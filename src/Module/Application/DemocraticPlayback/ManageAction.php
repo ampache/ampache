@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ManageAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'manage';
-    
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -61,7 +61,7 @@ final class ManageAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
-        
+
         $this->ui->showHeader();
 
         $democratic = Democratic::get_current_playlist();
@@ -70,10 +70,10 @@ final class ManageAction implements ApplicationActionInterface
 
         // Show the create page
         require_once Ui::find_template('show_create_democratic.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

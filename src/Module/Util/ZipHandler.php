@@ -33,7 +33,7 @@ use ZipStream\ZipStream;
 final class ZipHandler implements ZipHandlerInterface
 {
     private ConfigContainerInterface $configContainer;
-    
+
     private LoggerInterface $logger;
 
     public function __construct(

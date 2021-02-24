@@ -65,7 +65,7 @@ final class PodcastsMethod
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         Api::set_filter('add', $input['add']);
         Api::set_filter('update', $input['update']);
@@ -79,7 +79,7 @@ final class PodcastsMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $episodes = $input['include'] == 'episodes';
+        $episodes = ($input['include'] == 'episodes' || (int) $input['include'] == 1);
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

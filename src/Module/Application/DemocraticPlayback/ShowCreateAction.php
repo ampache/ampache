@@ -50,7 +50,7 @@ final class ShowCreateAction implements ApplicationActionInterface
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
@@ -65,10 +65,10 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         // Show the create page
         require_once Ui::find_template('show_create_democratic.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

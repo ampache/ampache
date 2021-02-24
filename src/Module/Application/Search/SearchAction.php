@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class SearchAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'search';
-    
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -58,29 +58,43 @@ final class SearchAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
-        if (Core::get_request('rule_1') != 'missing_artist') {
+
+        // set the browse type BEFORE running the search (for the search bar)
+        $searchType = Core::get_request('type');
+        $rule_1     = Core::get_request('rule_1');
+        if (empty($searchType)) {
+            $searchType = ($rule_1 == 'album' || $rule_1 == 'artist' || $rule_1 == 'playlist_name' || $rule_1 == 'tag')
+                ? str_replace('_name', ' ', $rule_1)
+                : 'song';
+            // set the search type when you don't set one.
+            $_REQUEST['type'] = $searchType;
+            if ($searchType != 'song') {
+                $_REQUEST['rule_1'] = 'title';
+            }
+        }
+
+        if ($rule_1 != 'missing_artist') {
             $browse = $this->modelFactory->createBrowse();
             require_once Ui::find_template('show_search_form.inc.php');
-            require_once  Ui::find_template('show_search_options.inc.php');
+            require_once Ui::find_template('show_search_options.inc.php');
             $results = Search::run($_REQUEST);
-            $browse->set_type(Core::get_request('type'));
+            $browse->set_type($searchType);
             $browse->show_objects($results);
             $browse->store();
         } else {
             $wartists = $this->missingArtistFinder->find($_REQUEST['rule_1_input']);
             require_once Ui::find_template('show_missing_artists.inc.php');
-            
+
             printf(
                 '<a href="http://musicbrainz.org/search?query=%s&type=artist&method=indexed" target="_blank">%s</a><br />',
                 rawurlencode($_REQUEST['rule_1_input']),
                 T_('View on MusicBrainz')
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

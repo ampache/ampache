@@ -335,6 +335,11 @@ div#autoupdate > span {
     width: 100%;
 }
 
+#cookie_notice {
+    padding-top: 20px;
+    text-align: center;
+}
+
 #sb_Subsearch,
 #play_type_switch {
     display: inline-block;
@@ -993,6 +998,10 @@ span#sidebar-header-content::after {
 .list-header a:hover,
 .list-header a:focus {
     text-decoration: none;
+}
+
+.ui-sortable-helper {
+    display: table; /* maintain column widths during move */
 }
 
 table.gatherart,
@@ -1706,6 +1715,7 @@ span.fatalerror {
 }
 
 #information_actions li img {
+    margin-right: 4px;
     vertical-align: top;
 }
 

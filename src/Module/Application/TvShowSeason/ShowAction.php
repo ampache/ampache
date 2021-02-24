@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private UiInterface $ui;
 
     public function __construct(
@@ -47,17 +47,17 @@ final class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         $season = new TVShow_Season($_REQUEST['season']);
         $season->format();
         $object_ids  = $season->get_episodes();
         $object_type = 'tvshow_episode';
-        
+
         require_once Ui::find_template('show_tvshow_season.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

@@ -57,7 +57,7 @@ final class ShowMissingAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('header.inc.php');
-        
+
         set_time_limit(600);
         $mbid   = $_REQUEST['mbid'];
         $walbum = $this->modelFactory->createWanted(Wanted::get_wanted($mbid));
@@ -88,7 +88,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         // Attempt to find the art.
         $art = $this->modelFactory->createArt((int) $walbum->mbid, 'album');
-        
+
         $images = $this->artCollector->collect(
             $art,
             [
@@ -98,9 +98,9 @@ final class ShowMissingAction implements ApplicationActionInterface
             ],
             1
         );
-        
+
         $imageList = '';
-        
+
         if (count($images) > 0 && !empty($images[0]['url'])) {
             $name = '[' . $artist->name . '] ' . scrub_out($walbum->name);
 
@@ -112,7 +112,7 @@ final class ShowMissingAction implements ApplicationActionInterface
                 $name
             );
         }
-        
+
         printf(
             '<div class="item_art">%s</div>',
             $imageList
@@ -122,26 +122,26 @@ final class ShowMissingAction implements ApplicationActionInterface
             T_('Actions'),
             $walbum->mbid
         );
-        
+
         $walbum->show_action_buttons();
-        
+
         print('</div></li></ul></div>');
 
         $this->ui->showBoxBottom();
 
         print('<div id="additional_information">&nbsp;</div><div>');
-        
+
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('song_preview');
         $browse->set_static_content(true);
         $browse->show_objects($walbum->songs);
-        
+
         print('</div>');
 
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

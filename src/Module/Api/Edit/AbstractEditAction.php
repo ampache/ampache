@@ -87,7 +87,9 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         debug_event(__CLASS__, $class_name, 3);
         debug_event(__CLASS__, $object_id, 3);
         $libitem    = new $class_name($object_id);
-        $libitem->format();
+        if (method_exists($libitem, 'format')) {
+            $libitem->format();
+        }
 
         $level = '50';
         if ($libitem->get_user_owner() == Core::get_global('user')->id) {

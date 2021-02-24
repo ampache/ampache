@@ -513,15 +513,12 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-        $show_skip = AmpConfig::get('show_skipped_times');
-        if ($show_skip) {
-            /* HINT: Number of times object has been skipped */
-            $this->type_numeric('skipped_times', T_('# Skipped'));
-            /* HINT: Number of times object has been played OR skipped */
-            $this->type_numeric('played_or_skipped_times', T_('# Played or Skipped'));
-            /* HINT: Percentage of (Times Played / Times skipped) * 100 */
-            $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
-        }
+        /* HINT: Number of times object has been skipped */
+        $this->type_numeric('skipped_times', T_('# Skipped'));
+        /* HINT: Number of times object has been played OR skipped */
+        $this->type_numeric('played_or_skipped_times', T_('# Played or Skipped'));
+        /* HINT: Percentage of (Times Played / Times skipped) * 100 */
+        $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
@@ -651,7 +648,6 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
@@ -700,7 +696,6 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
@@ -1101,7 +1096,7 @@ class Search extends playlist_object
     {
         $this->rules = array();
         foreach ($data as $rule => $value) {
-            if ($value == 'name' && preg_match('/^rule_[0|1|2|3|4|5|6|7|8|9]*$/', $rule)) {
+            if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -1270,6 +1265,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1528,6 +1526,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1758,6 +1759,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2147,12 +2151,12 @@ class Search extends playlist_object
         }
         if ($join['album_tag']) {
             foreach ($join['album_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='album' " . "$value" . "GROUP BY `object_id`" . ") AS realtag_$key " . "ON `album`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='album' " . "$value" . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `album`.`id`=`realtag_$key`.`object_id`";
             }
         }
         if ($join['artist_tag']) {
             foreach ($join['artist_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='artist' " . "$value" . "GROUP BY `object_id`" . ") AS realtag_$key " . "ON `artist`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='artist' " . "$value" . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
         }
         if ($join['playlist_data']) {
@@ -2205,6 +2209,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2271,6 +2278,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2349,6 +2359,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2403,6 +2416,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2456,6 +2472,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;

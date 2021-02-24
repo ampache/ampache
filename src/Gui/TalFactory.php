@@ -58,7 +58,7 @@ final class TalFactory implements TalFactoryInterface
             $this->guiFactory
         );
     }
-    
+
     public function createTalTranslationService(): TranslationServiceInterface
     {
         return new TalTranslationService();

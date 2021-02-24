@@ -33,11 +33,11 @@ use Psr\Http\Message\ServerRequestInterface;
 final class DescriptorAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'descriptor';
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('show_search_descriptor.inc.php');
-        
+
         return null;
     }
 }

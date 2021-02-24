@@ -59,11 +59,11 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
-            
+
             return null;
         }
 
@@ -87,7 +87,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

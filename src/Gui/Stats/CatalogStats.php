@@ -27,7 +27,7 @@ namespace Ampache\Gui\Stats;
 final class CatalogStats implements CatalogStatsInterface
 {
     private array $stats;
-    
+
     public function __construct(
         array $stats
     ) {
@@ -38,52 +38,52 @@ final class CatalogStats implements CatalogStatsInterface
     {
         return $this->stats['connected'] ?? 0;
     }
-    
+
     public function getUserCount(): int
     {
         return $this->stats['user'] ?? 0;
     }
-    
+
     public function getAlbumCount(): int
     {
         return $this->stats['album'] ?? 0;
     }
-    
+
     public function getArtistCount(): int
     {
         return $this->stats['artist'] ?? 0;
     }
-    
+
     public function getSongCount(): int
     {
         return $this->stats['song'] ?? 0;
     }
-    
+
     public function getPodcastCount(): int
     {
         return $this->stats['podcast'] ?? 0;
     }
-    
+
     public function getPodcastEpisodeCount(): int
     {
         return $this->stats['podcast_episode'] ?? 0;
     }
-    
+
     public function getGenreCount(): int
     {
         return $this->stats['tags'] ?? 0;
     }
-    
+
     public function getCatalogSize(): string
     {
         return $this->stats['formatted_size'] ?? '';
     }
-    
+
     public function getPlayTime(): string
     {
         return $this->stats['time_text'] ?? '';
     }
-    
+
     public function getItemCount(): int
     {
         return $this->stats['items'] ?? 0;

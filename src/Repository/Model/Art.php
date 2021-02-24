@@ -1188,48 +1188,57 @@ class Art extends database_object
 
         switch ($thumb) {
             case 1:
-                /* This is used by the now_playing / browse stuff */ $size['height'] = 100;
-                $size['width']                                                       = 100;
+                // This is used by the now_playing / browse stuff
+                $size['height'] = 100;
+                $size['width']  = 100;
                 break;
             case 2:
                 $size['height'] = 128;
                 $size['width']  = 128;
                 break;
             case 3:
-                /* This is used by the embedded web player */ $size['height'] = 80;
-                $size['width']                                                = 80;
+                // This is used by the embedded web player
+                $size['height'] = 80;
+                $size['width']  = 80;
                 break;
             case 5:
-                /* Web Player size */ $size['height'] = 32;
-                $size['width']                        = 32;
+                // Web Player size
+                $size['height'] = 32;
+                $size['width']  = 32;
                 break;
             case 6:
-                /* Video browsing size */ $size['height'] = 150;
-                $size['width']                            = 100;
+                // Video browsing size
+                $size['height'] = 150;
+                $size['width']  = 100;
                 break;
             case 7:
-                /* Video page size */ $size['height'] = 300;
-                $size['width']                        = 200;
+                // Video page size
+                $size['height'] = 300;
+                $size['width']  = 200;
                 break;
             case 8:
-                /* Video preview size */ $size['height'] = 200;
-                $size['width']                           = 470;
+                // Video preview size
+                $size['height'] = 200;
+                $size['width']  = 470;
                 break;
             case 9:
-                /* Video preview size */ $size['height'] = 100;
-                $size['width']                           = 235;
+                // Video preview size
+                $size['height'] = 84;
+                $size['width']  = 150; // cel_cover max-width is 150px
                 break;
             case 10:
-                /* Search preview size */ $size['height'] = 24;
-                $size['width']                            = 24;
+                // Search preview size
+                $size['height'] = 24;
+                $size['width']  = 24;
                 break;
             case 4:
-                /* Popup Web Player size */
+                // Popup Web Player size
             case 11:
-                /* Large view browse size */
+                // Large view browse size
             case 12:
-                /* Search preview size */ $size['height'] = 150;
-                $size['width']                            = 150;
+                // Search preview size
+                $size['height'] = 150;
+                $size['width']  = 150;
                 break;
             default:
                 $size['height'] = 200;

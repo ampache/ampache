@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private UiInterface $ui;
 
     public function __construct(
@@ -46,12 +46,12 @@ final class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         require_once Ui::find_template('show_search_form.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

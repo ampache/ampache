@@ -64,10 +64,10 @@ final class DownloadMethod
         $user_id   = User::get_from_username(Session::username($input['auth']))->id;
 
         $params = '&action=download' . '&client=api' . '&cache=1';
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ($format) {
+        if ($format && $type == 'song') {
             $params .= '&format=' . $format;
         }
         $url = '';

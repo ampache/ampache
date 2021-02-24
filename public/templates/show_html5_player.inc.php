@@ -239,11 +239,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
             last_int_position = int_position;
             if (shouts[int_position] != undefined) {
                 shouts[int_position].forEach(function(e) {
-                    noty({text: e,
-                            type: 'alert', layout: 'topRight',
-                            template: '<div class="noty_message noty_ampache"><span class="noty_text noty_ampache"></span><div class="noty_close noty_ampache"></div></div>',
-                            timeout: 2500,
-                        });
+                    console.log(e);
                 });
             }
         }
@@ -488,7 +484,7 @@ if ($isVideo) { ?>
 <?php if ($iframed) { ?>
         <?php if (Access::check('interface', 25)) { ?>
             <div class="action_button">
-                <a onclick="javascript:SaveToExistingPlaylist(event);">
+                <a href="javascript:SaveToExistingPlaylist(event);">
                     <?php echo Ui::get_icon('playlist_add_all', T_('Add All to playlist')) ?>
                 </a>
             </div>
@@ -506,7 +502,7 @@ if ($isVideo) { ?>
             <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
         <div class="action_button">
-            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo Ui::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
+            <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
         </div>
         <div id="replaygainbtn" class="action_button">
             <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', T_('ReplayGain')) ?></a>

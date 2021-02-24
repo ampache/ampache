@@ -83,7 +83,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         $class_name = ObjectTypeToClassNameMapper::map($object_type);
                         $object     = new $class_name($item);
                         $medias     = $object->get_medias();
-                        Core::get_global('user')->playlist->add_medias($medias);
+                        Core::get_global('user')->playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
                     }
                 } else {
                     switch ($_REQUEST['type']) {

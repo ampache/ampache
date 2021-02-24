@@ -79,7 +79,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->wantedRepository = $wantedRepository;
         $this->videoRepository  = $videoRepository;
     }
-    
+
     public function handle(): void
     {
         $results = array();

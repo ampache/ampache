@@ -64,7 +64,7 @@ final class SharesMethod
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         Api::set_filter('add', $input['add']);
         Api::set_filter('update', $input['update']);

@@ -148,12 +148,17 @@ class UPnPPlayer
     }
 
     /**
-     * @return SimpleXMLElement
+     * GetState
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetState()
     {
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
         $responseXML = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
         //!!debug_event(self::class, 'GetState = ' . $state, 5);
@@ -228,7 +233,7 @@ class UPnPPlayer
         $songUrl = $song['link'];
         $songId  = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
-        $song = new song($songId);
+        $song = new Song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
@@ -399,6 +404,8 @@ class UPnPPlayer
 
     /**
      * GetVolume
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetVolume()
     {
@@ -411,6 +418,9 @@ class UPnPPlayer
         ));
 
         $responseXML  = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
         debug_event(self::class, 'GetVolume:' . $volume, 5);
 

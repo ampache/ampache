@@ -108,10 +108,10 @@ final class ShowAction implements ApplicationActionInterface
         } else {
             echo T_('The Label cannot be found');
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 

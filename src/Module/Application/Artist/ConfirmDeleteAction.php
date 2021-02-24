@@ -41,11 +41,11 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
-    
+
     private ModelFactoryInterface $modelFactory;
 
     private ArtistDeleterInterface $artistDeleter;
@@ -61,7 +61,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->modelFactory    = $modelFactory;
         $this->artistDeleter   = $artistDeleter;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
@@ -74,7 +74,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
             return $response;
         }
-        
+
         $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
 
         if (!Catalog::can_remove($artist)) {

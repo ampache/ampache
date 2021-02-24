@@ -71,7 +71,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             // Show the Footer
             $this->ui->showQueryStats();
             $this->ui->showFooter();
-            
+
             return $response;
         }
 

@@ -123,13 +123,13 @@ class AmpError
             return self::getErrorsFormatted($name);
         }
     } // display
-    
+
     public static function getErrorsFormatted(string $name): string
     {
         if (isset(AmpError::$errors[$name])) {
             return '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
         }
-        
+
         return '';
     }
 }

@@ -42,7 +42,7 @@ use Teapot\StatusCode;
 final class UpdateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'update';
-    
+
     private TalFactoryInterface $talFactory;
 
     private GuiFactoryInterface $guiFactory;
@@ -95,7 +95,7 @@ final class UpdateAction implements ApplicationActionInterface
                 $this->guiFactory->createUpdateViewAdapter()
             )
             ->render();
-        
+
         return $this->responseFactory
             ->createResponse()
             ->withBody(

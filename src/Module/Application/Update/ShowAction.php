@@ -36,7 +36,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private TalFactoryInterface $talFactory;
 
     private GuiFactoryInterface $guiFactory;

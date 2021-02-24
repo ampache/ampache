@@ -74,16 +74,16 @@ final class ShareAction implements ApplicationActionInterface
             </ul>
         </div>
         TEXT;
-        
+
         printf(
             $text,
             $this->configContainer->getWebPath(),
             Ui::get_icon('clean', T_('Clean')),
             T_('Clean Expired Shared Objects')
         );
-        
+
         $object_ids = Share::get_share_list();
-        
+
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('share');
         $browse->set_static_content(true);

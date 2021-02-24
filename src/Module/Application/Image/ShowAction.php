@@ -78,7 +78,7 @@ final class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $response = $this->responseFactory->createResponse();
-        
+
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) === true &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION) === true
@@ -89,9 +89,9 @@ final class ShowAction implements ApplicationActionInterface
                 Core::get_request('t'),
                 Core::get_request('s')
             );
-            
+
             $cookie = $_COOKIE[AmpConfig::get('session_name')];
-            
+
             if (
                 !Session::exists('interface', $cookie) &&
                 !Session::exists('api', Core::get_request('auth')) &&
@@ -218,7 +218,7 @@ final class ShowAction implements ApplicationActionInterface
         if (!empty($image)) {
             $extension = Art::extension($mime);
             $filename  = scrub_out($filename . '.' . $extension);
-            
+
             // Send the headers and output the image
             if (!empty($etag)) {
                 $response = $response->withHeader(
@@ -246,7 +246,7 @@ final class ShowAction implements ApplicationActionInterface
                 $this->streamFactory->createStream($image)
             );
         }
-        
+
         return $response;
     }
 }

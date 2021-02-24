@@ -46,20 +46,21 @@ final class PingMethod
      * of the server is, and what version it is running/compatible with
      *
      * @param array $input
-     * auth = (string) //optional
+     * auth    = (string) //optional
+     * version = (string) $version //optional
      */
     public static function ping(array $input)
     {
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ($version[0] === '4' || $version[0] === '3') ? '500000' : Api::$version;
+        Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
 
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details($input['auth']));
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details());
         }
 
         debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR'), 5);

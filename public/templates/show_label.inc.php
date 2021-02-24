@@ -63,8 +63,10 @@ if ($label->website) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>"><?php echo T_('Post Shout'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">
+                    <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
+                    <?php echo T_('Post Shout'); ?>
+                </a>
             </li>
             <?php
     } ?>
@@ -72,8 +74,10 @@ if ($label->website) {
 } ?>
         <?php if ($label->email) { ?>
         <li>
-            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo Ui::get_icon('mail', T_('Send E-mail')); ?></a>
-            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo T_('Send E-mail'); ?></a>
+            <a href="mailto:<?php echo scrub_out($label->email); ?>">
+                <?php echo Ui::get_icon('mail', T_('Send E-mail')); ?>
+                <?php echo T_('Send E-mail'); ?>
+            </a>
         </li>
         <?php
     } ?>
@@ -81,8 +85,6 @@ if ($label->website) {
         <li>
             <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
-            </a>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo T_('Edit Label'); ?>
             </a>
         </li>
@@ -91,7 +93,8 @@ if ($label->website) {
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
             <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo T_('Delete'); ?>
             </a>
         </li>
         <?php

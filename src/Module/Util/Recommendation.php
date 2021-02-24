@@ -47,7 +47,7 @@ class Recommendation
     public static function get_lastfm_results($method, $query)
     {
         global $dic;
-        
+
         return $dic->get(LastFmQueryInterface::class)->getLastFmResults($method, $query);
     }
 

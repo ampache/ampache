@@ -193,7 +193,7 @@ class Json_Data
      * @param  array   $objects Array of object_ids (Mixed string|int)
      * @param  string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param  integer $user_id
-     * @param  boolean $include (add the extra songs details if a playlist)
+     * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user_id = null, $include = false)
@@ -207,11 +207,11 @@ class Json_Data
             case 'artist':
                 return self::artists($objects, array(), $user_id);
             case 'playlist':
-                return self::playlists($objects, $include);
+                return self::playlists($objects, $user_id, $include);
             case 'share':
                 return self::shares($objects);
             case 'podcast':
-                return self::podcasts($objects, $user_id);
+                return self::podcasts($objects, $user_id, $include);
             case 'podcast_episode':
                 return self::podcast_episodes($objects, $user_id);
             case 'video':
@@ -375,7 +375,7 @@ class Json_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $encode = true, $object = true)
     {
-        if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
 
@@ -446,7 +446,7 @@ class Json_Data
      */
     public static function albums($albums, $include = [], $user_id = null, $encode = true, $object = true)
     {
-        if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
 
@@ -528,13 +528,14 @@ class Json_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param  array   $playlists Playlist id's to include
+     * @param  integer $user_id
      * @param  boolean $songs
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "playlist"
      */
-    public static function playlists($playlists, $songs = false, $object = true)
+    public static function playlists($playlists, $user_id = null, $songs = false, $object = true)
     {
-        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($playlists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 
@@ -559,6 +560,7 @@ class Json_Data
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
+                $object_type    = 'search';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
@@ -568,6 +570,7 @@ class Json_Data
                 $playlist_user  = $playlist->f_user;
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
+                $object_type    = 'playlist';
             }
 
             if ($songs) {
@@ -581,6 +584,9 @@ class Json_Data
             } else {
                 $items = ($playitem_total ?: 0);
             }
+            $rating  = new Rating($playlist_id, $object_type);
+            $flag    = new Userflag($playlist_id, $object_type);
+            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
             array_push($JSON, [
@@ -588,7 +594,12 @@ class Json_Data
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
                 "items" => $items,
-                "type" => $playlist_type]
+                "type" => $playlist_type,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null)]
             );
         } // end foreach
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0];
@@ -763,6 +774,9 @@ class Json_Data
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();
+            $rating              = new Rating($podcast_id, 'podcast');
+            $flag                = new Userflag($podcast_id, 'podcast');
+            $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->f_title;
             $podcast_description = $podcast->description;
             $podcast_language    = $podcast->f_language;
@@ -776,7 +790,7 @@ class Json_Data
             $podcast_episodes    = array();
             if ($episodes) {
                 $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, $user_id, true);
+                $podcast_episodes = self::podcast_episodes($items, $user_id, false);
             }
             // Build this element
             array_push($JSON, [
@@ -791,6 +805,11 @@ class Json_Data
                 "build_date" => $podcast_build_date,
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "podcast_episode" => $podcast_episodes
             ]);
         } // end foreach
@@ -806,21 +825,25 @@ class Json_Data
      *
      * @param  integer[]    $podcast_episodes Podcast_Episode id's to include
      * @param  integer      $user_id
-     * @param  boolean      $simple just return the data as an array for pretty somewhere else
+     * @param  boolean      $encode
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $user_id = null, $simple = false, $object = true)
+    public static function podcast_episodes($podcast_episodes, $user_id = null, $encode = true, $object = true)
     {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $JSON = array();
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
+            $rating  = new Rating($episode_id, 'podcast_episode');
+            $flag    = new Userflag($episode_id, 'podcast_episode');
+            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
+                "title" => $episode->f_title,
                 "name" => $episode->f_title,
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
@@ -832,11 +855,18 @@ class Json_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
+                "mime" => $episode->mime,
                 "public_url" => $episode->link,
                 "url" => $episode->play_url('', 'api', false, $user_id),
+                "catalog" => $episode->catalog,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "played" => $episode->played]);
         }
-        if ($simple) {
+        if (!$encode) {
             return $JSON;
         }
         $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0];
@@ -857,7 +887,7 @@ class Json_Data
      */
     public static function songs($songs, $user_id = null, $encode = true, $object = true)
     {
-        if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
 
@@ -887,48 +917,45 @@ class Json_Data
                 "title" => $song->title,
                 "name" => $song->title,
                 "artist" => array(
-                    "id" => (string)$song->artist,
-                    "name" => $song->get_artist_name()
-                ),
+                    "id" => (string) $song->artist,
+                    "name" => $song->get_artist_name()),
                 "album" => array(
                     "id" => (string) $song->album,
                     "name" => $song->get_album_name()),
-                "genre" => self::genre_array($song->tags)
-            );
-            //always get album artist
-            $ourSong['albumartist'] = array(
-                "id" => (string) $song->albumartist,
-                "name" => $song->get_album_artist_name()
+                'albumartist' => array(
+                    "id" => (string) $song->albumartist,
+                    "name" => $song->get_album_artist_name()
+                )
             );
 
-            $ourSong['filename']         = $song->file;
-            $ourSong['track']            = (int)$song->track;
-            $ourSong['playlisttrack']    = $playlist_track;
-            $ourSong['time']             = (int)$song->time;
-            $ourSong['year']             = (int)$song->year;
-            $ourSong['bitrate']          = (int)$song->bitrate;
-            $ourSong['rate']             = (int)$song->rate;
-            $ourSong['mode']             = $song->mode;
-            $ourSong['mime']             = $song->mime;
-            $ourSong['url']              = $song->play_url('', 'api', false, $user_id);
-            $ourSong['size']             = (int) $song->size;
-            $ourSong['mbid']             = $song->mbid;
-            $ourSong['album_mbid']       = $song->album_mbid;
-            $ourSong['artist_mbid']      = $song->artist_mbid;
-            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
-            $ourSong['art']              = $art_url;
-            $ourSong['flag']             = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourSong['preciserating']    = ($rating->get_user_rating() ?: null);
-            $ourSong['rating']           = ($rating->get_user_rating() ?: null);
-            $ourSong['averagerating']    = ($rating->get_average_rating() ?: null);
-            $ourSong['playcount']        = (int)$song->played;
-            $ourSong['catalog']          = (int)$song->catalog;
-            $ourSong['composer']         = $song->composer;
-            $ourSong['channels']         = $song->channels;
-            $ourSong['comment']          = $song->comment;
-            if (AmpConfig::get('licensing') && $song->f_license) {
-                $ourSong['license'] = $song->f_license;
-            }
+            $ourSong['disk']                  = (int) $song->disk;
+            $ourSong['track']                 = (int) $song->track;
+            $ourSong['filename']              = $song->file;
+            $ourSong['genre']                 = self::genre_array($song->tags, true);
+            $ourSong['playlisttrack']         = $playlist_track;
+            $ourSong['time']                  = (int)$song->time;
+            $ourSong['year']                  = (int)$song->year;
+            $ourSong['bitrate']               = (int)$song->bitrate;
+            $ourSong['rate']                  = (int)$song->rate;
+            $ourSong['mode']                  = $song->mode;
+            $ourSong['mime']                  = $song->mime;
+            $ourSong['url']                   = $song->play_url('', 'api', false, $user_id);
+            $ourSong['size']                  = (int) $song->size;
+            $ourSong['mbid']                  = $song->mbid;
+            $ourSong['album_mbid']            = $song->album_mbid;
+            $ourSong['artist_mbid']           = $song->artist_mbid;
+            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
+            $ourSong['art']                   = $art_url;
+            $ourSong['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
+            $ourSong['preciserating']         = ($rating->get_user_rating() ?: null);
+            $ourSong['rating']                = ($rating->get_user_rating() ?: null);
+            $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
+            $ourSong['playcount']             = (int)$song->played;
+            $ourSong['catalog']               = (int)$song->catalog;
+            $ourSong['composer']              = $song->composer;
+            $ourSong['channels']              = $song->channels;
+            $ourSong['comment']               = $song->comment;
+            $ourSong['license']               = $song->f_license;
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
@@ -978,6 +1005,9 @@ class Json_Data
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
+            $rating  = new Rating($video_id, 'video');
+            $flag    = new Userflag($video_id, 'video');
+            $art_url = Art::url($video_id, 'video', Core::get_request('auth'));
             array_push($JSON, array(
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -985,7 +1015,13 @@ class Json_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "genre" => self::genre_array($video->tags),
-                "url" => $video->play_url('', 'api', false, $user_id)
+                "time" => (int) $video->time,
+                "url" => $video->play_url('', 'api', false, $user_id),
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null)
             ));
         } // end foreach
         $output = ($object) ? array("video" => $JSON) : $JSON[0];

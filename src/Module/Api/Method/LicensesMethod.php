@@ -65,7 +65,7 @@ final class LicensesMethod
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         $licenses = $browse->get_objects();
         if (empty($licenses)) {

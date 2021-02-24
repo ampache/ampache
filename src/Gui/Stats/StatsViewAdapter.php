@@ -54,12 +54,12 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
     {
         return $this->videoRepository->getItemCount(Video::class) > 0;
     }
-    
+
     public function displayPodcast(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST);
     }
-    
+
     public function getCatalogStats(): CatalogStatsInterface
     {
         return $this->guiFactory->createCatalogStats(Catalog::get_stats());
@@ -71,16 +71,16 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
     public function getCatalogDetails(): array
     {
         $catalogs = Catalog::get_catalogs();
-        
+
         $result = [];
-        
+
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
-            
+
             $result[] = $this->guiFactory->createCatalogDetails($catalog);
         }
-        
+
         return $result;
     }
 }

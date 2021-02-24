@@ -91,9 +91,9 @@ final class PrintTagsCommand extends Command
                 true
             );
             $io->eol(2);
-            
+
             print_r($info);
-            
+
             $io->eol();
             $io->info('------------------------------------------------------------------', true);
             $io->info(

@@ -58,10 +58,10 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|VideoRepositoryInterface|null */
     private MockInterface $videoRepository;
-    
+
     /** @var GuiFactory|null */
     private GuiFactory $subject;
-    
+
     public function setUp(): void
     {
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
@@ -69,7 +69,7 @@ class GuiFactoryTest extends MockeryTestCase
         $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
         $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
         $this->videoRepository  = $this->mock(VideoRepositoryInterface::class);
-        
+
         $this->subject = new GuiFactory(
             $this->configContainer,
             $this->modelFactory,
@@ -89,7 +89,7 @@ class GuiFactoryTest extends MockeryTestCase
             )
         );
     }
-    
+
     public function testCreateConfigViewAdapterReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -97,7 +97,7 @@ class GuiFactoryTest extends MockeryTestCase
             $this->subject->createConfigViewAdapter()
         );
     }
-    
+
     public function testCreateStatsViewAdapterReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -105,7 +105,7 @@ class GuiFactoryTest extends MockeryTestCase
             $this->subject->createStatsViewAdapter()
         );
     }
-    
+
     public function testCreateCatalogDetailsReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -115,7 +115,7 @@ class GuiFactoryTest extends MockeryTestCase
             )
         );
     }
-    
+
     public function testCreateCatalogStatsReturnsInstance(): void
     {
         $this->assertInstanceOf(

@@ -305,6 +305,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
+        // album artists that don't have any songs
+        if ((int) $results['time'] == 0) {
+            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
+            $db_results = Dba::read($sql, $params);
+            $results    = Dba::fetch_assoc($db_results);
+        }
 
         return (int) $results['time'];
     }

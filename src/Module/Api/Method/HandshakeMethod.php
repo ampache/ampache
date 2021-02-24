@@ -66,15 +66,15 @@ final class HandshakeMethod
         }
         $username = trim((string) $input['user']);
         $user_ip  = Core::get_user_ip();
-        $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
         // set the version to the old string for old api clients
-        Api::$version = ((int) $version[0] >= 350001) ? '500000' : Api::$version;
+        $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
+        Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
 
         // Log the attempt
         debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int) ($version) < Api::$auth_version && $version !== '5.0.0') {
+        if ((int) ($version) < Api::$auth_version && (int) $version[0] !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 

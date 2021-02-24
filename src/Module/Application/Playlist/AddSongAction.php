@@ -56,7 +56,7 @@ final class AddSongAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $playlist->add_songs(array($_REQUEST['song_id']), true);
+        $playlist->add_songs(array($_REQUEST['song_id']), (bool) AmpConfig::get('unique_playlist'));
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -38,7 +38,7 @@ interface UiInterface
      * This displays the footer
      */
     public function showFooter(): void;
-    
+
     /**
      * This displays the header
      */

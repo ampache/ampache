@@ -50,7 +50,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'
+     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = self::set_filter(date) //optional
@@ -77,6 +77,16 @@ final class GetIndexesMethod
 
             return false;
         }
+        if (!AmpConfig::get('share') && $type == 'share') {
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('live_stream') && $type == 'live_stream') {
+            Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (int) $input['include'] == 1;
         $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
@@ -91,7 +101,7 @@ final class GetIndexesMethod
         $browse->set_type($type);
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'], $browse);
         Api::set_filter('add', $input['add'], $browse);
         Api::set_filter('update', $input['update'], $browse);

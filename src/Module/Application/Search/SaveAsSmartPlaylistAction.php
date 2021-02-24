@@ -69,7 +69,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
         $playlist->limit  = (int) Core::get_request('limit');
         $playlist->random = (int) Core::get_request('random');
         $playlist->save();
-        
+
         $this->ui->showConfirmation(
             T_('No Problem'),
             /* HINT: playlist name */

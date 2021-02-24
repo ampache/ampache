@@ -110,7 +110,7 @@ final class AdvancedSearchMethod
                         echo Json_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results);
+                        echo Json_Data::playlists($results, $user->id);
                         break;
                     case 'label':
                         echo Json_Data::labels($results);
@@ -137,7 +137,7 @@ final class AdvancedSearchMethod
                         echo Xml_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results);
+                        echo Xml_Data::playlists($results, $user->id);
                         break;
                     case 'label':
                         echo Xml_Data::labels($results);

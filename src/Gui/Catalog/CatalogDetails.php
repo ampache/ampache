@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Catalog;
 final class CatalogDetails implements CatalogDetailsInterface
 {
     private GuiFactoryInterface $guiFactory;
-    
+
     private Catalog $catalog;
 
     public function __construct(
@@ -41,32 +41,32 @@ final class CatalogDetails implements CatalogDetailsInterface
         $this->guiFactory = $guiFactory;
         $this->catalog    = $catalog;
     }
-    
+
     public function getName(): string
     {
         return $this->catalog->name;
     }
-    
+
     public function getFullInfo(): string
     {
         return scrub_out($this->catalog->f_full_info);
     }
-    
+
     public function getLastUpdateDate(): string
     {
         return scrub_out($this->catalog->f_update);
     }
-    
+
     public function getLastAddDate(): string
     {
         return scrub_out($this->catalog->f_add);
     }
-    
+
     public function getLastCleanDate(): string
     {
         return scrub_out($this->catalog->f_clean);
     }
-    
+
     public function getCatalogStats(): CatalogStatsInterface
     {
         return $this->guiFactory->createCatalogStats(
