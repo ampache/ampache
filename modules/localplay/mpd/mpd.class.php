@@ -248,7 +248,7 @@ class mpd
      * should not need to call this directly.
      * @return false|string
      */
-    public function Connect()
+    public function connect()
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
@@ -425,7 +425,7 @@ class mpd
      * RefreshInfo
      *
      * Updates all class properties with the values from the MPD server.
-     * NOTE: This function is automatically called on Connect()
+     * NOTE: This function is automatically called on connect()
      * @return boolean
      */
     public function RefreshInfo()
