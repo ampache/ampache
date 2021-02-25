@@ -60,7 +60,7 @@ switch ($type) {
         $items = Catalog::get_artists();
     break;
     default:
-        $ids   = Playlist::get_playlists(false, -1);
+        $ids   = Playlist::get_playlists(-1);
         $items = array();
         foreach ($ids as $playlistid) {
             $items[] = new Playlist($playlistid);

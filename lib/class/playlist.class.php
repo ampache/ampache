@@ -101,7 +101,7 @@ class Playlist extends playlist_object
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id = -1);
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = array();
 
@@ -140,7 +140,7 @@ class Playlist extends playlist_object
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id = -1);
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
         $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
         $params   = array();
 
