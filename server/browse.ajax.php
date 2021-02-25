@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
                 break;
             case 'smartplaylist':
-                $playlist = new Search((int) Core::get_request('id'), 'song');
+                $playlist = new Search((int) Core::get_request('id'));
                 if (!$playlist->has_access()) {
                     return false;
                 }

@@ -404,7 +404,7 @@ class Daap_Api
                     $library .= self::tlv_playlist($playlist);
                 }
                 foreach ($searches as $search_id) {
-                    $playlist = new Search($search_id, 'song');
+                    $playlist = new Search($search_id);
                     $playlist->format();
                     $library .= self::tlv_playlist($playlist);
                 }
@@ -448,7 +448,7 @@ class Daap_Api
                 } else {
                     if ($object_id > Daap_Api::AMPACHEID_SMARTPL) {
                         $object_id -= Daap_Api::AMPACHEID_SMARTPL;
-                        $playlist = new Search($object_id, 'song');
+                        $playlist = new Search($object_id);
                     } else {
                         $playlist = new Playlist($object_id);
                     }

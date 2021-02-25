@@ -117,7 +117,7 @@ class Api
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
+                if (strpos((string) $value, '/')) {
                     $elements = explode('/', $value);
                     self::$browse->set_filter('add_lt', strtotime($elements['1']));
                     self::$browse->set_filter('add_gt', strtotime($elements['0']));
@@ -127,12 +127,12 @@ class Api
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
-                    $elements = explode('/', $value);
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
                     self::$browse->set_filter('update_lt', strtotime($elements['1']));
                     self::$browse->set_filter('update_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('update_gt', strtotime($value));
+                    self::$browse->set_filter('update_gt', strtotime((string) $value));
                 }
                 break;
             case 'alpha_match':
@@ -4022,8 +4022,8 @@ class Api
         if (!self::check_parameter($input, array('id', 'type'), 'get_art')) {
             return false;
         }
-        $object_id = $input['id'];
-        $type      = $input['type'];
+        $object_id = (int) $input['id'];
+        $type      = (string) $input['type'];
         $size      = $input['size'];
         $user      = User::get_from_username(Session::username($input['auth']));
 
@@ -4050,7 +4050,7 @@ class Api
         } elseif ($type == 'podcast') {
             $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
-            $smartlist = new Search($object_id . 'song', $user);
+            $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);

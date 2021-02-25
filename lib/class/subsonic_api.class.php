@@ -927,7 +927,7 @@ class Subsonic_Api
 
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylist');
         if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
-            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid));
             Subsonic_XML_Data::addSmartPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistid));
@@ -1048,7 +1048,7 @@ class Subsonic_Api
         $playlistId = self::check_parameter($input, 'id');
 
         if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
-            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId), 'song');
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId));
             $playlist->delete();
         } else {
             $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistId));
