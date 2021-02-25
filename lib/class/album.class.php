@@ -255,6 +255,9 @@ class Album extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+        if (!$this->time) {
+            $this->time = $this->update_time();
+        }
 
         // Little bit of formatting here
         $this->full_name      = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
@@ -667,8 +670,7 @@ class Album extends database_object implements library_item
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
      * @param integer $catalog
-     * return integer[]
-     * @return array
+     * @return integer[]
      */
     public function get_album_suite($catalog = 0)
     {
@@ -709,7 +711,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[$row['disk']] = $row['id'];
         }
 
         return $results;
@@ -812,7 +814,7 @@ class Album extends database_object implements library_item
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
 
-        if ($this->time == 0) {
+        if (!$this->time) {
             $this->time = $this->update_time();
         }
     } // format

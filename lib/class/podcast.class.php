@@ -490,11 +490,18 @@ class Podcast extends database_object implements library_item
         }
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
+        // time is missing hour e.g. "15:23"
         if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
             $duration = '00:' . $duration;
         }
-        $ptime = date_parse((string) $duration);
-        $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
+        // process a time string "03:23:01"
+        $ptime = (preg_grep("/[0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
+            ? date_parse((string)$duration)
+            : $duration;
+        // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
+        $time = (is_array($ptime))
+            ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
+            : (int) $ptime;
 
         $pubdate    = 0;
         $pubdatestr = (string) $episode->pubDate;

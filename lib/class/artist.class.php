@@ -179,6 +179,10 @@ class Artist extends database_object implements library_item
             $this->$key = $value;
         } // foreach info
 
+        if (!$this->time) {
+            $this->time = $this->update_time();
+        }
+
         return true;
     } // constructor
 
@@ -500,6 +504,12 @@ class Artist extends database_object implements library_item
         $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
+        // album artists that don't have any songs
+        if ((int) $results['time'] == 0) {
+            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
+            $db_results = Dba::read($sql, $params);
+            $results    = Dba::fetch_assoc($db_results);
+        }
 
         return (int) $results['time'];
     }
@@ -557,7 +567,7 @@ class Artist extends database_object implements library_item
         /* Set Object Vars */
         $this->songs      = $row['song_count'];
         $this->albums     = $row['album_count'];
-        $this->time       = $row['time'];
+        $this->time       = (int) $row['time'];
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
@@ -615,7 +625,7 @@ class Artist extends database_object implements library_item
 
             $this->object_cnt = $extra_info['object_cnt'];
         }
-        if ($this->time == 0) {
+        if (!$this->time) {
             $this->time = $this->update_time();
         }
 

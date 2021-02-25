@@ -91,44 +91,31 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
      * @return integer[]
      */
-    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
+    public static function get_playlists($user_id = null, $playlist_name = '', $like = true)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $sql      = "SELECT `id` FROM `playlist` ";
+        $params   = array();
 
-        $sql    = 'SELECT `id` FROM `playlist`';
-        $params = array();
-
-        if ($user_id > -1 && $incl_public) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
             $params[] = $user_id;
         }
-        if ($user_id > -1 && !$incl_public) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $user_id;
-        }
-        if (!$user_id > -1 && $incl_public) {
-            if (count($params) === 0) {
-                $sql .= " WHERE `type` = 'public'";
-            }
-        }
-
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if (count($params) > 0 || $incl_public) {
-                $sql .= " AND `name` " . $playlist_name;
-            } else {
-                $sql .= " WHERE `name` " . $playlist_name;
+            if ($is_admin) {
+                $sql .= ($is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
             }
         }
-        $sql .= ' ORDER BY `name`';
+        $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
@@ -143,43 +130,31 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
      * @return array
      */
-    public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
+    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
+        $params   = array();
 
-        // Search for smartplaylists
-        $sql    = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
-        $params = array();
-
-        if ($user_id > -1 && $incl_public) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
             $params[] = $user_id;
         }
-        if ($user_id > -1 && !$incl_public) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $user_id;
-        }
-        if (!$user_id > -1 && $incl_public) {
-            $sql .= " WHERE `type` = 'public'";
-        }
-
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if (count($params) > 0 || $incl_public) {
-                $sql .= " AND `name` " . $playlist_name;
-            } else {
-                $sql .= " WHERE `name` " . $playlist_name;
+            if ($is_admin) {
+                $sql .= ($is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
             }
         }
-        $sql .= ' ORDER BY `name`';
+        $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_smartlists ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
@@ -484,10 +459,10 @@ class Playlist extends playlist_object
     /**
      * add_songs
      * @param array $song_ids
-     * @param boolean $ordered
+     * @param boolean $unique
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array(), $ordered = false)
+    public function add_songs($song_ids = array(), $unique = false)
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -496,14 +471,15 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias);
+        $this->add_medias($medias, $unique);
     } // add_songs
 
     /**
      * add_medias
      * @param array $medias
+     * @param boolean $unique
      */
-    public function add_medias($medias)
+    public function add_medias($medias, $unique = false)
     {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
@@ -516,7 +492,6 @@ class Playlist extends playlist_object
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
-        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
             if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event(self::class, "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);

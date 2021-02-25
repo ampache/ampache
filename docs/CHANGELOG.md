@@ -64,6 +64,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4742 Failed Access Check
 * stats: Removed back compat from older versions. Only 'type' is mandatory
 * Return empty objects when the request was correct but the results were empty
+* Don't transcode podcast_episodes
 
 ## Ampache 4.4.0-develop
 
@@ -90,6 +91,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add R128 Gain adjustments
 * Persist replaygain setting as a cookie
 * Support for image per song
+* Format XML output using DOMDocument
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -114,6 +116,13 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Recognize opus when reading tags
 * Regex in config for additional_genre_delimiters
 * SQL query for smartlists not joining the OR correctly
+* Searching with bad rules will return no results instead of everything
+* Check the 'unique_playlist' option in more places
+* When you haven't set an active localplay nothing was picked
+* Set time for artists that are only albums
+* Don't hide rss generation when you haven't got a key
+* Podcast episode durations that use seconds were converting into crazy lengths
+* Playlist and Smartlist check sql simplified
 
 ### API 4.4.0-develop
 
@@ -135,6 +144,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
+* Add disk to song objects
+* Add time to video objects. (time in seconds)
 * Add title, mime, catalog to podcast_episodes
 * Api::advanced_search Add 'playlist', 'user' and 'video' to search types
 * Api::handshake added extra total counts to the response
@@ -157,6 +168,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
 * SubSonic - Json clients need their playlist entry to always array (single item lists)
+* Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
 
 ### Deprecated
 

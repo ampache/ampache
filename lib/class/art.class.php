@@ -999,7 +999,13 @@ class Art extends database_object
         if (isset($data['song'])) {
             // If we find a good one, stop looking
             $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
+            try {
+                $id3 = $getID3->analyze($data['song']);
+            } catch (Exception $error) {
+                debug_event(self::class, 'getid3' . $error->getMessage(), 1);
+
+                return '';
+            }
 
             if ($id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
@@ -1798,14 +1804,11 @@ class Art extends database_object
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($this->type == 'artist') ? 8 : 3;
-                if ($image['picturetypeid'] == $this_picturetypeid) {
-                    $data[] = array(
-                        $mtype => $media->file,
-                        'raw' => $image['data'],
-                        'mime' => $image['mime'],
-                        'title' => 'ID3');
-                }
+                $data[] = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3');
             }
         }
 

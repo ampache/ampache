@@ -909,11 +909,9 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
         $user     = User::get_from_username((string) $username);
-        $userid   = (!Access::check('interface', 100)) ? $user->id : -1;
-        $public   = !Access::check('interface', 100);
 
         // Don't allow playlist listing for another user
-        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($public, $userid), Playlist::get_smartlists($public, $userid));
+        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
         self::apiOutput($input, $response);
     }
 
@@ -992,7 +990,7 @@ class Subsonic_Api
             for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
                 $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
             }
-            $playlist->add_songs($songsIdToAdd);
+            $playlist->add_songs($songsIdToAdd, (bool) AmpConfig::get('unique_playlist'));
         }
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order

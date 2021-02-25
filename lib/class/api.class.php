@@ -555,7 +555,7 @@ class Api
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {
                 $objects = self::$browse->get_objects();
             }
@@ -573,7 +573,7 @@ class Api
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, $user->id, true, true);
+                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
         }
         Session::extend($input['auth']);
 
@@ -607,6 +607,7 @@ class Api
             return false;
         }
 
+        $user    = User::get_from_username(Session::username($input['auth']));
         $objects = array();
         $similar = array();
         switch ($type) {
@@ -625,12 +626,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
+                echo JSON_Data::indexes($objects, $type, $user->id);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type);
+                echo XML_Data::indexes($objects, $type, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1412,17 +1413,15 @@ class Api
      */
     public static function playlists($input)
     {
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $like    = ((int) $input['exact'] == 1) ? false : true;
-        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $user_id = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
-        $public  = !Access::check('interface', 100, $user->id);
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $like     = ((int) $input['exact'] == 1) ? false : true;
+        $hide     = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $user_id, (string) $input['filter'], $like);
+        $playlist_ids = Playlist::get_playlists($user->id, (string) $input['filter'], $like);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $user_id, (string) $input['filter'], $like));
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($user->id, (string) $input['filter'], $like));
         }
 
         ob_end_clean();
@@ -1430,12 +1429,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::playlists($playlist_ids, $user_id);
+                echo JSON_Data::playlists($playlist_ids, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::playlists($playlist_ids, $user_id);
+                echo XML_Data::playlists($playlist_ids, $user->id);
         }
         Session::extend($input['auth']);
     } // playlists
@@ -1456,7 +1455,6 @@ class Api
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
         $list_id = scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $list_id) === $list_id) {
@@ -1474,10 +1472,10 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($list_id), $user_id);
+                echo JSON_Data::playlists(array($list_id), $user->id);
             break;
             default:
-                echo XML_Data::playlists(array($list_id), $user_id);
+                echo XML_Data::playlists(array($list_id), $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1705,18 +1703,19 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song     = $input['song'];
+        $song     = (int) $input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
+        $unique = ((bool) AmpConfig::get('unique_playlist') || (int) $input['check'] == 1);
+        if (($unique) && in_array($song, $playlist->get_songs())) {
             self::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 
             return false;
         }
-        $playlist->add_songs(array($song), true);
+        $playlist->add_songs(array($song), $unique);
         self::message('success', 'song added to playlist', null, $input['api_format']);
         Session::extend($input['auth']);
 
@@ -1896,10 +1895,10 @@ class Api
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song');
+                        echo JSON_Data::indexes($song_ids, 'song', $user->id);
                     break;
                     default:
-                        echo XML_Data::indexes($song_ids, 'song');
+                        echo XML_Data::indexes($song_ids, 'song', $user->id);
                 }
                 break;
             case 'song':
@@ -3855,6 +3854,7 @@ class Api
 
         return true;
     } // update_art
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000
@@ -3901,7 +3901,7 @@ class Api
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
-     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
+     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
@@ -3925,10 +3925,10 @@ class Api
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0) {
+        if ((int) $maxBitRate > 0 && $type == 'song') {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
@@ -3965,7 +3965,7 @@ class Api
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
-     * format = (string) 'mp3'|'ogg', etc //optional
+     * format = (string) 'mp3'|'ogg', etc //optional SONG ONLY
      * @return boolean
      */
     public static function download($input)
@@ -3981,10 +3981,10 @@ class Api
 
         $url    = '';
         $params = '&action=download' . '&client=api' . '&cache=1';
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ($format) {
+        if ($format && $type == 'song') {
             $params .= '&format=' . $format;
         }
         if ($type == 'song') {
@@ -4116,6 +4116,8 @@ class Api
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (!$localplay->connect() || !$localplay->status()) {
             self::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
+
+            return false;
         }
 
         $result = false;

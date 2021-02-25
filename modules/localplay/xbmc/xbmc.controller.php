@@ -210,12 +210,8 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
-        $sql      = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
-        // if you only have one instance just default to that!
-        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
-            $sql = "SELECT * FROM `localplay_xbmc`";
-        }
+        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
+        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
         $db_results = Dba::query($sql, array($instance));
 
         return Dba::fetch_assoc($db_results);
@@ -683,7 +679,7 @@ class AmpacheXbmc extends localplay_controller
                     'properties' => array('repeat', 'shuffled')
                 ));
                 $array['repeat']    = ($playprop['repeat'] != "off");
-                $array['random']    = (strtolower($playprop['shuffled']) == 1) ;
+                $array['random']    = (strtolower($playprop['shuffled']) == 1);
                 $array['track']     = $currentplay['file'];
 
                 $url_data = $this->parse_url($array['track']);

@@ -420,7 +420,6 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
-
             /* Create the vainfo object and get info */
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);

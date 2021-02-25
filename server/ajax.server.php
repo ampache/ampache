@@ -129,7 +129,7 @@ switch ($action) {
             foreach ($object_id as $item) {
                 $object = new $object_type($item);
                 $medias = $object->get_medias();
-                Core::get_global('user')->playlist->add_medias($medias);
+                Core::get_global('user')->playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
             }
         } else {
             switch ($_REQUEST['type']) {
