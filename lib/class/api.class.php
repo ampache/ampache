@@ -3063,7 +3063,7 @@ class Api
                 if (!count($users)) {
                     self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
                 } else {
-                    debug_event(self::class, 'User is following:  ' . print_r($users), 1);
+                    debug_event(self::class, 'User is following:  ' . (string) count($users), 1);
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
