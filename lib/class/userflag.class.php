@@ -332,7 +332,7 @@ class Userflag extends database_object
      * @param string $user_id
      * @param integer $count
      * @param integer $offset
-     * @return array
+     * @return integer[]
      */
     public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
@@ -351,7 +351,7 @@ class Userflag extends database_object
             if ($type === null) {
                 $results[] = $row;
             } else {
-                $results[] = $row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 

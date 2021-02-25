@@ -118,19 +118,19 @@ class Api
             case 'add':
                 // Check for a range, if no range default to gt
                 if (strpos((string) $value, '/')) {
-                    $elements = explode('/', $value);
-                    self::$browse->set_filter('add_lt', strtotime($elements['1']));
-                    self::$browse->set_filter('add_gt', strtotime($elements['0']));
+                    $elements = explode('/', (string) $value);
+                    self::$browse->set_filter('add_lt', strtotime((string) $elements['1']));
+                    self::$browse->set_filter('add_gt', strtotime((string) $elements['0']));
                 } else {
-                    self::$browse->set_filter('add_gt', strtotime($value));
+                    self::$browse->set_filter('add_gt', strtotime((string) $value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos((string) $value, '/')) {
                     $elements = explode('/', (string) $value);
-                    self::$browse->set_filter('update_lt', strtotime($elements['1']));
-                    self::$browse->set_filter('update_gt', strtotime($elements['0']));
+                    self::$browse->set_filter('update_lt', strtotime((string) $elements['1']));
+                    self::$browse->set_filter('update_gt', strtotime((string) $elements['0']));
                 } else {
                     self::$browse->set_filter('update_gt', strtotime((string) $value));
                 }
@@ -759,7 +759,7 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -794,7 +794,7 @@ class Api
         }
         $uid     = scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::artists(array($uid), $include, $user->id);
@@ -912,7 +912,7 @@ class Api
 
         $albums  = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -947,7 +947,7 @@ class Api
         }
         $uid     = (int) scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::albums(array($uid), $include, $user->id);
@@ -2299,7 +2299,6 @@ class Api
             $limit = AmpConfig::get('popular_threshold', 10);
         }
 
-        $results = array();
         switch ($input['filter']) {
             case 'newest':
                 debug_event(self::class, 'stats newest', 5);
@@ -2343,43 +2342,44 @@ class Api
                     }
         }
 
-        if (!empty($results)) {
-            ob_end_clean();
-            debug_event(self::class, 'stats found results searching for ' . $type, 5);
-            if ($type === 'song') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::songs($results, $user->id);
-                    break;
-                    default:
-                        echo XML_Data::songs($results, $user->id);
-                }
-            }
-            if ($type === 'artist') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::artists($results, array(), $user->id);
-                    break;
-                    default:
-                        echo XML_Data::artists($results, array(), $user->id);
-                }
-            }
-            if ($type === 'album') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::albums($results, array(), $user->id);
-                    break;
-                    default:
-                        echo XML_Data::albums($results, array(), $user->id);
-                }
-            }
-            Session::extend($input['auth']);
+        ob_end_clean();
+        if (!isset($results)) {
+            self::message('error', 'No Results', '404', $input['api_format']);
 
-            return true;
+            return false;
         }
-        self::message('error', 'No Results', '404', $input['api_format']);
 
-        return false;
+        debug_event(self::class, 'stats found results searching for ' . $type, 5);
+        if ($type === 'song') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::songs($results, $user->id);
+                break;
+                default:
+                    echo XML_Data::songs($results, $user->id);
+            }
+        }
+        if ($type === 'artist') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::artists($results, array(), $user->id);
+                break;
+                default:
+                    echo XML_Data::artists($results, array(), $user->id);
+            }
+        }
+        if ($type === 'album') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::albums($results, array(), $user->id);
+                break;
+                default:
+                    echo XML_Data::albums($results, array(), $user->id);
+            }
+        }
+        Session::extend($input['auth']);
+
+        return true;
     } // stats
 
     /**

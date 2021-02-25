@@ -517,7 +517,7 @@ class Stats
      * @param integer $offset
      * @param integer $user_id
      * @param boolean $random
-     * @return array
+     * @return integer[]
      */
     public static function get_top($type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
     {
@@ -535,7 +535,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -591,7 +591,7 @@ class Stats
      * @param integer $count
      * @param integer $offset
      * @param boolean $newest
-     * @return array
+     * @return integer[]
      */
     public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
     {
@@ -607,7 +607,7 @@ class Stats
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

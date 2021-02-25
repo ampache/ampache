@@ -1391,7 +1391,7 @@ class User extends database_object
      * @param string $limit
      * @param string $type
      * @param boolean $newest
-     * @return array
+     * @return integer[]
      */
     public function get_recently_played($limit, $type = '', $newest = true)
     {
@@ -1407,7 +1407,7 @@ class User extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;

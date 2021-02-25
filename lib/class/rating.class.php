@@ -225,7 +225,7 @@ class Rating extends database_object
      * @param string $type
      * @param integer $count
      * @param integer $offset
-     * @return array
+     * @return integer[]
      */
     public static function get_highest($type, $count = 0, $offset = 0)
     {
@@ -242,7 +242,7 @@ class Rating extends database_object
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
