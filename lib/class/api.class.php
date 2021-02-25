@@ -1475,10 +1475,10 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($list_id), $user_id);
+                echo JSON_Data::playlists(array($list_id), $user->id);
             break;
             default:
-                echo XML_Data::playlists(array($list_id), $user_id);
+                echo XML_Data::playlists(array($list_id), $user->id);
         }
         Session::extend($input['auth']);
 
