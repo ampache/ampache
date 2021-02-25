@@ -1094,7 +1094,7 @@ class Search extends playlist_object
                 return $type['type'];
             }
         }
-        debug_event(self::class, 'ERROR: ' . $name . ' name_to_basetype: ' . $type['name'], 5);
+        debug_event(self::class, 'name_to_basetype: could not fund ' . $name . '. Check your search rules', 5);
 
         return false;
     }
