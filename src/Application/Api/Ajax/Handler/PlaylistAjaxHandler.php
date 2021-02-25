@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
