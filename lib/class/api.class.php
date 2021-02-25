@@ -1431,12 +1431,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::playlists($playlist_ids, $user_id);
+                echo JSON_Data::playlists($playlist_ids, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::playlists($playlist_ids, $user_id);
+                echo XML_Data::playlists($playlist_ids, $user->id);
         }
         Session::extend($input['auth']);
     } // playlists
@@ -1457,7 +1457,6 @@ class Api
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
         $list_id = scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $list_id) === $list_id) {
