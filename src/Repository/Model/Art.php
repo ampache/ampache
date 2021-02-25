@@ -1246,6 +1246,10 @@ class Art extends database_object
                 break;
         }
 
+        // For @2x output
+        $size['height'] *= 2;
+        $size['width'] *= 2;
+
         return $size;
     }
 
@@ -1307,6 +1311,11 @@ class Art extends database_object
                 $imgurl .= '&fooid=' . $art->id;
             }
         }
+
+        // For @2x output
+        $size['height'] /= 2;
+        $size['width'] /= 2;
+
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 
         if ($size['height'] >= 150) {
