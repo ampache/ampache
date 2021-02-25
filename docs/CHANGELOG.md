@@ -122,6 +122,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Set time for artists that are only albums
 * Don't hide rss generation when you haven't got a key
 * Podcast episode durations that use seconds were converting into crazy lengths
+* Playlist and Smartlist check sql simplified
 
 ### API 4.4.0-develop
 

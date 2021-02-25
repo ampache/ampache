@@ -555,7 +555,7 @@ class Api
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {
                 $objects = self::$browse->get_objects();
             }
@@ -1413,17 +1413,15 @@ class Api
      */
     public static function playlists($input)
     {
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $like    = ((int) $input['exact'] == 1) ? false : true;
-        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $user_id = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
-        $public  = !Access::check('interface', 100, $user->id);
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $like     = ((int) $input['exact'] == 1) ? false : true;
+        $hide     = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $user_id, (string) $input['filter'], $like);
+        $playlist_ids = Playlist::get_playlists($user->id, (string) $input['filter'], $like);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $user_id, (string) $input['filter'], $like));
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($user->id, (string) $input['filter'], $like));
         }
 
         ob_end_clean();
