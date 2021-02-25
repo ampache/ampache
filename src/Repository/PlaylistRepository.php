@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Core;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 
 final class PlaylistRepository implements PlaylistRepositoryInterface
@@ -67,40 +67,25 @@ final class PlaylistRepository implements PlaylistRepositoryInterface
      * @return int[]
      */
     public function getPlaylists(
-        bool $includePublic = true,
-        int $userId = -1,
+        ?int $userId = null,
         string $playlistName = '',
         bool $like = true
     ): array {
-        if (!$userId) {
-            $userId = Core::get_global('user')->id;
-        }
+        $is_admin = (Access::check('interface', 100, $userId) || $userId == -1);
+        $sql      = "SELECT `id` FROM `playlist` ";
+        $params   = [];
 
-        $sql    = 'SELECT `id` FROM `playlist`';
-        $params = array();
-
-        if ($userId > -1 && $includePublic) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
             $params[] = $userId;
         }
-        if ($userId > -1 && !$includePublic) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $userId;
-        }
-        if (!$userId > -1 && $includePublic) {
-            $sql .= " WHERE `type` = 'public'";
-        }
-
         if ($playlistName !== '') {
             $playlistName = (!$like) ? "= '" . $playlistName . "'" : "LIKE  '%" . $playlistName . "%' ";
-            if (count($params) > 0 || $includePublic) {
-                $sql .= " AND `name` " . $playlistName;
-            } else {
-                $sql .= " WHERE `name` " . $playlistName;
+            if ($is_admin) {
+                $sql .= ($is_admin) ? "AND `name` " . $playlistName : "WHERE `name` " . $playlistName;
             }
         }
-        $sql .= ' ORDER BY `name`';
-        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
+        $sql .= "ORDER BY `name`";
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -109,5 +94,5 @@ final class PlaylistRepository implements PlaylistRepositoryInterface
         }
 
         return $results;
-    } // get_playlists
+    }
 }

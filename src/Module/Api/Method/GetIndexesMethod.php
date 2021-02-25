@@ -115,7 +115,7 @@ final class GetIndexesMethod
             if (!$hide) {
                 $objects = array_merge(
                     $browse->get_objects(),
-                    static::getSearchRepository()->getSmartlists(true, $user->getId())
+                    static::getSearchRepository()->getSmartlists($user->getId())
                 );
             } else {
                 $objects = $browse->get_objects();

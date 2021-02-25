@@ -111,4 +111,9 @@ interface ConfigContainerInterface
      * Returns the amount if items displayed in `popular` lists
      */
     public function getPopularThreshold(int $default): int;
+
+    /**
+     * Returns the access level needed for localplay control
+     */
+    public function getLocalplayLevel(): int;
 }

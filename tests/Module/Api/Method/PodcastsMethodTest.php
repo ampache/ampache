@@ -226,7 +226,12 @@ class PodcastsMethodTest extends MockeryTestCase
                 $gatekeeper,
                 $response,
                 $output,
-                ['exact' => 1, 'limit' => (string) $limit, 'offset' => (string) $offset, 'include' => 'episodes']
+                [
+                    'exact' => 1,
+                    'limit' => (string) $limit,
+                    'offset' => (string) $offset,
+                    'include' => 'episodes'
+                ]
             )
         );
     }

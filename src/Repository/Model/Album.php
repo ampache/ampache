@@ -584,7 +584,7 @@ class Album extends database_object implements library_item
     {
         $suite_array = $this->album_suite;
         if (!count($suite_array)) {
-            $suite_array[] = $this->id;
+            $suite_array[$this->disk] = $this->id;
         }
 
         return $suite_array;

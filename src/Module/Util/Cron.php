@@ -118,7 +118,7 @@ final class Cron
                 Song::build_cache($songs);
 
                 // cache playlist details
-                $playlists = $playlistRepository->getPlaylists();
+                $playlists = $playlistRepository->getPlaylists(-1);
                 Playlist::build_cache($playlists);
 
                 // cache art details
@@ -151,7 +151,7 @@ final class Cron
                         Userflag::build_cache('video', $videos, $user_id);
                     }
                     // playlists
-                    $user_playlist = $playlistRepository->getPlaylists(true, (int) $user_id);
+                    $user_playlist = $playlistRepository->getPlaylists((int) $user_id);
                     Rating::build_cache('playlist', $user_playlist, $user_id);
                     Userflag::build_cache('playlist', $user_playlist, $user_id);
                     // podcasts

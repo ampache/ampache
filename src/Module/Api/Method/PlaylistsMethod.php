@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -80,23 +79,14 @@ final class PlaylistsMethod implements MethodInterface
         ApiOutputInterface $output,
         array $input
     ): ResponseInterface {
-        $like = ((int) ($input['exact'] ?? 0) == 1) ? false : true;
-        $hide = ((int) ($input['hide_search'] ?? 0) == 1) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HIDE_SEARCH);
-
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === true) {
-            $user_id = $gatekeeper->getUser()->getId();
-            $public  = false;
-        } else {
-            $user_id = -1;
-            $public  = true;
-        }
-
+        $like   = ((int) ($input['exact'] ?? 0) == 1) ? false : true;
+        $hide   = ((int) ($input['hide_search'] ?? 0) == 1) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HIDE_SEARCH);
+        $userId = $gatekeeper->getUser()->getId();
         $filter = (string) ($input['filter'] ?? '');
 
         // regular playlists
         $playlist_ids = $this->playlistRepository->getPlaylists(
-            $public,
-            $user_id,
+            $userId,
             $filter,
             $like
         );
@@ -106,8 +96,7 @@ final class PlaylistsMethod implements MethodInterface
             $playlist_ids = array_merge(
                 $playlist_ids,
                 $this->searchRepository->getSmartlists(
-                    $public,
-                    $user_id,
+                    $userId,
                     $filter,
                     $like
                 )
@@ -119,7 +108,7 @@ final class PlaylistsMethod implements MethodInterface
         } else {
             $result = $output->playlists(
                 $playlist_ids,
-                $user_id,
+                $userId,
                 false,
                 true,
                 (int) ($input['limit'] ?? 0),

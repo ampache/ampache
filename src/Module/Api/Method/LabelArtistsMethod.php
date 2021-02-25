@@ -64,7 +64,7 @@ final class LabelArtistsMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
-     * filter = (string) UID of label
+     * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @return ResponseInterface

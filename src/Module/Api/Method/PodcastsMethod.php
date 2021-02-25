@@ -92,6 +92,8 @@ final class PodcastsMethod implements MethodInterface
         Api::set_filter('add', ($input['add'] ?? ''), $browse);
         Api::set_filter('update', ($input['update'] ?? ''), $browse);
 
+        $include = $input['include'] ?? '';
+
         $podcastIds = $browse->get_objects();
         if ($podcastIds === []) {
             $result = $output->emptyResult('podcast');
@@ -99,7 +101,7 @@ final class PodcastsMethod implements MethodInterface
             $result = $output->podcasts(
                 array_map('intval', $podcastIds),
                 $gatekeeper->getUser()->getId(),
-                ($input['include'] ?? '') === 'episodes',
+                $include === 'episodes' || (int) $include === 1,
                 true,
                 (int) ($input['limit'] ?? 0),
                 (int) ($input['offset'] ?? 0)

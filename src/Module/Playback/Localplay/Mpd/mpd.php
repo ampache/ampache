@@ -272,7 +272,7 @@ class mpd
      * should not need to call this directly.
      * @return false|string
      */
-    public function Connect()
+    public function connect()
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);

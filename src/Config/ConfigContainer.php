@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Config;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+
 /**
  * The ConfigContainer is a containment for all of ampaches configuration data.
  * Once initialized, the data is immuteable
@@ -135,6 +137,16 @@ final class ConfigContainer implements ConfigContainerInterface
         $value = $this->get(ConfigurationKeyEnum::POPULAR_THRESHOLD);
         if ($value === null) {
             return $default;
+        }
+
+        return (int) $value;
+    }
+
+    public function getLocalplayLevel(): int
+    {
+        $value = $this->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL);
+        if ($value === null) {
+            return AccessLevelEnum::LEVEL_ADMIN;
         }
 
         return (int) $value;

@@ -35,8 +35,7 @@ interface PlaylistRepositoryInterface
      * @return int[]
      */
     public function getPlaylists(
-        bool $includePublic = true,
-        int $userId = -1,
+        ?int $userId = null,
         string $playlistName = '',
         bool $like = true
     ): array;

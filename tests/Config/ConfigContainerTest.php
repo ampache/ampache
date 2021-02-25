@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessLevelEnum;
 
 class ConfigContainerTest extends MockeryTestCase
 {
@@ -287,6 +288,24 @@ class ConfigContainerTest extends MockeryTestCase
             $this->createSubject([
                 ConfigurationKeyEnum::COMPOSER_BINARY_PATH => $value
             ])->getComposerBinaryPath()
+        );
+    }
+
+    public function testGetLocalplayLevelReturnsDefault(): void
+    {
+        $this->assertSame(
+            AccessLevelEnum::LEVEL_ADMIN,
+            $this->createSubject([])->getLocalplayLevel()
+        );
+    }
+
+    public function testGetLocalplayLevelReturnsValueFromConfig(): void
+    {
+        $value = 666;
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::LOCALPLAY_LEVEL => (string) $value])->getLocalplayLevel()
         );
     }
 

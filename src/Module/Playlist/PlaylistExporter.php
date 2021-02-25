@@ -71,7 +71,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = Catalog::get_artists();
                 break;
             default:
-                $ids   = $this->playlistRepository->getPlaylists(false);
+                $ids   = $this->playlistRepository->getPlaylists(-1);
                 $items = array();
                 foreach ($ids as $playlistid) {
                     $items[] = new Playlist($playlistid);

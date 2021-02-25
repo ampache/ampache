@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -121,7 +122,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                 if (count($medias) > 0) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias);
+                    $playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();

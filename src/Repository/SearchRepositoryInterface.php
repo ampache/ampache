@@ -26,7 +26,6 @@ interface SearchRepositoryInterface
     /**
      * Returns a list of playlists accessible by the user.
      *
-     * @param bool $includePublic
      * @param int $userId
      * @param string $playlistName
      * @param bool $like
@@ -34,7 +33,6 @@ interface SearchRepositoryInterface
      * @return int[]
      */
     public function getSmartlists(
-        bool $includePublic = true,
         int $userId = -1,
         string $playlistName = '',
         bool $like = true

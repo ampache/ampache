@@ -28,7 +28,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Mockery\MockInterface;
@@ -75,21 +74,21 @@ class PlaylistsMethodTest extends MockeryTestCase
         $stream     = $this->mock(StreamInterface::class);
 
         $result = 'some-result';
+        $userId = 666;
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::HIDE_SEARCH)
             ->once()
             ->andReturnFalse();
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+        $gatekeeper->shouldReceive('getUser->getId')
+            ->withNoArgs()
             ->once()
-            ->andReturnFalse();
+            ->andReturn($userId);
 
         $this->playlistRepository->shouldReceive('getPlaylists')
             ->with(
-                true,
-                -1,
+                $userId,
                 '',
                 true
             )
@@ -97,8 +96,7 @@ class PlaylistsMethodTest extends MockeryTestCase
             ->andReturn([]);
         $this->searchRepository->shouldReceive('getSmartlists')
             ->with(
-                true,
-                -1,
+                $userId,
                 '',
                 true
             )
@@ -145,10 +143,6 @@ class PlaylistsMethodTest extends MockeryTestCase
         $limit       = 21;
         $offset      = 42;
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
-            ->once()
-            ->andReturnTrue();
         $gatekeeper->shouldReceive('getUser->getId')
             ->withNoArgs()
             ->once()
@@ -156,7 +150,6 @@ class PlaylistsMethodTest extends MockeryTestCase
 
         $this->playlistRepository->shouldReceive('getPlaylists')
             ->with(
-                false,
                 $userId,
                 $filterValue,
                 false

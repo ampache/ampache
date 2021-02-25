@@ -171,7 +171,7 @@ class PlaylistAddSongMethodTest extends MockeryTestCase
         $playlist->shouldReceive('get_songs')
             ->withNoArgs()
             ->once()
-            ->andReturn([$songId]);
+            ->andReturn([$songId], true);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::UNIQUE_PLAYLIST)
@@ -214,7 +214,7 @@ class PlaylistAddSongMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
         $playlist->shouldReceive('add_songs')
-            ->with([$songId], true)
+            ->with([$songId], false)
             ->once();
 
         $this->configContainer->shouldReceive('isFeatureEnabled')

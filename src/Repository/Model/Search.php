@@ -554,7 +554,6 @@ class Search extends playlist_object
         }
 
         $playlistIds = $this->getPlaylistRepository()->getPlaylists(
-            true,
             (int) Core::get_global('user')->id
         );
 

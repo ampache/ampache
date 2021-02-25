@@ -532,7 +532,8 @@ class VlcPlayer
                         ); // This will combine the existing item and the new item together to make an array
                         $repeated_tag_index[$tag . '_' . $level] = 2;
 
-                        if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
+                        if (isset($current[$tag . '_attr'])) {
+                            // The attribute of the last(0th) tag must be moved as well
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                             unset($current[$tag . '_attr']);
                         }
@@ -567,7 +568,8 @@ class VlcPlayer
                         ); // ...Make it an array using using the existing value and the new value
                         $repeated_tag_index[$tag . '_' . $level] = 1;
                         if ($priority == 'tag' && $get_attributes) {
-                            if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
+                            if (isset($current[$tag . '_attr'])) {
+                                // The attribute of the last(0th) tag must be moved as well
                                 $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                                 unset($current[$tag . '_attr']);
                             }

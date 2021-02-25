@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 
 final class SearchRepository implements SearchRepositoryInterface
@@ -30,44 +31,33 @@ final class SearchRepository implements SearchRepositoryInterface
     /**
      * Returns a list of playlists accessible by the user.
      *
-     * @param bool $includePublic
-     * @param int $userId
+     * @param null|int $userId
      * @param string $playlistName
      * @param bool $like
      *
      * @return int[]
      */
     public function getSmartlists(
-        bool $includePublic = true,
-        int $userId = -1,
+        ?int $userId = -1,
         string $playlistName = '',
         bool $like = true
     ): array {
-        // Search for smartplaylists
-        $sql    = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
-        $params = [];
+        $is_admin = (Access::check('interface', 100, $userId) || $userId == -1);
+        $sql      = 'SELECT CONCAT(\'smart_\', `id`) AS `id` FROM `search`';
+        $params   = array();
 
-        if ($userId > -1 && $includePublic) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+        if (!$is_admin) {
+            $sql .= 'WHERE (`user` = ? OR `type` = \'public\') ';
             $params[] = $userId;
         }
-        if ($userId > -1 && !$includePublic) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $userId;
-        }
-        if (!$userId > -1 && $includePublic) {
-            $sql .= " WHERE `type` = 'public'";
-        }
-
         if ($playlistName !== '') {
             $playlistName = (!$like) ? "= '" . $playlistName . "'" : "LIKE  '%" . $playlistName . "%' ";
-            if (count($params) > 0 || $includePublic) {
-                $sql .= " AND `name` " . $playlistName;
-            } else {
-                $sql .= " WHERE `name` " . $playlistName;
+            if ($is_admin) {
+                $sql .= ($is_admin) ? "AND `name` " . $playlistName : "WHERE `name` " . $playlistName;
             }
         }
-        $sql .= ' ORDER BY `name`';
+        $sql .= 'ORDER BY `name`';
+        //debug_event(self::class, 'get_smartlists ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();

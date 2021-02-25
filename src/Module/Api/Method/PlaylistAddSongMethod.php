@@ -103,9 +103,12 @@ final class PlaylistAddSongMethod implements MethodInterface
         ) {
             throw new AccessDeniedException(T_('Require: 100'));
         }
+
+        $uniquePlaylist = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UNIQUE_PLAYLIST);
+
         if (
             (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UNIQUE_PLAYLIST) ||
+                $uniquePlaylist ||
                 (int) ($input['check'] ?? 0) == 1
             ) &&
             in_array($songId, $playlist->get_songs())
@@ -114,7 +117,10 @@ final class PlaylistAddSongMethod implements MethodInterface
                 sprintf(T_('Bad Request: %s'), $songId)
             );
         }
-        $playlist->add_songs([(int) $songId], true);
+        $playlist->add_songs(
+            [(int) $songId],
+            $uniquePlaylist
+        );
 
         return $response->withBody(
             $this->streamFactory->createStream(

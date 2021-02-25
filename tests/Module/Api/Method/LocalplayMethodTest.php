@@ -26,9 +26,11 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Lib\LocalPlayCommandMapperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayControllerFactoryInterface;
 use Mockery\MockInterface;
@@ -84,6 +86,35 @@ class LocalplayMethodTest extends MockeryTestCase
         );
     }
 
+    public function testHandleThrowsExceptionIfLocalplayAccessIsDenied(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $level = 33;
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Require: 100');
+
+        $this->configContainer->shouldReceive('getLocalplayLevel')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($level);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_LOCALPLAY, $level)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['command' => 'some command']
+        );
+    }
+
     public function testHandleThrowsExceptionIfLocalplayConnectionFails(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -91,8 +122,20 @@ class LocalplayMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $localPlay  = $this->mock(LocalPlay::class);
 
+        $level = 33;
+
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage('Unable to connect to localplay controller');
+
+        $this->configContainer->shouldReceive('getLocalplayLevel')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($level);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_LOCALPLAY, $level)
+            ->once()
+            ->andReturnTrue();
 
         $this->localPlayControllerFactory->shouldReceive('create')
             ->withNoArgs()
@@ -120,9 +163,20 @@ class LocalplayMethodTest extends MockeryTestCase
         $localPlay  = $this->mock(LocalPlay::class);
 
         $command = 'some-command';
+        $level   = 33;
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage('Bad Request');
+
+        $this->configContainer->shouldReceive('getLocalplayLevel')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($level);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_LOCALPLAY, $level)
+            ->once()
+            ->andReturnTrue();
 
         $this->localPlayControllerFactory->shouldReceive('create')
             ->withNoArgs()
@@ -164,6 +218,17 @@ class LocalplayMethodTest extends MockeryTestCase
         $callable   = function () use ($callResult): string {
             return $callResult;
         };
+        $level = 33;
+
+        $this->configContainer->shouldReceive('getLocalplayLevel')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($level);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_LOCALPLAY, $level)
+            ->once()
+            ->andReturnTrue();
 
         $this->localPlayControllerFactory->shouldReceive('create')
             ->withNoArgs()

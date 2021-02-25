@@ -91,6 +91,8 @@ final class PodcastMethod implements MethodInterface
             );
         }
 
+        $include = $input['include'] ?? '';
+
         $podcast = $this->modelFactory->createPodcast((int) $objectId);
 
         if ($podcast->isNew()) {
@@ -102,7 +104,7 @@ final class PodcastMethod implements MethodInterface
                 $output->podcasts(
                     [$objectId],
                     $gatekeeper->getUser()->getId(),
-                    ($input['include'] ?? '') === 'episodes',
+                    $include === 'episodes' || (int) $include === 1,
                     false
                 )
             )

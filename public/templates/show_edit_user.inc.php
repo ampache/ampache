@@ -138,7 +138,6 @@ use Ampache\Module\Util\Ui;
                 </span>
             </td>
         </tr>
-        <?php if ($client->rsstoken) { ?>
         <tr>
             <td>
                 <?php echo T_('RSS Token'); ?>
@@ -148,11 +147,12 @@ use Ampache\Module\Util\Ui;
             </td>
             <td>
                 <span>
-                    <?php echo $client->rsstoken; ?>
+                    <?php if ($client->rsstoken) {
+                    echo $client->rsstoken;
+                } ?>
                 </span>
             </td>
         </tr>
-        <?php } ?>
 
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>

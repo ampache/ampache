@@ -2340,8 +2340,7 @@ abstract class Catalog extends database_object
             $name = $pinfo['extension'] . " - " . $pinfo['filename'];
             // Search for existing playlist
             $playlist_search = static::getPlaylistRepository()->getPlaylists(
-                true,
-                -1,
+                null,
                 $name
             );
             if (empty($playlist_search)) {
@@ -2374,7 +2373,7 @@ abstract class Catalog extends database_object
                 $new_songs = array_diff($songs, $current_songs);
                 debug_event(__CLASS__, "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
             }
-            $playlist->add_songs($new_songs, true);
+            $playlist->add_songs($new_songs, (bool) AmpConfig::get('unique_playlist'));
 
             return array(
                 'success' => true,
