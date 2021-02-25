@@ -83,12 +83,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
-                echo Json_Data::playlists($playlist_ids, $user_id);
+                echo Json_Data::playlists($playlist_ids, $user->id);
                 break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::playlists($playlist_ids, $user_id);
+                echo Xml_Data::playlists($playlist_ids, $user->id);
         }
         Session::extend($input['auth']);
 
