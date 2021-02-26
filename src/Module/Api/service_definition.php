@@ -109,6 +109,7 @@ return [
     Method\UpdateArtMethod::class => autowire(),
     Method\GetBookmarkMethod::class => autowire(),
     Method\LocalplayMethod::class => autowire(),
+    Method\PreferenceEditMethod::class => autowire(),
     Method\Lib\LocalPlayCommandMapperInterface::class => autowire(Method\Lib\LocalPlayCommandMapper::class),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),

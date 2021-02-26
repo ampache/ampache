@@ -42,5 +42,5 @@ interface UserPreferenceUpdaterInterface
         $value,
         bool $applyToAll = false,
         bool $applyToDefault = false
-    ): void;
+    ): bool;
 }

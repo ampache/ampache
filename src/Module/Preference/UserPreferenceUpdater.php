@@ -46,8 +46,8 @@ final class UserPreferenceUpdater implements UserPreferenceUpdaterInterface
         $value,
         bool $applyToAll = false,
         bool $applyToDefault = false
-    ): void {
-        Preference::update(
+    ): bool {
+        return Preference::update(
             $preferenceName,
             $userId,
             $value,

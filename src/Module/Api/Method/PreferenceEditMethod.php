@@ -21,75 +21,114 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Preference\UserPreferenceRetrieverInterface;
+use Ampache\Module\Preference\UserPreferenceUpdaterInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PreferenceEditMethod
- * @package Lib\ApiMethods
- */
-final class PreferenceEditMethod
+final class PreferenceEditMethod implements MethodInterface
 {
-    private const ACTION = 'preference_edit';
+    public const ACTION = 'preference_edit';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserPreferenceUpdaterInterface $userPreferenceUpdater;
+
+    private UserPreferenceRetrieverInterface $userPreferenceRetriever;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserPreferenceUpdaterInterface $userPreferenceUpdater,
+        UserPreferenceRetrieverInterface $userPreferenceRetriever
+    ) {
+        $this->streamFactory           = $streamFactory;
+        $this->userPreferenceUpdater   = $userPreferenceUpdater;
+        $this->userPreferenceRetriever = $userPreferenceRetriever;
+    }
 
     /**
-     * preference_edit
      * MINIMUM_API_VERSION=5.0.0
      *
      * Edit a preference value and apply to all users if allowed
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function preference_edit(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['filter', 'value'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $all  = (int) $input['all'] == 1;
+
         // don't apply to all when you aren't an admin
-        if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(T_('Require: 100'));
         }
+
+        $user = $gatekeeper->getUser();
+
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        $user->fixPreferences();
 
-        $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name, $user->id);
+        $all             = (int) ($input['all'] ?? 0) === 1;
+        $preferenceName  = (string) $input['filter'];
+        $userId          = $user->getId();
+
+        $preference = $this->userPreferenceRetriever->retrieve(
+            $userId,
+            $preferenceName
+        );
+
         if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $preferenceName)
+            );
         }
+
         $value = $input['value'];
-        if (!Preference::update($pref_name, $value, $all)) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        if (!$this->userPreferenceUpdater->update($preferenceName, $userId, $value, $all)) {
+            throw new RequestParamMissingException(T_('Bad Request'));
         }
-        $preference   = Preference::get($pref_name, $user->id);
-        $output_array =  array('preference' => $preference);
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
-        }
-        Session::extend($input['auth']);
 
-        return true;
+        $preference = $this->userPreferenceRetriever->retrieve(
+            $userId,
+            $preferenceName
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array([$preference], 'preference')
+            )
+        );
     }
 }
