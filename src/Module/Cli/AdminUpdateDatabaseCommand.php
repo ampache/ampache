@@ -41,7 +41,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
-            ->usage('<bold>  admin:updateDatabase</end> <comment> ## Displays database update information</end><eol/>');
+            ->usage('<bold>  admin:updateDatabase</end> <comment> ## ' . T_('Display database update information') . '</end><eol/>');
     }
 
     public function execute(): void

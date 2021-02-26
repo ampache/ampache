@@ -46,7 +46,7 @@ final class UpdateDbCommand extends Command
 
         $this
             ->option('-x|--execute', T_('Disables dry-run and sorts the files'), 'boolval', false)
-            ->usage('<bold>  run:updateDb</end> <comment> ## Update the database<eol/>');
+            ->usage('<bold>  run:updateDb</end> <comment> ## ' . T_('Update the database') . '<eol/>');
     }
 
     public function execute(): void

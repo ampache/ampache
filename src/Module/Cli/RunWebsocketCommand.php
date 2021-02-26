@@ -47,7 +47,7 @@ final class RunWebsocketCommand extends Command
 
         $this
             ->option('-p|--port', T_('Listening port, default 8100'), 'intval', static::DEFAULT_PORT)
-            ->usage('<bold>  run:websocket</end> <comment>-p 8888</end> ## Runs the websocket on port 8888<eol/>');
+            ->usage('<bold>  run:websocket</end> <comment>-p 8888</end> ## ' . T_('Run the websocket on port 8888') . '<eol/>');
     }
 
     public function execute(): void

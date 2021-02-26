@@ -54,7 +54,7 @@ final class InstallerCommand extends Command
             ->option('-p|--ampachedbpassword', T_('Ampache Database Password'))
             ->option('-w|--webpath', T_('Web Path'), 'strval')
             ->option('-f|--force', T_('Overwrite if Config Already Exists'), 'boolval', false)
-            ->usage('<bold>  install</end> <comment> ## Displays database update information</end><eol/>');
+            ->usage('<bold>  install</end> <comment> ## ' . T_('Displays database update information') . '</end><eol/>');
         $this->installationHelper = $installationHelper;
     }
 

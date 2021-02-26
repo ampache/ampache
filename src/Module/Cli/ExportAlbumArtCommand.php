@@ -54,7 +54,7 @@ final class ExportAlbumArtCommand extends Command
 
         $this
             ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')
-            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## Exports album art for linux<eol/>');
+            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## ' . T_('Export album art for Linux') . '<eol/>');
     }
 
     public function execute(

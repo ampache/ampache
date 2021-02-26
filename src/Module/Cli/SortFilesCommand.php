@@ -38,7 +38,7 @@ final class SortFilesCommand extends Command
         ConfigContainerInterface $configContainer,
         SongSorterInterface $songSorter
     ) {
-        parent::__construct('cleanup:sortSongs', T_('Sorts songs'));
+        parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
         $this->configContainer = $configContainer;
         $this->songSorter      = $songSorter;
@@ -46,7 +46,7 @@ final class SortFilesCommand extends Command
         $this
             ->option('-x|--execute', T_('Disables dry-run and sorts the files'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval', null)
-            ->usage('<bold>  cleanup:sortSongs</end> <comment> ## Sorts songs<eol/>');
+            ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }
 
     public function execute(): void

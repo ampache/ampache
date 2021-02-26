@@ -35,7 +35,7 @@ final class AdminAddUserCommand extends Command
     public function __construct(
         ConfigContainerInterface $configContainer
     ) {
-        parent::__construct('admin:addUser', T_('Add a user'));
+        parent::__construct('admin:addUser', T_('Add a User'));
 
         $this->configContainer = $configContainer;
 
@@ -46,7 +46,7 @@ final class AdminAddUserCommand extends Command
             ->option('-n|--name', T_('Name'), 'strval', '')
             ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? 5)
             ->argument('<username>', T_('Username'))
-            ->usage('<bold>  admin:addUser some-user</end> <comment> ## Add the user `some-user`</end><eol/>');
+            ->usage('<bold>  admin:addUser some-user</end> <comment> ## ' . T_('Add a User with the name `some-user`') . '</end><eol/>');
     }
 
     public function execute(

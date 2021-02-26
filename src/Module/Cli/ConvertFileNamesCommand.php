@@ -46,7 +46,7 @@ final class ConvertFileNamesCommand extends Command
         $this
             ->option('-f|--fire', T_('Enables `fire-and-forget`-mode (Disables prompting on rename)'), 'boolval', false)
             ->option('-c|--charset', T_('The destination charset'), 'strval', iconv_get_encoding('output_encoding'))
-            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8</end> ## Converts filesnames to utf8<eol/>');
+            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8</end> ## ' . T_('Convert filenames to utf8') . '<eol/>');
     }
 
     public function execute(): void

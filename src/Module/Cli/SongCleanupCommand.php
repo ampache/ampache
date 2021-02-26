@@ -45,7 +45,7 @@ final class SongCleanupCommand extends Command
 
         $this
             ->option('-d|--delete', T_('Disables dry-run and sorts the files'), 'boolval', false)
-            ->usage('<bold>  cleanup:songs</end> <comment> ## Shows a list of disabled songs<eol/>');
+            ->usage('<bold>  cleanup:songs</end> <comment> ## ' . T_('Show a list of disabled songs') . '<eol/>');
     }
 
     public function execute(): void

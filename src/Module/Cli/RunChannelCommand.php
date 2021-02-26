@@ -46,7 +46,7 @@ final class RunChannelCommand extends Command
         $this
             ->argument('<channel>', T_('Channel ID'))
             ->argument('[port]', T_('Port'))
-            ->usage('<bold>  run:channel</end> <comment><channel> [port]</end> ## Runs the channel<eol/>');
+            ->usage('<bold>  run:channel</end> <comment><channel> [port]</end> ## ' . T_('Start Channel') . '<eol/>');
     }
 
     public function execute(

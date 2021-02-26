@@ -54,7 +54,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'), null)
             ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
-            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## Update the local catalog with name `some-catalog`</end><eol/>');
+            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## ' . T_('Update the local catalog called `some-catalog`') . '</end><eol/>');
     }
 
     public function execute(
