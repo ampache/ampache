@@ -2084,11 +2084,11 @@ class Search extends playlist_object
                     $where[] = "`song`.`license` $sql_match_operator '$input'";
                     break;
                 case 'added':
-                    $input   = strtotime($input);
+                    $input   = strtotime((string) $input);
                     $where[] = "`song`.`addition_time` $sql_match_operator $input";
                     break;
                 case 'updated':
-                    $input   = strtotime($input);
+                    $input   = strtotime((string) $input);
                     $where[] = "`song`.`update_time` $sql_match_operator $input";
                     break;
                 case 'recent_added':
