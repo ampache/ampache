@@ -1231,6 +1231,11 @@ class Art extends database_object
                 $size['height'] = 24;
                 $size['width']  = 24;
                 break;
+            case 22:
+                // Album page
+                $size['height'] = 256;
+                $size['width']  = 256;
+                break;
             case 4:
                 // Popup Web Player size
             case 11:
