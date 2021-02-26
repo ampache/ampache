@@ -39,13 +39,13 @@ final class UpdateDbCommand extends Command
         ConfigContainerInterface $configContainer,
         DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
     ) {
-        parent::__construct('run:updateDb', 'Update the database collation and charset');
+        parent::__construct('run:updateDb', T_('Update the database collation and charset'));
 
         $this->configContainer        = $configContainer;
         $this->databaseCharsetUpdater = $databaseCharsetUpdater;
 
         $this
-            ->option('-x|--execute', 'Disables dry-run and sorts the files', 'boolval', false)
+            ->option('-x|--execute', T_('Disables dry-run and sorts the files'), 'boolval', false)
             ->usage('<bold>  run:updateDb</end> <comment> ## Update the database<eol/>');
     }
 

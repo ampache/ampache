@@ -35,7 +35,7 @@ final class BroadcastCommand extends Command
     public function __construct(
         ConfigContainerInterface $configContainer
     ) {
-        parent::__construct('run:broadcast', 'Runs upnp broadcasting');
+        parent::__construct('run:broadcast', T_('Run a UPnP broadcast'));
 
         $this->configContainer = $configContainer;
     }

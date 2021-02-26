@@ -35,12 +35,12 @@ final class AdminUpdateDatabaseCommand extends Command
     public function __construct(
         ConfigContainerInterface $configContainer
     ) {
-        parent::__construct('admin:updateDatabase', 'Update the database to the latest version');
+        parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
 
         $this->configContainer = $configContainer;
 
         $this
-            ->option('-e|--execute', 'Execute the update', 'boolval', false)
+            ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  admin:updateDatabase</end> <comment> ## Displays database update information</end><eol/>');
     }
 

@@ -46,14 +46,14 @@ final class ExportAlbumArtCommand extends Command
         AlbumArtExporterInterface $albumArtExporter,
         ContainerInterface $dic
     ) {
-        parent::__construct('export:albumArt', 'Exports the album art');
+        parent::__construct('export:albumArt', T_('Export album art'));
 
         $this->configContainer  = $configContainer;
         $this->albumArtExporter = $albumArtExporter;
         $this->dic              = $dic;
 
         $this
-            ->argument('[type]', 'Metadata write mode (`linux` or `windows`)', 'linux')
+            ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')
             ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## Exports album art for linux<eol/>');
     }
 

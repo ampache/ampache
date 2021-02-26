@@ -53,7 +53,7 @@ final class CronProcessCommand extends Command
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         BookmarkRepositoryInterface $bookmarkRepository
     ) {
-        parent::__construct('run:cronProcess', 'Runs the cron process');
+        parent::__construct('run:cronProcess', T_('Run the cron process'));
 
         $this->configContainer         = $configContainer;
         $this->objectCache             = $objectCache;

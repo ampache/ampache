@@ -40,20 +40,20 @@ final class InstallerCommand extends Command
         ConfigContainerInterface $configContainer,
         InstallationHelperInterface $installationHelper
     ) {
-        parent::__construct('install', 'Installs the database');
+        parent::__construct('install', T_('Install the database'));
 
         $this->configContainer = $configContainer;
 
         $this
-            ->option('-U|--dbuser', 'The database user', 'strval')
-            ->option('-P|--dbpassword', 'The database password', 'strval')
-            ->option('-H|--dbhost', 'The database host', 'strval')
-            ->option('-o|--dbport', 'The database port', 'intval')
-            ->option('-d|--dbname', 'The database name', 'strval')
-            ->option('-u|--ampachedbuser', 'The database user meant for ampache', 'strval')
-            ->option('-p|--ampachedbpassword', 'The password for the ampache db user')
-            ->option('-w|--webpath', 'The ampache webpath', 'strval')
-            ->option('-f|--force', 'Force the installation (ignore existing config file)', 'boolval', false)
+            ->option('-U|--dbuser', T_('MySQL Administrative Username'), 'strval')
+            ->option('-P|--dbpassword', T_('MySQL Administrative Password'), 'strval')
+            ->option('-H|--dbhost', T_('MySQL Hostname'), 'strval')
+            ->option('-o|--dbport', T_('MySQL Port'), 'intval')
+            ->option('-d|--dbname', T_('Desired Database Name'), 'strval')
+            ->option('-u|--ampachedbuser', T_('Ampache Database Username'), 'strval')
+            ->option('-p|--ampachedbpassword', T_('Ampache Database Password'))
+            ->option('-w|--webpath', T_('Web Path'), 'strval')
+            ->option('-f|--force', T_('Overwrite if Config Already Exists'), 'boolval', false)
             ->usage('<bold>  install</end> <comment> ## Displays database update information</end><eol/>');
         $this->installationHelper = $installationHelper;
     }

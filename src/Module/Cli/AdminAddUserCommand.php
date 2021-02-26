@@ -35,17 +35,17 @@ final class AdminAddUserCommand extends Command
     public function __construct(
         ConfigContainerInterface $configContainer
     ) {
-        parent::__construct('admin:addUser', 'Adds a user');
+        parent::__construct('admin:addUser', T_('Add a user'));
 
         $this->configContainer = $configContainer;
 
         $this
-            ->option('-p|--password', 'Password', 'strval', mt_rand())
-            ->option('-e|--email', 'E-Mail', 'strval', '')
-            ->option('-w|--website', 'Website', 'strval', '')
-            ->option('-n|--name', 'Name', 'strval', '')
-            ->option('-l|--level', 'Access Level', 'intval', $this->configContainer->get('auto_user') ?? 5)
-            ->argument('<username>', 'The name of the new user')
+            ->option('-p|--password', T_('Password'), 'strval', mt_rand())
+            ->option('-e|--email', T_('E-Mail'), 'strval', '')
+            ->option('-w|--website', T_('Website'), 'strval', '')
+            ->option('-n|--name', T_('Name'), 'strval', '')
+            ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? 5)
+            ->argument('<username>', T_('Username'))
             ->usage('<bold>  admin:addUser some-user</end> <comment> ## Add the user `some-user`</end><eol/>');
     }
 
