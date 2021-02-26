@@ -894,8 +894,8 @@ class Update
         $retval &= Dba::write($sql, array($row_id));
 
         $tables    = ['cache_object_count', 'cache_object_count_run'];
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         foreach ($tables as $table) {
             $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" . "`object_id` int(11) unsigned NOT NULL," . "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL," . "`count` int(11) unsigned NOT NULL DEFAULT '0'," . "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," . "`count_type` varchar(16) NOT NULL," . "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" . ") ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
