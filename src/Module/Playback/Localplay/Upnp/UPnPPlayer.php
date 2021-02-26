@@ -160,8 +160,7 @@ class UPnPPlayer
             return '';
         }
         list($state) = $responseXML->xpath('//CurrentTransportState');
-
-        //!!debug_event(self::class, 'GetState = ' . $state, 5);
+        debug_event(self::class, 'GetState = ' . $state, 5);
 
         return $state;
     }

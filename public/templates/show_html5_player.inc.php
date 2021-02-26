@@ -495,7 +495,7 @@ if ($isVideo) { ?>
             <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', T_('Slideshow')) ?></a>
         </div>
         <div id="expandplaylistbtn" class="action_button">
-            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', T_('Expand/collapse playlist')) ?></a>
+            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', T_('Expand/Collapse playlist')) ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) { ?>
         <div class="action_button">

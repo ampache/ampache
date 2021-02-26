@@ -169,7 +169,7 @@ ob_start("ob_html_strip", "1024", true);
 while ($row = Dba::fetch_assoc($db_results)) {
     $catalog = Catalog::create_from_id($row["id"]);
     /* HINT: Catalog Name */
-    printf(T_("Reading Catalog: '%s'"), $catalog->name);
+    printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
     echo "\n";
 
@@ -203,7 +203,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
     }
     if ($infoupdate == 1) {
         // Look for updated artist information. (missing or < 6 months since last update)
-        echo "- " . T_("Update artist information and fetch similar artists from last.fm") . " - \n";
+        echo "- " . T_('Update artist information and fetch similar artists from last.fm') . " - \n";
         echo "\n";
         $artist_info = $catalog->get_artist_ids("info");
         $catalog->gather_artist_info($artist_info);
@@ -259,7 +259,7 @@ function usage()
 {
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
-    echo T_("Usage:") . " \n\033[32m";
+    echo T_('Usage:') . " \n\033[32m";
     echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o|-p]") . "\033[0m (\033[31m!\033[0m)" . " \033[0m\n";
     echo "----------------------------------------------------------\n";
     echo T_("Default behavior is to do all except temporarily deactivate the php memory limit") . " \n";

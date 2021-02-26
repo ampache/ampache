@@ -257,7 +257,7 @@ final class SongSorter implements SongSorterInterface
             if (file_exists($fullname)) {
                 debug_event('sort_files', 'Error: $fullname already exists', 1);
                 /* HINT: filename (File path) */
-                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: %s'), $fullname));
+                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname));
 
                 return false;
             }
@@ -296,7 +296,7 @@ final class SongSorter implements SongSorterInterface
             if ($new_sum != $old_sum || !$new_sum) {
                 /* HINT: filename (File path) */
                 $interactor->info(
-                    sprintf(T_('Size comparison failed. Not deleting: %s'), $song->file),
+                    sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),
                     true
                 );
 

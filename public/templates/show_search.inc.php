@@ -47,8 +47,8 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
-                <?php echo T_('Batch Download'); ?>
+                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo T_('Batch download'); ?>
             </a>
         </li>
             <?php

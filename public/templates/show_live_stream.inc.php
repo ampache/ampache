@@ -46,7 +46,7 @@ use Ampache\Module\Util\Ui;
         } ?>
         <?php
     } ?>
-        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to temporary playlist'), 'add_live_stream_' . $radio->id); ?>
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
 <?php
     $itemprops[T_('Name')]     = $radio->f_name;

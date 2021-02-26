@@ -58,7 +58,7 @@ final class PrintTagsCommand extends Command
         $io = $this->app()->io();
 
         $io->info(
-            sprintf(T_('Reading: %s'), $filename),
+            sprintf(T_('Reading File: "%s"'), $filename),
             true
         );
 

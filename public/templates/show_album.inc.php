@@ -131,7 +131,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <ul>
         <?php if ($show_direct_play) {
         $play       = T_('Play');
-        $playlast   = T_('Play Last'); ?>
+        $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>

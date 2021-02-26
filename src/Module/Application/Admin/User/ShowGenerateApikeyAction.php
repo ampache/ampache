@@ -53,7 +53,7 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
 
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
-            T_('This will replace your existing API Key'),
+            T_('This will replace your existing API key'),
             sprintf(
                 'admin/users.php?action=%s&user_id=%d',
                 GenerateApikeyAction::REQUEST_KEY,

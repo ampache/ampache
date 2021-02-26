@@ -96,8 +96,8 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
-                <?php echo T_('Batch Download'); ?>
+                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo T_('Batch download'); ?>
             </a>
         </li>
     <?php
@@ -124,7 +124,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('flow'); ?>
-                <?php echo T_('Create channel'); ?>
+                <?php echo T_('Create Channel'); ?>
             </a>
         </li>
     <?php

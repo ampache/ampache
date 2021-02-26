@@ -73,7 +73,7 @@ if (Art::is_enabled()) { ?>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
-    echo Ajax::button('?action=basket&type=video&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_' . $libitem->id);
+    echo Ajax::button('?action=basket&type=video&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
     if (Access::check('interface', 25)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>

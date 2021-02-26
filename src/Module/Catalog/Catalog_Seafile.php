@@ -190,7 +190,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if (!is_numeric($api_call_delay)) {
-            AmpError::add('general', T_('API call delay must have a numeric value'));
+            AmpError::add('general', T_('API Call Delay must have a numeric value'));
 
             return false;
         }
@@ -421,14 +421,14 @@ class Catalog_Seafile extends Catalog
                     $song = new Song($row['id']);
                     $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
-                        Ui::update_text('', sprintf(T_('Updated song: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results['updated']++;
                     } else {
-                        Ui::update_text('', sprintf(T_('Song up to date: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
                     debug_event('seafile_catalog', 'Verify removing song', 5, 'ampache-catalog');
-                    Ui::update_text('', sprintf(T_('Removing song: %s'), $row['title']));
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     //$dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -498,7 +498,7 @@ class Catalog_Seafile extends Catalog
                     Ui::update_text('', sprintf(T_('Keeping song: %s'), $file['filename']));
                 } else {
                     /* HINT: filename (File path) */
-                    Ui::update_text('', sprintf(T_('Removing song: %s'), $file['filename']));
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $file['filename']));
                     debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));

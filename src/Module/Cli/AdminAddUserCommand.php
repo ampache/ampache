@@ -41,7 +41,7 @@ final class AdminAddUserCommand extends Command
 
         $this
             ->option('-p|--password', T_('Password'), 'strval', mt_rand())
-            ->option('-e|--email', T_('E-Mail'), 'strval', '')
+            ->option('-e|--email', T_('E-mail'), 'strval', '')
             ->option('-w|--website', T_('Website'), 'strval', '')
             ->option('-n|--name', T_('Name'), 'strval', '')
             ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? 5)

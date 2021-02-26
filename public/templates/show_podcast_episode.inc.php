@@ -77,7 +77,7 @@ use Ampache\Module\Util\Ui;
             } ?>
         <?php
         } ?>
-        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to temporary playlist'), 'add_podcast_episode_' . $episode->id); ?>
+        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
         <?php
     } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>

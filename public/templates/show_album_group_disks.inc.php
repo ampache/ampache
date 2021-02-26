@@ -103,7 +103,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         </li>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play Last'), 'addplay_album_'); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
         </li>
             <?php
         } ?>
@@ -167,12 +167,12 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
                 }
             }
         if ($show_playlist_add) {
-            echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_id('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
-            echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_id('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_id('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_id('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_' . $c_album->id);
         } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo Ui::get_icon('comment', T_('Post shout')) ?></a>
+                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) { ?>

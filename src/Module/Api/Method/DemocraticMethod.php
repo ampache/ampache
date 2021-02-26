@@ -135,7 +135,7 @@ final class DemocraticMethod
                 }
                 break;
             default:
-                Api::error(T_('Invalid request'), '4710', self::ACTION, 'method', $input['api_format']);
+                Api::error(T_('Invalid Request'), '4710', self::ACTION, 'method', $input['api_format']);
                 break;
         }
         Session::extend($input['auth']);

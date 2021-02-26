@@ -787,7 +787,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         foreach (glob($filter) as $srt) {
             $psrt      = explode('.', $srt);
             $lang_code = '__';
-            $lang_name = T_("Unknown");
+            $lang_name = T_('Unknown');
             if (count($psrt) >= 2) {
                 $lang_code = $psrt[count($psrt) - 2];
                 if (strlen((string) $lang_code) == 2) {

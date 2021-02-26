@@ -118,7 +118,7 @@ foreach ($data as $row) {
             <td class="cel_song"><?php echo $song->f_link; ?></td>
             <td class="cel_add">
                 <span class="cel_item_add">
-                    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_' . $count . '_' . $song->id); ?>
+                    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
                     <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
                         <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
