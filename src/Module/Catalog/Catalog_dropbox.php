@@ -104,8 +104,8 @@ class Catalog_dropbox extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`getchunk` TINYINT(1) NOT NULL, " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
@@ -119,7 +119,7 @@ class Catalog_dropbox extends Catalog
      */
     public function catalog_fields()
     {
-        $fields['apikey']    = array('description' => T_('API Key'), 'type' => 'text');
+        $fields['apikey']    = array('description' => T_('API key'), 'type' => 'text');
         $fields['secret']    = array('description' => T_('Secret'), 'type' => 'password');
         $fields['authtoken'] = array('description' => T_('Access Token'), 'type' => 'text');
         $fields['path']      = array('description' => T_('Path'), 'type' => 'text', 'value' => '/');
@@ -540,14 +540,14 @@ class Catalog_dropbox extends Catalog
                     $results['file'] = $path;
                     $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
                     if ($info['change']) {
-                        Ui::update_text('', sprintf(T_('Updated song "%s"'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated['updated']++;
                     } else {
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
                     debug_event('dropbox.catalog', 'removing song', 5, 'ampache-catalog');
-                    Ui::update_text('', sprintf(T_('Removing song "%s"'), $row['title']));
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
             }

@@ -50,7 +50,7 @@ final class ExportAlbumArtCommand extends Command
         CatalogRepositoryInterface $catalogRepository,
         ContainerInterface $dic
     ) {
-        parent::__construct('export:albumArt', 'Exports the album art');
+        parent::__construct('export:albumArt', T_('Export album art'));
 
         $this->configContainer   = $configContainer;
         $this->albumArtExporter  = $albumArtExporter;
@@ -58,8 +58,8 @@ final class ExportAlbumArtCommand extends Command
         $this->dic               = $dic;
 
         $this
-            ->argument('[type]', 'Metadata write mode (`linux` or `windows`)', 'linux')
-            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## Exports album art for linux<eol/>');
+            ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')
+            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## ' . T_('Export album art for Linux') . '<eol/>');
     }
 
     public function execute(

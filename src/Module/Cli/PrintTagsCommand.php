@@ -42,14 +42,14 @@ final class PrintTagsCommand extends Command
         ConfigContainerInterface $configContainer,
         ChannelRunnerInterface $channelRunner
     ) {
-        parent::__construct('print:tags', 'Print the tags of a file');
+        parent::__construct('print:tags', T_('Print file tags'));
 
         $this->configContainer = $configContainer;
         $this->channelRunner   = $channelRunner;
 
         $this
-            ->argument('<filename>', 'Filename to load')
-            ->usage('<bold>  print:tags</end> <comment><filename></end> ## Print tags<eol/>');
+            ->argument('<filename>', T_('File Path'))
+            ->usage('<bold>  print:tags</end> <comment><filename></end> ## ' . T_('Print tags') . '<eol/>');
     }
 
     public function execute(
@@ -58,7 +58,7 @@ final class PrintTagsCommand extends Command
         $io = $this->app()->io();
 
         $io->info(
-            sprintf(T_('Reading: %s'), $filename),
+            sprintf(T_('Reading File: "%s"'), $filename),
             true
         );
 

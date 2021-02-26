@@ -144,7 +144,7 @@ class AmpacheCatalogFavorites
                                     'addplay_' . $userflag['type'] . '_' . $userflag['id']);
                             }
                         }
-                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to temporary playlist'), 'play_full_' . $userflag['id']);
+                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag['id']);
                         echo '</span></td>';
                     }
                     echo '<td class=mash_cover>';

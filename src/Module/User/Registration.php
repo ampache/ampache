@@ -61,12 +61,12 @@ class Registration
         /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title'));
 
-        $mailer->message = T_("Thank you for registering") . "\n";
-        $mailer->message .= T_("Please keep this e-mail for your records. Your account information is as follows:") . "\n";
+        $mailer->message = T_('Thank you for registering') . "\n";
+        $mailer->message .= T_('Please keep this e-mail for your records. Your account information is as follows:') . "\n";
         $mailer->message .= "----------------------\n";
-        $mailer->message .= T_("Username") . ": $username" . "\n";
+        $mailer->message .= T_('Username') . ": $username" . "\n";
         $mailer->message .= "----------------------\n";
-        $mailer->message .= T_("To begin using your account, you must verify your e-mail address by vising the following link:") . "\n\n";
+        $mailer->message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
         $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation";
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;

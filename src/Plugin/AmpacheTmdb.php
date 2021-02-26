@@ -173,7 +173,7 @@ class AmpacheTmdb
                         $release                   = $client->getTvApi()->getTvshow($results['tmdb_tvshow_id']);
                         $results['tvshow']         = $release['original_name'];
                         if (!empty($release['first_air_date'])) {
-                            $results['tvshow_year'] = date("Y", strtotime($release['first_air_date']));
+                            $results['tvshow_year'] = date("Y", strtotime((string) $release['first_air_date']));
                         }
                         if ($release['poster_path']) {
                             $results['tvshow_art'] = $imageHelper->getUrl($release['poster_path']);
@@ -200,7 +200,7 @@ class AmpacheTmdb
                                         $results['tvshow_episode']               = $release['episode_number'];
                                         $results['original_name']                = $release['name'];
                                         if (!empty($release['air_date'])) {
-                                            $results['release_date'] = strtotime($release['air_date']);
+                                            $results['release_date'] = strtotime((string) $release['air_date']);
                                             $results['year']         = date("Y", $results['release_date']);
                                         }
                                         $results['summary'] = substr($release['overview'], 0, 255);

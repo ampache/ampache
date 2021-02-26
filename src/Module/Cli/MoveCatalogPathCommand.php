@@ -38,16 +38,16 @@ final class MoveCatalogPathCommand extends Command
         ConfigContainerInterface $configContainer,
         UpdateCatalogInterface $updateCatalog
     ) {
-        parent::__construct('run:moveCatalogPath', T_('Moving Catalog path'));
+        parent::__construct('run:moveCatalogPath', T_('Change a Catalog path'));
 
         $this->configContainer = $configContainer;
         $this->updateCatalog   = $updateCatalog;
 
         $this
             ->argument('[catalogName]', T_('The name of the catalog to update'), null)
-            ->argument('[catalogType]', 'Type of the catalog', 'local')
+            ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
             ->argument('[path]', T_('New path'), null)
-            ->usage('<bold>  run:moveCatalogPath some-catalog /new/path/to/catalog</end> <comment> ## Update the path of all files of the given catalogs</end><eol/>');
+            ->usage('<bold>  run:moveCatalogPath some-catalog /new/path</end> <comment> ## ' . T_('Update the path of `some-catalog` to /new/path') . '</end><eol/>');
     }
 
     public function execute(

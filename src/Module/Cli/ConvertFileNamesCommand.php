@@ -38,15 +38,15 @@ final class ConvertFileNamesCommand extends Command
         ConfigContainerInterface $configContainer,
         FileNameConverterInterface $fileNameCorrector
     ) {
-        parent::__construct('run:convertFilenames', 'Converts filesnames using a charset');
+        parent::__construct('run:convertFilenames', T_('Convert filenames using a charset'));
 
         $this->configContainer   = $configContainer;
         $this->fileNameCorrector = $fileNameCorrector;
 
         $this
-            ->option('-f|--fire', 'Enables `fire-and-forget`-mode (Disables prompting on rename)', 'boolval', false)
-            ->option('-c|--charset', 'The destination charset', 'strval', iconv_get_encoding('output_encoding'))
-            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8</end> ## Converts filesnames to utf8<eol/>');
+            ->option('-f|--fire', T_('Enables `fire-and-forget`-mode (Disables prompting on rename)'), 'boolval', false)
+            ->option('-c|--charset', T_('The destination charset'), 'strval', iconv_get_encoding('output_encoding'))
+            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8</end> ## ' . T_('Convert filenames to utf8') . '<eol/>');
     }
 
     public function execute(): void

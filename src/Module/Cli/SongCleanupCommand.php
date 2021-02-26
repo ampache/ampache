@@ -38,14 +38,14 @@ final class SongCleanupCommand extends Command
         ConfigContainerInterface $configContainer,
         SongFilesystemCleanupInterface $songFilesystemCleanup
     ) {
-        parent::__construct('cleanup:songs', 'Deletes disabled songs');
+        parent::__construct('cleanup:songs', T_('Delete disabled songs'));
 
         $this->configContainer       = $configContainer;
         $this->songFilesystemCleanup = $songFilesystemCleanup;
 
         $this
-            ->option('-d|--delete', 'Disables dry-run and deletes the files', 'boolval', false)
-            ->usage('<bold>  cleanup:songs</end> <comment> ## Shows a list of disabled songs<eol/>');
+            ->option('-d|--delete', T_('Disables dry-run and sorts the files'), 'boolval', false)
+            ->usage('<bold>  cleanup:songs</end> <comment> ## ' . T_('Show a list of disabled songs') . '<eol/>');
     }
 
     public function execute(): void

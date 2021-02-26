@@ -38,7 +38,7 @@ final class ComputeCacheCommand extends Command
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache
     ) {
-        parent::__construct('run:computeCache', 'Update the object cache');
+        parent::__construct('run:computeCache', T_('Update the object cache tables'));
 
         $this->configContainer = $configContainer;
         $this->objectCache     = $objectCache;

@@ -1200,8 +1200,18 @@ class Art extends database_object
                 $size['width']  = 100;
                 break;
             case 2:
+                // live stream, artist pages
                 $size['height'] = 128;
                 $size['width']  = 128;
+                break;
+            case 22:
+                $size['height'] = 256;
+                $size['width']  = 256;
+                break;
+            case 32:
+                // Single Album & Podcast pages
+                $size['height'] = 384;
+                $size['width']  = 384;
                 break;
             case 3:
                 // This is used by the embedded web player
@@ -1252,6 +1262,10 @@ class Art extends database_object
                 $size['width']  = 200;
                 break;
         }
+
+        // For @2x output
+        $size['height'] *= 2;
+        $size['width'] *= 2;
 
         return $size;
     }
@@ -1314,9 +1328,15 @@ class Art extends database_object
                 $imgurl .= '&fooid=' . $art->id;
             }
         }
+
+        // For @2x output
+        $size['height'] /= 2;
+        $size['width'] /= 2;
+
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 
-        if ($size['height'] >= 150) {
+        // don't put the play icon on really large images.
+        if ($size['height'] <= 150 && $size['height'] >= 300) {
             echo "<div class=\"item_art_play\">";
             echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
                 '<span class="item_art_play_icon" title="' . T_('Play') . '" />',

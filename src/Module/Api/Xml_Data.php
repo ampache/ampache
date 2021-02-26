@@ -687,7 +687,7 @@ class Xml_Data
                     "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<songcount>" . $album->song_count . "</songcount>\n" .
-                    "\t<disk>" . $disk . "</disk>\n" .
+                    "\t<diskcount>" . $disk . "</diskcount>\n" .
                     self::genre_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .

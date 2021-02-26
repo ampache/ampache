@@ -677,7 +677,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function update(array $data)
     {
         if (isset($data['release_date'])) {
-            $f_release_date = $data['release_date'];
+            $f_release_date = (string) $data['release_date'];
             $release_date   = strtotime($f_release_date);
         } else {
             $release_date = $this->release_date;
@@ -794,7 +794,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         foreach (glob($filter) as $srt) {
             $psrt      = explode('.', $srt);
             $lang_code = '__';
-            $lang_name = T_("Unknown");
+            $lang_name = T_('Unknown');
             if (count($psrt) >= 2) {
                 $lang_code = $psrt[count($psrt) - 2];
                 if (strlen((string) $lang_code) == 2) {

@@ -57,8 +57,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             );
         }
 
-        // Switch on the type of playlist dump we want to do
-        // here
+        // Switch on the type of playlist dump we want to do here
         switch ($type) {
             case 'albums':
                 $ids   = Catalog::get_albums();
@@ -70,6 +69,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'artists':
                 $items = Catalog::get_artists();
                 break;
+            case 'playlists':
             default:
                 $ids   = $this->playlistRepository->getPlaylists(-1);
                 $items = array();

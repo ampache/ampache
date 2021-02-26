@@ -81,7 +81,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 <?php
     } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
       <?php echo Ui::get_icon('add', T_('Add dynamic items')); ?>

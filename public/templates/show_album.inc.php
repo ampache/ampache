@@ -80,7 +80,7 @@ if ($directplay_limit > 0) {
     </div>
     <?php
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-        $thumb = Ui::is_grid_view('album') ? 2 : 11;
+        $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
@@ -131,7 +131,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <ul>
         <?php if ($show_direct_play) {
         $play       = T_('Play');
-        $playlast   = T_('Play Last'); ?>
+        $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>

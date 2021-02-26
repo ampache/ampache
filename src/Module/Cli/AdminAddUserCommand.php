@@ -41,19 +41,19 @@ final class AdminAddUserCommand extends Command
         ConfigContainerInterface $configContainer,
         UserCreatorInterface $userCreator
     ) {
-        parent::__construct('admin:addUser', 'Adds a user');
+        parent::__construct('admin:addUser', T_('Add a User'));
 
         $this->configContainer = $configContainer;
         $this->userCreator     = $userCreator;
 
         $this
-            ->option('-p|--password', 'Password', 'strval', mt_rand())
-            ->option('-e|--email', 'E-Mail', 'strval', '')
-            ->option('-w|--website', 'Website', 'strval', '')
-            ->option('-n|--name', 'Name', 'strval', '')
-            ->option('-l|--level', 'Access Level', 'intval', $this->configContainer->get('auto_user') ?? AccessLevelEnum::LEVEL_GUEST)
-            ->argument('<username>', 'The name of the new user')
-            ->usage('<bold>  admin:addUser some-user</end> <comment> ## Add the user `some-user`</end><eol/>');
+            ->option('-p|--password', T_('Password'), 'strval', mt_rand())
+            ->option('-e|--email', T_('E-mail'), 'strval', '')
+            ->option('-w|--website', T_('Website'), 'strval', '')
+            ->option('-n|--name', T_('Name'), 'strval', '')
+            ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? AccessLevelEnum::LEVEL_GUEST)
+            ->argument('<username>', T_('Username'))
+            ->usage('<bold>  admin:addUser some-user</end> <comment> ## ' . T_('Add a User with the name `some-user`') . '</end><eol/>');
     }
 
     public function execute(

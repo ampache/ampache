@@ -38,23 +38,23 @@ final class UpdateCatalogCommand extends Command
         ConfigContainerInterface $configContainer,
         UpdateCatalogInterface $updateCatalog
     ) {
-        parent::__construct('run:updateCatalog', 'Performs catalog actions for all files of a catalog');
+        parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog'));
 
         $this->configContainer = $configContainer;
         $this->updateCatalog   = $updateCatalog;
 
         $this
-            ->option('-c|--cleanup', 'Cleans the catalog', 'boolval', false)
-            ->option('-e|--verify', 'Verifies the catalog', 'boolval', false)
-            ->option('-a|--add', 'Adds new media to the catalog', 'boolval', false)
-            ->option('-g|--art', 'Searches for new art for the catalog', 'boolval', false)
-            ->option('-u|--update', 'Update artist information and fetch similar artists from last.fm', 'boolval', false)
-            ->option('-i|--import', 'Imports playlists',  'boolval',false)
-            ->option('-o|--optimize', 'Optimize database tables', 'boolval', false)
-            ->option('-m|--memorylimit', 'Temporarily deactivating PHP memory limit', 'boolval', false)
-            ->argument('[catalogName]', 'The name of the catalog to update', null)
-            ->argument('[catalogType]', 'Type of the catalog', 'local')
-            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## Update the local catalog with name `some-catalog`</end><eol/>');
+            ->option('-c|--cleanup', T_('Cleans Catalogs from orphaned entries'), 'boolval', false)
+            ->option('-e|--verify', T_('Verifies Catalog entries and updates them if related files have new information'), 'boolval', false)
+            ->option('-a|--add', T_('Adds new media to Catalogs'), 'boolval', false)
+            ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
+            ->option('-u|--update', T_('Update artist information and fetch similar artists from last.fm'), 'boolval', false)
+            ->option('-i|--import', T_('Imports playlists'),  'boolval',false)
+            ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
+            ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'), null)
+            ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
+            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## ' . T_('Update the local catalog called `some-catalog`') . '</end><eol/>');
     }
 
     public function execute(

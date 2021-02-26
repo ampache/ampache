@@ -64,9 +64,9 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         }
 
         $user_id      = (int)Core::get_request('user_id');
-        $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
+        $end_date     = $_REQUEST['end_date'] ? strtotime((string) $_REQUEST['end_date']) : time();
         $f_end_date   = get_datetime((int)$end_date);
-        $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
+        $start_date   = $_REQUEST['start_date'] ? strtotime((string) $_REQUEST['start_date']) : ($end_date - 864000);
         $f_start_date = get_datetime((int)$start_date);
         $zoom         = $_REQUEST['zoom'] ?: 'day';
 

@@ -80,7 +80,7 @@ class ShowGenerateApikeyActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'Are You Sure?',
-                'This will replace your existing API Key',
+                'This will replace your existing API key',
                 sprintf(
                     'admin/users.php?action=%s&user_id=%d',
                     GenerateApikeyAction::REQUEST_KEY,

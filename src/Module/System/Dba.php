@@ -543,8 +543,8 @@ class Dba
                 break;
             case 'UTF-8':
             default:
-                $target_charset   = AmpConfig::get('database_charset', 'utf8');
-                $target_collation = AmpConfig::get('database_collation', 'utf8_unicode_ci');
+                $target_charset   = AmpConfig::get('database_charset', 'utf8mb4');
+                $target_collation = AmpConfig::get('database_collation', 'utf8mb4_unicode_ci');
                 break;
         }
 

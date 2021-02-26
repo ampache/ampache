@@ -150,7 +150,7 @@ class AmpachePersonalFavorites
                             }
                         }
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'add',
-                            T_('Add to temporary playlist'), 'play_full_' . $item[0]->id);
+                            T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
                         echo '<div style="white-space: normal;">' . $item[0]->description . '</div>';

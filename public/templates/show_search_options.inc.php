@@ -40,8 +40,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
     if (Access::check_function('batch_download') && $zipHandler->isZipable((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) { ?>
 <li>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>&amp;browse_id=<?php echo $browse->id; ?>">
-        <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
-        <?php echo T_('Batch Download'); ?>
+        <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+        <?php echo T_('Batch download'); ?>
     </a>
 </li>
     <?php

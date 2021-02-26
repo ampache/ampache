@@ -246,20 +246,20 @@ class Api
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    $browse->set_filter('add_lt', strtotime($elements['1']));
-                    $browse->set_filter('add_gt', strtotime($elements['0']));
+                    $browse->set_filter('add_lt', strtotime((string) $elements['1']));
+                    $browse->set_filter('add_gt', strtotime((string) $elements['0']));
                 } else {
-                    $browse->set_filter('add_gt', strtotime($value));
+                    $browse->set_filter('add_gt', strtotime((string) $value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    $browse->set_filter('update_lt', strtotime($elements['1']));
-                    $browse->set_filter('update_gt', strtotime($elements['0']));
+                    $browse->set_filter('update_lt', strtotime((string) $elements['1']));
+                    $browse->set_filter('update_gt', strtotime((string) $elements['0']));
                 } else {
-                    $browse->set_filter('update_gt', strtotime($value));
+                    $browse->set_filter('update_gt', strtotime((string) $value));
                 }
                 break;
             case 'alpha_match':

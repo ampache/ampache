@@ -38,15 +38,15 @@ final class RunChannelCommand extends Command
         ConfigContainerInterface $configContainer,
         ChannelRunnerInterface $channelRunner
     ) {
-        parent::__construct('run:channel', 'Runs a channel');
+        parent::__construct('run:channel', T_('Run a Channel'));
 
         $this->configContainer = $configContainer;
         $this->channelRunner   = $channelRunner;
 
         $this
-            ->argument('<channel>', 'The id of the channel to run')
-            ->argument('[port]', 'An optional port number')
-            ->usage('<bold>  run:channel</end> <comment><channel> [port]</end> ## Runs the channel<eol/>');
+            ->argument('<channel>', T_('Channel ID'))
+            ->argument('[port]', T_('Port'))
+            ->usage('<bold>  run:channel</end> <comment><channel> [port]</end> ## ' . T_('Start Channel') . '<eol/>');
     }
 
     public function execute(

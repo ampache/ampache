@@ -92,7 +92,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         </tr>
         <tr>
             <td>
-                <?php echo T_('API Key'); ?>
+                <?php echo T_('API key'); ?>
                 <?php if (Access::check('interface', 100)) { ?>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
                 <?php } ?>

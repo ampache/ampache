@@ -166,7 +166,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         return Ajax::button(
             '?action=basket&type=song&id=' . $songId,
             'add',
-            T_('Add to temporary playlist'),
+            T_('Add to Temporary Playlist'),
             'add_song_' . $songId
         );
     }

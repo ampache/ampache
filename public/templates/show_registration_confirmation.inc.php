@@ -55,7 +55,7 @@ $_SESSION['login'] = true; ?>
                     if (!AmpConfig::get('user_no_email_confirm')) {
                         $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
                     }
-                    $this->ui->showConfirmation(T_('Your Account Has Been Created'), $text, $url); ?>
+                    $this->ui->showConfirmation(T_('Your account has been created'), $text, $url); ?>
                 </div>
             </div>
         </div>

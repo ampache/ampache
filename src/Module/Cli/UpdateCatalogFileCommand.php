@@ -38,19 +38,19 @@ final class UpdateCatalogFileCommand extends Command
         ConfigContainerInterface $configContainer,
         UpdateSingleCatalogFileInterface $updateSingleCatalogFile
     ) {
-        parent::__construct('run:updateCatalogFile', 'Performs catalog actions for a single file');
+        parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
 
         $this->configContainer         = $configContainer;
         $this->updateSingleCatalogFile = $updateSingleCatalogFile;
 
         $this
-            ->option('-c|--cleanup', 'Cleans the file from the catalog', 'boolval', false)
-            ->option('-e|--verify', 'Verify the file in the catalog', 'boolval', true)
-            ->option('-a|--add', 'Adds the file to the catalog', 'boolval', false)
-            ->option('-g|--art', 'Adds art for the file', 'boolval', false)
-            ->argument('<catalogName>', 'The name of the catalog to update')
-            ->argument('<filePath>', 'Path to the file')
-            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## Updates the file in the catalog<eol/>');
+            ->option('-c|--cleanup', T_('Clean File'), 'boolval', false)
+            ->option('-e|--verify', T_('Verify File'), 'boolval', true)
+            ->option('-a|--add', T_('Add File'), 'boolval', false)
+            ->option('-g|--art', T_('Gather Art'), 'boolval', false)
+            ->argument('<catalogName>', T_('Catalog Name'))
+            ->argument('<filePath>', T_('File Path'))
+            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . T_('Update /tmp/some-file.mp3 in the catalog `some-catalog`') . '<eol/>');
     }
 
     public function execute(

@@ -147,7 +147,7 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">" . "\n";
                         $xsl .= "<head>" . "\n";
                         $xsl .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" . "\n";
-                        $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_("Ampache") . "</title>" . "\n";
+                        $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_('Ampache') . "</title>" . "\n";
                         $xsl .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" . "\n";
                         $xsl .= "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
                         $xsl .= "</head>" . "\n";
