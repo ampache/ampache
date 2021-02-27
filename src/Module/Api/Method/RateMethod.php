@@ -20,27 +20,42 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class RateMethod
- * @package Lib\ApiMethods
- */
-final class RateMethod
+final class RateMethod implements MethodInterface
 {
-    private const ACTION = 'rate';
+    public const ACTION = 'rate';
+
+    private ConfigContainerInterface $configContainer;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * rate
      * MINIMUM_API_VERSION=380001
      *
      * This rates a library item
@@ -49,55 +64,65 @@ final class RateMethod
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
-     * @return boolean|void
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
+     * @throws FunctionDisabledException
      */
-    public static function rate(array $input)
-    {
-        if (!AmpConfig::get('ratings')) {
-            Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('type', 'id', 'rating'), self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
-        $type      = (string) $input['type'];
-
-        $object_id = (int) $input['id'];
-        $rating    = (string) $input['rating'];
-        $user      = User::get_from_username(Session::username($input['auth']));
-        // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-        if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $rating), '4710', self::ACTION, 'rating', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: ratings')
+            );
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
-
-        if (!$className || !$object_id) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-        } else {
-            $item = new $className($object_id);
-            if (!$item->id) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
-
-                return false;
+        foreach (['type', 'id', 'rating'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
             }
-            $rate = new Rating($object_id, $type);
-            $rate->set_rating($rating, $user->id);
-            Api::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
-        Session::extend($input['auth']);
 
-        return true;
+        $type     = (string) $input['type'];
+        $objectId = (int) $input['id'];
+        $rating   = (int) $input['rating'];
+
+        // confirm the correct data
+        if (!in_array($type, ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
+        }
+        if (!in_array($rating, [0, 1, 2, 3, 4, 5])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %d'), $rating)
+            );
+        }
+
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
+        if (!$item->id) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $objectId)
+            );
+        }
+        $rate = $this->modelFactory->createRating($objectId, $type);
+        $rate->set_rating($rating, $gatekeeper->getUser()->getId());
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf(T_('rating set to %s for %d'), $rating, $objectId)
+                )
+            )
+        );
     }
 }
