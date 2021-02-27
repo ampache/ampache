@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -554,5 +555,36 @@ final class XmlOutput implements ApiOutputInterface
         string $item
     ): string {
         return Xml_Data::object_array($array, $item);
+    }
+
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[]    $objects Array of object_ids
+     * @param string   $type
+     * @param null|int $user_id
+     * @param bool     $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
+     * @param int      $limit
+     * @param int      $offset
+     */
+    public function indexes(
+        array $objectIds,
+        string $type,
+        ?int $userId = null,
+        bool $include = false,
+        bool $full_xml = false,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Xml_Data::indexes(
+            $objectIds,
+            $type,
+            $userId,
+            $include,
+            $full_xml,
+            $limit,
+            $offset
+        );
     }
 }

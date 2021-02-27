@@ -327,4 +327,24 @@ interface ApiOutputInterface
      * @param string $item
      */
     public function object_array(array $array, string $item): string;
+
+    /**
+     * This takes an array of object_ids and returns a result based on type
+     *
+     * @param int[]    $objects Array of object_ids
+     * @param string   $type
+     * @param null|int $user_id
+     * @param bool     $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
+     * @param int      $limit
+     * @param int      $offset
+     */
+    public function indexes(
+        array $objectIds,
+        string $type,
+        ?int $userId = null,
+        bool $include = false,
+        bool $full_xml = false,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

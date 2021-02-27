@@ -46,7 +46,7 @@ class Api
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         'get_indexes' => Method\GetIndexesMethod::class,
         Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
-        'get_similar' => Method\GetSimilarMethod::class,
+        Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
         Method\ArtistsMethod::ACTION => Method\ArtistsMethod::class,
         Method\ArtistMethod::ACTION => Method\ArtistMethod::class,

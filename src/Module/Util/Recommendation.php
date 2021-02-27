@@ -136,6 +136,19 @@ class Recommendation implements RecommendationInterface
     }
 
     /**
+     * Just a proxy for get_songs_like
+     *
+     * @return array<array<string, mixed>>
+     */
+    public function getSongsLike(
+        int $songId,
+        int $limit = 5,
+        bool $localOnly = true
+    ): array {
+        return static::get_songs_like($songId, $limit, $localOnly);
+    }
+
+    /**
      * get_songs_like
      * Returns a list of similar songs
      * @param integer $song_id

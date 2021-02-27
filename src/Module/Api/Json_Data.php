@@ -189,32 +189,40 @@ class Json_Data
      * @param  string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param  integer $user_id
      * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
+     * @param  int     $limit
+     * @param  int     $offset
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
-    public static function indexes($objects, $type, $user_id = null, $include = false)
-    {
+    public static function indexes(
+        array $objects,
+        string $type,
+        ?int $user_id = null,
+        bool $include = false,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
         // here is where we call the object type
         switch ($type) {
             case 'song':
-                return self::songs($objects, $user_id);
+                return self::songs($objects, $user_id, $limit, $offset);
             case 'album':
                 $include_array = ($include) ? array('songs') : array();
 
-                return self::albums($objects, $include_array, $user_id);
+                return self::albums($objects, $include_array, $user_id, $limit, $offset);
             case 'artist':
                 $include_array = ($include) ? array('songs', 'albums') : array();
 
-                return self::artists($objects, $include_array, $user_id);
+                return self::artists($objects, $include_array, $user_id, $limit, $offset);
             case 'playlist':
-                return self::playlists($objects, $user_id, $include);
+                return self::playlists($objects, $user_id, $include, $limit, $offset);
             case 'share':
-                return self::shares($objects);
+                return self::shares($objects, $limit, $offset);
             case 'podcast':
-                return self::podcasts($objects, $user_id, $include);
+                return self::podcasts($objects, $user_id, $include, $limit, $offset);
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user_id);
+                return self::podcast_episodes($objects, $user_id, $limit, $offset);
             case 'video':
-                return self::videos($objects, $user_id);
+                return self::videos($objects, $user_id, $limit, $offset);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');

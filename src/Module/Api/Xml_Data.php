@@ -391,12 +391,21 @@ class Xml_Data
      * @param  integer $user_id
      * @param  boolean $full_xml whether to return a full XML document or just the node.
      * @param  boolean $include include episodes from podcasts or tracks in a playlist
+     * @param  int     $limit
+     * @param  int     $offset
      * @return string  return xml
      */
-    public static function indexes($objects, $object_type, $user_id = null, $full_xml = true, $include = false)
-    {
-        if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+    public static function indexes(
+        array $objects,
+        string $object_type,
+        ?int $user_id = null,
+        bool $full_xml = true,
+        bool $include = false,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($objects) > $limit || $offset > 0) && ($limit && $full_xml)) {
+            $objects = array_splice($objects, $offset, $limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count($object_type) . "</total_count>\n" : '';
 

@@ -21,85 +21,102 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\Recommendation;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Util\RecommendationInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GetSimilarMethod
- * @package Lib\ApiMethods
- */
-final class GetSimilarMethod
+final class GetSimilarMethod implements MethodInterface
 {
-    private const ACTION = 'get_similar';
+    public const ACTION = 'get_similar';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private RecommendationInterface $recommendation;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        RecommendationInterface $recommendation
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->recommendation = $recommendation;
+    }
 
     /**
-     * get_similar
      * MINIMUM_API_VERSION=420000
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * type   = (string) 'song', 'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
      */
-    public static function get_similar(array $input)
-    {
-        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['type', 'filter'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['filter'];
+
+        $type     = (string) $input['type'];
+        $objectId = (int) $input['filter'];
+
         // confirm the correct data
-        if (!in_array($type, array('song', 'artist'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'artist'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
 
-        $objects = array();
-        $similar = array();
+        $similar = [];
         switch ($type) {
             case 'artist':
-                $similar = Recommendation::get_artists_like($object_id);
+                $similar = $this->recommendation->getArtistsLike($objectId);
                 break;
             case 'song':
-                $similar = Recommendation::get_songs_like($object_id);
-        }
-        foreach ($similar as $child) {
-            $objects[] = $child['id'];
-        }
-        if (empty($objects)) {
-            Api::empty($type, $input['api_format']);
-
-            return false;
-        }
-
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type, $user->id);
+                $similar = $this->recommendation->getSongsLike($objectId);
                 break;
-            default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, $user->id);
         }
-        Session::extend($input['auth']);
 
-        return true;
+        if ($similar === []) {
+            $result = $output->emptyResult($type);
+        } else {
+            $result = $output->indexes(
+                array_map(static function (array $item): int {
+                    return (int) $item['child'];
+                }, $similar),
+                $type,
+                $gatekeeper->getUser()->getId(),
+                false,
+                false,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

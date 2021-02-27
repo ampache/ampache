@@ -25,6 +25,17 @@ namespace Ampache\Module\Util;
 interface RecommendationInterface
 {
     /**
+     * Just a proxy for get_songs_like
+     *
+     * @return array<array<string, mixed>>
+     */
+    public function getSongsLike(
+        int $songId,
+        int $limit = 5,
+        bool $localOnly = true
+    ): array;
+
+    /**
      * Just a proxy for get_artists_like
      */
     public function getArtistsLike(int $artistId, int $limit = 10, bool $localOnly = true): array;
