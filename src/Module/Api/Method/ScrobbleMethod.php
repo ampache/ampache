@@ -24,29 +24,71 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class ScrobbleMethod
- * @package Lib\ApiMethods
- */
-final class ScrobbleMethod
+final class ScrobbleMethod implements MethodInterface
 {
-    private const ACTION = 'scrobble';
+    public const ACTION = 'scrobble';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private LoggerInterface $logger;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UiInterface $ui;
+
+    private SongRepositoryInterface $songRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter,
+        ModelFactoryInterface $modelFactory,
+        LoggerInterface $logger,
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui,
+        SongRepositoryInterface $songRepository
+    ) {
+        $this->streamFactory             = $streamFactory;
+        $this->userRepository            = $userRepository;
+        $this->userMediaPlaySaverAdapter = $userMediaPlaySaverAdapter;
+        $this->modelFactory              = $modelFactory;
+        $this->logger                    = $logger;
+        $this->configContainer           = $configContainer;
+        $this->ui                        = $ui;
+        $this->songRepository            = $songRepository;
+    }
 
     /**
-     * scrobble
      * MINIMUM_API_VERSION=400001
      *
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
@@ -56,90 +98,93 @@ final class ScrobbleMethod
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function scrobble(array $input)
-    {
-        if (!Api::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['song', 'artist', 'album'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        ob_end_clean();
-        $charset     = AmpConfig::get('site_charset');
-        $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
-        $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
-        $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
-        $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
-        $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
-        $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
-        $date        = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
-        $user        = User::get_from_username(Session::username($input['auth']));
-        $user_id     = $user->id;
-        $valid       = in_array($user->id, static::getUserRepository()->getValid());
+
+        $user   = $gatekeeper->getUser();
+        $userId = $user->getId();
 
         // validate supplied user
-        if ($valid === false) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'empty', $input['api_format']);
-
-            return false;
+        if (in_array($userId, $this->userRepository->getValid()) === false) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Not Found: %s'), $userId)
+            );
         }
 
-        // validate minimum required options
-        debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
-        if (!$song_name || !$album_name || !$artist_name) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+        $charset    = $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET);
+        $songName   = (string) html_entity_decode($this->ui->scrubOut($input['song']), ENT_QUOTES, $charset);
+        $artistName = (string) html_entity_decode($this->ui->scrubIn((string) $input['artist']), ENT_QUOTES, $charset);
+        $albumName  = (string) html_entity_decode($this->ui->scrubIn((string) $input['album']), ENT_QUOTES, $charset);
+        $songMbid   = (string) $this->ui->scrubIn($input['song_mbid'] ?? ''); //optional
+        $artistMbid = (string) $this->ui->scrubIn($input['artist_mbid'] ?? ''); //optional
+        $albumMbid  = (string) $this->ui->scrubIn($input['album_mbid'] ?? ''); //optional
+        $date       = (int) ($input['date'] ?? time()); //optional
 
-            return false;
+        // validate minimum required options
+        if (!$songName || !$albumName || !$artistName) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
-            ? $input['client']
-            : 'api';
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
+        $agent = $input['client'] ?? 'api';
 
-        if ($scrobble_id === '') {
-            Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
-        } else {
-            $media = new Song((int) $scrobble_id);
-            if (!$media->id) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), '4704', self::ACTION, 'song', $input['api_format']);
+        $scrobbleId = $this->songRepository->canScrobble(
+            $songName,
+            $artistName,
+            $albumName,
+            (string) $songMbid,
+            (string) $artistMbid,
+            (string) $albumMbid
+        );
 
-                return false;
-            }
-            debug_event(self::class, 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
-
-            // internal scrobbling (user_activity and object_count tables)
-            if ($media->set_played($user_id, $agent, array(), $date)) {
-                // scrobble plugins
-                static::getUserMediaPlaySaverAdapter()->save($user, $media);
-            }
-
-            Api::message('successfully scrobbled: ' . $scrobble_id, $input['api_format']);
+        $media = $this->modelFactory->createSong((int) $scrobbleId);
+        if ($media->isNew()) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $scrobbleId)
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
+        $this->logger->debug(
+            sprintf(
+                'scrobble: %d for %s using %s %d',
+                (int) $scrobbleId,
+                $user->username,
+                $agent,
+                $date
+            ),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
+        // internal scrobbling (user_activity and object_count tables)
+        if ($media->set_played($userId, $agent, [], $date)) {
+            // scrobble plugins
+            $this->userMediaPlaySaverAdapter->save($user, $media);
+        }
 
-        return $dic->get(UserRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserMediaPlaySaverAdapter(): UserMediaPlaySaverAdapterInterface
-    {
-        global $dic;
-
-        return $dic->get(UserMediaPlaySaverAdapterInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('successfully scrobbled: %s', $scrobbleId)
+                )
+            )
+        );
     }
 }

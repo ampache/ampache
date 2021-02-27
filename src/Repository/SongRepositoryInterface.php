@@ -78,4 +78,16 @@ interface SongRepositoryInterface
     public function getByLicense(int $licenseId): array;
 
     public function delete(int $songId): bool;
+
+    /**
+     * Return a song id based on a last.fm-style search in the database
+     */
+    public function canScrobble(
+        string $song_name,
+        string $artist_name,
+        string $album_name,
+        string $song_mbid = '',
+        string $artist_mbid = '',
+        string $album_mbid = ''
+    ): ?int;
 }

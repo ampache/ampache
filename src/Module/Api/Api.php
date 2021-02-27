@@ -113,7 +113,7 @@ class Api
         Method\RateMethod::ACTION => Method\RateMethod::class,
         Method\FlagMethod::ACTION => Method\FlagMethod::class,
         Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
-        'scrobble' => Method\ScrobbleMethod::class,
+        Method\ScrobbleMethod::ACTION => Method\ScrobbleMethod::class,
         Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,
         Method\CatalogMethod::ACTION => Method\CatalogMethod::class,
         Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
