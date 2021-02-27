@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -69,18 +70,22 @@ final class PlayAction implements ApplicationActionInterface
 
     private UserRepositoryInterface $userRepository;
 
+    private UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter;
+
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         SongRepositoryInterface $songRepository,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter
     ) {
-        $this->browser               = $browser;
-        $this->authenticationManager = $authenticationManager;
-        $this->networkChecker        = $networkChecker;
-        $this->songRepository        = $songRepository;
-        $this->userRepository        = $userRepository;
+        $this->browser                   = $browser;
+        $this->authenticationManager     = $authenticationManager;
+        $this->networkChecker            = $networkChecker;
+        $this->songRepository            = $songRepository;
+        $this->userRepository            = $userRepository;
+        $this->userMediaPlaySaverAdapter = $userMediaPlaySaverAdapter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -778,7 +783,7 @@ final class PlayAction implements ApplicationActionInterface
                         // internal scrobbling (user_activity and object_count tables)
                         if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) == 'Song') {
                             // scrobble plugins
-                            User::save_mediaplay($user, $media);
+                            $this->userMediaPlaySaverAdapter->save($user, $media);
                         }
                     }
                 } elseif (!$share_id && $record_stats) {

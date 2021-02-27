@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -112,7 +113,7 @@ final class ScrobbleMethod
             // internal scrobbling (user_activity and object_count tables)
             if ($media->set_played($user_id, $agent, array(), $date)) {
                 // scrobble plugins
-                User::save_mediaplay($user, $media);
+                static::getUserMediaPlaySaverAdapter()->save($user, $media);
             }
 
             Api::message('successfully scrobbled: ' . $scrobble_id, $input['api_format']);
@@ -130,5 +131,15 @@ final class ScrobbleMethod
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserMediaPlaySaverAdapter(): UserMediaPlaySaverAdapterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserMediaPlaySaverAdapterInterface::class);
     }
 }

@@ -709,26 +709,6 @@ class User extends database_object
     } // update_access
 
     /**
-     * save_mediaplay
-     * @param User $user
-     * @param Song $media
-     */
-    public static function save_mediaplay($user, $media)
-    {
-        foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user)) {
-                    debug_event(self::class, 'save_mediaplay... ' . $plugin->_plugin->name, 5);
-                    $plugin->_plugin->save_mediaplay($media);
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
-            }
-        }
-    }
-
-    /**
      * insert_ip_history
      * This inserts a row into the IP History recording this user at this
      * address at this time in this place, doing this thing.. you get the point

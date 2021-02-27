@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
@@ -2061,7 +2062,7 @@ class Subsonic_Api
             if ($submission && get_class($media) == Song::class && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 // stream has finished
                 debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                User::save_mediaplay($user, $media);
+                static::getUserMediaPlaySaverAdapter()->save($user, $media);
             }
             // Submission is false and not a repeat. let repeats go though to saveplayqueue
             if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
@@ -2714,5 +2715,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(UserCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserMediaPlaySaverAdapter(): UserMediaPlaySaverAdapterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserMediaPlaySaverAdapterInterface::class);
     }
 }
