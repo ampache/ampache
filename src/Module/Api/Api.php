@@ -73,7 +73,7 @@ class Api
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         Method\PlaylistSongsMethod::ACTION => Method\PlaylistSongsMethod::class,
         Method\PlaylistCreateMethod::ACTION => Method\PlaylistCreateMethod::class,
-        'playlist_edit' => Method\PlaylistEditMethod::class,
+        Method\PlaylistEditMethod::ACTION => Method\PlaylistEditMethod::class,
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
         Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,
         Method\PlaylistRemoveSongMethod::ACTION => Method\PlaylistRemoveSongMethod::class,

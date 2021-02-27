@@ -113,6 +113,7 @@ return [
     Method\RateMethod::class => autowire(),
     Method\RecordPlayMethod::class => autowire(),
     Method\GetSimilarMethod::class => autowire(),
+    Method\PlaylistEditMethod::class => autowire(),
     Method\Lib\LocalPlayCommandMapperInterface::class => autowire(Method\Lib\LocalPlayCommandMapper::class),
     Method\Lib\ServerDetailsRetrieverInterface::class => autowire(Method\Lib\ServerDetailsRetriever::class),
     Edit\EditObjectAction::class => autowire(),
