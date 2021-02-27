@@ -94,6 +94,6 @@ class License
             );
         }
 
-        return $this->name;
+        return (string) $this->name;
     }
 }
