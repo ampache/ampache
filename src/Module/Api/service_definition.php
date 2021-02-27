@@ -111,6 +111,7 @@ return [
     Method\LocalplayMethod::class => autowire(),
     Method\PreferenceEditMethod::class => autowire(),
     Method\RateMethod::class => autowire(),
+    Method\RecordPlayMethod::class => autowire(),
     Method\Lib\LocalPlayCommandMapperInterface::class => autowire(Method\Lib\LocalPlayCommandMapper::class),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),

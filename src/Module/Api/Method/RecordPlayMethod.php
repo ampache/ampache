@@ -20,109 +20,143 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class RecordPlayMethod
- * @package Lib\ApiMethods
- */
-final class RecordPlayMethod
+final class RecordPlayMethod implements MethodInterface
 {
-    private const ACTION = 'record_play';
+    public const ACTION = 'record_play';
+
+    private UserRepositoryInterface $userRepository;
+
+    private UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter,
+        StreamFactoryInterface $streamFactory,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->userRepository            = $userRepository;
+        $this->userMediaPlaySaverAdapter = $userMediaPlaySaverAdapter;
+        $this->streamFactory             = $streamFactory;
+        $this->logger                    = $logger;
+        $this->modelFactory              = $modelFactory;
+    }
 
     /**
-     * record_play
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
      * This allows other sources to record play history to Ampache.
      * Require 100 (Admin) permission to change other user's play history
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws ResultEmptyException
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function record_play(array $input)
-    {
-        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['id', 'user'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        $api_user  = User::get_from_username(Session::username($input['auth']));
-        $play_user = (isset($input['user']) && (int) $input['user'] > 0)
-            ? new User((int) $input['user'])
-            : User::get_from_username((string) $input['user']);
+
+        $userLookupValue = $input['user'];
+        $userLookupId    = (int) $userLookupValue;
+
+        if ($userLookupId === 0) {
+            $userLookupId = $this->userRepository->findByUsername((string) $userLookupValue);
+        }
+
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $api_user->id && !Api::check_access('interface', 100, $api_user->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if (
+            $userLookupId !== $gatekeeper->getUser()->getId() &&
+            !$gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+        ) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
         }
-        ob_end_clean();
-        $object_id = (int) $input['id'];
-        $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
-        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
-        if ($valid === false) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $play_user->id), '4704', self::ACTION, 'user', $input['api_format']);
-
-            return false;
+        if (in_array($userLookupId, $this->userRepository->getValid()) === false) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $userLookupId)
+            );
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
-            ? $input['client']
-            : 'api';
+        $agent    = $input['client'] ?? 'api';
+        $objectId = (int) $input['id'];
+        $date     = (int) ($input['date'] ?? time());
 
-        $media = new Song($object_id);
-        if (!$media->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
-
-            return false;
+        $media = $this->modelFactory->createSong($objectId);
+        if ($media->isNew()) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $objectId)
+            );
         }
-        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+
+        $playUser     = $this->modelFactory->createUser($userLookupId);
+        $playUserName = $playUser->username;
+
+        $this->logger->debug(
+            sprintf('record_play: %s for %s using %s %d', $objectId, $playUserName, $agent, $date),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($play_user->id, $agent, array(), $date)) {
+        if ($media->set_played($userLookupId, $agent, [], $date)) {
             // scrobble plugins
-            static::getUserMediaPlaySaverAdapter()->save($play_user, $media);
+            $this->userMediaPlaySaverAdapter->save($playUser, $media);
         }
 
-        Api::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserMediaPlaySaverAdapter(): UserMediaPlaySaverAdapterInterface
-    {
-        global $dic;
-
-        return $dic->get(UserMediaPlaySaverAdapterInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('successfully recorded play: %s for: %s', $objectId, $playUserName)
+                )
+            )
+        );
     }
 }

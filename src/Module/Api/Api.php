@@ -115,7 +115,7 @@ class Api
         Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
         Method\RateMethod::ACTION => Method\RateMethod::class,
         Method\FlagMethod::ACTION => Method\FlagMethod::class,
-        'record_play' => Method\RecordPlayMethod::class,
+        Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
         'scrobble' => Method\ScrobbleMethod::class,
         Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,
         Method\CatalogMethod::ACTION => Method\CatalogMethod::class,
