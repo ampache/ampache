@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Authentication;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
@@ -47,14 +48,18 @@ final class Gatekeeper implements GatekeeperInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         ServerRequestInterface $request,
         LoggerInterface $logger,
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
+        ConfigContainerInterface $configContainer
     ) {
         $this->logger           = $logger;
         $this->request          = $request;
         $this->privilegeChecker = $privilegeChecker;
+        $this->configContainer  = $configContainer;
     }
 
     public function getUser(): User
@@ -80,6 +85,11 @@ final class Gatekeeper implements GatekeeperInterface
     public function getUserName(): string
     {
         return Session::username($this->getAuth());
+    }
+
+    public function getSessionExpiryDate(): int
+    {
+        return time() + $this->configContainer->getSessionLength() - 60;
     }
 
     public function getAuth(): string

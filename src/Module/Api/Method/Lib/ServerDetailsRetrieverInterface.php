@@ -20,22 +20,17 @@
  *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Api\Method\Lib;
 
-interface CatalogRepositoryInterface
+/**
+ * Provides access to vital server informations
+ */
+interface ServerDetailsRetrieverInterface
 {
     /**
-     * Pull all the current catalogs and return a list of ids
-     * of what you find
+     * get the server counts for pings and handshakes
      *
-     * @return int[]
+     * @return array<string, mixed>
      */
-    public function getList(?string $filterType = null): array;
-
-    /**
-     * Returne the date for last updates, additions and cleanup
-     *
-     * @return array<string, string>
-     */
-    public function getLastActionDates(): array;
+    public function retrieve(string $token = ''): array;
 }

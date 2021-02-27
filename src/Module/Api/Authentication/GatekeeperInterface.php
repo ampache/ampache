@@ -36,6 +36,11 @@ interface GatekeeperInterface
 
     public function getUserName(): string;
 
+    /**
+     * Returns the projected session expiry date
+     */
+    public function getSessionExpiryDate(): int;
+
     public function getAuth(): string;
 
     public function mayAccess(

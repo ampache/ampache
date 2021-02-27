@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\Exception\HandshakeException;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Authentication\HandshakeInterface;
+use Ampache\Module\Api\Method\Lib\ServerDetailsRetrieverInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
@@ -47,14 +48,18 @@ final class HandshakeMethod implements MethodInterface
 
     private EnvironmentInterface $environment;
 
+    private ServerDetailsRetrieverInterface $serverDetailsRetriever;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         HandshakeInterface $handshake,
-        EnvironmentInterface $environment
+        EnvironmentInterface $environment,
+        ServerDetailsRetrieverInterface $serverDetailsRetriever
     ) {
-        $this->streamFactory = $streamFactory;
-        $this->handshake     = $handshake;
-        $this->environment   = $environment;
+        $this->streamFactory          = $streamFactory;
+        $this->handshake              = $handshake;
+        $this->environment            = $environment;
+        $this->serverDetailsRetriever = $serverDetailsRetriever;
     }
 
     /**
@@ -128,18 +133,12 @@ final class HandshakeMethod implements MethodInterface
             $token = $data['apikey'];
         }
 
-        $outarray = Api::server_details($token);
-
-        switch ($input['api_format']) {
-            case 'json':
-                $result = json_encode($outarray, JSON_PRETTY_PRINT);
-                break;
-            default:
-                $result = Xml_Data::keyed_array($outarray);
-        }
-
         return $response->withBody(
-            $this->streamFactory->createStream($result)
+            $this->streamFactory->createStream(
+                $output->dict(
+                    $this->serverDetailsRetriever->retrieve($token)
+                )
+            )
         );
     }
 }

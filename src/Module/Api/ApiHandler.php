@@ -84,7 +84,8 @@ final class ApiHandler implements ApiHandlerInterface
         $gatekeeper = new Gatekeeper(
             $request,
             $this->logger,
-            $this->privilegeChecker
+            $this->privilegeChecker,
+            $this->configContainer
         );
 
         $action = (string) Core::get_request('action');

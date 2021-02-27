@@ -24,11 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Dba;
 
 /**
  * API Class
@@ -333,47 +330,4 @@ class Api
 
         return true;
     } // check_access
-
-    /**
-     * server_details
-     *
-     * get the server counts for pings and handshakes
-     *
-     * @param string $token
-     * @return array
-     */
-    public static function server_details($token = '')
-    {
-        // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
-        $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
-        $db_results = Dba::read($sql);
-        $details    = Dba::fetch_assoc($db_results);
-
-        // Now we need to quickly get the totals
-        $counts    = Catalog::count_server(true);
-        $autharray = (!empty($token)) ? array('auth' => $token) : array();
-
-        // send the totals
-        $outarray = array('api' => Api::$version,
-            'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-            'update' => date("c", (int) $details['update']),
-            'add' => date("c", (int) $details['add']),
-            'clean' => date("c", (int) $details['clean']),
-            'songs' => (int) $counts['song'],
-            'albums' => (int) $counts['album'],
-            'artists' => (int) $counts['artist'],
-            'genres' => (int) $counts['tag'],
-            'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-            'users' => ((int) $counts['user'] + (int) $counts['user']),
-            'catalogs' => (int) $counts['catalog'],
-            'videos' => (int) $counts['video'],
-            'podcasts' => (int) $counts['podcast'],
-            'podcast_episodes' => (int) $counts['podcast_episode'],
-            'shares' => (int) $counts['share'],
-            'licenses' => (int) $counts['license'],
-            'live_streams' => (int) $counts['live_stream'],
-            'labels' => (int) $counts['label']);
-
-        return array_merge($autharray, $outarray);
-    } // server_details
 }

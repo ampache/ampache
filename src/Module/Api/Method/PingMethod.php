@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Lib\ServerDetailsRetrieverInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -47,16 +48,20 @@ final class PingMethod implements MethodInterface
 
     private EnvironmentInterface $environment;
 
+    private ServerDetailsRetrieverInterface $serverDetailsRetriever;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        EnvironmentInterface $environment
+        EnvironmentInterface $environment,
+        ServerDetailsRetrieverInterface $serverDetailsRetriever
     ) {
-        $this->streamFactory   = $streamFactory;
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->environment     = $environment;
+        $this->streamFactory          = $streamFactory;
+        $this->configContainer        = $configContainer;
+        $this->logger                 = $logger;
+        $this->environment            = $environment;
+        $this->serverDetailsRetriever = $serverDetailsRetriever;
     }
 
     /**
@@ -93,9 +98,9 @@ final class PingMethod implements MethodInterface
             $gatekeeper->extendSession();
 
             $data = array_merge(
-                ['session_expire' => date('c', time() + $this->configContainer->getSessionLength() - 60)],
                 $data,
-                Api::server_details()
+                ['session_expire' => date('c', $gatekeeper->getSessionExpiryDate())],
+                $this->serverDetailsRetriever->retrieve()
             );
         }
 

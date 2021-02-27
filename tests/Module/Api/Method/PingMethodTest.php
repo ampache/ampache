@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Lib\ServerDetailsRetrieverInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -51,20 +52,25 @@ class PingMethodTest extends MockeryTestCase
     /** @var EnvironmentInterface|MockInterface|null */
     private MockInterface $environment;
 
+    /** @var MockInterface|ServerDetailsRetrieverInterface|null */
+    private MockInterface $serverDetailsRetriever;
+
     private ?PingMethod $subject;
 
     public function setUp(): void
     {
-        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-        $this->environment     = $this->mock(EnvironmentInterface::class);
+        $this->streamFactory          = $this->mock(StreamFactoryInterface::class);
+        $this->configContainer        = $this->mock(ConfigContainerInterface::class);
+        $this->logger                 = $this->mock(LoggerInterface::class);
+        $this->environment            = $this->mock(EnvironmentInterface::class);
+        $this->serverDetailsRetriever = $this->mock(ServerDetailsRetrieverInterface::class);
 
         $this->subject = new PingMethod(
             $this->streamFactory,
             $this->configContainer,
             $this->logger,
-            $this->environment
+            $this->environment,
+            $this->serverDetailsRetriever
         );
     }
 
@@ -75,10 +81,12 @@ class PingMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $version       = '5.0.0';
-        $serverVersion = '1234';
-        $clientIp      = '1.2.3.4';
-        $result        = 'some-result';
+        $version           = '5.0.0';
+        $serverVersion     = '1234';
+        $clientIp          = '1.2.3.4';
+        $result            = 'some-result';
+        $serverDetails     = ['some' => 'details'];
+        $sessionExpiryDate = 12345;
 
         $this->environment->shouldReceive('getClientIp')
             ->withNoArgs()
@@ -93,7 +101,19 @@ class PingMethodTest extends MockeryTestCase
         $gatekeeper->shouldReceive('sessionExists')
             ->withNoArgs()
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
+        $gatekeeper->shouldReceive('extendSession')
+            ->withNoArgs()
+            ->once();
+        $gatekeeper->shouldReceive('getSessionExpiryDate')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($sessionExpiryDate);
+
+        $this->serverDetailsRetriever->shouldReceive('retrieve')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($serverDetails);
 
         $this->logger->shouldReceive('debug')
             ->with(
@@ -103,11 +123,17 @@ class PingMethodTest extends MockeryTestCase
             ->once();
 
         $output->shouldReceive('dict')
-            ->with([
-                'server' => $serverVersion,
-                'version' => $version,
-                'compatible' => '350001',
-            ])
+            ->with(
+                array_merge(
+                    [
+                        'server' => $serverVersion,
+                        'version' => $version,
+                        'compatible' => '350001',
+                    ],
+                    ['session_expire' => date('c', $sessionExpiryDate)],
+                    $serverDetails
+                )
+            )
             ->once()
             ->andReturn($result);
 
