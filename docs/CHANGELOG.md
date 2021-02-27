@@ -2,6 +2,8 @@
 
 ## Ampache develop
 
+Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
 Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
@@ -24,6 +26,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Stop logging auth/passphrase strings
+* Add Y scrolling to the current playlist box (rightbar)
 
 ### Removed
 

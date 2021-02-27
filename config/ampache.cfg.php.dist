@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 48
+config_version = 49
 
 ;#########################################################
 ; Auto Update                                            #
@@ -23,6 +23,11 @@ config_version = 48
 ; Either a binary name in $PATH as well as a fully qualified path is possible
 ; DEFAULT: composer
 ;composer_binary_path = "composer"
+
+; We sometimes need to talk and will show a warning to admin users
+; Enable this setting if you don't want to see warnings (When we enable them)
+; DEFAULT: false
+;hide_ampache_messages = "true"
 
 ;#########################################################
 ; Path Vars                                              #

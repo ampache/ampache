@@ -98,7 +98,7 @@ class License
             );
         }
 
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function getName(): string
