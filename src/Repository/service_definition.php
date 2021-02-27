@@ -52,4 +52,5 @@ return [
     PlaylistRepositoryInterface::class => autowire(PlaylistRepository::class),
     ShareRepositoryInterface::class => autowire(ShareRepository::class),
     SearchRepositoryInterface::class => autowire(SearchRepository::class),
+    DemocraticRepositoryInterface::class => autowire(DemocraticRepository::class),
 ];

@@ -25,8 +25,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
@@ -645,5 +649,50 @@ final class JsonOutput implements ApiOutputInterface
             $limit,
             $offset
         );
+    }
+
+    /**
+     * This handles creating an result for democratic items, this can be a little complicated
+     * due to the votes and all of that
+     *
+     * @param int[] $object_ids Object IDs
+     * @param int   $userId
+     */
+    public function democratic(
+        array $object_ids,
+        int $userId
+    ): string {
+        $democratic = Democratic::get_current_playlist();
+
+        $JSON = [];
+
+        foreach ($object_ids as $row_id => $data) {
+            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $class_name($data['object_id']);
+            $song->format();
+
+            $rating  = new Rating($song->id, 'song');
+            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+
+            array_push($JSON, array(
+                "id" => (string)$song->id,
+                "title" => $song->title,
+                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
+                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
+                "genre" => Json_Data::genre_array($song->tags),
+                "track" => (int) $song->track,
+                "time" => (int) $song->time,
+                "mime" => $song->mime,
+                "url" => $song->play_url('', 'api', false, $userId),
+                "size" => (int) $song->size,
+                "art" => $art_url,
+                "preciserating" => ($rating->get_user_rating() ?: null),
+                "rating" => ($rating->get_user_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
+                "vote" => $democratic->get_vote($row_id)
+            ));
+        }
+
+        return json_encode(['song' => $JSON], JSON_PRETTY_PRINT);
     }
 }

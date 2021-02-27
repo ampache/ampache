@@ -24,10 +24,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
@@ -586,5 +591,59 @@ final class XmlOutput implements ApiOutputInterface
             $limit,
             $offset
         );
+    }
+
+    /**
+     * This handles creating an result for democratic items, this can be a little complicated
+     * due to the votes and all of that
+     *
+     * @param int[] $object_ids Object IDs
+     * @param int   $userId
+     */
+    public function democratic(
+        array $object_ids,
+        int $userId
+    ): string {
+        $democratic = Democratic::get_current_playlist();
+        $string     = '';
+
+        foreach ($object_ids as $row_id => $data) {
+            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $class_name($data['object_id']);
+            $song->format();
+
+            // FIXME: This is duplicate code and so wrong, functions need to be improved
+            $tag           = new Tag($song->tags['0']);
+            $song->genre   = $tag->id;
+            $song->f_genre = $tag->name;
+
+            $tag_string = Xml_Data::genre_string($song->tags);
+
+            $rating = new Rating($song->id, 'song');
+
+            $art_url = Art::url($song->album, 'album', Core::get_request('auth'));
+
+            $string .= "<song id=\"" . $song->id . "\">\n" .
+                // Title is an alias for name
+                "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
+                "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
+                "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
+                "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
+                $tag_string .
+                "\t<track>" . $song->track . "</track>\n" .
+                "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
+                "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
+                "\t<url><![CDATA[" . $song->play_url('', 'api', false, $userId) . "]]></url>\n" .
+                "\t<size>" . $song->size . "</size>\n" .
+                "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t<preciserating>" . ($rating->get_user_rating($userId) ?: null) . "</preciserating>\n" .
+                "\t<rating>" . ($rating->get_user_rating($userId) ?: null) . "</rating>\n" .
+                "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
+                "</song>\n";
+        } // end foreach
+
+        return Xml_Data::output_xml($string);
     }
 }

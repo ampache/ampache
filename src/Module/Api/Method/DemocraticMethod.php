@@ -20,126 +20,94 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Lib\DemocraticControlMapperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\DemocraticRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class DemocraticMethod
- * @package Lib\ApiMethods
- */
-final class DemocraticMethod
+final class DemocraticMethod implements MethodInterface
 {
-    private const ACTION = 'democratic';
+    public const ACTION = 'democratic';
+
+    private DemocraticControlMapperInterface $democraticControlMapper;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private DemocraticRepositoryInterface $democraticRepository;
+
+    public function __construct(
+        DemocraticControlMapperInterface $democraticControlMapper,
+        StreamFactoryInterface $streamFactory,
+        DemocraticRepositoryInterface $democraticRepository
+    ) {
+        $this->democraticControlMapper = $democraticControlMapper;
+        $this->streamFactory           = $streamFactory;
+        $this->democraticRepository    = $democraticRepository;
+    }
 
     /**
-     * democratic
      * MINIMUM_API_VERSION=380001
      *
      * This is for controlling democratic play
      *
+     * @param GatekeeperInterface $gatekeeper ,
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
      */
-    public static function democratic(array $input)
-    {
-        if (!Api::check_parameter($input, array('method'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $method = $input['method'] ?? null;
+
+        if ($method === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'method')
+            );
         }
+
+        $action = $this->democraticControlMapper->map((string) $method);
+
+        if ($action === null) {
+            throw new RequestParamMissingException(
+                T_('Invalid Request')
+            );
+        }
+
+        $user = $gatekeeper->getUser();
+
         // Load up democratic information
-        $democratic = Democratic::get_current_playlist();
+        $democratic = $this->democraticRepository->getCurrent(
+            (int) $user->access
+        );
         $democratic->set_parent();
 
-        switch ($input['method']) {
-            case 'vote':
-                $type      = 'song';
-                $object_id = (int) $input['oid'];
-                $media     = new Song($object_id);
-                if (!$media->id) {
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
-                    break;
-                }
-                $democratic->add_vote(array(
-                    array(
-                        'object_type' => $type,
-                        'object_id' => $media->id
-                    )
-                ));
-
-                // If everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($xml_array);
-                }
-                break;
-            case 'devote':
-                $type      = 'song';
-                $object_id = (int) $input['oid'];
-                $media     = new Song($object_id);
-                if (!$media->id) {
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
-                    break;
-                }
-
-                $object_id = $democratic->get_uid_from_object_id($media->id, $type);
-                $democratic->remove_vote($object_id);
-
-                // Everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($xml_array);
-                }
-                break;
-            case 'playlist':
-                $objects = $democratic->get_items();
-                $user    = User::get_from_username(Session::username($input['auth']));
-                Song::build_cache($democratic->object_ids);
-                Democratic::build_vote_cache($democratic->vote_ids);
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo Json_Data::democratic($objects, $user->id);
-                        break;
-                    default:
-                        echo Xml_Data::democratic($objects, $user->id);
-                }
-                break;
-            case 'play':
-                $url       = $democratic->play_url();
-                $xml_array = array('url' => $url);
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($xml_array);
-                }
-                break;
-            default:
-                Api::error(T_('Invalid Request'), '4710', self::ACTION, 'method', $input['api_format']);
-                break;
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                call_user_func(
+                    $action,
+                    $democratic,
+                    $output,
+                    $user,
+                    (int) ($input['oid'] ?? 0)
+                )
+            )
+        );
     }
 }

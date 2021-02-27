@@ -347,4 +347,16 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This handles creating an result for democratic items, this can be a little complicated
+     * due to the votes and all of that
+     *
+     * @param int[] $object_ids Object IDs
+     * @param int   $userId
+     */
+    public function democratic(
+        array $object_ids,
+        int $userId
+    ): string;
 }

@@ -31,6 +31,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\DemocraticRepository;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use PDOStatement;
 
@@ -79,32 +80,6 @@ class Democratic extends Tmp_Playlist
     {
         return (int) $this->id;
     }
-
-    /**
-     * build_vote_cache
-     * This builds a vote cache of the objects we've got in the playlist
-     * @param $ids
-     * @return boolean
-     */
-    public static function build_vote_cache($ids)
-    {
-        if (!is_array($ids) || !count($ids)) {
-            return false;
-        }
-
-        $idlist = '(' . implode(',', $ids) . ')';
-        $sql    = "SELECT `object_id`, COUNT(`user`) AS `count` " . "FROM `user_vote` " . "WHERE `object_id` IN $idlist GROUP BY `object_id`";
-
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('democratic_vote', $row['object_id'], array($row['count']));
-        }
-
-        return true;
-    } // build_vote_cache
 
     /**
      * is_enabled
@@ -197,6 +172,9 @@ class Democratic extends Tmp_Playlist
      * get_current_playlist
      * This returns the current users current playlist, or if specified
      * this current playlist of the user
+     *
+     * @deprecated
+     * @see DemocraticRepository::getCurrent()
      */
     public static function get_current_playlist()
     {

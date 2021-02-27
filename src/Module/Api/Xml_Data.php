@@ -205,7 +205,7 @@ class Xml_Data
      * @param  array  $tags
      * @return string
      */
-    private static function genre_string($tags)
+    public static function genre_string($tags)
     {
         $string = '';
 

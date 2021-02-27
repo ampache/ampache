@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\DemocraticRepositoryInterface;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -47,14 +48,18 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private DemocraticRepositoryInterface $democraticRepository;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        DemocraticRepositoryInterface $democraticRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui                   = $ui;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->democraticRepository = $democraticRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,7 +87,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
         $objects = $democratic->get_items();
         Song::build_cache($democratic->object_ids);
-        Democratic::build_vote_cache($democratic->vote_ids);
+        $this->democraticRepository->buildVoteCache($democratic->vote_ids);
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('democratic');

@@ -27,13 +27,10 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
@@ -152,7 +149,7 @@ class Json_Data
      * @param  array $tags
      * @return array
      */
-    private static function genre_array($tags)
+    public static function genre_array($tags)
     {
         $JSON = array();
 
@@ -922,58 +919,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // videos
-
-    /**
-     * democratic
-     *
-     * This handles creating an JSON document for democratic items, this can be a little complicated
-     * due to the votes and all of that
-     *
-     * @param  integer[]    $object_ids Object IDs
-     * @param  integer|null $user_id
-     * @param  boolean      $object (whether to return as a named object array or regular array)
-     * @return string       JSON Object "song"
-     */
-    public static function democratic($object_ids = array(), $user_id = null, $object = true)
-    {
-        if (!is_array($object_ids)) {
-            $object_ids = array();
-        }
-
-        $democratic = Democratic::get_current_playlist();
-
-        $JSON = [];
-
-        foreach ($object_ids as $row_id => $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $class_name($data['object_id']);
-            $song->format();
-
-            $rating  = new Rating($song->id, 'song');
-            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
-
-            array_push($JSON, array(
-                "id" => (string)$song->id,
-                "title" => $song->title,
-                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
-                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
-                "genre" => self::genre_array($song->tags),
-                "track" => (int) $song->track,
-                "time" => (int) $song->time,
-                "mime" => $song->mime,
-                "url" => $song->play_url('', 'api', false, $user_id),
-                "size" => (int) $song->size,
-                "art" => $art_url,
-                "preciserating" => ($rating->get_user_rating() ?: null),
-                "rating" => ($rating->get_user_rating() ?: null),
-                "averagerating" => ($rating->get_average_rating() ?: null),
-                "vote" => $democratic->get_vote($row_id)
-            ));
-        } // end foreach
-        $output = ($object) ? array("song" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // democratic
 
     /**
      * users
