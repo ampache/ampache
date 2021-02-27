@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,12 +46,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareCreatorInterface $shareCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareCreatorInterface $shareCreator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->shareCreator    = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,7 +73,7 @@ final class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $share_id = Share::create_share(
+        $share_id = $this->shareCreator->create(
             $_REQUEST['type'],
             (int) $_REQUEST['id'],
             make_bool($_REQUEST['allow_stream']),

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -58,18 +59,22 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private ShareCreatorInterface $shareCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
-        FunctionCheckerInterface $functionChecker
+        FunctionCheckerInterface $functionChecker,
+        ShareCreatorInterface $shareCreator
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
         $this->functionChecker   = $functionChecker;
+        $this->shareCreator      = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -94,8 +99,16 @@ final class ExternalShareAction implements ApplicationActionInterface
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
-        $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
-        $share    = new Share($share_id);
+        $share_id = $this->shareCreator->create(
+            $type,
+            $share_id,
+            true,
+            $allow_download,
+            AmpConfig::get('share_expire'),
+            $secret,
+        );
+
+        $share = new Share($share_id);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

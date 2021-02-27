@@ -115,6 +115,7 @@ return [
     Method\GetSimilarMethod::class => autowire(),
     Method\PlaylistEditMethod::class => autowire(),
     Method\DemocraticMethod::class => autowire(),
+    Method\ShareCreateMethod::class => autowire(),
     Method\Lib\LocalPlayCommandMapperInterface::class => autowire(Method\Lib\LocalPlayCommandMapper::class),
     Method\Lib\ServerDetailsRetrieverInterface::class => autowire(Method\Lib\ServerDetailsRetriever::class),
     Method\Lib\DemocraticControlMapperInterface::class => autowire(Method\Lib\DemocraticControlMapper::class),

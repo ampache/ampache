@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\Album;
@@ -1652,7 +1653,7 @@ class Subsonic_Api
 
                 $response = Subsonic_Xml_Data::createSuccessResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share(
+                $shares[] = static::getShareCreator()->create(
                     $object_type,
                     $object_id,
                     true,
@@ -2725,5 +2726,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(UserMediaPlaySaverAdapterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShareCreator(): ShareCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareCreatorInterface::class);
     }
 }

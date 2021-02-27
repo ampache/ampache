@@ -17,17 +17,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
-use function DI\autowire;
-
-return [
-    ShareUiLinkRendererInterface::class => autowire(ShareUiLinkRenderer::class),
-    ExpirationDateCalculatorInterface::class => autowire(ExpirationDateCalculator::class),
-    ShareCreatorInterface::class => autowire(ShareCreator::class),
-];
+/**
+ * Create share items
+ */
+interface ShareCreatorInterface
+{
+    public function create(
+        string $object_type,
+        int $object_id,
+        bool $allow_stream = true,
+        bool $allow_download = true,
+        int $expire = 0,
+        string $secret = '',
+        int $max_counter = 0,
+        string $description = ''
+    ): ?int;
+}

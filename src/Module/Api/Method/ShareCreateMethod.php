@@ -21,114 +21,149 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Share;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\System\Session;
+use Ampache\Module\Share\ExpirationDateCalculatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ShareCreateMethod
- * @package Lib\ApiMethods
- */
-final class ShareCreateMethod
+final class ShareCreateMethod implements MethodInterface
 {
-    private const ACTION = 'share_create';
+    public const ACTION = 'share_create';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private FunctionCheckerInterface $functionChecker;
+
+    private PasswordGeneratorInterface $passwordGenerator;
+
+    private ExpirationDateCalculatorInterface $expirationDateCalculator;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    private ShareCreatorInterface $shareCreator;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        FunctionCheckerInterface $functionChecker,
+        PasswordGeneratorInterface $passwordGenerator,
+        ExpirationDateCalculatorInterface $expirationDateCalculator,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        ConfigContainerInterface $configContainer,
+        ShareCreatorInterface $shareCreator
+    ) {
+        $this->streamFactory            = $streamFactory;
+        $this->modelFactory             = $modelFactory;
+        $this->functionChecker          = $functionChecker;
+        $this->passwordGenerator        = $passwordGenerator;
+        $this->expirationDateCalculator = $expirationDateCalculator;
+        $this->updateInfoRepository     = $updateInfoRepository;
+        $this->configContainer          = $configContainer;
+        $this->shareCreator             = $shareCreator;
+    }
 
     /**
-     * share_create
      * MINIMUM_API_VERSION=420000
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter      = (string) object_id
      * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
+     * @throws FunctionDisabledException
      */
-    public static function share_create(array $input)
-    {
-        if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
-            return false;
-        }
-
-        $description = $input['description'];
-        $object_id   = $input['filter'];
-        $type        = $input['type'];
-        $expire_days = Share::get_expiry($input['expires']);
-        // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-
-        $share = array();
-        if (!$className || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-        } else {
-            $item = new $className($object_id);
-            if (!$item->id) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-                return false;
-            }
-            // @todo Replace by constructor injection
-            global $dic;
-            $functionChecker   = $dic->get(FunctionCheckerInterface::class);
-            $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-
-            $share[] = Share::create_share(
-                $type,
-                $object_id,
-                true,
-                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
-                $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
-                0,
-                $description
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: share')
             );
         }
-        if (empty($share)) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        foreach (['type', 'filter'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::shares($share, false);
-                break;
-            default:
-                echo Xml_Data::shares($share);
-        }
-        Catalog::count_table('share');
-        Session::extend($input['auth']);
+        $description = ($input['description'] ?? '');
+        $objectId    = (int) $input['filter'];
+        $type        = $input['type'];
 
-        return true;
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist'))) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
+        }
+
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
+        if (!$item->id) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $objectId)
+            );
+        }
+
+        $shareId = $this->shareCreator->create(
+            $type,
+            $objectId,
+            true,
+            $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+            $this->expirationDateCalculator->calculate((int) ($input['expires'] ?? 0)),
+            $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+            0,
+            $description
+        );
+        if ($shareId === null) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
+        }
+
+        $this->updateInfoRepository->updateCountByTableName('share');
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares([$shareId], false)
+            )
+        );
     }
 }
