@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UI;
 
@@ -445,7 +446,14 @@ class Browse extends Query
     public function save_cookie_params($option, $value)
     {
         if ($this->get_type()) {
-            setcookie('browse_' . $this->get_type() . '_' . $option, $value, time() + 31536000, "/");
+            $this->getCookieSetter()->set(
+                sprintf('browse_%s_%s', $this->get_type(), $option),
+                $value,
+                [
+                    'expires' => time() + 31536000,
+                    'path' => '/',
+                ]
+            );
         }
     }
 
@@ -589,5 +597,15 @@ class Browse extends Query
         }
 
         return $css;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getCookieSetter(): CookieSetterInterface
+    {
+        global $dic;
+
+        return $dic->get(CookieSetterInterface::class);
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -179,14 +180,20 @@ final class Session implements SessionInterface
         debug_event(self::class, 'Deleting Session with key:' . $key, 6);
 
         $session_name  = AmpConfig::get('session_name');
-        $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = '';
-        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
+
+        $options = [
+            'expires' => -1,
+            'path' => AmpConfig::get('cookie_path'),
+            'domain' => '',
+            'secure' => make_bool(AmpConfig::get('cookie_secure'))
+        ];
+
+        $cookieSetter = static::getCookieSetter();
 
         // Destroy our cookie!
-        setcookie($session_name, '', -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_user', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
+        $cookieSetter->set($session_name, '', $options);
+        $cookieSetter->set(sprintf('%_user', $session_name), '', $options);
+        $cookieSetter->set(sprintf('%_lang', $session_name), '', $options);
 
         return true;
     }
@@ -551,13 +558,21 @@ final class Session implements SessionInterface
         // Set up the cookie prefs before we throw down, this is very important
         $cookie_life   = (int)AmpConfig::get('cookie_life');
         $cookie_path   = (string)AmpConfig::get('cookie_path');
-        $cookie_domain = '';
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+            static::getCookieSetter()->set(
+                session_name(),
+                session_id(),
+                [
+                    'expires' => $cookie_life,
+                    'path' => $cookie_path,
+                    'domain' => '',
+                    'secure' => $cookie_secure
+                ]
+            );
         } else {
-            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+            session_set_cookie_params($cookie_life, $cookie_path, '', $cookie_secure);
         }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
@@ -578,15 +593,25 @@ final class Session implements SessionInterface
      */
     public static function create_user_cookie($username)
     {
-        $cookie_life   = AmpConfig::get('cookie_life');
         $session_name  = AmpConfig::get('session_name');
-        $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = '';
-        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
+        $options       = [
+            'expires' => AmpConfig::get('cookie_life'),
+            'path' => AmpConfig::get('cookie_path'),
+            'domain' => '',
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+        ];
 
-        setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain,
-            $cookie_secure);
+        $cookieSetter = static::getCookieSetter();
+        $cookieSetter->set(
+            sprintf('%s_user', $session_name),
+            $username,
+            $options
+        );
+        $cookieSetter->set(
+            sprintf('%s_lang', $session_name),
+            AmpConfig::get('lang'),
+            $options
+        );
     }
 
     /**
@@ -599,9 +624,6 @@ final class Session implements SessionInterface
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
-        $cookie_path     = AmpConfig::get('cookie_path');
-        $cookie_domain   = '';
-        $cookie_secure   = make_bool(AmpConfig::get('cookie_secure'));
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -609,7 +631,16 @@ final class Session implements SessionInterface
         $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
-        setcookie($session_name . '_remember', $cookie, time() + $remember_length, $cookie_path, $cookie_domain, $cookie_secure);
+        static::getCookieSetter()->set(
+            sprintf('%s_remember', $session_name),
+            $cookie,
+            [
+                'expires' => time() + $remember_length,
+                'path' => AmpConfig::get('cookie_path'),
+                'domain' => '',
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            ]
+        );
     }
 
     /**
@@ -686,5 +717,15 @@ final class Session implements SessionInterface
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCookieSetter(): CookieSetterInterface
+    {
+        global $dic;
+
+        return $dic->get(CookieSetterInterface::class);
     }
 }

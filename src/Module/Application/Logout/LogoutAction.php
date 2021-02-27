@@ -20,12 +20,15 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Ampache\Module\Application\Logout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\Util\CookieSetterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,18 +40,27 @@ final class LogoutAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private CookieSetterInterface $cookieSetter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        CookieSetterInterface $cookieSetter
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
+        $this->cookieSetter          = $cookieSetter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
+        $this->cookieSetter->set(
+            sprintf('%s_remember', $this->configContainer->getSessionName()),
+            '',
+            [
+                'expires' => -1
+            ]
+        );
 
         $this->authenticationManager->logout('', false);
 

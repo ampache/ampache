@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
+use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Horde_Browser;
@@ -37,10 +38,14 @@ final class InstallationHelper implements InstallationHelperInterface
 {
     private UserCreatorInterface $userCreator;
 
+    private CookieSetterInterface $cookieSetter;
+
     public function __construct(
-        UserCreatorInterface $userCreator
+        UserCreatorInterface $userCreator,
+        CookieSetterInterface $cookieSetter
     ) {
-        $this->userCreator = $userCreator;
+        $this->userCreator  = $userCreator;
+        $this->cookieSetter = $cookieSetter;
     }
 
     /**
@@ -573,10 +578,15 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['download']    = '0';
                 $dbconfig['allow_video'] = '0';
 
+                $cookieOptions = [
+                    'expires' => time() + (30 * 24 * 60 * 60),
+                    'path' => '/',
+                ];
+
                 // Default local UI preferences to have a better 'minimalist first look'.
-                setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_album_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
+                $this->cookieSetter->set('sidebare_state', 'collapsed', $cookieOptions);
+                $this->cookieSetter->set('browse_album_grid_view', 'false', $cookieOptions);
+                $this->cookieSetter->set('browse_artist_grid_view', 'false', $cookieOptions);
                 break;
             case 'community':
                 $trconfig['use_auth']                                = 'false';
