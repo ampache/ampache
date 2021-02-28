@@ -126,7 +126,7 @@ class Api
         Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
         Method\StreamMethod::ACTION => Method\StreamMethod::class,
         Method\DownloadMethod::ACTION => Method\DownloadMethod::class,
-        'get_art' => Method\GetArtMethod::class,
+        Method\GetArtMethod::ACTION => Method\GetArtMethod::class,
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         Method\DemocraticMethod::ACTION => Method\DemocraticMethod::class,
         Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,

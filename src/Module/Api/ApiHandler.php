@@ -248,6 +248,7 @@ final class ApiHandler implements ApiHandlerInterface
                 )
             );
         } catch (Throwable $e) {
+            var_dump($e->getTraceAsString());
             $this->logger->error(
                 $e->getMessage(),
                 [

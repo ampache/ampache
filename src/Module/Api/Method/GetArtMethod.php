@@ -20,118 +20,134 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Lib\ArtItemRetrieverInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Teapot\StatusCode;
 
-/**
- * Class GetArtMethod
- * @package Lib\ApiMethods
- */
-final class GetArtMethod
+final class GetArtMethod implements MethodInterface
 {
-    private const ACTION = 'get_art';
+    public const ACTION = 'get_art';
+
+    private ArtItemRetrieverInterface $artItemRetriever;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ArtItemRetrieverInterface $artItemRetriever,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->artItemRetriever = $artItemRetriever;
+        $this->streamFactory    = $streamFactory;
+        $this->configContainer  = $configContainer;
+    }
 
     /**
-     * get_art
      * MINIMUM_API_VERSION=400001
      *
      * Get an art image.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * id   = (string) $object_id
      * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function get_art(array $input)
-    {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
-            http_response_code(400);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['id', 'type'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                return $response->withStatus(StatusCode::BAD_REQUEST);
+            }
         }
+
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'];
-        $user      = User::get_from_username(Session::username($input['auth']));
+        $size      = (int) ($input['size'] ?? 0);
 
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
+            return $response->withStatus(StatusCode::BAD_REQUEST);
         }
 
-        $art = null;
-        if ($type == 'artist') {
-            $art = new Art($object_id, 'artist');
-        } elseif ($type == 'album') {
-            $art = new Art($object_id, 'album');
-        } elseif ($type == 'song') {
-            $art = new Art($object_id, 'song');
-            if ($art != null && $art->id == null) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
-                $song = new Song($object_id);
-                $art  = new Art($song->album, 'album');
-            }
-        } elseif ($type == 'podcast') {
-            $art = new Art($object_id, 'podcast');
-        } elseif ($type == 'search') {
-            $smartlist = new Search($object_id, 'song', $user);
-            $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, 'album');
-            }
-        } elseif ($type == 'playlist') {
-            $playlist  = new Playlist($object_id);
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, 'album');
-            }
-        }
+        $art = $this->artItemRetriever->retrieve(
+            $gatekeeper->getUser(),
+            $type,
+            $object_id
+        );
 
         if ($art != null) {
-            header('Access-Control-Allow-Origin: *');
-            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
-                $dim           = array();
-                $dim['width']  = $size;
-                $dim['height'] = $size;
-                $thumb         = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
-                    echo $thumb['thumb'];
-
-                    return true;
+            if (
+                $art->has_db_info() &&
+                $size &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RESIZE_IMAGES) === true
+            ) {
+                $thumb = $art->get_thumb([
+                    'width' => $size,
+                    'height' => $size
+                ]);
+                if ($thumb !== []) {
+                    return $this->sendResponse(
+                        $response,
+                        $thumb['thumb_mime'],
+                        strlen((string) $thumb['thumb']),
+                        $thumb['thumb']
+                    );
                 }
             }
 
-            header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen((string) $art->raw));
-            echo $art->raw;
-            Session::extend($input['auth']);
-
-            return true;
+            if ($art->raw_mime !== null) {
+                return $this->sendResponse(
+                    $response,
+                    $art->raw_mime,
+                    strlen((string) $art->raw),
+                    $art->raw
+                );
+            }
         }
         // art not found
-        http_response_code(404);
+        return $response->withStatus(StatusCode::NOT_FOUND);
+    }
 
-        return false;
+    private function sendResponse(
+        ResponseInterface $response,
+        string $mimeType,
+        int $contentLength,
+        string $image
+    ): ResponseInterface {
+        return $response
+            ->withHeader(
+                'Content-Type',
+                $mimeType
+            )
+            ->withHeader(
+                'Content-Length',
+                $contentLength
+            )
+            ->withHeader(
+                'Access-Control-Allow-Origin',
+                '*'
+            )
+            ->withBody(
+                $this->streamFactory->createStream($image)
+            );
     }
 }
