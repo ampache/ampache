@@ -25,25 +25,48 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class CatalogFileMethod
- * @package Lib\ApiMethods
- */
-final class CatalogFileMethod
+final class CatalogFileMethod implements MethodInterface
 {
-    private const ACTION = 'catalog_file';
+    public const ACTION = 'catalog_file';
+
+    private SongDeleterInterface $songDeleter;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        SongDeleterInterface $songDeleter,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->songDeleter     = $songDeleter;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+        $this->streamFactory   = $streamFactory;
+    }
 
     /**
-     * catalog_file
      * MINIMUM_API_VERSION=420000
      *
      * Perform actions on local catalog files.
@@ -54,44 +77,59 @@ final class CatalogFileMethod
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove'
      * catalog = (integer) $catalog_id)
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function catalog_file(array $input)
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
         $task = (string) $input['task'];
-        if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            Api::error(T_('Enable: delete_from_disk'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+        if ($task === 'remove' && !AmpConfig::get('delete_from_disk')) {
+            throw new FunctionDisabledException(
+                T_('Enable: delete_from_disk')
+            );
         }
 
-        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 50')
+            );
         }
-        if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
-            return false;
+
+        foreach (['catalog', 'file', 'task'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
+
         $file = (string) html_entity_decode($input['file']);
         // confirm the correct data
-        if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
-
-            return false;
+        if (!in_array($task, ['add', 'clean', 'verify', 'remove'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $task)
+            );
         }
         if (!file_exists($file) && $task !== 'clean') {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $file)
+            );
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $catalog_id)
+            );
         }
         switch ($catalog->gather_types) {
             case 'podcast':
@@ -129,22 +167,18 @@ final class CatalogFileMethod
                     $media->remove();
                     break;
             }
-            Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf('successfully started: %s for %s', $task, $file)
+                    )
+                )
+            );
         } else {
-            Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
+            throw new ResultEmptyException(
+                T_('Not Found')
+            );
         }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

@@ -21,30 +21,37 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistGenerateMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistGenerateMethod
+final class PlaylistGenerateMethod implements MethodInterface
 {
-    const ACTION = 'playlist_generate';
+    public const ACTION = 'playlist_generate';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * playlist_generate
      * MINIMUM_API_VERSION=400001
      * CHANGED_IN_API_VERSION=400002
      *
@@ -53,6 +60,9 @@ final class PlaylistGenerateMethod
      * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * mode   = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
@@ -62,21 +72,28 @@ final class PlaylistGenerateMethod
      * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
      */
-    public static function playlist_generate(array $input)
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
         // parameter defaults
         $mode   = (in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? $input['mode'] : 'random';
         $format = (in_array($input['format'], array('song', 'index', 'id'), true)) ? $input['format'] : 'song';
+
         // confirm the correct data
         if (!in_array($format, array('song', 'index', 'id'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $format), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $format)
+            );
         }
-        $user   = User::get_from_username(Session::username($input['auth']));
-        $array  = array();
+        $user  = $gatekeeper->getUser();
+        $array = array();
 
         // count for search rules
         $rule_count = 1;
@@ -138,64 +155,53 @@ final class PlaylistGenerateMethod
             $array['rule_' . $rule_count . '_operator'] = 4;
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-        }
-
         // get db data
-        $song_ids = Search::run($array, $user);
+        $song_ids = $this->modelFactory->createSearch()->runSearch($array, $user);
         shuffle($song_ids);
 
         //slice the array if there is a limit
         if ((int) $input['limit'] > 0) {
             $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
         }
-        if (empty($song_ids)) {
-            Api::empty($format, $input['api_format']);
-
-            return false;
+        if ($song_ids === []) {
+            $result = $output->emptyResult($format);
+        } else {
+            // output formatted XML
+            switch ($format) {
+                case 'id':
+                    $result = $output->dict(
+                        $song_ids,
+                        true,
+                        'id'
+                    );
+                    break;
+                case 'index':
+                    $result = $output->indexes(
+                        $song_ids,
+                        'song',
+                        $user->getId(),
+                        false,
+                        false,
+                        (int) ($input['limit'] ?? 0),
+                        (int) ($input['offset'] ?? 0)
+                    );
+                    break;
+                case 'song':
+                default:
+                    $result = $output->songs(
+                        $song_ids,
+                        $user->getId(),
+                        true,
+                        true,
+                        true,
+                        (int) ($input['limit'] ?? 0),
+                        (int) ($input['offset'] ?? 0)
+                    );
+            }
         }
 
-        // output formatted XML
-        ob_end_clean();
-        switch ($format) {
-            case 'id':
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($song_ids, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($song_ids, false, 'id');
-                }
-                break;
-            case 'index':
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song', $user->id);
-                        break;
-                    default:
-                        echo XML_Data::indexes($song_ids, 'song', $user->id);
-                }
-                break;
-            case 'song':
-            default:
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo Json_Data::songs($song_ids, $user->id);
-                        break;
-                    default:
-                        echo Xml_Data::songs($song_ids, $user->id);
-                }
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

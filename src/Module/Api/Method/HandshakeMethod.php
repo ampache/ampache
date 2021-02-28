@@ -31,7 +31,6 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Authentication\HandshakeInterface;
 use Ampache\Module\Api\Method\Lib\ServerDetailsRetrieverInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\EnvironmentInterface;
