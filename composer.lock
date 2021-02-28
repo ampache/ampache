@@ -1232,12 +1232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "80c557835768de3bb76e45878c18774ad522aafc"
+                "reference": "1a4591b163195905a80f1eb0228a60284bfeb7d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/80c557835768de3bb76e45878c18774ad522aafc",
-                "reference": "80c557835768de3bb76e45878c18774ad522aafc",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/1a4591b163195905a80f1eb0228a60284bfeb7d1",
+                "reference": "1a4591b163195905a80f1eb0228a60284bfeb7d1",
                 "shasum": ""
             },
             "require": {
@@ -1292,7 +1292,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-02-26T13:59:03+00:00"
+            "time": "2021-02-27T19:10:46+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
