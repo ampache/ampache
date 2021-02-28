@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Method\PodcastEditMethod;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 
@@ -95,7 +96,7 @@ class Api
         Method\PodcastMethod::ACTION => Method\PodcastMethod::class,
         Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
         Method\PodcastDeleteMethod::ACTION => Method\PodcastDeleteMethod::class,
-        'podcast_edit' => Method\PodcastEditMethod::class,
+        Method\PodcastEditMethod::ACTION => Method\PodcastEditMethod::class,
         Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,
         Method\PodcastEpisodeMethod::ACTION => Method\PodcastEpisodeMethod::class,
         Method\PodcastEpisodeDeleteMethod::ACTION => Method\PodcastEpisodeDeleteMethod::class,
