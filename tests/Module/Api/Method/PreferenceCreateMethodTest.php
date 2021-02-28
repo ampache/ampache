@@ -28,12 +28,15 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 
 class PreferenceCreateMethodTest extends MockeryTestCase
 {
@@ -117,6 +120,240 @@ class PreferenceCreateMethodTest extends MockeryTestCase
                 'default' => $default,
                 'category' => $category
             ]
+        );
+    }
+
+    public function testHandleThrowsExceptionIfPreferenceIsSystemPreference(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $type     = 'special';
+        $filter   = 'some-name';
+        $default  = 'bool';
+        $category = 'some-category';
+
+        $this->expectException(RequestParamMissingException::class);
+        $this->expectExceptionMessage(sprintf('Bad Request: %s', $filter));
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->preferenceRepository->shouldReceive('get')
+            ->with($filter, -1)
+            ->once()
+            ->andReturn([]);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'type' => $type,
+                'filter' => $filter,
+                'default' => $default,
+                'category' => $category
+            ]
+        );
+    }
+
+    public function testHandleThrowsExceptionIfTypeIsNotSupported(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $type     = 'some-type';
+        $filter   = 'some-name';
+        $default  = 'bool';
+        $category = 'some-category';
+
+        $this->expectException(RequestParamMissingException::class);
+        $this->expectExceptionMessage(sprintf('Bad Request: %s', $type));
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->preferenceRepository->shouldReceive('get')
+            ->with($filter, -1)
+            ->once()
+            ->andReturn([$filter]);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'type' => $type,
+                'filter' => $filter,
+                'default' => $default,
+                'category' => $category
+            ]
+        );
+    }
+
+    public function testHandleThrowsExceptionIfCategoryIsNotSupported(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $type     = 'special';
+        $filter   = 'some-name';
+        $default  = 'bool';
+        $category = 'some-category';
+
+        $this->expectException(RequestParamMissingException::class);
+        $this->expectExceptionMessage(sprintf('Bad Request: %s', $category));
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->preferenceRepository->shouldReceive('get')
+            ->with($filter, -1)
+            ->once()
+            ->andReturn([$filter]);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'type' => $type,
+                'filter' => $filter,
+                'default' => $default,
+                'category' => $category
+            ]
+        );
+    }
+
+    public function testHandleThrowsExceptionIfInsertFailed(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $type     = 'special';
+        $filter   = 'some-name';
+        $default  = 'bool';
+        $category = 'interface';
+
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage(sprintf('Not Found: %s', $filter));
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->preferenceRepository->shouldReceive('get')
+            ->with($filter, -1)
+            ->twice()
+            ->andReturn([$filter], []);
+        $this->preferenceRepository->shouldReceive('add')
+            ->with(
+                $filter,
+                '',
+                $default,
+                AccessLevelEnum::LEVEL_ADMIN,
+                $type,
+                $category,
+                ''
+            )
+            ->once();
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'type' => $type,
+                'filter' => $filter,
+                'default' => $default,
+                'category' => $category
+            ]
+        );
+    }
+
+    public function testHandleAdds(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $stream     = $this->mock(StreamInterface::class);
+        $user       = $this->mock(User::class);
+
+        $type     = 'special';
+        $filter   = 'some-name';
+        $default  = 'bool';
+        $category = 'interface';
+        $result   = 'some-result';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->preferenceRepository->shouldReceive('get')
+            ->with($filter, -1)
+            ->twice()
+            ->andReturn([$filter]);
+        $this->preferenceRepository->shouldReceive('add')
+            ->with(
+                $filter,
+                '',
+                $default,
+                AccessLevelEnum::LEVEL_ADMIN,
+                $type,
+                $category,
+                ''
+            )
+            ->once();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
+        $user->shouldReceive('fixPreferences')
+            ->withNoArgs()
+            ->once();
+
+        $output->shouldReceive('object_array')
+            ->with([$filter], 'preference')
+            ->once()
+            ->andReturn($result);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'type' => $type,
+                    'filter' => $filter,
+                    'default' => $default,
+                    'category' => $category
+                ]
+            )
         );
     }
 }

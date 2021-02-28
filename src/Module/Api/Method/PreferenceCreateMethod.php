@@ -117,7 +117,7 @@ final class PreferenceCreateMethod implements MethodInterface
 
         $level       = (isset($input['level'])) ? (int) $input['level'] : AccessLevelEnum::LEVEL_ADMIN;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $description = (string) $input['description'];
+        $description = (string) ($input['description'] ?? '');
         $subcategory = (string) ($input['subcategory'] ?? '');
 
         // insert and return the new preference
