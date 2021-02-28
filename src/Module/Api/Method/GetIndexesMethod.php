@@ -21,34 +21,63 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GetIndexesMethod
- * @package Lib\ApiMethods
- */
-final class GetIndexesMethod
+final class GetIndexesMethod implements MethodInterface
 {
-    private const ACTION = 'get_indexes';
+    public const ACTION = 'get_indexes';
+
+    private const TYPE_REQUIRE_FEATURE = [
+        'video' => ConfigurationKeyEnum::ALLOW_VIDEO,
+        'podcast' => ConfigurationKeyEnum::PODCAST,
+        'podcast_episode' => ConfigurationKeyEnum::PODCAST,
+        'live_stream' => ConfigurationKeyEnum::LIVE_STREAM,
+    ];
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private SearchRepositoryInterface $searchRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        SearchRepositoryInterface $searchRepository,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory    = $streamFactory;
+        $this->configContainer  = $configContainer;
+        $this->searchRepository = $searchRepository;
+        $this->modelFactory     = $modelFactory;
+    }
 
     /**
-     * get_indexes
      * MINIMUM_API_VERSION=400001
      * CHANGED_IN_API_VERSION=5.0.0
      *
      * This takes a collection of inputs and returns ID + name for the object type
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
@@ -59,63 +88,66 @@ final class GetIndexesMethod
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function get_indexes(array $input)
-    {
-        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
-            return false;
-        }
-        $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $type = $input['type'] ?? null;
 
-            return false;
+        if ($type === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'type')
+            );
         }
-        if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
-            return false;
-        }
-        if (!AmpConfig::get('share') && $type == 'share') {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+        $type = ($type === 'album_artist') ? 'artist' : $type;
 
-            return false;
-        }
-        if (!AmpConfig::get('live_stream') && $type == 'live_stream') {
-            Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (int) $input['include'] == 1;
-        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
-        $browse = Api::getBrowse();
+
+        $requiredFeature = static::TYPE_REQUIRE_FEATURE[$type] ?? null;
+        if ($requiredFeature !== null && $this->configContainer->isFeatureEnabled($requiredFeature) === false) {
+            throw new FunctionDisabledException(sprintf(T_('Enable: %s'), $type));
+        }
+
+        $include = (int) ($input['include'] ?? 0) == 1;
+        $hide    = ((int) ($input['hide_search'] ?? 0) == 1) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HIDE_SEARCH);
+
+        $userId = $gatekeeper->getUser()->getId();
+
+        $browse = $this->modelFactory->createBrowse();
         $browse->reset_filters();
         $browse->set_type($type);
         $browse->set_sort('name', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'], $browse);
-        Api::set_filter('add', $input['add'], $browse);
-        Api::set_filter('update', $input['update'], $browse);
+        $method = ($input['exact'] ?? '') ? 'exact_match' : 'alpha_match';
+
+        Api::set_filter($method, ($input['filter'] ?? ''), $browse);
+        Api::set_filter('add', ($input['add'] ?? ''), $browse);
+        Api::set_filter('update', ($input['update'] ?? ''), $browse);
         // set the album_artist filter (if enabled)
         if ((string) $input['type'] == 'album_artist') {
             Api::set_filter('album_artist', true, $browse);
         }
 
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', $user->id);
+            $browse->set_filter('playlist_type', $userId);
             if (!$hide) {
                 $objects = array_merge(
                     $browse->get_objects(),
-                    static::getSearchRepository()->getSmartlists($user->getId())
+                    $this->searchRepository->getSmartlists($userId)
                 );
             } else {
                 $objects = $browse->get_objects();
@@ -123,36 +155,23 @@ final class GetIndexesMethod
         } else {
             $objects = $browse->get_objects();
         }
-        if (empty($objects)) {
-            Api::empty($type, $input['api_format']);
 
-            return false;
+        if ($objects === []) {
+            $result = $output->emptyResult($type);
+        } else {
+            $result = $output->indexes(
+                array_map('intval', $objects),
+                $type,
+                $userId,
+                $include,
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type, $user->id, $include);
-                break;
-            default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
-        }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getSearchRepository(): SearchRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SearchRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

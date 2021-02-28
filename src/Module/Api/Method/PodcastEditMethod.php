@@ -21,31 +21,57 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastEditMethod
- * @package Lib\ApiMethods
- */
-final class PodcastEditMethod
+final class PodcastEditMethod implements MethodInterface
 {
-    private const ACTION = 'podcast_edit';
+    public const ACTION = 'podcast_edit';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private UiInterface $ui;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+        UiInterface $ui
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+        $this->ui              = $ui;
+    }
 
     /**
-     * podcast_edit
      * MINIMUM_API_VERSION=420000
      * CHANGED_IN_API_VERSION=5.0.0
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
@@ -54,38 +80,53 @@ final class PodcastEditMethod
      * description = (string) //optional
      * generator   = (string) //optional
      * copyright   = (string) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function podcast_edit(array $input)
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $podcast_id = $input['filter'];
-        $podcast    = new Podcast($podcast_id);
-
-        if (!$podcast->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $podcast_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: podcast')
+            );
         }
 
-        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
-        $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
-        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
-        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
-        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+            throw new AccessDeniedException('Require: 50');
+        }
+
+        $podcastId = $input['filter'] ?? null;
+
+        if ($podcastId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        $podcastId = (int) $podcastId;
+        $podcast   = $this->modelFactory->createPodcast($podcastId);
+
+        if ($podcast->isNew()) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $podcastId)
+            );
+        }
+
+        $feed           = filter_var($input['feed'] ?? '', FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+        $title          = isset($input['title']) ? $this->ui->scrubIn($input['title']) : $podcast->title;
+        $website        = filter_var($input['website'] ?? '', FILTER_VALIDATE_URL) ? $this->ui->scrubIn($input['website']) : $podcast->website;
+        $description    = isset($input['description']) ? $this->ui->scrubIn($input['description']) : $podcast->description;
+        $generator      = isset($input['generator']) ? $this->ui->scrubIn($input['generator']) : $podcast->generator;
+        $copyright      = isset($input['copyright']) ? $this->ui->scrubIn($input['copyright']) : $podcast->copyright;
         $data           = array(
             'feed' => $feed,
             'title' => $title,
@@ -94,14 +135,16 @@ final class PodcastEditMethod
             'generator' => $generator,
             'copyright' => $copyright
         );
-        if ($podcast->update($data)) {
-            Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), '4710', self::ACTION, 'system', $input['api_format']);
+        if (!$podcast->update($data)) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $podcastId)
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(sprintf('podcast %d updated', $podcastId))
+            )
+        );
     }
 }

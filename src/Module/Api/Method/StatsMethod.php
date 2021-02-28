@@ -21,39 +21,58 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Session;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Lib\ItemToplistMapperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class StatsMethod
- * @package Lib\ApiMethods
- */
-final class StatsMethod
+final class StatsMethod implements MethodInterface
 {
-    private const ACTION = 'stats';
+    public const ACTION = 'stats';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ItemToplistMapperInterface $itemToplistMapper;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ItemToplistMapperInterface $itemToplistMapper,
+        ModelFactoryInterface $modelFactory,
+        UserRepositoryInterface $userRepository,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory     = $streamFactory;
+        $this->itemToplistMapper = $itemToplistMapper;
+        $this->modelFactory      = $modelFactory;
+        $this->userRepository    = $userRepository;
+        $this->configContainer   = $configContainer;
+    }
 
     /**
-     * stats
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=5.0.0
      *
      * Get some items based on some simple search types and filters. (Random by default)
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * type     = (string)  'song', 'album', 'artist'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
@@ -61,142 +80,77 @@ final class StatsMethod
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
      */
-    public static function stats(array $input)
-    {
-        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $type = $input['type'] ?? null;
+
+        if ($type === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'type')
+            );
         }
-        $type   = (string) $input['type'];
-        $offset = (int) $input['offset'];
-        $limit  = (int) $input['limit'];
-        if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
-        }
+
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'album', 'artist'])) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
 
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
+        $offset = (int) ($input['offset'] ?? 0);
+        $limit  = (int) ($input['limit'] ?? 0);
+        if ($limit < 1) {
+            $limit = $this->configContainer->getPopularThreshold(10);
+        }
+
+        $username = $input['username'] ?? null;
+        $userId   = $input['user_id'] ?? null;
+
         // override your user if you're looking at others
-        if ($input['username']) {
-            $user    = User::get_from_username($input['username']);
-            $user_id = $user->id;
-        } elseif ($input['user_id']) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+        if ($username !== null) {
+            $user = $this->modelFactory->createUser(
+                $this->userRepository->findByUsername($username)
+            );
+        } elseif ($userId !== null) {
+            $user = $this->modelFactory->createUser((int) $userId);
+        } else {
+            $user = $gatekeeper->getUser();
         }
 
-        $results = array();
-        switch ($input['filter']) {
-            case 'newest':
-                debug_event(self::class, 'stats newest', 5);
-                $results = Stats::get_newest($type, $limit, $offset);
-                break;
-            case 'highest':
-                debug_event(self::class, 'stats highest', 4);
-                $results = Rating::get_highest($type, $limit, $offset);
-                break;
-            case 'frequent':
-                debug_event(self::class, 'stats frequent', 4);
-                $threshold = AmpConfig::get('stats_threshold');
-                $results   = Stats::get_top($type, $limit, $threshold, $offset);
-                break;
-            case 'recent':
-            case 'forgotten':
-                debug_event(self::class, 'stats ' . $input['filter'], 4);
-                $newest  = $input['filter'] == 'recent';
-                $results = ($user->id)
-                    ? $user->get_recently_played($limit, $type, $newest)
-                    : Stats::get_recent($type, $limit, $offset, $newest);
-                break;
-            case 'flagged':
-                debug_event(self::class, 'stats flagged', 4);
-                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
-                break;
-            case 'random':
-            default:
-                debug_event(self::class, 'stats random ' . $type, 4);
-                switch ($type) {
-                    case 'song':
-                        $results = Random::get_default($limit, $user_id);
-                        break;
-                    case 'artist':
-                        $results = static::getArtistRepository()->getRandom(
-                            $user_id,
-                            $limit
-                        );
-                        break;
-                    case 'album':
-                        $results = static::getAlbumRepository()->getRandom(
-                            $user->id,
-                            $limit
-                        );
-                }
-        }
-        if (empty($results)) {
-            Api::empty($type, $input['api_format']);
+        $action = $this->itemToplistMapper->map($input['filter']);
 
-            return false;
-        }
+        $objectIds = $action(
+            $user,
+            $type,
+            $limit,
+            $offset
+        );
 
-        ob_end_clean();
-        if ($type === 'song') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json_Data::songs($results, $user->id);
-                    break;
-                default:
-                    echo Xml_Data::songs($results, $user->id);
+        $result = '';
+        if ($objectIds === []) {
+            $result = $output->emptyResult($type);
+        } else {
+            if ($type === 'song') {
+                $result = $output->songs($objectIds, $user->getId());
+            }
+            if ($type === 'artist') {
+                $result = $output->artists($objectIds, [], $user->getId());
+            }
+            if ($type === 'album') {
+                $result = $output->albums($objectIds, [], $user->getId());
             }
         }
-        if ($type === 'artist') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json_Data::artists($results, array(), $user->id);
-                    break;
-                default:
-                    echo Xml_Data::artists($results, array(), $user->id);
-            }
-        }
-        if ($type === 'album') {
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json_Data::albums($results, array(), $user->id);
-                    break;
-                default:
-                    echo Xml_Data::albums($results, array(), $user->id);
-            }
-        }
-        Session::extend($input['auth']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistRepository(): ArtistRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

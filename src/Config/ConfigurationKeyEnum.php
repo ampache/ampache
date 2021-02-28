@@ -118,4 +118,5 @@ final class ConfigurationKeyEnum
     public const UPLOAD_ALLOW_REMOVE           = 'upload_allow_remove';
     public const HIDE_SEARCH                   = 'hide_search';
     public const SHARE_EXPIRE                  = 'share_expire';
+    public const LIVE_STREAM                   = 'live_stream';
 }
