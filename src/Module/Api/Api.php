@@ -45,7 +45,7 @@ class Api
         Method\PingMethod::ACTION => Method\PingMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
-        'get_indexes' => Method\GetIndexesMethod::class,
+        Method\GetIndexesMethod::ACTION => Method\GetIndexesMethod::class,
         Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
         Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,

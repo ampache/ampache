@@ -201,25 +201,25 @@ class Json_Data
         // here is where we call the object type
         switch ($type) {
             case 'song':
-                return self::songs($objects, $user_id, $limit, $offset);
+                return self::songs($objects, $user_id, true, true, $limit, $offset);
             case 'album':
                 $include_array = ($include) ? array('songs') : array();
 
-                return self::albums($objects, $include_array, $user_id, $limit, $offset);
+                return self::albums($objects, $include_array, $user_id, true, true, $limit, $offset);
             case 'artist':
                 $include_array = ($include) ? array('songs', 'albums') : array();
 
-                return self::artists($objects, $include_array, $user_id, $limit, $offset);
+                return self::artists($objects, $include_array, $user_id, true, true, $limit, $offset);
             case 'playlist':
-                return self::playlists($objects, $user_id, $include, $limit, $offset);
+                return self::playlists($objects, $user_id, $include, true, $limit, $offset);
             case 'share':
-                return self::shares($objects, $limit, $offset);
+                return self::shares($objects, true, $limit, $offset);
             case 'podcast':
-                return self::podcasts($objects, $user_id, $include, $limit, $offset);
+                return self::podcasts($objects, $user_id, $include, true, $limit, $offset);
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user_id, $limit, $offset);
+                return self::podcast_episodes($objects, $user_id, true, true, $limit, $offset);
             case 'video':
-                return self::videos($objects, $user_id, $limit, $offset);
+                return self::videos($objects, $user_id, true, $limit, $offset);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
@@ -313,10 +313,17 @@ class Json_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
-    public static function artists($artists, $include = [], $user_id = null, $encode = true, $object = true)
-    {
-        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $artists = array_splice($artists, self::$offset, self::$limit);
+    public static function artists(
+        $artists,
+        $include = [],
+        $user_id = null,
+        $encode = true,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($artists) > $limit || $offset > 0) && ($limit && $encode)) {
+            $artists = array_splice($artists, $offset, $limit);
         }
 
         $JSON = [];
@@ -384,10 +391,17 @@ class Json_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums($albums, $include = [], $user_id = null, $encode = true, $object = true)
-    {
-        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $albums = array_splice($albums, self::$offset, self::$limit);
+    public static function albums(
+        $albums,
+        $include = [],
+        $user_id = null,
+        $encode = true,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($albums) > $limit || $offset > 0) && ($limit && $encode)) {
+            $albums = array_splice($albums, $offset, $limit);
         }
 
         Rating::build_cache('album', $albums);
@@ -768,8 +782,14 @@ class Json_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
-    public static function songs($songs, $user_id = null, $encode = true, $object = true)
-    {
+    public static function songs(
+        $songs,
+        $user_id = null,
+        $encode = true,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
