@@ -86,10 +86,8 @@ final class HandshakeMethod implements MethodInterface
         ApiOutputInterface $output,
         array $input
     ): ResponseInterface {
-        $passphrase = $input['auth'] ?? '';
-        if ($passphrase === '') {
-            $passphrase = Core::get_post('auth');
-        }
+        $passphrase = $gatekeeper->getAuth();
+
         $version   = (isset($input['version'])) ? $input['version'] : Api::$version;
         $timestamp = (int) preg_replace('/[^0-9]/', '', $input['timestamp'] ?? time());
 

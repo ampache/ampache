@@ -73,14 +73,6 @@ final class GoodbyeMethod implements MethodInterface
         ApiOutputInterface $output,
         array $input
     ): ResponseInterface {
-        $auth = $input['auth'] ?? null;
-
-        if ($auth === null) {
-            throw new Exception\RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'auth')
-            );
-        }
-
         // Check and see if we should destroy the api session (done if valid session is passed)
         if ($gatekeeper->sessionExists()) {
             $gatekeeper->endSession();
@@ -92,7 +84,7 @@ final class GoodbyeMethod implements MethodInterface
 
             return $response->withBody(
                 $this->streamFactory->createStream(
-                    $output->success($auth)
+                    $output->success($gatekeeper->getAuth())
                 )
             );
         }

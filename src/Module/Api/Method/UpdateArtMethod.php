@@ -125,7 +125,7 @@ final class UpdateArtMethod implements MethodInterface
                 '%s/image.php?object_id=%d&object_type=artist&auth=%s',
                 $this->configContainer->getWebPath(),
                 $objectId,
-                $input['auth']
+                $gatekeeper->getAuth()
             );
 
             return $response->withBody(

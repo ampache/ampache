@@ -61,23 +61,6 @@ class GoodbyeMethodTest extends MockeryTestCase
         );
     }
 
-    public function testHandleThrowsExceptionIfAuthParameterIsMissing(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-
-        $this->expectException(RequestParamMissingException::class);
-        $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'auth'));
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            []
-        );
-    }
-
     public function testHandleThrowsExceptionIfSessionDoesNotExist(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -96,7 +79,7 @@ class GoodbyeMethodTest extends MockeryTestCase
             $gatekeeper,
             $response,
             $output,
-            ['auth' => 'some-auth']
+            []
         );
     }
 
@@ -118,6 +101,10 @@ class GoodbyeMethodTest extends MockeryTestCase
         $gatekeeper->shouldReceive('endSession')
             ->withNoArgs()
             ->once();
+        $gatekeeper->shouldReceive('getAuth')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($authValue);
 
         $this->logger->shouldReceive('debug')
             ->with(
@@ -152,7 +139,7 @@ class GoodbyeMethodTest extends MockeryTestCase
                 $gatekeeper,
                 $response,
                 $output,
-                ['auth' => $authValue]
+                []
             )
         );
     }

@@ -150,9 +150,6 @@ final class ApiHandler implements ApiHandlerInterface
             $userId = $gatekeeper->getUser()->id;
         }
 
-        // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : $gatekeeper->getUserName();
-
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
             $this->logger->warning(
                 sprintf('Unauthorized access attempt to API [%s]', Core::get_server('REMOTE_ADDR')),
@@ -201,41 +198,20 @@ final class ApiHandler implements ApiHandlerInterface
             );
         }
 
-        $input = $request->getQueryParams();
-        // Ensure the auth param is set
-        $input['auth'] = $gatekeeper->getAuth();
-
         try {
-            /**
-             * This condition allows the `new` approach and the legacy one to co-exist.
-             * After implementing the MethodInterface in all api methods, the condition will be removed
-             *
-             * @todo cleanup
-             */
-            if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
-                /** @var MethodInterface $handler */
-                $handler = $this->dic->get($handlerClassName);
+            /** @var MethodInterface $handler */
+            $handler = $this->dic->get($handlerClassName);
 
-                $response = $handler->handle(
-                    $gatekeeper,
-                    $response,
-                    $output,
-                    $input
-                );
+            $response = $handler->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                $request->getQueryParams()
+            );
 
-                $gatekeeper->extendSession();
+            $gatekeeper->extendSession();
 
-                return $response;
-            } else {
-                call_user_func(
-                    [$handlerClassName, $action],
-                    $input
-                );
-
-                $gatekeeper->extendSession();
-
-                return null;
-            }
+            return $response;
         } catch (ApiException $e) {
             return $response->withBody(
                 $this->streamFactory->createStream(

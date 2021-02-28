@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 
 /**
@@ -162,61 +161,6 @@ class Api
     }
 
     /**
-     * message
-     * call the correct success message depending on format
-     * @param string $message
-     * @param string $format
-     * @param array $return_data
-     */
-    public static function message($message, $format = 'xml', $return_data = array())
-    {
-        switch ($format) {
-            case 'json':
-                echo Json_Data::success($message, $return_data);
-                break;
-            default:
-                echo Xml_Data::success($message, $return_data);
-        }
-    } // message
-
-    /**
-     * error
-     * call the correct error message depending on format
-     * @param string $message
-     * @param string $error_code
-     * @param string $method
-     * @param string $error_type
-     * @param string $format
-     */
-    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
-    {
-        switch ($format) {
-            case 'json':
-                echo Json_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml_Data::error($error_code, $message, $method, $error_type);
-        }
-    } // error
-
-    /**
-     * empty
-     * call the correct empty message depending on format
-     * @param string $empty_type
-     * @param string $format
-     */
-    public static function empty($empty_type, $format = 'xml')
-    {
-        switch ($format) {
-            case 'json':
-                echo Json_Data::empty($empty_type);
-                break;
-            default:
-                echo Xml_Data::empty();
-        }
-    } // empty
-
-    /**
      * set_filter
      * MINIMUM_API_VERSION=380001
      *
@@ -274,60 +218,4 @@ class Api
 
         return true;
     } // set_filter
-
-    /**
-     * check_parameter
-     *
-     * This function checks the $input actually has the parameter.
-     * Parameters must be an array of required elements as a string
-     *
-     * @param array $input
-     * @param string[] $parameters e.g. array('auth', type')
-     * @param string $method
-     * @return boolean
-     */
-    public static function check_parameter($input, $parameters, $method)
-    {
-        foreach ($parameters as $parameter) {
-            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
-                continue;
-            }
-            if (empty($input[$parameter])) {
-                debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-                return false;
-            }
-        }
-
-        return true;
-    } // check_parameter
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, User::get_from_username(Session::username($input['auth']))->id)
-     *
-     * @param string $type
-     * @param integer $level
-     * @param integer $user_id
-     * @param string $method
-     * @param string $format
-     * @return boolean
-     */
-    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
-
-            return false;
-        }
-
-        return true;
-    } // check_access
 }

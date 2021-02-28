@@ -110,7 +110,10 @@ final class Gatekeeper implements GatekeeperInterface
                  *
                  * @todo Remove some day
                  */
-                $token = $this->request->getQueryParams()['auth'] ?? '';
+                $token =
+                    $this->request->getQueryParams()['auth'] ??
+                    $this->request->getParsedBody()['auth'] ??
+                    '';
             }
 
             $this->logger->info(

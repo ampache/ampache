@@ -233,6 +233,10 @@ class UpdateArtMethodTest extends MockeryTestCase
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
             ->once()
             ->andReturnTrue();
+        $gatekeeper->shouldReceive('getAuth')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($auth);
 
         $this->modelFactory->shouldReceive('mapObjectType')
             ->with($type, $objectId)
@@ -286,7 +290,6 @@ class UpdateArtMethodTest extends MockeryTestCase
                     'type' => 'artist',
                     'id' => (string) $objectId,
                     'overwrite' => 1,
-                    'auth' => $auth
                 ]
             )
         );
