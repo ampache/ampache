@@ -91,7 +91,7 @@ class Api
         Method\BookmarkDeleteMethod::ACTION => Method\BookmarkDeleteMethod::class,
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
         Method\VideoMethod::ACTION => Method\VideoMethod::class,
-        'stats' => Method\StatsMethod::class,
+        Method\StatsMethod::ACTION => Method\StatsMethod::class,
         Method\PodcastsMethod::ACTION => Method\PodcastsMethod::class,
         Method\PodcastMethod::ACTION => Method\PodcastMethod::class,
         Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
