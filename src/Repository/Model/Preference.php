@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\PreferenceRepository;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
@@ -411,36 +412,22 @@ class Preference extends database_object
      * @param string $category
      * @param string $subcategory
      * @return boolean
+     *
+     * @deprecated Replace by Repoitory
+     * @see PreferenceRepository::add()
      */
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
-        if ($subcategory !== null) {
-            $subcategory = strtolower((string)$subcategory);
-        }
-        $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
-
-        if (!$db_results) {
-            return false;
-        }
-        $pref_id    = Dba::insert_id();
-        $params     = array($pref_id, $default);
-        $sql        = "INSERT INTO `user_preference` VALUES (-1,?,?)";
-        $db_results = Dba::write($sql, $params);
-        if (!$db_results) {
-            return false;
-        }
-        if ($category !== "system") {
-            $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
-            $db_results = Dba::write($sql, $params);
-            if (!$db_results) {
-                return false;
-            }
-        }
-
-        return true;
-    } // insert
+        return static::getPreferenceRepository()->add(
+            $name,
+            $description,
+            $default,
+            $level,
+            $type,
+            $category,
+            $subcategory
+        );
+    }
 
     /**
      * delete

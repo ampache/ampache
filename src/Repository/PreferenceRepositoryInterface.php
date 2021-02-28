@@ -56,4 +56,26 @@ interface PreferenceRepositoryInterface
      * This removes any garbage
      */
     public function cleanPreferences(): void;
+
+    /**
+     * This inserts a new preference into the preference table
+     * it does NOT sync up the users, that should be done independently
+     *
+     * @param string $name
+     * @param string $description
+     * @param int|string $default
+     * @param int $level
+     * @param string $type
+     * @param string $category
+     * @param null|string $subcategory
+     */
+    public function add(
+        string $name,
+        string $description,
+        $default,
+        int $level,
+        string $type,
+        string $category,
+        ?string $subcategory = null
+    ): bool;
 }

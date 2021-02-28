@@ -164,4 +164,58 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
         // First remove garbage
         Dba::write('DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` WHERE `preference`.`id` IS NULL');
     }
+
+    /**
+     * This inserts a new preference into the preference table
+     * it does NOT sync up the users, that should be done independently
+     *
+     * @param string $name
+     * @param string $description
+     * @param int|string $default
+     * @param int $level
+     * @param string $type
+     * @param string $category
+     * @param null|string $subcategory
+     */
+    public function add(
+        string $name,
+        string $description,
+        $default,
+        int $level,
+        string $type,
+        string $category,
+        ?string $subcategory = null
+    ): bool {
+        if ($subcategory !== null) {
+            $subcategory = strtolower((string)$subcategory);
+        }
+        $db_results = Dba::write(
+            'INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$name, $description, $default, $level, $type, $category, $subcategory]
+        );
+
+        if (!$db_results) {
+            return false;
+        }
+        $pref_id    = Dba::insert_id();
+        $params     = [$pref_id, $default];
+        $db_results = Dba::write(
+            'INSERT INTO `user_preference` VALUES (-1,?,?)',
+            $params
+        );
+        if (!$db_results) {
+            return false;
+        }
+        if ($category !== "system") {
+            $db_results = Dba::write(
+                'INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`',
+                $params
+            );
+            if (!$db_results) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Api\Method\PodcastEditMethod;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 
@@ -133,7 +132,7 @@ class Api
         Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
         Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
         Method\SystemPreferenceMethod::ACTION => Method\SystemPreferenceMethod::class,
-        'preference_create' => Method\PreferenceCreateMethod::class,
+        Method\PreferenceCreateMethod::ACTION => Method\PreferenceCreateMethod::class,
         Method\PreferenceEditMethod::ACTION => Method\PreferenceEditMethod::class,
         Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
     ];

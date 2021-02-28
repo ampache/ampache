@@ -20,33 +20,46 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PreferenceCreateMethod
- * @package Lib\ApiMethods
- */
-final class PreferenceCreateMethod
+final class PreferenceCreateMethod implements MethodInterface
 {
-    private const ACTION = 'preference_create';
+    public const ACTION = 'preference_create';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private PreferenceRepositoryInterface $preferenceRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        PreferenceRepositoryInterface $preferenceRepository
+    ) {
+        $this->streamFactory           = $streamFactory;
+        $this->preferenceRepository    = $preferenceRepository;
+    }
 
     /**
-     * preference_create
      * MINIMUM_API_VERSION=5.0.0
      *
      * Add a new preference to your server
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * This inserts a new preference into the preference table
-     *
      * filter      = (string) preference name
      * type        = (string) 'boolean', 'integer', 'string', 'special'
      * default     = (string|integer) default value
@@ -54,63 +67,84 @@ final class PreferenceCreateMethod
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
      * level       = (integer) access level required to change the value (default 100) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function preference_create(array $input)
-    {
-        $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['filter', 'type', 'default', 'category'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        $pref_name = (string) $input['filter'];
-        $pref_list = Preference::get($pref_name, -1);
-        // if you found the preference or it's a system preference; don't add it.
-        if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), '4710', self::ACTION, 'filter', $input['api_format']);
 
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(T_('Require: 100'));
+        }
+
+        $preferenceName = (string) $input['filter'];
+
+        $preferenceList = $this->preferenceRepository->get($preferenceName, -1);
+
+        // if you found the preference or it's a system preference; don't add it.
+        if ($preferenceList === [] || in_array($preferenceName, Preference::SYSTEM_LIST)) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $preferenceName)
+            );
         }
         $type = (string) $input['type'];
-        if (!in_array($type, array('boolean', 'integer', 'string', 'special'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['boolean', 'integer', 'string', 'special'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
         $category = (string) $input['category'];
-        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'category', $input['api_format']);
-
-            return false;
+        if (!in_array($category, ['interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $category)
+            );
         }
-        $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
+
+        $level       = (isset($input['level'])) ? (int) $input['level'] : AccessLevelEnum::LEVEL_ADMIN;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
         $description = (string) $input['description'];
-        $subcategory = (string) $input['subcategory'];
+        $subcategory = (string) ($input['subcategory'] ?? '');
 
         // insert and return the new preference
-        Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
-        $preference = Preference::get($pref_name, -1);
-        if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'system', $input['api_format']);
+        $this->preferenceRepository->add(
+            $preferenceName,
+            $description,
+            $default,
+            $level,
+            $type,
+            $category,
+            $subcategory
+        );
 
-            return false;
+        $preferenceList = $this->preferenceRepository->get($preferenceName, -1);
+        if ($preferenceList === []) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $preferenceName)
+            );
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($preference, 'preference');
-        }
+
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
-        Session::extend($input['auth']);
+        $gatekeeper->getUser()->fixPreferences();
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array($preferenceList, 'preference')
+            )
+        );
     }
 }
