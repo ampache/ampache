@@ -58,6 +58,7 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
+        'channel' => Channel::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
         'user' => User::class,
