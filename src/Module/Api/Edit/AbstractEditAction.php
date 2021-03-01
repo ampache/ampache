@@ -77,7 +77,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type = implode('_', explode('_', $object_type, -1));
         }
 
-        if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share') {
+        if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share' && $object_type != 'channel') {
             debug_event(__CLASS__, 'Type `' . $object_type . '` is not based on an item library.', 3);
 
             return null;
