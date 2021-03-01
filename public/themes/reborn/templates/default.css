@@ -1749,7 +1749,8 @@ span.fatalerror {
 }
 
 #item_summary {
-    margin-right: 260px;
+    margin-right: 33%;
+    padding-bottom: 20px;
 }
 
 /* -------------------------

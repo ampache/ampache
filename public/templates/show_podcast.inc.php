@@ -40,13 +40,12 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
     Art::display('podcast', $podcast->id, $podcast->f_title, $thumb); ?>
-    <?php if ($podcast->description) { ?>
-    <div id="item_summary">
-        <?php echo $podcast->description; ?>
-    </div>
-    <?php
-    } ?>
 </div>
+<?php if ($podcast->description) { ?>
+<div id="item_summary">
+    <?php echo $podcast->description; ?>
+</div>
+<?php } ?>
 <?php if (User::is_registered()) { ?>
     <?php
     if (AmpConfig::get('ratings')) { ?>
