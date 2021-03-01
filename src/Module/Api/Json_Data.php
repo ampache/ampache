@@ -504,6 +504,7 @@ class Json_Data
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
             $theArray['diskcount']     = (int) $disk;
+            $theArray['type']          = $album->release_type;
             $theArray['genre']         = self::genre_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
