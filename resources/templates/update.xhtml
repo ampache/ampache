@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        tal:attributes="xml:lang UPDATE/getHtmlLanguage; lang UPDATE/getHtmlLanguage">
+<head>
+    <!-- Propelled by Ampache | ampache.org -->
+    <meta http-equiv="Content-Type" content="text/html; charset=${UPDATE/getCharset}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title tal:content="UPDATE/getTitle">TITLE</title>
+    <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container" style="height: 70px;">
+        <a class="navbar-brand" href="#">
+            <img tal:attributes="src UPDATE/getLogoUrl" title="Ampache" alt="Ampache" i18n:attributes="title; alt" />
+            <tal:block tal:replace="UPDATE/getInstallationTitle">INSTALLATION TITLE</tal:block>
+        </a>
+    </div>
+</div>
+<div class="container" role="main">
+    <div class="page-header requirements">
+        <h1 i18n:translate="">Ampache Update</h1>
+    </div>
+    <div class="well">
+        <p tal:content="structure UPDATE/getUpdateInfoText">UPDATE INFO</p>
+        <p i18n:translate="">The following updates need to be performed:</p>
+    </div>
+    <tal:block tal:replace="UPDATE/getErrorText">ERROR</tal:block>
+    <div class="content" tal:condition="not: UPDATE/hasUpdate">
+        <p class="database-update">No Update Needed [<a tal:attributes="href UPDATE/getWebPath">Return to main page</a>]</p>
+    </div>
+    <div class="content" tal:condition="UPDATE/hasUpdate">
+        <ul>
+            <li tal:repeat="update UPDATE/getUpdateInfo">
+                <strong tal:content="update/title">VERSION</strong><br />
+                <tal:block tal:replace="structure update/description">DESCRIPTION</tal:block>
+            </li>
+        </ul>
+    </div>
+    <form
+        tal:condition="UPDATE/hasUpdate"
+        method="post"
+        enctype="multipart/form-data"
+        tal:attributes="action UPDATE/getUpdateActionUrl"
+    >
+        <button type="submit" class="btn btn-warning" name="update" i18n:translate="">Update Now!</button>
+    </form>
+</div>
+</body>
+</html>

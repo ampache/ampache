@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+use Ampache\Module\Cli\InstallerCommand;
+use Psr\Container\ContainerInterface;
+
+define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
+define('CLI', 1);
+
+/** @var ContainerInterface $dic */
+$dir = require_once __DIR__ . '/../src/Config/Bootstrap.php';
+
+// Init App with name and version
+$app = new Ahc\Cli\Application(
+    'Ampache CLI',
+    'install'
+);
+$app->add($dic->get(InstallerCommand::class));
+
+$logo = <<<LOGO
+    _                               _          
+   / \   _ __ ___  _ __   __ _  ___| |__   ___ 
+  / _ \ | '_ ` _ \| '_ \ / _` |/ __| '_ \ / _ \
+ / ___ \| | | | | | |_) | (_| | (__| | | |  __/
+/_/   \_\_| |_| |_| .__/ \__,_|\___|_| |_|\___|
+                  |_|    
+LOGO;
+
+$app->logo($logo);
+
+$app->handle($_SERVER['argv']);

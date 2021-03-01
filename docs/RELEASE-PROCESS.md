@@ -23,7 +23,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Commit merge for new version (e.g. 4.x.x) but **do not push!**
 * Browse changes to check for things you've missed in the changelog
 * Add pchart to composer
-  * composer require szymach/c-pchart "2.*"
+  * composer require --update-no-dev szymach/c-pchart "3.*"
 * ~~Run composer install~~ (adding pchart updates everything)
 * Get missing map files
 

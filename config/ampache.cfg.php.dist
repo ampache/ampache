@@ -9,11 +9,20 @@
 ; into the init script
 config_version = 49
 
+;#########################################################
+; Auto Update                                            #
+;#########################################################
+
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
 ; POSSIBLE VALUES: master develop
 ; DEFAULT: none
 ;github_force_branch = "develop"
+
+; This value allows to override the composer binary path to distinguish between multiple composer versions
+; Either a binary name in $PATH as well as a fully qualified path is possible
+; DEFAULT: composer
+;composer_binary_path = "composer"
 
 ; We sometimes need to talk and will show a warning to admin users
 ; Enable this setting if you don't want to see warnings (When we enable them)
@@ -86,11 +95,8 @@ database_password = password
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
 ;
-; Usually "utf8" or "utf8mb4". If you set "utf8mb4" as your charset
-; Ampache will change the storage engine on all tables to InnoDB
-; to support the extra character bytes needed in table KEYs
-; DEFAULT: "utf8"
-;database_charset = "utf8"
+; DEFAULT: "utf8mb4"
+;database_charset = "utf8mb4"
 
 ; Set a default collation for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
@@ -100,8 +106,8 @@ database_password = password
 ; "utf8mb4_unicode_ci"     = 4 bytes per character
 ; "utf8mb4_unicode_520_ci" = Supports more characters and is based on UCA 5.2.0 weight keys
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
-; DEFAULT: "utf8_unicode_ci"
-;database_collation = "utf8_unicode_ci"
+; DEFAULT: "utf8mb4_unicode_ci"
+;database_collation = "utf8mb4_unicode_ci"
 
 
 ;#########################################################
