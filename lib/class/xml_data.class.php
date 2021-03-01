@@ -639,6 +639,7 @@ class XML_Data
                     "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<songcount>" . $album->song_count . "</songcount>\n" .
+                    "\t<type>" . $album->release_type . "</type>\n" .
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .

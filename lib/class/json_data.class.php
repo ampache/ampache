@@ -397,6 +397,7 @@ class JSON_Data
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
+            $theArray['type']          = $album->release_type;
             $theArray['disk']          = (int) $disk;
             $theArray['tag']           = self::tags_array($album->tags);
             $theArray['art']           = $art_url;

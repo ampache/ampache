@@ -144,6 +144,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
+* Add type (release_type) to album objects
 * Add disk to song objects
 * Add time to video objects. (time in seconds)
 * Add title, mime, catalog to podcast_episodes
