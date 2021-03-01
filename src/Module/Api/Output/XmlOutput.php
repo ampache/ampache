@@ -534,7 +534,7 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param int[] $shareIds Share id's to include
-     * @param bool  $asAsOject
+     * @param bool  $asObject
      * @param int   $limit
      * @param int   $offset
      */
@@ -599,17 +599,17 @@ final class XmlOutput implements ApiOutputInterface
      * This handles creating an result for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param int[] $object_ids Object IDs
+     * @param int[] $objectIds Object IDs
      * @param int   $userId
      */
     public function democratic(
-        array $object_ids,
+        array $objectIds,
         int $userId
     ): string {
         $democratic = Democratic::get_current_playlist();
         $string     = '';
 
-        foreach ($object_ids as $row_id => $data) {
+        foreach ($objectIds as $row_id => $data) {
             $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
             $song       = new $class_name($data['object_id']);
             $song->format();
