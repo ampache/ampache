@@ -181,7 +181,8 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
                 [$objectId],
                 $userId,
                 false,
-                false
+                false,
+                true
             )
             ->once()
             ->andReturn($result);

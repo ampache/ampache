@@ -245,6 +245,7 @@ class PodcastEpisodesMethodTest extends MockeryTestCase
                 $userId,
                 false,
                 true,
+                true,
                 $limit,
                 $offset
             )

@@ -25,28 +25,41 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
+use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 
 class JsonOutputTest extends MockeryTestCase
 {
-    /** @var MockInterface|null|ModelFactoryInterface */
-    private ?MockInterface $modelFactory;
+    /** @var MockInterface|ModelFactoryInterface */
+    private MockInterface $modelFactory;
+
+    /** @var MockInterface|AlbumRepositoryInterface */
+    private MockInterface $albumRepository;
+
+    /** @var MockInterface|SongRepositoryInterface */
+    private MockInterface $songRepository;
 
     private ?JsonOutput $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->albumRepository  = $this->mock(AlbumRepositoryInterface::class);
+        $this->songRepository   = $this->mock(SongRepositoryInterface::class);
 
         $this->subject = new JsonOutput(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->albumRepository,
+            $this->songRepository
         );
     }
 
@@ -475,6 +488,106 @@ class JsonOutputTest extends MockeryTestCase
                 ]]
             ], JSON_PRETTY_PRINT),
             $this->subject->timeline([$activityId])
+        );
+    }
+
+    public function testUsersReturnsList(): void
+    {
+        $userId   = 666;
+        $username = 'some-username';
+
+        $user = $this->mock(User::class);
+
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+        $user->username = $username;
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $this->assertJsonOutput(
+            ['user' => [[
+                'id' => (string) $userId,
+                'username' => $username
+            ]]],
+            $this->subject->users([$userId])
+        );
+    }
+
+    public function testLabelsReturnsList(): void
+    {
+        $labelId1 = 666;
+        $labelId2 = 42;
+
+        $name     = 'some-name';
+        $artists  = 'some-artists';
+        $summary  = 'some-summary';
+        $link     = 'some-link';
+        $address  = 'some-address';
+        $category = 'some-category';
+        $email    = 'some-email';
+        $website  = 'some-website';
+        $user     = 'some-user';
+
+        $label = $this->mock(Label::class);
+
+        $label->shouldReceive('format')
+            ->withNoArgs()
+            ->once();
+
+        $this->modelFactory->shouldReceive('createLabel')
+            ->with($labelId2)
+            ->once()
+            ->andReturn($label);
+
+        $label->f_name   = $name;
+        $label->artists  = $artists;
+        $label->summary  = $summary;
+        $label->link     = $link;
+        $label->address  = $address;
+        $label->category = $category;
+        $label->email    = $email;
+        $label->website  = $website;
+        $label->user     = $user;
+
+        $this->assertJsonOutput(
+            ['label' => [[
+                'id' => (string) $labelId2,
+                'name' => $name,
+                'artists' => $artists,
+                'summary' => $summary,
+                'external_link' => $link,
+                'address' => $address,
+                'category' => $category,
+                'email' => $email,
+                'website' => $website,
+                'user' => $user
+            ]]],
+            $this->subject->labels([$labelId1, $labelId2], true, 1, 1)
+        );
+    }
+
+    private function assertJsonOutput(
+        array $expectation,
+        string $actual
+    ): void {
+        $this->assertSame(
+            json_encode($expectation, JSON_PRETTY_PRINT),
+            $actual
+        );
+    }
+
+    public function testEmptyResultReturnsEmptyResult(): void
+    {
+        $type = 'some-type';
+
+        $this->assertJsonOutput(
+            [$type => []],
+            $this->subject->emptyResult($type)
         );
     }
 }

@@ -24,22 +24,34 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private AlbumRepositoryInterface $albumRepository;
+
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        AlbumRepositoryInterface $albumRepository,
+        SongRepositoryInterface $songRepository
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->albumRepository = $albumRepository;
+        $this->songRepository  = $songRepository;
     }
 
     public function createJsonOutput(): ApiOutputInterface
     {
         return new JsonOutput(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->albumRepository,
+            $this->songRepository
         );
     }
 

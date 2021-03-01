@@ -24,44 +24,72 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
 
 final class JsonOutput implements ApiOutputInterface
 {
+    // This is added so that we don't pop any webservers
+    private const DEFAULT_LIMIT = 5000;
+
     private ModelFactoryInterface $modelFactory;
 
+    private AlbumRepositoryInterface $albumRepository;
+
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        AlbumRepositoryInterface $albumRepository,
+        SongRepositoryInterface $songRepository
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory     = $modelFactory;
+        $this->albumRepository  = $albumRepository;
+        $this->songRepository   = $songRepository;
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This generates an error message
      */
     public function error(int $code, string $message, string $action, string $type): string
     {
-        return Json_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
+        $message = [
+            'error' => [
+                'errorCode' => (string) $code,
+                'errorAction' => $action,
+                'errorType' => $type,
+                'errorMessage' => $message
+            ]
+        ];
+
+        return json_encode($message, JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param int[] $albums
+     * @param int[] $albumIds
      * @param array $include
-     * @param int|null $user_id
+     * @param int|null $userId
      * @param bool $encode
      * @param int $limit
      * @param int $offset
@@ -69,21 +97,89 @@ final class JsonOutput implements ApiOutputInterface
      * @return array|string
      */
     public function albums(
-        array $albums,
+        array $albumIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $encode = true,
         int $limit = 0,
         int $offset = 0
     ) {
-        Json_Data::set_offset($offset);
-        Json_Data::set_limit($limit);
+        $albumIds = $this->applyLimit($albumIds, $limit, $offset);
 
-        return Json_Data::albums($albums, $include, $user_id, $encode);
+        Rating::build_cache('album', $albumIds);
+
+        $JSON = [];
+        foreach ($albumIds as $album_id) {
+            $album = new Album($album_id);
+            $album->format();
+
+            $disk   = $album->disk;
+            $rating = new Rating($album_id, 'album');
+            $flag   = new Userflag($album_id, 'album');
+
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
+
+            $theArray = [];
+
+            $theArray["id"]   = (string)$album->id;
+            $theArray["name"] = $album->name;
+
+            // Do a little check for artist stuff
+            if ($album->album_artist_name != "") {
+                $theArray['artist'] = array(
+                    "id" => (string)$album->artist_id,
+                    "name" => $album->album_artist_name
+                );
+            } elseif ($album->artist_count != 1) {
+                $theArray['artist'] = array(
+                    "id" => "0",
+                    "name" => 'Various'
+                );
+            } else {
+                $theArray['artist'] = array(
+                    "id" => (string)$album->artist_id,
+                    "name" => $album->artist_name
+                );
+            }
+
+            // Handle includes
+            $songs = (in_array("songs", $include))
+                ? $this->songs($this->songRepository->getByAlbum($album->id), $userId, false)
+                : array();
+
+            // count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
+            }
+
+            $theArray['time']          = (int) $album->total_duration;
+            $theArray['year']          = (int) $album->year;
+            $theArray['tracks']        = $songs;
+            $theArray['songcount']     = (int) $album->song_count;
+            $theArray['diskcount']     = (int) $disk;
+            $theArray['genre']         = $this->genre_array($album->tags);
+            $theArray['art']           = $art_url;
+            $theArray['flag']          = (!$flag->get_flag($userId, false) ? 0 : 1);
+            $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
+            $theArray['rating']        = ($rating->get_user_rating() ?: null);
+            $theArray['averagerating'] = ($rating->get_average_rating() ?: null);
+            $theArray['mbid']          = $album->mbid;
+
+            array_push($JSON, $theArray);
+        } // end foreach
+
+        if ($encode) {
+            $output = $JSON[0];
+
+            return json_encode($output, JSON_PRETTY_PRINT);
+        }
+
+        return $JSON;
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This generates a JSON empty object
      *
      * @param string $type object type
      *
@@ -91,78 +187,207 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function emptyResult(string $type): string
     {
-        return Json_Data::empty($type);
+        return json_encode([$type => []], JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This takes an array of artists and then returns a pretty JSON document with the information
+     * we want
      *
-     * @param int[] $artists
+     * @param int[] $artistIds
      * @param array $include
-     * @param null|int $user_id
+     * @param null|int $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param boolean $asObject (whether to return as a named object array or regular array)
      * @param int $limit
      * @param int $offset
      *
      * @return array|string JSON Object "artist"
      */
     public function artists(
-        array $artists,
+        array $artistIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
-        Json_Data::set_offset($offset);
-        Json_Data::set_limit($limit);
+        $artistIds = $this->applyLimit($artistIds, $limit, $offset);
 
-        return Json_Data::artists(
-            $artists,
-            $include,
-            $user_id,
-            $encode,
-            $object
-        );
+        $JSON = [];
+
+        Rating::build_cache('artist', $artistIds);
+
+        foreach ($artistIds as $artist_id) {
+            $artist = new Artist($artist_id);
+            $artist->format();
+
+            $rating = new Rating($artist_id, 'artist');
+            $flag   = new Userflag($artist_id, 'artist');
+
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+
+            // Handle includes
+            $albums = (in_array("albums", $include))
+                ? $this->albums($this->albumRepository->getByArtist($artist), array(), $userId, false)
+                : array();
+            $songs = (in_array("songs", $include))
+                ? $this->songs($this->songRepository->getByArtist($artist), $userId, false)
+                : array();
+
+            array_push($JSON, array(
+                "id" => (string)$artist->id,
+                "name" => $artist->f_full_name,
+                "albums" => $albums,
+                "albumcount" => (int) $artist->albums,
+                "songs" => $songs,
+                "songcount" => (int) $artist->songs,
+                "genre" => $this->genre_array($artist->tags),
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($userId, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating() ?: null),
+                "rating" => ($rating->get_user_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
+                "mbid" => $artist->mbid,
+                "summary" => $artist->summary,
+                "time" => (int) $artist->time,
+                "yearformed" => (int) $artist->yearformed,
+                "placeformed" => $artist->placeformed
+            ));
+        } // end foreach artists
+
+        if ($encode) {
+            $output = ($asObject) ? array("artist" => $JSON) : $JSON[0];
+
+            return json_encode($output, JSON_PRETTY_PRINT);
+        }
+
+        return $JSON;
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns an array of songs populated from an array of song ids.
+     * (Spiffy isn't it!)
      *
-     * @param int[] $songs
-     * @param int|null $user_id
+     * @param int[] $songIds
+     * @param int|null $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
-     * @param boolean $full_xml
+     * @param boolean $asObject (whether to return as a named object array or regular array)
+     * @param boolean $fullXml
      * @param int $limit
      * @param int $offset
      *
      * @return array|string
      */
     public function songs(
-        array $songs,
-        ?int $user_id = null,
+        array $songIds,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
-        bool $full_xml = true,
+        bool $asObject = true,
+        bool $fullXml = true,
         int $limit = 0,
         int $offset = 0
     ) {
-        Json_Data::set_offset($offset);
-        Json_Data::set_limit($limit);
+        $songIds = $this->applyLimit($songIds, $limit, $offset);
 
-        return Json_Data::songs(
-            $songs,
-            $user_id,
-            $encode,
-            $object
-        );
+        Song::build_cache($songIds);
+        Stream::set_session($_REQUEST['auth']);
+
+        $JSON           = [];
+        $playlist_track = 0;
+
+        // Foreach the ids!
+        foreach ($songIds as $song_id) {
+            $song = new Song($song_id);
+
+            // If the song id is invalid/null
+            if (!$song->id) {
+                continue;
+            }
+
+            $song->format();
+            $rating  = new Rating($song_id, 'song');
+            $flag    = new Userflag($song_id, 'song');
+            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $playlist_track++;
+
+            $ourSong = array(
+                "id" => (string)$song->id,
+                "title" => $song->title,
+                "name" => $song->title,
+                "artist" => array(
+                    "id" => (string) $song->artist,
+                    "name" => $song->get_artist_name()),
+                "album" => array(
+                    "id" => (string) $song->album,
+                    "name" => $song->get_album_name()),
+                'albumartist' => array(
+                    "id" => (string) $song->albumartist,
+                    "name" => $song->get_album_artist_name()
+                )
+            );
+
+            $ourSong['disk']                  = (int) $song->disk;
+            $ourSong['track']                 = (int) $song->track;
+            $ourSong['filename']              = $song->file;
+            $ourSong['genre']                 = $this->genre_array($song->tags);
+            $ourSong['playlisttrack']         = $playlist_track;
+            $ourSong['time']                  = (int)$song->time;
+            $ourSong['year']                  = (int)$song->year;
+            $ourSong['bitrate']               = (int)$song->bitrate;
+            $ourSong['rate']                  = (int)$song->rate;
+            $ourSong['mode']                  = $song->mode;
+            $ourSong['mime']                  = $song->mime;
+            $ourSong['url']                   = $song->play_url('', 'api', false, $userId);
+            $ourSong['size']                  = (int) $song->size;
+            $ourSong['mbid']                  = $song->mbid;
+            $ourSong['album_mbid']            = $song->album_mbid;
+            $ourSong['artist_mbid']           = $song->artist_mbid;
+            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
+            $ourSong['art']                   = $art_url;
+            $ourSong['flag']                  = (!$flag->get_flag($userId, false) ? 0 : 1);
+            $ourSong['preciserating']         = ($rating->get_user_rating() ?: null);
+            $ourSong['rating']                = ($rating->get_user_rating() ?: null);
+            $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
+            $ourSong['playcount']             = (int)$song->played;
+            $ourSong['catalog']               = (int)$song->catalog;
+            $ourSong['composer']              = $song->composer;
+            $ourSong['channels']              = $song->channels;
+            $ourSong['comment']               = $song->comment;
+            $ourSong['license']               = $song->f_license;
+            $ourSong['publisher']             = $song->label;
+            $ourSong['language']              = $song->language;
+            $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
+            $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
+            $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
+            $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
+            $ourSong['r128_album_gain']       = $song->r128_album_gain;
+            $ourSong['r128_track_gain']       = $song->r128_track_gain;
+
+            if (Song::isCustomMetadataEnabled()) {
+                foreach ($song->getMetadata() as $metadata) {
+                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
+                        $metadata->getField()->getName());
+                    $ourSong[$meta_name] = $metadata->getData();
+                }
+            }
+
+            array_push($JSON, $ourSong);
+        } // end foreach
+
+        if ($encode) {
+            $output = ($asObject) ? array("song" => $JSON) : $JSON[0];
+
+            return json_encode($output, JSON_PRETTY_PRINT);
+        }
+
+        return $JSON;
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This handles creating a user result
      *
      * @param int[] $users User identifier list
      *
@@ -170,7 +395,22 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function users(array $users): string
     {
-        return Json_Data::users($users);
+        return json_encode(
+            [
+                'user' => array_map(
+                    function (int $userId): array {
+                        $user = $this->modelFactory->createUser($userId);
+
+                        return [
+                            'id' => (string) $user->getId(),
+                            'username' => $user->username
+                        ];
+                    },
+                    $users
+                )
+            ],
+            JSON_PRETTY_PRINT
+        );
     }
 
     /**
@@ -255,9 +495,7 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        if ((count($tagIds) > $limit || $offset > 0) && $limit) {
-            $tagIds = array_splice($tagIds, $offset, $limit);
-        }
+        $tagIds = $this->applyLimit($tagIds, $limit, $offset);
 
         $result = [];
         foreach ($tagIds as $tagId) {
@@ -281,7 +519,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This builds the JSON document for displaying video objects
      *
      * @param int[] $videoIds
      * @param int|null $userId
@@ -294,13 +532,34 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::videos(
-            $videoIds,
-            $userId,
-            $object,
-            $limit,
-            $offset
-        );
+        $videoIds = $this->applyLimit($videoIds, $limit, $offset);
+
+        $JSON = [];
+        foreach ($videoIds as $video_id) {
+            $video = new Video($video_id);
+            $video->format();
+            $rating  = new Rating($video_id, 'video');
+            $flag    = new Userflag($video_id, 'video');
+            $art_url = Art::url($video_id, 'video', Core::get_request('auth'));
+            array_push($JSON, array(
+                'id' => (string)$video->id,
+                'title' => $video->title,
+                'mime' => $video->mime,
+                'resolution' => $video->f_resolution,
+                'size' => (int) $video->size,
+                'genre' => $this->genre_array($video->tags),
+                'time' => (int) $video->time,
+                'url' => $video->play_url('', 'api', false, $userId),
+                'art' => $art_url,
+                'flag' => (!$flag->get_flag($userId, false) ? 0 : 1),
+                'preciserating' => ($rating->get_user_rating($userId) ?: null),
+                'rating' => ($rating->get_user_rating($userId) ?: null),
+                'averagerating' => (string) ($rating->get_average_rating() ?: null)
+            ));
+        }
+        $output = ($object) ? ['video' => $JSON] : $JSON[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     public function success(string $string, array $return_data = []): string
@@ -327,9 +586,7 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        if ((count($licenseIds) > $limit || $offset > 0) && $limit) {
-            $licenseIds = array_splice($licenseIds, $offset, $limit);
-        }
+        $licenseIds = $this->applyLimit($licenseIds, $limit, $offset);
 
         $result = [];
 
@@ -349,7 +606,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param int[] $labelIds
      * @param bool $asObject
@@ -362,18 +619,38 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::labels(
-            $labelIds,
-            $asObject,
-            $limit,
-            $offset
+        $labelIds = $this->applyLimit($labelIds, $limit, $offset);
+
+        $result = array_map(
+            function (int $labelId): array {
+                $label = $this->modelFactory->createLabel($labelId);
+                $label->format();
+
+                return [
+                    'id' => (string) $labelId,
+                    'name' => $label->f_name,
+                    'artists' => $label->artists,
+                    'summary' => $label->summary,
+                    'external_link' => $label->link,
+                    'address' => $label->address,
+                    'category' => $label->category,
+                    'email' => $label->email,
+                    'website' => $label->website,
+                    'user' => $label->user,
+                ];
+            },
+            $labelIds
         );
+
+        $output = ($asObject) ? ['label' => $result] : $result[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns podcasts to the user
      *
-     * @param int[] $podcasts
+     * @param int[] $podcastIds
      * @param int $userId
      * @param bool $episodes include the episodes of the podcast
      * @param bool $asObject
@@ -381,30 +658,77 @@ final class JsonOutput implements ApiOutputInterface
      * @param int $offset
      */
     public function podcasts(
-        array $podcasts,
+        array $podcastIds,
         int $userId,
         bool $episodes = false,
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::podcasts(
-            $podcasts,
-            $userId,
-            $episodes,
-            $asObject,
-            $limit,
-            $offset
-        );
+        $podcastIds = $this->applyLimit($podcastIds, $limit, $offset);
+
+        $JSON = [];
+        foreach ($podcastIds as $podcast_id) {
+            $podcast = new Podcast($podcast_id);
+            $podcast->format();
+            $rating              = new Rating($podcast_id, 'podcast');
+            $flag                = new Userflag($podcast_id, 'podcast');
+            $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
+            $podcast_name        = $podcast->f_title;
+            $podcast_description = $podcast->description;
+            $podcast_language    = $podcast->f_language;
+            $podcast_copyright   = $podcast->f_copyright;
+            $podcast_feed_url    = $podcast->feed;
+            $podcast_generator   = $podcast->f_generator;
+            $podcast_website     = $podcast->f_website;
+            $podcast_build_date  = $podcast->f_lastbuilddate;
+            $podcast_sync_date   = $podcast->f_lastsync;
+            $podcast_public_url  = $podcast->link;
+            $podcast_episodes    = array();
+            if ($episodes) {
+                $items            = $podcast->get_episodes();
+                $podcast_episodes = $this->podcast_episodes($items,
+                    $userId,
+                    false,
+                    true,
+                    true,
+                    $limit,
+                    $offset);
+            }
+            // Build this element
+            array_push($JSON, [
+                "id" => (string) $podcast_id,
+                "name" => $podcast_name,
+                "description" => $podcast_description,
+                "language" => $podcast_language,
+                "copyright" => $podcast_copyright,
+                "feed_url" => $podcast_feed_url,
+                "generator" => $podcast_generator,
+                "website" => $podcast_website,
+                "build_date" => $podcast_build_date,
+                "sync_date" => $podcast_sync_date,
+                "public_url" => $podcast_public_url,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($userId, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($userId) ?: null),
+                "rating" => ($rating->get_user_rating($userId) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "podcast_episode" => $podcast_episodes
+            ]);
+        } // end foreach
+        $output = ($asObject) ? array("podcast" => $JSON) : $JSON[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns podcast episodes to the user
      *
      * @param int[] $podcastEpisodeIds
      * @param int $userId
      * @param bool $simple just return the data as an array for pretty somewhere else
      * @param bool $asObject
+     * @param bool $encode
      * @param int $limit
      * @param int $offset
      *
@@ -415,21 +739,54 @@ final class JsonOutput implements ApiOutputInterface
         int $userId,
         bool $simple = false,
         bool $asObject = true,
+        bool $encode = true,
         int $limit = 0,
         int $offset = 0
     ) {
-        return Json_Data::podcast_episodes(
-            $podcastEpisodeIds,
-            $userId,
-            $simple,
-            $asObject,
-            $limit,
-            $offset
-        );
+        $podcastEpisodeIds = $this->applyLimit($podcastEpisodeIds, $limit, $offset);
+
+        $JSON = array();
+        foreach ($podcastEpisodeIds as $episode_id) {
+            $episode = new Podcast_Episode($episode_id);
+            $episode->format();
+            $rating  = new Rating($episode_id, 'podcast_episode');
+            $flag    = new Userflag($episode_id, 'podcast_episode');
+            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            array_push($JSON, [
+                "id" => (string) $episode_id,
+                "title" => $episode->f_title,
+                "name" => $episode->f_title,
+                "description" => $episode->f_description,
+                "category" => $episode->f_category,
+                "author" => $episode->f_author,
+                "author_full" => $episode->f_artist_full,
+                "website" => $episode->f_website,
+                "pubdate" => $episode->f_pubdate,
+                "state" => $episode->f_state,
+                "filelength" => $episode->f_time_h,
+                "filesize" => $episode->f_size,
+                "filename" => $episode->f_file,
+                "mime" => $episode->mime,
+                "public_url" => $episode->link,
+                "url" => $episode->play_url('', 'api', false, $userId),
+                "catalog" => $episode->catalog,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($userId, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($userId) ?: null),
+                "rating" => ($rating->get_user_rating($userId) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "played" => $episode->played]);
+        }
+        if (!$encode) {
+            return $JSON;
+        }
+        $output = ($asObject) ? array("podcast_episode" => $JSON) : $JSON[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns the playlists to the user
      *
      * @param int[] $playlistIds
      * @param int $userId
@@ -439,21 +796,81 @@ final class JsonOutput implements ApiOutputInterface
      * @param int $offset
      */
     public function playlists(
-        array $playlists,
+        array $playlistIds,
         int $userId,
         bool $songs = false,
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::playlists(
-            $playlists,
-            $userId,
-            $songs,
-            $asObject,
-            $limit,
-            $offset
-        );
+        $playlistIds = $this->applyLimit($playlistIds, $limit, $offset);
+
+        $JSON = [];
+
+        // Foreach the playlist ids
+        foreach ($playlistIds as $playlist_id) {
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist  = 1000000
+             */
+            if ((int) $playlist_id === 0) {
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                $playlist->format();
+
+                $playlist_name = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
+                $playlist_user = ($playlist->type !== 'public')
+                    ? $playlist->f_user
+                    : $playlist->type;
+
+                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playlist_type  = $playlist->type;
+                $object_type    = 'search';
+            } else {
+                $playlist    = new Playlist($playlist_id);
+                $playlist_id = $playlist->id;
+                $playlist->format();
+
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
+                $playlist_type  = $playlist->type;
+                $object_type    = 'playlist';
+            }
+
+            if ($songs) {
+                $items          = array();
+                $trackcount     = 1;
+                $playlisttracks = $playlist->get_items();
+                foreach ($playlisttracks as $objects) {
+                    array_push($items, array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
+                    $trackcount++;
+                }
+            } else {
+                $items = ($playitem_total ?: 0);
+            }
+            $rating  = new Rating($playlist_id, $object_type);
+            $flag    = new Userflag($playlist_id, $object_type);
+            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+
+            // Build this element
+            array_push($JSON, [
+                    "id" => (string) $playlist_id,
+                    "name" => $playlist_name,
+                    "owner" => $playlist_user,
+                    "items" => $items,
+                    "type" => $playlist_type,
+                    "art" => $art_url,
+                    "flag" => (!$flag->get_flag($userId, false) ? 0 : 1),
+                    "preciserating" => ($rating->get_user_rating($userId) ?: null),
+                    "rating" => ($rating->get_user_rating($userId) ?: null),
+                    "averagerating" => (string) ($rating->get_average_rating() ?: null)]
+            );
+        } // end foreach
+        $output = ($asObject) ? array("playlist" => $JSON) : $JSON[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     public function dict(
@@ -468,7 +885,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns catalogs to the user
      *
      * @param int[] $catalogIds group of catalog id's
      * @param bool $asObject (whether to return as a named object array or regular array)
@@ -479,9 +896,7 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        if ((count($catalogIds) > $limit || $offset > 0) && $limit) {
-            $catalogIds = array_splice($catalogs, $offset, $limit);
-        }
+        $catalogIds = $this->applyLimit($catalogIds, $limit, $offset);
 
         $result = [];
         foreach ($catalogIds as $catalog_id) {
@@ -518,7 +933,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This return user activity to the user
      *
      * @param int[] $activityIds Activity identifier list
      */
@@ -557,9 +972,7 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        if ((count($bookmarkIds) > $limit || $offset > 0) && $limit) {
-            $bookmarkIds = array_splice($bookmarkIds, $offset, $limit);
-        }
+        $bookmarkIds = $this->applyLimit($bookmarkIds, $limit, $offset);
 
         $result = [];
         foreach ($bookmarkIds as $bookmarkId) {
@@ -588,7 +1001,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This returns shares to the user
      *
      * @param int[] $shareIds Share id's to include
      * @param bool  $asAsOject
@@ -597,20 +1010,53 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function shares(
         array $shareIds,
-        bool $asOject = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::shares(
-            $shareIds,
-            $asOject,
-            $limit,
-            $offset
-        );
+        $JSON = [];
+        foreach ($this->applyLimit($shareIds, $limit, $offset) as $share_id) {
+            $share                = new Share($share_id);
+            $share_name           = $share->getObjectName();
+            $share_user           = $share->getUserName();
+            $share_allow_stream   = (int) $share->allow_stream;
+            $share_allow_download = (int) $share->allow_download;
+            $share_creation_date  = $share->getCreationDateFormatted();
+            $share_lastvisit_date = $share->getLastVisitDateFormatted();
+            $share_object_type    = $share->object_type;
+            $share_object_id      = $share->object_id;
+            $share_expire_days    = (int) $share->expire_days;
+            $share_max_counter    = (int) $share->max_counter;
+            $share_counter        = (int) $share->counter;
+            $share_secret         = $share->secret;
+            $share_public_url     = $share->public_url;
+            $share_description    = $share->description;
+            // Build this element
+            array_push($JSON, [
+                "id" => (string) $share_id,
+                "name" => $share_name,
+                "owner" => $share_user,
+                "allow_stream" => $share_allow_stream,
+                "allow_download" => $share_allow_download,
+                "creation_date" => $share_creation_date,
+                "lastvisit_date" => $share_lastvisit_date,
+                "object_type" => $share_object_type,
+                "object_id" => $share_object_id,
+                "expire_days" => $share_expire_days,
+                "max_counter" => $share_max_counter,
+                "counter" => $share_counter,
+                "secret" => $share_secret,
+                "public_url" => $share_public_url,
+                "description" => $share_description
+            ]);
+        } // end foreach
+        $output = ($asObject) ? array("share" => $JSON) : $JSON[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * Formats a list of arrays
      *
      * @param array  $array
      * @param string $item
@@ -623,7 +1069,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * This takes an array of object_ids and returns a result based on type
      *
      * @param int[]    $objects Array of object_ids
      * @param string   $type
@@ -641,14 +1087,37 @@ final class JsonOutput implements ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Json_Data::indexes(
-            $objectIds,
-            $type,
-            $userId,
-            $include,
-            $limit,
-            $offset
-        );
+        switch ($type) {
+            case 'song':
+                return $this->songs($objectIds, $userId, true, true, true, $limit, $offset);
+            case 'album':
+                $include_array = ($include) ? array('songs') : array();
+
+                return $this->albums($objectIds, $include_array, $userId, true, $limit, $offset);
+            case 'artist':
+                $include_array = ($include) ? array('songs', 'albums') : array();
+
+                return $this->artists($objectIds, $include_array, $userId, true, true, $limit, $offset);
+            case 'playlist':
+                return $this->playlists($objectIds, $userId, $include, true, $limit, $offset);
+            case 'share':
+                return $this->shares($objectIds, true, $limit, $offset);
+            case 'podcast':
+                return $this->podcasts($objectIds, $userId, $include, true, $limit, $offset);
+            case 'podcast_episode':
+                return $this->podcast_episodes($objectIds,
+                    $userId,
+                    true,
+                    true,
+                    true,
+                    $limit,
+                    $offset);
+            case 'video':
+                return $this->videos($objectIds, $userId, true, $limit, $offset);
+            default:
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                return $this->error(4710, sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+        }
     }
 
     /**
@@ -667,8 +1136,10 @@ final class JsonOutput implements ApiOutputInterface
         $JSON = [];
 
         foreach ($object_ids as $row_id => $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $class_name($data['object_id']);
+            $song = $this->modelFactory->mapObjectType(
+                $data['object_type'],
+                (int) $data['object_id']
+            );
             $song->format();
 
             $rating  = new Rating($song->id, 'song');
@@ -679,7 +1150,7 @@ final class JsonOutput implements ApiOutputInterface
                 "title" => $song->title,
                 "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
                 "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
-                "genre" => Json_Data::genre_array($song->tags),
+                "genre" => $this->genre_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
@@ -694,5 +1165,50 @@ final class JsonOutput implements ApiOutputInterface
         }
 
         return json_encode(['song' => $JSON], JSON_PRETTY_PRINT);
+    }
+    /**
+     * This returns the formatted 'genre' array for a JSON document
+     *
+     * @param  array $tags
+     * @return array
+     */
+    public function genre_array($tags)
+    {
+        $JSON = array();
+
+        if (!empty($tags)) {
+            $atags = array();
+            foreach ($tags as $tag_id => $data) {
+                if (array_key_exists($data['id'], $atags)) {
+                    $atags[$data['id']]['count']++;
+                } else {
+                    $atags[$data['id']] = array(
+                        'name' => $data['name'],
+                        'count' => 1
+                    );
+                }
+            }
+
+            foreach ($atags as $id => $data) {
+                array_push($JSON, array(
+                    "id" => (string) $id,
+                    "name" => $data['name']
+                ));
+            }
+        }
+
+        return $JSON;
+    }
+
+    private function applyLimit(array $itemList, int $limit, int $offset): array
+    {
+        if ($limit === 0) {
+            $limit = static::DEFAULT_LIMIT;
+        }
+        if ((count($itemList) > $limit || $offset > 0) && $limit) {
+            return array_slice($itemList, $offset, $limit);
+        }
+
+        return $itemList;
     }
 }

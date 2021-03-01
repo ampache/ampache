@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {
@@ -35,7 +37,9 @@ class ApiOutputFactoryTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->subject = new ApiOutputFactory(
-            $this->mock(ModelFactoryInterface::class)
+            $this->mock(ModelFactoryInterface::class),
+            $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class)
         );
     }
 

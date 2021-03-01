@@ -37,9 +37,9 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param int[] $albums
+     * @param int[] $albumIds
      * @param array $include
-     * @param int|null $user_id
+     * @param int|null $userId
      * @param bool $encode
      * @param int $limit
      * @param int $offset
@@ -47,9 +47,9 @@ interface ApiOutputInterface
      * @return array|string
      */
     public function albums(
-        array $albums,
+        array $albumIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $encode = true,
         int $limit = 0,
         int $offset = 0
@@ -68,22 +68,22 @@ interface ApiOutputInterface
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param int[] $artists
+     * @param int[] $artistIds
      * @param array $include
-     * @param null|int $user_id
+     * @param null|int $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param boolean $asObject (whether to return as a named object array or regular array)
      * @param int $limit
      * @param int $offset
      *
      * @return array|string
      */
     public function artists(
-        array $artists,
+        array $artistIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     );
@@ -92,22 +92,22 @@ interface ApiOutputInterface
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      *
-     * @param int[] $songs
-     * @param int|null $user_id
+     * @param int[] $songIds
+     * @param int|null $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
-     * @param bool $full_xml
+     * @param boolean $asObject (whether to return as a named object array or regular array)
+     * @param bool $fullXml
      * @param int $limit
      * @param int $offset
      *
      * @return array|string
      */
     public function songs(
-        array $songs,
-        ?int $user_id = null,
+        array $songIds,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
-        bool $full_xml = true,
+        bool $asObject = true,
+        bool $fullXml = true,
         int $limit = 0,
         int $offset = 0
     );
@@ -204,14 +204,14 @@ interface ApiOutputInterface
     /**
      * This returns podcasts to the user
      *
-     * @param int[] $podcasts
+     * @param int[] $podcastIds
      * @param int $userId
      * @param boolean $episodes include the episodes of the podcast
      * @param int $limit
      * @param int $offset
      */
     public function podcasts(
-        array $podcasts,
+        array $podcastIds,
         int $userId,
         bool $episodes = false,
         bool $asObject = true,
@@ -226,6 +226,7 @@ interface ApiOutputInterface
      * @param int $userId
      * @param bool $simple just return the data as an array for pretty somewhere else
      * @param bool $asObject
+     * @param bool $encode
      * @param int $limit
      * @param int $offset
      *
@@ -236,6 +237,7 @@ interface ApiOutputInterface
         int $userId,
         bool $simple = false,
         bool $asObject = true,
+        bool $encode = true,
         int $limit = 0,
         int $offset = 0
     );
@@ -251,7 +253,7 @@ interface ApiOutputInterface
      * @param int $offset
      */
     public function playlists(
-        array $playlists,
+        array $playlistIds,
         int $userId,
         bool $songs = false,
         bool $asObject = true,
@@ -309,13 +311,13 @@ interface ApiOutputInterface
      * This returns shares to the user
      *
      * @param int[] $shareIds Share id's to include
-     * @param bool  $asAsOject
+     * @param bool  $asAsObject
      * @param int   $limit
      * @param int   $offset
      */
     public function shares(
         array $shareIds,
-        bool $asAsOject = true,
+        bool $asAsObject = true,
         int $limit = 0,
         int $offset = 0
     ): string;

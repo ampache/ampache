@@ -61,9 +61,9 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param int[] $albums
+     * @param int[] $albumIds
      * @param array $include
-     * @param int|null $user_id
+     * @param int|null $userId
      * @param bool $fullXml
      * @param int $limit
      * @param int $offset
@@ -71,9 +71,9 @@ final class XmlOutput implements ApiOutputInterface
      * @return array|string
      */
     public function albums(
-        array $albums,
+        array $albumIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $fullXml = true,
         int $limit = 0,
         int $offset = 0
@@ -81,7 +81,7 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_offset($offset);
         Xml_Data::set_limit($limit);
 
-        return Xml_Data::albums($albums, $include, $user_id, $fullXml);
+        return Xml_Data::albums($albumIds, $include, $userId, $fullXml);
     }
 
     public function emptyResult(string $type): string
@@ -92,22 +92,22 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param int[] $artists
+     * @param int[] $artistIds
      * @param array $include
-     * @param null|int $user_id
+     * @param null|int $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param boolean $asObject (whether to return as a named object array or regular array)
      * @param int $limit
      * @param int $offset
      *
      * @return array|string
      */
     public function artists(
-        array $artists,
+        array $artistIds,
         array $include = [],
-        ?int $user_id = null,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
@@ -115,31 +115,31 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_limit($limit);
 
         return Xml_Data::artists(
-            $artists,
+            $artistIds,
             $include,
-            $user_id
+            $userId
         );
     }
 
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param int[] $songs
-     * @param int|null $user_id
+     * @param int[] $songIds
+     * @param int|null $userId
      * @param boolean $encode
-     * @param boolean $object (whether to return as a named object array or regular array)
-     * @param boolean $full_xml
+     * @param boolean $asObject (whether to return as a named object array or regular array)
+     * @param boolean $fullXml
      * @param int $limit
      * @param int $offset
      *
      * @return array|string
      */
     public function songs(
-        array $songs,
-        ?int $user_id = null,
+        array $songIds,
+        ?int $userId = null,
         bool $encode = true,
-        bool $object = true,
-        bool $full_xml = true,
+        bool $asObject = true,
+        bool $fullXml = true,
         int $limit = 0,
         int $offset = 0
     ) {
@@ -147,9 +147,9 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_limit($limit);
 
         return Xml_Data::songs(
-            $songs,
-            $user_id,
-            $full_xml
+            $songIds,
+            $userId,
+            $fullXml
         );
     }
 
@@ -344,7 +344,7 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param int[] $podcasts
+     * @param int[] $podcastIds
      * @param int $userId
      * @param bool $episodes include the episodes of the podcast
      * @param bool $asObject
@@ -352,7 +352,7 @@ final class XmlOutput implements ApiOutputInterface
      * @param int $offset
      */
     public function podcasts(
-        array $podcasts,
+        array $podcastIds,
         int $userId,
         bool $episodes = false,
         bool $asObject = true,
@@ -360,7 +360,7 @@ final class XmlOutput implements ApiOutputInterface
         int $offset = 0
     ): string {
         return Xml_Data::podcasts(
-            $podcasts,
+            $podcastIds,
             $userId,
             $episodes,
             $limit,
@@ -375,6 +375,7 @@ final class XmlOutput implements ApiOutputInterface
      * @param int $userId
      * @param bool $simple just return the data as an array for pretty somewhere else
      * @param bool $asObject
+     * @param bool $encode
      * @param int $limit
      * @param int $offset
      *
@@ -385,6 +386,7 @@ final class XmlOutput implements ApiOutputInterface
         int $userId,
         bool $simple = false,
         bool $asObject = true,
+        bool $encode = true,
         int $limit = 0,
         int $offset = 0
     ) {
@@ -408,14 +410,14 @@ final class XmlOutput implements ApiOutputInterface
      * @param int $offset
      */
     public function playlists(
-        array $playlists,
+        array $playlistIds,
         int $userId,
         bool $songs = false,
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Xml_Data::playlists($playlists, $userId, $limit, $offset);
+        return Xml_Data::playlists($playlistIds, $userId, $limit, $offset);
     }
 
     public function dict(
@@ -538,7 +540,7 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function shares(
         array $shareIds,
-        bool $asOject = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {

@@ -109,8 +109,9 @@ final class PodcastEpisodesMethod implements MethodInterface
                 $gatekeeper->getUser()->getId(),
                 false,
                 true,
-                (int) ($input['limit'] ?? 0),
-                (int) ($input['offset'] ?? 0)
+                true,
+                (int)($input['limit'] ?? 0),
+                (int)($input['offset'] ?? 0)
             );
         }
 
