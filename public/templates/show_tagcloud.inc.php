@@ -63,7 +63,7 @@ global $dic;
             <ul>
                 <li>
                     <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Edit') ?>', 'click_tag_')">
-                        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>

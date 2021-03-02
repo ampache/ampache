@@ -97,7 +97,7 @@ foreach ($data as $row) {
             }
         }
         $song->format(); ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td class="cel_play">
                 <span class="cel_play_content">&nbsp;</span>
                 <div class="cel_play_hover">
@@ -120,7 +120,7 @@ foreach ($data as $row) {
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
                     <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
-                        <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>
             </td>
@@ -137,7 +137,7 @@ foreach ($data as $row) {
             ?>
                 <td class="cel_agent">
                     <?php if (!empty($agent)) {
-                echo UI::get_icon('info', $agent);
+                echo Ui::get_icon('info', $agent);
             } ?>
                 </td>
                 <?php
