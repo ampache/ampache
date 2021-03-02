@@ -74,7 +74,7 @@ if (User::is_registered()) {
     <li id="sb_tab_home" class="sb1">
         <div id="sidebar-page" class="sidebar-page-float">
         <?php
-            require_once UI::find_template('sidebar_home.inc.php'); ?>
+            require_once Ui::find_template('sidebar_home.inc.php'); ?>
         </div>
     </li>
 <?php } ?>

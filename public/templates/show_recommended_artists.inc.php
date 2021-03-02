@@ -27,7 +27,14 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-$thcount = 8; ?>
+$thcount  = 8;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';
+$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag';
+$cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
+<?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata">
     <thead>
@@ -35,15 +42,15 @@ $thcount = 8; ?>
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
@@ -51,7 +58,7 @@ $thcount = 8; ?>
     } ?>
         <?php if (AmpConfig::get('userflags')) {
         ++$thcount; ?>
-            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+            <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
         <?php
     } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
@@ -97,25 +104,25 @@ $thcount = 8; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
-            <th class="cel_time"> <?php echo T_('Time'); ?> </th>
-            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_time; ?>"> <?php echo T_('Time'); ?> </th>
+            <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) { ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
         <?php
         } ?>
         <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+            <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
         <?php
         } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>
 </table>
-<?php Ui::show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

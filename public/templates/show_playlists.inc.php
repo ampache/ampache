@@ -30,8 +30,8 @@ use Ampache\Module\Util\Ui;
 
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
-$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

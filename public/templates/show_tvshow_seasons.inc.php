@@ -30,7 +30,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 6; ?>
+$thcount  = 6;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -40,7 +44,7 @@ $thcount  = 6; ?>
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
         <?php
 } ?>
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
@@ -54,7 +58,7 @@ $thcount  = 6; ?>
     } ?>
                 <?php if (AmpConfig::get('userflags')) {
         ++$thcount; ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
     } ?>
             <?php
@@ -90,7 +94,7 @@ $thcount  = 6; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
         <?php
         } ?>
             <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_name_bottom'); ?></th>
@@ -102,7 +106,7 @@ $thcount  = 6; ?>
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php

@@ -122,7 +122,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         if (AmpConfig::get('ajax_load')) {
             $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
-        <?php require_once UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <?php require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
             function NavigateTo(url)
             {
