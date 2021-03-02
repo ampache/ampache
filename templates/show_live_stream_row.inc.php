@@ -28,7 +28,7 @@
         } ?>
     </div>
 </td>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb); ?>

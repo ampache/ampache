@@ -1111,15 +1111,15 @@ table.tabledata tbody .cel_license {
     max-width: 150px;
 }
 
-table.tabledata tbody td.mash_cover {
+table.tabledata tbody td.grid_cover {
     height: auto;
 }
 
-table.tabledata tbody td.mash_userflag {
+table.tabledata tbody td.grid_userflag {
     margin-left: 41%;
 }
 
-table.tabledata tbody .mash_cover img,
+table.tabledata tbody .grid_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
     -webkit-border-radius: 2px;
@@ -1129,7 +1129,7 @@ table.tabledata tbody .cel_cover img {
     object-fit: cover;
 }
 
-table.tabledata tbody .mash_cover img:hover,
+table.tabledata tbody .grid_cover img:hover,
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid;
     margin: 0;

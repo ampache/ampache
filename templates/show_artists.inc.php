@@ -26,11 +26,13 @@ $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
-$cel_album  = ($is_table) ? "cel_album" : 'mash_album';
-$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist';
-$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags';
-$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
+$cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_album   = ($is_table) ? "cel_album" : 'grid_album';
+$cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
+$cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
+$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
+$cel_time    = ($is_table) ? "cel_time" : 'grid_time';
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -40,16 +42,16 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
             <th class="cel_play essential"></th>
             <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php
     } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Tags'); ?></th>
@@ -110,16 +112,16 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time essential"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Tags'); ?></th>

@@ -33,7 +33,7 @@
 </td>
 <?php
     if (Art::is_enabled()) { ?>
-        <td class="cel_cover">
+        <td class="<?php echo $cel_cover; ?>">
             <?php Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
         </td>
     <?php
@@ -41,7 +41,7 @@
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
@@ -49,7 +49,7 @@
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-        <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php Userflag::show($libitem->id, 'tvshow'); ?></td>
+        <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php Userflag::show($libitem->id, 'tvshow'); ?></td>
     <?php
         }
     } ?>

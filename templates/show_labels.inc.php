@@ -20,7 +20,9 @@
  *
  */
 
-$thcount = 6; ?>
+$thcount = 6;
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
@@ -37,7 +39,7 @@ $thcount = 6; ?>
         <tr class="th-top">
             <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
@@ -67,7 +69,7 @@ $thcount = 6; ?>
     <tfoot>
         <tr class="th-bottom">
             <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
