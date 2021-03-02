@@ -584,7 +584,7 @@ final class InstallationHelper implements InstallationHelperInterface
                 ];
 
                 // Default local UI preferences to have a better 'minimalist first look'.
-                $this->cookieSetter->set('sidebare_state', 'collapsed', $cookieOptions);
+                $this->cookieSetter->set('sidebar_state', 'collapsed', $cookieOptions);
                 $this->cookieSetter->set('browse_album_grid_view', 'false', $cookieOptions);
                 $this->cookieSetter->set('browse_artist_grid_view', 'false', $cookieOptions);
                 break;
