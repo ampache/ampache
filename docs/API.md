@@ -1,6 +1,6 @@
 ---
-title: "API 4.3"
-metaTitle: "API 4.3"
+title: "API 4"
+metaTitle: "API 4"
 metaDescription: "API documentation"
 ---
 
@@ -14,9 +14,62 @@ metaDescription: "API documentation"
 * 4.2.5-release
 * 4.2.6-release
 * 4.3.0-release
+* 4.4.0-release
 
 Ampache Provides an API for pulling out it's meta data in the form of simple XML documents. This was originally created for use by [Amarok](http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data. Access to the API is controlled by the Internal [Access Control Lists](API-acls.md). The KEY defined in the ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results pass offset as an additional parameter.
 If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues?state=closed). All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
+
+## Changelog
+
+### Added
+
+* NEW API functions
+  * Api::users (ID and Username of the site users)
+* Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
+* Api::localplay added parameters:
+  * 'oid' (integer) object_id to add //optional
+  * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
+  * 'clear' (integer) 0|1 clear the current playlist on add //optional
+* Api::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
+* Api::get_indexes
+  * New type options: 'album_artist', 'podcast', 'podcast_episode', 'share', 'video'
+  * Added parameter 'include': (0,1) (add the extra songs details if a playlist or podcast_episodes if a podcast)
+* Api::rate - Added types 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'
+* Api::flag - Added types 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'
+* Add time to artist and album objects. (total time of all songs in seconds)
+* Add songcount, albumcount to artist objects. (time in seconds)
+* Add songcount to album objects. (time in seconds)
+* Add type (release_type) to album objects
+* Add disk to song objects
+* Add time to video objects. (time in seconds)
+* Add title, mime, catalog to podcast_episodes
+* Api::advanced_search Add 'playlist', 'user' and 'video' to search types
+* Api::handshake added extra total counts to the response
+  * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
+* Api::ping match the handshake response (excluding the auth token)
+
+### Changed
+
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* Make filter optional in shares
+* Api::podcast_episodes
+  * "url" is now a play url (instead of a link to the episode)
+  * "public_url" is now the old episode link
+
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
+* Api::democratic was using action from localplay in the return responses
+* get_indexes for XML didn't include podcast indexes
+* Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
+* Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
+
+### Deprecated
+
+* Dropped in API 5.0.0
+  * Api::get_indexes; stop including playlist track and id in xml by default
+  * Album objects: "tracks" will only include track details. Use "songcount"
+  * Artist objects: "albums", "songs" will only include track details Use "albumcount" and "songcount"
 
 ## Sending Handshake Request
 
@@ -92,25 +145,27 @@ Optionally, you can also provide geolocation information `&geo_latitude=$latitud
 If your authenticated User and IP match a row in the Access List the following will be returned.
 
 For XML
+
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<auth><%AUTHENTICATION TOKEN%></auth>
-	<api><%APIVERSION%></api>
-	<session_expire><![CDATA[2019-12-03T09:36:46+10:00]]></session_expire>
-	<update><![CDATA[2019-11-26T16:35:05+10:00]]></update>
-	<add><![CDATA[2019-12-03T06:42:55+10:00]]></add>
-	<clean><![CDATA[2019-12-03T06:41:02+10:00]]></clean>
-	<songs><![CDATA[268302]]></songs>
-	<albums><![CDATA[25686]]></albums>
-	<artists><![CDATA[11055]]></artists>
-	<playlists><![CDATA[20]]></playlists>
-	<videos><![CDATA[0]]></videos>
-	<catalogs><![CDATA[4]]></catalogs>
+    <auth><%AUTHENTICATION TOKEN%></auth>
+    <api><%APIVERSION%></api>
+    <session_expire><![CDATA[2019-12-03T09:36:46+10:00]]></session_expire>
+    <update><![CDATA[2019-11-26T16:35:05+10:00]]></update>
+    <add><![CDATA[2019-12-03T06:42:55+10:00]]></add>
+    <clean><![CDATA[2019-12-03T06:41:02+10:00]]></clean>
+    <songs><![CDATA[268302]]></songs>
+    <albums><![CDATA[25686]]></albums>
+    <artists><![CDATA[11055]]></artists>
+    <playlists><![CDATA[20]]></playlists>
+    <videos><![CDATA[0]]></videos>
+    <catalogs><![CDATA[4]]></catalogs>
 </root>
 ```
 
 For JSON
+
 ```JSON
 {
     "auth": "%AUTHENTICATION TOKEN%",
@@ -236,23 +291,27 @@ For the purpose of this example the Ampache host is 'localhost' and the path to 
 ### Requesting all genres whose name starts with Rock
 
 XML
-```
+
+```XML
 http://localhost/ampache/server/xml.server.php?action=tags&auth=1234567890123456789012345678901&filter=Rock
 ```
 
 JSON
-```
+
+```JSON
 http://localhost/ampache/server/json.server.php?action=tags&auth=1234567890123456789012345678901&filter=Rock
 ```
 
 ### Requesting all song titles, with an offset of 5000
 
 XML
-```
+
+```XML
 http://localhost/ampache/server/xml.server.php?action=songs&auth=12345678901234567890123456789012&offset=5000
 ```
 
 JSON
-```
+
+```JSON
 http://localhost/ampache/server/json.server.php?action=songs&auth=12345678901234567890123456789012&offset=5000
 ```

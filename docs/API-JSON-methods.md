@@ -1,6 +1,6 @@
 ---
-title: "JSON 4.3"
-metaTitle: "JSON 4.3"
+title: "API 4 JSON"
+metaTitle: "API 4 JSON"
 metaDescription: "API documentation"
 ---
 
@@ -27,9 +27,10 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 
-| Input  | Type   | Description                                    | Optional |
-|--------|--------|------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) destroys the session if it exists |      YES |
+| Input     | Type   | Description                                                                | Optional |
+|-----------|--------|----------------------------------------------------------------------------|----------|
+| 'auth'    | string | (Session ID) returns version information and extends the session if passed | YES      |
+| 'version' | string | $version (API Version that the application understands)                    | YES      |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/ping.json)
 
@@ -37,9 +38,9 @@ This can be called without being authenticated, it is useful for determining if 
 
 Destroy a session using the auth parameter.
 
-| Input  | Type   | Description                                                                | Optional |
-|--------|--------|----------------------------------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) returns version information and extends the session if passed |       NO |
+| Input  | Type   | Description                                    | Optional |
+|--------|--------|------------------------------------------------|----------|
+| 'auth' | string | (Session ID) destroys the session if it exists | NO       |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/goodbye.json)
 
@@ -105,18 +106,17 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](API-advanced-search.md) page for details about creating searches.
+Refer to the [Advanced Search](api-4.3/api-advanced-search) page for details about creating searches.
 
-
-    INPUTS
-    * ampache_url = (string)
-    * ampache_API = (string)
-    * operator = (string) 'and'|'or' (whether to match one rule or all)
-    * rules = (array) = [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]]
-    * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
-    * random = (integer) 0|1 (random order of results; default to 0)
-    * offset = (integer)
-    * limit' = (integer)
+* INPUTS
+  * ampache_url = (string)
+  * ampache_API = (string)
+  * operator = (string) 'and'|'or' (whether to match one rule or all)
+  * rules = (array) = [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]]
+  * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
+  * random = (integer) 0|1 (random order of results; default to 0)
+  * offset = (integer)
+  * limit' = (integer)
 
 SONG
 
@@ -145,8 +145,6 @@ This takes a collection of inputs and returns artist objects.
 | 'offset'  | integer    | Return results starting from this index position                              |      YES |
 | 'limit'   | integer    | Maximum number of results to return                                           |      YES |
 | 'include' | string     | 'albums', 'songs' and will include the corresponding JSON                     |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artists.json)
 
 ## artist
@@ -169,8 +167,6 @@ This returns the albums of an artist
 | 'filter' | integer | UID of Artist, returns Album JSON                |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artist_albums.json)
 
 ## artist_songs
@@ -182,8 +178,6 @@ This returns the songs of the specified artist
 | 'filter' | integer | UID of Artist, returns Song JSON                 |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artist_songs.json)
 
 ## albums
@@ -201,8 +195,6 @@ This returns albums based on the provided search filters
 | 'offset'  | integer    | Return results starting from this index position                              |      YES |
 | 'limit'   | integer    | Maximum number of results to return                                           |      YES |
 | 'include' | string     | 'albums', 'songs' will include nested in the album JSON                       |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/albums.json)
 
 ## album
@@ -213,8 +205,6 @@ This returns a single album based on the UID provided
 |-----------|---------|----------------------------------------------------------------------|---------:|
 | 'filter'  | integer | UID of Album, returns album JSON                                     |       NO |
 | 'include' | string  | 'songs' will include the corresponding JSON nested in the album JSON |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/album.json)
 
 ## album_songs
@@ -226,48 +216,7 @@ This returns the songs of a specified album
 | 'filter' | integer | UID of Album, returns song JSON                  |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/album_songs.json)
-
-## licenses
-
-* **NEW** in 4.2.0
-
-This returns the licenses based on the specified filter
-
-| Input    | Type    | Description                                                                   | Optional |
-|----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
-| 'offset' | integer | Return results starting from this index position                              |      YES |
-| 'limit'  | integer | Maximum number of results to return                                           |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/licenses.json)
-
-## license
-
-* **NEW** in 4.2.0
-
-This returns a single license based on UID
-
-| Input    | Type    | Description                          | Optional |
-|----------|---------|--------------------------------------|---------:|
-| 'filter' | integer | UID of license, returns license JSON |       NO |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/license.json)
-
-## license_songs
-
-* **NEW** in 4.2.0
-
-This returns a list of songs based on the filter ID
-
-| Input    | Type    | Description                       | Optional |
-|----------|---------|-----------------------------------|---------:|
-| 'filter' | integer | UID of license, returns song JSON |       NO |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/license_songs.json)
 
 ## tags
 
@@ -342,8 +291,6 @@ Returns songs based on the specified filter
 | 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
 | 'offset' | integer    | Return results starting from this index position                              |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                           |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/songs.json)
 
 ## song
@@ -353,8 +300,6 @@ returns a single song
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
 | 'filter' | integer | UID of Song, returns song JSON |       NO |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/song.json)
 
 ## playlists
@@ -372,8 +317,6 @@ This returns playlists based on the specified filter
 | 'offset'      | integer    | Return results starting from this index position                              |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                           |      YES |
 | 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result                 |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlists.json)
 
 ## playlist
@@ -383,8 +326,6 @@ This returns a single playlist
 | Input    | Type   | Description                            | Optional |
 |----------|--------|----------------------------------------|---------:|
 | 'filter' | string | UID of playlist, returns playlist JSON |       NO |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlist.json)
 
 ## playlist_songs
@@ -396,8 +337,6 @@ This returns the songs for a playlist
 | 'filter' | string  | UID of Playlist, returns song JSON               |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlist_songs.json)
 
 ## playlist_create
@@ -491,7 +430,6 @@ ID
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlist_generate%20\(id\).json)
 
-
 ## shares
 
 * **NEW** in 4.2.0
@@ -515,7 +453,7 @@ Return shares by UID
 
 | Input    | Type    | Description                        | Optional |
 |----------|---------|------------------------------------|---------:|
-| 'filter' | integer | UID of Share, returns song JSON 	NO |       NO |
+| 'filter' | integer | UID of Share, returns song JSON NO |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/share.json)
 
@@ -588,8 +526,6 @@ This searches the songs and returns... songs
 | 'filter' | string  | Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song JSON |       NO |
 | 'offset' | integer | Return results starting from this index position                                           |      YES |
 | 'limit'  | integer | Maximum number of results to return                                                        |      YES |
-
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/search_songs.json)
 
 ## videos
@@ -620,7 +556,6 @@ This returns a single video
 * **NEW** in 4.2.0
 
 Get information about podcasts
-
 
 | Input     | Type    | Description                                                                   | Optional |
 |-----------|---------|-------------------------------------------------------------------------------|---------:|
@@ -810,18 +745,14 @@ Delete an existing user.
 
 * **NEW** in 4.2.0
 
-This returns licenses based on the specified filter
+This returns the licenses based on the specified filter
 
-| Input    | Type       | Description                                                                   | Optional |
-|----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
-|          |            | Find objects with an 'add' date newer than the specified date                 |          |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
-|          |            | Find objects with an 'update' time newer than the specified date              |          |
-| 'offset' | integer    | Return results starting from this index position                              |      YES |
-| 'limit'  | integer    | Maximum number of results to return                                           |      YES |
+| Input    | Type    | Description                                                                   | Optional |
+|----------|---------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                              |      YES |
+| 'limit'  | integer | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/licenses.json)
 
@@ -829,7 +760,7 @@ This returns licenses based on the specified filter
 
 * **NEW** in 4.2.0
 
-This returns a single license
+This returns a single license based on UID
 
 | Input    | Type    | Description                          | Optional |
 |----------|---------|--------------------------------------|---------:|
@@ -841,13 +772,11 @@ This returns a single license
 
 * **NEW** in 4.2.0
 
-This returns the songs for a license
+This returns a list of songs based on the filter ID
 
-| Input    | Type    | Description                                      | Optional |
-|----------|---------|--------------------------------------------------|---------:|
-| 'filter' | integer | UID of license, returns song JSON                |       NO |
-| 'offset' | integer | Return results starting from this index position |      YES |
-| 'limit'  | integer | Maximum number of results to return              |      YES |
+| Input    | Type    | Description                       | Optional |
+|----------|---------|-----------------------------------|---------:|
+| 'filter' | integer | UID of license, returns song JSON |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/license_songs.json)
 
@@ -900,6 +829,7 @@ This rates a library item
 |----------|---------|-----------------------------------------------|---------:|
 | 'type'   | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
 |          |         | 'podcast', 'podcast_episode', 'video'         |          |
+|          |         | 'tvshow', 'tvshow_season'                     |          |
 | 'id'     | integer | library item id                               |       NO |
 | 'rating' | integer | rating between 0-5                            |       NO |
 
@@ -916,6 +846,7 @@ This flags a library item as a favorite
 |--------|---------|----------------------------------------|---------:|
 | 'type' | string  | 'song', 'album', 'artist', 'playlist', |       NO |
 |        |         | 'podcast', 'podcast_episode', 'video'  |          |
+|        |         | 'tvshow', 'tvshow_season'              |          |
 | 'id'   | integer | $object_id                             |       NO |
 | 'flag' | boolean | 0, 1                                   |       NO |
 
@@ -1125,8 +1056,16 @@ This is for controlling localplay
 |           |         | 'Broadcast', 'Democratic', 'Live_Stream'                     |          |
 | 'clear'   | boolean | 0,1 Clear the current playlist before adding                 | YES      |
 
+* return object
+
 ```JSON
-TBC
+"localplay": { "command": {} }
+```
+
+* throws object
+
+```JSON
+"error": ""
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/localplay.json)
@@ -1154,7 +1093,18 @@ This is for controlling democratic play
 | 'method' | string  |             |       NO |
 | 'action' | string  |             |       NO |
 
+* return object|array
+
 ```JSON
-TBC
+"url": ""|"method": "","result": false|"song": []
 ```
 
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/democratic%20\(play\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/democratic%20\(vote\).json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/democratic%20\(playlist\).json)
