@@ -26,7 +26,8 @@
 
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 xoutput_headers();
 
@@ -128,7 +129,7 @@ switch ($action) {
             foreach ($object_id as $item) {
                 $object = new $object_type($item);
                 $medias = $object->get_medias();
-                Core::get_global('user')->playlist->add_medias($medias);
+                Core::get_global('user')->playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
             }
         } else {
             switch ($_REQUEST['type']) {

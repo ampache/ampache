@@ -96,14 +96,14 @@ class Userflag extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'podcast', 'podcast_episode');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('userflag.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -177,7 +177,7 @@ class Userflag extends database_object
         if (!empty($results)) {
             return self::set_flag_for_group($flagged, $results, $user_id);
         }
-        debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 4);
+        debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
 
         if (!$flagged) {
             $sql = "DELETE FROM `user_flag` WHERE " .
@@ -223,11 +223,11 @@ class Userflag extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    debug_event('userflag.class', 'save_flag...' . $plugin->_plugin->name, 5);
+                    debug_event(self::class, 'save_flag...' . $plugin->_plugin->name, 5);
                     $plugin->_plugin->set_flag($song, $flagged);
                 }
             } catch (Exception $error) {
-                debug_event('userflag.class', 'save_flag plugin error: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'save_flag plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -332,7 +332,7 @@ class Userflag extends database_object
      * @param string $user_id
      * @param integer $count
      * @param integer $offset
-     * @return array
+     * @return integer[]
      */
     public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
@@ -351,7 +351,7 @@ class Userflag extends database_object
             if ($type === null) {
                 $results[] = $row;
             } else {
-                $results[] = $row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 

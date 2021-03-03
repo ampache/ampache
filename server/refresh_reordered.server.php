@@ -22,7 +22,8 @@
 
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 

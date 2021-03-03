@@ -86,7 +86,7 @@ class Shoutbox
                 $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('shoutbox.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -133,7 +133,7 @@ class Shoutbox
     } // get_top
 
     /**
-     * @param $time
+     * @param integer $time
      * @return array
      */
     public static function get_shouts_since($time)
@@ -268,6 +268,7 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      * @param array $data
+     * @return mixed
      */
     public function update(array $data)
     {

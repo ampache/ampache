@@ -7,6 +7,7 @@
 
 **News:**
 
+* Keep an eye on the incoming changes to develop branch at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 * The Ampache kodi plugin has merged into the official Kodi addons repo!
  * Make sure you enable **hide_search** in your config to enable playlists in this initial version.
 * Develop changes

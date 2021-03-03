@@ -161,11 +161,11 @@ class Upnp_Api
 
         $addr=explode(":", $address);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api.class', 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
+            debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
         self::udpSend($response, $delay, $addr[0], (int) $addr[1]);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api.class', '(Sent)', 5);     // for timing
+            debug_event(self::class, '(Sent)', 5);     // for timing
         }
     }
 
@@ -179,7 +179,7 @@ class Upnp_Api
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api.class', $str, 5);
+            debug_event(self::class, $str, 5);
         }
     }
 
@@ -219,8 +219,8 @@ class Upnp_Api
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api.class', 'Discovery request from ' . $address, 5);
-            debug_event('upnp_api.class', 'HEADERS:' . var_export($headers, true), 5);
+            debug_event(self::class, 'Discovery request from ' . $address, 5);
+            debug_event(self::class, 'HEADERS:' . var_export($headers, true), 5);
         }
 
         $new_usn = 'uuid:' . self::get_uuidStr();
@@ -249,12 +249,12 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
             } else {
                 if (self::SSDP_DEBUG) {
-                    debug_event('upnp_api.class', 'ST header not for a service we provide [' . $actst . ']', 5);
+                    debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
                 }
             }
         } else {
             if (self::SSDP_DEBUG) {
-                debug_event('upnp_api.class', 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
+                debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
             }
         }
     }
@@ -269,13 +269,13 @@ class Upnp_Api
     {
         $retArr = array();
         $reader = new XMLReader();
-        $result = $reader->XML($prmRequest);
+        $result = XMLReader::XML($prmRequest);
         if (!$result) {
-            debug_event('upnp_api.class', 'XML reader failed', 5);
+            debug_event(self::class, 'XML reader failed', 5);
         }
 
         while ($reader->read()) {
-            debug_event('upnp_api.class', $reader->localName . ' ' . (string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
+            debug_event(self::class, $reader->localName . ' ' . (string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
 
             if (($reader->nodeType == XMLReader::ELEMENT)) {
                 switch ($reader->localName) {
@@ -355,7 +355,8 @@ class Upnp_Api
         if ($filterValue == null || $filterValue == '') {
             return true;
         }
-        if ($filterValue == "*") { // genuine wildcard
+        if ($filterValue == "*") {
+            // genuine wildcard
             return true;
         }
         if ($keyisRes) {
@@ -364,7 +365,7 @@ class Upnp_Api
             $testKey = $keytoCheck;
         }
         $filt = explode(',', $filterValue);      // do exact word match rather than partial, which is what strpos does.
-        //debug_event('upnp_api.class', 'checking '.$testKey.' in '.var_export($filt, true), 5);
+        //debug_event(self::class, 'checking '.$testKey.' in '.var_export($filt, true), 5);
         return in_array($testKey, $filt, true);  // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
@@ -396,8 +397,8 @@ class Upnp_Api
         // Add each item in $prmItems array to $ndDIDL:
         foreach ($prmItems as $item) {
             if (!is_array($item)) {
-                debug_event('upnp_api.class', 'item is not array', 2);
-                debug_event('upnp_api.class', $item, 5);
+                debug_event(self::class, 'item is not array', 2);
+                debug_event(self::class, $item, 5);
                 continue;
             }
 
@@ -669,7 +670,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $playlist = new Search($pathreq[1], 'song');
+                        $playlist = new Search($pathreq[1]);
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
@@ -754,7 +755,7 @@ class Upnp_Api
     public static function _slice($items, $start, $count)
     {
         $maxCount = count($items);
-        //debug_event('upnp_api.class', 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
+        //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
         return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
     }
@@ -773,14 +774,14 @@ class Upnp_Api
         $queryData  = array();
         parse_str($prmQuery, $queryData);
 
-        debug_event('upnp_api.class', 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
+        debug_event(self::class, 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
 
         $parent  = 'amp://music' . $prmPath;
         $pathreq = explode('/', $prmPath);
         if ($pathreq[0] == '' && count($pathreq) > 0) {
             array_shift($pathreq);
         }
-        debug_event('upnp_api.class', 'MusicChilds4: [' . $pathreq[0] . ']', 5);
+        debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
 
         switch ($pathreq[0]) {
             case 'artists':
@@ -883,13 +884,13 @@ class Upnp_Api
                         $pl_ids                  = Search::get_searches();
                         list($maxCount, $pl_ids) = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
-                            $playlist = new Search($pl_id, 'song');
+                            $playlist = new Search($pl_id);
                             $playlist->format();
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search($pathreq[1], 'song');
+                        $playlist = new Search($pathreq[1]);
                         if ($playlist->id) {
                             $items                  = $playlist->get_items();
                             list($maxCount, $items) = self::_slice($items, $start, $count);
@@ -1280,10 +1281,11 @@ class Upnp_Api
         //    echo $i, $tok[$i];
         //    echo "\n";
         //}
-        debug_event('upnp_api.class', 'Token ' . var_export($tok, true), 5);
+        debug_event(self::class, 'Token ' . var_export($tok, true), 5);
 
         $term = array();
-        if (sizeof($tok) == 3) { // tuple, we understand
+        if (sizeof($tok) == 3) {
+            // tuple, we understand
             switch ($tok[0]) {
                 case 'dc:title':
                     $term['ruletype'] = 'title';
@@ -1392,16 +1394,17 @@ class Upnp_Api
         // they supply after the search term.
         // Start with assuming a search type of "song" in the case where the first search term
         // is actually a term rather than a type
-       if (str_word_count($tokens[0]) > 1) { // first token is not a type, need to work out one
-           if ($type == '') {
-               $data['type'] = 'song';
-           } else {
-               $data['type'] = $type;
-           }
-       } else {
-           $data['type'] = $tokens[0];
-           $tokens[0]    = '';
-       }
+        if (str_word_count($tokens[0]) > 1) {
+            // first token is not a type, need to work out one
+            if ($type == '') {
+                $data['type'] = 'song';
+            } else {
+                $data['type'] = $type;
+            }
+        } else {
+            $data['type'] = $tokens[0];
+            $tokens[0]    = '';
+        }
 
         // Construct the operator type. The first one is likely to be 'and' (if present),
         // and the remainder should be 'and' or 'or'
@@ -1476,15 +1479,15 @@ class Upnp_Api
         $maxCount     = 0;
         $type         = self::parse_upnp_filter($filter);
         $search_terms = self::parse_upnp_searchcriteria($criteria, $type);
-        debug_event('upnp_api.class', 'Dumping $search_terms: ' . var_export($search_terms, true), 5);
+        debug_event(self::class, 'Dumping $search_terms: ' . var_export($search_terms, true), 5);
         $ids = Search::run($search_terms);// return a list of IDs
         if (count($ids) == 0) {
-            debug_event('upnp_api.class', 'Search returned no hits', 5);
+            debug_event(self::class, 'Search returned no hits', 5);
 
             return array(0, $mediaItems);
         }
-        //debug_event('upnp_api.class', 'Dumping $search results: '.var_export( $ids, true ) , 5);
-        debug_event('upnp_api.class', ' ' . (string) count($ids) . ' ids looking for type ' . $search_terms['type'], 5);
+        //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ) , 5);
+        debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $search_terms['type'], 5);
 
         switch ($search_terms['type']) {
             case 'artist':
@@ -1508,7 +1511,7 @@ class Upnp_Api
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     $album->format();
-                    //debug_event('upnp_api.class', $album->f_title, 5);
+                    //debug_event(self::class, $album->f_title, 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
             break;
@@ -1548,9 +1551,9 @@ class Upnp_Api
          * when the device comes to play and searches for songs belonging to the album, the
          * album is no longer found as a match
          */
-        //debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
+        //debug_event(self::class, 'replace <<< ' . $title, 5);
         //$title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
-        //debug_event('upnp_api.class', 'replace >>> ' . $title, 5);
+        //debug_event(self::class, 'replace >>> ' . $title, 5);
         if ($title == "") {
             $title = '(no title)';
         }
@@ -1695,7 +1698,6 @@ class Upnp_Api
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2',  // Just say its stereo as we don't have the real info
-            'protocolInfo' => $arrFileType['mime'],
             'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }

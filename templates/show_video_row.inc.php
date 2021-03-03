@@ -41,7 +41,7 @@ if (!isset($video_type)) {
 </td>
 <?php
 if (Art::is_enabled()) { ?>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
     <?php
     $art_showed = false;
         if ($libitem->get_default_art_kind() == 'preview') {
@@ -76,10 +76,10 @@ if ($video_type != 'video') {
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->object_cnt; ?></td>
 <?php
 } ?>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
@@ -87,7 +87,7 @@ if ($video_type != 'video') {
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_video"><?php Userflag::show($libitem->id, 'video') ?></td>
+    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id ?>_video"><?php Userflag::show($libitem->id, 'video') ?></td>
     <?php
         }
     } ?>

@@ -210,6 +210,40 @@ class Update
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
+        $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
+        $version[]     = array('version' => '400012', 'description' => $update_string);
+
+        $update_string = "* Extend Democratic cooldown beyond 255.<br/ >";
+        $version[]     = array('version' => '400013', 'description' => $update_string);
+
+        $update_string = "* Add last_duration to playlist<br/ > " .
+                         "* Add time to artist and album<br/ >";
+        $version[]     = array('version' => '400014', 'description' => $update_string);
+
+        $update_string = "* Extend artist time. smallint was too small<br/ > ";
+        $version[]     = array('version' => '400015', 'description' => $update_string);
+
+        $update_string = "* Extend album and make artist even bigger. This should cover everyone.<br/ > ";
+        $version[]     = array('version' => '400016', 'description' => $update_string);
+
+        $update_string = ""; // REMOVED update
+        $version[]     = array('version' => '400017', 'description' => $update_string);
+
+        $update_string = "* Extend video bitrate to unsigned. There's no reason for a negative bitrate.<br/ > ";
+        $version[]     = array('version' => '400018', 'description' => $update_string);
+
+        $update_string = "* Put 'of_the_moment' into a per user preference.<br/ > ";
+        $version[]     = array('version' => '400019', 'description' => $update_string);
+
+        $update_string = "* Customizable login page background.<br/ > ";
+        $version[]     = array('version' => '400020', 'description' => $update_string);
+
+        $update_string = "* Add r128 gain columns to song_data.<br/ > ";
+        $version[]     = array('version' => '400021', 'description' => $update_string);
+
+        $update_string = "* Extend allowed time for podcast_episodes.<br/ > ";
+        $version[]     = array('version' => '400022', 'description' => $update_string);
+
         return $version;
     }
 
@@ -272,7 +306,7 @@ class Update
      */
     public static function run_update()
     {
-        debug_event('update.class', 'run_update: starting', 4);
+        debug_event(self::class, 'run_update: starting', 4);
         /* Nuke All Active session before we start the mojo */
         $sql = "TRUNCATE session";
         Dba::write($sql);
@@ -296,7 +330,7 @@ class Update
             self::$versions = self::populate_version();
         }
 
-        debug_event('update.class', 'run_update: checking versions', 4);
+        debug_event(self::class, 'run_update: checking versions', 4);
         foreach (self::$versions as $version) {
             // If it's newer than our current version let's see if a function
             // exists and run the bugger.
@@ -307,7 +341,7 @@ class Update
 
                     // If the update fails drop out
                     if ($success) {
-                        debug_event('update.class', 'run_update: successfully updated to ' . $version['version'], 3);
+                        debug_event(self::class, 'run_update: successfully updated to ' . $version['version'], 3);
                         self::set_version('db_version', $version['version']);
                     } else {
                         AmpError::display('update');
@@ -319,11 +353,11 @@ class Update
         } // end foreach version
 
         // Let's also clean up the preferences unconditionally
-        debug_event('update.class', 'run_update: starting rebuild_all_preferences', 5);
+        debug_event(self::class, 'run_update: starting rebuild_all_preferences', 5);
         User::rebuild_all_preferences();
 
         // Upgrade complete
-        debug_event('update.class', 'run_update: starting', 4);
+        debug_event(self::class, 'run_update: starting', 4);
 
         return true;
     } // run_update
@@ -1201,6 +1235,187 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400012
+     *
+     * Add a rss token to use an RSS unauthenticated feed.
+     */
+    public static function update_400012()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400013
+     *
+     * Extend Democratic cooldown beyond 255.
+     */
+    public static function update_400013()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400014
+     *
+     * Add last_duration to playlist
+     * Add time to artist and album
+     */
+    public static function update_400014()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `album` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    //
+
+    /**
+     * update_400015
+     *
+     * Extend artist time. smallint was too small
+     */
+    public static function update_400015()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400016
+     *
+     * Extend album and make artist even bigger. This should cover everyone.
+     */
+    public static function update_400016()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400017
+     *
+     * Removed.
+     */
+    public static function update_400017()
+    {
+        return true;
+    }
+
+    /**
+     * update_400018
+     *
+     * Extend video bitrate to unsigned. There's no reason for a negative bitrate.
+     */
+    public static function update_400018()
+    {
+        $retval = true;
+        $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400019
+     *
+     * Put of_the_moment into a per user preference
+     */
+    public static function update_400019()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400020
+     *
+     * Customizable login background image
+     */
+    public static function update_400020()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400021
+     *
+     * Add r128 gain columns to song_data
+     */
+    public static function update_400021()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `song_data` " .
+            "ADD `r128_track_gain` smallint(5) DEFAULT NULL, " .
+            "ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400022
+     *
+     * Extend allowed time for podcast_episodes
+     */
+    public static function update_400022()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
         $retval &= Dba::write($sql);
 
         return $retval;

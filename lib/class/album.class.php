@@ -255,6 +255,9 @@ class Album extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+        if (!$this->time) {
+            $this->time = $this->update_time();
+        }
 
         // Little bit of formatting here
         $this->full_name      = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
@@ -566,13 +569,13 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event('album.class', 'Album check created new album id ' . $album_id, 4);
+        debug_event(self::class, 'Album check created new album id ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
                 Wanted::delete_wanted_release((string) $mbid);
             } catch (Exception $error) {
-                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
+                debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
         }
 
@@ -667,8 +670,7 @@ class Album extends database_object implements library_item
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
      * @param integer $catalog
-     * return integer[]
-     * @return array
+     * @return integer[]
      */
     public function get_album_suite($catalog = 0)
     {
@@ -709,7 +711,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[$row['disk']] = $row['id'];
         }
 
         return $results;
@@ -810,6 +812,10 @@ class Album extends database_object implements library_item
         } else {
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
+        }
+
+        if (!$this->time) {
+            $this->time = $this->update_time();
         }
     } // format
 
@@ -1053,6 +1059,23 @@ class Album extends database_object implements library_item
     } // get_random_songs
 
     /**
+     * update_time
+     *
+     * Get time for an album disk and set it.
+     * @return integer
+     */
+    public function update_time()
+    {
+        $time = self::get_time((int) $this->id);
+        if ($time !== $this->time && $this->id) {
+            $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
+            Dba::write($sql);
+        }
+
+        return $time;
+    }
+
+    /**
      * update
      * This function takes a key'd array of data and updates this object
      * as needed
@@ -1086,7 +1109,7 @@ class Album extends database_object implements library_item
         $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number, true);
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
-            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
+            debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
@@ -1207,6 +1230,51 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * update_album_artist
+     *
+     * find albums that are missing an album_artist and generate one.
+     * @param array $album_ids
+     */
+    public static function update_album_artist($album_ids = array())
+    {
+        $results = $album_ids;
+        if (empty($results)) {
+            // Find all albums that are missing an album artist
+            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != 'Unknown (Orphaned)'";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[] = (int) $row['id'];
+            }
+        }
+        foreach ($results as $album_id) {
+            $artists    = array();
+            $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
+            $db_results = Dba::read($sql, array($album_id));
+
+            // these are albums that only have 1 artist
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $artists[] = (int) $row['artist'];
+            }
+
+            // if there isn't a distinct artist, sort by the count with another fall back to id order
+            if (empty($artists)) {
+                $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist`, `id` ORDER BY COUNT(`id`) DESC, `id` ASC LIMIT 1";
+                $db_results = Dba::read($sql, array($album_id));
+
+                // these are album pick the artist by majority count
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $artists[] = (int) $row['artist'];
+                }
+            }
+            // Update the album
+            if (!empty($artists)) {
+                debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);
+                Album::update_field('album_artist', $artists[0], $album_id);
+            }
+        }
+    }
+
+    /**
      * remove
      * @return PDOStatement|boolean
      */
@@ -1218,7 +1286,7 @@ class Album extends database_object implements library_item
             $song    = new Song($song_id);
             $deleted = $song->remove();
             if (!$deleted) {
-                debug_event('album.class', 'Error when deleting the song `' . $song_id . '`.', 1);
+                debug_event(self::class, 'Error when deleting the song `' . $song_id . '`.', 1);
                 break;
             }
         }
@@ -1297,7 +1365,7 @@ class Album extends database_object implements library_item
         }
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
-        //debug_event('album.class', 'get_random ' . $sql, 5);
+        //debug_event(self::class, 'get_random ' . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];

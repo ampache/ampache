@@ -21,7 +21,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
 if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {

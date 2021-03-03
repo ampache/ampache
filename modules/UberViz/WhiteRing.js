@@ -40,20 +40,20 @@ var WhiteRing = (function() {
 
 
         //empty square
-        geometry = new THREE.RingGeometry( radius*.6,radius, 4,1, 0, Math.PI*2) ;
+        geometry = new THREE.RingGeometry( radius*.6,radius, 4,1, 0, Math.PI*2);
         mesh = new THREE.Mesh( geometry, material );
         groupHolder.add( mesh );
         shapes.push(mesh);
 
 
         //empty tri
-        geometry = new THREE.RingGeometry( radius*.6,radius, 3,1, 0, Math.PI*2) ;
+        geometry = new THREE.RingGeometry( radius*.6,radius, 3,1, 0, Math.PI*2);
         mesh = new THREE.Mesh( geometry, material );
         groupHolder.add( mesh );
         shapes.push(mesh);
 
         //empty circ
-        // geometry = new THREE.RingGeometry( radius*.6,radius, 24,1, 0, Math.PI*2) ;
+        // geometry = new THREE.RingGeometry( radius*.6,radius, 24,1, 0, Math.PI*2);
         // mesh = new THREE.Mesh( geometry, material );
         // groupHolder.add( mesh );
         // shapes.push(mesh);

@@ -52,7 +52,7 @@ class Stream_Playlist
             $this->id = Stream::get_session();
 
             if (!Session::exists('stream', $this->id)) {
-                debug_event('stream_playlist.class', 'Session::exists failed', 2);
+                debug_event(self::class, 'Session::exists failed', 2);
 
                 return false;
             }
@@ -235,7 +235,10 @@ class Stream_Playlist
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
-                    $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $show_song_art    = AmpConfig::get('show_song_art', false);
+                    $art_object       = ($show_song_art) ? $object->id : $object->album;
+                    $art_type         = ($show_song_art) ? 'song' : 'album';
+                    $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['codec']     = $object->type;
                     //$url['track_num'] = $object->f_track;
@@ -315,12 +318,12 @@ class Stream_Playlist
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {
-            debug_event('stream_playlist.class', 'Error: Empty URL array for ' . $this->id, 2);
+            debug_event(self::class, 'Error: Empty URL array for ' . $this->id, 2);
 
             return false;
         }
 
-        debug_event('stream_playlist.class', 'Generating a {' . $type . '} object...', 4);
+        debug_event(self::class, 'Generating a {' . $type . '} object...', 4);
 
         $ext = $type;
         switch ($type) {
@@ -670,7 +673,7 @@ class Stream_Playlist
                 $furl = $this->urls[0];
                 if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
                     // If democratic, repeat the song to get the next voted one.
-                    debug_event('stream_playlist.class', 'Playing democratic on Localplay, enabling repeat...', 5);
+                    debug_event(self::class, 'Playing democratic on Localplay, enabling repeat...', 5);
                     $localplay->repeat(true);
                 }
             }
@@ -708,7 +711,7 @@ class Stream_Playlist
     {
         // There should only be one here...
         if (count($this->urls) != 1) {
-            debug_event('stream_playlist.class', 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($this->urls), 2);
         }
 
         // Header redirect baby!

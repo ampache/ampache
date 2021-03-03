@@ -86,6 +86,15 @@ class Search extends playlist_object
             T_('5 Stars')
         );
 
+        $this->stars = array(
+            T_('0 Stars'),
+            T_('1 Star'),
+            T_('2 Stars'),
+            T_('3 Stars'),
+            T_('4 Stars'),
+            T_('5 Stars')
+        );
+
         // Define our basetypes
         $this->set_basetypes();
 
@@ -491,7 +500,7 @@ class Search extends playlist_object
         $this->type_text('anywhere', T_('Any searchable text'));
         $this->type_text('title', T_('Title'));
         $this->type_text('album', T_('Album'));
-        $this->type_text('artist', T_('Artist'));
+        $this->type_text('artist', T_('Song Artist'));
         $this->type_text('album_artist', T_('Album Artist'));
         $this->type_text('composer', T_('Composer'));
 
@@ -509,13 +518,15 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-        if (AmpConfig::get('show_skipped_times')) {
-            /* HINT: Number of times object has been skipped */
-            $this->type_numeric('skipped_times', T_('# Skipped'));
-            /* HINT: Percentage of (Times Played / Times skipped) * 100 */
-            $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
-        }
+        /* HINT: Number of times object has been skipped */
+        $this->type_numeric('skipped_times', T_('# Skipped'));
+        /* HINT: Number of times object has been played OR skipped */
+        $this->type_numeric('played_or_skipped_times', T_('# Played or Skipped'));
+        /* HINT: Percentage of (Times Played / Times skipped) * 100 */
+        $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
+        $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
         $this->type_boolean('played', T_('Played'));
         $this->type_boolean('myplayed', T_('Played by Me'));
         $this->type_boolean('myplayedalbum', T_('Played by Me (Album)'));
@@ -642,8 +653,9 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
+        $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
         $this->type_boolean('played', T_('Played'));
         $this->type_boolean('myplayed', T_('Played by Me'));
         $this->type_numeric('time', T_('Length (in minutes)'));
@@ -672,7 +684,7 @@ class Search extends playlist_object
     private function album_types()
     {
         $this->type_text('title', T_('Title'));
-        $this->type_text('artist', T_('Artist'));
+        $this->type_text('artist', T_('Album Artist'));
 
         $this->type_numeric('year', T_('Year'));
         $this->type_numeric('original_year', T_('Original Year'));
@@ -689,8 +701,9 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
+        $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
         $this->type_boolean('played', T_('Played'));
         $this->type_boolean('myplayed', T_('Played by Me'));
         $this->type_numeric('time', T_('Length (in minutes)'));
@@ -862,6 +875,8 @@ class Search extends playlist_object
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
         $search = new Search(null, $data['type'], $user);
+        unset($data['type']);
+        //debug_event(self::class, 'run: ' . print_r($data, true), 5);
         $search->parse_rules($data);
 
         // Generate BASE SQL
@@ -889,7 +904,7 @@ class Search extends playlist_object
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
 
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event(self::class, 'SQL get_items: ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -954,7 +969,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event(self::class, 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1025,7 +1040,7 @@ class Search extends playlist_object
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . (string) ($limit) : ' ';
-        //debug_event('search.class', 'SQL get_random_items: ' . $sql, 5);
+        //debug_event(self::class, 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
@@ -1074,10 +1089,12 @@ class Search extends playlist_object
     public function name_to_basetype($name)
     {
         foreach ($this->types as $type) {
+            //debug_event(self::class, $name . ' name_to_basetype: ' . $type['name'], 5);
             if ($type['name'] == $name) {
                 return $type['type'];
             }
         }
+        debug_event(self::class, 'name_to_basetype: could not fund ' . $name . '. Check your search rules', 5);
 
         return false;
     }
@@ -1093,7 +1110,8 @@ class Search extends playlist_object
     {
         $this->rules = array();
         foreach ($data as $rule => $value) {
-            if ($value == 'name' && preg_match('/^rule_[0|1|2|3|4|5|6|7|8|9]*$/', $rule)) {
+            //debug_event(self::class, 'parse_rules: ' . $rule . ' - ' . $value, 5);
+            if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -1260,6 +1278,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1372,6 +1393,28 @@ class Search extends playlist_object
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
+                case 'last_skip':
+                    $my_type = 'album';
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
+                    $where[]      = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['song'] = true;
+                    break;
+                case 'last_play_or_skip':
+                    $my_type = 'album';
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
+                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['song'] = true;
+                    break;
                 case 'played_times':
                     $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " .
@@ -1461,7 +1504,7 @@ class Search extends playlist_object
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
         if ($join['song']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
@@ -1479,11 +1522,11 @@ class Search extends playlist_object
                 "`object_count` ON `object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
             $where_sql .= " AND `image`.`object_type`='album'";
             $where_sql .= " AND `image`.`size`='original'";
         }
-
+        ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -1521,6 +1564,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1638,6 +1684,28 @@ class Search extends playlist_object
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
+                case 'last_skip':
+                    $my_type = 'artist';
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
+                    $where[]      = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['song'] = true;
+                    break;
+                case 'last_play_or_skip':
+                    $my_type = 'artist';
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
+                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['song'] = true;
+                    break;
                 case 'played_times':
                     $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
@@ -1694,7 +1762,7 @@ class Search extends playlist_object
         }
 
         if ($join['song']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id`";
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id`";
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
@@ -1712,10 +1780,11 @@ class Search extends playlist_object
                 "`object_count` ON `object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
         }
+        ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -1751,8 +1820,11 @@ class Search extends playlist_object
         $metadata    = array();
 
         foreach ($this->rules as $rule) {
-            $type          = $this->name_to_basetype($rule[0]);
-            $operator      = array();
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1918,6 +1990,26 @@ class Search extends playlist_object
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
+                case 'last_skip':
+                    $my_type = 'song';
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
+                    $where[] = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
+                case 'last_play_or_skip':
+                    $my_type = 'song';
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['play_or_skip'], "play_or_skip_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `play_or_skip_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
+                    $where[] = "`play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1926,6 +2018,11 @@ class Search extends playlist_object
                 case 'skipped_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    break;
+                case 'played_or_skipped_times':
+                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'play_skip_ratio':
@@ -2164,7 +2261,7 @@ class Search extends playlist_object
                     "WHERE `tag_map`.`object_type`='album' " .
                     "$value" .
                     "GROUP BY `object_id`" .
-                    ") AS realtag_$key " .
+                    ") AS `realtag_$key` " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
             }
         }
@@ -2178,7 +2275,7 @@ class Search extends playlist_object
                     "WHERE `tag_map`.`object_type`='artist' " .
                     "$value" .
                     "GROUP BY `object_id`" .
-                    ") AS realtag_$key " .
+                    ") AS `realtag_$key` " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
         }
@@ -2196,7 +2293,7 @@ class Search extends playlist_object
                 $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
-
+        ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -2232,6 +2329,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2263,7 +2363,7 @@ class Search extends playlist_object
                 $where_sql .= " `catalog_se`.`enabled` = '1'";
             }
         }
-
+        ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -2298,6 +2398,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2331,7 +2434,7 @@ class Search extends playlist_object
         }
 
         if ($join['song']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
 
             if ($join['catalog']) {
@@ -2343,7 +2446,7 @@ class Search extends playlist_object
                 }
             }
         }
-
+        ksort($table);
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -2376,6 +2479,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2430,6 +2536,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2483,6 +2592,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2503,6 +2615,7 @@ class Search extends playlist_object
         } // foreach rule
 
         $where_sql = implode(" $sql_logic_operator ", $where);
+        ksort($table);
 
         return array(
             'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',

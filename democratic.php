@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Make sure they have access to this */
 if (!AmpConfig::get('allow_democratic_playback')) {

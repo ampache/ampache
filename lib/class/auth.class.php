@@ -98,7 +98,7 @@ class Auth
         // Check for token auth with apikey
         $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
-            debug_event('auth.class', 'Logging in using token auth ' . $token, 5);
+            debug_event(self::class, 'Logging in using token auth ' . $token, 5);
 
             return $token_check;
         }
@@ -266,7 +266,7 @@ class Auth
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
-                debug_event('auth.class', "external_auth fread error: " . $stderr, 3);
+                debug_event(self::class, "external_auth fread error: " . $stderr, 3);
             }
             fclose($pipes[2]);
         } else {
@@ -375,7 +375,7 @@ class Auth
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
                         } else {
                             // Send redirect.
-                            debug_event('auth.class', 'OpenID 1: redirecting to ' . $redirect_url, 5);
+                            debug_event(self::class, 'OpenID 1: redirecting to ' . $redirect_url, 5);
                             header("Location: " . $redirect_url);
                         }
                     } else {
@@ -387,24 +387,24 @@ class Auth
                             $results['success'] = false;
                             $results['error']   = 'Could not render authentication form.';
                         } else {
-                            debug_event('auth.class', 'OpenID 2: javascript redirection code to OpenID form.', 5);
+                            debug_event(self::class, 'OpenID 2: javascript redirection code to OpenID form.', 5);
                             // First step is a success, UI interaction required.
                             $results['success']     = false;
                             $results['ui_required'] = $form_html;
                         }
                     }
                 } else {
-                    debug_event('auth.class', $website . ' is not a valid OpenID.', 3);
+                    debug_event(self::class, $website . ' is not a valid OpenID.', 3);
                     $results['success'] = false;
                     $results['error']   = 'Not a valid OpenID.';
                 }
             } else {
-                debug_event('auth.class', 'Cannot initialize OpenID resources.', 3);
+                debug_event(self::class, 'Cannot initialize OpenID resources.', 3);
                 $results['success'] = false;
                 $results['error']   = 'Cannot initialize OpenID resources.';
             }
         } else {
-            debug_event('auth.class', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
+            debug_event(self::class, 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
             $results['success'] = false;
             $results['error']   = 'Missing scheme in OpenID.';
         }

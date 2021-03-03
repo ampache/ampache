@@ -315,10 +315,10 @@ function return_bytes($val)
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'm':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'k':
             $val *= 1024;
             break;

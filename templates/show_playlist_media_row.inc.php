@@ -35,7 +35,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </div>
 </td>
 <?php if (Art::is_enabled()) { ?>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
 <div style="max-width: 80px;">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 3;
@@ -56,14 +56,14 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     } ?>
     </span>
 </td>
-<td class="cel_time"><?php echo $libitem->f_time ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?></td>
 <?php if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Rating::show($libitem->id, $object_type) ?></td>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Userflag::show($libitem->id, $object_type) ?></td>
+    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Userflag::show($libitem->id, $object_type) ?></td>
     <?php
         }
     } ?>

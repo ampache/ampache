@@ -30,14 +30,15 @@
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+define('OUTDATED_DATABASE_OK', 1);
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
     $token_check = Auth::token_check(Core::get_request('u'), Core::get_request('t'), Core::get_request('s'));
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', Core::get_request('auth')) && !empty($token_check)) {
-        $auth = (Core::get_request('auth') !== '') ? Core::get_request('auth') : Core::get_request('t');
-        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $auth, 2);
+        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')], 2);
 
         return false;
     }
@@ -50,7 +51,7 @@ if (!AmpConfig::get('resize_images')) {
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!filter_has_var(INPUT_GET, 'object_type')) {
-    $_GET['object_type'] = 'album';
+    $_GET['object_type'] = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
 }
 
 $type = Core::get_get('object_type');

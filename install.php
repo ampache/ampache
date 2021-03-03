@@ -21,8 +21,10 @@
  */
 
 $prefix = dirname(__FILE__);
-require_once $prefix . '/lib/init-tiny.php';
-require_once $prefix . '/lib/install.lib.php';
+
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init-tiny.php';
+require_once $a_root . '/lib/install.lib.php';
 
 set_error_handler('ampache_error_handler');
 

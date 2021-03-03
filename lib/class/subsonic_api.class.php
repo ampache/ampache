@@ -141,7 +141,7 @@ class Subsonic_Api
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
-            debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
+            debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
             if ($curl) {
                 curl_setopt_array($curl, array(
@@ -159,7 +159,7 @@ class Subsonic_Api
                     CURLOPT_TIMEOUT => 0
                 ));
                 if (curl_exec($curl) === false) {
-                    debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+                    debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }
                 curl_close($curl);
             }
@@ -195,7 +195,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param array $alwaysArray
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $format   = ($input['f']) ? strtolower((string) $input['f']) : 'xml';
         $callback = $input['callback'];
@@ -209,7 +209,7 @@ class Subsonic_Api
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
@@ -909,11 +909,9 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
         $user     = User::get_from_username((string) $username);
-        $userid   = (!Access::check('interface', 100)) ? $user->id : -1;
-        $public   = !Access::check('interface', 100);
 
         // Don't allow playlist listing for another user
-        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($public, $userid), Playlist::get_smartlists($public, $userid));
+        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
         self::apiOutput($input, $response);
     }
 
@@ -929,7 +927,7 @@ class Subsonic_Api
 
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylist');
         if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
-            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid));
             Subsonic_XML_Data::addSmartPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistid));
@@ -992,7 +990,7 @@ class Subsonic_Api
             for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
                 $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
             }
-            $playlist->add_songs($songsIdToAdd);
+            $playlist->add_songs($songsIdToAdd, (bool) AmpConfig::get('unique_playlist'));
         }
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order
@@ -1050,7 +1048,7 @@ class Subsonic_Api
         $playlistId = self::check_parameter($input, 'id');
 
         if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
-            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId), 'song');
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId));
             $playlist->delete();
         } else {
             $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistId));
@@ -1216,8 +1214,11 @@ class Subsonic_Api
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
-                $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
-                $art  = new Art($song->album, "album");
+                $song          = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
+                $show_song_art = AmpConfig::get('show_song_art', false);
+                $art_object    = ($show_song_art) ? $song->id : $song->album;
+                $art_type      = ($show_song_art) ? 'song' : 'album';
+                $art           = new Art($art_object, $art_type);
             }
         }
         if (($type == 'podcast')) {
@@ -1563,7 +1564,7 @@ class Subsonic_Api
                     $object_type = 'playlist';
                 }
             }
-            debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
@@ -1841,7 +1842,7 @@ class Subsonic_Api
         $gain   = $input['gain'];
 
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
-        debug_event('subsonic_api.class', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        debug_event(self::class, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 
         if ($localplay->connect()) {
@@ -1863,7 +1864,7 @@ class Subsonic_Api
                             $ret = $localplay->play();
                         }
                     } elseif (isset($input['offset'])) {
-                        debug_event('subsonic_api.class', 'Skip with offset is not supported on JukeboxControl.', 5);
+                        debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
                     } else {
                         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
                     }
@@ -1888,7 +1889,7 @@ class Subsonic_Api
                             }
 
                             if ($url !== null) {
-                                debug_event('subsonic_api.class', 'Adding ' . $url, 5);
+                                debug_event(self::class, 'Adding ' . $url, 5);
                                 $stream        = array();
                                 $stream['url'] = $url;
                                 $ret           = $localplay->add_url(new Stream_URL($stream));
@@ -1955,7 +1956,7 @@ class Subsonic_Api
             // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
             if ($submission && get_class($media) == 'Song' && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 // stream has finished
-                debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
+                debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
             // Submission is false and not a repeat. let repeats go though to saveplayqueue
@@ -2070,9 +2071,9 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
             if (!empty($similars)) {
-                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', 4);
+                debug_event(self::class, 'Found: ' . count($similars) . ' similar artists', 4);
                 foreach ($similars as $similar) {
-                    debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
+                    debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
                         // get the songs in a random order for even more chaos
@@ -2300,9 +2301,9 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        $user_id   = User::get_from_username($input['u'])->id;
+        $user      = User::get_from_username($input['u']);
         $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
-        $bookmarks = Bookmark::get_bookmarks($user_id);
+        $bookmarks = Bookmark::get_bookmarks($user);
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
@@ -2406,19 +2407,26 @@ class Subsonic_Api
     public static function saveplayqueue($input)
     {
         $current  = (int) $input['current'];
-        $position = (int) $input['position'];
+        $position = (int) $input['position'] / 1000;
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_XML_Data::getAmpacheObject($current);
         $time     = time();
-        if ($position < 1 && $media->id) {
+        if ($media->id) {
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_XML_Data::getAmpacheType($current);
-            Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
-            // repeated plays aren't called by scrobble so make sure we call this too
-            if ($previous['object_id'] == $media->id && ($time - $previous['time']) > 5) {
-                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+            // track has just started
+            if ($position < 1) {
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
+                // repeated plays aren't called by scrobble so make sure we call this too
+                if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                    $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+                }
+            }
+            // paused or played after 5 seconds so shift the start time
+            if ($position > 5 && $previous['object_id'] == $media->id) {
+                Stats::shift_last_play($user_id, (string) $input['c'], $previous['date'], ($time - $position));
             }
         }
         // continue to fail saving the queue

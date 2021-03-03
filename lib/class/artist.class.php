@@ -179,6 +179,10 @@ class Artist extends database_object implements library_item
             $this->$key = $value;
         } // foreach info
 
+        if (!$this->time) {
+            $this->time = $this->update_time();
+        }
+
         return true;
     } // constructor
 
@@ -315,7 +319,7 @@ class Artist extends database_object implements library_item
             $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
-        //debug_event('artist.class', 'get_albums ' . $sql, 5);
+        //debug_event(self::class, 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -385,7 +389,7 @@ class Artist extends database_object implements library_item
      */
     public static function get_top_songs($artist, $count = 50)
     {
-        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
+        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` ";
         $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
@@ -396,7 +400,7 @@ class Artist extends database_object implements library_item
         }
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
-        //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
+        //debug_event(self::class, 'get_top_songs sql: ' . $sql, 5);
 
 
         $results = array();
@@ -500,6 +504,12 @@ class Artist extends database_object implements library_item
         $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
+        // album artists that don't have any songs
+        if ((int) $results['time'] == 0) {
+            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
+            $db_results = Dba::read($sql, $params);
+            $results    = Dba::fetch_assoc($db_results);
+        }
 
         return (int) $results['time'];
     }
@@ -557,7 +567,7 @@ class Artist extends database_object implements library_item
         /* Set Object Vars */
         $this->songs      = $row['song_count'];
         $this->albums     = $row['album_count'];
-        $this->time       = $row['time'];
+        $this->time       = (int) $row['time'];
         $this->catalog_id = $row['catalog_id'];
 
         return $row;
@@ -614,6 +624,9 @@ class Artist extends database_object implements library_item
             }
 
             $this->object_cnt = $extra_info['object_cnt'];
+        }
+        if (!$this->time) {
+            $this->time = $this->update_time();
         }
 
         return true;
@@ -891,7 +904,7 @@ class Artist extends database_object implements library_item
             return null;
         }
         $artist_id = (int) Dba::insert_id();
-        debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
+        debug_event(self::class, 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
@@ -1003,7 +1016,6 @@ class Artist extends database_object implements library_item
      * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param integer|null $current_id
      * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
@@ -1062,6 +1074,23 @@ class Artist extends database_object implements library_item
     }
 
     /**
+     * update_time
+     *
+     * Get time for an artist and set it.
+     * @return integer
+     */
+    public function update_time()
+    {
+        $time = self::get_time((int) $this->id);
+        if ($time !== $this->time && $this->id) {
+            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
+            Dba::write($sql);
+        }
+
+        return $time;
+    }
+
+    /**
      * @return PDOStatement|boolean
      */
     public function remove()
@@ -1072,7 +1101,7 @@ class Artist extends database_object implements library_item
             $album   = new Album($albumid);
             $deleted = $album->remove();
             if (!$deleted) {
-                debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
+                debug_event(self::class, 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
         }

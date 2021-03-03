@@ -302,7 +302,7 @@ class Channel extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
-        debug_event('channel.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -360,7 +360,7 @@ class Channel extends database_object implements media, library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'channel') || $force) {
-            Art::display('channel', $this->id, $this->get_fullname(), $thumb, null);
+            Art::display('channel', $this->id, $this->get_fullname(), $thumb);
         }
     }
 
@@ -544,7 +544,7 @@ class Channel extends database_object implements media, library_item
                     if (make_bool($this->media->enabled)) {
                         if (AmpConfig::get('lock_songs')) {
                             if (!Stream::check_lock_media($this->media->id, 'song')) {
-                                debug_event('channel.class', 'Media ' . $this->media->id . ' locked, skipped.', 3);
+                                debug_event(self::class, 'Media ' . $this->media->id . ' locked, skipped.', 3);
                                 $this->media = null;
                             }
                         }
@@ -554,20 +554,20 @@ class Channel extends database_object implements media, library_item
                         $this->media = $catalog->prepare_media($this->media);
 
                         if (!$this->media->file || !Core::is_readable(Core::conv_lc_file($this->media->file))) {
-                            debug_event('channel.class', 'Cannot read media ' . $this->media->id . ' file, skipped.', 3);
+                            debug_event(self::class, 'Cannot read media ' . $this->media->id . ' file, skipped.', 3);
                             $this->media = null;
                         } else {
                             $valid_types = $this->media->get_stream_types();
                             if (!in_array('transcode', $valid_types)) {
-                                debug_event('channel.class', 'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
+                                debug_event(self::class, 'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
                                 $this->media = null;
                             } else {
-                                debug_event('channel.class', 'Now listening to ' . $this->media->file . '.', 4);
+                                debug_event(self::class, 'Now listening to ' . $this->media->file . '.', 4);
                             }
                         }
                     }
                 } else {
-                    debug_event('channel.class', 'Media ' . $this->media->id . ' doesn\'t have catalog, skipped.', 3);
+                    debug_event(self::class, 'Media ' . $this->media->id . ' doesn\'t have catalog, skipped.', 3);
                     $this->media = null;
                 }
 
@@ -597,7 +597,7 @@ class Channel extends database_object implements media, library_item
                     $this->media_bytes_streamed += strlen((string) $chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        // debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
+                        // debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {

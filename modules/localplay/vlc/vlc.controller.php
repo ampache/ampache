@@ -202,12 +202,8 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance = $instance ? $instance : AmpConfig::get('vlc_active');
-        $sql      = "SELECT * FROM `localplay_vlc` WHERE `id` = ?";
-        // if you only have one instance just default to that!
-        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
-            $sql = "SELECT * FROM `localplay_vlc`";
-        }
+        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
+        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
         $db_results = Dba::query($sql, array($instance));
 
         return Dba::fetch_assoc($db_results);
@@ -251,7 +247,7 @@ class AmpacheVlc extends localplay_controller
     public function add_url(Stream_URL $url)
     {
         if ($this->_vlc->add($url->title, $url->url) === null) {
-            debug_event('vlc.controller', 'add_url failed to add: ' . json_encode($url), 1);
+            debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
         }
@@ -269,7 +265,7 @@ class AmpacheVlc extends localplay_controller
     public function delete_track($object_id)
     {
         if ($this->_vlc->delete_pos($object_id) === null) {
-            debug_event('vlc.controller', 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
+            debug_event(self::class, 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
 
             return false;
         }

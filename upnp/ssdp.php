@@ -33,6 +33,9 @@ $socket->on('message', function ($data, $remote) use ($socket) {
     }
 });
 
+/**
+ * @param $signal
+ */
 function ssdpShutdown($signal)
 {
     debug_event('upnp', 'SSDP server being shut down by signal ' . $signal, 5);

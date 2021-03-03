@@ -22,7 +22,7 @@
 <?php
 if (Art::is_enabled()) {
     $name = scrub_out($libitem->f_name); ?>
-    <td class="cel_cover">
+    <td class="<?php echo $cel_cover; ?>">
         <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
     </td>
     <?php

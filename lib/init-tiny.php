@@ -44,7 +44,6 @@ if (!defined('CLI')) {
 require_once $a_root . '/lib/general.lib.php';
 require_once $a_root . '/lib/class/ampconfig.class.php';
 require_once $a_root . '/lib/class/core.class.php';
-require_once $a_root . '/lib/cron.lib.php';
 
 // Define some base level config options
 AmpConfig::set('prefix', $a_root);

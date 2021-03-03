@@ -20,8 +20,7 @@
  *
  */
 
-$thcount = 8; ?>
-<?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
+$thcount  = 8; ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">

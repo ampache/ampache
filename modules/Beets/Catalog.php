@@ -71,7 +71,8 @@ abstract class Catalog extends \Catalog
      * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
-    { // TODO: Basic constructor should be provided from parent
+    {
+        // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
@@ -152,7 +153,7 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -279,6 +280,17 @@ abstract class Catalog extends \Catalog
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
         return $count;
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
     }
 
     /**

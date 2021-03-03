@@ -413,8 +413,10 @@ var AACDecoder = AV.Decoder.extend(function() {
                 if (stream.read(1)) // dependsOnCoreCoder
                     stream.advance(14); // coreCoderDelay
 
-                if (stream.read(1)) { // extensionFlag
-                    if (this.config.profile > 16) { // error resiliant profile
+                if (stream.read(1)) {
+                    // extensionFlag
+                    if (this.config.profile > 16) {
+                        // error resiliant profile
                         this.config.sectionDataResilience = stream.read(1);
                         this.config.scalefactorResilience = stream.read(1);
                         this.config.spectralDataResilience = stream.read(1);
@@ -562,7 +564,8 @@ var AACDecoder = AV.Decoder.extend(function() {
         for (var i = 0; i < elements.length && channel < channels; i++) {
             var e = elements[i];
 
-            if (e instanceof ICStream) { // SCE or LFE element
+            if (e instanceof ICStream) {
+                // SCE or LFE element
                 channel += this.processSingle(e, channel);
             } else if (e instanceof CPEElement) {
                 this.processPair(e, channel);

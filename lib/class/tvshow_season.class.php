@@ -200,7 +200,7 @@ class TVShow_Season extends database_object implements library_item
      */
     public function search_childrens($name)
     {
-        debug_event('tvshow_season.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -265,6 +265,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
      */
@@ -348,6 +349,7 @@ class TVShow_Season extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
+     * @return mixed
      */
     public function update(array $data)
     {
@@ -368,7 +370,7 @@ class TVShow_Season extends database_object implements library_item
             $video   = Video::create_from_id($video_id);
             $deleted = $video->remove();
             if (!$deleted) {
-                debug_event('tvshow_season.class', 'Error when deleting the video `' . $video_id . '`.', 1);
+                debug_event(self::class, 'Error when deleting the video `' . $video_id . '`.', 1);
                 break;
             }
         }

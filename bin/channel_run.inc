@@ -25,9 +25,11 @@ define('CLI', 1);
 
 $chunk_buffer        = '';
 $nb_chunks_remainder = 0;
-$path                = dirname(__FILE__);
-$prefix              = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+
+$path   = dirname(__FILE__);
+$prefix = realpath($path . '/../');
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_flush();
 
 $metadata_interval = 16000;
@@ -183,8 +185,10 @@ while (true) {
         $chunk_buffer .= $chunk;
 
         //buffer maintenance
-        while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) { // buffer 15 seconds
-            if (strtolower($channel->stream_type) == "ogg" && strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
+        while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) {
+            // buffer 15 seconds
+            if (strtolower($channel->stream_type) == "ogg" && strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") {
+                //maintain ogg chunk alignment --- "4F676753" == "OggS"
                 // read OggS segment length
                 $hex                = strtohex(substr($chunk_buffer, 0, 27));
                 $ogg_nr_of_segments = (int) hexdec(substr($hex, 26 * 2, 2));
@@ -201,7 +205,8 @@ while (true) {
                 debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
                 $manual_search = strpos($chunk_buffer, 'OggS');
                 $chunk_buffer  = substr($chunk_buffer, $manual_search);
-            } else { // no chunk alignment required
+            } else {
+                // no chunk alignment required
                 $chunk_buffer = substr($chunk_buffer, $chunklen);
             }
             //debug_event('channel_run', 'removed chunk from buffer ', 5);
@@ -222,7 +227,8 @@ while (true) {
                     //fwrite($sock, $channel->header_chunk);
                     //debug_event('channel_run', 'IS NEW' . $channel->header_chunk, 5);
                     $clchunk_buffer = $channel->header_chunk . $chunk_buffer;
-                    if ($client['metadata']) { //stub
+                    if ($client['metadata']) {
+                        //stub
                         //if (strtolower($channel->stream_type) == "ogg")
                         while (strlen($clchunk_buffer) > $metadata_interval) {
                             fwrite($sock, substr($clchunk_buffer, 0, $metadata_interval) . chr(0x00));
@@ -256,7 +262,7 @@ while (true) {
                             $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_title . "';";
                             $metadata .= chr(0x00);
                             $metadatalen = ceil(strlen($metadata) / 16);
-                            $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
+                            $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00));
                             //debug_event('channel_run', 'Sending metadata to client...', 5);
                             fwrite($sock, chr($metadatalen) . $metadata);
                             $client['metadata_lastsong'] = $channel->media->id;

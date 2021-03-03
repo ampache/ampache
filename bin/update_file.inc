@@ -25,7 +25,8 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
@@ -133,11 +134,12 @@ while ($row = Dba::fetch_assoc($db_results)) {
         }
         // for songs and videos run an art gather
         if ($artadd == 1 && $file_id) {
+            $gather_song_art = (AmpConfig::get('gather_song_art', false));
             if ($type == 'song') {
                 $media    = new Song($file_id);
-                $art      = new Art($media->album, $type);
-                $art_id   = $media->album;
-                $art_type = 'album';
+                $art      = ($gather_song_art) ? new Art($file_id, $type) : new Art($media->album, $type);
+                $art_id   = ($gather_song_art) ? $file_id : $media->album;
+                $art_type = ($gather_song_art) ? 'song' : 'album';
                 $artist   = new Art($media->artist, $type);
                 if (!$art->has_db_info()) {
                     Catalog::gather_art_item($art_type, $art_id, true);

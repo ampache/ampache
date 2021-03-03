@@ -21,8 +21,9 @@
  */
 
 // This is playlist.php, it does playlist things.
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
-require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
@@ -127,7 +128,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist->add_songs(array($_REQUEST['song_id']), true);
+        $playlist->add_songs(array($_REQUEST['song_id']), (bool) AmpConfig::get('unique_playlist'));
         break;
     case 'remove_duplicates':
         debug_event('playlist', 'Remove duplicates called.', 4);

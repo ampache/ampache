@@ -96,7 +96,7 @@ class AmpacheGoogleMaps
                 $name = $place['results'][0]['formatted_address'];
             }
         } catch (Exception $error) {
-            debug_event('googlemaps.plugin', 'Error getting location name: ' . $error->getMessage(), 1);
+            debug_event(self::class, 'Error getting location name: ' . $error->getMessage(), 1);
         }
 
         return $name;
@@ -109,7 +109,7 @@ class AmpacheGoogleMaps
     public function display_map($pts)
     {
         if (!$this->api_key) {
-            debug_event('googlemaps.plugin', 'Missing API key, display map plugin skipped.', 3);
+            debug_event(self::class, 'Missing API key, display map plugin skipped.', 3);
 
             return false;
         }

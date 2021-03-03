@@ -43,9 +43,7 @@ class Openid
     {
         $store_path = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . '_openid';
         if (!file_exists($store_path) && !mkdir($store_path)) {
-            debug_event('openid.class', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', 3);
-        } else {
-            $store = new Auth_OpenID_FileStore($store_path);
+            debug_event(self::class, 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', 3);
 
             return null;
         }

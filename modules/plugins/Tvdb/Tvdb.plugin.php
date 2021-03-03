@@ -130,7 +130,7 @@ class AmpacheTvdb
                 // Get first match
                 $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
-                $results['tvshow_imdb_id'] = $release->imdbId ;
+                $results['tvshow_imdb_id'] = $release->imdbId;
                 $results['tvshow_summary'] = substr($release->overview, 0, 255); // Summary column in db is only 256 characters.
                 $results['tvshow']         = $release->name;
 
@@ -170,7 +170,7 @@ class AmpacheTvdb
                         $results['tvshow_season']  = $release->season;
                         $results['tvshow_episode'] = $release->number;
                         $results['original_name']  = $release->name;
-                        $results['imdb_id']        = $release->imdbId ;
+                        $results['imdb_id']        = $release->imdbId;
                         if ($release->firstAired) {
                             $results['release_date'] = $release->firstAired->getTimestamp();
                             $results['year']         = $release->firstAired->format('Y');

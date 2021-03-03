@@ -88,6 +88,10 @@ class User extends database_object
      * @var string $apikey
      */
     public $apikey;
+    /**
+     * @var string $rsstoken
+     */
+    public $rsstoken;
 
     // Constructed variables
     /**
@@ -363,6 +367,25 @@ class User extends database_object
 
         return $users;
     } // get_from_website
+
+    /**
+     * get_from_rsstoken
+     * This returns a built user from a rsstoken. This is a
+     * static function so it doesn't require an instance
+     * @param $rsstoken
+     * @return User|null
+     */
+    public static function get_from_rsstoken($rsstoken)
+    {
+        $user_id    = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, array($rsstoken));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = new User($results['id']);
+        }
+
+        return $user_id;
+    } // get_from_rsstoken
 
     /**
      * get_catalogs
@@ -690,7 +713,7 @@ class User extends database_object
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
 
-        debug_event('user.class', 'Updating username', 4);
+        debug_event(self::class, 'Updating username', 4);
 
         Dba::write($sql, array($new_username, $this->id));
     } // update_username
@@ -721,7 +744,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating fullname', 4);
+        debug_event(self::class, 'Updating fullname', 4);
 
         Dba::write($sql, array($new_fullname, $this->id));
     } // update_fullname
@@ -735,7 +758,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating fullname public', 4);
+        debug_event(self::class, 'Updating fullname public', 4);
 
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
     } // update_fullname_public
@@ -749,7 +772,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating email', 4);
+        debug_event(self::class, 'Updating email', 4);
 
         Dba::write($sql, array($new_email, $this->id));
     } // update_email
@@ -764,7 +787,7 @@ class User extends database_object
         $new_website = rtrim((string) $new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating website', 4);
+        debug_event(self::class, 'Updating website', 4);
 
         Dba::write($sql, array($new_website, $this->id));
     } // update_website
@@ -778,7 +801,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating state', 4);
+        debug_event(self::class, 'Updating state', 4);
 
         Dba::write($sql, array($new_state, $this->id));
     } // update_state
@@ -792,7 +815,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating city', 4);
+        debug_event(self::class, 'Updating city', 4);
 
         Dba::write($sql, array($new_city, $this->id));
     } // update_city
@@ -806,10 +829,24 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
+        debug_event(self::class, 'Updating apikey for ' . $this->id, 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
     } // update_apikey
+
+    /**
+     * update_rsstoken
+     * Updates their RSS token
+     * @param string $new_rsstoken
+     */
+    public function update_rsstoken($new_rsstoken)
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating rsstoken for ' . $this->id, 4);
+
+        Dba::write($sql, array($new_rsstoken, $this->id));
+    } // update_rsstoken
 
     /**
      * generate_apikey
@@ -819,6 +856,20 @@ class User extends database_object
     {
         $apikey = hash('md5', time() . $this->username . $this->get_password());
         $this->update_apikey($apikey);
+    }
+
+    /**
+     * generate_rsstoken
+     * Generate a new user RSS token
+     */
+    public function generate_rsstoken()
+    {
+        try {
+            $rsstoken = bin2hex(random_bytes(32));
+            $this->update_rsstoken($rsstoken);
+        } catch (Exception $error) {
+            debug_event(self::class, 'Could not generate random_bytes: ' . $error, 3);
+        }
     }
 
     /**
@@ -890,7 +941,7 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
+        debug_event(self::class, 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
@@ -918,11 +969,11 @@ class User extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                    debug_event(self::class, 'save_mediaplay... ' . $plugin->_plugin->name, 5);
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
-                debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -936,10 +987,10 @@ class User extends database_object
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
+            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
         } else {
             $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
+            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
         }
 
         // Remove port information if any
@@ -1048,7 +1099,7 @@ class User extends database_object
      */
     public function update_password($new_password, $hashed_password = null)
     {
-        debug_event('user.class', 'Updating password', 1);
+        debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
             $hashed_password = hash('sha256', $new_password);
         }
@@ -1108,7 +1159,7 @@ class User extends database_object
             $this->f_usage = UI::format_bytes($total);
 
             /* Get Users Last ip */
-            if (count($data = $this->get_ip_history(1))) {
+            if (count($data = $this->get_ip_history())) {
                 $user_ip          = inet_ntop($data['0']['ip']);
                 $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {
@@ -1340,7 +1391,7 @@ class User extends database_object
      * @param string $limit
      * @param string $type
      * @param boolean $newest
-     * @return array
+     * @return integer[]
      */
     public function get_recently_played($limit, $type = '', $newest = true)
     {
@@ -1356,7 +1407,7 @@ class User extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -1461,7 +1512,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
+        debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 

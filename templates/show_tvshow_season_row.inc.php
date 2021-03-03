@@ -32,7 +32,7 @@
     </div>
 </td>
 <?php if (Art::is_enabled()) { ?>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
     <?php Art::display('tvshow_season', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
 </td>
 <?php
@@ -49,7 +49,7 @@
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
+    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
         <?php Userflag::show($libitem->id, 'tvshow_season'); ?>
     </td>
     <?php

@@ -836,7 +836,7 @@ class OAuthServer
      * @return
      * @throws OAuthException
      */
-    private function get_token($request, $consumer, $token_type="access")
+    private function get_token($request, $consumer, $token_type = "access")
     {
         $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
         $token       = $this->data_store->lookup_token($consumer, $token_type, $token_field);

@@ -25,7 +25,8 @@ define('CLI', 1);
 define('NO_CRON_CACHE', '1');
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean();
@@ -41,7 +42,7 @@ foreach ($thresholds as $threshold) {
     foreach ($count_types as $count_type) {
         foreach ($object_types as $object_type) {
             $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
+            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type);
             $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
             Dba::write($sql);
         }

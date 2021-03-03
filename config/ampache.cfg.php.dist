@@ -7,13 +7,18 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 46
+config_version = 49
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
 ; POSSIBLE VALUES: master develop
 ; DEFAULT: none
 ;github_force_branch = "develop"
+
+; We sometimes need to talk and will show a warning to admin users
+; Enable this setting if you don't want to see warnings (When we enable them)
+; DEFAULT: false
+;hide_ampache_messages = "true"
 
 ;#########################################################
 ; Path Vars                                              #
@@ -247,7 +252,7 @@ deferred_ext_metadata = "true"
 ; This list specifies possible delimiters additional to \0
 ; This setting takes a regex pattern.
 ; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
@@ -255,6 +260,23 @@ additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
 ; DEFAULT: "false"
 ;enable_custom_metadata = "true"
 
+;#########################################################
+; File Tags                                             #
+;#########################################################
+
+; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
+; DEFAULT: "false"
+;write_id3 = "true"
+
+; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
+; as id3 metadata when updated.
+; DEFAULT: "false"
+;write_id3_art = "true"
+
+; Overwrite tags
+; This switch allows removal of id3v1 tags from the files.
+; DEFAULT: "false"
+;overwrite_tags = "true"
 
 ;#########################################################
 ; Catalog                                                #
@@ -442,11 +464,6 @@ ratings = "true"
 ; DEFAULT: -1
 ;rating_file_tag_user = 1
 
-; Set the amount of items Album/Video of the Moment will display
-; This was previously hardcoded into the site
-; DEFAULT: 6
-;of_the_moment = 6
-
 ; User flags/favorites
 ; This allows user flags for almost any object in Ampache as favorite
 ; POSSIBLE VALUES: false true
@@ -597,6 +614,35 @@ sociable = "true"
 ; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
 art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 
+; Gather song art
+; Gather song art additionally to the album art. This will add each
+; image of a song into the database. If your database contains
+; many songs not related to an album this should possibly be set to true.
+; Otherwise for an environment that contains mainly full albums
+; this should remain false to avoid multiple entries of the same image.
+; You need to set show_song_art to true if you want to make the song images visible.
+; DEFAULT = false
+;gather_song_art = "true"
+
+; Show song art
+; Show song art instead of album art in web UI and Subsonic API.
+; This will only work when gather_song_art is set to true AND when
+; there is song art in the database.
+; DEFAULT: false
+;show_song_art = "true"
+
+; Spotify Album art search filter
+;  Narrow the search.
+;  POSSIBLE VALUES:  artist,(year:1991 or year:1991-2000)
+; POSSIBLE  VALUES: empty string("") or commented out for no filter
+; DEFAULT: none;
+;spotify_art_filter="artist"
+
+; Art search limit
+;  Limit the total images returned
+;  DEFAULT: 5
+;art_search_limit="15"
+
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
 ; while browsing. Requires Last.FM.
@@ -637,7 +683,7 @@ lastfm_api_secret = ""
 ; Set this to true to enable display missing albums and the
 ; possibility for users to mark it as wanted.
 ; DEFAULT: "false"
-wanted = "true"
+;wanted = "true"
 
 ; Wanted types
 ; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
@@ -664,7 +710,7 @@ wanted_types = "album,official"
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
 ; DEFAULT: "false"
-channel = "false"
+;channel = "true"
 
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the
@@ -738,10 +784,10 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
 
-; Subsonic clients all seem to ignore the download method
-; This setting will not scrobble actions from stream actions.
+; Subsonic clients all seem to ignore the download method and always stream.
+; This setting will stop recording stats from Subsonic stream actions.
 ; (This means you can sync playlists without overloading your server)
-; Make sure you enable scrobbling in your client to keep recording stats!
+; Make sure you enable scrobbling in your Subsonic client to keep recording stats!
 ; DEFAULT: "true"
 ;subsonic_stream_scrobble = "true"
 
@@ -1025,6 +1071,7 @@ registration_mandatory_fields = "fullname"
 ;transcode_mpc  = "required"
 ;transcode_ogg  = "required"
 ;transcode_oga  = "required"
+;transcode_opus = "required"
 ;transcode_wav  = "required"
 ;transcode_wma  = "required"
 ;transcode_aif  = "required"
@@ -1138,8 +1185,8 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT: "false"
-;send_full_stream = "webplayer"
+; DEFAULT: "webplayer"
+send_full_stream = "webplayer"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #

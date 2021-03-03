@@ -420,7 +420,6 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
-
             /* Create the vainfo object and get info */
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
@@ -579,6 +578,17 @@ class Catalog_dropbox extends Catalog
         $this->update_last_clean();
 
         return $dead;
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
     }
 
     /**

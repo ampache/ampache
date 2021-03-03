@@ -108,7 +108,7 @@ class Song_Preview extends database_object implements media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
+            debug_event(self::class, 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
             return null;
         }
@@ -273,7 +273,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function search_childrens($name)
     {
-        debug_event('song_preview.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }

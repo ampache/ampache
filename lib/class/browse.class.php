@@ -201,7 +201,7 @@ class Browse extends Query
 
         $argument_param = ($argument ? '&argument=' . scrub_in((string) $argument) : '');
 
-        debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
+        debug_event(self::class, 'Show objects called for type {' . $type . '}', 5);
 
         $limit_threshold = $this->get_threshold();
         $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';

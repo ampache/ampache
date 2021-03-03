@@ -20,8 +20,7 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
- ?>
+$web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
      require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
  } ?>
