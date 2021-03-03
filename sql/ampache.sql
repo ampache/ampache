@@ -21,9 +21,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Feb 03, 2021 at 02:09 PM
+-- Generation Time: Mar 02, 2021 at 06:42 PM
 -- Server version: 10.5.8-MariaDB-3
--- PHP Version: 7.4.14
+-- PHP Version: 7.4.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `original_year` int(4) DEFAULT NULL,
   `barcode` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `catalog_number` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `time` bigint(20) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `year` (`year`),
@@ -119,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `user` int(11) DEFAULT NULL,
   `manual_update` smallint(1) DEFAULT 0,
+  `time` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -315,7 +317,7 @@ DROP TABLE IF EXISTS `democratic`;
 CREATE TABLE IF NOT EXISTS `democratic` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `cooldown` tinyint(4) UNSIGNED DEFAULT NULL,
+  `cooldown` int(11) UNSIGNED DEFAULT NULL,
   `level` tinyint(4) UNSIGNED NOT NULL DEFAULT 25,
   `user` int(11) NOT NULL,
   `primary` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
@@ -634,6 +636,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL,
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `last_duration` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `type` (`type`)
@@ -694,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `file` varchar(4096) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `source` varchar(4096) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `size` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-  `time` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `time` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `website` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `description` varchar(4096) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `author` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
@@ -724,7 +727,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   PRIMARY KEY (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=158 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -776,7 +779,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'),
 (99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'),
 (100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'),
-(101, 'stream_beautiful_url', '1', 'Enable URL Rewriting', 100, 'boolean', 'streaming', NULL),
+(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', NULL),
 (103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'),
 (104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'),
 (105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'),
@@ -812,7 +815,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
 (137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'),
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'),
-(139, 'webdav_backend', '1', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'),
+(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'),
 (140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', NULL),
 (141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'),
 (142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'),
@@ -829,7 +832,9 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library'),
 (155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'),
 (156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'),
-(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL);
+(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL),
+(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'),
+(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom');
 
 -- --------------------------------------------------------
 
@@ -1060,6 +1065,8 @@ CREATE TABLE IF NOT EXISTS `song_data` (
   `replaygain_track_peak` decimal(10,6) DEFAULT NULL,
   `replaygain_album_gain` decimal(10,6) DEFAULT NULL,
   `replaygain_album_peak` decimal(10,6) DEFAULT NULL,
+  `r128_track_gain` smallint(5) DEFAULT NULL,
+  `r128_album_gain` smallint(5) DEFAULT NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1267,7 +1274,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '400012'),
+('db_version', '400022'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1293,6 +1300,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `state` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `rsstoken` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1434,7 +1442,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 104, '0'),
 (-1, 103, '7'),
 (-1, 102, '0'),
-(-1, 101, '1'),
+(-1, 101, '0'),
 (-1, 100, '1'),
 (-1, 99, '0'),
 (-1, 95, '1'),
@@ -1478,7 +1486,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 136, ''),
 (-1, 137, ''),
 (-1, 138, ''),
-(-1, 139, '1'),
+(-1, 139, '0'),
 (-1, 140, '0'),
 (-1, 141, 'dark'),
 (-1, 142, ''),
@@ -1498,7 +1506,9 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 153, ''),
 (-1, 155, ''),
 (-1, 156, '0'),
-(-1, 157, '');
+(-1, 157, ''),
+(-1, 158, ''),
+(-1, 159, '');
 
 -- --------------------------------------------------------
 
@@ -1583,7 +1593,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `release_date` int(11) DEFAULT NULL,
   `channels` mediumint(9) DEFAULT NULL,
   `bitrate` mediumint(8) DEFAULT NULL,
-  `video_bitrate` mediumint(8) DEFAULT NULL,
+  `video_bitrate` int(11) UNSIGNED DEFAULT NULL,
   `display_x` mediumint(8) DEFAULT NULL,
   `display_y` mediumint(8) DEFAULT NULL,
   `frame_rate` float DEFAULT NULL,

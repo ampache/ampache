@@ -1,72 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
-
-**IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
-This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
-Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
-
-This means Ampache now **requires** php-intl module/dll to be enabled.
-
-### Added
-
-* php-intl is now required for translation of date formats into your locale
-
-### Changed
-
-* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
-* Renamed 'Tag' strings to 'Genre'
-* Changed sidebar back to browse for artist/album
-
-### API develop
-
-All API code that used 'Tag' now references 'Genre' instead
-
-### Added
-
-* NEW API functions
-  * Api::song_delete (Delete files when you are allowed to)
-  * Api::user_preferences (Get your user preferences)
-  * Api::user_preference (Get your preference by name)
-  * Api::system_update (Check Ampache for updates and run the update if there is one.)
-  * Api::system_preferences (Preferences for the system user)
-  * Api::system_preference (Get a system preference by name)
-  * Api::preference_create (Add a new preference to Ampache)
-  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
-  * Api::preference_delete (Delete a preference by name)
-  * Api::labels (list your record labels)
-  * Api::label (get a label by id)
-  * Api::label_artists (get all artists attached to that label)
-  * Api::get_bookmark (See if you've previously played the file)
-  * Api::bookmarks (List all bookmarks created by your account)
-  * Api::bookmark_create (Create a bookmark to allow revisting later)
-  * Api::bookmark_edit (Edit a bookmark)
-  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
-
-### Changed
-
-* Renamed functions:
-  * tags => genres
-  * tag => genre
-  * tag_artists => genre_artists
-  * tag_albums => genre_albums
-  * tag_songs => genre_songs
-* Don't allow duplicate podcast feeds
-* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
-* Error Codes and response structure has changed
-  * 4700 Access Control not Enabled
-  * 4701 Received Invalid Handshake
-  * 4703 Access Denied
-  * 4704 Not Found
-  * 4705 Missing Method
-  * 4706 Depreciated Method
-  * 4710 Bad Request
-  * 4742 Failed Access Check
-* stats: Removed back compat from older versions. Only 'type' is mandatory
-* Return empty objects when the request was correct but the results were empty
-* Don't transcode podcast_episodes
-
-## Ampache 4.4.0-develop
+## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 
@@ -92,6 +26,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Persist replaygain setting as a cookie
 * Support for image per song
 * Format XML output using DOMDocument
+* SubSonic - shift the current track start time when you pause/resume
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -123,8 +58,9 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Don't hide rss generation when you haven't got a key
 * Podcast episode durations that use seconds were converting into crazy lengths
 * Playlist and Smartlist check sql simplified
+* SubSonic - Json clients need their playlist entry to always array (single item lists)
 
-### API 4.4.0-develop
+### API 4.4.0
 
 ### Added
 
@@ -152,7 +88,6 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::handshake added extra total counts to the response
   * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
 * Api::ping match the handshake response (excluding the auth token)
-* SubSonic - shift the current track start time when you pause/resume
 
 ### Changed
 
@@ -168,7 +103,6 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::democratic was using action from localplay in the return responses
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
-* SubSonic - Json clients need their playlist entry to always array (single item lists)
 * Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
 
 ### Deprecated
