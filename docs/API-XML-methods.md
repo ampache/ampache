@@ -1,6 +1,6 @@
 ---
-title: "XML Methods"
-metaTitle: "XML Methods"
+title: "API 5 XML Methods"
+metaTitle: "API 5 XML Methods"
 metaDescription: "API documentation"
 ---
 
@@ -11,6 +11,7 @@ With the exception of Binary methods, all responses will return a HTTP 200 respo
 Also remember that Binary data methods will not return xml; just the file/data you have requested.
 
 Binary methods will also return:
+
 * HTTP 400 responses for a bad or incomplete request
 * HTTP 404 responses where the requests data was not found
 
@@ -23,37 +24,37 @@ Auth methods are used for authenticating or checking the status of your session 
 This is the function that handles verifying a new handshake Takes a timestamp, auth key, and username.
 
 | Input       | Type    | Description                                              | Optional |
-|-------------|---------|----------------------------------------------------------|---------:|
-| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key) |       NO |
-| 'user'      | string  | $username (Required if login/password authentication)    |      YES |
-| 'timestamp' | integer | UNIXTIME() The timestamp used in seed of password hash   |      YES |
+|-------------|---------|----------------------------------------------------------|----------|
+| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key) | NO       |
+| 'user'      | string  | $username (Required if login/password authentication)    | YES      |
+| 'timestamp' | integer | UNIXTIME() The timestamp used in seed of password hash   | YES      |
 |             |         | (Required if login/password authentication)              |          |
-| 'version'   | string  | $version (API Version that the application understands)  |      YES |
+| 'version'   | string  | $version (API Version that the application understands)  | YES      |
 
 * return
 
 ```XML
 <root>
-	<auth>
-	<api>
-	<session_expire>
-	<update>
-	<add>
-	<clean>
-	<songs>
-	<albums>
-	<artists>
-	<genres>
-	<playlists>
-	<users>
-	<catalogs>
-	<videos>
-	<podcasts>
-	<podcast_episodes>
-	<shares>
-	<licenses>
-	<live_streams>
-	<labels>
+    <auth>
+    <api>
+    <session_expire>
+    <update>
+    <add>
+    <clean>
+    <songs>
+    <albums>
+    <artists>
+    <genres>
+    <playlists>
+    <users>
+    <catalogs>
+    <videos>
+    <podcasts>
+    <podcast_episodes>
+    <shares>
+    <licenses>
+    <live_streams>
+    <labels>
 </root>
 ```
 
@@ -69,37 +70,38 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 
-| Input  | Type   | Description                                                                | Optional |
-|--------|--------|----------------------------------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) returns version information and extends the session if passed |      YES |
+| Input     | Type   | Description                                                                | Optional |
+|-----------|--------|----------------------------------------------------------------------------|----------|
+| 'auth'    | string | (Session ID) returns version information and extends the session if passed | YES      |
+| 'version' | string | $version (API Version that the application understands)                    | YES      |
 
 * return
 
 ```XML
 <root>
-	<session_expire>
-	<server>
-	<version>
-	<compatible>
-	<auth>
-	<api>
-	<update>
-	<add>
-	<clean>
-	<songs>
-	<albums>
-	<artists>
-	<genres>
-	<playlists>
-	<users>
-	<catalogs>
-	<videos>
-	<podcasts>
-	<podcast_episodes>
-	<shares>
-	<licenses>
-	<live_streams>
-	<labels>
+    <session_expire>
+    <server>
+    <version>
+    <compatible>
+    <auth>
+    <api>
+    <update>
+    <add>
+    <clean>
+    <songs>
+    <albums>
+    <artists>
+    <genres>
+    <playlists>
+    <users>
+    <catalogs>
+    <videos>
+    <podcasts>
+    <podcast_episodes>
+    <shares>
+    <licenses>
+    <live_streams>
+    <labels>
 </root>
 ```
 
@@ -120,8 +122,8 @@ This can be called without being authenticated, it is useful for determining if 
 Destroy a session using the auth parameter.
 
 | Input  | Type   | Description                                    | Optional |
-|--------|--------|------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) destroys the session if it exists |       NO |
+|--------|--------|------------------------------------------------|----------|
+| 'auth' | string | (Session ID) destroys the session if it exists | NO       |
 
 * return
 
@@ -259,17 +261,18 @@ Data methods require additional information and parameters to return information
 
 This takes a collection of inputs and returns ID + name for the object type
 
-| Input     | Type       | Description                                                      | Optional |
-|-----------|------------|------------------------------------------------------------------|---------:|
-| 'type'    | string     | 'song', 'album', 'artist', 'album_artist', 'playlist',           |       NO |
-|           |            | 'podcast', 'podcast_episode', 'live_stream'                      |          |
-| 'filter'  | string     |                                                                  |      YES |
-|           |            | Find objects with an 'add' date newer than the specified date    |          |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
-|           |            | Find objects with an 'update' time newer than the specified date |          |
-| 'include' | boolean    | 0,1 include songs in a playlist or episodes in a podcast         |      YES |
-| 'offset'  | integer    |                                                                  |      YES |
-| 'limit'   | integer    |                                                                  |      YES |
+| Input         | Type       | Description                                                                   | Optional |
+|---------------|------------|-------------------------------------------------------------------------------|----------|
+| 'type'        | string     | 'song', 'album', 'artist', 'album_artist', 'playlist',                        | NO       |
+|               |            | 'podcast', 'podcast_episode', 'live_stream'                                   |          |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number | YES      |
+|               |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16)                                             | YES      |
+|               |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'include'     | boolean    | 0,1 include songs in a playlist or episodes in a podcast                      | YES      |
+| 'offset'      | integer    | Return results starting from this index position                              | YES      |
+| 'limit'       | integer    | Maximum number of results to return                                           | YES      |
+| 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result                 | YES      |
 
 * return
 
@@ -318,16 +321,16 @@ Just add 1 to the rule value to create a new group of rules.
 * Optional (Metadata searches **only**)
   * rule_1_subtype
 
-| Input    | Type    | Description                                   | Optional |
-|----------|---------|--------------- -------------------------------|---------:|
-| operator | string  | 'and','or' (whether to match one rule or all) |       NO |
-| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],        |       NO |
-| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]] |      YES |
-| type     | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
-|          |         | 'label', 'user', 'video'                      |          |
-| random   | boolean | 0, 1 (random order of results; default to 0)  |      YES |
-| offset   | integer |                                               |      YES |
-| limit'   | integer |                                               |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| operator | string  | 'and','or' (whether to match one rule or all)    | NO       |
+| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],           | NO       |
+| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]     | YES      |
+| type     | string  | 'song', 'album', 'artist', 'playlist',           | NO       |
+|          |         | 'label', 'user', 'video'                         |          |
+| random   | boolean | 0, 1 (random order of results; default to 0)     | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -355,17 +358,17 @@ ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master
 This takes a collection of inputs and returns artist objects.
 
 | Input          | Type       | Description                                                      | Optional |
-|----------------|------------|------------------------------------------------------------------|---------:|
-| 'filter'       | string     | Filter results to match this string                              |      YES |
-| 'exact'        | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
-| 'add'          | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|----------------|------------|------------------------------------------------------------------|----------|
+| 'filter'       | string     | Filter results to match this string                              | YES      |
+| 'exact'        | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         | YES      |
+| 'add'          | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |                |            | Find objects with an 'add' date newer than the specified date    |          |
-| 'update'       | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+| 'update'       | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |                |            | Find objects with an 'update' time newer than the specified date |          |
-| 'include'      | string     | 'albums', 'songs' and will include the corresponding XML         |      YES |
-| 'album_artist' | boolean    | 0,1 if true filter for album artists only                        |      YES |
-| 'offset'       | integer    |                                                                  |      YES |
-| 'limit'        | integer    |                                                                  |      YES |
+| 'include'      | string     | 'albums', 'songs' and will include the corresponding XML         | YES      |
+| 'album_artist' | boolean    | 0,1 if true filter for album artists only                        | YES      |
+| 'offset'       | integer    | Return results starting from this index position                 | YES      |
+| 'limit'        | integer    | Maximum number of results to return                              | YES      |
 
 * return
 
@@ -389,9 +392,9 @@ This takes a collection of inputs and returns artist objects.
 This returns a single artist based on the UID of said artist
 
 | Input     | Type   | Description                                              | Optional |
-|-----------|--------|----------------------------------------------------------|---------:|
-| 'filter'  | string | UID of Artist, returns artist XML                        |       NO |
-| 'include' | string | 'albums', 'songs' and will include the corresponding XML |      YES |
+|-----------|--------|----------------------------------------------------------|----------|
+| 'filter'  | string | UID of Artist, returns artist XML                        | NO       |
+| 'include' | string | 'albums', 'songs' and will include the corresponding XML | YES      |
 
 * return
 
@@ -414,11 +417,11 @@ This returns a single artist based on the UID of said artist
 
 This returns the albums of an artist
 
-| Input    | Type    | Description                      | Optional |
-|----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of Artist, returns Album XML |       NO |
-| 'offset' | integer |                                  |      YES |
-| 'limit'  | integer |                                  |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of Artist, returns Album XML                 | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -441,11 +444,12 @@ This returns the albums of an artist
 
 This returns the songs of the specified artist
 
-| Input    | Type    | Description                     | Optional |
-|----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of Artist, returns Song XML |       NO |
-| 'offset' | integer |                                 |      YES |
-| 'limit'  | integer |                                 |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of Artist, returns Song XML                  | NO       |
+| 'top50'  | boolean | 0,1, if true filter to the artist top 50         | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -469,16 +473,16 @@ This returns the songs of the specified artist
 This returns albums based on the provided search filters
 
 | Input     | Type       | Description                                                      | Optional |
-|-----------|------------|------------------------------------------------------------------|---------:|
-| 'filter'  | string     | Filter results to match this string                              |      YES |
-| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|-----------|------------|------------------------------------------------------------------|----------|
+| 'filter'  | string     | Filter results to match this string                              | YES      |
+| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         | YES      |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |           |            | Find objects with an 'add' date newer than the specified date    |          |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |           |            | Find objects with an 'update' time newer than the specified date |          |
-| 'offset'  | integer    |                                                                  |      YES |
-| 'limit'   | integer    |                                                                  |      YES |
-| 'include' | string     | 'albums', 'songs' will include the corresponding XML             |      YES |
+| 'offset'  | integer    | Return results starting from this index position                 | YES      |
+| 'limit'   | integer    | Maximum number of results to return                              | YES      |
+| 'include' | string     | 'albums', 'songs' will include the corresponding XML             | YES      |
 
 * return
 
@@ -502,9 +506,9 @@ This returns albums based on the provided search filters
 This returns a single album based on the UID provided
 
 | Input     | Type   | Description                                | Optional |
-|-----------|--------|--------------------------------------------|---------:|
-| 'filter'  | string | UID of Album, returns album XML            |       NO |
-| 'include' | string | 'songs' will include the corresponding XML |      YES |
+|-----------|--------|--------------------------------------------|----------|
+| 'filter'  | string | UID of Album, returns album XML            | NO       |
+| 'include' | string | 'songs' will include the corresponding XML | YES      |
 
 * return
 
@@ -527,11 +531,12 @@ This returns a single album based on the UID provided
 
 This returns the songs of a specified album
 
-| Input    | Type    | Description                    | Optional |
-|----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of Album, returns song XML |       NO |
-| 'offset' | integer |                                |      YES |
-| 'limit'  | integer |                                |      YES |
+| Input    | Type    | Description                                        | Optional |
+|----------|---------|----------------------------------------------------|----------|
+| 'filter' | string  | UID of Album, returns song XML                     | NO       |
+| 'exact'  | boolean | 0,1 if true don't group songs from different disks | YES      |
+| 'offset' | integer | Return results starting from this index position   | YES      |
+| 'limit'  | integer | Maximum number of results to return                | YES      |
 
 * return
 
@@ -555,11 +560,11 @@ This returns the songs of a specified album
 This returns the genres (Tags) based on the specified filter
 
 | Input    | Type    | Description                                              | Optional |
-|----------|---------|----------------------------------------------------------|---------:|
-| 'filter' | string  | Filter results to match this string                      |      YES |
-| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
-| 'offset' | integer |                                                          |      YES |
-| 'limit'  | integer |                                                          |      YES |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
 
 * return
 
@@ -581,12 +586,12 @@ This returns the genres (Tags) based on the specified filter
 ### genre
 
 This returns a single genre based on UID.
-All XML Documents that have a ```<genre>``` element may have 0 or more genre elements associated with them.
+All XML Documents that have a ```<genre></genre>``` element may have 0 or more genre elements associated with them.
 Each genre element has an attribute "count" that indicates the number of people who have specified this genre.
 
 | Input    | Type   | Description                     | Optional |
-|----------|--------|---------------------------------|---------:|
-| 'filter' | string | UID of genre, returns genre XML |       NO |
+|----------|--------|---------------------------------|----------|
+| 'filter' | string | UID of genre, returns genre XML | NO       |
 
 * return
 
@@ -609,11 +614,11 @@ Each genre element has an attribute "count" that indicates the number of people 
 
 This returns the artists associated with the genre in question as defined by the UID
 
-| Input    | Type    | Description                      | Optional |
-|----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns artist XML |      YES |
-| 'offset' | integer |                                  |      YES |
-| 'limit'  | integer |                                  |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of genre, returns artist XML                 | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -636,11 +641,11 @@ This returns the artists associated with the genre in question as defined by the
 
 This returns the albums associated with the genre in question
 
-| Input    | Type    | Description                     | Optional |
-|----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns album XML |      YES |
-| 'offset' | integer |                                 |      YES |
-| 'limit'  | integer |                                 |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of genre, returns album XML                  | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -663,11 +668,11 @@ This returns the albums associated with the genre in question
 
 returns the songs for this genre
 
-| Input    | Type    | Description                    | Optional |
-|----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns song XML |      YES |
-| 'offset' | integer |                                |      YES |
-| 'limit'  | integer |                                |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of genre, returns song XML                   | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -691,15 +696,15 @@ returns the songs for this genre
 Returns songs based on the specified filter
 
 | Input    | Type       | Description                                                      | Optional |
-|----------|------------|------------------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                              |      YES |
-| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|----------|------------|------------------------------------------------------------------|----------|
+| 'filter' | string     | Filter results to match this string                              | YES      |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         | YES      |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |          |            | Find objects with an 'add' date newer than the specified date    |          |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
 |          |            | Find objects with an 'update' time newer than the specified date |          |
-| 'offset' | integer    |                                                                  |      YES |
-| 'limit'  | integer    |                                                                  |      YES |
+| 'offset' | integer    | Return results starting from this index position                 | YES      |
+| 'limit'  | integer    | Maximum number of results to return                              | YES      |
 
 * return
 
@@ -723,8 +728,8 @@ Returns songs based on the specified filter
 returns a single song
 
 | Input    | Type   | Description                   | Optional |
-|----------|--------|-------------------------------|---------:|
-| 'filter' | string | UID of Song, returns song XML |       NO |
+|----------|--------|-------------------------------|----------|
+| 'filter' | string | UID of Song, returns song XML | NO       |
 
 * return
 
@@ -750,8 +755,8 @@ returns a single song
 Delete an existing song. (if you are allowed to)
 
 | Input    | Type   | Description           | Optional |
-|----------|--------|-----------------------|---------:|
-| 'filter' | string | UID of song to delete |       NO |
+|----------|--------|-----------------------|----------|
+| 'filter' | string | UID of song to delete | NO       |
 
 * return
 
@@ -760,6 +765,7 @@ Delete an existing song. (if you are allowed to)
     <success>
 </root>
 ```
+
 * throws
 
 ```XML
@@ -773,8 +779,8 @@ Delete an existing song. (if you are allowed to)
 This takes a url and returns the song object in question
 
 | Input | Type   | Description                                                   | Optional |
-|-------|--------|---------------------------------------------------------------|---------:|
-| 'url' | string | Full Ampache URL from server, translates back into a song XML |       NO |
+|-------|--------|---------------------------------------------------------------|----------|
+| 'url' | string | Full Ampache URL from server, translates back into a song XML | NO       |
 
 * return
 
@@ -797,16 +803,17 @@ This takes a url and returns the song object in question
 
 This returns playlists based on the specified filter
 
-| Input    | Type       | Description                                                      | Optional |
-|----------|------------|------------------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                              |      YES |
-| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
-|          |            | Find objects with an 'add' date newer than the specified date    |          |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
-|          |            | Find objects with an 'update' time newer than the specified date |          |
-| 'offset' | integer    |                                                                  |      YES |
-| 'limit'  | integer    |                                                                  |      YES |
+| Input         | Type       | Description                                                      | Optional |
+|---------------|------------|------------------------------------------------------------------|----------|
+| 'filter'      | string     | Filter results to match this string                              | YES      |
+| 'exact'       | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         | YES      |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
+|               |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16)                                | YES      |
+|               |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset'      | integer    | Return results starting from this index position                 | YES      |
+| 'limit'       | integer    | Maximum number of results to return                              | YES      |
+| 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result    | YES      |
 
 * return
 
@@ -830,8 +837,8 @@ This returns playlists based on the specified filter
 This returns a single playlist
 
 | Input    | Type   | Description                           | Optional |
-|----------|--------|---------------------------------------|---------:|
-| 'filter' | string | UID of playlist, returns playlist XML |       NO |
+|----------|--------|---------------------------------------|----------|
+| 'filter' | string | UID of playlist, returns playlist XML | NO       |
 
 * return
 
@@ -854,11 +861,11 @@ This returns a single playlist
 
 This returns the songs for a playlist
 
-| Input    | Type    | Description                       | Optional |
-|----------|---------|-----------------------------------|---------:|
-| 'filter' | string  | UID of Playlist, returns song XML |       NO |
-| 'offset' | integer |                                   |      YES |
-| 'limit'  | integer |                                   |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of Playlist, returns song XML                | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -882,9 +889,9 @@ This returns the songs for a playlist
 This create a new playlist and return it
 
 | Input  | Type   | Description                       | Optional |
-|--------|--------|-----------------------------------|---------:|
-| 'name' | string | Playlist name                     |       NO |
-| 'type' | string | Playlist type 'public', 'private' |      YES |
+|--------|--------|-----------------------------------|----------|
+| 'name' | string | Playlist name                     | NO       |
+| 'type' | string | Playlist type 'public', 'private' | YES      |
 
 * return
 
@@ -909,12 +916,12 @@ This modifies name and type of a playlist
 Previously name and type were mandatory while filter wasn't. this has been reversed.
 
 | Input    | Type   | Description                                                       | Optional |
-|----------|--------|-------------------------------------------------------------------|---------:|
-| 'filter' | string | UID of Playlist                                                   |       NO |
-| 'name'   | string | Playlist name                                                     |      YES |
-| 'type'   | string | Playlist type 'public', 'private'                                 |      YES |
-| 'items'  | string | comma-separated song_id's (replaces existing items with a new id) |      YES |
-| 'tracks' | string | comma-separated playlisttrack numbers matched to 'items' in order |      YES |
+|----------|--------|-------------------------------------------------------------------|----------|
+| 'filter' | string | UID of Playlist                                                   | NO       |
+| 'name'   | string | Playlist name                                                     | YES      |
+| 'type'   | string | Playlist type 'public', 'private'                                 | YES      |
+| 'items'  | string | comma-separated song_id's (replaces existing items with a new id) | YES      |
+| 'tracks' | string | comma-separated playlisttrack numbers matched to 'items' in order | YES      |
 
 * return
 
@@ -937,8 +944,8 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 This deletes a playlist
 
 | Input    | Type   | Description     | Optional |
-|----------|--------|-----------------|---------:|
-| 'filter' | string | UID of Playlist |       NO |
+|----------|--------|-----------------|----------|
+| 'filter' | string | UID of Playlist | NO       |
 
 * return
 
@@ -961,10 +968,10 @@ This deletes a playlist
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
 | Input    | Type    | Description                                               | Optional |
-|----------|---------|-----------------------------------------------------------|---------:|
-| 'filter' | string  | UID of Playlist                                           |       NO |
-| 'song'   | string  | UID of song to add to playlist                            |       NO |
-| 'check'  | boolean | 0, 1 Whether to check and ignore duplicates (default = 0) |      YES |
+|----------|---------|-----------------------------------------------------------|----------|
+| 'filter' | string  | UID of Playlist                                           | NO       |
+| 'song'   | string  | UID of song to add to playlist                            | NO       |
+| 'check'  | boolean | 0, 1 Whether to check and ignore duplicates (default = 0) | YES      |
 
 * return
 
@@ -988,10 +995,10 @@ This remove a song from a playlist.
 Previous versions required 'track' instead of 'song'.
 
 | Input    | Type    | Description                          | Optional |
-|----------|---------|--------------------------------------|---------:|
-| 'filter' | string  | UID of Playlist                      |       NO |
-| 'song'   | string  | UID of song to remove from playlist  |      YES |
-| 'track'  | integer | Track number to remove from playlist |      YES |
+|----------|---------|--------------------------------------|----------|
+| 'filter' | string  | UID of Playlist                      | NO       |
+| 'song'   | string  | UID of song to remove from playlist  | YES      |
+| 'track'  | integer | Track number to remove from playlist | YES      |
 
 * return
 
@@ -1019,15 +1026,15 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 **Note** when using the 'id' format total_count is not returned.
 
 | Input    | Type    | Description                                                      | Optional |
-|----------|---------|------------------------------------------------------------------|---------:|
-| 'mode'   | string  | 'recent', 'forgotten', 'unplayed', 'random' (default = 'random') |      YES |
-| 'filter' | string  | string LIKE matched to song title                                |      YES |
-| 'album'  | integer | $album_id                                                        |      YES |
-| 'artist' | integer | $artist_id                                                       |      YES |
-| 'flag'   | integer | get flagged songs only 0, 1 (default = 0)                        |      YES |
-| 'format' | string  | 'song', 'index','id' (default = 'song')                          |      YES |
-| 'offset' | integer |                                                                  |      YES |
-| 'limit'  | integer |                                                                  |      YES |
+|----------|---------|------------------------------------------------------------------|----------|
+| 'mode'   | string  | 'recent', 'forgotten', 'unplayed', 'random' (default = 'random') | YES      |
+| 'filter' | string  | string LIKE matched to song title                                | YES      |
+| 'album'  | integer | $album_id                                                        | YES      |
+| 'artist' | integer | $artist_id                                                       | YES      |
+| 'flag'   | integer | get flagged songs only 0, 1 (default = 0)                        | YES      |
+| 'format' | string  | 'song', 'index','id' (default = 'song')                          | YES      |
+| 'offset' | integer | Return results starting from this index position                 | YES      |
+| 'limit'  | integer | Maximum number of results to return                              | YES      |
 
 * return
 
@@ -1054,12 +1061,12 @@ ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/do
 
 This searches the shares and returns... shares
 
-| Input    | Type    | Description                                   | Optional |
-|----------|---------|-----------------------------------------------|---------:|
-| 'filter' | string  | Filter results to match this string           |      YES |
-| 'exact'  | boolean | 0, 1 boolean to match the exact filter string |      YES |
-| 'offset' | integer |                                               |      YES |
-| 'limit'  | integer |                                               |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string              | YES      |
+| 'exact'  | boolean | 0, 1 boolean to match the exact filter string    | YES      |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1083,8 +1090,8 @@ This searches the shares and returns... shares
 Return shares by UID
 
 | Input    | Type   | Description                    | Optional |
-|----------|--------|--------------------------------|---------:|
-| 'filter' | string | UID of Share, returns song XML |       NO |
+|----------|--------|--------------------------------|----------|
+| 'filter' | string | UID of Share, returns song XML | NO       |
 
 * return
 
@@ -1109,11 +1116,11 @@ Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
 
 | Input         | Type    | Description                                   | Optional |
-|---------------|---------|-----------------------------------------------|---------:|
-| 'filter'      | string  | UID of object you are sharing                 |       NO |
-| 'type'        | string  | object_type                                   |       NO |
-| 'description' | string  | description (will be filled for you if empty) |      YES |
-| 'expires'     | integer | days to keep active                           |      YES |
+|---------------|---------|-----------------------------------------------|----------|
+| 'filter'      | string  | UID of object you are sharing                 | NO       |
+| 'type'        | string  | object_type                                   | NO       |
+| 'description' | string  | description (will be filled for you if empty) | YES      |
+| 'expires'     | integer | days to keep active                           | YES      |
 
 * return
 
@@ -1138,12 +1145,12 @@ Update the description and/or expiration date for an existing share.
 Takes the share id to update with optional description and expires parameters.
 
 | Input         | Type    | Description                        | Optional |
-|---------------|---------|------------------------------------|---------:|
-| 'filter'      | string  | Alpha-numeric search term          |       NO |
-| 'stream'      | boolean | 0, 1 Allow streaming               |      YES |
-| 'download'    | boolean | 0, 1 Allow Downloading             |      YES |
-| 'expires'     | integer | number of whole days before expiry |      YES |
-| 'description' | string  | update description                 |      YES |
+|---------------|---------|------------------------------------|----------|
+| 'filter'      | string  | Alpha-numeric search term          | NO       |
+| 'stream'      | boolean | 0, 1 Allow streaming               | YES      |
+| 'download'    | boolean | 0, 1 Allow Downloading             | YES      |
+| 'expires'     | integer | number of whole days before expiry | YES      |
+| 'description' | string  | update description                 | YES      |
 
 * return
 
@@ -1166,8 +1173,8 @@ Takes the share id to update with optional description and expires parameters.
 Delete an existing share.
 
 | Input    | Type   | Description            | Optional |
-|----------|--------|------------------------|---------:|
-| 'filter' | string | UID of Share to delete |       NO |
+|----------|--------|------------------------|----------|
+| 'filter' | string | UID of Share to delete | NO       |
 
 * return
 
@@ -1189,12 +1196,12 @@ Delete an existing share.
 
 Return similar artist id's or similar song ids compared to the input filter
 
-| Input    | Type    | Description          | Optional |
-|----------|---------|----------------------|---------:|
-| 'type'   | string  | 'song' or 'artist'   |       NO |
-| 'filter' | integer | artist id or song id |       NO |
-| 'offset' | integer |                      |      YES |
-| 'limit'  | integer |                      |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'type'   | string  | 'song' or 'artist'                               | NO       |
+| 'filter' | integer | artist id or song id                             | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1217,11 +1224,11 @@ Return similar artist id's or similar song ids compared to the input filter
 
 This searches the songs and returns... songs
 
-| Input    | Type    | Description                         | Optional |
-|----------|---------|-------------------------------------|---------:|
-| 'filter' | string  | Filter results to match this string |       NO |
-| 'offset' | integer |                                     |      YES |
-| 'limit'  | integer |                                     |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string              | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1245,11 +1252,11 @@ This searches the songs and returns... songs
 This returns video objects!
 
 | Input    | Type    | Description                                              | Optional |
-|----------|---------|----------------------------------------------------------|---------:|
-| 'filter' | string  | Filter results to match this string                      |      YES |
-| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
-| 'offset' | integer |                                                          |      YES |
-| 'limit'  | integer |                                                          |      YES |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
 
 * return
 
@@ -1273,8 +1280,8 @@ This returns video objects!
 This returns a single video
 
 | Input    | Type   | Description                     | Optional |
-|----------|--------|---------------------------------|---------:|
-| 'filter' | string | UID of video, returns video XML |       NO |
+|----------|--------|---------------------------------|----------|
+| 'filter' | string | UID of video, returns video XML | NO       |
 
 * return
 
@@ -1298,15 +1305,15 @@ This returns a single video
 Get some items based on some simple search types and filters. (Random by default)
 This method HAD partial backwards compatibility with older api versions but it has now been removed
 
-| Input      | Type    | Description                                | Optional |
-|------------|---------|--------------------------------------------|---------:|
-| 'type'     | string  | 'song', 'album', 'artist'                  |       NO |
-| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |      YES |
-|            |         | 'forgotten', 'flagged', 'random'           |          |
-| 'user_id'  | integer |                                            |      YES |
-| 'username' | string  |                                            |      YES |
-| 'offset'   | integer |                                            |      YES |
-| 'limit'    | integer |                                            |      YES |
+| Input      | Type    | Description                                      | Optional |
+|------------|---------|--------------------------------------------------|----------|
+| 'type'     | string  | 'song', 'album', 'artist'                        | NO       |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent',       | YES      |
+|            |         | 'forgotten', 'flagged', 'random'                 |          |
+| 'user_id'  | integer |                                                  | YES      |
+| 'username' | string  |                                                  | YES      |
+| 'offset'   | integer | Return results starting from this index position | YES      |
+| 'limit'    | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1333,12 +1340,12 @@ ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master
 
 Get information about podcasts
 
-| Input     | Type    | Description                                   | Optional |
-|-----------|---------|-----------------------------------------------|---------:|
-| 'filter'  | string  |                                               |      YES |
-| 'offset'  | integer |                                               |      YES |
-| 'limit'   | integer |                                               |      YES |
-| 'include' | string  | 'episodes' (include episodes in the response) |      YES |
+| Input     | Type    | Description                                                                   | Optional |
+|-----------|---------|-------------------------------------------------------------------------------|----------|
+| 'filter'  | string  | Value is Alpha Match for returned results, may be more than one letter/number | YES      |
+| 'offset'  | integer | Return results starting from this index position                              | YES      |
+| 'limit'   | integer | Maximum number of results to return                                           | YES      |
+| 'include' | string  | 'episodes' (include episodes in the response)                                 | YES      |
 
 * return
 
@@ -1362,9 +1369,9 @@ Get information about podcasts
 Get the podcast from it's id.
 
 | Input     | Type   | Description                                   | Optional |
-|-----------|--------|-----------------------------------------------|---------:|
-| 'filter'  | string | UID of podcast, returns podcast XML           |       NO |
-| 'include' | string | 'episodes' (include episodes in the response) |      YES |
+|-----------|--------|-----------------------------------------------|----------|
+| 'filter'  | string | UID of podcast, returns podcast XML           | NO       |
+| 'include' | string | 'episodes' (include episodes in the response) | YES      |
 
 * return
 
@@ -1391,9 +1398,9 @@ Takes the url and catalog parameters.
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input     | Type   | Description         | Optional |
-|-----------|--------|---------------------|---------:|
-| 'url'     | string | rss url for podcast |       NO |
-| 'catalog' | string | podcast catalog     |       NO |
+|-----------|--------|---------------------|----------|
+| 'url'     | string | rss url for podcast | NO       |
+| 'catalog' | string | podcast catalog     | NO       |
 
 * return
 
@@ -1420,14 +1427,14 @@ Takes the podcast id to update with optional description and expires parameters.
 **ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input         | Type   | Description               | Optional |
-|---------------|--------|---------------------------|---------:|
-| 'filter'      | string | Alpha-numeric search term |       NO |
-| 'feed'        | string | feed rss xml url          |      YES |
-| 'title'       | string | title string              |      YES |
-| 'website'     | string | source website url        |      YES |
-| 'description' | string |                           |      YES |
-| 'generator'   | string |                           |      YES |
-| 'copyright'   | string |                           |      YES |
+|---------------|--------|---------------------------|----------|
+| 'filter'      | string | Alpha-numeric search term | NO       |
+| 'feed'        | string | feed rss xml url          | YES      |
+| 'title'       | string | title string              | YES      |
+| 'website'     | string | source website url        | YES      |
+| 'description' | string |                           | YES      |
+| 'generator'   | string |                           | YES      |
+| 'copyright'   | string |                           | YES      |
 
 * return
 
@@ -1452,8 +1459,8 @@ Delete an existing podcast.
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input    | Type   | Description              | Optional |
-|----------|--------|--------------------------|---------:|
-| 'filter' | string | UID of podcast to delete |       NO |
+|----------|--------|--------------------------|----------|
+| 'filter' | string | UID of podcast to delete | NO       |
 
 * return
 
@@ -1475,11 +1482,11 @@ Delete an existing podcast.
 
 This returns the episodes for a podcast
 
-| Input    | Type    | Description    | Optional |
-|----------|---------|----------------|---------:|
-| 'filter' | string  | UID of podcast |       NO |
-| 'offset' | integer |                |      YES |
-| 'limit'  | integer |                |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of podcast                                   | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1503,8 +1510,8 @@ This returns the episodes for a podcast
 Get the podcast_episode from it's id.
 
 | Input    | Type   | Description               | Optional |
-|----------|--------|---------------------------|---------:|
-| 'filter' | string | podcast_episode ID number |       NO |
+|----------|--------|---------------------------|----------|
+| 'filter' | string | podcast_episode ID number | NO       |
 
 * return
 
@@ -1528,8 +1535,8 @@ Get the podcast_episode from it's id.
 Delete an existing podcast_episode.
 
 | Input    | Type   | Description                      | Optional |
-|----------|--------|----------------------------------|---------:|
-| 'filter' | string | UID of podcast_episode to delete |       NO |
+|----------|--------|----------------------------------|----------|
+| 'filter' | string | UID of podcast_episode to delete | NO       |
 
 * return
 
@@ -1552,8 +1559,8 @@ Delete an existing podcast_episode.
 This get an user public information
 
 | Input      | Type   | Description                             | Optional |
-|------------|--------|-----------------------------------------|---------:|
-| 'username' | string | Username of the user to get details for |       NO |
+|------------|--------|-----------------------------------------|----------|
+| 'username' | string | Username of the user to get details for | NO       |
 
 * return
 
@@ -1578,12 +1585,12 @@ Create a new user. (Requires the username, password and email.)
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input      | Type    | Description                | Optional |
-|------------|---------|----------------------------|---------:|
-| 'username' | string  | $username                  |       NO |
-| 'password' | string  | hash('sha256', $password)) |       NO |
-| 'email'    | string  | 'user@gmail.com'           |       NO |
-| 'fullname' | string  |                            |      YES |
-| 'disable'  | boolean | 0, 1                       |      YES |
+|------------|---------|----------------------------|----------|
+| 'username' | string  | $username                  | NO       |
+| 'password' | string  | hash('sha256', $password)) | NO       |
+| 'email'    | string  | 'user@gmail.com'           | NO       |
+| 'fullname' | string  |                            | YES      |
+| 'disable'  | boolean | 0, 1                       | YES      |
 
 * return
 
@@ -1608,16 +1615,16 @@ Update an existing user.
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input        | Type    | Description                | Optional |
-|--------------|---------|----------------------------|---------:|
-| 'username'   | string  | $username                  |       NO |
-| 'password'   | string  | hash('sha256', $password)) |      YES |
-| 'email'      | string  | 'user#gmail.com'           |      YES |
-| 'fullname'   | string  |                            |      YES |
-| 'website'    | string  |                            |      YES |
-| 'state'      | string  |                            |      YES |
-| 'city'       | string  |                            |      YES |
-| 'disable'    | boolean | 0, 1                       |      YES |
-| 'maxbitrate' | string  |                            |      YES |
+|--------------|---------|----------------------------|----------|
+| 'username'   | string  | $username                  | NO       |
+| 'password'   | string  | hash('sha256', $password)) | YES      |
+| 'email'      | string  | 'user#gmail.com'           | YES      |
+| 'fullname'   | string  |                            | YES      |
+| 'website'    | string  |                            | YES      |
+| 'state'      | string  |                            | YES      |
+| 'city'       | string  |                            | YES      |
+| 'disable'    | boolean | 0, 1                       | YES      |
+| 'maxbitrate' | string  |                            | YES      |
 
 * return
 
@@ -1642,8 +1649,8 @@ Delete an existing user.
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input      | Type   | Description | Optional |
-|------------|--------|-------------|---------:|
-| 'username' | string |             |       NO |
+|------------|--------|-------------|----------|
+| 'username' | string |             | NO       |
 
 * return
 
@@ -1665,12 +1672,12 @@ Delete an existing user.
 
 This returns licenses based on the specified filter
 
-| Input    | Type       | Description                                              | Optional |
-|----------|------------|----------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                      |      YES |
-| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
-| 'offset' | integer    |                                                          |      YES |
-| 'limit'  | integer    |                                                          |      YES |
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
 
 * return
 
@@ -1694,8 +1701,8 @@ This returns licenses based on the specified filter
 This returns a single license
 
 | Input    | Type   | Description                         | Optional |
-|----------|--------|-------------------------------------|---------:|
-| 'filter' | string | UID of license, returns license XML |       NO |
+|----------|--------|-------------------------------------|----------|
+| 'filter' | string | UID of license, returns license XML | NO       |
 
 * return
 
@@ -1718,11 +1725,11 @@ This returns a single license
 
 This returns the songs for a license
 
-| Input    | Type    | Description                      | Optional |
-|----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of license, returns song XML |       NO |
-| 'offset' | integer |                                  |      YES |
-| 'limit'  | integer |                                  |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of license, returns song XML                 | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1747,12 +1754,12 @@ This returns the songs for a license
 
 This returns labels based on the specified filter
 
-| Input    | Type       | Description                                              | Optional |
-|----------|------------|----------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                      |      YES |
-| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
-| 'offset' | integer    |                                                          |      YES |
-| 'limit'  | integer    |                                                          |      YES |
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
 
 * return
 
@@ -1778,8 +1785,8 @@ This returns labels based on the specified filter
 This returns a single label
 
 | Input    | Type   | Description                     | Optional |
-|----------|--------|---------------------------------|---------:|
-| 'filter' | string | UID of label, returns label XML |       NO |
+|----------|--------|---------------------------------|----------|
+| 'filter' | string | UID of label, returns label XML | NO       |
 
 * return
 
@@ -1804,11 +1811,11 @@ This returns a single label
 
 This returns the artists for a label
 
-| Input    | Type    | Description                      | Optional |
-|----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of label, returns artist XML |       NO |
-| 'offset' | integer |                                  |      YES |
-| 'limit'  | integer |                                  |      YES |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'filter' | string  | UID of label, returns artist XML                 | NO       |
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
 
 * return
 
@@ -1832,8 +1839,8 @@ This returns the artists for a label
 This gets the followers for the requested username
 
 | Input      | Type   | Description                                        | Optional |
-|------------|--------|----------------------------------------------------|---------:|
-| 'username' | string | Username of the user for who to get followers list |       NO |
+|------------|--------|----------------------------------------------------|----------|
+| 'username' | string | Username of the user for who to get followers list | NO       |
 
 * return
 
@@ -1856,8 +1863,8 @@ This gets the followers for the requested username
 Get a list of people that this user follows
 
 | Input      | Type   | Description                                         | Optional |
-|------------|--------|-----------------------------------------------------|---------:|
-| 'username' | string | (Username of the user for who to get following list |       NO |
+|------------|--------|-----------------------------------------------------|----------|
+| 'username' | string | (Username of the user for who to get following list | NO       |
 
 * return
 
@@ -1880,8 +1887,8 @@ Get a list of people that this user follows
 This follow/unfollow an user
 
 | Input      | Type   | Description                             | Optional |
-|------------|--------|-----------------------------------------|---------:|
-| 'username' | string | Username of the user to follow/unfollow |       NO |
+|------------|--------|-----------------------------------------|----------|
+| 'username' | string | Username of the user to follow/unfollow | NO       |
 
 * return
 
@@ -1904,9 +1911,9 @@ This follow/unfollow an user
 This gets the latest posted shouts
 
 | Input      | Type    | Description                         | Optional |
-|------------|---------|-------------------------------------|---------:|
-| 'username' | string  | Get latest shouts for this username |      YES |
-| 'limit'    | integer |                                     |      YES |
+|------------|---------|-------------------------------------|----------|
+| 'username' | string  | Get latest shouts for this username | YES      |
+| 'limit'    | integer | Maximum number of results to return | YES      |
 
 * return
 
@@ -1930,7 +1937,9 @@ This rates a library item
 
 | Input    | Type    | Description                                   | Optional |
 |----------|---------|-----------------------------------------------|---------:|
-| 'type'   | string  | library item type, album, artist, song, video |       NO |
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
+|          |         | 'podcast', 'podcast_episode', 'video',        |          |
+|          |         | 'tvshow', 'tvshow_season'                     |          |
 | 'id'     | string  | library item id                               |       NO |
 | 'rating' | integer | rating between 0-5                            |       NO |
 
@@ -1957,11 +1966,13 @@ This flags a library item as a favorite
 * Setting flag to true (1) will set the flag
 * Setting flag to false (0) will remove the flag
 
-| Input  | Type    | Description                        | Optional |
-|--------|---------|------------------------------------|---------:|
-| 'type' | string  | 'song', 'album', 'artist', 'video' |       NO |
-| 'id'   | integer | $object_id                         |       NO |
-| 'flag' | boolean | 0, 1                               |       NO |
+| Input  | Type    | Description                            | Optional |
+|--------|---------|----------------------------------------|---------:|
+| 'type' | string  | 'song', 'album', 'artist', 'playlist', |       NO |
+|        |         | 'podcast', 'podcast_episode', 'video', |          |
+|        |         | 'tvshow', 'tvshow_season'              |          |
+| 'id'   | integer | $object_id                             |       NO |
+| 'flag' | boolean | 0, 1                                   |       NO |
 
 * return
 
@@ -1988,11 +1999,11 @@ If you don't supply a user id (optional) then just fall back to you.
 **ACCESS REQUIRED:** 100 (Admin) permission to change another user's play history
 
 | Input    | Type    | Description | Optional |
-|----------|---------|-------------|---------:|
-| 'id'     | integer | $object_id  |       NO |
-| 'user'   | integer | $user_id    |      YES |
-| 'client' | string  | $agent      |      YES |
-| 'date'   | integer | UNIXTIME()  |      YES |
+|----------|---------|-------------|----------|
+| 'id'     | integer | $object_id  | NO       |
+| 'user'   | integer | $user_id    | YES      |
+| 'client' | string  | $agent      | YES      |
+| 'date'   | integer | UNIXTIME()  | YES      |
 
 * return
 
@@ -2015,15 +2026,15 @@ If you don't supply a user id (optional) then just fall back to you.
 Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 
 | Input        | Type    | Description  | Optional |
-|--------------|---------|--------------|---------:|
-| 'song'       | string  | $song_name   |       NO |
-| 'artist'     | string  | $artist_name |       NO |
-| 'album'      | string  | $album_name  |       NO |
-| 'songmbid'   | string  | $song_mbid   |      YES |
-| 'artistmbid' | string  | $artist_mbid |      YES |
-| 'albummbid'  | string  | $album_mbid  |      YES |
-| 'date'       | integer | UNIXTIME()   |      YES |
-| 'client'     | string  | $agent       |      YES |
+|--------------|---------|--------------|----------|
+| 'song'       | string  | $song_name   | NO       |
+| 'artist'     | string  | $artist_name | NO       |
+| 'album'      | string  | $album_name  | NO       |
+| 'songmbid'   | string  | $song_mbid   | YES      |
+| 'artistmbid' | string  | $artist_mbid | YES      |
+| 'albummbid'  | string  | $album_mbid  | YES      |
+| 'date'       | integer | UNIXTIME()   | YES      |
+| 'client'     | string  | $agent       | YES      |
 
 * return
 
@@ -2046,8 +2057,8 @@ Search for a song using text info and then record a play if found. This allows o
 This searches the catalogs and returns... catalogs
 
 | Input    | Type   | Description                        | Optional |
-|----------|--------|------------------------------------|---------:|
-| 'filter' | string | Catalog type: music, clip, tvshow, |      YES |
+|----------|--------|------------------------------------|----------|
+| 'filter' | string | Catalog type: music, clip, tvshow, | YES      |
 |          |        | movie, personal_video, podcast     |          |
 
 * return
@@ -2072,8 +2083,8 @@ This searches the catalogs and returns... catalogs
 Return catalog by UID
 
 | Input    | Type   | Description    | Optional |
-|----------|--------|----------------|---------:|
-| 'filter' | string | UID of Catalog |       NO |
+|----------|--------|----------------|----------|
+| 'filter' | string | UID of Catalog | NO       |
 
 * return
 
@@ -2099,9 +2110,9 @@ Kick off a catalog update or clean for the selected catalog
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input     | Type    | Description                       | Optional |
-|-----------|---------|-----------------------------------|---------:|
-| 'task'    | string  | 'add_to_catalog', 'clean_catalog' |       NO |
-| 'catalog' | integer | $catalog_id                       |       NO |
+|-----------|---------|-----------------------------------|----------|
+| 'task'    | string  | 'add_to_catalog', 'clean_catalog' | NO       |
+| 'catalog' | integer | $catalog_id                       | NO       |
 
 * return
 
@@ -2130,10 +2141,10 @@ Make sure you remember to urlencode those file names!
 **ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input     | Type    | Description                      | Optional |
-|-----------|---------|----------------------------------|---------:|
-| 'file'    | string  | FULL path to local file          |       NO |
-| 'task'    | string  | 'add','clean','verify', 'remove' |       NO |
-| 'catalog' | integer | $catalog_id                      |       NO |
+|-----------|---------|----------------------------------|----------|
+| 'file'    | string  | FULL path to local file          | NO       |
+| 'task'    | string  | 'add','clean','verify', 'remove' | NO       |
+| 'catalog' | integer | $catalog_id                      | NO       |
 
 * return
 
@@ -2156,10 +2167,10 @@ Make sure you remember to urlencode those file names!
 This get an user timeline
 
 | Input      | Type    | Description                                       | Optional |
-|------------|---------|---------------------------------------------------|---------:|
-| 'username' | string  | Username of the user for whom to get the timeline |       NO |
-| 'limit'    | integer |                                                   |      YES |
-| 'since'    | integer | UNIXTIME()                                        |      YES |
+|------------|---------|---------------------------------------------------|----------|
+| 'username' | string  | Username of the user for whom to get the timeline | NO       |
+| 'limit'    | integer | Maximum number of results to return               | YES      |
+| 'since'    | integer | UNIXTIME()                                        | YES      |
 
 * return
 
@@ -2181,10 +2192,10 @@ This get an user timeline
 
 This get current user friends timeline
 
-| Input   | Type    | Description | Optional |
-|---------|---------|-------------|---------:|
-| 'limit' | integer |             |      YES |
-| 'since' | integer | UNIXTIME()  |       NO |
+| Input   | Type    | Description                         | Optional |
+|---------|---------|-------------------------------------|----------|
+| 'limit' | integer | Maximum number of results to return | YES      |
+| 'since' | integer | UNIXTIME()                          | NO       |
 
 * return
 
@@ -2207,9 +2218,9 @@ This get current user friends timeline
 Update a single album, artist, song from the tag data
 
 | Input  | Type    | Description                     | Optional |
-|--------|---------|---------------------------------|---------:|
-| 'type' | string  | 'artist', 'album', 'song'       |       NO |
-| 'id'   | integer | $artist_id, $album_id, $song_id |       NO |
+|--------|---------|---------------------------------|----------|
+| 'type' | string  | 'artist', 'album', 'song'       | NO       |
+| 'id'   | integer | $artist_id, $album_id, $song_id | NO       |
 
 * return
 
@@ -2235,8 +2246,8 @@ Make sure lastfm_API_key is set in your configuration file
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input | Type    | Description | Optional |
-|-------|---------|-------------|---------:|
-| 'id'  | integer | $artist_id  |       NO |
+|-------|---------|-------------|----------|
+| 'id'  | integer | $artist_id  | NO       |
 
 * return
 
@@ -2262,10 +2273,10 @@ Doesn't overwrite existing art by default.
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input       | Type    | Description       | Optional |
-|-------------|---------|-------------------|---------:|
-| 'id'        | integer | $object_id        |       NO |
-| 'type'      | string  | 'song', 'podcast' |       NO |
-| 'overwrite' | boolean | 0, 1              |      YES |
+|-------------|---------|-------------------|----------|
+| 'id'        | integer | $object_id        | NO       |
+| 'type'      | string  | 'song', 'podcast' | NO       |
+| 'overwrite' | boolean | 0, 1              | YES      |
 
 * return
 
@@ -2291,8 +2302,8 @@ Sync and download new podcast episodes
 **ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input | Type    | Description | Optional |
-|-------|---------|-------------|---------:|
-| 'id'  | integer | $object_id  |       NO |
+|-------|---------|-------------|----------|
+| 'id'  | integer | $object_id  | NO       |
 
 * return
 
@@ -2317,8 +2328,8 @@ Sync and download new podcast episodes
 Get your user preference by name
 
 | Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+|----------|--------|---------------------------------------------------|----------|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') | NO       |
 
 * return
 
@@ -2345,8 +2356,8 @@ Get your server preference by name
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+|----------|--------|---------------------------------------------------|----------|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') | NO       |
 
 * return
 
@@ -2373,15 +2384,15 @@ Add a new preference to your server
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input         | Type    | Description                                             | Optional |
-|---------------|---------|---------------------------------------------------------|---------:|
-| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')       |       NO |
-| 'type'        | string  | 'boolean', 'integer', 'string', 'special'               |       NO |
-| 'default'     | mixed   | string or integer default value                         |       NO |
-| 'category'    | string  | 'interface', 'internal', 'options', 'playlist',         |       NO |
+|---------------|---------|---------------------------------------------------------|----------|
+| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')       | NO       |
+| 'type'        | string  | 'boolean', 'integer', 'string', 'special'               | NO       |
+| 'default'     | mixed   | string or integer default value                         | NO       |
+| 'category'    | string  | 'interface', 'internal', 'options', 'playlist',         | NO       |
 |               |         | 'plugins', 'streaming', 'system'                        |          |
-| 'description' | string  |                                                         |      YES |
-| 'subcategory' | string  |                                                         |      YES |
-| 'level'       | integer | access level required to change the value (default 100) |      YES |
+| 'description' | string  |                                                         | YES      |
+| 'subcategory' | string  |                                                         | YES      |
+| 'level'       | integer | access level required to change the value (default 100) | YES      |
 
 * return
 
@@ -2407,11 +2418,11 @@ Edit a preference value and apply to all users if allowed
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input    | Type    | Description                                       | Optional |
-|----------|---------|---------------------------------------------------|---------:|
-| 'filter' | string  | Preference name e.g ('notify_email', 'ajax_load') |       NO |
-| 'value'  | mixed   | (string|integer) Preference value                 |       NO |
-| 'all'    | boolean | 0, 1 apply to all users                           |      YES |
+| Input    | Type    | Description                                       | Optional                  |    |
+|----------|---------|---------------------------------------------------|---------------------------|----|
+| 'filter' | string  | Preference name e.g ('notify_email', 'ajax_load') | NO                        |    |
+| 'value'  | mixed   | (string                                           | integer) Preference value | NO |
+| 'all'    | boolean | 0, 1 apply to all users                           | YES                       |    |
 
 * return
 
@@ -2438,8 +2449,8 @@ Delete a non-system preference by name
 **ACCESS REQUIRED:** 100 (Admin)
 
 | Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+|----------|--------|---------------------------------------------------|----------|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') | NO       |
 
 * return
 
@@ -2464,9 +2475,9 @@ Delete a non-system preference by name
 Get the bookmark from it's object_id and object_type.
 
 | Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | object_id to find                                 |       NO |
-| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+|----------|--------|---------------------------------------------------|----------|
+| 'filter' | string | object_id to find                                 | NO       |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') | NO       |
 
 * return
 
@@ -2491,12 +2502,12 @@ Get the bookmark from it's object_id and object_type.
 Create a placeholder for the current media that you can return to later.
 
 | Input      | Type    | Description                                       | Optional |
-|------------|---------|---------------------------------------------------|---------:|
-| 'filter'   | string  | object_id to find                                 |       NO |
-| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
-| 'position' | integer | current track time in seconds                     |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
-| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+|------------|---------|---------------------------------------------------|----------|
+| 'filter'   | string  | object_id to find                                 | NO       |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') | NO       |
+| 'position' | integer | current track time in seconds                     | NO       |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             | YES      |
+| 'date'     | integer | update time (Default: UNIXTIME())                 | YES      |
 
 * return
 
@@ -2521,12 +2532,12 @@ Create a placeholder for the current media that you can return to later.
 Edit a placeholder for the current media that you can return to later.
 
 | Input      | Type    | Description                                       | Optional |
-|------------|---------|---------------------------------------------------|---------:|
-| 'filter'   | string  | object_id to find                                 |       NO |
-| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
-| 'position' | integer | current track time in seconds                     |       NO |
-| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
-| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+|------------|---------|---------------------------------------------------|----------|
+| 'filter'   | string  | object_id to find                                 | NO       |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') | NO       |
+| 'position' | integer | current track time in seconds                     | NO       |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             | YES      |
+| 'date'     | integer | update time (Default: UNIXTIME())                 | YES      |
 
 * return
 
@@ -2551,10 +2562,10 @@ Edit a placeholder for the current media that you can return to later.
 Delete an existing bookmark. (if it exists)
 
 | Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | object_id to delete                               |       NO |
-| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
-| 'client' | string | Agent string. (Default: 'AmpacheAPI')             |      YES |
+|----------|--------|---------------------------------------------------|----------|
+| 'filter' | string | object_id to delete                               | NO       |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') | NO       |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')             | YES      |
 
 * return
 
@@ -2580,14 +2591,14 @@ Binary data methods are used for returning raw data to the user such as a image 
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 
-| Input     | Type    | Description                 | Optional |
-|-----------|---------|-----------------------------|---------:|
-| 'id'      | integer | $object_id                  |       NO |
-| 'type'    | string  | 'song', 'podcast'           |       NO |
-| 'bitrate' | integer | max bitrate for transcoding |      YES |
-| 'format'  | string  | 'mp3', 'ogg', 'raw', etc    |      YES |
-| 'offset'  | integer | time offset in seconds      |      YES |
-| 'length'  | boolean | 0, 1                        |      YES |
+| Input     | Type    | Description                                      | Optional |
+|-----------|---------|--------------------------------------------------|----------|
+| 'id'      | integer | $object_id                                       | NO       |
+| 'type'    | string  | 'song', 'podcast'                                | NO       |
+| 'bitrate' | integer | max bitrate for transcoding                      | YES      |
+| 'format'  | string  | 'mp3', 'ogg', 'raw', etc                         | YES      |
+| 'offset'  | integer | Return results starting from this index position | YES      |
+| 'length'  | boolean | 0, 1                                             | YES      |
 
 * return file (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)
@@ -2598,10 +2609,10 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 Downloads a given media file. set format=raw to download the full file
 
 | Input    | Type    | Description               | Optional |
-|----------|---------|---------------------------|---------:|
-| 'id'     | integer | $object_id                |       NO |
-| 'type'   | string  | 'song', 'podcast_episode' |       NO |
-| 'format' | string  | 'mp3', 'ogg', 'raw', etc  |      YES |
+|----------|---------|---------------------------|----------|
+| 'id'     | integer | $object_id                | NO       |
+| 'type'   | string  | 'song', 'podcast_episode' | NO       |
+| 'format' | string  | 'mp3', 'ogg', 'raw', etc  | YES      |
 
 * return file (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)
@@ -2612,9 +2623,9 @@ Downloads a given media file. set format=raw to download the full file
 Get an art image.
 
 | Input  | Type    | Description                                                | Optional |
-|--------|---------|------------------------------------------------------------|---------:|
-| 'id'   | integer | $object_id                                                 |       NO |
-| 'type' | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' |       NO |
+|--------|---------|------------------------------------------------------------|----------|
+| 'id'   | integer | $object_id                                                 | NO       |
+| 'type' | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' | NO       |
 
 * return image (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)
@@ -2627,13 +2638,13 @@ Get an art image.
 This is for controlling localplay
 
 | Input     | Type    | Description                                                  | Optional |
-|-----------|---------|--------------------------------------------------------------|---------:|
-| 'command' | string  | 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', |       NO |
+|-----------|---------|--------------------------------------------------------------|----------|
+| 'command' | string  | 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', | NO       |
 |           |         | 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status' |          |
-| 'oid'     | integer | object_id                                                    |      YES |
-| 'type'    | string  | 'Song', 'Video', 'Podcast_Episode', 'Channel',               |      YES |
+| 'oid'     | integer | object_id                                                    | YES      |
+| 'type'    | string  | 'Song', 'Video', 'Podcast_Episode', 'Channel',               | YES      |
 |           |         | 'Broadcast', 'Democratic', 'Live_Stream'                     |          |
-| 'clear'   | boolean | 0,1 Clear the current playlist before adding                 |      YES |
+| 'clear'   | boolean | 0,1 Clear the current playlist before adding                 | YES      |
 
 * return
 
@@ -2668,9 +2679,9 @@ This is for controlling democratic play (Songs only)
   * play: Returns the URL for playing democratic play
 
 | Input    | Type    | Description                  | Optional |
-|----------|---------|------------------------------|---------:|
-| 'oid'    | integer | UID of Song object           |       NO |
-| 'method' | string  | vote, devote, playlist, play |       NO |
+|----------|---------|------------------------------|----------|
+| 'oid'    | integer | UID of Song object           | NO       |
+| 'method' | string  | vote, devote, playlist, play | NO       |
 
 * return
 
@@ -2689,4 +2700,3 @@ This is for controlling democratic play (Songs only)
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(play\).xml)
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(vote\).xml)
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(playlist\).xml)
-

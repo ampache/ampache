@@ -26,8 +26,6 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
-* Stop logging auth/passphrase strings
-* Add Y scrolling to the current playlist box (rightbar)
 
 ### Removed
 
@@ -81,7 +79,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * Return empty objects when the request was correct but the results were empty
 * Don't transcode podcast_episodes
 
-## Ampache 4.4.0-develop
+## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 
@@ -107,6 +105,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Persist replaygain setting as a cookie
 * Support for image per song
 * Format XML output using DOMDocument
+* SubSonic - shift the current track start time when you pause/resume
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -136,8 +135,11 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * When you haven't set an active localplay nothing was picked
 * Set time for artists that are only albums
 * Don't hide rss generation when you haven't got a key
+* Podcast episode durations that use seconds were converting into crazy lengths
+* Playlist and Smartlist check sql simplified
+* SubSonic - Json clients need their playlist entry to always array (single item lists)
 
-### API 4.4.0-develop
+### API 4.4.0
 
 ### Added
 
@@ -157,6 +159,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
+* Add type (release_type) to album objects
 * Add disk to song objects
 * Add time to video objects. (time in seconds)
 * Add title, mime, catalog to podcast_episodes
@@ -164,13 +167,11 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::handshake added extra total counts to the response
   * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
 * Api::ping match the handshake response (excluding the auth token)
-* SubSonic - shift the current track start time when you pause/resume
 
 ### Changed
 
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 * Make filter optional in shares
-* Api::get_indexes; stop including playlist track and id in xml by default
 * Api::podcast_episodes
   * "url" is now a play url (instead of a link to the episode)
   * "public_url" is now the old episode link
@@ -181,12 +182,12 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::democratic was using action from localplay in the return responses
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
-* SubSonic - Json clients need their playlist entry to always array (single item lists)
 * Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
 
 ### Deprecated
 
 * Dropped in API 5.0.0
+  * Api::get_indexes; stop including playlist track and id in xml by default
   * Album objects: "tracks" will only include track details. Use "songcount"
   * Artist objects: "albums", "songs" will only include track details Use "albumcount" and "songcount"
 
@@ -267,84 +268,7 @@ There also a few API changes to enable a bit better control for older clients.
   * Add 'hide_search' parameter (optional)
 * Api::playlists
   * Add 'hide_search' parameter (optional)
-
-## Ampache 4.3.0-release
-
-This version of Ampache seeks to bring in some of the great changes going on in develop while we work on v5.
-There also a few API changes to enable a bit better control for older clients.
-
-### Added
-
-* Check limits on democratic playlists (> 0 && < 3000000000)
-* Show an error for out of range democratic cooldowns
-* SubSonic - Force a default format (xml) instead of none
-* Added back the agent string in recently played (for admins)
-* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
-* Disable API/Subsonic password resets in 'simple_user_mode'
-* New option -m 'move_catalog' added to catalog_update.inc
-* More default preferences to the refill/check functions
-* More functions to search (album artist, mbid)
-* Config version 46
-* NEW config options
-  * hide_search: If true do not include searches/smartlists in playlist results for Api::get_indexes, Api::playlists
-* NEW plugin:
-  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
-  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
-
-### Changed
-
-* Scrobble plugins fire after stat recording
-* Split art search by 5 instead of 4
-* Increase autoupdate check time and don't force it on each logon
-* Updated CSS and separated mashup covers from other types
-* Don't use mail_enabled for registration checks
-* WebUI - Browse by album_artist instead of single artists
-* Better sorting for playlists using sort_tracks
-* Don't allow duplicate podcast feeds
-* Updated the gather art process
-* Searches will order by file/name instead of id (unless random)
-* Updated amapche.sql
-* Updated composer requirements
-* Default false config option text changed to true (no more typing, just uncomment!)
-* Compressed PNG and JPG images
-
-### Removed
-
-* Disabled the jPlayer fullscreen shortcut (ctrl + f)
-* Remove system preferences from the user that aren't classified as a system preference
-* Stop setting open_basedir from fs.ajax
-* Concert/Event pages (dead Last.fm API)
-* Don't run reset_db_charset on DB updates
-* Disabled browse_filter for new user accounts
-
-### Fixed
-
-* Speed up the playlist dialog boxes (Add to playlist)
-* Fix SQL query for Stats::get_newest_sql
-* Session cookie creation
-* Multiple auth attempts in the same second would not return a session
-* Mail auth was not checked correctly
-* Gather art correctly for update_file.inc
-* set bitrate correctly if using a maxbitrate in play/index
-* MP3's would not get a waveform without editing the config
-* Recently played respects your privacy settings
-* Graph class sql grouping
-* **MAJOR** UPnP fixes
-* Upload catalog rename logic
-
-### API 4.3.0
-
-### Changed
-
-* Api::record_play
-  * Make 'user' parameter optional
-  * Allow 'user' to the be user_id **or** the username string
-  * Add 'date' parameter (optional)
-  * Require 100 (Admin) permission to record plays for other users
-* Api::get_indexes
-  * Add 'hide_search' parameter (optional)
-* Api::playlists
-  * Add 'hide_search' parameter (optional)
+* Setting a limit of 'none' would slice away all the results
 
 ## Ampache 4.2.6-release
 
@@ -369,6 +293,7 @@ There also a few API changes to enable a bit better control for older clients.
 * Duplicate downloads recorded in play/index
 * Subsonic video HLS stream and json values
 * Block more password resets when using simple_user_mode
+* Upload catalog rename logic
 
 ### API 4.2.6
 
