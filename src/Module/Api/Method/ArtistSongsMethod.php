@@ -49,6 +49,7 @@ final class ArtistSongsMethod
      *
      * @param array $input
      * filter = (string) UID of Artist
+     * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -66,7 +67,9 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $songs = static::getSongRepository()->getByArtist($artist);
+        $songs = ($input['top50'])
+            ? static::getSongRepository()->getTopSongsByArtist($artist)
+            : static::getSongRepository()->getByArtist($artist);
         $user  = User::get_from_username(Session::username($input['auth']));
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);
