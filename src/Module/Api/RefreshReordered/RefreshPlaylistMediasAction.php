@@ -24,10 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,21 +34,17 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'refresh_playlist_medias';
 
-    private RequestParserInterface $requestParser;
-
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectId = $this->requestParser->getFromRequest('id');
+        $objectId = (int) ($request->getQueryParams()['id'] ?? 0);
 
         $browse   = $this->modelFactory->createBrowse();
         $playlist = $this->modelFactory->createPlaylist((int) $objectId);

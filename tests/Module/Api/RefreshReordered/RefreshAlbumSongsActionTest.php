@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -25,38 +24,35 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RefreshPlaylistMediasActionTest extends MockeryTestCase
+class RefreshAlbumSongsActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|ModelFactoryInterface|null */
+    /** @var ModelFactoryInterface|MockInterface */
     private MockInterface $modelFactory;
 
-    private ?RefreshPlaylistMediasAction $subject;
+    private RefreshAlbumSongsAction $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
-        $this->subject = new RefreshPlaylistMediasAction(
+        $this->subject = new RefreshAlbumSongsAction(
             $this->modelFactory
         );
     }
 
-    public function testRunRendersAndReturnsNull(): void
+    public function testRunPrintsObjects(): void
     {
-        $objectId          = '666';
-        $playlistObjectIds = [1, 2, 42];
+        $objectId = 666;
 
+        $browse     = $this->mock(Browse::class);
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $playlist   = $this->mock(Playlist::class);
-        $browse     = $this->mock(Browse::class);
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -67,41 +63,39 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($browse);
-        $this->modelFactory->shouldReceive('createPlaylist')
-            ->with((int) $objectId)
-            ->once()
-            ->andReturn($playlist);
 
-        $playlist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $playlist->shouldReceive('get_items')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($playlistObjectIds);
-        $playlist->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn((int) $objectId);
-
-        $browse->shouldReceive('set_type')
-            ->with('playlist_media')
-            ->once();
-        $browse->shouldReceive('add_supplemental_object')
-            ->with('playlist', (int) $objectId)
-            ->once();
-        $browse->shouldReceive('set_static_content')
+        $browse->shouldReceive('set_show_header')
             ->with(true)
             ->once();
+        $browse->shouldReceive('set_type')
+            ->with('song')
+            ->once();
+        $browse->shouldReceive('set_simple_browse')
+            ->with(true)
+            ->once();
+        $browse->shouldReceive('set_filter')
+            ->withSomeOfArgs('album', $objectId)
+            ->once();
+        $browse->shouldReceive('set_sort')
+            ->with('track', 'ASC')
+            ->once();
+        $browse->shouldReceive('get_objects')
+            ->withNoArgs()
+            ->once();
         $browse->shouldReceive('show_objects')
-            ->with($playlistObjectIds)
+            ->with(null, true)
             ->once();
         $browse->shouldReceive('store')
             ->withNoArgs()
             ->once();
 
+        $this->expectOutputString('<div id=\'browse_content_song\' class=\'browse_content\'></div>');
+
         $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
         );
     }
 }

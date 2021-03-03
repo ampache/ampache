@@ -24,10 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\RefreshReordered;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,28 +34,24 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'refresh_album_songs';
 
-    private RequestParserInterface $requestParser;
-
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_id = $this->requestParser->getFromRequest('id');
+        $objectId = (int) ($request->getQueryParams()['id'] ?? 0);
 
         $browse = $this->modelFactory->createBrowse();
 
         $browse->set_show_header(true);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
-        $browse->set_filter('album', $object_id);
+        $browse->set_filter('album', $objectId);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";
