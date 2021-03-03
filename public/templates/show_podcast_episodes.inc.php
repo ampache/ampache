@@ -29,7 +29,13 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$thcount  = 7; ?>
+$thcount  = 7;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
+$cel_time    = ($is_table) ? "cel_time" : 'grid_time';
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -40,9 +46,9 @@ $thcount  = 7; ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_podcast optional"><?php echo T_('Podcast'); ?></th>
-            <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
                 <?php
             } ?>
             <th class="cel_pubdate optional"><?php echo T_('Publication Date'); ?></th>
@@ -55,7 +61,7 @@ $thcount  = 7; ?>
             } ?>
                 <?php if (AmpConfig::get('userflags')) {
                 ++$thcount; ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php
@@ -91,15 +97,15 @@ $thcount  = 7; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
         <?php
         } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
                 <?php
             } ?>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>
@@ -110,7 +116,7 @@ $thcount  = 7; ?>
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php

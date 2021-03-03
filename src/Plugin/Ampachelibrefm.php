@@ -40,8 +40,7 @@ class Ampachelibrefm
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $challenge;
     private $user_id;
     private $api_key;

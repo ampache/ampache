@@ -80,6 +80,7 @@ final class UrlToSongMethod implements MethodInterface
         // Don't scrub, the function needs her raw and juicy
         $data = $this->streamUrlParser->parse($url);
 
+
         if (array_key_exists('id', $data) === false) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'url')

@@ -81,7 +81,7 @@ use Ampache\Module\Util\Ui;
                 </td>
         </tr>
         <tr>
-            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>

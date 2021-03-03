@@ -26,8 +26,6 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
-* Stop logging auth/passphrase strings
-* Add Y scrolling to the current playlist box (rightbar)
 
 ### Removed
 
@@ -81,7 +79,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * Return empty objects when the request was correct but the results were empty
 * Don't transcode podcast_episodes
 
-## Ampache 4.4.0-develop
+## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 
@@ -107,6 +105,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Persist replaygain setting as a cookie
 * Support for image per song
 * Format XML output using DOMDocument
+* SubSonic - shift the current track start time when you pause/resume
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -136,8 +135,11 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * When you haven't set an active localplay nothing was picked
 * Set time for artists that are only albums
 * Don't hide rss generation when you haven't got a key
+* Podcast episode durations that use seconds were converting into crazy lengths
+* Playlist and Smartlist check sql simplified
+* SubSonic - Json clients need their playlist entry to always array (single item lists)
 
-### API 4.4.0-develop
+### API 4.4.0
 
 ### Added
 
@@ -157,6 +159,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
+* Add type (release_type) to album objects
 * Add disk to song objects
 * Add time to video objects. (time in seconds)
 * Add title, mime, catalog to podcast_episodes
@@ -164,13 +167,11 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::handshake added extra total counts to the response
   * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
 * Api::ping match the handshake response (excluding the auth token)
-* SubSonic - shift the current track start time when you pause/resume
 
 ### Changed
 
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 * Make filter optional in shares
-* Api::get_indexes; stop including playlist track and id in xml by default
 * Api::podcast_episodes
   * "url" is now a play url (instead of a link to the episode)
   * "public_url" is now the old episode link
@@ -181,12 +182,12 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::democratic was using action from localplay in the return responses
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
-* SubSonic - Json clients need their playlist entry to always array (single item lists)
 * Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
 
 ### Deprecated
 
 * Dropped in API 5.0.0
+  * Api::get_indexes; stop including playlist track and id in xml by default
   * Album objects: "tracks" will only include track details. Use "songcount"
   * Artist objects: "albums", "songs" will only include track details Use "albumcount" and "songcount"
 
@@ -267,6 +268,7 @@ There also a few API changes to enable a bit better control for older clients.
   * Add 'hide_search' parameter (optional)
 * Api::playlists
   * Add 'hide_search' parameter (optional)
+* Setting a limit of 'none' would slice away all the results
 
 ## Ampache 4.2.6-release
 
@@ -291,6 +293,7 @@ There also a few API changes to enable a bit better control for older clients.
 * Duplicate downloads recorded in play/index
 * Subsonic video HLS stream and json values
 * Block more password resets when using simple_user_mode
+* Upload catalog rename logic
 
 ### API 4.2.6
 

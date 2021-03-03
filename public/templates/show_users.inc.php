@@ -27,8 +27,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
- ?>
+$web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
      require Ui::find_template('list_header.inc.php');
  } ?>

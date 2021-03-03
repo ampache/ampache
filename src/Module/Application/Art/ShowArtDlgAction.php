@@ -62,7 +62,7 @@ final class ShowArtDlgAction extends AbstractArtAction
 
         $this->ui->showHeader();
 
-        require_once UI::find_template('show_get_art.inc.php');
+        require_once Ui::find_template('show_get_art.inc.php');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

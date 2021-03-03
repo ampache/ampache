@@ -36,14 +36,14 @@ $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_song    = ($is_table) ? "cel_song" : 'mash_song';
-$cel_album   = ($is_table) ? "cel_album" : 'mash_album';
-$cel_artist  = ($is_table) ? "cel_artist" : 'mash_artist';
-$cel_tags    = ($is_table) ? "cel_tags" : 'mash_tags';
-$cel_flag    = ($is_table) ? "cel_userflag" : 'mash_userflag';
-$cel_time    = ($is_table) ? "cel_time" : 'mash_time';
-$cel_license = ($is_table) ? "cel_license" : 'mash_license';
-$cel_counter = ($is_table) ? "cel_counter" : 'mash_counter'; ?>
+$cel_song    = ($is_table) ? "cel_song" : 'grid_song';
+$cel_album   = ($is_table) ? "cel_album" : 'grid_album';
+$cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
+$cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
+$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
+$cel_time    = ($is_table) ? "cel_time" : 'grid_time';
+$cel_license = ($is_table) ? "cel_license" : 'grid_license';
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

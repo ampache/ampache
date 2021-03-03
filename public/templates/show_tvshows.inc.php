@@ -32,7 +32,12 @@ use Ampache\Module\Util\Ui;
 session_start();
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 8; ?>
+$thcount  = 8;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';
+$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -42,13 +47,13 @@ $thcount  = 8; ?>
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
         <?php
 } ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
-            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
@@ -57,7 +62,7 @@ $thcount  = 8; ?>
     } ?>
                 <?php if (AmpConfig::get('userflags')) {
         ++$thcount; ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
     } ?>
             <?php
@@ -77,7 +82,7 @@ $thcount  = 8; ?>
 
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
-            $libitem = new TvShow($tvshow_id);
+            $libitem = new TVShow($tvshow_id);
             $libitem->format(); ?>
         <tr id="tvshow_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
             <?php require Ui::find_template('show_tvshow_row.inc.php'); ?>
@@ -95,20 +100,20 @@ $thcount  = 8; ?>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
         <?php
         } ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
-            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php

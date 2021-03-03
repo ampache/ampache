@@ -122,7 +122,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         if (AmpConfig::get('ajax_load')) {
             $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
-        <?php require_once UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <?php require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
             function NavigateTo(url)
             {
@@ -401,7 +401,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=album_artist">
-                        <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
+                        <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>
                 </div>
@@ -504,9 +504,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 <?php
                     if (Access::check('interface', 100)) {
                         echo '<div id=update_notify>';
-                        if (!AmpConfig::get('hide_ampache_messages', false)) {
-                            AutoUpdate::show_ampache_message();
-                        }
+                        //if (!AmpConfig::get('hide_ampache_messages', false)) {
+                        //    AutoUpdate::show_ampache_message();
+                        //}
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();
                             echo '<br />';

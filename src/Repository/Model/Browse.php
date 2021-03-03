@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\UI;
+use Ampache\Module\Util\Ui;
 
 /**
  * Browse Class
@@ -279,7 +279,7 @@ class Browse extends Query
             case 'tag':
                 Tag::build_cache($object_ids);
                 $box_title = T_('Genres');
-                $box_req   = UI::find_template('show_tagcloud.inc.php');
+                $box_req   = Ui::find_template('show_tagcloud.inc.php');
                 break;
             case 'video':
                 Video::build_cache($object_ids);

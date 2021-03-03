@@ -79,9 +79,9 @@ if (Art::is_enabled()) {
 </td>
 <td class="cel_songs optional"><?php echo $libitem->songs; ?></td>
 <td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
-<td class="cel_time optional"><?php echo $libitem->f_time; ?></td>
+<td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
 <?php
         } ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>

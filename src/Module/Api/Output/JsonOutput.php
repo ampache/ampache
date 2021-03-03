@@ -158,6 +158,7 @@ final class JsonOutput implements ApiOutputInterface
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
             $theArray['diskcount']     = (int) $disk;
+            $theArray['type']          = $album->release_type;
             $theArray['genre']         = $this->genre_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($userId, false) ? 0 : 1);

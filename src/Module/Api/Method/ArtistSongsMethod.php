@@ -64,6 +64,7 @@ final class ArtistSongsMethod implements MethodInterface
      * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Artist
+     * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      *
@@ -92,7 +93,9 @@ final class ArtistSongsMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        $songs = $this->songRepository->getByArtist($artist);
+        $songs = array_key_exists('top50', $input)
+            ? $this->songRepository->getTopSongsByArtist($artist)
+            : $this->songRepository->getByArtist($artist);
 
         if ($songs === []) {
             $result = $output->emptyResult('song');

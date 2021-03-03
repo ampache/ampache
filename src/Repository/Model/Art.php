@@ -1336,7 +1336,7 @@ class Art extends database_object
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 
         // don't put the play icon on really large images.
-        if ($size['height'] <= 150 && $size['height'] >= 300) {
+        if ($size['height'] >= 150 && $size['height'] <= 300) {
             echo "<div class=\"item_art_play\">";
             echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
                 '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
@@ -1350,7 +1350,7 @@ class Art extends database_object
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo UI::get_icon('edit', T_('Edit/Find Art'));
+                echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
 
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";

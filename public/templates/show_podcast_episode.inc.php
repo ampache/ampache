@@ -97,8 +97,8 @@ use Ampache\Module\Util\Ui;
         <?php
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
-            <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>

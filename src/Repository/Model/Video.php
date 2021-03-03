@@ -522,7 +522,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return Stream_Url::format($url);
     }
 
     /**

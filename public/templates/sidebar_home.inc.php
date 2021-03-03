@@ -56,7 +56,7 @@ $t_search    = T_('Search'); ?>
     Ajax::end_container();
     echo "</li>";
 } ?>
-    <li class="sb2_music"><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse'); ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <li class="sb2_music"><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php
         $text = (string) scrub_in(Core::get_request('action')) . '_ac';
         if ($text) {
@@ -92,7 +92,7 @@ $t_search    = T_('Search'); ?>
         </ul>
     </li>
     <?php if ($allowVideo) { ?>
-        <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo Ui::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
           <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
                 <li id="sb_home_browse_video_clip"><a href="<?php echo $web_path ?>/browse.php?action=clip"><?php echo T_('Music Clips') ?></a></li>
@@ -130,7 +130,7 @@ $t_search    = T_('Search'); ?>
     </li>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
-    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlist; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlist; ?></span><?php echo Ui::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', 50)) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
@@ -154,7 +154,7 @@ $t_search    = T_('Search'); ?>
     <?php
     } ?>
     <li class="sb2_information">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Information'); ?></span><?php echo UI::get_icon('all', $t_expander, 'information', 'header-img ' . (($_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Information'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . (($_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>

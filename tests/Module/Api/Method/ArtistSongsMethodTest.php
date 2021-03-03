@@ -227,4 +227,71 @@ class ArtistSongsMethodTest extends MockeryTestCase
             )
         );
     }
+
+    public function testHandleReturnsTopSongList(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $artist     = $this->mock(Artist::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $objectId = 666;
+        $result   = 'some-result';
+        $userId   = 42;
+        $songId   = 33;
+
+        $this->modelFactory->shouldReceive('createArtist')
+            ->with($objectId)
+            ->once()
+            ->andReturn($artist);
+
+        $artist->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->songRepository->shouldReceive('getTopSongsByArtist')
+            ->with($artist)
+            ->once()
+            ->andReturn([$songId]);
+
+        $output->shouldReceive('songs')
+            ->with(
+                [$songId],
+                $userId,
+                true,
+                true,
+                true,
+                0,
+                0
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
+
+        $gatekeeper->shouldReceive('getUser->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                ['filter' => $objectId, 'top50' => 1]
+            )
+        );
+    }
 }

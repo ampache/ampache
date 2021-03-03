@@ -27,7 +27,8 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-$thcount = 8; ?>
+$thcount  = 8; ?>
+<?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata">
     <thead>
@@ -35,7 +36,7 @@ $thcount = 8; ?>
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>

@@ -30,10 +30,14 @@ use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
 $seconds  = $browse->duration;
-$duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
-?>
+$duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag';
+$cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
@@ -42,12 +46,12 @@ $duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
             <tr class="th-top">
                 <th class="cel_play essential"></th>
                 <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
                 <?php
 } ?>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
-                <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+                <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
                 <?php if (User::is_registered()) { ?>
                     <?php if (AmpConfig::get('ratings')) { ?>
                         <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
@@ -56,7 +60,7 @@ $duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
                     <?php if (AmpConfig::get('userflags')) { ?>
                 <?php
         } ?>
-                <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
             <?php
     } ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -85,19 +89,19 @@ $duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
                 <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art') ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
                 <?php
     } ?>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
-                <th class="cel_time"><?php echo T_('Time'); ?></th>
+                <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
                 <?php if (User::is_registered()) { ?>
                     <?php if (AmpConfig::get('ratings')) { ?>
                         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                     <?php
         } ?>
                     <?php if (AmpConfig::get('userflags')) { ?>
-                        <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                        <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
                     <?php
         } ?>
                 <?php
@@ -110,6 +114,6 @@ $duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
 </form>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
-        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        require Ui::find_template('list_header.inc.php');
         echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
     } ?>

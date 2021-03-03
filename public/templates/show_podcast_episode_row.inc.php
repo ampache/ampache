@@ -63,9 +63,9 @@ use Ampache\Module\Util\Ui;
     </span>
 </td>
 <td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
-<td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
     <?php
 } ?>
 <td class="cel_pubdate"><?php echo $libitem->f_pubdate; ?></td>
@@ -79,7 +79,7 @@ use Ampache\Module\Util\Ui;
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
+    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
         <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
     </td>
     <?php
