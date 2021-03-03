@@ -22,8 +22,8 @@
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
-     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
- } ?>
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />

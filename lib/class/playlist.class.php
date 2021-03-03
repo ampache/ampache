@@ -111,9 +111,7 @@ class Playlist extends playlist_object
         }
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if ($is_admin) {
-                $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
-            }
+            $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
@@ -150,9 +148,7 @@ class Playlist extends playlist_object
         }
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if ($is_admin) {
-                $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
-            }
+            $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_smartlists ' . $sql, 5);
