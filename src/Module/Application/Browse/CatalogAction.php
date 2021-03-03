@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Browse;
 
@@ -39,7 +39,6 @@ final class CatalogAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
@@ -50,7 +49,7 @@ final class CatalogAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
+        @session_start();
 
         $browse = $this->modelFactory->createBrowse();
 

@@ -20,20 +20,20 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -49,16 +49,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private AlbumDeleterInterface $albumDeleter;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        AlbumDeleterInterface $albumDeleter
+        AlbumDeleterInterface $albumDeleter,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->albumDeleter    = $albumDeleter;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->ui                   = $ui;
+        $this->albumDeleter         = $albumDeleter;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,10 +79,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return $response;
         }
 
-        $album = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
-        if (!Catalog::can_remove($album)) {
+        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
+
+        $album = $this->modelFactory->createAlbum($albumId);
+
+        if (!$this->mediaDeletionChecker->mayDelete($album, $gatekeeper->getUserId())) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the album `%d`', $album->id)
+                sprintf('Unauthorized to remove the album `%d`', $albumId)
             );
         }
 

@@ -21,20 +21,20 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Artist\Deletion\ArtistDeleterInterface;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,22 +44,26 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     private ModelFactoryInterface $modelFactory;
+
+    private UiInterface $ui;
 
     private ArtistDeleterInterface $artistDeleter;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ArtistDeleterInterface $artistDeleter
+        UiInterface $ui,
+        ArtistDeleterInterface $artistDeleter,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->artistDeleter   = $artistDeleter;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->ui                   = $ui;
+        $this->artistDeleter        = $artistDeleter;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,11 +79,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return $response;
         }
 
-        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
+        $artistId = (int) ($request->getQueryParams()['artist_id'] ?? 0);
 
-        if (!Catalog::can_remove($artist)) {
+        $artist = $this->modelFactory->createArtist($artistId);
+
+        if (!$this->mediaDeletionChecker->mayDelete($artist, $gatekeeper->getUserId())) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the artist `%d`', $artist->id)
+                sprintf('Unauthorized to remove the artist `%d`', $artistId)
             );
         }
 
