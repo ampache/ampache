@@ -482,8 +482,7 @@ final class PlayAction implements ApplicationActionInterface
 
         /* If we don't have a file, or the file is not readable */
         if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
-            // We need to make sure this isn't democratic play, if it is then remove
-            // the media from the vote list
+            // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
             if (is_object($tmp_playlist)) {
                 $tmp_playlist->delete_track($object_id);
             }

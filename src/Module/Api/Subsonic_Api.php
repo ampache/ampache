@@ -1147,17 +1147,17 @@ class Subsonic_Api
         }
 
         $url = '';
-        if (Subsonic_XML_Data::isSong($fileid)) {
-            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+        if (Subsonic_Xml_Data::isSong($fileid)) {
+            $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
-        } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+        } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
+            $object = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
         if (empty($url)) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'download');
             self::apiOutput($input, $response);
 
             return;
@@ -1177,16 +1177,16 @@ class Subsonic_Api
         $user_id = User::get_from_username($input['u'])->id;
         $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
         $url     = '';
-        if (Subsonic_XML_Data::isSong($fileid)) {
-            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+        if (Subsonic_Xml_Data::isSong($fileid)) {
+            $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
-        } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+        } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
+            $object = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         // return an error on missing files
         if (empty($url)) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'download');
             self::apiOutput($input, $response);
 
             return;
@@ -1207,18 +1207,18 @@ class Subsonic_Api
         $bitRate = $input['bitRate'];
 
         $media                = array();
-        if (Subsonic_XML_Data::isSong($fileid)) {
+        if (Subsonic_Xml_Data::isSong($fileid)) {
             $media['object_type'] = 'song';
-        } elseif (Subsonic_XML_Data::isVideo($fileid)) {
+        } elseif (Subsonic_Xml_Data::isVideo($fileid)) {
             $media['object_type'] = 'video';
         } else {
             self::apiOutput(
                 $input,
-                Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND,
+                Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND,
                                                'Invalid id',
                                                'hls'));
         }
-        $media['object_id']   = Subsonic_XML_Data::getAmpacheId($fileid);
+        $media['object_id']   = Subsonic_Xml_Data::getAmpacheId($fileid);
 
         $medias            = array();
         $medias[]          = $media;
@@ -1247,9 +1247,9 @@ class Subsonic_Api
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $sub_id = str_replace('pl-', '', $sub_id);
         $size   = $input['size'];
-        $type   = Subsonic_XML_Data::getAmpacheType($sub_id);
+        $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
             return;
@@ -1258,17 +1258,17 @@ class Subsonic_Api
         $art = null;
 
         if ($type == 'artist') {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
+            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "artist");
         }
         if ($type == 'album') {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
+            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "album");
         }
         if (($type == 'song')) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
+            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
-                $song          = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
+                $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $show_song_art = AmpConfig::get('show_song_art', false);
                 $art_object    = ($show_song_art) ? $song->id : $song->album;
                 $art_type      = ($show_song_art) ? 'song' : 'album';
@@ -1276,16 +1276,16 @@ class Subsonic_Api
             }
         }
         if (($type == 'podcast')) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
+            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "podcast");
         }
         if ($type == 'search' || $type == 'playlist') {
             $listitems = array();
             // playlists and smartlists
             if (($type == 'search')) {
-                $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($sub_id));
+                $playlist  = new Search(Subsonic_Xml_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
             } elseif (($type == 'playlist')) {
-                $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($sub_id));
+                $playlist  = new Playlist(Subsonic_Xml_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
             }
             $item = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
@@ -1296,7 +1296,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
             return;
@@ -1961,8 +1961,8 @@ class Subsonic_Api
                         foreach ($id as $song_id) {
                             $url = null;
 
-                            if (Subsonic_XML_Data::isSong($song_id)) {
-                                $media = new Song(Subsonic_XML_Data::getAmpacheId($song_id));
+                            if (Subsonic_Xml_Data::isSong($song_id)) {
+                                $media = new Song(Subsonic_Xml_Data::getAmpacheId($song_id));
                                 $url   = $media->play_url('', 'api', function_exists('curl_version'), $user->id);
                             }
 
@@ -2167,7 +2167,7 @@ class Subsonic_Api
             // randomize and slice
             shuffle($songs);
             $songs = array_slice($songs, 0, $count);
-        //} elseif (Ampache\Module\Api\Subsonic_XML_Data::isAlbum($id)) {
+        //} elseif (Ampache\Module\Api\Subsonic_Xml_Data::isAlbum($id)) {
             //    // TODO: support similar songs for albums
         } elseif (Subsonic_Xml_Data::isSong($id)) {
             $songs = Recommendation::get_songs_like(Subsonic_Xml_Data::getAmpacheId($id), $count);
@@ -2402,7 +2402,7 @@ class Subsonic_Api
             $bookmarks[] = new Bookmark($bookmarkId);
         }
 
-        Subsonic_XML_Data::addBookmarks($response, $bookmarks);
+        Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
 
@@ -2528,11 +2528,11 @@ class Subsonic_Api
         $position = (int) $input['position'] / 1000;
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
-        $media    = Subsonic_XML_Data::getAmpacheObject($current);
+        $media    = Subsonic_Xml_Data::getAmpacheObject($current);
         $time     = time();
         if ($media->id) {
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
-            $type     = Subsonic_XML_Data::getAmpacheType($current);
+            $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // track has just started
             if ($position < 1) {
                 Stream::garbage_collection();

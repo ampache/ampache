@@ -28,7 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\UI;
+use Ampache\Module\Util\Ui;
 
 /**
  * Browse Class

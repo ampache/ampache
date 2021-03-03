@@ -56,7 +56,7 @@ final class UrlToSongMethod
             return false;
         }
         // Don't scrub, the function needs her raw and juicy
-        $data = Stream_URL::parse($input['url']);
+        $data = Stream_Url::parse($input['url']);
         if (empty($data['id'])) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
 

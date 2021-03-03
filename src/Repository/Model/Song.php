@@ -2023,7 +2023,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return Stream_Url::format($url);
     }
 
     /**

@@ -36,8 +36,8 @@ class AmpacheGoogleAnalytics
     public $min_ampache = '370034';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
+    private $user;
     private $tracking_id;
 
     /**

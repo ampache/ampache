@@ -1027,7 +1027,7 @@ class Search extends playlist_object
         }
 
         $sql .= ' ORDER BY RAND()';
-        $sql .= $limit ? ' LIMIT ' . (string) ($limit) : ' ';
+        $sql .= ($limit) ? ' LIMIT ' . (string) ($limit) : ' ';
         //debug_event(self::class, 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);

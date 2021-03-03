@@ -426,7 +426,7 @@ class mpd
     {
         $this->_debug('SendCommandQueue', 'start', 5);
         if (!$this->connected) {
-            _error('SendCommandQueue', 'Not connected');
+            $this->_error('SendCommandQueue', 'Not connected');
 
             return false;
         }

@@ -232,7 +232,7 @@ class WebPlayer
             if ($item->type == 'broadcast') {
                 $force_type = 'mp3';
             }
-            $urlinfo = Stream_URL::parse($item->url);
+            $urlinfo = Stream_Url::parse($item->url);
             $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
             if (!in_array($types['player'], $jptypes)) {
                 $jptypes[] = $types['player'];
@@ -306,7 +306,7 @@ class WebPlayer
             $json[$kmember] = $item->$member;
         }
 
-        $urlinfo  = Stream_URL::parse($item->url);
+        $urlinfo  = Stream_Url::parse($item->url);
         $types    = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
         $url      = $urlinfo['base_url'];
         $media    = self::get_media_object($urlinfo);

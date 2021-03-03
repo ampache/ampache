@@ -249,7 +249,7 @@ class Playlist extends playlist_object
      * get_random_items
      * This is the same as before but we randomize the buggers!
      * @param string $limit
-     * @return integer[]
+     * @return array
      */
     public function get_random_items($limit = '')
     {

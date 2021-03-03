@@ -56,7 +56,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $category;
     public $pubdate;
     public $enabled;
-
+    public $object_cnt;
     public $catalog;
     public $f_title;
     public $f_file;
@@ -462,7 +462,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return Stream_Url::format($url);
     }
 
     /**
