@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # n magi <csma17068@g.nihon-u.ac.jp>, 2020
 # MechMS <sonofswin@nagasaki.email.ne.jp>, 2019-2020
@@ -12,14 +12,13 @@ msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2020-12-28 20:06+0100\n"
-"PO-Revision-Date: 2020-10-12 02:17+0000\n"
+"PO-Revision-Date: 2021-01-03 23:31+0000\n"
 "Last-Translator: Transifex Bot <>\n"
-"Language-Team: Japanese (Japan) (http://www.transifex.com/ampache/ampache/"
-"language/ja_JP/)\n"
-"Language: ja_JP\n"
+"Language-Team: Japanese (Japan) (http://www.transifex.com/ampache/ampache/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:44 ../../admin/access.php:80
@@ -171,14 +170,12 @@ msgid "The Catalog art search has started"
 msgstr "カタログアート検索が開始されました。"
 
 #: ../../admin/catalog.php:261
-#, fuzzy
 msgid "The catalog write file tags has started"
-msgstr "カタログアート検索が開始されました。"
+msgstr ""
 
 #: ../../admin/catalog.php:265
-#, fuzzy
 msgid "The Catalog write file tags has started"
-msgstr "カタログアート検索が開始されました。"
+msgstr ""
 
 #: ../../admin/license.php:42
 msgid "The License has been updated"
@@ -276,9 +273,7 @@ msgstr "シャウトボックスの投稿が削除されました"
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
-"データベースと関連テーブルは、現在設定されている文字セットに一致するように更"
-"新されています"
+msgstr "データベースと関連テーブルは、現在設定されている文字セットに一致するように更新されています"
 
 #: ../../admin/system.php:76
 msgid "Your cache has been cleared successfully"
@@ -300,7 +295,8 @@ msgstr "パスワードが一致しません"
 msgid "You entered an invalid e-mail address"
 msgstr "無効なメールアドレスを入力しました"
 
-#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000)
+#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions
+#. (2000x3000)
 #: ../../admin/users.php:120
 #, php-format
 msgid ""
@@ -317,7 +313,8 @@ msgid "The new User was not created"
 msgstr "新しいユーザーは作成されませんでした"
 
 #: ../../admin/users.php:181 ../../lib/class/shoutbox.class.php:354
-#: ../../lib/class/user.class.php:1227 ../../templates/show_add_user.inc.php:65
+#: ../../lib/class/user.class.php:1227
+#: ../../templates/show_add_user.inc.php:65
 #: ../../templates/show_edit_user.inc.php:83
 #: ../../templates/show_preference_admin.inc.php:42
 #: ../../templates/show_preference_box.inc.php:74
@@ -432,9 +429,7 @@ msgstr "新しいユーザーAPIキーが生成された"
 msgid ""
 "This will replace your existing RSS token. Feeds with the old token might "
 "not work properly"
-msgstr ""
-"あなたのRSSトークンを置き換えます. 古いトークンでは正しく動かなくなるかもしれ"
-"ません"
+msgstr "あなたのRSSトークンを置き換えます. 古いトークンでは正しく動かなくなるかもしれません"
 
 #: ../../admin/users.php:326
 msgid "A new user RSS token has been generated"
@@ -480,9 +475,7 @@ msgstr "アートの情報をデータベースから削除しました"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file was not received correctly"
-msgstr ""
-"現時点ではアルバムアートは見つからなかった。 これは、書き込みアクセスエラーが"
-"原因であるか、ファイルが正しく受信されなかった可能性がある"
+msgstr "現時点ではアルバムアートは見つからなかった。 これは、書き込みアクセスエラーが原因であるか、ファイルが正しく受信されなかった可能性がある"
 
 #: ../../arts.php:85 ../../arts.php:124
 msgid "Art has been added"
@@ -601,8 +594,8 @@ msgstr "使用方法:"
 
 #: ../../bin/catalog_update.inc:227
 msgid ""
-"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-"
-"u|-i|-o]"
+"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] "
+"[-h|-m|-c|-v|-a|-g|-u|-i|-o]"
 msgstr "catalog_update.inc [-n カタログ名] [-h|-m|-c|-v|-a|-g|-u|-i|-o]"
 
 #: ../../bin/catalog_update.inc:229
@@ -635,9 +628,7 @@ msgstr "孤立したエントリーをカタログから掃除します"
 msgid ""
 "Verifies Catalog entries and updates them if related files have new "
 "information"
-msgstr ""
-"カタログエントリーを確認し、関連するファイルが新しい情報を持っている場合に更"
-"新します"
+msgstr "カタログエントリーを確認し、関連するファイルが新しい情報を持っている場合に更新します"
 
 #: ../../bin/catalog_update.inc:237
 msgid "Adds new media to Catalogs"
@@ -663,27 +654,20 @@ msgstr "データベースのテーブルを最適化"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
-"このオプションは自己責任で使用してください。大量にメモリを使用してしまい、シ"
-"ステムがクラッシュしたり、応答しなくなる可能性があります！"
+msgstr "このオプションは自己責任で使用してください。大量にメモリを使用してしまい、システムがクラッシュしたり、応答しなくなる可能性があります！"
 
 #: ../../bin/catalog_update.inc:244
 msgid ""
 "Depending on your system's performance, this option may need a long time to "
 "finish and could greatly slow down other database processes if you have "
 "large Catalogs!"
-msgstr ""
-"システムのパフォーマンスによっては、このオプションを完了するのに長い時間が必"
-"要な場合があり、大きなカタログがある場合は他のデータベースプロセスが大幅に遅"
-"くなる可能性があります。"
+msgstr "システムのパフォーマンスによっては、このオプションを完了するのに長い時間が必要な場合があり、大きなカタログがある場合は他のデータベースプロセスが大幅に遅くなる可能性があります。"
 
 #: ../../bin/catalog_update.inc:245
 msgid ""
-"The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-"
-"a|-g] is used"
-msgstr ""
-"スイッチ [-m|-o] を使用するには、スイッチ [-c|-v|-a|-g] のいずれかを使用する"
-"必要があります"
+"The switches [-m|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used"
+msgstr "スイッチ [-m|-o] を使用するには、スイッチ [-c|-v|-a|-g] のいずれかを使用する必要があります"
 
 #: ../../bin/channel_run.inc:48
 msgid "Channel"
@@ -773,9 +757,7 @@ msgstr "WARNING"
 #: ../../bin/delete_disabled.inc:43 ../../bin/sort_files.inc:62
 #: ../../bin/update_db.inc:56
 msgid "Running in Write Mode. Make sure you've tested first!"
-msgstr ""
-"書き込みモードで実行されています. 先にテストしてから実行することをお勧めしま"
-"す"
+msgstr "書き込みモードで実行されています. 先にテストしてから実行することをお勧めします"
 
 #. HINT: filename (File path)
 #: ../../bin/delete_disabled.inc:53
@@ -809,8 +791,7 @@ msgstr "音楽の愛のために"
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Testing basic translation, the two strings below should look the same"
-msgstr ""
-"基本的な翻訳をテストしています。以下の2つの文字が同じか確認してください"
+msgstr "基本的な翻訳をテストしています。以下の2つの文字が同じか確認してください"
 
 #: ../../bin/fix_filenames.inc:55
 msgid "Original: For the Love of Music"
@@ -1064,11 +1045,13 @@ msgstr "コンフィグファイルの作成に失敗しました"
 msgid "Options"
 msgstr "オプション"
 
-#: ../../bin/install/install_db.inc:116 ../../templates/show_install.inc.php:67
+#: ../../bin/install/install_db.inc:116
+#: ../../templates/show_install.inc.php:67
 msgid "MySQL Administrative Username"
 msgstr "MySQL管理ユーザ名"
 
-#: ../../bin/install/install_db.inc:118 ../../templates/show_install.inc.php:73
+#: ../../bin/install/install_db.inc:118
+#: ../../templates/show_install.inc.php:73
 msgid "MySQL Administrative Password"
 msgstr "MySQL管理パスワード"
 
@@ -1453,7 +1436,8 @@ msgstr ""
 msgid "All"
 msgstr "全て"
 
-#: ../../lib/class/access.class.php:471 ../../templates/list_header.inc.php:125
+#: ../../lib/class/access.class.php:471
+#: ../../templates/list_header.inc.php:125
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:39
 #: ../../templates/show_graphs.inc.php:79
@@ -1519,7 +1503,8 @@ msgstr "ディスク"
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_browse_form.inc.php:38
 #: ../../templates/show_browse_form.inc.php:40
-#: ../../templates/show_label.inc.php:96 ../../templates/show_labels.inc.php:45
+#: ../../templates/show_label.inc.php:96
+#: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:75
 #: ../../templates/show_mashup_browse_form.inc.php:11
 #: ../../templates/show_random.inc.php:37
@@ -1655,7 +1640,8 @@ msgstr "on"
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/api.class.php:307
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:88
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:65
@@ -1690,15 +1676,15 @@ msgstr ""
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:87
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:124
 #: ../../lib/class/json_data.class.php:199
-#, fuzzy, php-format
+#, php-format
 msgid "Bad Request: %s"
-msgstr "不正なリクエスト"
+msgstr ""
 
 #. HINT: Access level, eg 75, 100
 #: ../../lib/class/api.class.php:334
-#, fuzzy, php-format
+#, php-format
 msgid "Require: %s"
-msgstr "必要条件"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:82
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:71
@@ -1709,11 +1695,11 @@ msgstr "必要条件"
 #: ../../lib/class/ApiMethods/LocalplayMethod.php:73
 #: ../../lib/class/ApiMethods/VideoMethod.php:55
 #: ../../lib/class/ApiMethods/VideosMethod.php:57
-#, fuzzy
 msgid "Enable: video"
-msgstr "有効化済"
+msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/AlbumMethod.php:63
 #: ../../lib/class/ApiMethods/AlbumSongsMethod.php:64
 #: ../../lib/class/ApiMethods/ArtistAlbumsMethod.php:64
@@ -1768,7 +1754,8 @@ msgstr "有効化済"
 msgid "Not Found: %s"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:78
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:84
 #: ../../lib/class/ApiMethods/BookmarkDeleteMethod.php:72
@@ -1790,18 +1777,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/StatsMethod.php:80
 #: ../../lib/class/ApiMethods/SystemUpdateMethod.php:61
 #: ../../lib/class/ApiMethods/UrlToSongMethod.php:61
-#, fuzzy
 msgid "Bad Request"
-msgstr "不正なリクエスト"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:96
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:132
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:76
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:86
 #: ../../lib/class/ApiMethods/ScrobbleMethod.php:100
-#, fuzzy
 msgid "Not Found"
-msgstr "見つかりました"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:62
 msgid "Enable: delete_from_disk"
@@ -1833,9 +1818,8 @@ msgstr ""
 #: ../../lib/class/ApiMethods/PodcastEpisodesMethod.php:59
 #: ../../lib/class/ApiMethods/PodcastMethod.php:57
 #: ../../lib/class/ApiMethods/PodcastsMethod.php:58
-#, fuzzy
 msgid "Enable: podcast"
-msgstr "Podcast"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/HandshakeMethod.php:75
 msgid "Login failed, API version is too old"
@@ -1861,16 +1845,14 @@ msgstr ""
 #: ../../lib/class/ApiMethods/LabelArtistsMethod.php:58
 #: ../../lib/class/ApiMethods/LabelMethod.php:56
 #: ../../lib/class/ApiMethods/LabelsMethod.php:58
-#, fuzzy
 msgid "Enable: label"
-msgstr "有効"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/LicenseMethod.php:56
 #: ../../lib/class/ApiMethods/LicensesMethod.php:58
 #: ../../lib/class/ApiMethods/LicenseSongsMethod.php:57
-#, fuzzy
 msgid "Enable: licensing"
-msgstr "ライセンス"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PlaylistAddSongMethod.php:65
 #: ../../lib/class/ApiMethods/PlaylistDeleteMethod.php:62
@@ -1883,9 +1865,8 @@ msgstr ""
 
 #: ../../lib/class/ApiMethods/PodcastEpisodeDeleteMethod.php:73
 #: ../../lib/class/ApiMethods/SongDeleteMethod.php:67
-#, fuzzy
 msgid "Require: 75"
-msgstr "必要条件"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/RateMethod.php:57
 msgid "Enable: ratings"
@@ -1896,18 +1877,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/ShareEditMethod.php:59
 #: ../../lib/class/ApiMethods/ShareMethod.php:55
 #: ../../lib/class/ApiMethods/SharesMethod.php:57
-#, fuzzy
 msgid "Enable: share"
-msgstr "有効"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/TagAlbumsMethod.php:49
 #: ../../lib/class/ApiMethods/TagArtistsMethod.php:49
 #: ../../lib/class/ApiMethods/TagMethod.php:49
 #: ../../lib/class/ApiMethods/TagsMethod.php:49
 #: ../../lib/class/ApiMethods/TagSongsMethod.php:49
-#, fuzzy
 msgid "Depreciated"
-msgstr "ユーザアクティベート"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1608
 msgid "Unable to open"
@@ -1974,7 +1953,8 @@ msgid "View changes"
 msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:273
-#: ../../lib/class/autoupdate.class.php:276 ../../lib/class/share.class.php:255
+#: ../../lib/class/autoupdate.class.php:276
+#: ../../lib/class/share.class.php:255
 #: ../../templates/show_album_group_disks.inc.php:112
 #: ../../templates/show_album_group_disks.inc.php:113
 #: ../../templates/show_album_group_disks.inc.php:163
@@ -2110,7 +2090,8 @@ msgstr "ブロードキャストの停止"
 #: ../../templates/show_artists.inc.php:111
 #: ../../templates/show_browse_form.inc.php:28
 #: ../../templates/show_browse_form.inc.php:30
-#: ../../templates/show_label.inc.php:97 ../../templates/show_label.inc.php:110
+#: ../../templates/show_label.inc.php:97
+#: ../../templates/show_label.inc.php:110
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_mashup_browse_form.inc.php:5
 #: ../../templates/show_random.inc.php:27
@@ -2211,7 +2192,8 @@ msgstr ""
 #: ../../templates/show_browse_form.inc.php:52
 #: ../../templates/show_browse_form.inc.php:54
 #: ../../templates/show_mashup_browse_form.inc.php:20
-#: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:137
+#: ../../templates/show_song.inc.php:170
+#: ../../templates/show_video.inc.php:137
 #: ../../templates/sidebar_home.inc.php:56
 msgid "Channels"
 msgstr "チャンネル"
@@ -2365,7 +2347,8 @@ msgstr ""
 msgid "Song"
 msgstr "曲"
 
-#: ../../lib/class/catalog.class.php:1759 ../../lib/class/channel.class.php:243
+#: ../../lib/class/catalog.class.php:1759
+#: ../../lib/class/channel.class.php:243
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
@@ -2437,7 +2420,8 @@ msgstr "実行中"
 msgid "Stopped"
 msgstr "停止"
 
-#: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:303
+#: ../../lib/class/democratic.class.php:153
+#: ../../lib/class/video.class.php:303
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
 msgstr "分"
@@ -2449,7 +2433,8 @@ msgstr "プライマリ"
 #: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:535
 #: ../../templates/show_edit_song_row.inc.php:80
 #: ../../templates/show_labels.inc.php:43
-#: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:165
+#: ../../templates/show_labels.inc.php:73
+#: ../../templates/show_song.inc.php:165
 msgid "Label"
 msgstr "レーベル"
 
@@ -2460,8 +2445,7 @@ msgstr ""
 
 #: ../../lib/class/live_stream.class.php:244
 msgid "URL is invalid, must be mms:// , https:// or http://"
-msgstr ""
-"不正なURLです。mms:// , https:// または http:// で始まっている必要があります"
+msgstr "不正なURLです。mms:// , https:// または http:// で始まっている必要があります"
 
 #: ../../lib/class/live_stream.class.php:250
 #: ../../lib/class/live_stream.class.php:286
@@ -2483,7 +2467,8 @@ msgstr "一時停止"
 
 #: ../../lib/class/localplay.class.php:657
 #: ../../lib/class/playlist.class.php:230
-#: ../../lib/class/playlist.class.php:231 ../../lib/class/podcast.class.php:346
+#: ../../lib/class/playlist.class.php:231
+#: ../../lib/class/podcast.class.php:346
 #: ../../lib/class/tvshow_episode.class.php:77
 #: ../../lib/class/user.class.php:1141 ../../lib/class/user.class.php:1229
 #: ../../lib/class/video.class.php:845
@@ -2548,7 +2533,8 @@ msgstr "フィードを読み込みできません"
 #: ../../templates/show_podcast_episodes.inc.php:87
 #: ../../templates/show_podcasts.inc.php:45
 #: ../../templates/show_podcasts.inc.php:94
-#: ../../templates/show_song.inc.php:141 ../../templates/show_video.inc.php:125
+#: ../../templates/show_song.inc.php:141
+#: ../../templates/show_video.inc.php:125
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:93
 msgid "Title"
@@ -2596,9 +2582,7 @@ msgstr ""
 msgid ""
 "To begin using your account, you must verify your e-mail address by vising "
 "the following link:"
-msgstr ""
-"アカウント有効化するにあたって認証メール内に記載されているリンクを使用してく"
-"ださい"
+msgstr "アカウント有効化するにあたって認証メール内に記載されているリンクを使用してください"
 
 #: ../../lib/class/registration.class.php:83
 msgid "A new user has registered, the following values were entered:"
@@ -2781,9 +2765,8 @@ msgstr "検索可能なテキスト"
 #: ../../templates/show_recently_played.inc.php:140
 #: ../../templates/show_song.inc.php:142 ../../templates/show_songs.inc.php:34
 #: ../../templates/show_songs.inc.php:96
-#, fuzzy
 msgid "Song Artist"
-msgstr "不明なアーティスト"
+msgstr ""
 
 #: ../../lib/class/search.class.php:492 ../../lib/class/search.class.php:672
 #: ../../templates/show_albums.inc.php:41
@@ -2864,7 +2847,8 @@ msgstr "# 再生済"
 
 #. HINT: Number of times object has been skipped
 #: ../../lib/class/search.class.php:511 ../../templates/show_song.inc.php:191
-#: ../../templates/show_songs.inc.php:47 ../../templates/show_songs.inc.php:108
+#: ../../templates/show_songs.inc.php:47
+#: ../../templates/show_songs.inc.php:108
 msgid "# Skipped"
 msgstr ""
 
@@ -2982,7 +2966,8 @@ msgstr "歌詞"
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:76
 #: ../../templates/show_import_playlist.inc.php:27
-#: ../../templates/show_song.inc.php:181 ../../templates/show_video.inc.php:139
+#: ../../templates/show_song.inc.php:181
+#: ../../templates/show_video.inc.php:139
 msgid "Filename"
 msgstr "フルネーム"
 
@@ -3254,7 +3239,8 @@ msgstr "パスワードが一致しません"
 msgid "Invalid"
 msgstr "不正"
 
-#: ../../lib/class/user.class.php:1168 ../../templates/show_tagcloud.inc.php:83
+#: ../../lib/class/user.class.php:1168
+#: ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr "データは全くありません"
 
@@ -4014,7 +4000,8 @@ msgstr "不明なアーティスト"
 msgid "Accept"
 msgstr "承認"
 
-#: ../../lib/class/wanted.class.php:426 ../../lib/javascript/search-data.php:56
+#: ../../lib/class/wanted.class.php:426
+#: ../../lib/javascript/search-data.php:56
 msgid "Remove"
 msgstr "削除"
 
@@ -4043,15 +4030,11 @@ msgstr "不明 %s"
 
 #: ../../lib/install.lib.php:86
 msgid "Unable to connect to the database, check your Ampache config"
-msgstr ""
-"データベースへ接続できませんでした。Ampacheのコンフィグをチェックしてくださ"
-"い。"
+msgstr "データベースへ接続できませんでした。Ampacheのコンフィグをチェックしてください。"
 
 #: ../../lib/install.lib.php:95
 msgid "Unable to query the database, check your Ampache config"
-msgstr ""
-"データベースへ接続できませんでした。Ampacheのコンフィグをチェックしてくださ"
-"い。"
+msgstr "データベースへ接続できませんでした。Ampacheのコンフィグをチェックしてください。"
 
 #: ../../lib/install.lib.php:103
 msgid "Existing database was detected, unable to continue the installation"
@@ -4084,17 +4067,13 @@ msgstr "データベースの作成ができません: %s"
 #. HINT: %1 user, %2 database, %3 host, %4 error message
 #: ../../lib/install.lib.php:257
 #, php-format
-msgid ""
-"Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": %4$s"
 msgstr " %3$sに %2$s の権限を持つユーザ %1$s を作成できません: %4$s"
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
 #: ../../lib/install.lib.php:271
 #, php-format
-msgid ""
-"Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
 msgstr " %3$sに %2$s のユーザ %1$s に権限を付与できません: %4$s"
 
 #: ../../lib/install.lib.php:333
@@ -4104,9 +4083,7 @@ msgstr "不正なコンフィグ設定です"
 #: ../../lib/install.lib.php:340
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
-msgstr ""
-"データベースの接続に失敗しましした\n"
-"ホスト名、ユーザ名、パスワードを確認してください"
+msgstr "データベースの接続に失敗しましした\nホスト名、ユーザ名、パスワードを確認してください"
 
 #: ../../lib/install.lib.php:350
 msgid "Config file is not writable"
@@ -4408,8 +4385,7 @@ msgstr "Beetsのデータベースファイル"
 
 #: ../../modules/catalog/beets/beets.catalog.php:113
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
-msgstr ""
-"エラー: Beetsが選択されました、しかしBeetsのデータベースファイルがありません"
+msgstr "エラー: Beetsが選択されました、しかしBeetsのデータベースファイルがありません"
 
 #: ../../modules/catalog/beets/beets.catalog.php:124
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:123
@@ -4666,8 +4642,8 @@ msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name (e."
-"g. 'Music')."
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:79
@@ -5199,21 +5175,20 @@ msgid "Personal favorites on the homepage"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:63
-#, fuzzy
 msgid "Favorite Playlists"
-msgstr "スマートプレイリスト"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:64
-#, fuzzy
 msgid "Favorite Smartlists"
-msgstr "お気に入り"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:112
 msgid "Favorite Lists"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:129
-#: ../../templates/header.inc.php:346 ../../templates/show_album_row.inc.php:29
+#: ../../templates/header.inc.php:346
+#: ../../templates/show_album_row.inc.php:29
 #: ../../templates/show_artist_row.inc.php:29
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_podcast_episode.inc.php:54
@@ -5704,8 +5679,9 @@ msgstr "Ampacheで使用するCookie"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the site"
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:5
@@ -5766,8 +5742,8 @@ msgstr ""
 
 #: ../../templates/error_page.inc.php:52
 msgid ""
-"The following error has occurred, you will be automatically redirected in 10 "
-"seconds."
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
 msgstr ""
 
 #: ../../templates/error_page.inc.php:54
@@ -5805,17 +5781,11 @@ msgstr "キャンセル"
 #: ../../templates/header.inc.php:310
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr ""
-"このウェブサイト良くする助けとして、あなたのコンピュータにCookieを置きます。"
-"あなたはいつでも %s を変更することができます。\n"
-"そうでなければ、あなたがOKしたものとみなして続行します。\n"
-"\n"
-"このメッセージをクリックすると再度表示されなくなります。"
+msgstr "このウェブサイト良くする助けとして、あなたのコンピュータにCookieを置きます。あなたはいつでも %s を変更することができます。\nそうでなければ、あなたがOKしたものとみなして続行します。\n\nこのメッセージをクリックすると再度表示されなくなります。"
 
 #: ../../templates/header.inc.php:311
 msgid "cookie settings"
@@ -5925,7 +5895,8 @@ msgid "Limit"
 msgstr "制限"
 
 #: ../../templates/list_header.inc.php:147
-#: ../../templates/show_random.inc.php:52 ../../templates/show_stats.inc.php:89
+#: ../../templates/show_random.inc.php:52
+#: ../../templates/show_stats.inc.php:89
 msgid "Item Count"
 msgstr "アイテム数"
 
@@ -6062,7 +6033,8 @@ msgstr "タイプ"
 #: ../../templates/show_tvshows.inc.php:56
 #: ../../templates/show_tvshows.inc.php:107
 #: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:95
-#: ../../templates/show_video.inc.php:77 ../../templates/show_videos.inc.php:61
+#: ../../templates/show_video.inc.php:77
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_videos.inc.php:119
 msgid "Action"
 msgstr "操作"
@@ -6172,11 +6144,9 @@ msgstr "カタログを追加"
 
 #: ../../templates/show_add_catalog.inc.php:26
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-"以下のフォームではローカルパス(例 /data/music)か別のAmpatcheのURL(例 http://"
-"theoherampache.com)のどちらかを入力してください"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "以下のフォームではローカルパス(例 /data/music)か別のAmpatcheのURL(例 http://theoherampache.com)のどちらかを入力してください"
 
 #: ../../templates/show_add_catalog.inc.php:36
 #: ../../templates/show_edit_catalog.inc.php:31
@@ -6538,25 +6508,29 @@ msgid "User Access Level"
 msgstr "ユーザアクセスレベル"
 
 #: ../../templates/show_album_group_disks.inc.php:44
-#: ../../templates/show_album.inc.php:49 ../../templates/show_artist.inc.php:38
+#: ../../templates/show_album.inc.php:49
+#: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_label.inc.php:33 ../../templates/show_song.inc.php:151
 msgid "Search on Google ..."
 msgstr "Googleで検索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:45
-#: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:39
+#: ../../templates/show_album.inc.php:50
+#: ../../templates/show_artist.inc.php:39
 #: ../../templates/show_label.inc.php:34 ../../templates/show_song.inc.php:152
 msgid "Search on DuckDuckGo ..."
 msgstr "DuckDuckGoで検索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
-#: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:40
+#: ../../templates/show_album.inc.php:51
+#: ../../templates/show_artist.inc.php:40
 #: ../../templates/show_label.inc.php:35
 msgid "Search on Wikipedia ..."
 msgstr "Wikipediaで検索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
-#: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:41
+#: ../../templates/show_album.inc.php:52
+#: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:153
 msgid "Search on Last.fm ..."
 msgstr "Last.fmで検索 ..."
@@ -6565,11 +6539,10 @@ msgstr "Last.fmで検索 ..."
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_album.inc.php:54 ../../templates/show_album.inc.php:56
 #: ../../templates/show_artist.inc.php:43
-#: ../../templates/show_artist.inc.php:45 ../../templates/show_song.inc.php:155
-#: ../../templates/show_song.inc.php:157
-#, fuzzy
+#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_song.inc.php:155 ../../templates/show_song.inc.php:157
 msgid "Search on Musicbrainz ..."
-msgstr "MusicBrainzで見る"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:77
 #: ../../templates/show_album.inc.php:108
@@ -6660,20 +6633,22 @@ msgid "Album Edit"
 msgstr ""
 
 #. HINT: Average rating. e.g. (average 3.7)
-#: ../../templates/show_album.inc.php:72 ../../templates/show_artist.inc.php:68
-#: ../../templates/show_song.inc.php:45
+#: ../../templates/show_album.inc.php:72
+#: ../../templates/show_artist.inc.php:68 ../../templates/show_song.inc.php:45
 msgid "average"
 msgstr ""
 
 #. HINT: Number of times an object has been played
-#: ../../templates/show_album.inc.php:91 ../../templates/show_artist.inc.php:86
+#: ../../templates/show_album.inc.php:91
+#: ../../templates/show_artist.inc.php:86
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
 msgstr[0] ""
 
 #: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:97 ../../templates/show_song.inc.php:206
+#: ../../templates/show_artist.inc.php:97
+#: ../../templates/show_song.inc.php:206
 msgid "Uploaded by"
 msgstr "アップロード"
 
@@ -6742,7 +6717,8 @@ msgstr "アート"
 #: ../../templates/show_tvshow_seasons.inc.php:92
 #: ../../templates/show_tvshows.inc.php:46
 #: ../../templates/show_tvshows.inc.php:98
-#: ../../templates/show_video.inc.php:57 ../../templates/show_videos.inc.php:52
+#: ../../templates/show_video.inc.php:57
+#: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:110
 msgid "Rating"
 msgstr "評価"
@@ -6769,7 +6745,8 @@ msgstr "評価"
 #: ../../templates/show_tvshow_seasons.inc.php:96
 #: ../../templates/show_tvshows.inc.php:51
 #: ../../templates/show_tvshows.inc.php:102
-#: ../../templates/show_video.inc.php:67 ../../templates/show_videos.inc.php:56
+#: ../../templates/show_video.inc.php:67
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_videos.inc.php:114
 msgid "Fav."
 msgstr "お気に入り"
@@ -6952,9 +6929,8 @@ msgid "Clean"
 msgstr "クリーン"
 
 #: ../../templates/show_catalog_row.inc.php:51
-#, fuzzy
 msgid "Update File Tags"
-msgstr "タグから更新"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:57
 msgid "Go"
@@ -7148,7 +7124,8 @@ msgstr "PHP設定"
 msgid "Setting"
 msgstr "設定"
 
-#: ../../templates/show_debug.inc.php:79 ../../templates/show_debug.inc.php:132
+#: ../../templates/show_debug.inc.php:79
+#: ../../templates/show_debug.inc.php:132
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:91
 #: ../../templates/show_user_preferences.inc.php:37
@@ -7266,12 +7243,13 @@ msgstr ""
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function"
+"You have been redirected to this page because you do not have access to this"
+" function"
 msgstr ""
 
 #: ../../templates/show_denied.inc.php:59
-msgid "If you believe this is an error please contact an Ampache administrator"
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
 msgstr ""
 
 #: ../../templates/show_denied.inc.php:60
@@ -7282,9 +7260,7 @@ msgstr ""
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr ""
-"あなたはデモで無効になっている機能にアクセスしようとしたためこのページにリダ"
-"イレクトされています"
+msgstr "あなたはデモで無効になっている機能にアクセスしようとしたためこのページにリダイレクトされています"
 
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:60
@@ -7319,7 +7295,8 @@ msgstr "重複している曲"
 #: ../../templates/show_duplicates.inc.php:30
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_podcast_episode.inc.php:113
-#: ../../templates/show_random.inc.php:68 ../../templates/show_song.inc.php:159
+#: ../../templates/show_random.inc.php:68
+#: ../../templates/show_song.inc.php:159
 #: ../../templates/show_video.inc.php:126
 msgid "Length"
 msgstr "長さ"
@@ -7529,14 +7506,12 @@ msgid "Searched"
 msgstr "検索済み"
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Cover Art Search"
-msgstr "アートの検索"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Artist Art Search"
-msgstr "アートの検索を開始しています"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:58
 msgid "Direct URL to Image"
@@ -7737,9 +7712,7 @@ msgstr "ステップ3 - 初期アカウントのセットアップ"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
-"このステップはAmpacheの管理者アカウントを初期化します。一旦管理者アカウントが"
-"作成されるとログインページに飛びます。"
+msgstr "このステップはAmpacheの管理者アカウントを初期化します。一旦管理者アカウントが作成されるとログインページに飛びます。"
 
 #: ../../templates/show_install_account.inc.php:46
 msgid "Create Admin Account"
@@ -7758,9 +7731,7 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
-"このページはAmpacheデータベースとampache.cfg.phpファイルの生成のインストール"
-"を扱います。続ける前に以下の事前準備をお願いします。"
+msgstr "このページはAmpacheデータベースとampache.cfg.phpファイルの生成のインストールを扱います。続ける前に以下の事前準備をお願いします。"
 
 #: ../../templates/show_install_check.inc.php:34
 msgid ""
@@ -7777,11 +7748,9 @@ msgstr ""
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
-msgstr ""
-"上記の要件を確認したら以下の情報を記入してください。必要なコンフィグの値を求"
-"めるだけです。後々Ampacheへの変更を加えたい場合、単に%sを編集するだけです。"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
+msgstr "上記の要件を確認したら以下の情報を記入してください。必要なコンフィグの値を求めるだけです。後々Ampacheへの変更を加えたい場合、単に%sを編集するだけです。"
 
 #: ../../templates/show_install_check.inc.php:43
 #: ../../templates/show_test.inc.php:58
@@ -7820,8 +7789,8 @@ msgstr ""
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
 msgstr ""
@@ -7864,8 +7833,8 @@ msgstr "最小"
 
 #: ../../templates/show_install_config.inc.php:119
 msgid ""
-"Only essential features are enabled to simply stream your music from the Web "
-"Interface."
+"Only essential features are enabled to simply stream your music from the Web"
+" Interface."
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:124
@@ -7886,8 +7855,8 @@ msgid ""
 "Transcoding allows you to convert music from one encoding to another. "
 "Ampache supports on the fly transcoding of any file type based on user, "
 "player, IP address or available bandwidth. In order to transcode, Ampache "
-"takes advantage of existing binary applications such as ffmpeg. In order for "
-"transcoding to work you must first install the supporting applications and "
+"takes advantage of existing binary applications such as ffmpeg. In order for"
+" transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
 msgstr ""
 
@@ -8238,9 +8207,8 @@ msgid "Gather All Art"
 msgstr "全アートを収集"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
-#, fuzzy
 msgid "Update All File Tags"
-msgstr "全て更新"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 msgid "Show Disabled Songs"
@@ -8391,9 +8359,8 @@ msgstr "並び替え"
 
 #: ../../templates/show_playlist_medias.inc.php:29
 #: ../../templates/show_playlist_medias.inc.php:105
-#, fuzzy
 msgid "Duration"
-msgstr "情報"
+msgstr ""
 
 #: ../../templates/show_playlist_row.inc.php:89
 msgid "Playlist Edit"
@@ -8435,7 +8402,8 @@ msgid "Upgrade"
 msgstr "アップグレード"
 
 #: ../../templates/show_podcast_episode.inc.php:83
-#: ../../templates/show_song.inc.php:108 ../../templates/show_video.inc.php:103
+#: ../../templates/show_song.inc.php:108
+#: ../../templates/show_video.inc.php:103
 msgid "Link"
 msgstr "リンク"
 
@@ -8807,7 +8775,8 @@ msgstr "リプレイゲイン トラックゲイン"
 msgid "ReplayGain Album Gain"
 msgstr "リプレイゲイン トラックゲイン"
 
-#: ../../templates/show_song.inc.php:184 ../../templates/show_video.inc.php:142
+#: ../../templates/show_song.inc.php:184
+#: ../../templates/show_video.inc.php:142
 msgid "Last Updated"
 msgstr "最終更新"
 
@@ -8819,7 +8788,8 @@ msgstr "ライセンス"
 msgid "Song Information"
 msgstr "曲情報"
 
-#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:101
+#: ../../templates/show_songs.inc.php:40
+#: ../../templates/show_songs.inc.php:101
 msgid "License"
 msgstr "ライセンス"
 
@@ -8887,9 +8857,7 @@ msgstr "PHP バージョン"
 msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
-msgstr ""
-"Ampacheが必要とする最低限のバージョンのPHPを実行しているかどうかテストしま"
-"す。"
+msgstr "Ampacheが必要とする最低限のバージョンのPHPを実行しているかどうかテストします。"
 
 #: ../../templates/show_test_table.inc.php:28
 msgid "Dependencies"
@@ -8902,8 +8870,8 @@ msgstr "Ampacheの依存関係がインストールされているかテスト�
 #: ../../templates/show_test_table.inc.php:34
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
-"mv composer.phar /usr/local/bin/composer). Then run `composer install --"
-"prefer-source --no-interaction` on the Ampache directory."
+"mv composer.phar /usr/local/bin/composer). Then run `composer install "
+"--prefer-source --no-interaction` on the Ampache directory."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:40
@@ -8914,8 +8882,7 @@ msgstr "PHP hash 拡張モジュール"
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"hash 拡張が有効であるかテストします。この拡張モジュールはAmpacheに必須です。"
+msgstr "hash 拡張が有効であるかテストします。この拡張モジュールはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:45
 msgid "SHA256"
@@ -8925,9 +8892,7 @@ msgstr "SHA256"
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
-msgstr ""
-"hash 拡張がSHA256をサポートしているかテストします。このアルゴリズムはAmpache"
-"に必須です。"
+msgstr "hash 拡張がSHA256をサポートしているかテストします。このアルゴリズムはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:50
 msgid "PHP PDO extension"
@@ -8937,9 +8902,7 @@ msgstr "PHP PDO 拡張モジュール"
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"PDO拡張モジュールが有効になっているかテストします。この拡張モジュールは"
-"Ampacheに必須です。"
+msgstr "PDO拡張モジュールが有効になっているかテストします。この拡張モジュールはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:55
 msgid "MySQL"
@@ -8949,9 +8912,7 @@ msgstr "MySQL"
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
-msgstr ""
-"PDOのMySQLドライバが有効になっているかテストします。このドライバはAmpacheに必"
-"須です。"
+msgstr "PDOのMySQLドライバが有効になっているかテストします。このドライバはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:60
 msgid "PHP session extension"
@@ -8959,11 +8920,9 @@ msgstr "PHP session 拡張モジュール"
 
 #: ../../templates/show_test_table.inc.php:62
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
-msgstr ""
-"session 拡張モジュールが有効になっているかテストします。この拡張モジュールは"
-"Ampacheに必須です。"
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
+msgstr "session 拡張モジュールが有効になっているかテストします。この拡張モジュールはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:65
 msgid "PHP iconv extension"
@@ -8973,9 +8932,7 @@ msgstr "PHP iconv 拡張モジュール"
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"iconv 拡張モジュールが有効になっているかテストします。この拡張モジュールは"
-"Ampacheに必須です。"
+msgstr "iconv 拡張モジュールが有効になっているかテストします。この拡張モジュールはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:70
 msgid "PHP JSON extension"
@@ -8985,9 +8942,7 @@ msgstr "PHP JSON 拡張モジュール"
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"JSON 拡張モジュールが有効になっているかテストします。この拡張モジュールは"
-"Ampacheに必須です。"
+msgstr "JSON 拡張モジュールが有効になっているかテストします。この拡張モジュールはAmpacheに必須です。"
 
 #: ../../templates/show_test_table.inc.php:77
 msgid ""
@@ -9001,8 +8956,8 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:82
 msgid ""
-"This tests whether you have the cURL extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
+"This tests whether you have the cURL extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:85
@@ -9011,11 +8966,9 @@ msgstr "PHP zlib 拡張モジュール"
 
 #: ../../templates/show_test_table.inc.php:87
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
-msgstr ""
-"zlib 拡張モジュールが有効になっているかテストします。これは必須ではありません"
-"が、より良い使用感となる可能性があります(zipダウンロード)。"
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
+msgstr "zlib 拡張モジュールが有効になっているかテストします。これは必須ではありませんが、より良い使用感となる可能性があります(zipダウンロード)。"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid "PHP SimpleXML extension"
@@ -9035,9 +8988,7 @@ msgstr "PHP GD 拡張モジュール"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr ""
-"GD 拡張モジュールが有効になっているかテストします。これは必須ではありません"
-"が、より良い使用感となる可能性があります。"
+msgstr "GD 拡張モジュールが有効になっているかテストします。これは必須ではありませんが、より良い使用感となる可能性があります。"
 
 #: ../../templates/show_test_table.inc.php:100
 msgid "PHP memory limit override"
@@ -9047,9 +8998,7 @@ msgstr "PHP safe mode の上書き"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"Ampacheがメモリ上限を上書きできるかテストします。これは必須ではありませんが、"
-"より良い使用感となる可能性があります。"
+msgstr "Ampacheがメモリ上限を上書きできるかテストします。これは必須ではありませんが、より良い使用感となる可能性があります。"
 
 #: ../../templates/show_test_table.inc.php:105
 msgid "PHP execution time override"
@@ -9057,11 +9006,9 @@ msgstr "PHP execution time の上書き"
 
 #: ../../templates/show_test_table.inc.php:107
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
-msgstr ""
-"Ampacheが最大実行時間の制限を上書きできるかテストします。これは必須ではありま"
-"せんが、より良い使用感となる可能性があります。"
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
+msgstr "Ampacheが最大実行時間の制限を上書きできるかテストします。これは必須ではありませんが、より良い使用感となる可能性があります。"
 
 #: ../../templates/show_test_table.inc.php:110
 msgid "PHP max upload size"
@@ -9071,9 +9018,7 @@ msgstr "PHP max upload size"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"Ampacheがメディアファイル (>= 20M)をアップロードできるかテストします。これは"
-"必須ではありませんが、より良い使用感となる可能性があります。"
+msgstr "Ampacheがメディアファイル (>= 20M)をアップロードできるかテストします。これは必須ではありませんが、より良い使用感となる可能性があります。"
 
 #: ../../templates/show_test_table.inc.php:115
 msgid "PHP integer size"
@@ -9106,14 +9051,14 @@ msgstr "コンフィグファイルが読み込み可能"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid ""
-"This test attempts to read config/ampache.cfg.php. If this fails the file is "
-"either not in the correct location, or not readable."
+"This test attempts to read config/ampache.cfg.php. If this fails the file is"
+" either not in the correct location, or not readable."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:131
 msgid ""
-"If you are installing Ampache for the first time you can ignore this warning "
-"and proceed to the installer."
+"If you are installing Ampache for the first time you can ignore this warning"
+" and proceed to the installer."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:136
@@ -9134,8 +9079,7 @@ msgstr "データベースの接続"
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
-msgstr ""
-"コンフィグファイルから読み込んだ値を使用してデータベースへの接続を試みます。"
+msgstr "コンフィグファイルから読み込んだ値を使用してデータベースへの接続を試みます。"
 
 #: ../../templates/show_test_table.inc.php:153
 msgid "Database tables"
@@ -9152,10 +9096,7 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr ""
-"このテストはweb_path変数が正しく設定されていてインデックスページを取得するこ"
-"とが出来ることを確実にします。ここでチェックマークが見れない場合、web_pathが"
-"正しく設定されていないかもしれません。"
+msgstr "このテストはweb_path変数が正しく設定されていてインデックスページを取得することが出来ることを確実にします。ここでチェックマークが見れない場合、web_pathが正しく設定されていないかもしれません。"
 
 #: ../../templates/show_tvshow.inc.php:74
 #: ../../templates/show_tvshow.inc.php:77
@@ -9467,9 +9408,8 @@ msgid "Help"
 msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:74
-#, fuzzy
 msgid "Ampache Wiki"
-msgstr "Ampache"
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:75
 msgid "API Documentation"
@@ -9505,7 +9445,8 @@ msgstr ""
 msgid "Couldn't delete this TV Show"
 msgstr ""
 
-#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version
+#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows
+#. current database version
 #: ../../update.php:82
 #, php-format
 msgid ""
@@ -9554,8 +9495,8 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 11.10.2020 14:56:45 CEST
-#
+# Last Update: 28.12.2020 20:06:12 CET
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "ダウンロードの許可"
@@ -9685,7 +9626,8 @@ msgid "Share Recently Played information"
 msgstr ""
 
 #: Database preference table id 92
-msgid "Share Recently Played information - Allow access to streaming date/time"
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
 msgstr ""
 
 #: Database preference table id 93
@@ -9927,9 +9869,7 @@ msgstr "カスタムブランクビデオのデフォルトイメージ"
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-"アルファベッド順閲覧は次のライブラリアイテムをデフォルトにする (album,"
-"artist,...)"
+msgstr "アルファベッド順閲覧は次のライブラリアイテムをデフォルトにする (album,artist,...)"
 
 #: Database preference table id 171
 msgid "Show # skipped"
@@ -9952,9 +9892,8 @@ msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr ""
 
 #: Database preference table id 176
-#, fuzzy
 msgid "Custom URL - Login page background"
-msgstr "URL - Logo"
+msgstr ""
 
 #: Database preference subcategory table id 1
 msgid "feature"
