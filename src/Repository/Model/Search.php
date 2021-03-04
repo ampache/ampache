@@ -1193,7 +1193,7 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
-            $this->random = ((int)$data['random'] > 0) ? 1 : 0;
+            $this->random = ((int)$data['random'] > 0 || $this->random) ? 1 : 0;
             $this->limit  = $data['limit'];
         }
 
