@@ -20,16 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -55,12 +54,18 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $episode = $this->modelFactory->createPodcastEpisode((int) $_REQUEST['podcast_episode']);
+        $episode = $this->modelFactory->createPodcastEpisode(
+            (int) ($request->getQueryParams()['podcast_episode'] ?? 0)
+        );
         $episode->format();
-        require_once Ui::find_template('show_podcast_episode.inc.php');
 
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_podcast_episode.inc.php',
+            [
+                'episode' => $episode
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

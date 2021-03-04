@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PodcastEpisode;
 
@@ -54,21 +54,20 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
+        $episodeId = (int) ($request->getQueryParams()['podcast_episode_id'] ?? 0);
 
-        $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Podcast Episode will be deleted'),
             sprintf(
-                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%s',
+                '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d',
                 $this->configContainer->getWebPath(),
-                $episode_id
+                $episodeId
             ),
             1,
             'delete_podcast_episode'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

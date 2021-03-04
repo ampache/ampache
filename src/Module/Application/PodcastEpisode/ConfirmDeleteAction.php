@@ -20,19 +20,19 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -49,16 +49,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->modelFactory         = $modelFactory;
+        $this->logger               = $logger;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,10 +71,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode = $this->modelFactory->createPodcastEpisode((int) $_REQUEST['podcast_episode_id']);
-        if (!Catalog::can_remove($episode)) {
+        $episodeId = (int) ($request->getQueryParams()['podcast_episode_id'] ?? 0);
+
+        $episode = $this->modelFactory->createPodcastEpisode($episodeId);
+
+        if ($this->mediaDeletionChecker->mayDelete($episode, $gatekeeper->getUserId()) === false) {
             $this->logger->warning(
-                sprintf('Unauthorized to remove the episode `%s`', $episode->id),
+                sprintf('Unauthorized to remove the episode `%s`', $episodeId),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             throw new AccessDeniedException();
