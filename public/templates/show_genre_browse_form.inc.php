@@ -13,7 +13,7 @@ $videoRepository = $dic->get(VideoRepositoryInterface::class);
     <tr id="browse_location">
         <td><?php if ($filter_str !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag&type=song"><?php echo T_('Songs'); ?></a><?php
-    } else {
+} else {
         echo T_('Songs');
     } ?></td>
         <td><?php if ($filter_str !== 'album') {
