@@ -31,7 +31,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     <li><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
     <li><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', T_('Smartlists')); ?><br /><?php echo T_('Smartlists') ?></a></li>
-    <li><a href="<?php echo $web_path ?>/browse.php?action=tag"><?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?><br /><?php echo $t_tagcloud ?></a></li>
+    <li><a href="<?php echo $web_path ?>/browse.php?action=tag&type=song"><?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?><br /><?php echo $t_tagcloud ?></a></li>
     <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', T_('Radio Stations')); ?><br /><?php echo T_('Radio') ?></a></li>
     <?php
