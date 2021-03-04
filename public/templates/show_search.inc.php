@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -29,7 +28,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-/** @var Playlist $playlist */
+/** @var Search $playlist */
 
 ?>
 <?php

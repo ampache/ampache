@@ -20,17 +20,16 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Search;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -53,11 +52,13 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $playlist = $this->modelFactory->createSearch(
-            (int) $request->getParsedBody()['playlist_id'] ?? 0
+            (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 
         if ($playlist->has_access()) {
-            $playlist->parse_rules(Search::clean_request($_REQUEST));
+            $playlist->parse_rules(
+                Search::clean_request($request->getParsedBody())
+            );
             $playlist->update();
             $playlist->format();
         } else {
@@ -65,10 +66,13 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $object_ids = $playlist->get_items();
-        require_once Ui::find_template('show_search.inc.php');
-
+        $this->ui->show(
+            'show_search.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $playlist->get_items()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
