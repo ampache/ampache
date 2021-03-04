@@ -1,9 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # BoneAsh <yjun0311@126.com>, 2016
+# Ernest Wagner <wagnered@comcast.net>, 2021
 # fjmax <fengjiongmax@gmail.com>, 2016
 # Sida Suo, 2020
 # BFDZ <yy194121@outlook.com>, 2018
@@ -12,14 +13,13 @@ msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2020-12-28 20:06+0100\n"
-"PO-Revision-Date: 2020-10-12 02:17+0000\n"
-"Last-Translator: Transifex Bot <>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2021-02-21 01:05+0000\n"
+"Last-Translator: Ernest Wagner <wagnered@comcast.net>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/ampache/ampache/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:44 ../../admin/access.php:80
@@ -49,11 +49,11 @@ msgstr ""
 #: ../../share.php:130 ../../song.php:57 ../../tvshow_seasons.php:57
 #: ../../tvshows.php:57 ../../video.php:57
 msgid "No Problem"
-msgstr ""
+msgstr "没问题"
 
 #: ../../admin/access.php:44
 msgid "Your Access List entry has been removed"
-msgstr ""
+msgstr "您的访问列表条目已被删除"
 
 #: ../../admin/access.php:51 ../../admin/catalog.php:115
 #: ../../admin/catalog.php:246 ../../admin/modules.php:79
@@ -71,7 +71,7 @@ msgstr "你确定吗？"
 #: ../../admin/access.php:53
 #, php-format
 msgid "This will permanently delete the ACL \"%s\""
-msgstr ""
+msgstr "这将永久删除ACL %s"
 
 #: ../../admin/access.php:80
 msgid "Your new Access Control List(s) have been created"
@@ -79,17 +79,17 @@ msgstr "新的(多个)访问控制列表已创建"
 
 #: ../../admin/access.php:95
 msgid "Your Access Control List has been updated"
-msgstr ""
+msgstr "您的访问控制列表已更新"
 
 #: ../../admin/catalog.php:57 ../../admin/catalog.php:64
 #: ../../admin/catalog.php:68 ../../admin/catalog.php:76
 #: ../../admin/catalog.php:85
 msgid "Catalog update process has started"
-msgstr ""
+msgstr "目录更新过程已开始"
 
 #: ../../admin/catalog.php:108
 msgid "The Catalog has been deleted"
-msgstr ""
+msgstr "目录已被删除"
 
 #: ../../admin/catalog.php:110 ../../admin/mail.php:70
 #: ../../admin/modules.php:130 ../../admin/users.php:118
@@ -101,7 +101,7 @@ msgstr ""
 #: ../../preferences.php:177 ../../song.php:59 ../../tvshow_seasons.php:59
 #: ../../tvshows.php:59 ../../video.php:59
 msgid "There Was a Problem"
-msgstr ""
+msgstr "有问题"
 
 #: ../../admin/catalog.php:110
 msgid "There was an error deleting this Catalog"
@@ -109,7 +109,7 @@ msgstr "在删除此目录时发生一个错误"
 
 #: ../../admin/catalog.php:115
 msgid "This will permanently delete your Catalog"
-msgstr ""
+msgstr "这将永久删除您的目录"
 
 #: ../../admin/catalog.php:128
 msgid "Song has been enabled"
@@ -164,21 +164,19 @@ msgstr "未找到禁用歌曲"
 #: ../../admin/catalog.php:248
 #, php-format
 msgid "This will permanently delete the catalog \"%s\""
-msgstr ""
+msgstr "这将永久删除目录 %s"
 
 #: ../../admin/catalog.php:257
 msgid "The Catalog art search has started"
-msgstr ""
+msgstr "目录艺术搜索已开始"
 
 #: ../../admin/catalog.php:261
-#, fuzzy
 msgid "The catalog write file tags has started"
-msgstr "目录清理已开始"
+msgstr "目录写文件标签已启动"
 
 #: ../../admin/catalog.php:265
-#, fuzzy
 msgid "The Catalog write file tags has started"
-msgstr "目录清理已开始"
+msgstr "目录写文件标签已启动"
 
 #: ../../admin/license.php:42
 msgid "The License has been updated"
@@ -298,7 +296,8 @@ msgstr "密码不符"
 msgid "You entered an invalid e-mail address"
 msgstr "输入了无效的邮件地址"
 
-#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000)
+#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions
+#. (2000x3000)
 #: ../../admin/users.php:120
 #, php-format
 msgid ""
@@ -315,7 +314,8 @@ msgid "The new User was not created"
 msgstr "未能创建新用户"
 
 #: ../../admin/users.php:181 ../../lib/class/shoutbox.class.php:354
-#: ../../lib/class/user.class.php:1227 ../../templates/show_add_user.inc.php:65
+#: ../../lib/class/user.class.php:1227
+#: ../../templates/show_add_user.inc.php:65
 #: ../../templates/show_edit_user.inc.php:83
 #: ../../templates/show_preference_admin.inc.php:42
 #: ../../templates/show_preference_box.inc.php:74
@@ -595,8 +595,8 @@ msgstr "用法："
 
 #: ../../bin/catalog_update.inc:227
 msgid ""
-"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-"
-"u|-i|-o]"
+"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] "
+"[-h|-m|-c|-v|-a|-g|-u|-i|-o]"
 msgstr ""
 
 #: ../../bin/catalog_update.inc:229
@@ -655,9 +655,7 @@ msgstr "优化数据库表单"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
-"使用此功能需要您自行承担奉献！你的系统可能会崩溃或者因为大量内存消耗导致系统"
-"无响应。"
+msgstr "使用此功能需要您自行承担奉献！你的系统可能会崩溃或者因为大量内存消耗导致系统无响应。"
 
 #: ../../bin/catalog_update.inc:244
 msgid ""
@@ -668,8 +666,8 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:245
 msgid ""
-"The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-"
-"a|-g] is used"
+"The switches [-m|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used"
 msgstr ""
 
 #: ../../bin/channel_run.inc:48
@@ -1048,11 +1046,13 @@ msgstr "配置文件创建失败"
 msgid "Options"
 msgstr "选项"
 
-#: ../../bin/install/install_db.inc:116 ../../templates/show_install.inc.php:67
+#: ../../bin/install/install_db.inc:116
+#: ../../templates/show_install.inc.php:67
 msgid "MySQL Administrative Username"
 msgstr "MySQL 管理员用户名"
 
-#: ../../bin/install/install_db.inc:118 ../../templates/show_install.inc.php:73
+#: ../../bin/install/install_db.inc:118
+#: ../../templates/show_install.inc.php:73
 msgid "MySQL Administrative Password"
 msgstr "MySQL 管理员密码"
 
@@ -1437,7 +1437,8 @@ msgstr ""
 msgid "All"
 msgstr "全部"
 
-#: ../../lib/class/access.class.php:471 ../../templates/list_header.inc.php:125
+#: ../../lib/class/access.class.php:471
+#: ../../templates/list_header.inc.php:125
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:39
 #: ../../templates/show_graphs.inc.php:79
@@ -1503,7 +1504,8 @@ msgstr "磁盘"
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_browse_form.inc.php:38
 #: ../../templates/show_browse_form.inc.php:40
-#: ../../templates/show_label.inc.php:96 ../../templates/show_labels.inc.php:45
+#: ../../templates/show_label.inc.php:96
+#: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:75
 #: ../../templates/show_mashup_browse_form.inc.php:11
 #: ../../templates/show_random.inc.php:37
@@ -1639,7 +1641,8 @@ msgstr "在"
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/api.class.php:307
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:88
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:65
@@ -1674,15 +1677,15 @@ msgstr ""
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:87
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:124
 #: ../../lib/class/json_data.class.php:199
-#, fuzzy, php-format
+#, php-format
 msgid "Bad Request: %s"
-msgstr "无效的请求"
+msgstr ""
 
 #. HINT: Access level, eg 75, 100
 #: ../../lib/class/api.class.php:334
-#, fuzzy, php-format
+#, php-format
 msgid "Require: %s"
-msgstr "要求"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:82
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:71
@@ -1693,11 +1696,11 @@ msgstr "要求"
 #: ../../lib/class/ApiMethods/LocalplayMethod.php:73
 #: ../../lib/class/ApiMethods/VideoMethod.php:55
 #: ../../lib/class/ApiMethods/VideosMethod.php:57
-#, fuzzy
 msgid "Enable: video"
-msgstr "启用"
+msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/AlbumMethod.php:63
 #: ../../lib/class/ApiMethods/AlbumSongsMethod.php:64
 #: ../../lib/class/ApiMethods/ArtistAlbumsMethod.php:64
@@ -1752,7 +1755,8 @@ msgstr "启用"
 msgid "Not Found: %s"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:78
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:84
 #: ../../lib/class/ApiMethods/BookmarkDeleteMethod.php:72
@@ -1774,18 +1778,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/StatsMethod.php:80
 #: ../../lib/class/ApiMethods/SystemUpdateMethod.php:61
 #: ../../lib/class/ApiMethods/UrlToSongMethod.php:61
-#, fuzzy
 msgid "Bad Request"
-msgstr "无效的请求"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:96
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:132
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:76
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:86
 #: ../../lib/class/ApiMethods/ScrobbleMethod.php:100
-#, fuzzy
 msgid "Not Found"
-msgstr "找到"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:62
 msgid "Enable: delete_from_disk"
@@ -1817,9 +1819,8 @@ msgstr ""
 #: ../../lib/class/ApiMethods/PodcastEpisodesMethod.php:59
 #: ../../lib/class/ApiMethods/PodcastMethod.php:57
 #: ../../lib/class/ApiMethods/PodcastsMethod.php:58
-#, fuzzy
 msgid "Enable: podcast"
-msgstr "广播"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/HandshakeMethod.php:75
 msgid "Login failed, API version is too old"
@@ -1845,16 +1846,14 @@ msgstr "不正确的用户名或密码"
 #: ../../lib/class/ApiMethods/LabelArtistsMethod.php:58
 #: ../../lib/class/ApiMethods/LabelMethod.php:56
 #: ../../lib/class/ApiMethods/LabelsMethod.php:58
-#, fuzzy
 msgid "Enable: label"
-msgstr "启用"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/LicenseMethod.php:56
 #: ../../lib/class/ApiMethods/LicensesMethod.php:58
 #: ../../lib/class/ApiMethods/LicenseSongsMethod.php:57
-#, fuzzy
 msgid "Enable: licensing"
-msgstr "许可"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PlaylistAddSongMethod.php:65
 #: ../../lib/class/ApiMethods/PlaylistDeleteMethod.php:62
@@ -1867,9 +1866,8 @@ msgstr ""
 
 #: ../../lib/class/ApiMethods/PodcastEpisodeDeleteMethod.php:73
 #: ../../lib/class/ApiMethods/SongDeleteMethod.php:67
-#, fuzzy
 msgid "Require: 75"
-msgstr "要求"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/RateMethod.php:57
 msgid "Enable: ratings"
@@ -1880,18 +1878,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/ShareEditMethod.php:59
 #: ../../lib/class/ApiMethods/ShareMethod.php:55
 #: ../../lib/class/ApiMethods/SharesMethod.php:57
-#, fuzzy
 msgid "Enable: share"
-msgstr "启用"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/TagAlbumsMethod.php:49
 #: ../../lib/class/ApiMethods/TagArtistsMethod.php:49
 #: ../../lib/class/ApiMethods/TagMethod.php:49
 #: ../../lib/class/ApiMethods/TagsMethod.php:49
 #: ../../lib/class/ApiMethods/TagSongsMethod.php:49
-#, fuzzy
 msgid "Depreciated"
-msgstr "用户已激活"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1608
 msgid "Unable to open"
@@ -1958,7 +1954,8 @@ msgid "View changes"
 msgstr "查看变更"
 
 #: ../../lib/class/autoupdate.class.php:273
-#: ../../lib/class/autoupdate.class.php:276 ../../lib/class/share.class.php:255
+#: ../../lib/class/autoupdate.class.php:276
+#: ../../lib/class/share.class.php:255
 #: ../../templates/show_album_group_disks.inc.php:112
 #: ../../templates/show_album_group_disks.inc.php:113
 #: ../../templates/show_album_group_disks.inc.php:163
@@ -2094,7 +2091,8 @@ msgstr "未广播"
 #: ../../templates/show_artists.inc.php:111
 #: ../../templates/show_browse_form.inc.php:28
 #: ../../templates/show_browse_form.inc.php:30
-#: ../../templates/show_label.inc.php:97 ../../templates/show_label.inc.php:110
+#: ../../templates/show_label.inc.php:97
+#: ../../templates/show_label.inc.php:110
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_mashup_browse_form.inc.php:5
 #: ../../templates/show_random.inc.php:27
@@ -2195,7 +2193,8 @@ msgstr ""
 #: ../../templates/show_browse_form.inc.php:52
 #: ../../templates/show_browse_form.inc.php:54
 #: ../../templates/show_mashup_browse_form.inc.php:20
-#: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:137
+#: ../../templates/show_song.inc.php:170
+#: ../../templates/show_video.inc.php:137
 #: ../../templates/sidebar_home.inc.php:56
 msgid "Channels"
 msgstr "通道"
@@ -2349,7 +2348,8 @@ msgstr ""
 msgid "Song"
 msgstr "歌曲"
 
-#: ../../lib/class/catalog.class.php:1759 ../../lib/class/channel.class.php:243
+#: ../../lib/class/catalog.class.php:1759
+#: ../../lib/class/channel.class.php:243
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
@@ -2421,7 +2421,8 @@ msgstr "运行中"
 msgid "Stopped"
 msgstr "已停止"
 
-#: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:303
+#: ../../lib/class/democratic.class.php:153
+#: ../../lib/class/video.class.php:303
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
 msgstr "分"
@@ -2433,7 +2434,8 @@ msgstr "首要"
 #: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:535
 #: ../../templates/show_edit_song_row.inc.php:80
 #: ../../templates/show_labels.inc.php:43
-#: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:165
+#: ../../templates/show_labels.inc.php:73
+#: ../../templates/show_song.inc.php:165
 msgid "Label"
 msgstr "标签"
 
@@ -2466,7 +2468,8 @@ msgstr "已停止"
 
 #: ../../lib/class/localplay.class.php:657
 #: ../../lib/class/playlist.class.php:230
-#: ../../lib/class/playlist.class.php:231 ../../lib/class/podcast.class.php:346
+#: ../../lib/class/playlist.class.php:231
+#: ../../lib/class/podcast.class.php:346
 #: ../../lib/class/tvshow_episode.class.php:77
 #: ../../lib/class/user.class.php:1141 ../../lib/class/user.class.php:1229
 #: ../../lib/class/video.class.php:845
@@ -2531,7 +2534,8 @@ msgstr ""
 #: ../../templates/show_podcast_episodes.inc.php:87
 #: ../../templates/show_podcasts.inc.php:45
 #: ../../templates/show_podcasts.inc.php:94
-#: ../../templates/show_song.inc.php:141 ../../templates/show_video.inc.php:125
+#: ../../templates/show_song.inc.php:141
+#: ../../templates/show_video.inc.php:125
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:93
 msgid "Title"
@@ -2762,9 +2766,8 @@ msgstr "任何能搜索的文本"
 #: ../../templates/show_recently_played.inc.php:140
 #: ../../templates/show_song.inc.php:142 ../../templates/show_songs.inc.php:34
 #: ../../templates/show_songs.inc.php:96
-#, fuzzy
 msgid "Song Artist"
-msgstr "未知艺术家"
+msgstr ""
 
 #: ../../lib/class/search.class.php:492 ../../lib/class/search.class.php:672
 #: ../../templates/show_albums.inc.php:41
@@ -2845,7 +2848,8 @@ msgstr "# 已播放"
 
 #. HINT: Number of times object has been skipped
 #: ../../lib/class/search.class.php:511 ../../templates/show_song.inc.php:191
-#: ../../templates/show_songs.inc.php:47 ../../templates/show_songs.inc.php:108
+#: ../../templates/show_songs.inc.php:47
+#: ../../templates/show_songs.inc.php:108
 msgid "# Skipped"
 msgstr "#已跳过"
 
@@ -2963,7 +2967,8 @@ msgstr "歌词"
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:76
 #: ../../templates/show_import_playlist.inc.php:27
-#: ../../templates/show_song.inc.php:181 ../../templates/show_video.inc.php:139
+#: ../../templates/show_song.inc.php:181
+#: ../../templates/show_video.inc.php:139
 msgid "Filename"
 msgstr "文件名"
 
@@ -3235,7 +3240,8 @@ msgstr "密码不符"
 msgid "Invalid"
 msgstr "无效"
 
-#: ../../lib/class/user.class.php:1168 ../../templates/show_tagcloud.inc.php:83
+#: ../../lib/class/user.class.php:1168
+#: ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr "数据不足"
 
@@ -3995,7 +4001,8 @@ msgstr "未知艺术家"
 msgid "Accept"
 msgstr "接受"
 
-#: ../../lib/class/wanted.class.php:426 ../../lib/javascript/search-data.php:56
+#: ../../lib/class/wanted.class.php:426
+#: ../../lib/javascript/search-data.php:56
 msgid "Remove"
 msgstr "移除"
 
@@ -4061,17 +4068,13 @@ msgstr "无法创建数据库：%s"
 #. HINT: %1 user, %2 database, %3 host, %4 error message
 #: ../../lib/install.lib.php:257
 #, php-format
-msgid ""
-"Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": %4$s"
 msgstr ""
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
 #: ../../lib/install.lib.php:271
 #, php-format
-msgid ""
-"Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
 msgstr ""
 
 #: ../../lib/install.lib.php:333
@@ -4640,8 +4643,8 @@ msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name (e."
-"g. 'Music')."
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
 msgstr ""
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:79
@@ -5173,21 +5176,20 @@ msgid "Personal favorites on the homepage"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:63
-#, fuzzy
 msgid "Favorite Playlists"
-msgstr "智能播放列表"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:64
-#, fuzzy
 msgid "Favorite Smartlists"
-msgstr "最喜爱"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:112
 msgid "Favorite Lists"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:129
-#: ../../templates/header.inc.php:346 ../../templates/show_album_row.inc.php:29
+#: ../../templates/header.inc.php:346
+#: ../../templates/show_album_row.inc.php:29
 #: ../../templates/show_artist_row.inc.php:29
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_podcast_episode.inc.php:54
@@ -5678,8 +5680,9 @@ msgstr "Ampache 对于 cookies 的使用"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the site"
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
 msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:5
@@ -5740,8 +5743,8 @@ msgstr ""
 
 #: ../../templates/error_page.inc.php:52
 msgid ""
-"The following error has occurred, you will be automatically redirected in 10 "
-"seconds."
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
 msgstr ""
 
 #: ../../templates/error_page.inc.php:54
@@ -5779,17 +5782,11 @@ msgstr "取消"
 #: ../../templates/header.inc.php:310
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr ""
-"我们已将 cookies 保存至您的电脑中以使得这个站点能更好。您也可以在任何时间改变"
-"您的 %s 。\n"
-"那么，我们假定您已准备就绪。\n"
-"\n"
-"不再显示此信息。"
+msgstr "我们已将 cookies 保存至您的电脑中以使得这个站点能更好。您也可以在任何时间改变您的 %s 。\n那么，我们假定您已准备就绪。\n\n不再显示此信息。"
 
 #: ../../templates/header.inc.php:311
 msgid "cookie settings"
@@ -5899,7 +5896,8 @@ msgid "Limit"
 msgstr "限制"
 
 #: ../../templates/list_header.inc.php:147
-#: ../../templates/show_random.inc.php:52 ../../templates/show_stats.inc.php:89
+#: ../../templates/show_random.inc.php:52
+#: ../../templates/show_stats.inc.php:89
 msgid "Item Count"
 msgstr "项目计数"
 
@@ -6036,7 +6034,8 @@ msgstr "类型"
 #: ../../templates/show_tvshows.inc.php:56
 #: ../../templates/show_tvshows.inc.php:107
 #: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:95
-#: ../../templates/show_video.inc.php:77 ../../templates/show_videos.inc.php:61
+#: ../../templates/show_video.inc.php:77
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_videos.inc.php:119
 msgid "Action"
 msgstr "动作"
@@ -6146,11 +6145,9 @@ msgstr "添加目录"
 
 #: ../../templates/show_add_catalog.inc.php:26
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-"在下面的表单中输入一个本地路径 ( 如：/data/music ) 或一个 URL 来控制 Ampache "
-"的安装程序 ( 如： http://theotherampache.com )"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "在下面的表单中输入一个本地路径 ( 如：/data/music ) 或一个 URL 来控制 Ampache 的安装程序 ( 如： http://theotherampache.com )"
 
 #: ../../templates/show_add_catalog.inc.php:36
 #: ../../templates/show_edit_catalog.inc.php:31
@@ -6512,25 +6509,29 @@ msgid "User Access Level"
 msgstr "用户访问层级"
 
 #: ../../templates/show_album_group_disks.inc.php:44
-#: ../../templates/show_album.inc.php:49 ../../templates/show_artist.inc.php:38
+#: ../../templates/show_album.inc.php:49
+#: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_label.inc.php:33 ../../templates/show_song.inc.php:151
 msgid "Search on Google ..."
 msgstr "在 Google 上搜索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:45
-#: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:39
+#: ../../templates/show_album.inc.php:50
+#: ../../templates/show_artist.inc.php:39
 #: ../../templates/show_label.inc.php:34 ../../templates/show_song.inc.php:152
 msgid "Search on DuckDuckGo ..."
 msgstr "正在搜索 DuckDuckGo..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
-#: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:40
+#: ../../templates/show_album.inc.php:51
+#: ../../templates/show_artist.inc.php:40
 #: ../../templates/show_label.inc.php:35
 msgid "Search on Wikipedia ..."
 msgstr "在 Wikipedia 上搜索 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
-#: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:41
+#: ../../templates/show_album.inc.php:52
+#: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:153
 msgid "Search on Last.fm ..."
 msgstr "在 Last.fm 上搜索 ..."
@@ -6539,11 +6540,10 @@ msgstr "在 Last.fm 上搜索 ..."
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_album.inc.php:54 ../../templates/show_album.inc.php:56
 #: ../../templates/show_artist.inc.php:43
-#: ../../templates/show_artist.inc.php:45 ../../templates/show_song.inc.php:155
-#: ../../templates/show_song.inc.php:157
-#, fuzzy
+#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_song.inc.php:155 ../../templates/show_song.inc.php:157
 msgid "Search on Musicbrainz ..."
-msgstr "查看 MusicBrainz"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:77
 #: ../../templates/show_album.inc.php:108
@@ -6634,20 +6634,22 @@ msgid "Album Edit"
 msgstr ""
 
 #. HINT: Average rating. e.g. (average 3.7)
-#: ../../templates/show_album.inc.php:72 ../../templates/show_artist.inc.php:68
-#: ../../templates/show_song.inc.php:45
+#: ../../templates/show_album.inc.php:72
+#: ../../templates/show_artist.inc.php:68 ../../templates/show_song.inc.php:45
 msgid "average"
 msgstr ""
 
 #. HINT: Number of times an object has been played
-#: ../../templates/show_album.inc.php:91 ../../templates/show_artist.inc.php:86
+#: ../../templates/show_album.inc.php:91
+#: ../../templates/show_artist.inc.php:86
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
 msgstr[0] ""
 
 #: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:97 ../../templates/show_song.inc.php:206
+#: ../../templates/show_artist.inc.php:97
+#: ../../templates/show_song.inc.php:206
 msgid "Uploaded by"
 msgstr "上传自"
 
@@ -6716,7 +6718,8 @@ msgstr "封面"
 #: ../../templates/show_tvshow_seasons.inc.php:92
 #: ../../templates/show_tvshows.inc.php:46
 #: ../../templates/show_tvshows.inc.php:98
-#: ../../templates/show_video.inc.php:57 ../../templates/show_videos.inc.php:52
+#: ../../templates/show_video.inc.php:57
+#: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:110
 msgid "Rating"
 msgstr "评级"
@@ -6743,7 +6746,8 @@ msgstr "评级"
 #: ../../templates/show_tvshow_seasons.inc.php:96
 #: ../../templates/show_tvshows.inc.php:51
 #: ../../templates/show_tvshows.inc.php:102
-#: ../../templates/show_video.inc.php:67 ../../templates/show_videos.inc.php:56
+#: ../../templates/show_video.inc.php:67
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_videos.inc.php:114
 msgid "Fav."
 msgstr "最爱。"
@@ -6926,9 +6930,8 @@ msgid "Clean"
 msgstr "清理"
 
 #: ../../templates/show_catalog_row.inc.php:51
-#, fuzzy
 msgid "Update File Tags"
-msgstr "根据标签更新"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:57
 msgid "Go"
@@ -7122,7 +7125,8 @@ msgstr "PHP 设置"
 msgid "Setting"
 msgstr "设置"
 
-#: ../../templates/show_debug.inc.php:79 ../../templates/show_debug.inc.php:132
+#: ../../templates/show_debug.inc.php:79
+#: ../../templates/show_debug.inc.php:132
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:91
 #: ../../templates/show_user_preferences.inc.php:37
@@ -7240,12 +7244,13 @@ msgstr ""
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function"
+"You have been redirected to this page because you do not have access to this"
+" function"
 msgstr ""
 
 #: ../../templates/show_denied.inc.php:59
-msgid "If you believe this is an error please contact an Ampache administrator"
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
 msgstr ""
 
 #: ../../templates/show_denied.inc.php:60
@@ -7291,7 +7296,8 @@ msgstr "复制歌曲"
 #: ../../templates/show_duplicates.inc.php:30
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_podcast_episode.inc.php:113
-#: ../../templates/show_random.inc.php:68 ../../templates/show_song.inc.php:159
+#: ../../templates/show_random.inc.php:68
+#: ../../templates/show_song.inc.php:159
 #: ../../templates/show_video.inc.php:126
 msgid "Length"
 msgstr "长度"
@@ -7501,14 +7507,12 @@ msgid "Searched"
 msgstr "搜索完毕"
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Cover Art Search"
-msgstr "封面搜索"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Artist Art Search"
-msgstr "正在开始搜索封面"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:58
 msgid "Direct URL to Image"
@@ -7709,8 +7713,7 @@ msgstr "第三步 - 设置初始帐号"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
-"此步骤将会创建 Ampache 管理员帐号。建立完毕后将会将您重定向至登录页面。"
+msgstr "此步骤将会创建 Ampache 管理员帐号。建立完毕后将会将您重定向至登录页面。"
 
 #: ../../templates/show_install_account.inc.php:46
 msgid "Create Admin Account"
@@ -7729,9 +7732,7 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
-"此页面处理安装过程中 Ampache 数据库的安装及配置文件的创建。在您继续之前请确认"
-"您达到了以下要求："
+msgstr "此页面处理安装过程中 Ampache 数据库的安装及配置文件的创建。在您继续之前请确认您达到了以下要求："
 
 #: ../../templates/show_install_check.inc.php:34
 msgid ""
@@ -7748,11 +7749,9 @@ msgstr ""
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
-msgstr ""
-"当您确定您已满足以上需求，请将相关信息填入下面的表单中。表单中只设计配置相关"
-"数值。若您想对您接下来的 Ampache 安装作出修改，修改 %s 即可。"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
+msgstr "当您确定您已满足以上需求，请将相关信息填入下面的表单中。表单中只设计配置相关数值。若您想对您接下来的 Ampache 安装作出修改，修改 %s 即可。"
 
 #: ../../templates/show_install_check.inc.php:43
 #: ../../templates/show_test.inc.php:58
@@ -7791,8 +7790,8 @@ msgstr ""
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
 msgstr ""
@@ -7835,8 +7834,8 @@ msgstr "极简主义"
 
 #: ../../templates/show_install_config.inc.php:119
 msgid ""
-"Only essential features are enabled to simply stream your music from the Web "
-"Interface."
+"Only essential features are enabled to simply stream your music from the Web"
+" Interface."
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:124
@@ -7857,8 +7856,8 @@ msgid ""
 "Transcoding allows you to convert music from one encoding to another. "
 "Ampache supports on the fly transcoding of any file type based on user, "
 "player, IP address or available bandwidth. In order to transcode, Ampache "
-"takes advantage of existing binary applications such as ffmpeg. In order for "
-"transcoding to work you must first install the supporting applications and "
+"takes advantage of existing binary applications such as ffmpeg. In order for"
+" transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
 msgstr ""
 
@@ -8209,9 +8208,8 @@ msgid "Gather All Art"
 msgstr "收集所有封面"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
-#, fuzzy
 msgid "Update All File Tags"
-msgstr "更新全部"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 msgid "Show Disabled Songs"
@@ -8362,9 +8360,8 @@ msgstr "录音机"
 
 #: ../../templates/show_playlist_medias.inc.php:29
 #: ../../templates/show_playlist_medias.inc.php:105
-#, fuzzy
 msgid "Duration"
-msgstr "信息"
+msgstr ""
 
 #: ../../templates/show_playlist_row.inc.php:89
 msgid "Playlist Edit"
@@ -8406,7 +8403,8 @@ msgid "Upgrade"
 msgstr "升级"
 
 #: ../../templates/show_podcast_episode.inc.php:83
-#: ../../templates/show_song.inc.php:108 ../../templates/show_video.inc.php:103
+#: ../../templates/show_song.inc.php:108
+#: ../../templates/show_video.inc.php:103
 msgid "Link"
 msgstr "链接"
 
@@ -8778,7 +8776,8 @@ msgstr "播放增益 轨增益"
 msgid "ReplayGain Album Gain"
 msgstr "播放增益 专辑增益"
 
-#: ../../templates/show_song.inc.php:184 ../../templates/show_video.inc.php:142
+#: ../../templates/show_song.inc.php:184
+#: ../../templates/show_video.inc.php:142
 msgid "Last Updated"
 msgstr "最后更新"
 
@@ -8790,7 +8789,8 @@ msgstr "许可"
 msgid "Song Information"
 msgstr "曲目信息"
 
-#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:101
+#: ../../templates/show_songs.inc.php:40
+#: ../../templates/show_songs.inc.php:101
 msgid "License"
 msgstr "许可"
 
@@ -8871,8 +8871,8 @@ msgstr "此项测试将测试 Ampache 的依赖是否已安装。"
 #: ../../templates/show_test_table.inc.php:34
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
-"mv composer.phar /usr/local/bin/composer). Then run `composer install --"
-"prefer-source --no-interaction` on the Ampache directory."
+"mv composer.phar /usr/local/bin/composer). Then run `composer install "
+"--prefer-source --no-interaction` on the Ampache directory."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:40
@@ -8921,8 +8921,8 @@ msgstr "PHP session 扩展"
 
 #: ../../templates/show_test_table.inc.php:62
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
 msgstr "此项测试将测试您是否启用了 session 扩展。Ampache 需要此扩展。"
 
 #: ../../templates/show_test_table.inc.php:65
@@ -8957,11 +8957,9 @@ msgstr "PHP curl 扩展"
 
 #: ../../templates/show_test_table.inc.php:82
 msgid ""
-"This tests whether you have the cURL extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 cURL 扩展。尽管这不是必须的，但启用其扩展将有助于"
-"提升您的使用体验。"
+"This tests whether you have the cURL extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
+msgstr "此项测试将测试您是否启用了 cURL 扩展。尽管这不是必须的，但启用其扩展将有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:85
 msgid "PHP zlib extension"
@@ -8969,11 +8967,9 @@ msgstr "PHP zlib 扩展"
 
 #: ../../templates/show_test_table.inc.php:87
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
-msgstr ""
-"此项测试将测试您是否启用了 zlib 扩展。尽管这不是必须的，但启用此扩展经有助于"
-"提升您的使用体验 ( zip下载 )。"
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
+msgstr "此项测试将测试您是否启用了 zlib 扩展。尽管这不是必须的，但启用此扩展经有助于提升您的使用体验 ( zip下载 )。"
 
 #: ../../templates/show_test_table.inc.php:90
 msgid "PHP SimpleXML extension"
@@ -8983,9 +8979,7 @@ msgstr "PHP SimpleXML 扩展"
 msgid ""
 "This tests whether you have the SimpleXML extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 SimpleXML扩展。尽管这不是必须的，但启用此扩展将有"
-"助于提升您的使用体验。"
+msgstr "此项测试将测试您是否启用了 SimpleXML扩展。尽管这不是必须的，但启用此扩展将有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:95
 msgid "PHP GD extension"
@@ -8995,9 +8989,7 @@ msgstr "PHP GD 扩展"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试您是否启用了 GD 扩展。尽管这不是必须的，但启用其扩展将有助于提"
-"升您的使用体验。"
+msgstr "此项测试将测试您是否启用了 GD 扩展。尽管这不是必须的，但启用其扩展将有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:100
 msgid "PHP memory limit override"
@@ -9007,9 +8999,7 @@ msgstr "PHP 内存限制覆盖"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否覆盖内存限制。此项不是必须的，但会有助于提升您的使"
-"用体验。"
+msgstr "此项测试将测试 Ampache 能否覆盖内存限制。此项不是必须的，但会有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:105
 msgid "PHP execution time override"
@@ -9017,11 +9007,9 @@ msgstr "PHP 执行时间覆盖"
 
 #: ../../templates/show_test_table.inc.php:107
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否覆盖最大执行时间限制。这不是必须的，但有助于提升您"
-"的使用体验。"
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
+msgstr "此项测试将测试 Ampache 能否覆盖最大执行时间限制。这不是必须的，但有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:110
 msgid "PHP max upload size"
@@ -9031,9 +9019,7 @@ msgstr "PHP 上传最大值限制"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"此项测试将测试 Ampache 能否将中等大小 ( 不小于 20M ) 的文件上传。此项不是必须"
-"的，但会有助于提升您的使用体验。"
+msgstr "此项测试将测试 Ampache 能否将中等大小 ( 不小于 20M ) 的文件上传。此项不是必须的，但会有助于提升您的使用体验。"
 
 #: ../../templates/show_test_table.inc.php:115
 msgid "PHP integer size"
@@ -9066,14 +9052,14 @@ msgstr "配置文件的可读性"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid ""
-"This test attempts to read config/ampache.cfg.php. If this fails the file is "
-"either not in the correct location, or not readable."
+"This test attempts to read config/ampache.cfg.php. If this fails the file is"
+" either not in the correct location, or not readable."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:131
 msgid ""
-"If you are installing Ampache for the first time you can ignore this warning "
-"and proceed to the installer."
+"If you are installing Ampache for the first time you can ignore this warning"
+" and proceed to the installer."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:136
@@ -9111,9 +9097,7 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr ""
-"此项测试将确保您的 web 路径参数的设置是正确的以让网站能够正常跳转到主页。如果"
-"没有看到正确的标识则表明您的 web 路径没有设置正确。"
+msgstr "此项测试将确保您的 web 路径参数的设置是正确的以让网站能够正常跳转到主页。如果没有看到正确的标识则表明您的 web 路径没有设置正确。"
 
 #: ../../templates/show_tvshow.inc.php:74
 #: ../../templates/show_tvshow.inc.php:77
@@ -9425,9 +9409,8 @@ msgid "Help"
 msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:74
-#, fuzzy
 msgid "Ampache Wiki"
-msgstr "Ampache "
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:75
 msgid "API Documentation"
@@ -9463,7 +9446,8 @@ msgstr "电视节目已删除"
 msgid "Couldn't delete this TV Show"
 msgstr "无法删除此季电视节目"
 
-#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version
+#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows
+#. current database version
 #: ../../update.php:82
 #, php-format
 msgid ""
@@ -9512,8 +9496,8 @@ msgstr "无法删除此视频"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 11.10.2020 14:56:45 CEST
-#
+# Last Update: 28.12.2020 20:06:12 CET
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "开放下载"
@@ -9643,7 +9627,8 @@ msgid "Share Recently Played information"
 msgstr ""
 
 #: Database preference table id 92
-msgid "Share Recently Played information - Allow access to streaming date/time"
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
 msgstr ""
 
 #: Database preference table id 93

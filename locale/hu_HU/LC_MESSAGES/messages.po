@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Feralheart <gyula210@gmail.com>, 2016
 # Nite <shunite@gmail.com>, 2019-2020
@@ -10,14 +10,13 @@ msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2020-12-28 20:06+0100\n"
-"PO-Revision-Date: 2020-12-22 08:14+0000\n"
-"Last-Translator: Nite <shunite@gmail.com>\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/ampache/ampache/"
-"language/hu_HU/)\n"
-"Language: hu_HU\n"
+"PO-Revision-Date: 2021-01-03 23:31+0000\n"
+"Last-Translator: Transifex Bot <>\n"
+"Language-Team: Hungarian (Hungary) (http://www.transifex.com/ampache/ampache/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../admin/access.php:44 ../../admin/access.php:80
@@ -170,14 +169,12 @@ msgid "The Catalog art search has started"
 msgstr "A Katalógusborító keresés elkezdődött"
 
 #: ../../admin/catalog.php:261
-#, fuzzy
 msgid "The catalog write file tags has started"
-msgstr "A Katalógusborító keresés elkezdődött"
+msgstr ""
 
 #: ../../admin/catalog.php:265
-#, fuzzy
 msgid "The Catalog write file tags has started"
-msgstr "A Katalógusborító keresés elkezdődött"
+msgstr ""
 
 #: ../../admin/license.php:42
 msgid "The License has been updated"
@@ -275,9 +272,7 @@ msgstr "Shoutbox bejegyzés törölve"
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
-"Az adatbázis és benne a táblák frissítve lettek a jelenleg beállított "
-"karakterkészletnek megfelelően"
+msgstr "Az adatbázis és benne a táblák frissítve lettek a jelenleg beállított karakterkészletnek megfelelően"
 
 #: ../../admin/system.php:76
 msgid "Your cache has been cleared successfully"
@@ -299,7 +294,8 @@ msgstr "A Jelszavak nem egyeznek meg"
 msgid "You entered an invalid e-mail address"
 msgstr "Érvénytelen e-mail címet adtál meg"
 
-#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000)
+#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions
+#. (2000x3000)
 #: ../../admin/users.php:120
 #, php-format
 msgid ""
@@ -316,7 +312,8 @@ msgid "The new User was not created"
 msgstr "Az új Felhasználó nem jött létre"
 
 #: ../../admin/users.php:181 ../../lib/class/shoutbox.class.php:354
-#: ../../lib/class/user.class.php:1227 ../../templates/show_add_user.inc.php:65
+#: ../../lib/class/user.class.php:1227
+#: ../../templates/show_add_user.inc.php:65
 #: ../../templates/show_edit_user.inc.php:83
 #: ../../templates/show_preference_admin.inc.php:42
 #: ../../templates/show_preference_box.inc.php:74
@@ -431,9 +428,7 @@ msgstr "Új felhasználói API Kulcs létrehozva"
 msgid ""
 "This will replace your existing RSS token. Feeds with the old token might "
 "not work properly"
-msgstr ""
-"Ezzel lecseréled a jelenlegi RSS tokent. A feliratkozásaid a régi tokennel "
-"lehet, hogy nem működnek majd megfelelően."
+msgstr "Ezzel lecseréled a jelenlegi RSS tokent. A feliratkozásaid a régi tokennel lehet, hogy nem működnek majd megfelelően."
 
 #: ../../admin/users.php:326
 msgid "A new user RSS token has been generated"
@@ -479,9 +474,7 @@ msgstr "A borító eltávolítva az adatbázisból"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file was not received correctly"
-msgstr ""
-"Nem sikerült borítót találni. Lehet, hogy írási jog hiánya miatt, vagy a "
-"fájlt nem sikerült megfelelően fogadni."
+msgstr "Nem sikerült borítót találni. Lehet, hogy írási jog hiánya miatt, vagy a fájlt nem sikerült megfelelően fogadni."
 
 #: ../../arts.php:85 ../../arts.php:124
 msgid "Art has been added"
@@ -489,8 +482,7 @@ msgstr "Borító hozzáadva"
 
 #: ../../arts.php:87 ../../arts.php:126
 msgid "Art file failed to insert, check the dimensions are correct."
-msgstr ""
-"A borítót nem sikerült feltölteni, ellenőrizd, hogy a méretei megfelelőek-e."
+msgstr "A borítót nem sikerült feltölteni, ellenőrizd, hogy a méretei megfelelőek-e."
 
 #: ../../arts.php:167
 msgid "Art file failed size check"
@@ -548,8 +540,7 @@ msgstr "Új médiaborítók összegyűjtése"
 #: ../../bin/catalog_update.inc:83 ../../bin/catalog_update.inc:185
 #: ../../bin/catalog_update.inc:239
 msgid "Update artist information and fetch similar artists from last.fm"
-msgstr ""
-"Előadó információk frissítése, és hasonló előadók keresése a last.fm-en"
+msgstr "Előadó információk frissítése, és hasonló előadók keresése a last.fm-en"
 
 #: ../../bin/catalog_update.inc:87
 msgid "Importing playlist/s"
@@ -602,19 +593,15 @@ msgstr "Használat:"
 
 #: ../../bin/catalog_update.inc:227
 msgid ""
-"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-"
-"u|-i|-o]"
-msgstr ""
-"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-"
-"u|-i|-o]"
+"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] "
+"[-h|-m|-c|-v|-a|-g|-u|-i|-o]"
+msgstr "catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]"
 
 #: ../../bin/catalog_update.inc:229
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr ""
-"Az alapbeállítás mindegyik végrehajtása, kivéve a php memórialimit átmeneti "
-"kikapcsolását"
+msgstr "Az alapbeállítás mindegyik végrehajtása, kivéve a php memórialimit átmeneti kikapcsolását"
 
 #: ../../bin/catalog_update.inc:231 ../../bin/update_file.inc:168
 msgid "This help message"
@@ -640,9 +627,7 @@ msgstr "Törli a Katalógusból az árva bejegyzéseket"
 msgid ""
 "Verifies Catalog entries and updates them if related files have new "
 "information"
-msgstr ""
-"Ellenőrzi a Katalógusbejegyzéseket, és frissíti őket, ha a hozzá tartozó "
-"fájlban elérhető új információ"
+msgstr "Ellenőrzi a Katalógusbejegyzéseket, és frissíti őket, ha a hozzá tartozó fájlban elérhető új információ"
 
 #: ../../bin/catalog_update.inc:237
 msgid "Adds new media to Catalogs"
@@ -654,8 +639,7 @@ msgstr "Médiaborítók összegyűjtése"
 
 #: ../../bin/catalog_update.inc:239
 msgid "Make sure lastfm_api_key is set in your configuration file"
-msgstr ""
-"Ellenőrizd, hogy a lastfm_api_key be van-e állítva a konfigurációs fájlodban"
+msgstr "Ellenőrizd, hogy a lastfm_api_key be van-e állítva a konfigurációs fájlodban"
 
 #: ../../bin/catalog_update.inc:240
 msgid "Imports playlists"
@@ -669,26 +653,20 @@ msgstr "Adatbázistáblák optimizálása"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
-"Csak saját felelősségre használd! A rendszer lefagyhat, vagy lehet, hogy nem "
-"válaszol majd a magas memóriafogyasztás miatt!"
+msgstr "Csak saját felelősségre használd! A rendszer lefagyhat, vagy lehet, hogy nem válaszol majd a magas memóriafogyasztás miatt!"
 
 #: ../../bin/catalog_update.inc:244
 msgid ""
 "Depending on your system's performance, this option may need a long time to "
 "finish and could greatly slow down other database processes if you have "
 "large Catalogs!"
-msgstr ""
-"A rendszer teljesítményétől függőn ez a beállítás sok időt vehet igénybe, és "
-"jelentősen lelassíthat más adatbázisműveleteket, ha nagy Katalógusaid vannak!"
+msgstr "A rendszer teljesítményétől függőn ez a beállítás sok időt vehet igénybe, és jelentősen lelassíthat más adatbázisműveleteket, ha nagy Katalógusaid vannak!"
 
 #: ../../bin/catalog_update.inc:245
 msgid ""
-"The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-"
-"a|-g] is used"
-msgstr ""
-"A [-m|-o] kapcsolók csak akkor használhatóak, ha a [-c|-v|-a|-g] kapcsolók "
-"közül valamelyiket is használod"
+"The switches [-m|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used"
+msgstr "A [-m|-o] kapcsolók csak akkor használhatóak, ha a [-c|-v|-a|-g] kapcsolók közül valamelyiket is használod"
 
 #: ../../bin/channel_run.inc:48
 msgid "Channel"
@@ -744,8 +722,7 @@ msgstr "Az elindítani kívánt Csatorna azonosítója"
 
 #: ../../bin/channel_run.inc:316
 msgid "Listening port, default get an available port automatically"
-msgstr ""
-"Melyik porton hallgasson, alapbeállításként automatikusan keres egy elérhetőt"
+msgstr "Melyik porton hallgasson, alapbeállításként automatikusan keres egy elérhetőt"
 
 #: ../../bin/channel_run.inc:429
 msgid "Icecast Streaming Media Server"
@@ -843,8 +820,7 @@ msgstr "Ellenőrzés alatt %1$s (%2$s)"
 
 #: ../../bin/fix_filenames.inc:81
 msgid "Finished checking file names for valid characters"
-msgstr ""
-"A fájlnevekben szereplő karakterek érvényességének ellenőrzése befejeződött"
+msgstr "A fájlnevekben szereplő karakterek érvényességének ellenőrzése befejeződött"
 
 #. HINT: directory (File path)
 #: ../../bin/fix_filenames.inc:110
@@ -895,9 +871,7 @@ msgstr "Mappa létrehozása: %s"
 #: ../../bin/fix_filenames.inc:199
 #, php-format
 msgid "There was an error trying to create \"%s\": Move failed, stopping"
-msgstr ""
-"Hiba történt \"%s\" létrehozása közben: a mozgatás nem sikerült, ezért "
-"leállítva"
+msgstr "Hiba történt \"%s\" létrehozása közben: a mozgatás nem sikerült, ezért leállítva"
 
 #: ../../bin/fix_filenames.inc:211
 msgid "File copy failed. Not deleting source file"
@@ -1070,11 +1044,13 @@ msgstr "Config fájl létrehozása nem sikerült"
 msgid "Options"
 msgstr "Lehetőségek"
 
-#: ../../bin/install/install_db.inc:116 ../../templates/show_install.inc.php:67
+#: ../../bin/install/install_db.inc:116
+#: ../../templates/show_install.inc.php:67
 msgid "MySQL Administrative Username"
 msgstr "MySQL Adminisztrátor Felhasználónév"
 
-#: ../../bin/install/install_db.inc:118 ../../templates/show_install.inc.php:73
+#: ../../bin/install/install_db.inc:118
+#: ../../templates/show_install.inc.php:73
 msgid "MySQL Administrative Password"
 msgstr "MySQL Adminisztrátor Jelszó"
 
@@ -1233,9 +1209,7 @@ msgstr "A méretellenőrzés nem sikerült. Nem lesz törölve: %s"
 #: ../../bin/update_db.inc:46
 msgid ""
 "This script makes changes to your database based on your config settings"
-msgstr ""
-"Ez a script változtatásokat végez az adatbázisodon a konfigurációs "
-"beállításoknak megfelelően"
+msgstr "Ez a script változtatásokat végez az adatbázisodon a konfigurációs beállításoknak megfelelően"
 
 #: ../../bin/update_db.inc:47
 msgid "Target charset"
@@ -1267,8 +1241,7 @@ msgstr "Fájl olvasása: \"%s\""
 
 #: ../../bin/update_file.inc:166
 msgid "catalog_update.inc [-n CATALOG NAME] [-f FILE PATH] [-h|-c|-v|-a|-g]"
-msgstr ""
-"catalog_update.inc [-n KATALÓGUS NEVE] [-f FÁJL ELÉRÉSI ÚT] [-h|-c|-v|-a|-g]"
+msgstr "catalog_update.inc [-n KATALÓGUS NEVE] [-f FÁJL ELÉRÉSI ÚT] [-h|-c|-v|-a|-g]"
 
 #: ../../bin/update_file.inc:169 ../../templates/show_add_catalog.inc.php:33
 msgid "Catalog Name"
@@ -1317,9 +1290,7 @@ msgstr "\"%s\" lejátszási lista létrehozva"
 
 #: ../../bin/write_playlists.inc:103
 msgid "This will dump a collection of playlists files based on type"
-msgstr ""
-"Ezzel lerakatot készíthetsz a lejátszási lista fájlok csoportjáról a "
-"típustól függően"
+msgstr "Ezzel lerakatot készíthetsz a lejátszási lista fájlok csoportjáról a típustól függően"
 
 #: ../../bin/write_playlists.inc:104 ../../lib/class/browse.class.php:245
 #: ../../lib/class/upnp_api.class.php:435 ../../server/search.ajax.php:149
@@ -1464,7 +1435,8 @@ msgstr "Ilyen ACL bejegyzés már létezik"
 msgid "All"
 msgstr "Mind"
 
-#: ../../lib/class/access.class.php:471 ../../templates/list_header.inc.php:125
+#: ../../lib/class/access.class.php:471
+#: ../../templates/list_header.inc.php:125
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:39
 #: ../../templates/show_graphs.inc.php:79
@@ -1530,7 +1502,8 @@ msgstr "Lemez"
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_browse_form.inc.php:38
 #: ../../templates/show_browse_form.inc.php:40
-#: ../../templates/show_label.inc.php:96 ../../templates/show_labels.inc.php:45
+#: ../../templates/show_label.inc.php:96
+#: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:75
 #: ../../templates/show_mashup_browse_form.inc.php:11
 #: ../../templates/show_random.inc.php:37
@@ -1666,7 +1639,8 @@ msgstr "-"
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/api.class.php:307
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:88
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:65
@@ -1701,15 +1675,15 @@ msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:87
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:124
 #: ../../lib/class/json_data.class.php:199
-#, fuzzy, php-format
+#, php-format
 msgid "Bad Request: %s"
-msgstr "Érvénytelen kérés"
+msgstr ""
 
 #. HINT: Access level, eg 75, 100
 #: ../../lib/class/api.class.php:334
-#, fuzzy, php-format
+#, php-format
 msgid "Require: %s"
-msgstr "Követelmények"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:82
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:71
@@ -1720,11 +1694,11 @@ msgstr "Követelmények"
 #: ../../lib/class/ApiMethods/LocalplayMethod.php:73
 #: ../../lib/class/ApiMethods/VideoMethod.php:55
 #: ../../lib/class/ApiMethods/VideosMethod.php:57
-#, fuzzy
 msgid "Enable: video"
-msgstr "Engedélyezve"
+msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/AlbumMethod.php:63
 #: ../../lib/class/ApiMethods/AlbumSongsMethod.php:64
 #: ../../lib/class/ApiMethods/ArtistAlbumsMethod.php:64
@@ -1779,7 +1753,8 @@ msgstr "Engedélyezve"
 msgid "Not Found: %s"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:78
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:84
 #: ../../lib/class/ApiMethods/BookmarkDeleteMethod.php:72
@@ -1801,18 +1776,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/StatsMethod.php:80
 #: ../../lib/class/ApiMethods/SystemUpdateMethod.php:61
 #: ../../lib/class/ApiMethods/UrlToSongMethod.php:61
-#, fuzzy
 msgid "Bad Request"
-msgstr "Érvénytelen kérés"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:96
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:132
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:76
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:86
 #: ../../lib/class/ApiMethods/ScrobbleMethod.php:100
-#, fuzzy
 msgid "Not Found"
-msgstr "Megtalálva"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:62
 msgid "Enable: delete_from_disk"
@@ -1844,9 +1817,8 @@ msgstr ""
 #: ../../lib/class/ApiMethods/PodcastEpisodesMethod.php:59
 #: ../../lib/class/ApiMethods/PodcastMethod.php:57
 #: ../../lib/class/ApiMethods/PodcastsMethod.php:58
-#, fuzzy
 msgid "Enable: podcast"
-msgstr "podcast"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/HandshakeMethod.php:75
 msgid "Login failed, API version is too old"
@@ -1872,16 +1844,14 @@ msgstr "Hibás felhasználónév vagy jelszó"
 #: ../../lib/class/ApiMethods/LabelArtistsMethod.php:58
 #: ../../lib/class/ApiMethods/LabelMethod.php:56
 #: ../../lib/class/ApiMethods/LabelsMethod.php:58
-#, fuzzy
 msgid "Enable: label"
-msgstr "Engedélyez"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/LicenseMethod.php:56
 #: ../../lib/class/ApiMethods/LicensesMethod.php:58
 #: ../../lib/class/ApiMethods/LicenseSongsMethod.php:57
-#, fuzzy
 msgid "Enable: licensing"
-msgstr "Tábla motor"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PlaylistAddSongMethod.php:65
 #: ../../lib/class/ApiMethods/PlaylistDeleteMethod.php:62
@@ -1889,38 +1859,33 @@ msgstr "Tábla motor"
 #: ../../lib/class/ApiMethods/PlaylistMethod.php:73
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:68
 #: ../../lib/class/ApiMethods/PlaylistSongsMethod.php:77
-#, fuzzy
 msgid "Require: 100"
-msgstr "szükséges"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PodcastEpisodeDeleteMethod.php:73
 #: ../../lib/class/ApiMethods/SongDeleteMethod.php:67
-#, fuzzy
 msgid "Require: 75"
-msgstr "szükséges"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/RateMethod.php:57
-#, fuzzy
 msgid "Enable: ratings"
-msgstr "URL Újraírás engedélyezése"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/ShareCreateMethod.php:62
 #: ../../lib/class/ApiMethods/ShareDeleteMethod.php:56
 #: ../../lib/class/ApiMethods/ShareEditMethod.php:59
 #: ../../lib/class/ApiMethods/ShareMethod.php:55
 #: ../../lib/class/ApiMethods/SharesMethod.php:57
-#, fuzzy
 msgid "Enable: share"
-msgstr "Engedélyez"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/TagAlbumsMethod.php:49
 #: ../../lib/class/ApiMethods/TagArtistsMethod.php:49
 #: ../../lib/class/ApiMethods/TagMethod.php:49
 #: ../../lib/class/ApiMethods/TagsMethod.php:49
 #: ../../lib/class/ApiMethods/TagSongsMethod.php:49
-#, fuzzy
 msgid "Depreciated"
-msgstr "Felhasználó aktiválva"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1608
 msgid "Unable to open"
@@ -1987,7 +1952,8 @@ msgid "View changes"
 msgstr "Módosítások megtekintése"
 
 #: ../../lib/class/autoupdate.class.php:273
-#: ../../lib/class/autoupdate.class.php:276 ../../lib/class/share.class.php:255
+#: ../../lib/class/autoupdate.class.php:276
+#: ../../lib/class/share.class.php:255
 #: ../../templates/show_album_group_disks.inc.php:112
 #: ../../templates/show_album_group_disks.inc.php:113
 #: ../../templates/show_album_group_disks.inc.php:163
@@ -2123,7 +2089,8 @@ msgstr "Műsorszórás vége"
 #: ../../templates/show_artists.inc.php:111
 #: ../../templates/show_browse_form.inc.php:28
 #: ../../templates/show_browse_form.inc.php:30
-#: ../../templates/show_label.inc.php:97 ../../templates/show_label.inc.php:110
+#: ../../templates/show_label.inc.php:97
+#: ../../templates/show_label.inc.php:110
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_mashup_browse_form.inc.php:5
 #: ../../templates/show_random.inc.php:27
@@ -2224,7 +2191,8 @@ msgstr "Megosztások"
 #: ../../templates/show_browse_form.inc.php:52
 #: ../../templates/show_browse_form.inc.php:54
 #: ../../templates/show_mashup_browse_form.inc.php:20
-#: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:137
+#: ../../templates/show_song.inc.php:170
+#: ../../templates/show_video.inc.php:137
 #: ../../templates/sidebar_home.inc.php:56
 msgid "Channels"
 msgstr "Csatornák"
@@ -2380,7 +2348,8 @@ msgstr "Albumborító lerakat elkészült"
 msgid "Song"
 msgstr "Dal"
 
-#: ../../lib/class/catalog.class.php:1759 ../../lib/class/channel.class.php:243
+#: ../../lib/class/catalog.class.php:1759
+#: ../../lib/class/channel.class.php:243
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
@@ -2431,9 +2400,7 @@ msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
-msgstr ""
-"Ez a mappa nem része egyik létező Katalógusnak sem. A frissítés nem "
-"dolgozható fel."
+msgstr "Ez a mappa nem része egyik létező Katalógusnak sem. A frissítés nem dolgozható fel."
 
 #: ../../lib/class/channel.class.php:241
 msgid "Start Channel"
@@ -2456,7 +2423,8 @@ msgstr "Folyamatban"
 msgid "Stopped"
 msgstr "Leállt"
 
-#: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:303
+#: ../../lib/class/democratic.class.php:153
+#: ../../lib/class/video.class.php:303
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
 msgstr "perc"
@@ -2468,7 +2436,8 @@ msgstr "Elsődleges"
 #: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:535
 #: ../../templates/show_edit_song_row.inc.php:80
 #: ../../templates/show_labels.inc.php:43
-#: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:165
+#: ../../templates/show_labels.inc.php:73
+#: ../../templates/show_song.inc.php:165
 msgid "Label"
 msgstr "Címke"
 
@@ -2501,7 +2470,8 @@ msgstr "Szüneteltetve"
 
 #: ../../lib/class/localplay.class.php:657
 #: ../../lib/class/playlist.class.php:230
-#: ../../lib/class/playlist.class.php:231 ../../lib/class/podcast.class.php:346
+#: ../../lib/class/playlist.class.php:231
+#: ../../lib/class/podcast.class.php:346
 #: ../../lib/class/tvshow_episode.class.php:77
 #: ../../lib/class/user.class.php:1141 ../../lib/class/user.class.php:1229
 #: ../../lib/class/video.class.php:845
@@ -2566,7 +2536,8 @@ msgstr "A feed nem olvasható"
 #: ../../templates/show_podcast_episodes.inc.php:87
 #: ../../templates/show_podcasts.inc.php:45
 #: ../../templates/show_podcasts.inc.php:94
-#: ../../templates/show_song.inc.php:141 ../../templates/show_video.inc.php:125
+#: ../../templates/show_song.inc.php:141
+#: ../../templates/show_video.inc.php:125
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:93
 msgid "Title"
@@ -2614,9 +2585,7 @@ msgstr "Kérjük, tartsd meg ezt az e-mailt. Információk a fiókodról:"
 msgid ""
 "To begin using your account, you must verify your e-mail address by vising "
 "the following link:"
-msgstr ""
-"Ahhoz, hogy a fiókot használatba vedd, meg kell erősítened az e-mail címed a "
-"következő linkre kattintva:"
+msgstr "Ahhoz, hogy a fiókot használatba vedd, meg kell erősítened az e-mail címed a következő linkre kattintva:"
 
 #: ../../lib/class/registration.class.php:83
 msgid "A new user has registered, the following values were entered:"
@@ -2799,9 +2768,8 @@ msgstr "Bármely kereshető szöveg"
 #: ../../templates/show_recently_played.inc.php:140
 #: ../../templates/show_song.inc.php:142 ../../templates/show_songs.inc.php:34
 #: ../../templates/show_songs.inc.php:96
-#, fuzzy
 msgid "Song Artist"
-msgstr "Ismeretlen Előadó"
+msgstr ""
 
 #: ../../lib/class/search.class.php:492 ../../lib/class/search.class.php:672
 #: ../../templates/show_albums.inc.php:41
@@ -2882,7 +2850,8 @@ msgstr "# Lejátszva"
 
 #. HINT: Number of times object has been skipped
 #: ../../lib/class/search.class.php:511 ../../templates/show_song.inc.php:191
-#: ../../templates/show_songs.inc.php:47 ../../templates/show_songs.inc.php:108
+#: ../../templates/show_songs.inc.php:47
+#: ../../templates/show_songs.inc.php:108
 msgid "# Skipped"
 msgstr "# Kihagyása"
 
@@ -3000,7 +2969,8 @@ msgstr "Dalszöveg"
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:76
 #: ../../templates/show_import_playlist.inc.php:27
-#: ../../templates/show_song.inc.php:181 ../../templates/show_video.inc.php:139
+#: ../../templates/show_song.inc.php:181
+#: ../../templates/show_video.inc.php:139
 msgid "Filename"
 msgstr "Fájlnév"
 
@@ -3272,7 +3242,8 @@ msgstr "A jelszavak nem egyeznek"
 msgid "Invalid"
 msgstr "Érvénytelen"
 
-#: ../../lib/class/user.class.php:1168 ../../templates/show_tagcloud.inc.php:83
+#: ../../lib/class/user.class.php:1168
+#: ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr "Nincs elég adat"
 
@@ -4032,7 +4003,8 @@ msgstr "Ismeretlen Előadó"
 msgid "Accept"
 msgstr "Elfogad"
 
-#: ../../lib/class/wanted.class.php:426 ../../lib/javascript/search-data.php:56
+#: ../../lib/class/wanted.class.php:426
+#: ../../lib/javascript/search-data.php:56
 msgid "Remove"
 msgstr "Eltávolít"
 
@@ -4061,8 +4033,7 @@ msgstr "Ismeretlen %s"
 
 #: ../../lib/install.lib.php:86
 msgid "Unable to connect to the database, check your Ampache config"
-msgstr ""
-"Az adatbázishoz kapcsolódás nem sikerült, ellenőrizd az Ampache configot"
+msgstr "Az adatbázishoz kapcsolódás nem sikerült, ellenőrizd az Ampache configot"
 
 #: ../../lib/install.lib.php:95
 msgid "Unable to query the database, check your Ampache config"
@@ -4088,8 +4059,7 @@ msgstr "Nem sikerült az adatbázishoz kapcsolódni: %s"
 
 #: ../../lib/install.lib.php:228
 msgid "Database already exists and \"overwrite\" was not checked"
-msgstr ""
-"Az adatbázis már létezik és a felülírás (\"overwrite\") nem volt bekapcsolva"
+msgstr "Az adatbázis már létezik és a felülírás (\"overwrite\") nem volt bekapcsolva"
 
 #. HINT: Database error message
 #: ../../lib/install.lib.php:237
@@ -4100,22 +4070,14 @@ msgstr "Nem sikerült az adatbázis létrehozása: %s"
 #. HINT: %1 user, %2 database, %3 host, %4 error message
 #: ../../lib/install.lib.php:257
 #, php-format
-msgid ""
-"Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": "
-"%4$s"
-msgstr ""
-"\"%1$s\" felhasználó létrehozása nem lehetséges \"%2$s\" jogosultságokkal "
-"itt: \"%3$s\" -  %4$s"
+msgid "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": %4$s"
+msgstr "\"%1$s\" felhasználó létrehozása nem lehetséges \"%2$s\" jogosultságokkal itt: \"%3$s\" -  %4$s"
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
 #: ../../lib/install.lib.php:271
 #, php-format
-msgid ""
-"Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": "
-"%4$s"
-msgstr ""
-"Nem sikerült a \"%1$s\" jogosultság hozzárendelése \"%2$s\" felhasználóhoz "
-"itt: \"%3$s\" - %4$s"
+msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
+msgstr "Nem sikerült a \"%1$s\" jogosultság hozzárendelése \"%2$s\" felhasználóhoz itt: \"%3$s\" - %4$s"
 
 #: ../../lib/install.lib.php:333
 msgid "Invalid configuration settings"
@@ -4124,9 +4086,7 @@ msgstr "Érvénytelen konfigurációs beállítás"
 #: ../../lib/install.lib.php:340
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
-msgstr ""
-"Nem sikerült kapcsolódni az adatbázishoz. Ellenőrizd a kiszolgáló nevét, a "
-"felhasználónevet és a jelszót"
+msgstr "Nem sikerült kapcsolódni az adatbázishoz. Ellenőrizd a kiszolgáló nevét, a felhasználónevet és a jelszót"
 
 #: ../../lib/install.lib.php:350
 msgid "Config file is not writable"
@@ -4405,9 +4365,7 @@ msgstr "Elfelejtett jelszó"
 #: ../../lostpassword.php:85
 #, php-format
 msgid "A user from \"%1$s\" has requested a password reset for \"%2$s\""
-msgstr ""
-"A felhasználó innen: \"%1$s\" jelszó visszaállítást kért a \"%2$s\" "
-"felhasználónévre"
+msgstr "A felhasználó innen: \"%1$s\" jelszó visszaállítást kért a \"%2$s\" felhasználónévre"
 
 #: ../../lostpassword.php:87
 #, php-format
@@ -4430,8 +4388,7 @@ msgstr "Beets adatbázisfájl"
 
 #: ../../modules/catalog/beets/beets.catalog.php:113
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
-msgstr ""
-"Beets Katalógus került kiválasztásra, de nem lett Beets DB fájl megadva"
+msgstr "Beets Katalógus került kiválasztásra, de nem lett Beets DB fájl megadva"
 
 #: ../../modules/catalog/beets/beets.catalog.php:124
 #: ../../modules/catalog/beetsremote/beetsremote.catalog.php:123
@@ -4472,9 +4429,7 @@ msgstr "Kattints a 'Generate' gombra az Access Token létrehozásához"
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:78
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
-msgstr ""
-"Másold be az API key, App secret és az Access Token értékét a következő "
-"mezőkbe."
+msgstr "Másold be az API key, App secret és az Access Token értékét a következő mezőkbe."
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:122
 #: ../../templates/show_account.inc.php:86
@@ -4507,8 +4462,7 @@ msgstr "Feldarabolt fájlok kérése elemzéskor"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:193
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr ""
-"Hiba: API Key, Secret és Access Token szükséges a Dropbox Katalógusokhoz"
+msgstr "Hiba: API Key, Secret és Access Token szükséges a Dropbox Katalógusokhoz"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:200
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:546
@@ -4684,8 +4638,7 @@ msgstr "Nem sikerült a belépés a Seafile-hoz"
 #: ../../modules/catalog/seafile/SeafileAdapter.php:149
 #, php-format
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
-msgstr ""
-"A \"%s\" nevű Seafile könyvtár nem található, média frissítés nem történt"
+msgstr "A \"%s\" nevű Seafile könyvtár nem található, média frissítés nem történt"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:77
 msgid "Install a Seafile server as described in the documentation"
@@ -4693,34 +4646,25 @@ msgstr "Telepíts egy Seafile szervert a dokumentációban leírt módon"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name (e."
-"g. 'Music')."
-msgstr ""
-"Írd be a szerver URL-jét (pl. 'https://seafile.example.com') és a könyvtár "
-"nevét (pl. 'Music')."
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr "Írd be a szerver URL-jét (pl. 'https://seafile.example.com') és a könyvtár nevét (pl. 'Music')."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:79
 msgid ""
 "API Call Delay is the delay inserted between repeated requests to Seafile "
 "(such as during an Add or Clean action) to accommodate Seafile's Rate "
 "Limiting."
-msgstr ""
-"Az \"API híváskésleltetés\" a késleltetés két ismételt Seafile hívás között "
-"(például Hozzáadás vagy Takarítás műveletekkor), a Seafile hívássűrűség "
-"korlátozása miatt."
+msgstr "Az \"API híváskésleltetés\" a késleltetés két ismételt Seafile hívás között (például Hozzáadás vagy Takarítás műveletekkor), a Seafile hívássűrűség korlátozása miatt."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:80
 msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr ""
-"Az alapértelmezés a Seafile hívássűrűség korlátozásainak megfelelően került "
-"beállításra."
+msgstr "Az alapértelmezés a Seafile hívássűrűség korlátozásainak megfelelően került beállításra."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:81
 msgid ""
 "After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr ""
-"A katalógus létrehozása után végezd el a 'Make it readonly' műveletet a "
-"Katalógus táblán."
+msgstr "A katalógus létrehozása után végezd el a 'Make it readonly' műveletet a Katalógus táblán."
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:128
 msgid "Server URI"
@@ -5236,21 +5180,20 @@ msgid "Personal favorites on the homepage"
 msgstr "Személyes kedvencek a kezdőlapon"
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:63
-#, fuzzy
 msgid "Favorite Playlists"
-msgstr "Kedvenc listák"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:64
-#, fuzzy
 msgid "Favorite Smartlists"
-msgstr "Kedvenc listák"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:112
 msgid "Favorite Lists"
 msgstr "Kedvenc listák"
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:129
-#: ../../templates/header.inc.php:346 ../../templates/show_album_row.inc.php:29
+#: ../../templates/header.inc.php:346
+#: ../../templates/show_album_row.inc.php:29
 #: ../../templates/show_artist_row.inc.php:29
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_podcast_episode.inc.php:54
@@ -5614,9 +5557,7 @@ msgstr "Engedélyez"
 msgid ""
 "No Catalog configured yet. To start streaming your media, you now need to "
 "%1$s add a Catalog %2$s"
-msgstr ""
-"Nincs még Katalógus beállítva. Ahhoz, hogy a médiádat elérd, %1$s létre kell "
-"hoznod egy Katalógust %2$s"
+msgstr "Nincs még Katalógus beállítva. Ahhoz, hogy a médiádat elérd, %1$s létre kell hoznod egy Katalógust %2$s"
 
 #: ../../server/json.server.php:45 ../../server/xml.server.php:45
 #: ../../templates/show_denied.inc.php:53
@@ -5667,9 +5608,7 @@ msgstr "Mostmár megosztahatod az URL-t:"
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following HTML code:"
-msgstr ""
-"Ezt a megosztást beágyazhatod web lejátszóként a weboldaladba is, a "
-"következő HTML kóddal:"
+msgstr "Ezt a megosztást beágyazhatod web lejátszóként a weboldaladba is, a következő HTML kóddal:"
 
 #: ../../share.php:100
 msgid "The Share will be deleted and no longer accessible to others"
@@ -5746,13 +5685,10 @@ msgstr "Az Ampache által használt sütik"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the site"
-msgstr ""
-"A sütik kis szöveges fájlok, melyeket az általad meglátogatott weboldalak "
-"helyeznek el a számítógépeden. Gyakran használják őket weboldalak helyes "
-"vagy hatékonyabb működéséhez, emellett az oldal tulajdonosa információkhoz "
-"juthat belőlük"
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
+msgstr "A sütik kis szöveges fájlok, melyeket az általad meglátogatott weboldalak helyeznek el a számítógépeden. Gyakran használják őket weboldalak helyes vagy hatékonyabb működéséhez, emellett az oldal tulajdonosa információkhoz juthat belőlük"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
 msgid "The table below explains the cookies we use and why"
@@ -5788,9 +5724,7 @@ msgstr "Emlékezzen a web lejátszó utolsó hangerőbeállítására"
 
 #: ../../templates/cookie_disclaimer.inc.php:52
 msgid "Show/Hide column [column_index] when browsing [object_type] objects"
-msgstr ""
-"[column_index] oszlop mutatása/elrejtése [object_type] objektumok "
-"böngészésekor"
+msgstr "[column_index] oszlop mutatása/elrejtése [object_type] objektumok böngészésekor"
 
 #: ../../templates/cookie_disclaimer.inc.php:57
 msgid "Use alphabet when browsing [object_type] objects"
@@ -5814,11 +5748,9 @@ msgstr "Ampache hibaoldal"
 
 #: ../../templates/error_page.inc.php:52
 msgid ""
-"The following error has occurred, you will be automatically redirected in 10 "
-"seconds."
-msgstr ""
-"A következő hiba történt, 10 másodpercen belül automatikusan át leszel "
-"irányítva"
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
+msgstr "A következő hiba történt, 10 másodpercen belül automatikusan át leszel irányítva"
 
 #: ../../templates/error_page.inc.php:54
 msgid "Error Messages"
@@ -5855,17 +5787,11 @@ msgstr "Mégsem"
 #: ../../templates/header.inc.php:310
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
-msgstr ""
-"Sütiket helyeztünk el a számítógépeden a weboldal használhatóságáért. "
-"Bármikor megváltoztathatod a %s.\n"
-"Egyébként feltételezzük, hogy folytatni szeretnéd.\n"
-"\n"
-"Kattints erre az üzenetre, hogy ne jelenjen meg többé."
+msgstr "Sütiket helyeztünk el a számítógépeden a weboldal használhatóságáért. Bármikor megváltoztathatod a %s.\nEgyébként feltételezzük, hogy folytatni szeretnéd.\n\nKattints erre az üzenetre, hogy ne jelenjen meg többé."
 
 #: ../../templates/header.inc.php:311
 msgid "cookie settings"
@@ -5975,7 +5901,8 @@ msgid "Limit"
 msgstr "Korlát"
 
 #: ../../templates/list_header.inc.php:147
-#: ../../templates/show_random.inc.php:52 ../../templates/show_stats.inc.php:89
+#: ../../templates/show_random.inc.php:52
+#: ../../templates/show_stats.inc.php:89
 msgid "Item Count"
 msgstr "Elemek száma"
 
@@ -6112,7 +6039,8 @@ msgstr "Típus"
 #: ../../templates/show_tvshows.inc.php:56
 #: ../../templates/show_tvshows.inc.php:107
 #: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:95
-#: ../../templates/show_video.inc.php:77 ../../templates/show_videos.inc.php:61
+#: ../../templates/show_video.inc.php:77
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_videos.inc.php:119
 msgid "Action"
 msgstr "Akció"
@@ -6222,11 +6150,9 @@ msgstr "Katalógus hozzáadása"
 
 #: ../../templates/show_add_catalog.inc.php:26
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-"A lenti űrlapot töltsd ki egy helyi elérési úttal (pl. /data/music) vagy egy "
-"távoli Ampache szerver URL-jével (pl. http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "A lenti űrlapot töltsd ki egy helyi elérési úttal (pl. /data/music) vagy egy távoli Ampache szerver URL-jével (pl. http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:36
 #: ../../templates/show_edit_catalog.inc.php:31
@@ -6279,9 +6205,7 @@ msgstr "(kezdő és záró '/' nélkül)"
 
 #: ../../templates/show_add_catalog.inc.php:76
 msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr ""
-"Lejátszási listák építése lejátszásilista-fájlokból. (m3u, m3u8, asx, pls, "
-"xspf)"
+msgstr "Lejátszási listák építése lejátszásilista-fájlokból. (m3u, m3u8, asx, pls, xspf)"
 
 #: ../../templates/show_add_catalog.inc.php:80
 msgid "Catalog Media Type"
@@ -6590,25 +6514,29 @@ msgid "User Access Level"
 msgstr "Felhasználó hozzáférési szintje"
 
 #: ../../templates/show_album_group_disks.inc.php:44
-#: ../../templates/show_album.inc.php:49 ../../templates/show_artist.inc.php:38
+#: ../../templates/show_album.inc.php:49
+#: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_label.inc.php:33 ../../templates/show_song.inc.php:151
 msgid "Search on Google ..."
 msgstr "Keresés a Google-ön ..."
 
 #: ../../templates/show_album_group_disks.inc.php:45
-#: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:39
+#: ../../templates/show_album.inc.php:50
+#: ../../templates/show_artist.inc.php:39
 #: ../../templates/show_label.inc.php:34 ../../templates/show_song.inc.php:152
 msgid "Search on DuckDuckGo ..."
 msgstr "Keresés a DuckDuckGo-n ..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
-#: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:40
+#: ../../templates/show_album.inc.php:51
+#: ../../templates/show_artist.inc.php:40
 #: ../../templates/show_label.inc.php:35
 msgid "Search on Wikipedia ..."
 msgstr "Keresés a Wikipedián ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
-#: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:41
+#: ../../templates/show_album.inc.php:52
+#: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:153
 msgid "Search on Last.fm ..."
 msgstr "Keresés a Last.fm-en ..."
@@ -6617,11 +6545,10 @@ msgstr "Keresés a Last.fm-en ..."
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_album.inc.php:54 ../../templates/show_album.inc.php:56
 #: ../../templates/show_artist.inc.php:43
-#: ../../templates/show_artist.inc.php:45 ../../templates/show_song.inc.php:155
-#: ../../templates/show_song.inc.php:157
-#, fuzzy
+#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_song.inc.php:155 ../../templates/show_song.inc.php:157
 msgid "Search on Musicbrainz ..."
-msgstr "Megtekintés MusicBrainz-en"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:77
 #: ../../templates/show_album.inc.php:108
@@ -6712,13 +6639,14 @@ msgid "Album Edit"
 msgstr "Album szerkesztés"
 
 #. HINT: Average rating. e.g. (average 3.7)
-#: ../../templates/show_album.inc.php:72 ../../templates/show_artist.inc.php:68
-#: ../../templates/show_song.inc.php:45
+#: ../../templates/show_album.inc.php:72
+#: ../../templates/show_artist.inc.php:68 ../../templates/show_song.inc.php:45
 msgid "average"
 msgstr "átlagos"
 
 #. HINT: Number of times an object has been played
-#: ../../templates/show_album.inc.php:91 ../../templates/show_artist.inc.php:86
+#: ../../templates/show_album.inc.php:91
+#: ../../templates/show_artist.inc.php:86
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
@@ -6726,7 +6654,8 @@ msgstr[0] "%d alkalommal"
 msgstr[1] "%d alkalommal"
 
 #: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:97 ../../templates/show_song.inc.php:206
+#: ../../templates/show_artist.inc.php:97
+#: ../../templates/show_song.inc.php:206
 msgid "Uploaded by"
 msgstr "Feltöltötte"
 
@@ -6795,7 +6724,8 @@ msgstr "Borító"
 #: ../../templates/show_tvshow_seasons.inc.php:92
 #: ../../templates/show_tvshows.inc.php:46
 #: ../../templates/show_tvshows.inc.php:98
-#: ../../templates/show_video.inc.php:57 ../../templates/show_videos.inc.php:52
+#: ../../templates/show_video.inc.php:57
+#: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:110
 msgid "Rating"
 msgstr "Értékelés"
@@ -6822,7 +6752,8 @@ msgstr "Értékelés"
 #: ../../templates/show_tvshow_seasons.inc.php:96
 #: ../../templates/show_tvshows.inc.php:51
 #: ../../templates/show_tvshows.inc.php:102
-#: ../../templates/show_video.inc.php:67 ../../templates/show_videos.inc.php:56
+#: ../../templates/show_video.inc.php:67
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_videos.inc.php:114
 msgid "Fav."
 msgstr "Kedv."
@@ -7005,9 +6936,8 @@ msgid "Clean"
 msgstr "Takarít"
 
 #: ../../templates/show_catalog_row.inc.php:51
-#, fuzzy
 msgid "Update File Tags"
-msgstr "Sikertelen frissítés"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:57
 msgid "Go"
@@ -7201,7 +7131,8 @@ msgstr "PHP beállítások"
 msgid "Setting"
 msgstr "Beállítások"
 
-#: ../../templates/show_debug.inc.php:79 ../../templates/show_debug.inc.php:132
+#: ../../templates/show_debug.inc.php:79
+#: ../../templates/show_debug.inc.php:132
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:91
 #: ../../templates/show_user_preferences.inc.php:37
@@ -7319,16 +7250,14 @@ msgstr "Az esemény logolva"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function"
-msgstr ""
-"Azért lettél átirányítva erre az oldalra, mert nincs hozzáférésed ehhez a "
-"funkcióhoz"
+"You have been redirected to this page because you do not have access to this"
+" function"
+msgstr "Azért lettél átirányítva erre az oldalra, mert nincs hozzáférésed ehhez a funkcióhoz"
 
 #: ../../templates/show_denied.inc.php:59
-msgid "If you believe this is an error please contact an Ampache administrator"
-msgstr ""
-"Ha úgy hiszed, hiba történt, lépj kapcsolatba egy Ampache adminisztrátorral"
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
+msgstr "Ha úgy hiszed, hiba történt, lépj kapcsolatba egy Ampache adminisztrátorral"
 
 #: ../../templates/show_denied.inc.php:60
 msgid "You will be automatically redirected in 10 seconds."
@@ -7338,9 +7267,7 @@ msgstr "10 másodpercen belül automatikusan át leszel irányítva."
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr ""
-"Azért lettél átirányítva erre az oldalra, mert az elérni kívánt funkció "
-"letiltott a demóban."
+msgstr "Azért lettél átirányítva erre az oldalra, mert az elérni kívánt funkció letiltott a demóban."
 
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:60
@@ -7375,7 +7302,8 @@ msgstr "Duplikált Dalok"
 #: ../../templates/show_duplicates.inc.php:30
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_podcast_episode.inc.php:113
-#: ../../templates/show_random.inc.php:68 ../../templates/show_song.inc.php:159
+#: ../../templates/show_random.inc.php:68
+#: ../../templates/show_song.inc.php:159
 #: ../../templates/show_video.inc.php:126
 msgid "Length"
 msgstr "Hossz"
@@ -7585,14 +7513,12 @@ msgid "Searched"
 msgstr "Átnézve"
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Cover Art Search"
-msgstr "Borító keresése"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Artist Art Search"
-msgstr "Borító keresése indul"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:58
 msgid "Direct URL to Image"
@@ -7793,9 +7719,7 @@ msgstr "3. Lépés - Felhasználói fiók beállítása"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
-"Ebben a lépésben létrejön a kezdeti Ampache adminfiók. Amikor az adminfiók "
-"elkészült, átirányítunk a belépés oldalára."
+msgstr "Ebben a lépésben létrejön a kezdeti Ampache adminfiók. Amikor az adminfiók elkészült, átirányítunk a belépés oldalára."
 
 #: ../../templates/show_install_account.inc.php:46
 msgid "Create Admin Account"
@@ -7814,37 +7738,26 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
-"Ez az oldal gondoskodik az Ampache adatbázis telepítéséről és az ampache.cfg."
-"php fájl létrehozásáról. Mielőtt folytatnád, ellenőrizd a következő "
-"előfeltételeket:"
+msgstr "Ez az oldal gondoskodik az Ampache adatbázis telepítéséről és az ampache.cfg.php fájl létrehozásáról. Mielőtt folytatnád, ellenőrizd a következő előfeltételeket:"
 
 #: ../../templates/show_install_check.inc.php:34
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr ""
-"Egy MySQL szerver olyan felhasználónévvel és jelszóval, mely képes "
-"adatbázisok létrehozására/módosítására"
+msgstr "Egy MySQL szerver olyan felhasználónévvel és jelszóval, mely képes adatbázisok létrehozására/módosítására"
 
 #. HINT: %1 and %2 refer to Ampache configuration files
 #: ../../templates/show_install_check.inc.php:35
 msgid "Your webserver has read access to the files \"%1$s\" and \"%2%s\""
-msgstr ""
-"A webszerverednek olvasási jogosultsága van a \"%1$s\" és a \"%2$s\" "
-"fájlokhoz"
+msgstr "A webszerverednek olvasási jogosultsága van a \"%1$s\" és a \"%2$s\" fájlokhoz"
 
 #: ../../templates/show_install_check.inc.php:38
 #, php-format
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
-msgstr ""
-"Miután meggyőződtél róla, hogy a fenti feltételek adottak, töltsd ki lent a "
-"szükséges információkat. Csak a szükséges config értékeket kell megadnod. Ha "
-"később módosítani szeretnél az Ampache telepítésen, a %s szerkesztésével "
-"teheted meg"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
+msgstr "Miután meggyőződtél róla, hogy a fenti feltételek adottak, töltsd ki lent a szükséges információkat. Csak a szükséges config értékeket kell megadnod. Ha később módosítani szeretnél az Ampache telepítésen, a %s szerkesztésével teheted meg"
 
 #: ../../templates/show_install_check.inc.php:43
 #: ../../templates/show_test.inc.php:58
@@ -7867,9 +7780,7 @@ msgstr "\"ampache.sql\" olvasható"
 msgid ""
 "This tests whether the file needed to initialize the database structure is "
 "available."
-msgstr ""
-"Ellenőrzi, hogy az adatbázis struktúra létrehozásához szükséges fájl "
-"elérhető-e."
+msgstr "Ellenőrzi, hogy az adatbázis struktúra létrehozásához szükséges fájl elérhető-e."
 
 #: ../../templates/show_install_check.inc.php:59
 msgid "\"ampache.cfg.php\" is writable"
@@ -7879,23 +7790,17 @@ msgstr "\"ampache.cfg.php\" írható"
 msgid ""
 "This tests whether PHP can write to config. This is not strictly necessary, "
 "but will help streamline the installation process."
-msgstr ""
-"Ellenőrzi, hogy a PHP tudja-e írni a configot. Ez nem feltétlen szükséges, "
-"de megkönnyíti a telepítés menetét."
+msgstr "Ellenőrzi, hogy a PHP tudja-e írni a configot. Ez nem feltétlen szükséges, de megkönnyíti a telepítés menetét."
 
 #: ../../templates/show_install_config.inc.php:54
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
-msgstr ""
-"Ez a lépés az alapbeállítás értékeivel elkészíti a config fájlt. Ha a "
-"config/ mappa írható, az \"írás\" kiválasztásakor az Ampache közvetlenül a "
-"megfelelő helyre beírja a config fájlt. Ha \"letöltés\"-t választasz, "
-"letöltheted a config fájlt, és kézzel bemásolhatod a helyére: %s ."
+msgstr "Ez a lépés az alapbeállítás értékeivel elkészíti a config fájlt. Ha a config/ mappa írható, az \"írás\" kiválasztásakor az Ampache közvetlenül a megfelelő helyre beírja a config fájlt. Ha \"letöltés\"-t választasz, letöltheted a config fájlt, és kézzel bemásolhatod a helyére: %s ."
 
 #: ../../templates/show_install_config.inc.php:65
 msgid "Web Path"
@@ -7923,9 +7828,7 @@ msgstr "Telepítés típus"
 msgid ""
 "Optimize Ampache for your use case. The installer will enable/disable "
 "features automatically."
-msgstr ""
-"Ampache optimizálása a használati szokásaidnak megfelelően. A telepítő "
-"automatikusan engedélyez/letilt egyes funkciókat."
+msgstr "Ampache optimizálása a használati szokásaidnak megfelelően. A telepítő automatikusan engedélyez/letilt egyes funkciókat."
 
 #: ../../templates/show_install_config.inc.php:114
 msgid "Ampache is configured for personal use with the best features."
@@ -7937,11 +7840,9 @@ msgstr "Minimalista"
 
 #: ../../templates/show_install_config.inc.php:119
 msgid ""
-"Only essential features are enabled to simply stream your music from the Web "
-"Interface."
-msgstr ""
-"Csak a legszükségesebb funkciók elérhetőek, egyszerű streameléshez a "
-"webfelületről."
+"Only essential features are enabled to simply stream your music from the Web"
+" Interface."
+msgstr "Csak a legszükségesebb funkciók elérhetőek, egyszerű streameléshez a webfelületről."
 
 #: ../../templates/show_install_config.inc.php:124
 msgid "Community"
@@ -7950,8 +7851,7 @@ msgstr "Közösségi"
 #: ../../templates/show_install_config.inc.php:124
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
-msgstr ""
-"Ajánlott beállítások, amikor az Ampache-t egy zenei közösség használja."
+msgstr "Ajánlott beállítások, amikor az Ampache-t egy zenei közösség használja."
 
 #: ../../templates/show_install_config.inc.php:129
 msgid "Allow Transcoding"
@@ -7962,27 +7862,17 @@ msgid ""
 "Transcoding allows you to convert music from one encoding to another. "
 "Ampache supports on the fly transcoding of any file type based on user, "
 "player, IP address or available bandwidth. In order to transcode, Ampache "
-"takes advantage of existing binary applications such as ffmpeg. In order for "
-"transcoding to work you must first install the supporting applications and "
+"takes advantage of existing binary applications such as ffmpeg. In order for"
+" transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr ""
-"A transzkódolással a zene konvertálható egyik enkódolásról egy másikra. Az "
-"Ampache támogatja bármely fájl valós idejű transzkódolását felhasználótól, "
-"lejátszótól, IP címtől vagy az elérhető sávszélességtől függően. A "
-"transzkódoláshoz az Ampache egy létező bináris alkalmazást használ, mint "
-"például ffmpeg-et. Hogy ez működjön, előbb telepítened kell a transzkódolást "
-"támogató alkalmazást, és győződj meg róla, hogy a webszerver végrehajthatja "
-"azt."
+msgstr "A transzkódolással a zene konvertálható egyik enkódolásról egy másikra. Az Ampache támogatja bármely fájl valós idejű transzkódolását felhasználótól, lejátszótól, IP címtől vagy az elérhető sávszélességtől függően. A transzkódoláshoz az Ampache egy létező bináris alkalmazást használ, mint például ffmpeg-et. Hogy ez működjön, előbb telepítened kell a transzkódolást támogató alkalmazást, és győződj meg róla, hogy a webszerver végrehajthatja azt."
 
 #: ../../templates/show_install_config.inc.php:133
 msgid ""
 "This section applies the default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once setup "
 "has ended."
-msgstr ""
-"Ez a szakasz a transzkódolás alapbeállításait konfigurálja az általad "
-"használni kívánt alkalmazásnak megfelelően. Szükséges lehet a beállítások "
-"kézi módosítása a telepítés befejeztével."
+msgstr "Ez a szakasz a transzkódolás alapbeállításait konfigurálja az általad használni kívánt alkalmazásnak megfelelően. Szükséges lehet a beállítások kézi módosítása a telepítés befejeztével."
 
 #: ../../templates/show_install_config.inc.php:133
 #: ../../templates/show_install_config.inc.php:161
@@ -7998,10 +7888,7 @@ msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (FFmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr ""
-"Nem található transzkódoló alkalmazás. Lehet, hogy telepítened kell egyet "
-"(népszerű lehetőségek az FFmpeg, avconv, stb.), vagy kézzel kell módosítanod "
-"a transzkódolás beállításait a telepítés végeztével."
+msgstr "Nem található transzkódoló alkalmazás. Lehet, hogy telepítened kell egyet (népszerű lehetőségek az FFmpeg, avconv, stb.), vagy kézzel kell módosítanod a transzkódolás beállításait a telepítés végeztével."
 
 #: ../../templates/show_install_config.inc.php:159
 msgid "Players"
@@ -8011,19 +7898,13 @@ msgstr "Lejátszók"
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media to any player."
-msgstr ""
-"Az Ampache több, mint egy web interfész. Különböző szerver oldali "
-"megvalósításokat tartalmaz, hogy biztosítsa a médiád streamelését bármilyen "
-"lejátszóra."
+msgstr "Az Ampache több, mint egy web interfész. Különböző szerver oldali megvalósításokat tartalmaz, hogy biztosítsa a médiád streamelését bármilyen lejátszóra."
 
 #: ../../templates/show_install_config.inc.php:161
 msgid ""
 "Select each backend to enable. Depending on the backend, you may need to "
 "perform additional configuration."
-msgstr ""
-"Válaszd ki, mely szerver oldali megvalósításokat engedélyezed. A "
-"választásodtól függően lehet, hogy további beállításokat kell majd "
-"eszközölnöd."
+msgstr "Válaszd ki, mely szerver oldali megvalósításokat engedélyezed. A választásodtól függően lehet, hogy további beállításokat kell majd eszközölnöd."
 
 #: ../../templates/show_install_config.inc.php:196
 msgid "File Insight"
@@ -8102,10 +7983,7 @@ msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
 "slower computers."
-msgstr ""
-"Ebben a lépésben létrejön az Ampache adatbázis, ehhez egy MySQL felhasználói "
-"fiókra van szükség adatbázis létrehozó jogosultsággal. A művelet lassú "
-"számítógépeken eltarthat egy darabig."
+msgstr "Ebben a lépésben létrejön az Ampache adatbázis, ehhez egy MySQL felhasználói fiókra van szükség adatbázis létrehozó jogosultsággal. A művelet lassú számítógépeken eltarthat egy darabig."
 
 #: ../../templates/show_install.inc.php:46
 msgid "Insert Ampache Database"
@@ -8336,9 +8214,8 @@ msgid "Gather All Art"
 msgstr "Minden Borító összegyűjtése"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
-#, fuzzy
 msgid "Update All File Tags"
-msgstr "Összes frissítése"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 msgid "Show Disabled Songs"
@@ -8489,9 +8366,8 @@ msgstr "Felvevő"
 
 #: ../../templates/show_playlist_medias.inc.php:29
 #: ../../templates/show_playlist_medias.inc.php:105
-#, fuzzy
 msgid "Duration"
-msgstr "Információ"
+msgstr ""
 
 #: ../../templates/show_playlist_row.inc.php:89
 msgid "Playlist Edit"
@@ -8533,7 +8409,8 @@ msgid "Upgrade"
 msgstr "Frissít"
 
 #: ../../templates/show_podcast_episode.inc.php:83
-#: ../../templates/show_song.inc.php:108 ../../templates/show_video.inc.php:103
+#: ../../templates/show_song.inc.php:108
+#: ../../templates/show_video.inc.php:103
 msgid "Link"
 msgstr "Link"
 
@@ -8765,9 +8642,7 @@ msgstr "Kérjük, várd meg, hogy egy adminisztrátor aktiválja a fiókod"
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information"
-msgstr ""
-"Az aktivációs kulcs elküldve az általad megadott e-mail címre. Kérjük, "
-"ellenőrizd a leveleid további információkért"
+msgstr "Az aktivációs kulcs elküldve az általad megadott e-mail címre. Kérjük, ellenőrizd a leveleid további információkért"
 
 #: ../../templates/show_registration_confirmation.inc.php:55
 msgid "Your Account Has Been Created"
@@ -8917,7 +8792,8 @@ msgstr "ReplayGain Szám erősítés"
 msgid "ReplayGain Album Gain"
 msgstr "ReplayGain Album erősítés"
 
-#: ../../templates/show_song.inc.php:184 ../../templates/show_video.inc.php:142
+#: ../../templates/show_song.inc.php:184
+#: ../../templates/show_video.inc.php:142
 msgid "Last Updated"
 msgstr "Utoljára frissítve"
 
@@ -8929,7 +8805,8 @@ msgstr "Licenszelés"
 msgid "Song Information"
 msgstr "Dal információ"
 
-#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:101
+#: ../../templates/show_songs.inc.php:40
+#: ../../templates/show_songs.inc.php:101
 msgid "License"
 msgstr "Licensz"
 
@@ -8971,9 +8848,7 @@ msgstr "Ampache Konfiguráció értelmezési hiba"
 msgid ""
 "You may have reached this page because your %s configuration file was not "
 "parsable"
-msgstr ""
-"Azért kerülhettél erre az oldalra, mert a %s konfigurációs fájl nem volt "
-"értelmezhető"
+msgstr "Azért kerülhettél erre az oldalra, mert a %s konfigurációs fájl nem volt értelmezhető"
 
 #: ../../templates/show_test_config.inc.php:46
 #: ../../templates/test_error_page.inc.php:51
@@ -8984,9 +8859,7 @@ msgstr "Kérjük, segítségért látogasd meg a wikit"
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
-msgstr ""
-"Azért kerülhettél erre az oldalra, mert konfigurációs hiba történt. Debug "
-"információt lásd lent."
+msgstr "Azért kerülhettél erre az oldalra, mert konfigurációs hiba történt. Debug információt lásd lent."
 
 #: ../../templates/show_test.inc.php:50
 #: ../../templates/show_test_table.inc.php:131
@@ -9014,12 +8887,9 @@ msgstr "Ellenőrzi, hogy az Ampache függőségei installálva vannak-e."
 #: ../../templates/show_test_table.inc.php:34
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
-"mv composer.phar /usr/local/bin/composer). Then run `composer install --"
-"prefer-source --no-interaction` on the Ampache directory."
-msgstr ""
-"Kérjük, töltsd le a Composer-t innen: http://getcomposer.org, és telepítsd "
-"(pl.: mv composer.phar /usr/local/bin/composer). Ezután futtasd a `composer "
-"install --prefer-source --no-interaction` parancsot az Ampache mappában."
+"mv composer.phar /usr/local/bin/composer). Then run `composer install "
+"--prefer-source --no-interaction` on the Ampache directory."
+msgstr "Kérjük, töltsd le a Composer-t innen: http://getcomposer.org, és telepítsd (pl.: mv composer.phar /usr/local/bin/composer). Ezután futtasd a `composer install --prefer-source --no-interaction` parancsot az Ampache mappában."
 
 #: ../../templates/show_test_table.inc.php:40
 msgid "PHP hash extension"
@@ -9029,9 +8899,7 @@ msgstr "PHP hash kiterjesztés"
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a hash kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy a hash kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:45
 msgid "SHA256"
@@ -9041,9 +8909,7 @@ msgstr "SHA256"
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a hash kiterjesztés támogatja-e az SHA256-ot. Ez az "
-"algoritmus szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy a hash kiterjesztés támogatja-e az SHA256-ot. Ez az algoritmus szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:50
 msgid "PHP PDO extension"
@@ -9053,9 +8919,7 @@ msgstr "PHP PDO kiterjesztés"
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a PDO kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy a PDO kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:55
 msgid "MySQL"
@@ -9065,9 +8929,7 @@ msgstr "MySQL"
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a PDO MySQL driver engedélyezve van-e. Ez a driver szükséges "
-"az Ampache-nak."
+msgstr "Ellenőrzi, hogy a PDO MySQL driver engedélyezve van-e. Ez a driver szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:60
 msgid "PHP session extension"
@@ -9075,11 +8937,9 @@ msgstr "PHP session kiterjesztés"
 
 #: ../../templates/show_test_table.inc.php:62
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a session kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
+msgstr "Ellenőrzi, hogy a session kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:65
 msgid "PHP iconv extension"
@@ -9089,9 +8949,7 @@ msgstr "PHP iconv kiterjesztés"
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy az iconv kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy az iconv kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:70
 msgid "PHP JSON extension"
@@ -9101,17 +8959,13 @@ msgstr "PHP JSON kiterjesztés"
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy a JSON kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy a JSON kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:77
 msgid ""
 "This tests whether you have the intl extension enabled. This extension is "
 "required by Ampache."
-msgstr ""
-"Ellenőrzi, hogy az intl kiterjesztés engedélyezve van-e. Ez a kiterjesztés "
-"szükséges az Ampache-nak."
+msgstr "Ellenőrzi, hogy az intl kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
 #: ../../templates/show_test_table.inc.php:80
 msgid "PHP cURL extension"
@@ -9119,11 +8973,9 @@ msgstr "PHP cURL kiterjesztés"
 
 #: ../../templates/show_test_table.inc.php:82
 msgid ""
-"This tests whether you have the cURL extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy a cURL kiterjesztés engedélyezve van-e. Ez nem feltétlenül "
-"szükséges, de a felhasználói élményt jobbá teheti."
+"This tests whether you have the cURL extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
+msgstr "Ellenőrzi, hogy a cURL kiterjesztés engedélyezve van-e. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:85
 msgid "PHP zlib extension"
@@ -9131,11 +8983,9 @@ msgstr "PHP zlib kiterjesztés"
 
 #: ../../templates/show_test_table.inc.php:87
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
-msgstr ""
-"Ellenőrzi, hogy a zlib kiterjesztés engedélyezve van-e. Ez nem feltétlenül "
-"szükséges, de a felhasználói élményt jobbá teheti (zip letöltés)."
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
+msgstr "Ellenőrzi, hogy a zlib kiterjesztés engedélyezve van-e. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti (zip letöltés)."
 
 #: ../../templates/show_test_table.inc.php:90
 msgid "PHP SimpleXML extension"
@@ -9145,9 +8995,7 @@ msgstr "PHP SimpleXML kiterjesztés"
 msgid ""
 "This tests whether you have the SimpleXML extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy a SimpleXML kiterjesztés engedélyezve van-e. Ez nem "
-"feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
+msgstr "Ellenőrzi, hogy a SimpleXML kiterjesztés engedélyezve van-e. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:95
 msgid "PHP GD extension"
@@ -9157,9 +9005,7 @@ msgstr "PHP GD kiterjesztés"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy a GD kiterjesztés engedélyezve van-e. Ez nem feltétlenül "
-"szükséges, de a felhasználói élményt jobbá teheti."
+msgstr "Ellenőrzi, hogy a GD kiterjesztés engedélyezve van-e. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:100
 msgid "PHP memory limit override"
@@ -9169,9 +9015,7 @@ msgstr "PHP memóriakorlát felülírás"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy az Ampache képes-e felülírni a memóriakorlátot. Ez nem "
-"feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
+msgstr "Ellenőrzi, hogy az Ampache képes-e felülírni a memóriakorlátot. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:105
 msgid "PHP execution time override"
@@ -9179,11 +9023,9 @@ msgstr "PHP végrehajtási idő korlát"
 
 #: ../../templates/show_test_table.inc.php:107
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy az Ampache képes-e felülírni a végrehajtási idő korlátot. Ez "
-"nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
+msgstr "Ellenőrzi, hogy az Ampache képes-e felülírni a végrehajtási idő korlátot. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:110
 msgid "PHP max upload size"
@@ -9193,10 +9035,7 @@ msgstr "PHP max. feltöltés méret"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr ""
-"Ellenőrzi, hogy az Ampache fel tud-e tölteni közepes méretű fájlokat "
-"(>=20M). Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá "
-"teheti."
+msgstr "Ellenőrzi, hogy az Ampache fel tud-e tölteni közepes méretű fájlokat (>=20M). Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti."
 
 #: ../../templates/show_test_table.inc.php:115
 msgid "PHP integer size"
@@ -9207,10 +9046,7 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires a 64-bit operating system."
-msgstr ""
-"Ellenőrzi, hogy az Ampache képes-e nagy fájlok kezelésére (>2GB). Ez nem "
-"feltétlenül szükséges, de a felhasználói élményt jobbá teheti. Általában 64 "
-"bites operációs rendszer szükséges hozzá."
+msgstr "Ellenőrzi, hogy az Ampache képes-e nagy fájlok kezelésére (>2GB). Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti. Általában 64 bites operációs rendszer szükséges hozzá."
 
 #: ../../templates/show_test_table.inc.php:120
 msgid "PHP mbstring.func_overload"
@@ -9224,11 +9060,7 @@ msgid ""
 "is not strictly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr ""
-"Ellenőrzi, hogy a PHP %s beállítás tönkreteszi-e az ID3 címke támogatást. Ez "
-"nem feltétlen szükséges, de az ID3 címkék írásának engedélyezése "
-"(alapbeállításként le van tiltva) együtt az mbstring.func_overload-dal "
-"visszafordíthatatlanul tönkreteheti a zenefájljaidat."
+msgstr "Ellenőrzi, hogy a PHP %s beállítás tönkreteszi-e az ID3 címke támogatást. Ez nem feltétlen szükséges, de az ID3 címkék írásának engedélyezése (alapbeállításként le van tiltva) együtt az mbstring.func_overload-dal visszafordíthatatlanul tönkreteheti a zenefájljaidat."
 
 #: ../../templates/show_test_table.inc.php:127
 msgid "Configuration file readability"
@@ -9236,19 +9068,15 @@ msgstr "Konfigurációs fájl olvashatósága"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid ""
-"This test attempts to read config/ampache.cfg.php. If this fails the file is "
-"either not in the correct location, or not readable."
-msgstr ""
-"Megpróbálja olvasni a config/ampache.cfg.php fájlt. Ha nem sikerül, a fájl "
-"vagy nincs a megfelelő helyen, vagy nem olvasható."
+"This test attempts to read config/ampache.cfg.php. If this fails the file is"
+" either not in the correct location, or not readable."
+msgstr "Megpróbálja olvasni a config/ampache.cfg.php fájlt. Ha nem sikerül, a fájl vagy nincs a megfelelő helyen, vagy nem olvasható."
 
 #: ../../templates/show_test_table.inc.php:131
 msgid ""
-"If you are installing Ampache for the first time you can ignore this warning "
-"and proceed to the installer."
-msgstr ""
-"Ha az első alkalommal telepíted az Ampache-t, figyelmen kívül hagyhatod ezt "
-"a figyelmeztetést és folytathatod a telepítést."
+"If you are installing Ampache for the first time you can ignore this warning"
+" and proceed to the installer."
+msgstr "Ha az első alkalommal telepíted az Ampache-t, figyelmen kívül hagyhatod ezt a figyelmeztetést és folytathatod a telepítést."
 
 #: ../../templates/show_test_table.inc.php:136
 msgid "Configuration file validity"
@@ -9258,9 +9086,7 @@ msgstr "Konfigurációs fájl érvényesség"
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that Ampache is able to completely parse your config file."
-msgstr ""
-"Ez a teszt meggyőződik róla, hogy minden szükséges konfigurációs értéket "
-"beállítottál, és az Ampache képes teljesen értelmezni a config fájlt."
+msgstr "Ez a teszt meggyőződik róla, hogy minden szükséges konfigurációs értéket beállítottál, és az Ampache képes teljesen értelmezni a config fájlt."
 
 #: ../../templates/show_test_table.inc.php:148
 msgid "Database connection"
@@ -9270,9 +9096,7 @@ msgstr "Adatbázis-kapcsolat"
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
-msgstr ""
-"Megpróbál kapcsolódni az adatbázishoz a konfigurációs fájlból felolvasott "
-"értékekkel."
+msgstr "Megpróbál kapcsolódni az adatbázishoz a konfigurációs fájlból felolvasott értékekkel."
 
 #: ../../templates/show_test_table.inc.php:153
 msgid "Database tables"
@@ -9282,19 +9106,14 @@ msgstr "Adatbázis-táblák"
 msgid ""
 "This checks a few key tables to make sure that the Ampache database exists, "
 "and the user has access to the database"
-msgstr ""
-"Ellenőriz néhány kulcsfontosságú táblát, hogy meggyőződjön róla, hogy az "
-"Ampache adatbázis létezik, és a felhasználó hozzáfér"
+msgstr "Ellenőriz néhány kulcsfontosságú táblát, hogy meggyőződjön róla, hogy az Ampache adatbázis létezik, és a felhasználó hozzáfér"
 
 #: ../../templates/show_test_table.inc.php:167
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr ""
-"Ez a teszt ellenőrzi, hogy a web_path változó helyesen van-e beállítva, és a "
-"kezdőlap megjeleníthető. Ha nem látsz pipát, a web_path nincs helyesen "
-"beállítva."
+msgstr "Ez a teszt ellenőrzi, hogy a web_path változó helyesen van-e beállítva, és a kezdőlap megjeleníthető. Ha nem látsz pipát, a web_path nincs helyesen beállítva."
 
 #: ../../templates/show_tvshow.inc.php:74
 #: ../../templates/show_tvshow.inc.php:77
@@ -9606,9 +9425,8 @@ msgid "Help"
 msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:74
-#, fuzzy
 msgid "Ampache Wiki"
-msgstr "Ampache"
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:75
 msgid "API Documentation"
@@ -9618,9 +9436,7 @@ msgstr ""
 msgid ""
 "You may have reached this page because Ampache was unable to load the "
 "required dependencies"
-msgstr ""
-"Azért kerülhettél erre az oldalra, mert az Ampache nem tudta betölteni a "
-"szükséges függőségeket"
+msgstr "Azért kerülhettél erre az oldalra, mert az Ampache nem tudta betölteni a szükséges függőségeket"
 
 #: ../../tvshow_seasons.php:37
 msgid "The entire TV Season will be deleted"
@@ -9646,15 +9462,14 @@ msgstr "TV Sorozat törölve"
 msgid "Couldn't delete this TV Show"
 msgstr "Nem sikerült a TV Sorozat törlése"
 
-#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version
+#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows
+#. current database version
 #: ../../update.php:82
 #, php-format
 msgid ""
 "This page handles all database updates to Ampache starting with %1$s. Your "
 "current version is %2$s with database version %3$s"
-msgstr ""
-"Ez az oldal kezel minden Ampache adatbázis frissítést %1$s -től. A jelenlegi "
-"verzió %2$s, adatbázis verzió %3$s"
+msgstr "Ez az oldal kezel minden Ampache adatbázis frissítést %1$s -től. A jelenlegi verzió %2$s, adatbázis verzió %3$s"
 
 #: ../../update.php:91
 msgid "Update Now!"
@@ -9697,8 +9512,8 @@ msgstr "Nem sikerült a Videó törlése"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 11.10.2020 14:56:45 CEST
-#
+# Last Update: 28.12.2020 20:06:12 CET
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "Letöltések engedélyezése"
@@ -9828,16 +9643,13 @@ msgid "Share Recently Played information"
 msgstr "Nemrég Lejátszott információ megosztása"
 
 #: Database preference table id 92
-msgid "Share Recently Played information - Allow access to streaming date/time"
-msgstr ""
-"Nemrég Lejátszott információ megosztása - Hozzáférés engedélyezése a "
-"Streaming dátum/időhöz"
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
+msgstr "Nemrég Lejátszott információ megosztása - Hozzáférés engedélyezése a Streaming dátum/időhöz"
 
 #: Database preference table id 93
 msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-"Nemrég Lejátszott információ megosztása - Hozzáférés engedélyezése a "
-"streaming ügynökhöz"
+msgstr "Nemrég Lejátszott információ megosztása - Hozzáférés engedélyezése a streaming ügynökhöz"
 
 #: Database preference table id 94
 msgid "Fix header position on compatible themes"
@@ -9905,8 +9717,7 @@ msgstr "Legfelső menü"
 
 #: Database preference table id 110
 msgid "Democratic - Clear votes for expired user sessions"
-msgstr ""
-"Demokratikus - Lejárt felhasználói munkamenetek szavazatainak takarítása"
+msgstr "Demokratikus - Lejárt felhasználói munkamenetek szavazatainak takarítása"
 
 #: Database preference table id 111
 msgid "Show donate button in footer"
@@ -10054,8 +9865,7 @@ msgstr "Feltöltött fájl átnevezése a Katalógus mintának megfelelően"
 
 #: Database preference table id 152
 msgid "Check library item at import time and don't import duplicates"
-msgstr ""
-"Könyvtár bejegyzés ellenőrzése importáláskor, ne importáljon már létezőt"
+msgstr "Könyvtár bejegyzés ellenőrzése importáláskor, ne importáljon már létezőt"
 
 #: Database preference table id 153
 msgid "Show filter box on browse"
@@ -10076,9 +9886,7 @@ msgstr "Saját üres videó alapbeállított kép"
 #: Database preference table id 157
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-"Ábécérendben böngészés alapbeállításként a következő könyvtári "
-"bejegyzésekben (album,előadó,...)"
+msgstr "Ábécérendben böngészés alapbeállításként a következő könyvtári bejegyzésekben (album,előadó,...)"
 
 #: Database preference table id 171
 msgid "Show # skipped"
@@ -10090,9 +9898,7 @@ msgstr "Egyedi dátum és idő"
 
 #: Database preference table id 173
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr ""
-"Cron használata a számított SQL adatok (pl. média lejátszás statisztikák) "
-"gyorsítótárazására"
+msgstr "Cron használata a számított SQL adatok (pl. média lejátszás statisztikák) gyorsítótárazására"
 
 #: Database preference table id 174
 msgid "Only add unique items to playlists"
@@ -10103,9 +9909,8 @@ msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr ""
 
 #: Database preference table id 176
-#, fuzzy
 msgid "Custom URL - Login page background"
-msgstr "Egyedi URL - Bejelentkezési oldal logó"
+msgstr ""
 
 #: Database preference subcategory table id 1
 msgid "feature"
