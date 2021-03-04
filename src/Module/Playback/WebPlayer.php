@@ -308,7 +308,6 @@ class WebPlayer
         }
 
         $urlinfo = static::getStreamUrlParser()->parse($item->url);
-        $urlinfo = Stream_Url::parse($item->url);
         $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
         $url     = $urlinfo['base_url'];
         $media   = self::get_media_object($urlinfo);

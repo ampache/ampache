@@ -192,8 +192,8 @@ final class Session implements SessionInterface
 
         // Destroy our cookie!
         $cookieSetter->set($session_name, '', $options);
-        $cookieSetter->set(sprintf('%_user', $session_name), '', $options);
-        $cookieSetter->set(sprintf('%_lang', $session_name), '', $options);
+        $cookieSetter->set(sprintf('%s_user', $session_name), '', $options);
+        $cookieSetter->set(sprintf('%s_lang', $session_name), '', $options);
 
         return true;
     }

@@ -730,7 +730,7 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (strlen((string)$results['theme_name']) > 0) {
             // In case the theme was removed
-            if (!Core::is_readable(__DIR__ . '/../../public/themes/' . $results['theme_name'])) {
+            if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
             }
         } else {

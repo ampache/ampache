@@ -358,6 +358,10 @@ class Core
             return true;
         }
 
+        if (file_exists($path) === false) {
+            return false;
+        }
+
         $handle = @fopen($path, 'rb');
         if ($handle === false) {
             return false;
