@@ -2,9 +2,9 @@ name: unittest
 
 on:
   push:
-    branches: [ source-changes, edge ]
+    branches: [ develop, edge ]
   pull_request:
-    branches: [ source-changes, edge ]
+    branches: [ develop, edge ]
 
 jobs:
   build:
