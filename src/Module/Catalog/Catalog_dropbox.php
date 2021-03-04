@@ -395,7 +395,7 @@ class Catalog_dropbox extends Catalog
                 $results['file'] = $outfile;
                 $song_id         = Song::insert($results);
                 if ($song_id) {
-                    parent::gather_art([$song_id], null);
+                    parent::gather_art([$song_id]);
                 }
                 $results['file'] = $path;
                 $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
@@ -735,7 +735,7 @@ class Catalog_dropbox extends Catalog
                     if ($res) {
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($outfile, $song->id));
-                        parent::gather_art([$song->id], null);
+                        parent::gather_art([$song->id]);
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($song->file, $song->id));
                         $search_count++;

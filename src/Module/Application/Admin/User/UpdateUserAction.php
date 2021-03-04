@@ -68,7 +68,7 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('edit_user', 'post')) {
+        if (!Core::form_verify('edit_user')) {
             throw new AccessDeniedException();
         }
 

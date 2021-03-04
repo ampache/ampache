@@ -74,7 +74,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
-        if (!Core::form_verify('add_catalog', 'post')) {
+        if (!Core::form_verify('add_catalog')) {
             throw new AccessDeniedException();
         }
 

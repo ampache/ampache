@@ -325,7 +325,7 @@ class mpd
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
         if (!$this->connected) {
-            $this->_error('SendCommand', 'Not connected', 1);
+            $this->_error('SendCommand', 'Not connected');
 
             return false;
         } else {

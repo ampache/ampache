@@ -61,7 +61,7 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_channel', 'post')
+            !Core::form_verify('add_channel')
         ) {
             throw new AccessDeniedException();
         }

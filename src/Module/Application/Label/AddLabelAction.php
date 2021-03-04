@@ -59,7 +59,7 @@ final class AddLabelAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false ||
-            !Core::form_verify('add_label', 'post')
+            !Core::form_verify('add_label')
         ) {
             throw new AccessDeniedException();
         }

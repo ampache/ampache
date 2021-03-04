@@ -64,7 +64,7 @@ final class GenerateRsstokenAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('generate_rsstoken', 'post')) {
+        if (!Core::form_verify('generate_rsstoken')) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();

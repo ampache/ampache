@@ -87,7 +87,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         );
 
         // Attempt to find the art.
-        $art = $this->modelFactory->createArt((int) $walbum->mbid, 'album');
+        $art = $this->modelFactory->createArt((int) $walbum->mbid);
 
         $images = $this->artCollector->collect(
             $art,

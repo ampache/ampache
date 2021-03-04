@@ -59,7 +59,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
                 Core::get_post('method') == 'admin' &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false
             ) ||
-            !Core::form_verify('update_preference', 'post')
+            !Core::form_verify('update_preference')
         ) {
             throw new AccessDeniedException();
         }

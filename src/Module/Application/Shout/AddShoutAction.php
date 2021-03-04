@@ -63,7 +63,7 @@ final class AddShoutAction implements ApplicationActionInterface
         // Must be at least a user to do this
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
-            !Core::form_verify('add_shout', 'post') ||
+            !Core::form_verify('add_shout') ||
             !InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))
         ) {
             throw new AccessDeniedException();

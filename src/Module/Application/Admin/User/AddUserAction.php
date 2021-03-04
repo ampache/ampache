@@ -68,7 +68,7 @@ final class AddUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('add_user', 'post')) {
+        if (!Core::form_verify('add_user')) {
             throw new AccessDeniedException();
         }
 

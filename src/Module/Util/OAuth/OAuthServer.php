@@ -116,7 +116,7 @@ class OAuthServer
     {
         $this->get_version($request);
         $consumer = $this->get_consumer($request);
-        $token    = $this->get_token($request, $consumer, "access");
+        $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
         return array($consumer, $token);

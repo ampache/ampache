@@ -61,7 +61,7 @@ final class UpdateUserAction implements ApplicationActionInterface
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
                 Core::get_global('user')->id > 0
             ) ||
-            !Core::form_verify('update_user', 'post')
+            !Core::form_verify('update_user')
         ) {
             throw new AccessDeniedException();
         }
