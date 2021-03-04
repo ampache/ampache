@@ -111,7 +111,8 @@ final class ChannelRunner implements ChannelRunnerInterface
         $last_stream    = microtime(true);
         $chunk_buffer   = '';
 
-        while (true) {
+        stream_set_blocking($server , false);
+        while (stream_get_meta_data($server)['timed_out'] == null) {
             //prepare readable sockets
             $read_socks = $client_socks;
             if (count($client_socks) < $channel->max_listeners) {

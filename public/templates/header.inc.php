@@ -412,7 +412,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=tag">
+                    <a href="<?php echo $web_path ?>/browse.php?action=tag&type=song">
                         <?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?>
                         <span><?php echo $t_tagcloud ?></span>
                     </a>

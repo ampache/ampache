@@ -44,9 +44,9 @@ final class MoveCatalogPathCommand extends Command
         $this->updateCatalog   = $updateCatalog;
 
         $this
-            ->argument('[catalogName]', T_('The name of the catalog to update'), null)
+            ->argument('[catalogName]', T_('The name of the catalog to update'))
             ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
-            ->argument('[path]', T_('New path'), null)
+            ->argument('[path]', T_('New path'))
             ->usage('<bold>  run:moveCatalogPath some-catalog /new/path</end> <comment> ## ' . T_('Update the path of `some-catalog` to /new/path') . '</end><eol/>');
     }
 

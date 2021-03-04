@@ -118,7 +118,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 1));
+                $dirs[] = Core::conv_lc_file(dirname($song->file));
                 // look one level up (e.g. /mnt/Music/%artistName%)
                 $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
             }

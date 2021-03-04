@@ -62,7 +62,7 @@ final class DeleteAvatarAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_avatar', 'post')) {
+        if (!Core::form_verify('delete_avatar')) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();

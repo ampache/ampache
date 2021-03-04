@@ -84,7 +84,7 @@ $t_search    = T_('Search'); ?>
             <?php if ($allowVideo) { ?>
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=video"><?php echo $t_videos ?></a></li>
                 <?php } ?>
-        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo $t_tagcloud; ?></a></li>
+        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=song"><?php echo $t_tagcloud; ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
               <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
             <?php
@@ -160,6 +160,9 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
             <?php if (User::is_registered()) { ?>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
                 <?php if (AmpConfig::get('ratings')) { ?>
                 <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/stats.php?action=highest"><?php echo T_('Top Rated') ?></a></li>
                 <?php } ?>

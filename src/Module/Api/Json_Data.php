@@ -934,7 +934,7 @@ class Json_Data
             $ourSong['disk']                  = (int) $song->disk;
             $ourSong['track']                 = (int) $song->track;
             $ourSong['filename']              = $song->file;
-            $ourSong['genre']                 = self::genre_array($song->tags, true);
+            $ourSong['genre']                 = self::genre_array($song->tags);
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int)$song->time;
             $ourSong['year']                  = (int)$song->year;

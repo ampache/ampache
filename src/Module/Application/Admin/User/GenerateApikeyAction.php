@@ -67,7 +67,7 @@ final class GenerateApikeyAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('generate_apikey', 'post')) {
+        if (!Core::form_verify('generate_apikey')) {
             throw new AccessDeniedException();
         }
 

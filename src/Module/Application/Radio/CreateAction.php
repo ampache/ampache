@@ -59,7 +59,7 @@ final class CreateAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_radio', 'post')
+            !Core::form_verify('add_radio')
         ) {
             throw new AccessDeniedException();
         }

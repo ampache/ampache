@@ -54,6 +54,7 @@ class Channel extends database_object implements Media, library_item
     public $name;
     public $description;
     public $fixed_endpoint;
+    public $url;
 
     public $header_chunk;
     public $chunk_size              = 4096;

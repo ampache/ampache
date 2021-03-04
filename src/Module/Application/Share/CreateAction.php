@@ -66,7 +66,7 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_share', 'post')
+            !Core::form_verify('add_share')
         ) {
             throw new AccessDeniedException();
         }

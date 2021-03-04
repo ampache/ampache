@@ -81,9 +81,7 @@ final class PlaylistRepository implements PlaylistRepositoryInterface
         }
         if ($playlistName !== '') {
             $playlistName = (!$like) ? "= '" . $playlistName . "'" : "LIKE  '%" . $playlistName . "%' ";
-            if ($is_admin) {
-                $sql .= ($is_admin) ? "AND `name` " . $playlistName : "WHERE `name` " . $playlistName;
-            }
+            $sql .= ($is_admin) ? "AND `name` " . $playlistName : "WHERE `name` " . $playlistName;
         }
         $sql .= "ORDER BY `name`";
 

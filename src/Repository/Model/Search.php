@@ -1107,13 +1107,16 @@ class Search extends playlist_object
     /**
      * parse_rules
      *
-     * Takes an array of sanitized search data from the form and generates
-     * our real array from it.
+     * Takes an array of sanitized search data from the form and generates our real array from it.
      * @param array $data
      */
     public function parse_rules($data)
     {
-        $this->rules = array();
+        // check that a limit or random flag have been sent
+        $this->random = (isset($data['random'])) ? (int) $data['random'] : $this->random;
+        $this->limit  = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
+        // parse the remaining rule* keys
+        $this->rules  = array();
         foreach ($data as $rule => $value) {
             if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
@@ -1212,7 +1215,7 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
-            $this->random = ((int)$data['random'] > 0) ? 1 : 0;
+            $this->random = ((int)$data['random'] > 0 || $this->random) ? 1 : 0;
             $this->limit  = $data['limit'];
         }
 

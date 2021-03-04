@@ -333,7 +333,7 @@ class Catalog_subsonic extends Catalog
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
 
-        return $art->insert($image, '');
+        return $art->insert($image);
     }
 
     /**

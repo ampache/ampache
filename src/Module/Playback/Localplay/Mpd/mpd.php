@@ -240,21 +240,17 @@ class mpd
 
         if ($password) {
             if (!$this->SendCommand(self::COMMAND_PASSWORD, $password, false)) {
+                // bad password or command
                 $this->connected = false;
                 $this->_error('construct', 'Password supplied is incorrect or Invalid Command');
 
-                return false;  // bad password or command
+                return false;
             }
-        } // if password
-        else {
+        } else {
             if (!$this->RefreshInfo()) {
                 // no read access, might as well be disconnected
                 $this->connected = false;
-                if ($password) {
-                    $this->_error('construct', 'Password supplied does not have read access');
-                } else {
-                    $this->_error('construct', 'Password required to access server');
-                }
+                $this->_error('construct', 'Password required to access server');
 
                 return false;
             }
@@ -325,7 +321,7 @@ class mpd
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
         if (!$this->connected) {
-            $this->_error('SendCommand', 'Not connected', 1);
+            $this->_error('SendCommand', 'Not connected');
 
             return false;
         } else {

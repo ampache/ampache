@@ -52,7 +52,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-i|--import', T_('Imports playlists'),  'boolval',false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
-            ->argument('[catalogName]', T_('Name of Catalog (optional)'), null)
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
             ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## ' . T_('Update the local catalog called `some-catalog`') . '</end><eol/>');
     }
