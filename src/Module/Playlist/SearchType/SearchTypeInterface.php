@@ -20,22 +20,13 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Playlist\SearchType;
 
-namespace Ampache\Module\Playlist;
+use Ampache\Repository\Model\Search;
 
-use function DI\autowire;
-
-return [
-    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
-    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    SearchType\SearchTypeMapperInterface::class => autowire(SearchType\SearchTypeMapper::class),
-    SearchType\AlbumSearchType::class => autowire(),
-    SearchType\ArtistSearchType::class => autowire(),
-    SearchType\LabelSearchType::class => autowire(),
-    SearchType\PlaylistSearchType::class => autowire(),
-    SearchType\SongSearchType::class => autowire(),
-    SearchType\TagSearchType::class => autowire(),
-    SearchType\UserSearchType::class => autowire(),
-    SearchType\VideoSearchType::class => autowire(),
-];
+interface SearchTypeInterface
+{
+    public function getSql(
+        Search $search
+    ): array;
+}

@@ -20,22 +20,36 @@
  *
  */
 
-declare(strict_types=1);
+declare(strict_types=0);
 
-namespace Ampache\Module\Playlist;
+namespace Ampache\Module\Playlist\SearchType;
 
-use function DI\autowire;
+abstract class AbstractSearchType implements SearchTypeInterface
+{
+    /**
+     * Convenience function. Mangles the input according to a set
+     * of predefined rules
+     *
+     * @param array|string $data
+     * @param string|false $type
+     * @param array $operator
+     *
+     * @return array|boolean|integer|string|string[]|null
+     */
+    protected function mangleData($data, $type, array $operator)
+    {
+        if ($operator['preg_match']) {
+            $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
+        }
 
-return [
-    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
-    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    SearchType\SearchTypeMapperInterface::class => autowire(SearchType\SearchTypeMapper::class),
-    SearchType\AlbumSearchType::class => autowire(),
-    SearchType\ArtistSearchType::class => autowire(),
-    SearchType\LabelSearchType::class => autowire(),
-    SearchType\PlaylistSearchType::class => autowire(),
-    SearchType\SongSearchType::class => autowire(),
-    SearchType\TagSearchType::class => autowire(),
-    SearchType\UserSearchType::class => autowire(),
-    SearchType\VideoSearchType::class => autowire(),
-];
+        if ($type == 'numeric' || $type == 'days') {
+            return (int)($data);
+        }
+
+        if ($type == 'boolean') {
+            return make_bool($data);
+        }
+
+        return $data;
+    }
+}
