@@ -29,32 +29,20 @@ use Ampache\Module\Util\Ui;
 ?>
 
 <div class="item_info">
-    <?php if ($biography['id']) {
-    $thumb = Ui::is_grid_view('artist') ? 2 : 11;
-    Art::display('artist', $biography['id'], $artist->f_name, $thumb);
-} else { ?>
-        <div class="item_art">
-            <?php if ($biography && is_array($biography)) { ?>
-                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-            <?php
-    } ?>
-        </div>
-    <?php
-} ?>
+    <?php Art::display('artist', $artist->id, $artist->f_name, 2); ?>
     <div class="item_properties">
-        <?php
-        if (! empty($biography) && is_array($biography)) {
-            $dcol = array();
-            if ($biography['placeformed']) {
-                $dcol[] = $biography['placeformed'];
-            }
-            if ($biography['yearformed']) {
-                $dcol[] = $biography['yearformed'];
-            }
-            if (count($dcol) > 0) {
-                echo implode(',', $dcol);
-            }
-        } ?>
+    <?php if (! empty($biography) && is_array($biography)) {
+    $dcol = array();
+    if ($biography['placeformed']) {
+        $dcol[] = $biography['placeformed'];
+    }
+    if ($biography['yearformed']) {
+        $dcol[] = $biography['yearformed'];
+    }
+    if (count($dcol) > 0) {
+        echo implode(',', $dcol);
+    }
+} ?>
     </div>
 </div>
 <div id="item_summary">

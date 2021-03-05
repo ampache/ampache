@@ -71,7 +71,7 @@ Ui::show_box_top($artist->f_name, 'info-box'); ?>
         </div>
     <?php
 } else {
-        $thumb = Ui::is_grid_view('artist') ? 2 : 11;
+        $thumb = 32;
         Art::display('artist', $artist->id, $artist->f_name, $thumb);
     } ?>
 </div>
