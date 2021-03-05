@@ -22,7 +22,7 @@
 
 <div class="item_info">
     <?php if ($biography['id']) {
-    $thumb = UI::is_grid_view('artist') ? 2 : 11;
+    $thumb = 2;
     Art::display('artist', $biography['id'], $artist->f_name, $thumb);
 } else { ?>
         <div class="item_art">

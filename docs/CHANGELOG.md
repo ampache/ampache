@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 4.4.1-develop
+
+### Fixed
+
+* Grid View shouldn't change the artist image
+
 ## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
