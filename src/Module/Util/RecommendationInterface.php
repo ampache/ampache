@@ -43,5 +43,5 @@ interface RecommendationInterface
     /**
      * Just a proxy for get_artist_info
      */
-    public function getArtistInfo(int $artistId, string $fullname = ''): array;
+    public function getArtistInfo(int $artistId): array;
 }

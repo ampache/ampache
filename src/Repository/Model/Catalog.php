@@ -1020,12 +1020,12 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['artist'];
+            $results[] = (int) $row['artist'];
         }
 
         return array_reverse($results);
@@ -1484,7 +1484,7 @@ abstract class Catalog extends database_object
             $searches['artist'] = $artist_list;
         }
 
-        debug_event(self::class, 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
+        debug_event(self::class, 'gather_artist_info found ' . (string) count($searches) . ' items to check', 4);
         // Run through items and refresh info
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {

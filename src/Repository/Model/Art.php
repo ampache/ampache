@@ -1228,6 +1228,23 @@ class Art extends database_object
                 $size['height'] = 150;
                 $size['width']  = 100;
                 break;
+            case 34:
+                // small 34x34
+                $size['height'] = 34;
+                $size['width']  = 34;
+                break;
+            case 64:
+                // medium 64x64
+                $size['height'] = 64;
+                $size['width']  = 64;
+                break;
+            case 174:
+                // large 174x174
+                $size['height'] = 174;
+                $size['width']  = 174;
+                break;
+            case 300:
+                // extralarge, mega 300x300
             case 7:
                 // Video page size
                 $size['height'] = 300;

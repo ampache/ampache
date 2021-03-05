@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Alexander Son <soneus72@snu.ac.kr>, 2019-2020
 # Donggyu Park <pdg0526@nate.com>, 2020
@@ -13,14 +13,13 @@ msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2020-12-28 20:06+0100\n"
-"PO-Revision-Date: 2020-12-28 19:00+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>\n"
-"Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
-"language/ko_KR/)\n"
-"Language: ko_KR\n"
+"PO-Revision-Date: 2021-01-03 23:31+0000\n"
+"Last-Translator: Transifex Bot <>\n"
+"Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../admin/access.php:44 ../../admin/access.php:80
@@ -172,14 +171,12 @@ msgid "The Catalog art search has started"
 msgstr "카탈로그 아트 검색을 시작합니다"
 
 #: ../../admin/catalog.php:261
-#, fuzzy
 msgid "The catalog write file tags has started"
-msgstr "카탈로그 아트 검색을 시작합니다"
+msgstr ""
 
 #: ../../admin/catalog.php:265
-#, fuzzy
 msgid "The Catalog write file tags has started"
-msgstr "카탈로그 아트 검색을 시작합니다"
+msgstr ""
 
 #: ../../admin/license.php:42
 msgid "The License has been updated"
@@ -277,8 +274,7 @@ msgstr "샤우트박스 포스트를 삭제하였습니다"
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
-"현재 구성된 문자집합과 일치하도록 데이타베이스와 연관 표들을 갱신하였습니다"
+msgstr "현재 구성된 문자집합과 일치하도록 데이타베이스와 연관 표들을 갱신하였습니다"
 
 #: ../../admin/system.php:76
 msgid "Your cache has been cleared successfully"
@@ -300,7 +296,8 @@ msgstr "암호가 일치하지 않습니다"
 msgid "You entered an invalid e-mail address"
 msgstr "이메일 주소가 유효하지 않습니다"
 
-#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000)
+#. HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions
+#. (2000x3000)
 #: ../../admin/users.php:120
 #, php-format
 msgid ""
@@ -317,7 +314,8 @@ msgid "The new User was not created"
 msgstr "새 사용자를 만들지 못하였습니다"
 
 #: ../../admin/users.php:181 ../../lib/class/shoutbox.class.php:354
-#: ../../lib/class/user.class.php:1227 ../../templates/show_add_user.inc.php:65
+#: ../../lib/class/user.class.php:1227
+#: ../../templates/show_add_user.inc.php:65
 #: ../../templates/show_edit_user.inc.php:83
 #: ../../templates/show_preference_admin.inc.php:42
 #: ../../templates/show_preference_box.inc.php:74
@@ -478,9 +476,7 @@ msgstr "데이타베이스에서 관련 정보를 삭제하였습니다"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file was not received correctly"
-msgstr ""
-"지금은 분야를 지정할 수 없습니다. 파일을 받을 수 없거나 접근 오류가 났을 것입"
-"니다"
+msgstr "지금은 분야를 지정할 수 없습니다. 파일을 받을 수 없거나 접근 오류가 났을 것입니다"
 
 #: ../../arts.php:85 ../../arts.php:124
 msgid "Art has been added"
@@ -599,17 +595,15 @@ msgstr "사용법:"
 
 #: ../../bin/catalog_update.inc:227
 msgid ""
-"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-"
-"u|-i|-o]"
+"catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] "
+"[-h|-m|-c|-v|-a|-g|-u|-i|-o]"
 msgstr ""
 
 #: ../../bin/catalog_update.inc:229
 msgid ""
 "Default behavior is to do all except temporarily deactivate the php memory "
 "limit"
-msgstr ""
-"기본 설정은 모든 작업을 다 수행할 수 있으나 php메모리 제한을 잠시 비활하는 것"
-"은 예외다"
+msgstr "기본 설정은 모든 작업을 다 수행할 수 있으나 php메모리 제한을 잠시 비활하는 것은 예외다"
 
 #: ../../bin/catalog_update.inc:231 ../../bin/update_file.inc:168
 msgid "This help message"
@@ -661,25 +655,20 @@ msgstr "데이타베이스 테이블을 최적화한다"
 msgid ""
 "Use this option at your own risk! Your system could crash or become "
 "unresponsive due to huge memory consumption!"
-msgstr ""
-"이 선택사항을 쓸지 결정하라! 잘못하면 시스템이 붕괴되거나 과도하게 메모리를 "
-"사용하여 오류날 수도 있다"
+msgstr "이 선택사항을 쓸지 결정하라! 잘못하면 시스템이 붕괴되거나 과도하게 메모리를 사용하여 오류날 수도 있다"
 
 #: ../../bin/catalog_update.inc:244
 msgid ""
 "Depending on your system's performance, this option may need a long time to "
 "finish and could greatly slow down other database processes if you have "
 "large Catalogs!"
-msgstr ""
-"카탈로그가 크면 시스템 성능에 따라서는 작업 시간이 많이 걸리거나 데이타베이"
-"스 처리 속도를 매우 크게 낮출 수 있다"
+msgstr "카탈로그가 크면 시스템 성능에 따라서는 작업 시간이 많이 걸리거나 데이타베이스 처리 속도를 매우 크게 낮출 수 있다"
 
 #: ../../bin/catalog_update.inc:245
 msgid ""
-"The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-"
-"a|-g] is used"
-msgstr ""
-"이 스위치 [-m|-o] 는 다른 스위치 [-c|-v|-a|-g] 를 사용할때만 쓸 수 있다"
+"The switches [-m|-o] can only be used, if one of the other switches "
+"[-c|-v|-a|-g] is used"
+msgstr "이 스위치 [-m|-o] 는 다른 스위치 [-c|-v|-a|-g] 를 사용할때만 쓸 수 있다"
 
 #: ../../bin/channel_run.inc:48
 msgid "Channel"
@@ -1057,11 +1046,13 @@ msgstr "설정 파일 생성 실패"
 msgid "Options"
 msgstr "선택사항들"
 
-#: ../../bin/install/install_db.inc:116 ../../templates/show_install.inc.php:67
+#: ../../bin/install/install_db.inc:116
+#: ../../templates/show_install.inc.php:67
 msgid "MySQL Administrative Username"
 msgstr "MySQL 관리 사용자명"
 
-#: ../../bin/install/install_db.inc:118 ../../templates/show_install.inc.php:73
+#: ../../bin/install/install_db.inc:118
+#: ../../templates/show_install.inc.php:73
 msgid "MySQL Administrative Password"
 msgstr "MySQL 관리자 암호"
 
@@ -1446,7 +1437,8 @@ msgstr "ACL 항목 중복"
 msgid "All"
 msgstr "전체"
 
-#: ../../lib/class/access.class.php:471 ../../templates/list_header.inc.php:125
+#: ../../lib/class/access.class.php:471
+#: ../../templates/list_header.inc.php:125
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:39
 #: ../../templates/show_graphs.inc.php:79
@@ -1512,7 +1504,8 @@ msgstr "디스크"
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_browse_form.inc.php:38
 #: ../../templates/show_browse_form.inc.php:40
-#: ../../templates/show_label.inc.php:96 ../../templates/show_labels.inc.php:45
+#: ../../templates/show_label.inc.php:96
+#: ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:75
 #: ../../templates/show_mashup_browse_form.inc.php:11
 #: ../../templates/show_random.inc.php:37
@@ -1648,7 +1641,8 @@ msgstr "온"
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/api.class.php:307
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:88
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:65
@@ -1683,15 +1677,15 @@ msgstr ""
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:87
 #: ../../lib/class/ApiMethods/UserUpdateMethod.php:124
 #: ../../lib/class/json_data.class.php:199
-#, fuzzy, php-format
+#, php-format
 msgid "Bad Request: %s"
-msgstr "유효하지 않은 요청"
+msgstr ""
 
 #. HINT: Access level, eg 75, 100
 #: ../../lib/class/api.class.php:334
-#, fuzzy, php-format
+#, php-format
 msgid "Require: %s"
-msgstr "요구사항"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/AdvancedSearchMethod.php:82
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:71
@@ -1702,11 +1696,11 @@ msgstr "요구사항"
 #: ../../lib/class/ApiMethods/LocalplayMethod.php:73
 #: ../../lib/class/ApiMethods/VideoMethod.php:55
 #: ../../lib/class/ApiMethods/VideosMethod.php:57
-#, fuzzy
 msgid "Enable: video"
-msgstr "사용가능"
+msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/AlbumMethod.php:63
 #: ../../lib/class/ApiMethods/AlbumSongsMethod.php:64
 #: ../../lib/class/ApiMethods/ArtistAlbumsMethod.php:64
@@ -1761,7 +1755,8 @@ msgstr "사용가능"
 msgid "Not Found: %s"
 msgstr ""
 
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:78
 #: ../../lib/class/ApiMethods/BookmarkCreateMethod.php:84
 #: ../../lib/class/ApiMethods/BookmarkDeleteMethod.php:72
@@ -1783,18 +1778,16 @@ msgstr ""
 #: ../../lib/class/ApiMethods/StatsMethod.php:80
 #: ../../lib/class/ApiMethods/SystemUpdateMethod.php:61
 #: ../../lib/class/ApiMethods/UrlToSongMethod.php:61
-#, fuzzy
 msgid "Bad Request"
-msgstr "유효하지 않은 요청"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogActionMethod.php:96
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:132
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:76
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:86
 #: ../../lib/class/ApiMethods/ScrobbleMethod.php:100
-#, fuzzy
 msgid "Not Found"
-msgstr "찾음"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/CatalogFileMethod.php:62
 msgid "Enable: delete_from_disk"
@@ -1826,9 +1819,8 @@ msgstr ""
 #: ../../lib/class/ApiMethods/PodcastEpisodesMethod.php:59
 #: ../../lib/class/ApiMethods/PodcastMethod.php:57
 #: ../../lib/class/ApiMethods/PodcastsMethod.php:58
-#, fuzzy
 msgid "Enable: podcast"
-msgstr "팟캐스트"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/HandshakeMethod.php:75
 msgid "Login failed, API version is too old"
@@ -1854,16 +1846,14 @@ msgstr "유효하지 않은 사용자명이나 암호"
 #: ../../lib/class/ApiMethods/LabelArtistsMethod.php:58
 #: ../../lib/class/ApiMethods/LabelMethod.php:56
 #: ../../lib/class/ApiMethods/LabelsMethod.php:58
-#, fuzzy
 msgid "Enable: label"
-msgstr "사용가능"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/LicenseMethod.php:56
 #: ../../lib/class/ApiMethods/LicensesMethod.php:58
 #: ../../lib/class/ApiMethods/LicenseSongsMethod.php:57
-#, fuzzy
 msgid "Enable: licensing"
-msgstr "라이센싱"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PlaylistAddSongMethod.php:65
 #: ../../lib/class/ApiMethods/PlaylistDeleteMethod.php:62
@@ -1871,38 +1861,33 @@ msgstr "라이센싱"
 #: ../../lib/class/ApiMethods/PlaylistMethod.php:73
 #: ../../lib/class/ApiMethods/PlaylistRemoveSongMethod.php:68
 #: ../../lib/class/ApiMethods/PlaylistSongsMethod.php:77
-#, fuzzy
 msgid "Require: 100"
-msgstr "요구됨"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/PodcastEpisodeDeleteMethod.php:73
 #: ../../lib/class/ApiMethods/SongDeleteMethod.php:67
-#, fuzzy
 msgid "Require: 75"
-msgstr "요구됨"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/RateMethod.php:57
-#, fuzzy
 msgid "Enable: ratings"
-msgstr "URL 다시 쓰기 가능"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/ShareCreateMethod.php:62
 #: ../../lib/class/ApiMethods/ShareDeleteMethod.php:56
 #: ../../lib/class/ApiMethods/ShareEditMethod.php:59
 #: ../../lib/class/ApiMethods/ShareMethod.php:55
 #: ../../lib/class/ApiMethods/SharesMethod.php:57
-#, fuzzy
 msgid "Enable: share"
-msgstr "사용가능"
+msgstr ""
 
 #: ../../lib/class/ApiMethods/TagAlbumsMethod.php:49
 #: ../../lib/class/ApiMethods/TagArtistsMethod.php:49
 #: ../../lib/class/ApiMethods/TagMethod.php:49
 #: ../../lib/class/ApiMethods/TagsMethod.php:49
 #: ../../lib/class/ApiMethods/TagSongsMethod.php:49
-#, fuzzy
 msgid "Depreciated"
-msgstr "사용자 활성화"
+msgstr ""
 
 #: ../../lib/class/art.class.php:1608
 msgid "Unable to open"
@@ -1969,7 +1954,8 @@ msgid "View changes"
 msgstr "바뀐 점 보기"
 
 #: ../../lib/class/autoupdate.class.php:273
-#: ../../lib/class/autoupdate.class.php:276 ../../lib/class/share.class.php:255
+#: ../../lib/class/autoupdate.class.php:276
+#: ../../lib/class/share.class.php:255
 #: ../../templates/show_album_group_disks.inc.php:112
 #: ../../templates/show_album_group_disks.inc.php:113
 #: ../../templates/show_album_group_disks.inc.php:163
@@ -2105,7 +2091,8 @@ msgstr "방송하지않기"
 #: ../../templates/show_artists.inc.php:111
 #: ../../templates/show_browse_form.inc.php:28
 #: ../../templates/show_browse_form.inc.php:30
-#: ../../templates/show_label.inc.php:97 ../../templates/show_label.inc.php:110
+#: ../../templates/show_label.inc.php:97
+#: ../../templates/show_label.inc.php:110
 #: ../../templates/show_manage_democratic.inc.php:31
 #: ../../templates/show_mashup_browse_form.inc.php:5
 #: ../../templates/show_random.inc.php:27
@@ -2206,7 +2193,8 @@ msgstr "공유"
 #: ../../templates/show_browse_form.inc.php:52
 #: ../../templates/show_browse_form.inc.php:54
 #: ../../templates/show_mashup_browse_form.inc.php:20
-#: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:137
+#: ../../templates/show_song.inc.php:170
+#: ../../templates/show_video.inc.php:137
 #: ../../templates/sidebar_home.inc.php:56
 msgid "Channels"
 msgstr "채널"
@@ -2360,7 +2348,8 @@ msgstr "앨범 아트 내려받기 완료"
 msgid "Song"
 msgstr "노래"
 
-#: ../../lib/class/catalog.class.php:1759 ../../lib/class/channel.class.php:243
+#: ../../lib/class/catalog.class.php:1759
+#: ../../lib/class/channel.class.php:243
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
@@ -2432,7 +2421,8 @@ msgstr "동작중입니다"
 msgid "Stopped"
 msgstr "멈추었습니다"
 
-#: ../../lib/class/democratic.class.php:153 ../../lib/class/video.class.php:303
+#: ../../lib/class/democratic.class.php:153
+#: ../../lib/class/video.class.php:303
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
 msgstr "분"
@@ -2444,7 +2434,8 @@ msgstr "1차"
 #: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:535
 #: ../../templates/show_edit_song_row.inc.php:80
 #: ../../templates/show_labels.inc.php:43
-#: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:165
+#: ../../templates/show_labels.inc.php:73
+#: ../../templates/show_song.inc.php:165
 msgid "Label"
 msgstr "레이블"
 
@@ -2477,7 +2468,8 @@ msgstr "잠시 멈추었습니다"
 
 #: ../../lib/class/localplay.class.php:657
 #: ../../lib/class/playlist.class.php:230
-#: ../../lib/class/playlist.class.php:231 ../../lib/class/podcast.class.php:346
+#: ../../lib/class/playlist.class.php:231
+#: ../../lib/class/podcast.class.php:346
 #: ../../lib/class/tvshow_episode.class.php:77
 #: ../../lib/class/user.class.php:1141 ../../lib/class/user.class.php:1229
 #: ../../lib/class/video.class.php:845
@@ -2542,7 +2534,8 @@ msgstr "피드를 읽을 수 없음"
 #: ../../templates/show_podcast_episodes.inc.php:87
 #: ../../templates/show_podcasts.inc.php:45
 #: ../../templates/show_podcasts.inc.php:94
-#: ../../templates/show_song.inc.php:141 ../../templates/show_video.inc.php:125
+#: ../../templates/show_song.inc.php:141
+#: ../../templates/show_video.inc.php:125
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:93
 msgid "Title"
@@ -2773,9 +2766,8 @@ msgstr "찾을 만한 문서"
 #: ../../templates/show_recently_played.inc.php:140
 #: ../../templates/show_song.inc.php:142 ../../templates/show_songs.inc.php:34
 #: ../../templates/show_songs.inc.php:96
-#, fuzzy
 msgid "Song Artist"
-msgstr "알수없는 아티스트"
+msgstr ""
 
 #: ../../lib/class/search.class.php:492 ../../lib/class/search.class.php:672
 #: ../../templates/show_albums.inc.php:41
@@ -2856,7 +2848,8 @@ msgstr "# 재생됨"
 
 #. HINT: Number of times object has been skipped
 #: ../../lib/class/search.class.php:511 ../../templates/show_song.inc.php:191
-#: ../../templates/show_songs.inc.php:47 ../../templates/show_songs.inc.php:108
+#: ../../templates/show_songs.inc.php:47
+#: ../../templates/show_songs.inc.php:108
 msgid "# Skipped"
 msgstr ""
 
@@ -2974,7 +2967,8 @@ msgstr "가사"
 #: ../../templates/show_duplicates.inc.php:33
 #: ../../templates/show_duplicates.inc.php:76
 #: ../../templates/show_import_playlist.inc.php:27
-#: ../../templates/show_song.inc.php:181 ../../templates/show_video.inc.php:139
+#: ../../templates/show_song.inc.php:181
+#: ../../templates/show_video.inc.php:139
 msgid "Filename"
 msgstr "파일명"
 
@@ -3246,7 +3240,8 @@ msgstr "암호가 일치하지 않음"
 msgid "Invalid"
 msgstr "유효하지 않은"
 
-#: ../../lib/class/user.class.php:1168 ../../templates/show_tagcloud.inc.php:83
+#: ../../lib/class/user.class.php:1168
+#: ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr "자료가 충분하지 않음"
 
@@ -4006,7 +4001,8 @@ msgstr "알수없는 아티스트"
 msgid "Accept"
 msgstr "승인"
 
-#: ../../lib/class/wanted.class.php:426 ../../lib/javascript/search-data.php:56
+#: ../../lib/class/wanted.class.php:426
+#: ../../lib/javascript/search-data.php:56
 msgid "Remove"
 msgstr "제거"
 
@@ -4072,17 +4068,13 @@ msgstr "%s 데이타베이스를 만들지 못함"
 #. HINT: %1 user, %2 database, %3 host, %4 error message
 #: ../../lib/install.lib.php:257
 #, php-format
-msgid ""
-"Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": %4$s"
 msgstr ""
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
 #: ../../lib/install.lib.php:271
 #, php-format
-msgid ""
-"Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": "
-"%4$s"
+msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
 msgstr ""
 
 #: ../../lib/install.lib.php:333
@@ -4651,8 +4643,8 @@ msgstr "문서에 기술된 대로 Seafile 서버 설치하기"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:78
 msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name (e."
-"g. 'Music')."
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
 msgstr "서버에 URL과 라이브러리 이름을 넣으시오"
 
 #: ../../modules/catalog/seafile/seafile.catalog.php:79
@@ -5184,21 +5176,20 @@ msgid "Personal favorites on the homepage"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:63
-#, fuzzy
 msgid "Favorite Playlists"
-msgstr "지능형 재생목록들"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:64
-#, fuzzy
 msgid "Favorite Smartlists"
-msgstr "스마트 리스트"
+msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:112
 msgid "Favorite Lists"
 msgstr ""
 
 #: ../../modules/plugins/PersonalFavorites/PersonalFavorites.plugin.php:129
-#: ../../templates/header.inc.php:346 ../../templates/show_album_row.inc.php:29
+#: ../../templates/header.inc.php:346
+#: ../../templates/show_album_row.inc.php:29
 #: ../../templates/show_artist_row.inc.php:29
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_podcast_episode.inc.php:54
@@ -5689,8 +5680,9 @@ msgstr "Ampache 쿠키 허용"
 #: ../../templates/cookie_disclaimer.inc.php:4
 msgid ""
 "Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work "
-"more efficiently, as well as to provide information to the owners of the site"
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
 msgstr "쿠키는 방문 사이트 정보를 저장하는 조그만 텍스트 파일입니다"
 
 #: ../../templates/cookie_disclaimer.inc.php:5
@@ -5751,8 +5743,8 @@ msgstr "Ampache 오류 쪽"
 
 #: ../../templates/error_page.inc.php:52
 msgid ""
-"The following error has occurred, you will be automatically redirected in 10 "
-"seconds."
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
 msgstr "다음 오류가 발생하였습니다. 10초 뒤 자동으로 옮겨갑니다."
 
 #: ../../templates/error_page.inc.php:54
@@ -5790,8 +5782,7 @@ msgstr "취소"
 #: ../../templates/header.inc.php:310
 #, php-format
 msgid ""
-"We have placed cookies on your computer to help make this website better. "
-"You can change your %s at any time.\n"
+"We have placed cookies on your computer to help make this website better. You can change your %s at any time.\n"
 "Otherwise, we will assume you are OK to continue.\n"
 "\n"
 "Click on this message to not display it again."
@@ -5905,7 +5896,8 @@ msgid "Limit"
 msgstr "제한"
 
 #: ../../templates/list_header.inc.php:147
-#: ../../templates/show_random.inc.php:52 ../../templates/show_stats.inc.php:89
+#: ../../templates/show_random.inc.php:52
+#: ../../templates/show_stats.inc.php:89
 msgid "Item Count"
 msgstr "아이템 세기"
 
@@ -6042,7 +6034,8 @@ msgstr "형태"
 #: ../../templates/show_tvshows.inc.php:56
 #: ../../templates/show_tvshows.inc.php:107
 #: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:95
-#: ../../templates/show_video.inc.php:77 ../../templates/show_videos.inc.php:61
+#: ../../templates/show_video.inc.php:77
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_videos.inc.php:119
 msgid "Action"
 msgstr "실행"
@@ -6152,8 +6145,8 @@ msgstr "카탈로그 추가하기"
 
 #: ../../templates/show_add_catalog.inc.php:26
 msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr "아래 양식에 내부 경로나 URL을 넣으시오"
 
 #: ../../templates/show_add_catalog.inc.php:36
@@ -6516,25 +6509,29 @@ msgid "User Access Level"
 msgstr "사용자 접근 수준"
 
 #: ../../templates/show_album_group_disks.inc.php:44
-#: ../../templates/show_album.inc.php:49 ../../templates/show_artist.inc.php:38
+#: ../../templates/show_album.inc.php:49
+#: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_label.inc.php:33 ../../templates/show_song.inc.php:151
 msgid "Search on Google ..."
 msgstr "구글에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:45
-#: ../../templates/show_album.inc.php:50 ../../templates/show_artist.inc.php:39
+#: ../../templates/show_album.inc.php:50
+#: ../../templates/show_artist.inc.php:39
 #: ../../templates/show_label.inc.php:34 ../../templates/show_song.inc.php:152
 msgid "Search on DuckDuckGo ..."
 msgstr "덕덕고에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:46
-#: ../../templates/show_album.inc.php:51 ../../templates/show_artist.inc.php:40
+#: ../../templates/show_album.inc.php:51
+#: ../../templates/show_artist.inc.php:40
 #: ../../templates/show_label.inc.php:35
 msgid "Search on Wikipedia ..."
 msgstr "위키피디아에서 찾기 ..."
 
 #: ../../templates/show_album_group_disks.inc.php:47
-#: ../../templates/show_album.inc.php:52 ../../templates/show_artist.inc.php:41
+#: ../../templates/show_album.inc.php:52
+#: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_label.inc.php:36 ../../templates/show_song.inc.php:153
 msgid "Search on Last.fm ..."
 msgstr "라스트에프엠에서 찾기 ..."
@@ -6543,11 +6540,10 @@ msgstr "라스트에프엠에서 찾기 ..."
 #: ../../templates/show_album_group_disks.inc.php:51
 #: ../../templates/show_album.inc.php:54 ../../templates/show_album.inc.php:56
 #: ../../templates/show_artist.inc.php:43
-#: ../../templates/show_artist.inc.php:45 ../../templates/show_song.inc.php:155
-#: ../../templates/show_song.inc.php:157
-#, fuzzy
+#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_song.inc.php:155 ../../templates/show_song.inc.php:157
 msgid "Search on Musicbrainz ..."
-msgstr "MusicBrainz에서 보기"
+msgstr ""
 
 #: ../../templates/show_album_group_disks.inc.php:77
 #: ../../templates/show_album.inc.php:108
@@ -6638,20 +6634,22 @@ msgid "Album Edit"
 msgstr "앨범 편집"
 
 #. HINT: Average rating. e.g. (average 3.7)
-#: ../../templates/show_album.inc.php:72 ../../templates/show_artist.inc.php:68
-#: ../../templates/show_song.inc.php:45
+#: ../../templates/show_album.inc.php:72
+#: ../../templates/show_artist.inc.php:68 ../../templates/show_song.inc.php:45
 msgid "average"
 msgstr ""
 
 #. HINT: Number of times an object has been played
-#: ../../templates/show_album.inc.php:91 ../../templates/show_artist.inc.php:86
+#: ../../templates/show_album.inc.php:91
+#: ../../templates/show_artist.inc.php:86
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
 msgstr[0] " %d 회"
 
 #: ../../templates/show_album.inc.php:102
-#: ../../templates/show_artist.inc.php:97 ../../templates/show_song.inc.php:206
+#: ../../templates/show_artist.inc.php:97
+#: ../../templates/show_song.inc.php:206
 msgid "Uploaded by"
 msgstr "에서 업로드됨"
 
@@ -6720,7 +6718,8 @@ msgstr "아트"
 #: ../../templates/show_tvshow_seasons.inc.php:92
 #: ../../templates/show_tvshows.inc.php:46
 #: ../../templates/show_tvshows.inc.php:98
-#: ../../templates/show_video.inc.php:57 ../../templates/show_videos.inc.php:52
+#: ../../templates/show_video.inc.php:57
+#: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_videos.inc.php:110
 msgid "Rating"
 msgstr "등급"
@@ -6747,7 +6746,8 @@ msgstr "등급"
 #: ../../templates/show_tvshow_seasons.inc.php:96
 #: ../../templates/show_tvshows.inc.php:51
 #: ../../templates/show_tvshows.inc.php:102
-#: ../../templates/show_video.inc.php:67 ../../templates/show_videos.inc.php:56
+#: ../../templates/show_video.inc.php:67
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_videos.inc.php:114
 msgid "Fav."
 msgstr "선호"
@@ -6930,9 +6930,8 @@ msgid "Clean"
 msgstr "정리"
 
 #: ../../templates/show_catalog_row.inc.php:51
-#, fuzzy
 msgid "Update File Tags"
-msgstr "갱신 실패"
+msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:57
 msgid "Go"
@@ -7126,7 +7125,8 @@ msgstr "PHP 설정"
 msgid "Setting"
 msgstr "설정"
 
-#: ../../templates/show_debug.inc.php:79 ../../templates/show_debug.inc.php:132
+#: ../../templates/show_debug.inc.php:79
+#: ../../templates/show_debug.inc.php:132
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:91
 #: ../../templates/show_user_preferences.inc.php:37
@@ -7244,12 +7244,13 @@ msgstr "이 사건이 발생하였습니다"
 
 #: ../../templates/show_denied.inc.php:58
 msgid ""
-"You have been redirected to this page because you do not have access to this "
-"function"
+"You have been redirected to this page because you do not have access to this"
+" function"
 msgstr "이 기능을 쓸 권한이 없어서 이 화면으로 옮겨왔습니다"
 
 #: ../../templates/show_denied.inc.php:59
-msgid "If you believe this is an error please contact an Ampache administrator"
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
 msgstr "오류라고 생각하시면 Ampache 관리자에게 연락하세요"
 
 #: ../../templates/show_denied.inc.php:60
@@ -7295,7 +7296,8 @@ msgstr "노래 중복시키기"
 #: ../../templates/show_duplicates.inc.php:30
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_podcast_episode.inc.php:113
-#: ../../templates/show_random.inc.php:68 ../../templates/show_song.inc.php:159
+#: ../../templates/show_random.inc.php:68
+#: ../../templates/show_song.inc.php:159
 #: ../../templates/show_video.inc.php:126
 msgid "Length"
 msgstr "길이"
@@ -7505,14 +7507,12 @@ msgid "Searched"
 msgstr "탐색함"
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Cover Art Search"
-msgstr "아트 검색"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:25
-#, fuzzy
 msgid "Artist Art Search"
-msgstr "아트 검색 시작 중"
+msgstr ""
 
 #: ../../templates/show_get_art.inc.php:58
 msgid "Direct URL to Image"
@@ -7713,9 +7713,7 @@ msgstr "3단계 - 초기 계정 만들기"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
-"이 단계에서는 Ampache 초기 관리자 계정을 만든다. 관리자 계정을 만들면 로그인 "
-"화면으로 이동한다."
+msgstr "이 단계에서는 Ampache 초기 관리자 계정을 만든다. 관리자 계정을 만들면 로그인 화면으로 이동한다."
 
 #: ../../templates/show_install_account.inc.php:46
 msgid "Create Admin Account"
@@ -7734,9 +7732,7 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
-"이 화면은 Ampache 데이타베이스 설치와 ampache.cfg.php 파일 생성을 합니다. 진"
-"행하기 전에 아래 사전요구사항을 확인하세요."
+msgstr "이 화면은 Ampache 데이타베이스 설치와 ampache.cfg.php 파일 생성을 합니다. 진행하기 전에 아래 사전요구사항을 확인하세요."
 
 #: ../../templates/show_install_check.inc.php:34
 msgid ""
@@ -7753,11 +7749,9 @@ msgstr "웹 서버가 \"%1$s\" 와 \"%2%s\" 에 접근하여 읽고 있습니다
 msgid ""
 "Once you have ensured that the above requirements are met please fill out "
 "the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your Ampache install at a later "
-"date simply edit %s"
-msgstr ""
-"설치 요구사항을 확인하였다면 아래 정보를 채우세요. 필요 설정값만 요청합니다. "
-"향후 설치 내용을 변경하시려면 %s 파일을 수정하세요"
+"values. If you would like to make changes to your Ampache install at a later"
+" date simply edit %s"
+msgstr "설치 요구사항을 확인하였다면 아래 정보를 채우세요. 필요 설정값만 요청합니다. 향후 설치 내용을 변경하시려면 %s 파일을 수정하세요"
 
 #: ../../templates/show_install_check.inc.php:43
 #: ../../templates/show_test.inc.php:58
@@ -7780,9 +7774,7 @@ msgstr " \"ampache.sql\"  은 읽기 가능해야 한다"
 msgid ""
 "This tests whether the file needed to initialize the database structure is "
 "available."
-msgstr ""
-"이 과정은 데이타베이스 구조를 초기화할 필요가 있는 파일을 쓸 수 있는지 검증한"
-"다."
+msgstr "이 과정은 데이타베이스 구조를 초기화할 필요가 있는 파일을 쓸 수 있는지 검증한다."
 
 #: ../../templates/show_install_check.inc.php:59
 msgid "\"ampache.cfg.php\" is writable"
@@ -7798,15 +7790,11 @@ msgstr ""
 #, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
-"your config/ directory is writable, you can select \"write\" to have Ampache "
-"write the config file directly to the correct location. If you select "
+"your config/ directory is writable, you can select \"write\" to have Ampache"
+" write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
-msgstr ""
-"이 절차는 기본 설정값을 받아서 설정 파일을 생성한다. config 폴더가 쓰기 가능"
-"이면 \"write\" 선택하여 Ampache가 설정 파일을 바른 위치에 쓸 수 있게 한다.  "
-"\"download\" 선택하면 사용자가 설정 파일을 받아서  설정 파일을  %s 에 두도록 "
-"한다. "
+msgstr "이 절차는 기본 설정값을 받아서 설정 파일을 생성한다. config 폴더가 쓰기 가능이면 \"write\" 선택하여 Ampache가 설정 파일을 바른 위치에 쓸 수 있게 한다.  \"download\" 선택하면 사용자가 설정 파일을 받아서  설정 파일을  %s 에 두도록 한다. "
 
 #: ../../templates/show_install_config.inc.php:65
 msgid "Web Path"
@@ -7834,9 +7822,7 @@ msgstr "설치 형태"
 msgid ""
 "Optimize Ampache for your use case. The installer will enable/disable "
 "features automatically."
-msgstr ""
-"사용자 환경에 맞게 Ampache 최적화하기. 설치 프로그램은 자동으로 기능을 가능/"
-"불가 처리할 것이다."
+msgstr "사용자 환경에 맞게 Ampache 최적화하기. 설치 프로그램은 자동으로 기능을 가능/불가 처리할 것이다."
 
 #: ../../templates/show_install_config.inc.php:114
 msgid "Ampache is configured for personal use with the best features."
@@ -7848,11 +7834,9 @@ msgstr "미니멀리스트"
 
 #: ../../templates/show_install_config.inc.php:119
 msgid ""
-"Only essential features are enabled to simply stream your music from the Web "
-"Interface."
-msgstr ""
-"웹 인터페이스를 통해서 가장 간단하게 음악을 들을 수 있도록 핵심 기능만 설정한"
-"다."
+"Only essential features are enabled to simply stream your music from the Web"
+" Interface."
+msgstr "웹 인터페이스를 통해서 가장 간단하게 음악을 들을 수 있도록 핵심 기능만 설정한다."
 
 #: ../../templates/show_install_config.inc.php:124
 msgid "Community"
@@ -7872,22 +7856,17 @@ msgid ""
 "Transcoding allows you to convert music from one encoding to another. "
 "Ampache supports on the fly transcoding of any file type based on user, "
 "player, IP address or available bandwidth. In order to transcode, Ampache "
-"takes advantage of existing binary applications such as ffmpeg. In order for "
-"transcoding to work you must first install the supporting applications and "
+"takes advantage of existing binary applications such as ffmpeg. In order for"
+" transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr ""
-"트랜스코딩은 음악을 다른 코덱으로 변환해 준다. Ampache 는 다양한 형태의 파일"
-"로 변환을 지원해 주는데, ffmpeg를 이용할 수도 있다. 제대로 트랜스코딩을 쓰려"
-"면 관련 지원 프로그램을 설치해야 한다."
+msgstr "트랜스코딩은 음악을 다른 코덱으로 변환해 준다. Ampache 는 다양한 형태의 파일로 변환을 지원해 주는데, ffmpeg를 이용할 수도 있다. 제대로 트랜스코딩을 쓰려면 관련 지원 프로그램을 설치해야 한다."
 
 #: ../../templates/show_install_config.inc.php:133
 msgid ""
 "This section applies the default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once setup "
 "has ended."
-msgstr ""
-"이 부분은 사용하고자 하는 프로그램에 따라서 트랜스코딩 기본 설정을 적용할 수 "
-"있게 한다."
+msgstr "이 부분은 사용하고자 하는 프로그램에 따라서 트랜스코딩 기본 설정을 적용할 수 있게 한다."
 
 #: ../../templates/show_install_config.inc.php:133
 #: ../../templates/show_install_config.inc.php:161
@@ -7998,10 +7977,7 @@ msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
 "slower computers."
-msgstr ""
-"이 단계는 Ampache 데이타베이스를 만들어 넣는 과정이니 MySQL 계정이 데이타베이"
-"스 생성 권한이 있는지 확인해야 한다. 느린 컴퓨터에서는 시간이 좀 걸릴 수 있"
-"다."
+msgstr "이 단계는 Ampache 데이타베이스를 만들어 넣는 과정이니 MySQL 계정이 데이타베이스 생성 권한이 있는지 확인해야 한다. 느린 컴퓨터에서는 시간이 좀 걸릴 수 있다."
 
 #: ../../templates/show_install.inc.php:46
 msgid "Insert Ampache Database"
@@ -8232,9 +8208,8 @@ msgid "Gather All Art"
 msgstr "전체 아트 모으기"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
-#, fuzzy
 msgid "Update All File Tags"
-msgstr "전부 갱신하기"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 msgid "Show Disabled Songs"
@@ -8385,9 +8360,8 @@ msgstr "기록기"
 
 #: ../../templates/show_playlist_medias.inc.php:29
 #: ../../templates/show_playlist_medias.inc.php:105
-#, fuzzy
 msgid "Duration"
-msgstr "정보"
+msgstr ""
 
 #: ../../templates/show_playlist_row.inc.php:89
 msgid "Playlist Edit"
@@ -8429,7 +8403,8 @@ msgid "Upgrade"
 msgstr "업그레이드"
 
 #: ../../templates/show_podcast_episode.inc.php:83
-#: ../../templates/show_song.inc.php:108 ../../templates/show_video.inc.php:103
+#: ../../templates/show_song.inc.php:108
+#: ../../templates/show_video.inc.php:103
 msgid "Link"
 msgstr "링크"
 
@@ -8801,7 +8776,8 @@ msgstr "ReplayGain Track Gain"
 msgid "ReplayGain Album Gain"
 msgstr "ReplayGain Album Gain"
 
-#: ../../templates/show_song.inc.php:184 ../../templates/show_video.inc.php:142
+#: ../../templates/show_song.inc.php:184
+#: ../../templates/show_video.inc.php:142
 msgid "Last Updated"
 msgstr "최근 갱신됨"
 
@@ -8813,7 +8789,8 @@ msgstr "라이센싱"
 msgid "Song Information"
 msgstr "곡 정보"
 
-#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:101
+#: ../../templates/show_songs.inc.php:40
+#: ../../templates/show_songs.inc.php:101
 msgid "License"
 msgstr "라이센스"
 
@@ -8866,9 +8843,7 @@ msgstr "도움말이 필요하면 위키를 방문하세요"
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
-msgstr ""
-"설정 파일 오류가 나서 이 화면으로 왔을 수 있습니다. 아래 디버그 정보를 확인하"
-"세요."
+msgstr "설정 파일 오류가 나서 이 화면으로 왔을 수 있습니다. 아래 디버그 정보를 확인하세요."
 
 #: ../../templates/show_test.inc.php:50
 #: ../../templates/show_test_table.inc.php:131
@@ -8896,8 +8871,8 @@ msgstr "Ampache 디펜던시가 설치되었는지 테스트합니다."
 #: ../../templates/show_test_table.inc.php:34
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
-"mv composer.phar /usr/local/bin/composer). Then run `composer install --"
-"prefer-source --no-interaction` on the Ampache directory."
+"mv composer.phar /usr/local/bin/composer). Then run `composer install "
+"--prefer-source --no-interaction` on the Ampache directory."
 msgstr "Composer 를 설치하세요."
 
 #: ../../templates/show_test_table.inc.php:40
@@ -8946,8 +8921,8 @@ msgstr "PHP 세션 익스텐션"
 
 #: ../../templates/show_test_table.inc.php:62
 msgid ""
-"This tests whether you have the session extension enabled. This extension is "
-"required by Ampache."
+"This tests whether you have the session extension enabled. This extension is"
+" required by Ampache."
 msgstr "Ampache 에서 필요한 세션 익스텐션이 사용가능한지 확인합니다"
 
 #: ../../templates/show_test_table.inc.php:65
@@ -8982,8 +8957,8 @@ msgstr "PHP cURL 익스텐션"
 
 #: ../../templates/show_test_table.inc.php:82
 msgid ""
-"This tests whether you have the cURL extension enabled. This is not strictly "
-"necessary, but may result in a better experience."
+"This tests whether you have the cURL extension enabled. This is not strictly"
+" necessary, but may result in a better experience."
 msgstr "PHP cURL 익스텐션이 사용가능한지 확인합니다"
 
 #: ../../templates/show_test_table.inc.php:85
@@ -8992,8 +8967,8 @@ msgstr "PHP zlib 익스텐션"
 
 #: ../../templates/show_test_table.inc.php:87
 msgid ""
-"This tests whether you have the zlib extension enabled. This is not strictly "
-"necessary, but may result in a better experience (zip download)."
+"This tests whether you have the zlib extension enabled. This is not strictly"
+" necessary, but may result in a better experience (zip download)."
 msgstr "PHP zlib 익스텐션이 사용가능한지 확인합니다"
 
 #: ../../templates/show_test_table.inc.php:90
@@ -9032,8 +9007,8 @@ msgstr "PHP 실행 시간 달성"
 
 #: ../../templates/show_test_table.inc.php:107
 msgid ""
-"This tests whether Ampache can override the limit on maximum execution time. "
-"This is not strictly necessary, but may result in a better experience."
+"This tests whether Ampache can override the limit on maximum execution time."
+" This is not strictly necessary, but may result in a better experience."
 msgstr "Ampache 가 최대 실행 시간 제한을 달성할 수 있는지 확인합니다."
 
 #: ../../templates/show_test_table.inc.php:110
@@ -9055,9 +9030,7 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires a 64-bit operating system."
-msgstr ""
-"Ampache 가 2GB 넘는 파일을 관리할 수 있는지 확인합니다. 꼭 필요한 것은 아니"
-"며 성능을 잘 낼 수 있도록 해 줍니다."
+msgstr "Ampache 가 2GB 넘는 파일을 관리할 수 있는지 확인합니다. 꼭 필요한 것은 아니며 성능을 잘 낼 수 있도록 해 줍니다."
 
 #: ../../templates/show_test_table.inc.php:120
 msgid "PHP mbstring.func_overload"
@@ -9079,14 +9052,14 @@ msgstr "설정 파일 읽기 가능"
 
 #: ../../templates/show_test_table.inc.php:130
 msgid ""
-"This test attempts to read config/ampache.cfg.php. If this fails the file is "
-"either not in the correct location, or not readable."
+"This test attempts to read config/ampache.cfg.php. If this fails the file is"
+" either not in the correct location, or not readable."
 msgstr "config/ampache.cfg.php 파일을 읽을 수 있는지 확인합니다."
 
 #: ../../templates/show_test_table.inc.php:131
 msgid ""
-"If you are installing Ampache for the first time you can ignore this warning "
-"and proceed to the installer."
+"If you are installing Ampache for the first time you can ignore this warning"
+" and proceed to the installer."
 msgstr ""
 
 #: ../../templates/show_test_table.inc.php:136
@@ -9107,8 +9080,7 @@ msgstr "데이타베이스 연결"
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
-msgstr ""
-"설정 파일에서 값을 읽어 데이타베이스에 제대로 접속할 수 있는지 확인합니다"
+msgstr "설정 파일에서 값을 읽어 데이타베이스에 제대로 접속할 수 있는지 확인합니다"
 
 #: ../../templates/show_test_table.inc.php:153
 msgid "Database tables"
@@ -9437,9 +9409,8 @@ msgid "Help"
 msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:74
-#, fuzzy
 msgid "Ampache Wiki"
-msgstr "암파치"
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:75
 msgid "API Documentation"
@@ -9475,7 +9446,8 @@ msgstr "TV 쇼를 삭제하였습니다"
 msgid "Couldn't delete this TV Show"
 msgstr "이 TV 쇼를 삭제할 수 없습니다"
 
-#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version
+#. HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows
+#. current database version
 #: ../../update.php:82
 #, php-format
 msgid ""
@@ -9524,8 +9496,8 @@ msgstr "이 비디오를 삭제할 수 없습니다"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 11.10.2020 14:56:45 CEST
-#
+# Last Update: 28.12.2020 20:06:12 CET
+# 
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr "내려받기 허용"
@@ -9655,7 +9627,8 @@ msgid "Share Recently Played information"
 msgstr "최근 재생 정보 공유하기"
 
 #: Database preference table id 92
-msgid "Share Recently Played information - Allow access to streaming date/time"
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
 msgstr "최근 재생 정보 공유하기 - 스트리밍 날짜/시간 접근 허용하기"
 
 #: Database preference table id 93
@@ -9920,9 +9893,8 @@ msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr ""
 
 #: Database preference table id 176
-#, fuzzy
 msgid "Custom URL - Login page background"
-msgstr "사용자 URL - 로그인 화면 로고"
+msgstr ""
 
 #: Database preference subcategory table id 1
 msgid "feature"
