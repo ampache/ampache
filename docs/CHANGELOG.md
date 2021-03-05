@@ -9,6 +9,8 @@
 ### Fixed
 
 * Grid View shouldn't change the artist image
+* Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
+* Album::get_random_songs not returning id's
 
 ## Ampache 4.4.0-release
 
