@@ -2,6 +2,10 @@
 
 ## Ampache 4.4.1-develop
 
+### Added
+
+* If you have an MBID in you artist, use that for last.fm queries
+
 ### Fixed
 
 * Grid View shouldn't change the artist image
