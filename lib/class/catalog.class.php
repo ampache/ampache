@@ -1095,13 +1095,13 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" .
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" .
                 "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['artist'];
+            $results[] = (int) $row['artist'];
         }
 
         return array_reverse($results);
