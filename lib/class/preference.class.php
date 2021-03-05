@@ -35,6 +35,7 @@ class Preference extends database_object
     public const SYSTEM_LIST = array(
         'ajax_load',
         'album_group',
+        'album_prefer_albumartist',
         'album_release_type',
         'album_release_type_sort',
         'album_sort',
@@ -133,7 +134,7 @@ class Preference extends database_object
         'webplayer_confirmclose',
         'webplayer_flash',
         'webplayer_html5',
-        'webplayer_pausetabs'
+        'webplayer_pausetabs'        
     );
 
     /**

@@ -202,6 +202,7 @@ function create_preference_input($name, $value)
         case 'daap_backend':
         case 'upnp_backend':
         case 'album_release_type':
+        case 'album_prefer_albumartist':
         case 'home_moment_albums':
         case 'home_moment_videos':
         case 'home_recently_played':

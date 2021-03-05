@@ -244,6 +244,9 @@ class Update
         $update_string = "* Extend allowed time for podcast_episodes.<br/ > ";
         $version[]     = array('version' => '400022', 'description' => $update_string);
 
+        $update_string = "* Can override artist tag with albumartist.<br/ > ";
+        $version[]     = array('version' => '400023', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1420,4 +1423,24 @@ class Update
 
         return $retval;
     }
+
+    /**
+     * update_400023
+     *
+     * Add ui option for using albumartist ID# tag instead of artist
+     */
+    public static function update_400023()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('album_prefer_albumartist', '0', 'Album - Use albumartist tag instead of artist', 25, 'boolean', 'interface', 'library')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
 } // end update.class

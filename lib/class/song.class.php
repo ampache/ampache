@@ -372,6 +372,9 @@ class Song extends database_object implements media, library_item
         $album                 = Catalog::check_length($results['album']);
         $albumartist           = Catalog::check_length($results['albumartist'] ?: $results['band']);
         $albumartist           = $albumartist ?: null;
+        if ($albumartist && AmpConfig::get('album_prefer_albumartist')) {
+            $artist = $albumartist;
+        }
         $bitrate               = $results['bitrate'] ?: 0;
         $rate                  = $results['rate'] ?: 0;
         $mode                  = $results['mode'];
