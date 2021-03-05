@@ -134,7 +134,7 @@ class Preference extends database_object
         'webplayer_confirmclose',
         'webplayer_flash',
         'webplayer_html5',
-        'webplayer_pausetabs'        
+        'webplayer_pausetabs'
     );
 
     /**
