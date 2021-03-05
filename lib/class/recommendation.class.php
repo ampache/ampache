@@ -267,7 +267,7 @@ class Recommendation
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
         if (!$cache['id']) {
             $similars = array();
-            $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($artist->f_full_name);;
+            $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($artist->f_full_name);
 
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
