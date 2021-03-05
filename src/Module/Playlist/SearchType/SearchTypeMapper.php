@@ -22,6 +22,7 @@
 
 namespace Ampache\Module\Playlist\SearchType;
 
+use Ampache\Repository\DatabaseTableNameEnum;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -40,28 +41,28 @@ final class SearchTypeMapper implements SearchTypeMapperInterface
     public function map(string $type): ?SearchTypeInterface
     {
         $map = [
-            'album' => function () {
+            DatabaseTableNameEnum::ALBUM => function () {
                 return $this->dic->get(AlbumSearchType::class);
             },
-            'artist' => function () {
+            DatabaseTableNameEnum::ARTIST => function () {
                 return $this->dic->get(ArtistSearchType::class);
             },
-            'label' => function () {
+            DatabaseTableNameEnum::LABEL => function () {
                 return $this->dic->get(LabelSearchType::class);
             },
-            'playlist' => function () {
+            DatabaseTableNameEnum::PLAYLIST => function () {
                 return $this->dic->get(PlaylistSearchType::class);
             },
-            'song' => function () {
+            DatabaseTableNameEnum::SONG => function () {
                 return $this->dic->get(SongSearchType::class);
             },
-            'tag' => function () {
+            DatabaseTableNameEnum::TAG => function () {
                 return $this->dic->get(TagSearchType::class);
             },
-            'user' => function () {
+            DatabaseTableNameEnum::USER => function () {
                 return $this->dic->get(UserSearchType::class);
             },
-            'video' => function () {
+            DatabaseTableNameEnum::VIDEO => function () {
                 return $this->dic->get(VideoSearchType::class);
             },
         ];
