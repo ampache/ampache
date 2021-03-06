@@ -41,9 +41,9 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     /** @var MockInterface|GuiGatekeeperInterface|null */
     private MockInterface $gatekeeper;
 
-    private string $object_type = 'some-object-type';
+    private string $objectType = 'some-object-type';
 
-    private int $object_id = 666;
+    private string $objectIds = '666';
 
     private ?NewPlaylistDialogAdapter $subject;
 
@@ -57,8 +57,8 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
             $this->playlistLoader,
             $this->ajaxUriRetriever,
             $this->gatekeeper,
-            $this->object_type,
-            $this->object_id
+            $this->objectType,
+            $this->objectIds
         );
     }
 
@@ -102,16 +102,16 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     public function testGetObjectTypeReturnsValue(): void
     {
         $this->assertSame(
-            $this->object_type,
+            $this->objectType,
             $this->subject->getObjectType()
         );
     }
 
-    public function testGetObjectIdReturnsValue(): void
+    public function testGetObjectIdsReturnsValue(): void
     {
         $this->assertSame(
-            $this->object_id,
-            $this->subject->getObjectId()
+            $this->objectIds,
+            $this->subject->getObjectIds()
         );
     }
 
