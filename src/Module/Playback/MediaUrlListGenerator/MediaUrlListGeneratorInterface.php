@@ -20,12 +20,18 @@
  *
  */
 
-namespace Ampache\Module\Playlist\SearchType;
+namespace Ampache\Module\Playback\MediaUrlListGenerator;
+
+use Ampache\Module\Playback\Stream_Playlist;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Maps a db object name to a search type
+ * Generates a list of media item urls depending on the playlist type
  */
-interface SearchTypeMapperInterface
+interface MediaUrlListGeneratorInterface
 {
-    public function map(string $type): ?SearchTypeInterface;
+    public function generate(
+        Stream_Playlist $playlist,
+        string $type
+    ): ResponseInterface;
 }

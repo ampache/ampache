@@ -107,10 +107,7 @@ final class UpdateUserAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $notification_text = T_('User updated successfully');
-        if (!empty($notification_text)) {
-            display_notification($notification_text);
-        }
+        echo $this->ui->displayNotification(T_('User updated successfully'));
 
         // Show the default preferences page
         require Ui::find_template('show_preferences.inc.php');

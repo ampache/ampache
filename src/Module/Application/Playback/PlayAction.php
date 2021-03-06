@@ -359,9 +359,8 @@ final class PlayAction implements ApplicationActionInterface
             if ($uid != $playlist->user) {
                 throw new AccessDeniedException();
             }
-            $playlist->generate_playlist($playlist_type, false);
 
-            return null;
+            return $playlist->generate_playlist($playlist_type);
         }
 
         /**

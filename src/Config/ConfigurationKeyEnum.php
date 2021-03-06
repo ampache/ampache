@@ -119,4 +119,5 @@ final class ConfigurationKeyEnum
     public const HIDE_SEARCH                   = 'hide_search';
     public const SHARE_EXPIRE                  = 'share_expire';
     public const LIVE_STREAM                   = 'live_stream';
+    public const AJAX_LOAD                     = 'ajax_load';
 }

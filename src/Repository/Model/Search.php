@@ -1202,6 +1202,7 @@ class Search extends playlist_object
         if ($searchType === null) {
             return [];
         }
+
         return $searchType->getSql($this);
     }
 

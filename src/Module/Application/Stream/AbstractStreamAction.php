@@ -126,7 +126,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             }
 
             // Depending on the stream type, will either generate a redirect or actually do the streaming.
-            $playlist->generate_playlist($streamType, false);
+            return $playlist->generate_playlist($streamType);
         } else {
             $this->logger->debug(
                 'No item. Ignoring...',

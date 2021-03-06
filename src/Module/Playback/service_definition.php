@@ -30,4 +30,15 @@ use function DI\autowire;
 
 return [
     LocalPlayControllerFactoryInterface::class => autowire(LocalPlayControllerFactory::class),
+    MediaUrlListGenerator\MediaUrlListGeneratorInterface::class => autowire(MediaUrlListGenerator\MediaUrlListGenerator::class),
+    MediaUrlListGenerator\AsxMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\DemocraticMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\DownloadMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\HlsMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\LocalplayMediaUrlGeneratorType::class => autowire(),
+    MediaUrlListGenerator\M3uMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\PlsMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\SimpleM3uMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\WebPlayerMediaUrlListGeneratorType::class => autowire(),
+    MediaUrlListGenerator\XspfMediaUrlListGeneratorType::class => autowire(),
 ];

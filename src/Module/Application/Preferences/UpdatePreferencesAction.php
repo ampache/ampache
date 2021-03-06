@@ -95,7 +95,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if (!empty($notification_text)) {
-            display_notification($notification_text);
+            echo $this->ui->displayNotification($notification_text);
         }
 
         // Show the default preferences page

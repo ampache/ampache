@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
@@ -39,10 +40,14 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     private PlaylistRepositoryInterface $playlistRepository;
 
+    private UiInterface $ui;
+
     public function __construct(
-        PlaylistRepositoryInterface $playlistRepository
+        PlaylistRepositoryInterface $playlistRepository,
+        UiInterface $ui
     ) {
         $this->playlistRepository = $playlistRepository;
+        $this->ui                 = $ui;
     }
 
     public function handle(): void
@@ -125,9 +130,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
-                    ob_start();
-                    display_notification(T_('Added to playlist'));
-                    $results['rfc3514'] = ob_get_clean();
+                    $results['rfc3514'] = $this->ui->displayNotification(T_('Added to playlist'));
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }

@@ -63,6 +63,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Preference/service_definition.php',
     require_once __DIR__ . '/../Module/Podcast/service_definition.php',
     require_once __DIR__ . '/../Module/Plugin/service_definition.php',
+    require_once __DIR__ . '/../Module/Playback/service_definition.php',
 );
 
 return $builder->build();

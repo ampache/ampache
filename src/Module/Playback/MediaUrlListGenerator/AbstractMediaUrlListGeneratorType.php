@@ -20,12 +20,20 @@
  *
  */
 
-namespace Ampache\Module\Playlist\SearchType;
+namespace Ampache\Module\Playback\MediaUrlListGenerator;
 
-/**
- * Maps a db object name to a search type
- */
-interface SearchTypeMapperInterface
+use Psr\Http\Message\ResponseInterface;
+
+abstract class AbstractMediaUrlListGeneratorType implements MediaUrlListGeneratorTypeInterface
 {
-    public function map(string $type): ?SearchTypeInterface;
+    protected function setHeader(
+        ResponseInterface $response,
+        string $extension,
+        string $contentType
+    ): ResponseInterface {
+        return $response
+            ->withHeader('Cache-Control', 'public')
+            ->withHeader('Content-Disposition', 'filename=ampache_playlist' . $extension)
+            ->withHeader('Content-Type', $contentType . ';');
+    }
 }

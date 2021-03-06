@@ -21,8 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 
+/** @var Stream_Playlist $playlist */
 ?>
 <html>
 <head>
@@ -51,13 +53,13 @@ if ($_REQUEST['append']) { ?>
 <?php
 } ?>
     if (appendmedia) {
-        <?php echo WebPlayer::add_media_js($this); ?>
+        <?php echo WebPlayer::add_media_js($playlist); ?>
     } else if (playnext) {
-        <?php echo WebPlayer::play_next_js($this); ?>
+        <?php echo WebPlayer::play_next_js($playlist); ?>
     } else {
         $webplayer.show();
         $("#webplayer-minimize").show();
-        $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {
+        $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $playlist->id; ?>', function (data) {
             var $response = $(data);
             $webplayer.empty().append($response);
         }, 'html');

@@ -687,4 +687,16 @@ class Ui implements UiInterface
             return $results;
         }
     }
+
+    /**
+     * Show a javascript notification to the user
+     */
+    public function displayNotification(string $message, int $timeout = 5000): string
+    {
+        return sprintf(
+            '<script>displayNotification(\'%s\', %d);</script>',
+            addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)),
+            $timeout
+        );
+    }
 }

@@ -81,4 +81,9 @@ interface UiInterface
      * @return string|array
      */
     public function scrubIn($input);
+
+    /**
+     * Show a javascript notification to the user
+     */
+    public function displayNotification(string $message, int $timeout = 5000): string;
 }

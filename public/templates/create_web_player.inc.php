@@ -21,8 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
 
+/** @var Stream_Playlist $playlist */
 ?>
 <html>
 <head>
@@ -33,7 +35,7 @@ function PlayerPopUp(URL)
 {
 <?php
 $width = 730;
-if (WebPlayer::is_playlist_video($this)) {
+if (WebPlayer::is_playlist_video($playlist)) {
     $width = 880;
 } ?>
     window.open(URL, 'Web_player', 'width=<?php echo $width; ?>,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
@@ -43,6 +45,6 @@ if (WebPlayer::is_playlist_video($this)) {
 // end -->
 </script>
 </head>
-<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path')?>/web_player.php<?php echo '?playlist_id=' . $this->id ?>')">
+<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path')?>/web_player.php<?php echo '?playlist_id=' . $playlist->id ?>')">
 </body>
 </html>
