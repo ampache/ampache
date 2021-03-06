@@ -95,10 +95,11 @@ class ShowEditActionTest extends MockeryTestCase
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
-        $gatekeeper->shouldReceive('getUserId')
+
+        $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
-            ->andReturn($userId);
+            ->andReturn(['user_id' => (string) $userId]);
 
         $this->modelFactory->shouldReceive('createUser')
             ->with($userId)
