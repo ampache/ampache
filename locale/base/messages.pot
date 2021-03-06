@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2021-03-04 22:42+0100\n"
+"POT-Creation-Date: 2021-03-06 01:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -333,7 +333,7 @@ msgstr ""
 #: ../../src/Gui/Song/SongViewAdapter.php:116
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:139
 #: ../../src/Plugin/AmpachePersonalFavorites.php:143
-#: ../../src/Repository/Model/Art.php:1335
+#: ../../src/Repository/Model/Art.php:1352
 #: ../../src/Repository/Model/Shoutbox.php:301
 msgid "Play"
 msgstr ""
@@ -8401,15 +8401,15 @@ msgstr ""
 msgid "Artist MusicBrainzID"
 msgstr ""
 
-#: ../../src/Repository/Model/Art.php:1346
+#: ../../src/Repository/Model/Art.php:1363
 msgid "Edit/Find Art"
 msgstr ""
 
-#: ../../src/Repository/Model/Art.php:1349
+#: ../../src/Repository/Model/Art.php:1366
 msgid "Do you really want to reset art?"
 msgstr ""
 
-#: ../../src/Repository/Model/Art.php:1350
+#: ../../src/Repository/Model/Art.php:1367
 msgid "Reset Art"
 msgstr ""
 
@@ -9672,7 +9672,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 04.03.2021 22:42:33 CET 
+ # Last Update: 06.03.2021 01:34:30 CET 
 
  #######################################################################
 
