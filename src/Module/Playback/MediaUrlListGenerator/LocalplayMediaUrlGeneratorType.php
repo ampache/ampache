@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback\MediaUrlListGenerator;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayControllerFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
@@ -70,9 +68,9 @@ final class LocalplayMediaUrlGeneratorType extends AbstractMediaUrlListGenerator
         if (!$append) {
             // We don't have metadata on Stream_URL to know its kind
             // so we check the content to know if it is democratic
-            if (count($playlist->urls) == 1) {
+            if (count($playlist->urls) === 1) {
                 $furl = $playlist->urls[0];
-                if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
+                if (strpos($furl->url, '&demo_id=1') !== false && $furl->time == -1) {
                     // If democratic, repeat the song to get the next voted one.
                     $this->logger->debug(
                         'Playing democratic on Localplay, enabling repeat...',

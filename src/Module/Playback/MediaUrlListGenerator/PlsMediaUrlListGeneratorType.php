@@ -47,9 +47,9 @@ final class PlsMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorTy
         $count = 0;
         foreach ($playlist->urls as $url) {
             $count++;
-            $ret .= 'File' . $count . '=' . $url->url . "\n";
-            $ret .= 'Title' . $count . '=' . $url->author . ' - ' . $url->title . "\n";
-            $ret .= 'Length' . $count . '=' . $url->time . "\n";
+            $ret .= sprintf("File%d=%s\n", $count, $url->url);
+            $ret .= sprintf("Title%d=%s - %s\n", $count, $url->author, $url->title);
+            $ret .= sprintf("Length%d=%s\n", $count, $url->time);
         }
 
         $ret .= "Version=2\n";

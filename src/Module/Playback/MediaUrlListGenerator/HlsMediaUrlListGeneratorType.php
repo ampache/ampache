@@ -53,7 +53,8 @@ final class HlsMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorTy
         ResponseInterface $response
     ): ResponseInterface {
         $ssize = 10;
-        $ret   = "#EXTM3U\n";
+
+        $ret  = "#EXTM3U\n";
         $ret .= "#EXT-X-TARGETDURATION:" . $ssize . "\n";
         $ret .= "#EXT-X-VERSION:1\n";
         $ret .= "#EXT-X-ALLOW-CACHE:NO\n";

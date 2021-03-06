@@ -26,7 +26,9 @@ namespace Ampache\Module\Playback\MediaUrlListGenerator;
 
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\System\LegacyLogger;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Teapot\StatusCode;
 
 /**
@@ -34,13 +36,27 @@ use Teapot\StatusCode;
  */
 final class DownloadMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorType
 {
+    private LoggerInterface $logger;
+
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     public function generate(
         Stream_Playlist $playlist,
         ResponseInterface $response
     ): ResponseInterface {
         // There should only be one here...
         if (count($playlist->urls) != 1) {
-            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($playlist->urls), 2);
+            $this->logger->error(
+                sprintf(
+                    'Download called, but $urls contains %s',
+                    json_encode($playlist->urls)
+                ),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
         }
 
         // Header redirect baby!
