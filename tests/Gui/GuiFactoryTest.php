@@ -151,7 +151,7 @@ class GuiFactoryTest extends MockeryTestCase
             $this->subject->createNewPlaylistDialogAdapter(
                 $this->mock(GuiGatekeeperInterface::class),
                 'some-type',
-                666
+                '666'
             )
         );
     }

@@ -79,6 +79,12 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         database_object $libitem,
         int $object_id
     ): ?ResponseInterface {
+        /**
+         * Actually, object_id is not used - this is a design flaw.
+         * This action allows to submit multiple ids but the abstract app
+         * uses just one for internal checks. So we have to retrieve the object_ids here again
+         * @todo FIXME Replace by some smart solution
+         */
         $result = $this->talFactory
             ->createTalView()
             ->setTemplate('playlist/new_dialog.xhtml')
@@ -87,7 +93,7 @@ final class ShowEditPlaylistAction extends AbstractEditAction
                 $this->guiFactory->createNewPlaylistDialogAdapter(
                     $gatekeeper,
                     $object_type,
-                    $object_id
+                    $request->getQueryParams()['id']
                 )
             )
             ->render();
