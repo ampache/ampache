@@ -60,7 +60,9 @@ final class ShowEditAction extends AbstractUserAction
             return null;
         }
 
-        $client = $this->modelFactory->createUser($gatekeeper->getUserId());
+        $client = $this->modelFactory->createUser(
+            (int) ($request->getQueryParams()['user_id'] ?? 0)
+        );
         $client->format();
 
         $this->ui->showHeader();
