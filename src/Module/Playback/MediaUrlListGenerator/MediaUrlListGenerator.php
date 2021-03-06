@@ -58,9 +58,9 @@ final class MediaUrlListGenerator implements MediaUrlListGeneratorInterface
     ): ResponseInterface {
         $response = $this->responseFactory->createResponse();
 
-        if (!count($playlist->urls)) {
+        if ($playlist->urls === []) {
             $this->logger->error(
-                'Error: Empty URL array for ' . $playlist->id,
+                sprintf('Error: Empty URL array for %d', $playlist->id),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -68,7 +68,7 @@ final class MediaUrlListGenerator implements MediaUrlListGeneratorInterface
         }
 
         $this->logger->info(
-            'Generating a {' . $type . '} object...',
+            sprintf('Generating a {%s} object...', $type),
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
@@ -77,31 +77,31 @@ final class MediaUrlListGenerator implements MediaUrlListGeneratorInterface
             'download' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(DownloadMediaUrlListGeneratorType::class);
             },
-            'democratic' => function () {
+            'democratic' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(DemocraticMediaUrlListGeneratorType::class);
             },
-            'localplay' => function () {
+            'localplay' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(LocalplayMediaUrlGeneratorType::class);
             },
-            'web_player' => function () {
+            'web_player' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(WebPlayerMediaUrlListGeneratorType::class);
             },
-            'asx' => function () {
+            'asx' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(AsxMediaUrlListGeneratorType::class);
             },
-            'pls' => function () {
+            'pls' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(PlsMediaUrlListGeneratorType::class);
             },
-            'simple_m3u' => function () {
+            'simple_m3u' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(SimpleM3uMediaUrlListGeneratorType::class);
             },
-            'xspf' => function () {
+            'xspf' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(XspfMediaUrlListGeneratorType::class);
             },
-            'hls' => function () {
+            'hls' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(HlsMediaUrlListGeneratorType::class);
             },
-            'm3u' => function () {
+            'm3u' => function (): MediaUrlListGeneratorTypeInterface {
                 return $this->dic->get(M3uMediaUrlListGeneratorType::class);
             },
         ];
