@@ -46,13 +46,17 @@ final class M3uMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorTy
         Stream_Playlist $playlist,
         ResponseInterface $response
     ): ResponseInterface {
-        $ret = "#EXTM3U\n";
+        $ret = sprintf('#EXTM3U%s', PHP_EOL);
 
-        $count = 0;
         foreach ($playlist->urls as $url) {
-            $ret .= '#EXTINF:' . $url->time . ', ' . $url->author . ' - ' . $url->title . "\n";
-            $ret .= $url->url . "\n";
-            $count++;
+            $ret .= sprintf(
+                '#EXTINF:%s, %s - %s%s',
+                $url->time,
+                $url->author,
+                $url->title,
+                PHP_EOL
+            );
+            $ret .= $url->url . PHP_EOL;
         }
 
         return $this

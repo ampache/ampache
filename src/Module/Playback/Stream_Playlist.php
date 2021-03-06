@@ -45,6 +45,8 @@ use Psr\Http\Message\ResponseInterface;
 class Stream_Playlist
 {
     public $id;
+
+    /** @var Stream_Url[] $urls */
     public $urls = array();
     public $user;
 

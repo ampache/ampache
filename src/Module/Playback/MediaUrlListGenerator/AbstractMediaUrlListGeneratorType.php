@@ -33,7 +33,7 @@ abstract class AbstractMediaUrlListGeneratorType implements MediaUrlListGenerato
     ): ResponseInterface {
         return $response
             ->withHeader('Cache-Control', 'public')
-            ->withHeader('Content-Disposition', 'filename=ampache_playlist' . $extension)
-            ->withHeader('Content-Type', $contentType . ';');
+            ->withHeader('Content-Disposition', 'filename=ampache_playlist.' . $extension)
+            ->withHeader('Content-Type', $contentType);
     }
 }
