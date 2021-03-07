@@ -184,7 +184,7 @@ class AmpacheRatingMatch
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (get_class($song) != 'Song') {
+        if (get_class($song) != Song::class) {
             return false;
         }
         // Don't double rate something after it's already been rated before
