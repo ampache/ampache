@@ -74,7 +74,7 @@ final class XspfMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorT
                 $xml['track']['album'] = $url->album;
             }
 
-            $result .= $this->xmlWriter->buildKeyedArray($xml, true);
+            $result .= $this->xmlWriter->buildKeyedArray($xml);
         }
 
         $ret = $this->xmlWriter->writePlainXml(

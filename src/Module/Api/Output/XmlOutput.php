@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -55,12 +56,13 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function error(int $code, string $message, string $action, string $type): string
     {
-        return Xml_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
+        $xml_string = "\t<error errorCode=\"$code\">" .
+            "\n\t\t<errorAction><![CDATA[$action]]></errorAction>" .
+            "\n\t\t<errorType><![CDATA[$type]]></errorType>" .
+            "\n\t\t<errorMessage><![CDATA[$message]]></errorMessage>" .
+            "\n\t</error>";
+
+        return Xml_Data::output_xml($xml_string);
     }
 
     /**
@@ -91,7 +93,7 @@ final class XmlOutput implements ApiOutputInterface
 
     public function emptyResult(string $type): string
     {
-        return Xml_Data::empty();
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
     }
 
     /**

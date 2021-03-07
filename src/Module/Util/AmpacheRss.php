@@ -447,7 +447,7 @@ class AmpacheRss
         // Pass it to the keyed array xml function
         foreach ($data as $item) {
             // We need to enclose it in an item tag
-            $string .= $xmlWriter->buildKeyedArray(array('item' => $item), true);
+            $string .= $xmlWriter->buildKeyedArray(array('item' => $item));
         }
 
         return $xmlWriter->writePlainXml($string, 'rss');

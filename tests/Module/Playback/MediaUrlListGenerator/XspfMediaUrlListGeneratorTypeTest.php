@@ -101,7 +101,7 @@ class XspfMediaUrlListGeneratorTypeTest extends MockeryTestCase
                     'image' => $imageUrl,
                     'album' => $album
                 ]
-            ], true)
+            ])
             ->once()
             ->andReturn($result);
         $this->xmlWriter->shouldReceive('writePlainXml')

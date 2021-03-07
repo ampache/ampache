@@ -46,8 +46,6 @@ interface XmlWriterInterface
      * @param null|bool $object
      */
     public function buildKeyedArray(
-        array $array,
-        bool $callback = false,
-        ?string $object = null
+        array $array
     ): string;
 }

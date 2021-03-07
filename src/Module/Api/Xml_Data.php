@@ -98,78 +98,6 @@ class Xml_Data
     } // set_limit
 
     /**
-     * set_type
-     *
-     * This sets the type of XML_Data we are working on
-     *
-     * @param  string  $type XML_Data type
-     * @return boolean
-     */
-    public static function set_type($type)
-    {
-        if (!in_array($type, array('rss', 'xspf', 'itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
-
-        return true;
-    } // set_type
-
-    /**
-     * error
-     *
-     * This generates a standard XML Error message
-     * nothing fancy here...
-     *
-     * @param  string $code Error code
-     * @param  string $string Error message
-     * @param  string $action
-     * @param  string $type
-     * @return string return error message xml
-     */
-    public static function error($code, $string, $action, $type)
-    {
-        $xml_string = "\t<error errorCode=\"$code\">" .
-            "\n\t\t<errorAction><![CDATA[$action]]></errorAction>" .
-            "\n\t\t<errorType><![CDATA[$type]]></errorType>" .
-            "\n\t\t<errorMessage><![CDATA[$string]]></errorMessage>" .
-            "\n\t</error>";
-
-        return self::output_xml($xml_string);
-    } // error
-
-    /**
-     * success
-     *
-     * This generates a standard XML Success message
-     * nothing fancy here...
-     *
-     * @param  string $string success message
-     * @param  array  $return_data
-     * @return string return success message xml
-     */
-    public static function success($string, $return_data = array())
-    {
-        $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
-        foreach ($return_data as $title => $data) {
-            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
-        }
-
-        return self::output_xml($xml_string);
-    } // success
-
-    /**
-     * empty
-     *
-     * This generates an empty root element
-     */
-    public static function empty()
-    {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
-    } // empty
-
-    /**
      * header
      *
      * This returns the header
@@ -510,7 +438,7 @@ class Xml_Data
                     "</artist>\n";
         } // end foreach artists
 
-        return self::output_xml($string, true);
+        return self::output_xml($string);
     } // artists
 
     /**

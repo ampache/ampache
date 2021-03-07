@@ -242,14 +242,10 @@ final class XmlWriter implements XmlWriterInterface
     /**
      * This will build an xml document from a key'd array,
      *
-     * @param array     $array keyed array of objects (key => value, key => value)
-     * @param bool      $callback (don't output xml when true)
-     * @param null|bool $object
+     * @param array $array keyed array of objects (key => value, key => value)
      */
     public function buildKeyedArray(
-        array $array,
-        bool $callback = false,
-        ?string $object = null
+        array $array
     ): string {
         $string = '';
         // Foreach it
@@ -263,15 +259,11 @@ final class XmlWriter implements XmlWriterInterface
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = $this->buildKeyedArray($value, true);
-                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
+                $value = $this->buildKeyedArray($value);
+                $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
-                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[$value]]></$object>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
+                $string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
             }
-        } // end foreach
-
-        if (!$callback) {
-            $string = Xml_Data::output_xml($string);
         }
 
         return $string;
