@@ -64,7 +64,9 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
     {
         return new XmlOutput(
             $this->modelFactory,
-            $this->xmlWriter
+            $this->xmlWriter,
+            $this->albumRepository,
+            $this->songRepository
         );
     }
 }

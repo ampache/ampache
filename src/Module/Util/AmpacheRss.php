@@ -24,20 +24,22 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\Song;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use DOMDocument;
+use SimpleXMLElement;
 
 class AmpacheRss
 {
@@ -82,7 +84,7 @@ class AmpacheRss
                     if ($libitem->id) {
                         $libitem->format();
 
-                        return Xml_Data::podcast($libitem);
+                        return $this->podcast($libitem);
                     }
                 }
             }
@@ -451,6 +453,82 @@ class AmpacheRss
         }
 
         return $xmlWriter->writePlainXml($string, 'rss');
+    }
+
+    /**
+     * @param  library_item $libitem
+     * @param  integer      $user_id
+     * @return string|false
+     */
+    private function podcast(library_item $libitem, $user_id = null)
+    {
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
+        $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");
+        $xml->addAttribute("xmlns:xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
+        $xml->addAttribute("version", "2.0");
+        $xchannel = $xml->addChild("channel");
+        $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
+        //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
+        $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
+        if (Art::has_db($libitem->id, $libitem_type)) {
+            $ximg = $xchannel->addChild("xmlns:itunes:image");
+            $ximg->addAttribute("href", Art::url($libitem->id, $libitem_type));
+        }
+        $summary = $libitem->get_description();
+        if (!empty($summary)) {
+            $summary = htmlentities($summary);
+            $xchannel->addChild("description", $summary);
+            $xchannel->addChild("xmlns:itunes:summary", $summary);
+        }
+        $xchannel->addChild("generator", "ampache");
+        $xchannel->addChild("xmlns:itunes:category", "Music");
+        $owner = $libitem->get_user_owner();
+        if ($owner) {
+            $user_owner = new User($owner);
+            $user_owner->format();
+            $xowner = $xchannel->addChild("xmlns:itunes:owner");
+            $xowner->addChild("xmlns:itunes:name", $user_owner->f_name);
+        }
+
+        $medias = $libitem->get_medias();
+        foreach ($medias as $media_info) {
+            $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            $media      = new $class_name($media_info['object_id']);
+            $media->format();
+            $xitem = $xchannel->addChild("item");
+            $xitem->addChild("title", htmlentities($media->get_fullname()));
+            if ($media->f_artist) {
+                $xitem->addChild("xmlns:itunes:author", $media->f_artist);
+            }
+            //$xmlink = $xitem->addChild("link", htmlentities($media->link));
+            $xitem->addChild("guid", htmlentities($media->link));
+            if ($media->addition_time) {
+                $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
+            }
+            $description = $media->get_description();
+            if (!empty($description)) {
+                $xitem->addChild("description", htmlentities($description));
+            }
+            $xitem->addChild("xmlns:itunes:duration", $media->f_time);
+            if ($media->mime) {
+                $surl  = $media->play_url('', 'api', false, $user_id);
+                $xencl = $xitem->addChild("enclosure");
+                $xencl->addAttribute("type", (string)$media->mime);
+                $xencl->addAttribute("length", (string)$media->size);
+                $xencl->addAttribute("url", $surl);
+            }
+        }
+
+        $xmlstr = $xml->asXml();
+        // Format xml output
+        $dom = new DOMDocument();
+        if ($dom->loadXML($xmlstr, LIBXML_PARSEHUGE) !== false) {
+            $dom->formatOutput = true;
+
+            return $dom->saveXML();
+        } else {
+            return $xmlstr;
+        }
     }
 
     /**

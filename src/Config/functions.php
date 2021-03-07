@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\TVShow_Season;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;

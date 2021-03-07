@@ -1096,7 +1096,7 @@ final class JsonOutput implements ApiOutputInterface
         string $type,
         ?int $userId = null,
         bool $include = false,
-        bool $full_xml = false,
+        bool $fullXml = false,
         int $limit = 0,
         int $offset = 0
     ): string {

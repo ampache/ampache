@@ -317,7 +317,7 @@ interface ApiOutputInterface
      */
     public function shares(
         array $shareIds,
-        bool $asAsObject = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string;
@@ -333,10 +333,11 @@ interface ApiOutputInterface
     /**
      * This takes an array of object_ids and returns a result based on type
      *
-     * @param int[]    $objects Array of object_ids
+     * @param int[]    $objectIds Array of object_ids
      * @param string   $type
-     * @param null|int $user_id
+     * @param null|int $userId
      * @param bool     $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
+     * @param bool     $fullXml
      * @param int      $limit
      * @param int      $offset
      */
@@ -345,7 +346,7 @@ interface ApiOutputInterface
         string $type,
         ?int $userId = null,
         bool $include = false,
-        bool $full_xml = false,
+        bool $fullXml = false,
         int $limit = 0,
         int $offset = 0
     ): string;

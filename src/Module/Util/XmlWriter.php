@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml_Data;
 use DOMDocument;
 
 final class XmlWriter implements XmlWriterInterface
@@ -40,7 +39,7 @@ final class XmlWriter implements XmlWriterInterface
         if ($full_xml) {
             $xml .= self::header($type, $title);
         }
-        $xml .= $this->cleanUtf8($string);
+        $xml .= static::cleanUtf8($string);
         if ($full_xml) {
             $xml .= self::footer($type);
         }
@@ -135,7 +134,7 @@ final class XmlWriter implements XmlWriterInterface
      * @param string $string
      * @return string
      */
-    private function cleanUtf8(string $string): string
+    private static function cleanUtf8(string $string): string
     {
         if ($string) {
             $clean = preg_replace(
@@ -235,7 +234,7 @@ final class XmlWriter implements XmlWriterInterface
                     $string = '<?xml version="1.0" encoding="utf-8" ?>' . "\n<root>\n" . $string . "</root>\n";
                 }
 
-                return Xml_Data::clean_utf8($string);
+                return self::cleanUtf8($string);
         }
     }
 
