@@ -262,7 +262,7 @@ final class PlayAction implements ApplicationActionInterface
         if (!$share_id) {
             // No explicit authentication, use session
             if (!$user_authenticated) {
-                $GLOBALS['user'] = new User($uid);
+                $user = $GLOBALS['user'] = new User($uid);
                 Preference::init();
 
                 /* If the user has been disabled (true value) */
@@ -317,7 +317,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $GLOBALS['user'] = new User($share->user);
+            $user = $GLOBALS['user'] = new User($share->user);
             Preference::init();
         }
 
