@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -36,14 +37,18 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private XmlWriterInterface $xmlWriter;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        XmlWriterInterface $xmlWriter
     ) {
         $this->modelFactory    = $modelFactory;
         $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
+        $this->xmlWriter       = $xmlWriter;
     }
 
     public function createJsonOutput(): ApiOutputInterface
@@ -58,7 +63,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
     public function createXmlOutput(): ApiOutputInterface
     {
         return new XmlOutput(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->xmlWriter
         );
     }
 }

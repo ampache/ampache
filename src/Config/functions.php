@@ -1558,7 +1558,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return Xml_Data::output_xml_from_array($array, $callback, $type);
+        return \Ampache\Module\Util\XmlWriter::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 

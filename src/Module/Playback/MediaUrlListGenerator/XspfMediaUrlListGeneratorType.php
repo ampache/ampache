@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback\MediaUrlListGenerator;
 
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\XmlWriterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -33,10 +33,14 @@ final class XspfMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorT
 {
     private StreamFactoryInterface $streamFactory;
 
+    private XmlWriterInterface $xmlWriter;
+
     public function __construct(
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        XmlWriterInterface $xmlWriter
     ) {
         $this->streamFactory = $streamFactory;
+        $this->xmlWriter     = $xmlWriter;
     }
 
     public function generate(
@@ -69,17 +73,15 @@ final class XspfMediaUrlListGeneratorType extends AbstractMediaUrlListGeneratorT
             if ($url->album) {
                 $xml['track']['album'] = $url->album;
             }
-            if ($url->track_num) {
-                $xml['track']['trackNum'] = $url->track_num;
-            }
 
-            $result .= Xml_Data::keyed_array($xml, true);
-        } // end foreach
+            $result .= $this->xmlWriter->buildKeyedArray($xml, true);
+        }
 
-        Xml_Data::set_type('xspf');
-        $ret = Xml_Data::header($playlist->title);
-        $ret .= $result;
-        $ret .= Xml_Data::footer();
+        $ret = $this->xmlWriter->writePlainXml(
+            $result,
+            'xspf',
+            $playlist->title
+        );
 
         return $this
             ->setHeader($response, 'xspf', 'application/xspf+xml')

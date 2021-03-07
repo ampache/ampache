@@ -101,9 +101,7 @@ class AmpacheRss
                 $pub_date = call_user_func(array(AmpacheRss::class, $pub_date_function));
             }
 
-            Xml_Data::set_type('rss');
-
-            return Xml_Data::rss_feed($data, $this->get_title(), $pub_date);
+            return $this->rss_feed($data, $this->get_title(), $pub_date);
         }
 
         return null;
@@ -430,6 +428,32 @@ class AmpacheRss
     }
 
     /**
+     * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
+     *
+     * @param  array  $data Keyed array of information to RSS'ify
+     * @param  string $title RSS feed title
+     * @param  string $date publish date
+     * @return string RSS feed xml
+     */
+    public function rss_feed($data, $title, $date = null)
+    {
+        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        if (is_int($date)) {
+            $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
+        }
+
+        $xmlWriter = $this->getXmlWriter();
+
+        // Pass it to the keyed array xml function
+        foreach ($data as $item) {
+            // We need to enclose it in an item tag
+            $string .= $xmlWriter->buildKeyedArray(array('item' => $item), true);
+        }
+
+        return $xmlWriter->writePlainXml($string, 'rss');
+    }
+
+    /**
      * @deprecated Inject by constructor
      */
     private static function getUserAccessKeyGenerator(): UserAccessKeyGeneratorInterface
@@ -447,5 +471,15 @@ class AmpacheRss
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getXmlWriter(): XmlWriterInterface
+    {
+        global $dic;
+
+        return $dic->get(XmlWriterInterface::class);
     }
 }

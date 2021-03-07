@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Output;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
@@ -39,10 +40,14 @@ final class XmlOutput implements ApiOutputInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private XmlWriterInterface $xmlWriter;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        XmlWriterInterface $xmlWriter
     ) {
         $this->modelFactory = $modelFactory;
+        $this->xmlWriter    = $xmlWriter;
     }
 
     /**
@@ -497,7 +502,7 @@ final class XmlOutput implements ApiOutputInterface
             $string .= "\t</activity>\n";
         }
 
-        return Xml_Data::_header() . $string . Xml_Data::_footer();
+        return $this->xmlWriter->writeXml($string);
     }
 
     /**

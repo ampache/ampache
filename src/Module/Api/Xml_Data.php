@@ -28,21 +28,16 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\XmlWriter;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use DOMDocument;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -52,8 +47,11 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
+use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * XML_Data Class
@@ -229,127 +227,6 @@ class Xml_Data
 
         return $string;
     } // genre_string
-
-    /**
-     * output_xml_from_array
-     * This takes a one dimensional array and creates a XML document from it. For
-     * use primarily by the ajax mojo.
-     * @param  array   $array
-     * @param  boolean $callback
-     * @param  string  $type
-     * @return string
-     */
-    public static function output_xml_from_array($array, $callback = false, $type = '')
-    {
-        $string = '';
-
-        // If we weren't passed an array then return
-        if (!is_array($array)) {
-            return $string;
-        }
-
-        // The type is used for the different XML docs we pass
-        switch ($type) {
-            case 'itunes':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_int($value)) {
-                            $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                        } elseif ($key == "Date Added") {
-                            $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
-                        }
-                    }
-                } // end foreach
-
-                return $string;
-            case 'xspf':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_numeric($value)) {
-                            $string .= "\t\t\t<$key>$value</$key>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
-                        }
-                    }
-                } // end foreach
-
-                return $string;
-            default:
-                foreach ($array as $key => $value) {
-                    // No numeric keys
-                    if (is_numeric($key)) {
-                        $key = 'item';
-                    }
-
-                    if (is_array($value)) {
-                        // Call ourself
-                        $value = xoutput_from_array($value, true);
-                        $string .= "\t<content div=\"$key\">$value</content>\n";
-                    } else {
-                        /* We need to escape the value */
-                        $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
-                    }
-                    // end foreach elements
-                }
-                if (!$callback) {
-                    $string = '<?xml version="1.0" encoding="utf-8" ?>' . "\n<root>\n" . $string . "</root>\n";
-                }
-
-                return Ui::clean_utf8($string);
-        }
-    } // output_from_array
-
-    /**
-     * keyed_array
-     *
-     * This will build an xml document from a key'd array,
-     *
-     * @param  array          $array keyed array of objects (key => value, key => value)
-     * @param  boolean        $callback (don't output xml when true)
-     * @param  string|boolean $object
-     * @return string         return xml
-     */
-    public static function keyed_array($array, $callback = false, $object = false)
-    {
-        $string = '';
-        // Foreach it
-        foreach ($array as $key => $value) {
-            $attribute = '';
-            // See if the key has attributes
-            if (is_array($value) && isset($value['attributes'])) {
-                $attribute = ' ' . $value['attributes'];
-                $key       = $value['value'];
-            }
-
-            // If it's an array, run again
-            if (is_array($value)) {
-                $value = self::keyed_array($value, true);
-                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
-            } else {
-                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[$value]]></$object>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
-            }
-        } // end foreach
-
-        if (!$callback) {
-            $string = self::output_xml($string);
-        }
-
-        return $string;
-    } // keyed_array
 
     /**
      * object_array
@@ -1155,6 +1032,9 @@ class Xml_Data
     /**
      * @param  boolean $full_xml
      * @return string
+     *
+     * @deprecated
+     * @see XmlWriter
      */
     public static function output_xml($string, $full_xml = true)
     {
@@ -1162,7 +1042,7 @@ class Xml_Data
         if ($full_xml) {
             $xml .= self::_header();
         }
-        $xml .= Ui::clean_utf8($string);
+        $xml .= static::clean_utf8($string);
         if ($full_xml) {
             $xml .= self::_footer();
         }
@@ -1181,32 +1061,6 @@ class Xml_Data
     }
 
     /**
-     * rss_feed
-     *
-     * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
-     *
-     * @param  array  $data Keyed array of information to RSS'ify
-     * @param  string $title RSS feed title
-     * @param  string $date publish date
-     * @return string RSS feed xml
-     */
-    public static function rss_feed($data, $title, $date = null)
-    {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if (is_int($date)) {
-            $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), true);
-        }
-
-        return self::_header() . $string . self::_footer();
-    } // rss_feed
-
-    /**
      * _header
      *
      * this returns a standard header, there are a few types
@@ -1215,7 +1069,7 @@ class Xml_Data
      * @param  string $title
      * @return string Header xml tag.
      */
-    public static function _header($title = null)
+    private static function _header($title = null)
     {
         switch (self::$type) {
             case 'xspf':
@@ -1244,7 +1098,7 @@ class Xml_Data
      *
      * @return string Footer xml tag.
      */
-    public static function _footer()
+    private static function _footer()
     {
         switch (self::$type) {
             case 'itunes':
@@ -1342,6 +1196,34 @@ class Xml_Data
         } else {
             return $xmlstr;
         }
+    }
+
+    /**
+     * clean_utf8
+     *
+     * Removes characters that aren't valid in XML (which is a subset of valid
+     * UTF-8, but close enough for our purposes.)
+     * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
+     * @param string $string
+     * @return string
+     */
+    public static function clean_utf8($string)
+    {
+        if ($string) {
+            $clean = preg_replace(
+                '/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u',
+                '',
+                $string
+            );
+
+            if ($clean) {
+                return rtrim((string)$clean);
+            }
+
+            debug_event(self::class, 'Charset cleanup failed, something might break', 1);
+        }
+
+        return '';
     }
 
     /**
