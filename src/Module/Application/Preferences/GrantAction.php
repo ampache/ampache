@@ -64,20 +64,25 @@ final class GrantAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if (Core::get_request('token') && in_array(Core::get_request('plugin'), Plugin::get_plugins('save_mediaplay'))) {
+        $pluginName = mb_strtolower(Core::get_request('plugin'));
+
+        if (
+            Core::get_request('token') &&
+            in_array($pluginName, Plugin::get_plugins('save_mediaplay'))
+        ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin(Core::get_request('plugin'))) {
+            if ($plugin = new Plugin($pluginName)) {
                 $plugin->load(Core::get_global('user'));
                 if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
                     $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
+                    $text     = T_('Your account has been updated') . ' : ' . $pluginName;
                     $next_url = sprintf(
                         '%s/preferences.php?tab=plugins',
                         $this->configContainer->getWebPath()
                     );
                 } else {
                     $title    = T_("There Was a Problem");
-                    $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
+                    $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
                     $next_url = sprintf(
                         '%s/preferences.php?tab=plugins',
                         $this->configContainer->getWebPath()
