@@ -53,6 +53,8 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
@@ -1202,26 +1204,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_podcast_ids
-     *
-     * This returns an array of ids of podcasts in this catalog
-     * @return integer[]
-     */
-    public function get_podcast_ids()
-    {
-        $results = array();
-
-        $sql = 'SELECT `podcast`.`id` FROM `podcast` ';
-        $sql .= 'WHERE `podcast`.`catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      *
      * @param integer[]|null $catalogs
      * @return Podcast[]
@@ -1234,34 +1216,10 @@ abstract class Catalog extends database_object
 
         $results = array();
         foreach ($catalogs as $catalog_id) {
-            $catalog     = self::create_from_id($catalog_id);
-            $podcast_ids = $catalog->get_podcast_ids();
+            $podcast_ids = static::getPodcastRepository()->getPodcastIds((int) $catalog_id);
             foreach ($podcast_ids as $podcast_id) {
                 $results[] = new Podcast($podcast_id);
             }
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_newest_podcasts_ids
-     *
-     * This returns an array of ids of latest podcast episodes in this catalog
-     * @param integer $count
-     * @return integer[]
-     */
-    public function get_newest_podcasts_ids($count)
-    {
-        $results = array();
-
-        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ' . 'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' . 'WHERE `podcast`.`catalog` = ? ' . 'ORDER BY `podcast_episode`.`pubdate` DESC';
-        if ($count > 0) {
-            $sql .= ' LIMIT ' . (string)$count;
-        }
-        $db_results = Dba::read($sql, array($this->id));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
         }
 
         return $results;
@@ -1278,8 +1236,10 @@ abstract class Catalog extends database_object
         $results  = array();
 
         foreach ($catalogs as $catalog_id) {
-            $catalog     = self::create_from_id($catalog_id);
-            $episode_ids = $catalog->get_newest_podcasts_ids($count);
+            $episode_ids = static::getPodcastEpisodeRepository()->getNewestPodcastsIds(
+                (int) $catalog_id,
+                $count
+            );
             foreach ($episode_ids as $episode_id) {
                 $results[] = new Podcast_Episode($episode_id);
             }
@@ -2953,5 +2913,25 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(SingleItemUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 }

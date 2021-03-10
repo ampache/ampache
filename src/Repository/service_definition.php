@@ -53,4 +53,6 @@ return [
     ShareRepositoryInterface::class => autowire(ShareRepository::class),
     SearchRepositoryInterface::class => autowire(SearchRepository::class),
     DemocraticRepositoryInterface::class => autowire(DemocraticRepository::class),
+    PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
+    PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
 ];

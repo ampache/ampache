@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
@@ -156,7 +157,7 @@ final class Cron
                     Userflag::build_cache('playlist', $user_playlist, $user_id);
                     // podcasts
                     if (AmpConfig::get('podcast')) {
-                        $podcasts = $catalog->get_podcast_ids();
+                        $podcasts = static::getPodcastRepository()->getPodcastIds($catalog->getId());
                         foreach ($podcasts as $podcast_id) {
                             Rating::build_cache('podcast', $podcasts, $user_id);
                             Userflag::build_cache('podcast', $podcasts, $user_id);
@@ -195,5 +196,15 @@ final class Cron
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }
