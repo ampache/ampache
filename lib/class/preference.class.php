@@ -56,8 +56,6 @@ class Preference extends database_object
         'browser_notify',
         'browser_notify_timeout',
         'catalog_check_duplicate',
-        'concerts_limit_future',
-        'concerts_limit_past',
         'cron_cache',
         'custom_blankalbum',
         'custom_blankmovie',
@@ -612,8 +610,6 @@ class Preference extends database_object
                "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
                "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
                "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-               "(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'), " .
-               "(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'), " .
                "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
                "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
                "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .

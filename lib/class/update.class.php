@@ -244,6 +244,9 @@ class Update
         $update_string = "* Extend allowed time for podcast_episodes.<br/ > ";
         $version[]     = array('version' => '400022', 'description' => $update_string);
 
+        $update_string = "* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.<br/ > ";
+        $version[]     = array('version' => '400023', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1416,6 +1419,28 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400023
+     *
+     * delete concerts_limit_past and concerts_limit_future database settings
+     */
+    public static function update_400023()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `user_preference` " .
+            "WHERE `user_preference`.`preference` IN  " .
+            "(SELECT `preference`.`id` FROM `preference`  " .
+            "WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future'));";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `preference` " .
+            "WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future');";
         $retval &= Dba::write($sql);
 
         return $retval;

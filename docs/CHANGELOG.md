@@ -6,6 +6,10 @@
 
 * If you have an MBID in you artist, use that for last.fm queries
 
+### Removed
+
+* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.
+
 ### Fixed
 
 * Grid View shouldn't change the artist image
