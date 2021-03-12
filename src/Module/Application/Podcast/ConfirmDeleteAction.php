@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,14 +46,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PodcastDeleterInterface $podcastDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PodcastDeleterInterface $podcastDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->podcastDeleter  = $podcastDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,10 +73,11 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $podcast = $this->modelFactory->createPodcast((int) ($request->getQueryParams()['podcast_id'] ?? 0));
+
         $this->ui->showHeader();
 
-        $podcast = $this->modelFactory->createPodcast((int) $_REQUEST['podcast_id']);
-        if ($podcast->remove()) {
+        if ($this->podcastDeleter->delete($podcast)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Podcast has been deleted'),

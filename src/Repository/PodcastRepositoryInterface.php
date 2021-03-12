@@ -29,4 +29,8 @@ interface PodcastRepositoryInterface
      * @return int[]
      */
     public function getPodcastIds(int $catalogId): array;
+
+    public function remove(
+        int $podcastId
+    ): bool;
 }

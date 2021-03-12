@@ -482,23 +482,6 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * remove
-     * @return PDOStatement|boolean
-     */
-    public function remove()
-    {
-        $episodes = $this->get_episodes();
-        foreach ($episodes as $episode_id) {
-            $episode = new Podcast_Episode($episode_id);
-            $episode->remove();
-        }
-
-        $sql = "DELETE FROM `podcast` WHERE `id` = ?";
-
-        return Dba::write($sql, array($this->id));
-    }
-
-    /**
      * get_root_path
      * @return string
      */

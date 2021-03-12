@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
@@ -2337,7 +2338,7 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $podcast = new Podcast(Subsonic_Xml_Data::getAmpacheId($podcast_id));
             if ($podcast->id) {
-                if ($podcast->remove()) {
+                if (static::getPodcastDeleter()->delete($podcast)) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastchannel');
                 } else {
                     $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
@@ -2737,5 +2738,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ShareCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastDeleter(): PodcastDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastDeleterInterface::class);
     }
 }

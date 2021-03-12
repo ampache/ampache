@@ -17,16 +17,35 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastRepositoryInterface;
 
-return [
-    PodcastCreatorInterface::class => autowire(PodcastCreator::class),
-    PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
-];
+final class PodcastDeleter implements PodcastDeleterInterface
+{
+    private PodcastRepositoryInterface $podcastRepository;
+
+    public function __construct(
+        PodcastRepositoryInterface $podcastRepository
+    ) {
+        $this->podcastRepository = $podcastRepository;
+    }
+
+    public function delete(
+        Podcast $podcast
+    ): bool {
+        $episodes = $podcast->get_episodes();
+        foreach ($episodes as $episode_id) {
+            $episode = new Podcast_Episode($episode_id);
+            $episode->remove();
+        }
+
+        return $this->podcastRepository->remove($podcast->getId());
+    }
+}

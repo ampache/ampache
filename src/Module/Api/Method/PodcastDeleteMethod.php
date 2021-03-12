@@ -34,6 +34,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,16 +52,20 @@ final class PodcastDeleteMethod implements MethodInterface
 
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
+    private PodcastDeleterInterface $podcastDeleter;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        PodcastDeleterInterface $podcastDeleter
     ) {
         $this->streamFactory        = $streamFactory;
         $this->configContainer      = $configContainer;
         $this->modelFactory         = $modelFactory;
         $this->updateInfoRepository = $updateInfoRepository;
+        $this->podcastDeleter       = $podcastDeleter;
     }
 
     /**
@@ -107,7 +112,7 @@ final class PodcastDeleteMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        if (!$podcast->remove()) {
+        if (!$this->podcastDeleter->delete($podcast)) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), $objectId)
             );

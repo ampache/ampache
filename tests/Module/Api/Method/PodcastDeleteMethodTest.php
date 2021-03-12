@@ -33,6 +33,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
@@ -55,6 +56,9 @@ class PodcastDeleteMethodTest extends MockeryTestCase
     /** @var UpdateInfoRepositoryInterface|MockInterface|null */
     private MockInterface $updateInfoRepository;
 
+    /** @var MockInterface|PodcastDeleterInterface */
+    private MockInterface $podcastDeleter;
+
     private ?PodcastDeleteMethod $subject;
 
     public function setUp(): void
@@ -63,12 +67,14 @@ class PodcastDeleteMethodTest extends MockeryTestCase
         $this->configContainer      = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
         $this->updateInfoRepository = $this->mock(UpdateInfoRepositoryInterface::class);
+        $this->podcastDeleter       = $this->mock(PodcastDeleterInterface::class);
 
         $this->subject = new PodcastDeleteMethod(
             $this->streamFactory,
             $this->configContainer,
             $this->modelFactory,
-            $this->updateInfoRepository
+            $this->updateInfoRepository,
+            $this->podcastDeleter
         );
     }
 
@@ -219,8 +225,9 @@ class PodcastDeleteMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
-        $podcast->shouldReceive('remove')
-            ->withNoArgs()
+
+        $this->podcastDeleter->shouldReceive('delete')
+            ->with($podcast)
             ->once()
             ->andReturnFalse();
 
@@ -262,8 +269,9 @@ class PodcastDeleteMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
-        $podcast->shouldReceive('remove')
-            ->withNoArgs()
+
+        $this->podcastDeleter->shouldReceive('delete')
+            ->with($podcast)
             ->once()
             ->andReturnTrue();
 
