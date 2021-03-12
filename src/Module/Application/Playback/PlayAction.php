@@ -262,7 +262,7 @@ final class PlayAction implements ApplicationActionInterface
         if (!$share_id) {
             // No explicit authentication, use session
             if (!$user_authenticated) {
-                $GLOBALS['user'] = new User($uid);
+                $user = $GLOBALS['user'] = new User($uid);
                 Preference::init();
 
                 /* If the user has been disabled (true value) */
@@ -317,7 +317,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $GLOBALS['user'] = new User($share->user);
+            $user = $GLOBALS['user'] = new User($share->user);
             Preference::init();
         }
 
@@ -775,7 +775,7 @@ final class PlayAction implements ApplicationActionInterface
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                         debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) == 'Song') {
+                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) === Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }
