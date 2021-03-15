@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Config\AmpConfig;
 use Psr\Log\LoggerInterface;
 use ZipStream\Exception;
 use ZipStream\ZipStream;
@@ -57,27 +58,41 @@ final class ZipHandler implements ZipHandlerInterface
 
     /**
      * takes array of full paths to medias
-     * zips them and sends them
+     * zips them, adds art and m3u, and sends them
      *
      * @param string $name name of the zip file to be created
      * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
      */
     public function zip(string $name, array $media_files): void
     {
+        $art     = (string) AmpConfig::get('album_art_preferred_filename');
+        $addart  = (bool) AmpConfig::get('art_zip_add');
         $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
         $arc     = new ZipStream($filter . ".zip");
+        $pl      = '';
         $options = [
-            'comment' => $this->configContainer->get('file_zip_comment'),
+            'comment' => AmpConfig::get('file_zip_comment'),
         ];
-
+        
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
+                $dirname = dirname($file);
+                $artpath = dirname($file) . "/" . $art;
+                $folder  = explode("/", $dirname)[substr_count ($dirname, "/", 0)];
+                $pl      = $folder . "/" . basename($file);
                 try {
-                    $arc->addFileFromPath($dir . "/" . basename($file), $file, $options);
+                    $arc->addFileFromPath($folder . "/" . basename($file), $file, $options);
+                } catch (Exception $e) {
+                }
+            }
+            if ($addart === true && file_exists($artpath)) {
+                try {
+                    $arc->addFileFromPath($folder . "/" . $art, $artpath, $options);
                 } catch (Exception $e) {
                 }
             }
         }
+        $arc->addFile($name . ".m3u", $pl);
         $this->logger->debug(
             'Sending Zip ' . $name,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
