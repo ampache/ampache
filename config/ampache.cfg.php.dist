@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 49
+config_version = 50
 
 ;#########################################################
 ; Auto Update                                            #
@@ -358,6 +358,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
 ; DEFAULT: none
 ;allow_zip_types = "album"
+
+; Art Zip Add
+; This settings allows/disallows to include Album Art to the Zip 
+; If 'album_art_preferred_filename' exists this is included 
+; DEFAULT: false
+;art_zip_add = "true"
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
