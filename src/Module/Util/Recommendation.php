@@ -386,7 +386,7 @@ class Recommendation
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
         $results['yearformed']  = (string)$xml->artist->bio->yearformed;
 
-        if ($artist) {
+        if ($artist->id) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], (int)$results['yearformed']);
