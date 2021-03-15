@@ -67,7 +67,7 @@
                 <td class="cel_lastclean" tal:content="structure CATALOG/getLastCleanDate">LAST CLEAN DATE</td>
                 <tal:block tal:define="CATALOG_STATS CATALOG/getCatalogStats">
                     <td class="cel_items" tal:content="CATALOG_STATS/getItemCount">CATALOG ITEM COUNT</td>
-                    <td class="cel_total" tal:content="CATALOG_STATS/getPlayTime">CATALOG SIZE</td>
+                    <td class="cel_total" tal:content="CATALOG_STATS/getCatalogSize">CATALOG SIZE</td>
                 </tal:block>
             </tr>
         </tbody>
