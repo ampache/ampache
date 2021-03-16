@@ -28,7 +28,7 @@ declare(strict_types=1);
  * as such it needs to verify the session id that is passed
  */
 
-use Ampache\Module\Api\JsonApiApplication;
+use Ampache\Module\Api\Gui\JsonApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

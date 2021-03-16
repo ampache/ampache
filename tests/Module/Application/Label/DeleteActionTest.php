@@ -27,7 +27,7 @@ namespace Ampache\Module\Application\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryTest;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;

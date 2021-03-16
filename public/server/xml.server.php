@@ -25,7 +25,7 @@
  * as such it needs to verify the session id that is passed
  */
 
-use Ampache\Module\Api\XmlApiApplication;
+use Ampache\Module\Api\Gui\XmlApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
