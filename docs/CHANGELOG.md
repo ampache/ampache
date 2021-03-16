@@ -55,6 +55,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::bookmark_create (Create a bookmark to allow revisting later)
   * Api::bookmark_edit (Edit a bookmark)
   * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
+  * Api::localplay_songs (Get the list of songs in your localplay instance)
 
 ### Changed
 
