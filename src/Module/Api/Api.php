@@ -127,6 +127,7 @@ class Api
         Method\DownloadMethod::ACTION => Method\DownloadMethod::class,
         Method\GetArtMethod::ACTION => Method\GetArtMethod::class,
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
+        Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
         Method\DemocraticMethod::ACTION => Method\DemocraticMethod::class,
         Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
         Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,

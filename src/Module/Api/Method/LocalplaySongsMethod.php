@@ -28,56 +28,46 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
-use Ampache\Module\Api\Method\Lib\LocalPlayCommandMapperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlayControllerFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class LocalplayMethod implements MethodInterface
+final class LocalplaySongsMethod implements MethodInterface
 {
-    public const ACTION = 'localplay';
+    public const ACTION = 'localplay_songs';
 
     private StreamFactoryInterface $streamFactory;
 
     private ConfigContainerInterface $configContainer;
-
-    private LocalPlayCommandMapperInterface $localPlayCommandMapper;
 
     private LocalPlayControllerFactoryInterface $localPlayControllerFactory;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LocalPlayCommandMapperInterface $localPlayCommandMapper,
         LocalPlayControllerFactoryInterface $localPlayControllerFactory
     ) {
         $this->streamFactory              = $streamFactory;
         $this->configContainer            = $configContainer;
-        $this->localPlayCommandMapper     = $localPlayCommandMapper;
         $this->localPlayControllerFactory = $localPlayControllerFactory;
     }
 
     /**
-     * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=5.0.0
+     * MINIMUM_API_VERSION=5.0.0
      *
-     * This is for controlling Localplay
+     * get the list of songs in your localplay instance
      *
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
-     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
-     * oid     = (integer) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
-     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      *
      * @return ResponseInterface
      *
-     * @throws RequestParamMissingException
      * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -85,14 +75,6 @@ final class LocalplayMethod implements MethodInterface
         ApiOutputInterface $output,
         array $input
     ): ResponseInterface {
-        $command = $input['command'] ?? null;
-
-        if ($command === null) {
-            throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'command')
-            );
-        }
-
         // localplay is actually meant to be behind permissions
         $level = $this->configContainer->getLocalplayLevel();
 
@@ -110,27 +92,16 @@ final class LocalplayMethod implements MethodInterface
             );
         }
 
-        $commandCallable = $this->localPlayCommandMapper->map($command);
-
-        if ($commandCallable === null) {
-            throw new RequestParamMissingException(
-                T_('Bad Request')
-            );
+        // Pull the current playlist and return the objects
+        $songs = $localPlay->get();
+        if ($songs === []) {
+            $result = $output->emptyResult('localplay_songs');
+        } else {
+            $result = $output->object_array($songs, 'localplay_songs');
         }
 
-        $result = $commandCallable(
-            $localPlay,
-            $object_id = (int) ($input['oid'] ?? 0),
-            (string) ($input['type'] ?? 'Song'),
-            (int) ($input['clear'] ?? 0)
-        );
-
         return $response->withBody(
-            $this->streamFactory->createStream(
-                $output->dict(
-                    ['localplay' => ['command' => [$command => $result]]]
-                )
-            )
+            $this->streamFactory->createStream($result)
         );
     }
 }
