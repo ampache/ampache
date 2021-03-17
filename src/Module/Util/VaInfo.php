@@ -493,8 +493,8 @@ class VaInfo
             if (AmpConfig::get('enable_custom_metadata') && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
-                    if (!isset($info[$tag]) && !is_array($value)) {
-                        $info[$tag] = (!is_array($value)) ? trim((string)$value) : $value;
+                    if (!array_key_exists($tag, $info) && !is_array($value)) {
+                        $info[$tag] = trim((string)$value);
                     }
                 }
             }
