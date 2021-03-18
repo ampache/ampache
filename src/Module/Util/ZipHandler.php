@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Config\AmpConfig;
 use Psr\Log\LoggerInterface;
 use ZipStream\Exception;
 use ZipStream\ZipStream;
@@ -65,34 +65,44 @@ final class ZipHandler implements ZipHandlerInterface
      */
     public function zip(string $name, array $media_files): void
     {
-        $art     = (string) AmpConfig::get('album_art_preferred_filename');
-        $addart  = (bool) AmpConfig::get('art_zip_add');
+        $art     = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart  = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
         $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
         $arc     = new ZipStream($filter . ".zip");
         $pl      = '';
         $options = [
-            'comment' => AmpConfig::get('file_zip_comment'),
+            'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
         ];
         
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
                 $dirname = dirname($file);
-                $artpath = dirname($file) . "/" . $art;
-                $folder  = explode("/", $dirname)[substr_count ($dirname, "/", 0)];
-                $pl      = $folder . "/" . basename($file);
+                $artpath = $dirname . "/" . $art;
+                $folder  = explode("/", $dirname)[substr_count($dirname, "/", 0)];
+                $pl .= $folder . "/" . basename($file);
                 try {
                     $arc->addFileFromPath($folder . "/" . basename($file), $file, $options);
                 } catch (Exception $e) {
+                    $this->logger->error(
+                        $e->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                 }
             }
-            if ($addart === true && file_exists($artpath)) {
+            if ($addart === true) {
                 try {
                     $arc->addFileFromPath($folder . "/" . $art, $artpath, $options);
                 } catch (Exception $e) {
+                    $this->logger->error(
+                        $e->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                 }
             }
         }
-        $arc->addFile($name . ".m3u", $pl);
+        if (!empty($pl)) {
+            $arc->addFile($name . ".m3u", $pl, $options);
+        }
         $this->logger->debug(
             'Sending Zip ' . $name,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
