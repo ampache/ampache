@@ -106,4 +106,6 @@ final class ConfigurationKeyEnum
     public const ENABLE_CUSTOM_METADATA        = 'enable_custom_metadata';
     public const WRITE_ID3                     = 'write_id3';
     public const COMPOSER_BINARY_PATH          = 'composer_binary_path';
+    public const ART_ZIP_ADD                   = 'art_zip_add';
+    public const FILE_ZIP_COMMENT              = 'file_zip_comment';
 }
