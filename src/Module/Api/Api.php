@@ -136,6 +136,7 @@ class Api
         'download' => Method\DownloadMethod::class,
         'get_art' => Method\GetArtMethod::class,
         'localplay' => Method\LocalplayMethod::class,
+        'localplay_songs' => Method\LocalplaySongsMethod::class,
         'democratic' => Method\DemocraticMethod::class,
         'system_update' => Method\SystemUpdateMethod::class,
         'system_preferences' => Method\SystemPreferencesMethod::class,
