@@ -16,6 +16,12 @@
 * Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
 * Album::get_random_songs not returning id's
 
+### API 4.4.1-develop
+
+### Fixed
+
+* API::stats would not offset recent calls
+
 ## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)

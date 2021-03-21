@@ -2296,7 +2296,7 @@ class Api
             $input['filter'] = $type;
         }
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
 
         switch ($input['filter']) {
@@ -2318,7 +2318,7 @@ class Api
                 debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
                 if ($user->id) {
-                    $results = $user->get_recently_played($limit, $type, $newest);
+                    $results = $user->get_recently_played($type, $limit, $offset, $newest);
                 } else {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
                 }

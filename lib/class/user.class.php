@@ -1388,16 +1388,15 @@ class User extends database_object
      * get_recently_played
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
-     * @param string $limit
      * @param string $type
+     * @param string $count
+     * @param integer $offset
      * @param boolean $newest
      * @return integer[]
      */
-    public function get_recently_played($limit, $type = '', $newest = true)
+    public function get_recently_played($type, $count, $offset = 0, $newest = true)
     {
-        if (!$type) {
-            $type = 'song';
-        }
+        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
