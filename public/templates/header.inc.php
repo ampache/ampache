@@ -74,9 +74,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
-        <link rel="stylesheet" href="<?php echo Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo Ui::find_template('jquery-file-upload.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
