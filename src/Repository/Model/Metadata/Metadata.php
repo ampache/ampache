@@ -24,6 +24,7 @@ namespace Ampache\Repository\Model\Metadata;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Metadata\Model\MetadataField;
 use ReflectionException;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 trait Metadata
 {
@@ -66,7 +67,7 @@ trait Metadata
      */
     public function getMetadata()
     {
-        return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
+        return $this->metadataRepository->findByObjectIdAndType($this->id, ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
     }
 
     /**
@@ -89,7 +90,7 @@ trait Metadata
         $metadata = new Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
-        $metadata->setType(get_class($this));
+        $metadata->setType(ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
         $metadata->setData($data);
         $this->metadataRepository->add($metadata);
     }
@@ -102,7 +103,7 @@ trait Metadata
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
         /* @var Model\Metadata $metadata */
-        $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
+        $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, ucfirst(ObjectTypeToClassNameMapper::reverseMap(get_class($this))));
         if ($metadata) {
             $object = reset($metadata);
             $object->setData($data);

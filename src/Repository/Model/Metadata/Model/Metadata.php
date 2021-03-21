@@ -62,7 +62,7 @@ class Metadata extends DatabaseObject implements Model
      * can initialize objects the right way
      */
     protected $fieldClassRelations = array(
-        'field' => MetadataField::class
+        'field' => \Ampache\Repository\Model\Metadata\Repository\MetadataField::class
     );
 
     /**
