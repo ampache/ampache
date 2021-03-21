@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
@@ -434,7 +435,8 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $media = new $type($object_id);
+                    $className = ObjectTypeToClassNameMapper::map($type);
+                    $media = new $className($object_id);
                     $url   = $media->play_url($params, 'api', true);
                     self::follow_stream($url);
 
