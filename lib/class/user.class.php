@@ -284,7 +284,7 @@ class User extends database_object
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['username'];
+            $users[] = $results['username'];
         }
 
         return $users;
