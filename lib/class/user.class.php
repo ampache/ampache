@@ -270,6 +270,27 @@ class User extends database_object
     } // get_valid_users
 
     /**
+     * get_valid_usernames
+     * This returns all valid users in database.
+     * @param boolean $include_disabled
+     * @return array
+     */
+    public static function get_valid_usernames($include_disabled = false)
+    {
+        $users = array();
+        $sql   = ($include_disabled)
+            ? "SELECT `username` FROM `user`"
+            : "SELECT `username` FROM `user` WHERE `disabled` = '0'";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = (int) $results['username'];
+        }
+
+        return $users;
+    } // get_valid_users
+
+    /**
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance

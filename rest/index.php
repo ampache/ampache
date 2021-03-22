@@ -78,11 +78,16 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
 
     return false;
 }
-
-$password = Subsonic_Api::decrypt_password($password);
+// check usernames
+if (!in_array($user, User::get_valid_usernames())) {
+    debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
+    ob_end_clean();
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', $version), $callback);
+}
 
 // Check user authentication
-$auth = Auth::login($user, $password, true, $token, $salt);
+$password = Subsonic_Api::decrypt_password($password);
+$auth     = Auth::login($user, $password, true, $token, $salt);
 if (!$auth['success']) {
     debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
     ob_end_clean();
@@ -91,7 +96,7 @@ if (!$auth['success']) {
     return false;
 }
 
-if (!Access::check_network('init-api', $user, 5)) {
+if (!Access::check_network('init-api', $auth['username'], 5)) {
     debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
@@ -99,7 +104,8 @@ if (!Access::check_network('init-api', $user, 5)) {
     return false;
 }
 
-$GLOBALS['user'] = User::get_from_username($user);
+// passed all the checks, set the user
+$GLOBALS['user'] = User::get_from_username($auth['username']);
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0 && !($clientapp == 'Sublime Music' && $version == '1.15.0')) {
     ob_end_clean();
