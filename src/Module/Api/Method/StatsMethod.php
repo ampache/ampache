@@ -114,7 +114,7 @@ final class StatsMethod
                 debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest  = $input['filter'] == 'recent';
                 $results = ($user->id)
-                    ? $user->get_recently_played($limit, $type, $newest)
+                    ? $user->get_recently_played($type, $limit, $offset, $newest)
                     : Stats::get_recent($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
