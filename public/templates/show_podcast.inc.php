@@ -97,7 +97,7 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
         <li>
             <a href="<?php echo $podcast->website; ?>" target="_blank">
                 <?php echo Ui::get_icon('link', T_('Website')); ?>
-                <?php echo T_('Graphs'); ?>
+                <?php echo T_('Website'); ?>
             </a>
         </li>
         <li>
