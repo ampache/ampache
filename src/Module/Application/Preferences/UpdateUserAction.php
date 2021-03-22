@@ -33,8 +33,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,12 +47,16 @@ final class UpdateUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->qrCodeGenerator = $qrCodeGenerator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -95,22 +100,28 @@ final class UpdateUserAction implements ApplicationActionInterface
             AmpError::add('general', T_('Update failed'));
         } else {
             Core::get_global('user')->upload_avatar();
+        }
 
-            //$_REQUEST['action'] = 'confirm';
-            $title    = T_('No Problem');
-            $text     = T_('Your account has been updated');
-            $next_url = sprintf(
-                '%s/preferences.php?tab=account',
-                $this->configContainer->getWebPath()
-            );
+        /** @var User $user */
+        $user = Core::get_global('user');
+
+        $apiKey       = $user->apikey;
+        $apiKeyQrCode = '';
+        if ($apiKey) {
+            $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
         }
 
         $this->ui->showHeader();
 
         echo $this->ui->displayNotification(T_('User updated successfully'));
 
-        // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $user->fullname,
+                'apiKeyQrCode' => $apiKeyQrCode,
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

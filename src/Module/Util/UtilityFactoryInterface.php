@@ -22,7 +22,11 @@
 
 namespace Ampache\Module\Util;
 
+use Endroid\QrCode\Builder\BuilderInterface;
+
 interface UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface;
+
+    public function createQrCodeBuilder(): BuilderInterface;
 }

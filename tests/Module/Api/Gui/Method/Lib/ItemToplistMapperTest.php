@@ -67,7 +67,7 @@ class ItemToplistMapperTest extends MockeryTestCase
         $result = ['some-result'];
 
         $user->shouldReceive('get_recently_played')
-            ->with($limit, $type, true)
+            ->with($type, $limit, $offset, true)
             ->once()
             ->andReturn($result);
 
@@ -93,7 +93,7 @@ class ItemToplistMapperTest extends MockeryTestCase
         $result = ['some-result'];
 
         $user->shouldReceive('get_recently_played')
-            ->with($limit, $type, false)
+            ->with($type, $limit, $offset, false)
             ->once()
             ->andReturn($result);
 

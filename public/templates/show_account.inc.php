@@ -101,11 +101,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                 <span>
                     <?php if ($client->apikey) { ?>
                     <br />
-                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <div id="apikey_qrcode"></div>
-                    </div>
-                    <br />
-                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <img src="<?php echo $apiKeyQrCode; ?>" /><br />
                     <?php echo $client->apikey; ?>
                     <?php
                 } ?>

@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
@@ -28,8 +28,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +39,14 @@ final class AdminAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->qrCodeGenerator = $qrCodeGenerator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,13 +55,24 @@ final class AdminAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
             throw new AccessDeniedException();
         }
-        $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
+        $user = $gatekeeper->getUser();
+        $tab  = $request->getQueryParams()['tab'] ?? '0';
+
+        $apiKey       = $user->apikey;
+        $apiKeyQrCode = '';
+        if ($apiKey && $tab === 'account') {
+            $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
+        }
 
         $this->ui->showHeader();
-
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => T_('Server'),
+                'preferences' => $user->get_preferences($tab, true),
+                'apiKeyQrCode' => $apiKeyQrCode,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

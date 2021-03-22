@@ -32,6 +32,7 @@ use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\Util\EnvironmentInterface;
+use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -87,4 +88,5 @@ return [
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
+    BuilderInterface::class => autowire(),
 ];

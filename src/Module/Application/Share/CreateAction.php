@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -48,14 +49,18 @@ final class CreateAction implements ApplicationActionInterface
 
     private ShareCreatorInterface $shareCreator;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ShareCreatorInterface $shareCreator
+        ShareCreatorInterface $shareCreator,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->shareCreator    = $shareCreator;
+        $this->qrCodeGenerator = $qrCodeGenerator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -90,8 +95,7 @@ final class CreateAction implements ApplicationActionInterface
             $body  = T_('Share created') . '<br />' .
                 T_('You can now start sharing the following URL:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
-                '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
+                '<img src="' . $this->qrCodeGenerator->generate($share->public_url, 128) . '" />' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';

@@ -24,13 +24,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Builder\BuilderInterface;
+
 /**
- * Factory to create utility classes like Mailer
+ * Factory to create utility classes and new instances of classes which may not be used as a singleton
  */
 final class UtilityFactory implements UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface
     {
         return new Mailer();
+    }
+
+    public function createQrCodeBuilder(): BuilderInterface
+    {
+        return new Builder();
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -51,16 +52,20 @@ final class UpdateUserAction extends AbstractUserAction
 
     private UserRepositoryInterface $userRepository;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->userRepository  = $userRepository;
+        $this->qrCodeGenerator = $qrCodeGenerator;
     }
 
     protected function handle(
@@ -114,7 +119,20 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* If we've got an error then show edit form! */
         if (AmpError::occurred()) {
-            require_once Ui::find_template('show_edit_user.inc.php');
+            $apiKey       = $client->apikey;
+            $apiKeyQrCode = '';
+            if ($apiKey) {
+                $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
+            }
+
+            $this->ui->showHeader();
+            $this->ui->show(
+                'show_edit_user.inc.php',
+                [
+                    'client' => $client,
+                    'apiKeyQrCode' => $apiKeyQrCode,
+                ]
+            );
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

@@ -41,4 +41,5 @@ return [
     RecommendationInterface::class => autowire(Recommendation::class),
     CookieSetterInterface::class => autowire(CookieSetter::class),
     XmlWriterInterface::class => autowire(XmlWriter::class),
+    QrCodeGeneratorInterface::class => autowire(QrCodeGenerator::class),
 ];

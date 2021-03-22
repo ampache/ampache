@@ -17,15 +17,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Application\Admin\User;
+namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\QrCodeGeneratorInterface;
@@ -35,109 +35,96 @@ use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ShowEditActionTest extends MockeryTestCase
+class UserActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
+    /** @var MockInterface|ModelFactoryInterface */
     private MockInterface $modelFactory;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    /** @var UiInterface|MockInterface */
+    private MockInterface $ui;
 
-    /** @var MockInterface|QrCodeGeneratorInterface */
+    /** @var QrCodeGeneratorInterface|MockInterface */
     private MockInterface $qrCodeGenerator;
 
-    private ?ShowEditAction $subject;
+    private UserAction $subject;
 
     public function setUp(): void
     {
-        $this->ui              = $this->mock(UiInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
         $this->qrCodeGenerator = $this->mock(QrCodeGeneratorInterface::class);
 
-        $this->subject = new ShowEditAction(
-            $this->ui,
+        $this->subject = new UserAction(
             $this->modelFactory,
-            $this->configContainer,
+            $this->ui,
             $this->qrCodeGenerator
         );
     }
 
-    public function testHandleReturnsNullIfDemoModeIsActive(): void
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
-    }
-
-    public function testHandleReturnsNull(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->mock(User::class);
-
-        $userId       = 666;
-        $apiKey       = 'some-api-key';
-        $apiKeyQrCode = 'some-qr-code';
-
-        $user->apikey = $apiKey;
+        $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
-            ->once()
-            ->andReturn($user);
-
-        $user->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunRendersAndReturnsNull(): void
+    {
+        $user       = $this->mock(User::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $apiKey       = 'some-api-key';
+        $apiKeyQrCode = 'some-api-key-qrcode';
+        $preferences  = ['some-preferences'];
+        $userName     = 'some-name';
+        $userId       = 666;
+
+        $user->apikey   = $apiKey;
+        $user->fullname = $userName;
 
         $this->qrCodeGenerator->shouldReceive('generate')
             ->with($apiKey, 156)
             ->once()
             ->andReturn($apiKeyQrCode);
 
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['tab' => 'account', 'user_id' => (string) $userId]);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $user->shouldReceive('get_preferences')
+            ->with('account')
+            ->once()
+            ->andReturn($preferences);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_edit_user.inc.php',
+                'show_preferences.inc.php',
                 [
-                    'client' => $user,
+                    'fullname' => $userName,
+                    'preferences' => $preferences,
                     'apiKeyQrCode' => $apiKeyQrCode
                 ]
             )
@@ -150,10 +137,7 @@ class ShowEditActionTest extends MockeryTestCase
             ->once();
 
         $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
+            $this->subject->run($request, $gatekeeper)
         );
     }
 }

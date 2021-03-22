@@ -24,15 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +45,16 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
-        UiInterface $ui
+        UiInterface $ui,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->ui                            = $ui;
+        $this->qrCodeGenerator               = $qrCodeGenerator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,9 +76,17 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             $system             = true;
             $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
+            $apiKeyQrCode       = '';
         } else {
-            $user_id  = Core::get_global('user')->id;
-            $fullname = Core::get_global('user')->fullname;
+            /** @var User $user */
+            $user     = Core::get_global('user');
+            $user_id  = $user->id;
+            $fullname = $user->fullname;
+
+            $apiKey       = $user->apikey;
+            if ($apiKey) {
+                $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
+            }
         }
 
         /* Update and reset preferences */
@@ -98,9 +111,14 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             echo $this->ui->displayNotification($notification_text);
         }
 
-        // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $fullname,
+                'preferences' => $preferences,
+                'apiKeyQrCode' => $apiKeyQrCode,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

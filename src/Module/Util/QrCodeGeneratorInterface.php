@@ -20,35 +20,13 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\MockeryTestCase;
-use Endroid\QrCode\Builder\Builder;
-
-class UtilityFactoryTest extends MockeryTestCase
+interface QrCodeGeneratorInterface
 {
-    private ?UtilityFactory $subject;
-
-    public function setUp(): void
-    {
-        $this->subject = new UtilityFactory();
-    }
-
-    public function testCreateMailerReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            Mailer::class,
-            $this->subject->createMailer()
-        );
-    }
-
-    public function testCreateBuilderReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            Builder::class,
-            $this->subject->createQrCodeBuilder()
-        );
-    }
+    /**
+     * Creates a qrcode with the given size and content
+     * Returns a string suitable for usage as data-uri in <img> tags
+     */
+    public function generate(string $content, int $size): string;
 }

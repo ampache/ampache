@@ -24,31 +24,33 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\MockeryTestCase;
-use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
 
-class UtilityFactoryTest extends MockeryTestCase
+final class QrCodeGenerator implements QrCodeGeneratorInterface
 {
-    private ?UtilityFactory $subject;
+    private UtilityFactoryInterface $utilityFactory;
 
-    public function setUp(): void
-    {
-        $this->subject = new UtilityFactory();
+    public function __construct(
+        UtilityFactoryInterface $utilityFactory
+    ) {
+        $this->utilityFactory = $utilityFactory;
     }
 
-    public function testCreateMailerReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            Mailer::class,
-            $this->subject->createMailer()
-        );
-    }
-
-    public function testCreateBuilderReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            Builder::class,
-            $this->subject->createQrCodeBuilder()
-        );
+    /**
+     * Creates a qrcode with the given size and content
+     * Returns a string suitable for usage as data-uri in <img> tags
+     */
+    public function generate(
+        string $content,
+        int $size
+    ): string {
+        return $this->utilityFactory
+            ->createQrCodeBuilder()
+            ->data($content)
+            ->encoding(new Encoding('UTF-8'))
+            ->size($size)
+            ->margin(0)
+            ->build()
+            ->getDataUri();
     }
 }

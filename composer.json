@@ -56,11 +56,11 @@
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
         "doctrine/cache": "1.*.*",
+        "endroid/qr-code": "^4.0",
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",
         "happyworm/jplayer": "2.*",
         "james-heinrich/getid3": "dev-master",
-        "jeromeetienne/jquery-qrcode": "dev-master",
         "jwilsson/spotify-web-api-php": "^4.2",
         "krixon/xbmc-php-rpc": "dev-master",
         "kumailht/responsive-elements": "dev-master",
@@ -129,27 +129,6 @@
                 },
                 "autoload": {
                     "classmap": ["."]
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "jeromeetienne/jquery-qrcode",
-                "type": "component",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/jeromeetienne/jquery-qrcode.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "extra": {
-                    "component": {
-                        "scripts": [
-                            "src/jquery.qrcode.js",
-                            "src/qrcode.js"
-                        ]
-                    }
                 }
             }
         },

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,14 +43,18 @@ final class ShowEditAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
+    private QrCodeGeneratorInterface $qrCodeGenerator;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        QrCodeGeneratorInterface $qrCodeGenerator
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->qrCodeGenerator = $qrCodeGenerator;
     }
 
     protected function handle(
@@ -60,16 +65,23 @@ final class ShowEditAction extends AbstractUserAction
             return null;
         }
 
-        $client = $this->modelFactory->createUser(
+        $user = $this->modelFactory->createUser(
             (int) ($request->getQueryParams()['user_id'] ?? 0)
         );
-        $client->format();
+        $user->format();
+
+        $apiKey       = $user->apikey;
+        $apiKeyQrCode = '';
+        if ($apiKey) {
+            $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
+        }
 
         $this->ui->showHeader();
         $this->ui->show(
             'show_edit_user.inc.php',
             [
-                'client' => $client
+                'client' => $user,
+                'apiKeyQrCode' => $apiKeyQrCode,
             ]
         );
         $this->ui->showQueryStats();
