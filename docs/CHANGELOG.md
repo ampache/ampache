@@ -15,6 +15,7 @@
 * Grid View shouldn't change the artist image
 * Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
 * Album::get_random_songs not returning id's
+* Bookmark::get_bookmarks typo for get_bookmark_ids
 
 ### API 4.4.1-develop
 
