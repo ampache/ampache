@@ -95,6 +95,11 @@ class Auth
      */
     public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
+        $results = array();
+        // check usernames
+        if (!in_array($username, User::get_valid_usernames())) {
+            return $results;
+        }
         // Check for token auth with apikey
         $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
@@ -103,7 +108,6 @@ class Auth
             return $token_check;
         }
 
-        $results = array();
         // If no token check the regular methods
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';

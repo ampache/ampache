@@ -78,14 +78,6 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
 
     return false;
 }
-// check usernames
-if (!in_array($user, User::get_valid_usernames())) {
-    debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
-    ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', $version), $callback);
-
-    return false;
-}
 
 // Check user authentication
 $password = Subsonic_Api::decrypt_password($password);
