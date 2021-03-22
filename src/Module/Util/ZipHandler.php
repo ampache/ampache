@@ -89,7 +89,7 @@ final class ZipHandler implements ZipHandlerInterface
                     );
                 }
             }
-            if ($addart === true) {
+            if ($addart === true && !empty($folder) && !empty($artpath)) {
                 try {
                     $arc->addFileFromPath($folder . "/" . $art, $artpath, $options);
                 } catch (Exception $e) {
