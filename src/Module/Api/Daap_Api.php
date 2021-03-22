@@ -440,8 +440,8 @@ class Daap_Api
                     }
                     $params .= '&transcode_to=' . $type;
                     $className = ObjectTypeToClassNameMapper::map($type);
-                    $media = new $className($object_id);
-                    $url   = $media->play_url($params, 'api', true);
+                    $media     = new $className($object_id);
+                    $url       = $media->play_url($params, 'api', true);
                     self::follow_stream($url);
 
                     return false;

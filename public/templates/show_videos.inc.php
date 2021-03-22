@@ -81,7 +81,7 @@ if (isset($video_type) && $video_type != 'video') {
         foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
                 $className = ObjectTypeToClassNameMapper::map($video_type);
-                $libitem = new $className($video_id);
+                $libitem   = new $className($video_id);
             } else {
                 $libitem = new Video($video_id);
             }
