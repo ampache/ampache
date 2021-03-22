@@ -1043,17 +1043,16 @@ class User extends database_object
      * get_recently_played
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
-     * @param string $limit
      * @param string $type
+     * @param integer $count
+     * @param integer $offset
      * @param boolean $newest
      * @return array
      */
-    public function get_recently_played($limit, $type = '', $newest = true)
+    public function get_recently_played($type, $count, $offset = 0, $newest = true)
     {
-        if (!$type) {
-            $type = 'song';
-        }
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
+        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
 
         $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " . "GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));

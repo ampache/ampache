@@ -147,7 +147,7 @@ class Random
     {
         $results = array();
 
-        $data        = Core::get_global('user')->get_recently_played('1', 'artist');
+        $data        = Core::get_global('user')->get_recently_played('artist', 1);
         $where_sql   = "";
         $multi_where = 'WHERE';
         if ($data[0]) {

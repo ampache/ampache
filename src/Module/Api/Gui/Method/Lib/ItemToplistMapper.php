@@ -69,10 +69,10 @@ final class ItemToplistMapper implements ItemToplistMapperInterface
                 return Stats::get_top($type, $limit, $threshold, $offset);
             },
             'recent' => function (User $user, string $type, int $limit, int $offset): array {
-                return $user->get_recently_played($limit, $type, true);
+                return $user->get_recently_played($type, $limit, $offset, true);
             },
             'forgotten' => function (User $user, string $type, int $limit, int $offset): array {
-                return $user->get_recently_played($limit, $type, false);
+                return $user->get_recently_played($type, $limit, $offset, false);
             },
             'flagged' => function (User $user, string $type, int $limit, int $offset): array {
                 return Userflag::get_latest($type, $user->getId(), $limit, $offset);
