@@ -33,10 +33,6 @@ use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AlbumsMethod
- * @package Lib\ApiMethods
- */
 final class AlbumsMethod implements MethodInterface
 {
     public const ACTION = 'albums';
@@ -103,6 +99,7 @@ final class AlbumsMethod implements MethodInterface
             $albums,
             $include,
             $gatekeeper->getUser()->getId(),
+            true,
             true,
             (int) $input['limit'],
             (int) $input['offset']

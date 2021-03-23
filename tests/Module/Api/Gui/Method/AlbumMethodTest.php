@@ -130,7 +130,9 @@ class AlbumMethodTest extends MockeryTestCase
             ->with(
                 [$albumId],
                 $include,
-                $userId
+                $userId,
+                true,
+                false
             )
             ->once()
             ->andReturn($result);

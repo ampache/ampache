@@ -151,6 +151,7 @@ final class AdvancedSearchMethod implements MethodInterface
                     [],
                     $userId,
                     true,
+                    true,
                     $limit,
                     $offset
                 );

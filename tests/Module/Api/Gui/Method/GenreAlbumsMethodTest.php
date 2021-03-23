@@ -122,6 +122,7 @@ class GenreAlbumsMethodTest extends MockeryTestCase
                 [],
                 $userId,
                 true,
+                true,
                 $limit,
                 $offset
             )

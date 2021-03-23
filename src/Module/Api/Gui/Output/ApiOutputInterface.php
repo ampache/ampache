@@ -41,6 +41,7 @@ interface ApiOutputInterface
      * @param array $include
      * @param int|null $userId
      * @param bool $encode
+     * @param bool $asObject
      * @param int $limit
      * @param int $offset
      *
@@ -51,6 +52,7 @@ interface ApiOutputInterface
         array $include = [],
         ?int $userId = null,
         bool $encode = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     );

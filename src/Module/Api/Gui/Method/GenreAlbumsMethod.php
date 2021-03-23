@@ -86,6 +86,7 @@ final class GenreAlbumsMethod implements MethodInterface
                 [],
                 $gatekeeper->getUser()->getId(),
                 true,
+                true,
                 (int) ($input['limit'] ?? 0),
                 (int) ($input['offset'] ?? 0)
             );

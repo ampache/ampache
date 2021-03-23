@@ -289,6 +289,7 @@ class AdvancedSearchMethodTest extends MockeryTestCase
                     [],
                     666,
                     true,
+                    true,
                     0,
                     0
                 ]

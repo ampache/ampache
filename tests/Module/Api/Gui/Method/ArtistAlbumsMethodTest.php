@@ -181,6 +181,7 @@ class ArtistAlbumsMethodTest extends MockeryTestCase
                 [],
                 $userId,
                 true,
+                true,
                 0,
                 0
             )

@@ -95,6 +95,7 @@ final class XmlOutput implements ApiOutputInterface
      * @param array $include Array of other items to include.
      * @param int|null $userId
      * @param bool $encode whether to return a full XML document or just the node.
+     * @param bool $asObject
      * @param int $limit
      * @param int $offset
      *
@@ -105,6 +106,7 @@ final class XmlOutput implements ApiOutputInterface
         array $include = [],
         ?int $userId = null,
         bool $encode = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
