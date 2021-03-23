@@ -48,6 +48,7 @@ final class XmlOutput implements ApiOutputInterface
      * @param array $include
      * @param integer|null $user_id
      * @param bool $fullXml
+     * @param bool $asObject
      * @param int $limit
      * @param int $offset
      *
@@ -58,6 +59,7 @@ final class XmlOutput implements ApiOutputInterface
         array $include = [],
         ?int $user_id = null,
         bool $fullXml = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
