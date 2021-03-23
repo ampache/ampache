@@ -504,11 +504,11 @@ class Auth
     {
         // subsonic token auth with apikey
         if (strlen((string) $token) && strlen((string) $salt) && strlen((string) $username)) {
-            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
             $row        = Dba::fetch_assoc($db_results);
             $hash_token = hash('md5', ($row['apikey'] . $salt));
-            if ($token == $hash_token) {
+            if ($token == $hash_token && $row['username'] == $username && isset($row['apikey'])) {
                 return array(
                     'success' => true,
                     'type' => 'api',
