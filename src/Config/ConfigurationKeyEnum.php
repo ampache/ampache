@@ -120,4 +120,6 @@ final class ConfigurationKeyEnum
     public const SHARE_EXPIRE                  = 'share_expire';
     public const LIVE_STREAM                   = 'live_stream';
     public const AJAX_LOAD                     = 'ajax_load';
+    public const ART_ZIP_ADD                   = 'art_zip_add';
+    public const FILE_ZIP_COMMENT              = 'file_zip_comment';
 }
