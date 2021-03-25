@@ -17,6 +17,8 @@
 * Album::get_random_songs not returning id's
 * Bookmark::get_bookmarks typo for get_bookmark_ids
 * Sorting album browses by artist name could fail with mysql
+* SubSonic: getPlaylists should always send a user
+* Album browsing SQL didn't include Artist name in grouping
 
 ### API 4.4.1-develop
 
