@@ -16,6 +16,7 @@
 * Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
 * Album::get_random_songs not returning id's
 * Bookmark::get_bookmarks typo for get_bookmark_ids
+* Sorting album browses by artist name could fail with mysql
 
 ### API 4.4.1-develop
 
