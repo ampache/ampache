@@ -70,8 +70,8 @@ final class AdvancedSearchMethod implements MethodInterface
      *   * rule input (e.g. rule_1_input, rule_2_input)
      *
      * Refer to the wiki for further information on rule_* types and data
-     * http://ampache.org/api/api-xml-methods
-     * http://ampache.org/api/api-json-methods
+     * https://ampache.org/api/api-xml-methods
+     * https://ampache.org/api/api-json-methods
      *
      * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response

@@ -963,7 +963,7 @@ class Subsonic_Api
     public static function getplaylists($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
-        $username = $input['username'];
+        $username = $input['username'] ?: $input['u'];
         $user     = User::get_from_username((string)$username);
 
         // Don't allow playlist listing for another user
