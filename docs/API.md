@@ -4,11 +4,11 @@ metaTitle: "API 5"
 metaDescription: "API documentation"
 ---
 
-The [Ampache API](http://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
-simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://ampache.org/api/http://amarok.kde.org/),
+The [Ampache API](https://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
+simple XML (and JSON!) documents. This was originally created for use by [Amarok](https://ampache.org/api/http://amarok.kde.org/),
 but there is no reason it couldn't be used to create other front-ends to the Ampache data.
 
-Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls).
+Access to the API is controlled by the Internal [Access Control Lists](https://ampache.org/api/api-acls).
 Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results
 pass offset as an additional parameter.
 
@@ -21,16 +21,16 @@ The current stable release is documented under it's own version page.
 Refer to the taged versions if you just want to follow the stable releases.
 
 * [Ampache 4.4.0-release](https://github.com/ampache/ampache/releases/tag/4.4.0)
-* [API 4 Documentation](http://ampache.org/api/api-4)
+* [API 4 Documentation](https://ampache.org/api/api-4)
 
 ## Archived Version Documentation
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 Note that API 4.1 docs cover all previous versions.
 
-* [API 4.3 Documentation](http://ampache.org/api/versions/api-4.3)
-* [API 4.2 Documentation](http://ampache.org/api/versions/api-4.2)
-* [API 4.1 Documentation](http://ampache.org/api/versions/api-4.1)
+* [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
+* [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
+* [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
 
 ## Changelog API develop
 
@@ -201,8 +201,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation](http://ampache.org/api/api-xml-methods)
-* [JSON Documentation](http://ampache.org/api/api-json-methods)
+* [XML Documentation](https://ampache.org/api/api-xml-methods)
+* [JSON Documentation](https://ampache.org/api/api-json-methods)
 
 ### Auth Methods
 
@@ -226,7 +226,7 @@ All Non-Data methods return HTTP 200 responses
 All Data methods return HTTP 200 responses
 
 * get_indexes
-* [advanced_search](http://ampache.org/api/api-advanced-search)
+* [advanced_search](https://ampache.org/api/api-advanced-search)
 * artists
 * artist
 * artist_songs

@@ -78,7 +78,7 @@ $t_preferences = T_('Preferences'); ?>
     <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Help'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_help_sections">
         <li id="sb_help_sections_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
-        <li id="sb_help_sections_api"><a href="http://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
+        <li id="sb_help_sections_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
             <li id="sb_help_sections_cookies"><a href="<?php echo $web_path ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
         <?php } ?>
