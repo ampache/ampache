@@ -1540,6 +1540,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Userflag::migrate('artist', $old_artist, $new_artist);
         Rating::migrate('artist', $old_artist, $new_artist);
         Art::migrate('artist', $old_artist, $new_artist);
+        Artist::update_artist_counts($new_artist);
     } // update_artist
 
     /**

@@ -26,6 +26,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Move artist counts (song, album) to a DB column
 
 ### Removed
 
