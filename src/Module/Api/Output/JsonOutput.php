@@ -48,6 +48,7 @@ final class JsonOutput implements ApiOutputInterface
      * @param array $include
      * @param integer|null $user_id
      * @param bool $encode
+     * @param bool $asObject
      * @param int $limit
      * @param int $offset
      *
@@ -58,12 +59,13 @@ final class JsonOutput implements ApiOutputInterface
         array $include = [],
         ?int $user_id = null,
         bool $encode = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
         Json_Data::set_offset($offset);
         Json_Data::set_limit($limit);
 
-        return Json_Data::albums($albums, $include, $user_id, $encode);
+        return Json_Data::albums($albums, $include, $user_id, $encode, $asObject);
     }
 }

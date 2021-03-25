@@ -80,7 +80,8 @@ if (isset($video_type) && $video_type != 'video') {
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
-                $libitem = new $video_type($video_id);
+                $className = ObjectTypeToClassNameMapper::map($video_type);
+                $libitem   = new $className($video_id);
             } else {
                 $libitem = new Video($video_id);
             }

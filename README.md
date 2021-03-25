@@ -1,8 +1,8 @@
 # Ampache
 
-![Logo](http://ampache.org/img/logo/ampache-logo_x64.png)
+![Logo](https://ampache.org/img/logo/ampache-logo_x64.png)
 
-[www.ampache.org](http://ampache.org/) |
+[www.ampache.org](https://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
 **News:**
@@ -13,7 +13,7 @@
 * Develop changes
   * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
   * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
-  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](http://ampache.org/api/) website!
+  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](https://ampache.org/api/) website!
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
