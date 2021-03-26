@@ -20,6 +20,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
+* Search: Add 'possible_duplicate' to song, artist and album searches
 
 ### Changed
 

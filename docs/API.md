@@ -34,50 +34,7 @@ Note that API 4.1 docs cover all previous versions.
 
 ## Changelog API develop
 
-All API code that used 'Tag' now references 'Genre' instead
-
-### Added
-
-* NEW API functions
-  * Api::song_delete (Delete files when you are allowed to)
-  * Api::user_preferences (Get your user preferences)
-  * Api::user_preference (Get your preference by name)
-  * Api::system_update (Check Ampache for updates and run the update if there is one.)
-  * Api::system_preferences (Preferences for the system user)
-  * Api::system_preference (Get a system preference by name)
-  * Api::preference_create (Add a new preference to Ampache)
-  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
-  * Api::preference_delete (Delete a preference by name)
-  * Api::labels (list your record labels)
-  * Api::label (get a label by id)
-  * Api::label_artists (get all artists attached to that label)
-  * Api::get_bookmark (See if you've previously played the file)
-  * Api::bookmarks (List all bookmarks created by your account)
-  * Api::bookmark_create (Create a bookmark to allow revisting later)
-  * Api::bookmark_edit (Edit a bookmark)
-  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
-
-### Changed
-
-* Renamed functions:
-  * tags => genres
-  * tag => genre
-  * tag_artists => genre_artists
-  * tag_albums => genre_albums
-  * tag_songs => genre_songs
-* Don't allow duplicate podcast feeds
-* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
-* Error Codes and response structure has changed
-  * 4700 Access Control not Enabled
-  * 4701 Received Invalid Handshake
-  * 4703 Access Denied
-  * 4704 Not Found
-  * 4705 Missing Method
-  * 4706 Depreciated Method
-  * 4710 Bad Request
-  * 4742 Failed Access Check
-* stats: Removed back compat from older versions. Only 'type' is mandatory
-* Return empty objects when the request was correct but the results were empty
+Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to keep an eye on changes between versions
 
 ## Sending Handshake Request
 

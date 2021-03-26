@@ -1,6 +1,6 @@
 ---
-title: "advanced_search"
-metaTitle: "advanced_search"
+title: "API 5 advanced_search"
+metaTitle: "API 5 advanced_search"
 metaDescription: "API documentation"
 ---
 
@@ -13,7 +13,7 @@ Perform an advanced search given passed rules. This works in a similar way to th
 You can pass multiple rules as well as joins to create in depth search results
 
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
-Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
+Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
 
 * Rule arrays must contain the following:
   * rule name (e.g. rule_1['title'], rule_2['album'])
@@ -24,59 +24,69 @@ Use operator ('and'|'or') to choose whether to join or separate each rule when s
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
-| rule_1            | Title                 | Type              |           Valid Items            |
-|-------------------|-----------------------|-------------------|:--------------------------------:|
-| anywhere          | Any searchable text   | text              |               song               |
-| title             | Title / Name          | text              | song,album,artist,playlist,label |
-| album             | Album                 | text              |               song               |
-| artist            | Artist                | text              |            song,album            |
-| composer          | Composer              | text              |               song               |
-| year              | Year                  | numeric           |            song,album            |
-| original_year     | Original Year         | numeric           |              album               |
-| yearformed        | Year                  | numeric           |              artist              |
-| placeformed       | Place                 | text              |              artist              |
-| release_type      | Release Type          | text              |              album               |
-| myrating          | My Rating             | numeric           |        song,album,artist         |
-| rating            | Rating (Average)      | numeric           |        song,album,artist         |
-| albumrating       | My Rating (Album)     | numeric           |               song               |
-| artistrating      | My Rating (Artist)    | numeric           |            song,album            |
-| favorite          | Favorites             | text              |        song,album,artist         |
-| played_times      | # Played              | numeric           |        song,album,artist         |
-| last_play         | My Last Play          | days              |        song,album,artist         |
-| played            | Played                | boolean           |               song               |
-| myplayed          | Played by Me          | boolean           |               song               |
-| myplayedalbum     | Played by Me (Album)  | boolean           |               song               |
-| myplayedartist    | Played by Me (Artist) | boolean           |               song               |
-| time              | Length (in minutes)   | numeric           |            song,album            |
-| tag               | Tag                   | tags              |        song,album,artist         |
-| album_tag         | Album tag             | tags              |               song               |
-| artist_tag        | Artist tag            | tags              |               song               |
-| other_user        | Another User          | user_numeric      |        song,album,artist         |
-| other_user_album  | Another User          | user_numeric      |               song               |
-| other_user_artist | Another User          | user_numeric      |               song               |
-| label             | Label                 | text              |               song               |
-| license           | Music License         | boolean_numeric   |               song               |
-| playlist          | Playlist              | boolean_numeric   |               song               |
-| smartplaylist     | Smart Playlist        | boolean_subsearch |               song               |
-| playlist_name     | Playlist Name         | text              |               song               |
-| comment           | Comment               | text              |               song               |
-| lyrics            | Lyrics                | text              |               song               |
-| file              | Filename              | text              |            song,video            |
-| bitrate           | Bitrate               | numeric           |               song               |
-| added             | Added                 | date              |               song               |
-| updated           | Updated               | date              |               song               |
-| recent_added      | Recently Added        | date              |               song               |
-| recent_updated    | Recently Updated      | date              |               song               |
-| catalog           | Catalog               | boolean_numeric   |            song,album            |
-| metadata          | Metadata              | metadata (mixed)  |               song               |
-| has_image         | Local Image           | boolean           |           album,artist           |
-| image_height      | Image Height          | numeric           |           album,artist           |
-| image_width       | Image Width           | numeric           |           album,artist           |
-| username          | Username              | text              |               user               |
+| rule_1             | Title                   | Type              |           Valid Items            |
+|--------------------|-------------------------|-------------------|:--------------------------------:|
+| anywhere           | Any searchable text     | text              |               song               |
+| title              | Title / Name            | text              | song,album,artist,playlist,label |
+| album              | Album Title             | text              |            song,artist           |
+| artist             | Artist                  | text              |         song,album,artist        |
+| album_artist       | Album Artist            | text              |               song               |
+| composer           | Composer                | text              |               song               |
+| year               | Year                    | numeric           |            song,album            |
+| original_year      | Original Year           | numeric           |              album               |
+| yearformed         | Year                    | numeric           |              artist              |
+| placeformed        | Place                   | text              |              artist              |
+| release_type       | Release Type            | text              |              album               |
+| myrating           | My Rating               | numeric           |        song,album,artist         |
+| rating             | Rating (Average)        | numeric           |        song,album,artist         |
+| albumrating        | My Rating (Album)       | numeric           |               song               |
+| artistrating       | My Rating (Artist)      | numeric           |            song,album            |
+| favorite           | Favorites               | text              |        song,album,artist         |
+| played_times       | # Played                | numeric           |        song,album,artist         |
+| skipped_times      | # Skipped               | numeric           |               song               |
+| play_skip_ratio    | Played/Skipped ratio    | numeric           |               song               |
+| last_play          | My Last Play            | days              |        song,album,artist         |
+| played             | Played                  | boolean           |               song               |
+| myplayed           | Played by Me            | boolean           |        song,album,artist         |
+| myplayedalbum      | Played by Me (Album)    | boolean           |               song               |
+| myplayedartist     | Played by Me (Artist)   | boolean           |               song               |
+| time               | Length (in minutes)     | numeric           |        song,album,artist         |
+| tag                | Tag                     | tags              |        song,album,artist         |
+| album_tag          | Album tag               | tags              |               song               |
+| artist_tag         | Artist tag              | tags              |               song               |
+| other_user         | Another User            | user_numeric      |        song,album,artist         |
+| other_user_album   | Another User (Album)    | user_numeric      |               song               |
+| other_user_artist  | Another User (Artist)   | user_numeric      |               song               |
+| label              | Label                   | text              |               song               |
+| license            | Music License           | boolean_numeric   |               song               |
+| playlist           | Playlist                | boolean_numeric   |               song               |
+| smartplaylist      | Smart Playlist          | boolean_subsearch |               song               |
+| playlist_name      | Playlist Name           | text              |               song               |
+| comment            | Comment                 | text              |               song               |
+| lyrics             | Lyrics                  | text              |               song               |
+| file               | Filename                | text              |            song,video            |
+| bitrate            | Bitrate                 | numeric           |               song               |
+| added              | Added                   | date              |               song               |
+| updated            | Updated                 | date              |               song               |
+| recent_added       | Recently Added          | date              |               song               |
+| recent_updated     | Recently Updated        | date              |               song               |
+| catalog            | Catalog                 | boolean_numeric   |            song,album            |
+| mbid               | MusicBrainz ID          | text              |        song,album,artist         |
+| mbid_album         | MusicBrainz ID (Album)  | text              |               song               |
+| mbid_artist        | MusicBrainz ID (Artist) | text              |               song               |
+| metadata           | Metadata                | metadata (mixed)  |               song               |
+| has_image          | Local Image             | boolean           |           album,artist           |
+| image_height       | Image Height            | numeric           |           album,artist           |
+| image_width        | Image Width             | numeric           |           album,artist           |
+| possible_duplicate | Possible Duplicate      | is_true           |        song,album,artist         |
+| username           | Username                | text              |               user               |
+| category           | Category                | text              |              label               |
 
 ### Available search operators
 
 Select your operator (integer only!) based on the type or your selected search
+
+**note** with the new is_true search your operator is ignored, but still required
 
 | rule_1_operator | Text / Tags / Metadata            | Numeric / user_numeric                       | Date   | Boolean, Numeric, Subsearch / Days |
 |:---------------:|-----------------------------------|----------------------------------------------|--------|------------------------------------|
@@ -137,10 +147,10 @@ To search a mixed type like metadata you must search using 4 rules.
 @param array $input
 
 | Input    | Type    | Description                                   | Optional |
-|----------|---------|--------------- -------------------------------|---------:|
+|----------|---------|-----------------------------------------------|---------:|
 | operator | string  | 'and','or' (whether to match one rule or all) |       NO |
 | rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],        |       NO |
-| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]] |      YES |
+| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]  |      YES |
 | type     | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
 |          |         | 'label', 'user', 'video'                      |          |
 | random   | boolean | 0, 1 (random order of results; default to 0)  |      YES |
