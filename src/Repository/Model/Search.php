@@ -172,6 +172,12 @@ class Search extends playlist_object
             'sql' => '<'
         );
 
+        $this->basetypes['is_true'][] = array(
+            'name' => 'true',
+            'description' => T_('is true'),
+            'sql' => '1'
+        );
+
         $this->basetypes['boolean'][] = array(
             'name' => 'true',
             'description' => T_('is true'),
@@ -477,13 +483,14 @@ class Search extends playlist_object
      * True or false generic searches
      * @param string $name
      * @param string $label
+     * @param string $type
      */
-    private function type_boolean($name, $label)
+    private function type_boolean($name, $label, $type = 'boolean')
     {
         $this->types[] = array(
             'name' => $name,
             'label' => $label,
-            'type' => 'boolean',
+            'type' => $type,
             'widget' => array('input', 'hidden')
         );
     }
@@ -615,6 +622,7 @@ class Search extends playlist_object
         $this->type_text('mbid', T_('MusicBrainz ID'));
         $this->type_text('mbid_album', T_('MusicBrainz ID (Album)'));
         $this->type_text('mbid_artist', T_('MusicBrainz ID (Artist)'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
 
         if (AmpConfig::get('enable_custom_metadata')) {
             $metadataFields          = array();
@@ -676,6 +684,7 @@ class Search extends playlist_object
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
     } // artisttypes
 
     /**
@@ -732,6 +741,7 @@ class Search extends playlist_object
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
     } // albumtypes
 
     /**

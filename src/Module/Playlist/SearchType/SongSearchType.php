@@ -404,6 +404,11 @@ final class SongSearchType extends AbstractSearchType
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     $where[]         = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;
+                case 'possible_duplicate':
+                    $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM song LEFT JOIN `album` on song.album = album.id LEFT JOIN `artist` on song.artist = artist.id GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` on `song`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM song LEFT JOIN `album` on song.album = album.id LEFT JOIN `artist` on song.artist = artist.id GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` on `song`.`id` = `dupe_search2`.`dupe_id2`";
+                    break;
                 case 'metadata':
                     $field = (int)$rule[3];
                     if ($sql_match_operator === '=' && strlen($input) == 0) {

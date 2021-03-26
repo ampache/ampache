@@ -630,19 +630,19 @@ class Playlist extends playlist_object
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT LIST.`id`
-                FROM `playlist_data` AS LIST
-           LEFT JOIN `song` AS SONG ON LIST.object_id = SONG.id
-           LEFT JOIN `album` AS ALBUM ON SONG.album = ALBUM.id
-           LEFT JOIN `artist` AS ARTIST ON ALBUM.album_artist = ARTIST.id
-               WHERE LIST.`playlist` = ?
-            ORDER BY ARTIST.`name` ASC,
-                     ALBUM.`name` ASC,
-                     ALBUM.`year` ASC,
-                     ALBUM.`disk` ASC,
-                     SONG.`track` ASC,
-                     SONG.`title` ASC,
-                     SONG.`track` ASC";
+        $sql = "SELECT `list`.`id`
+                FROM `playlist_data` AS `list`
+           LEFT JOIN `song` ON `list`.`object_id` = `song`.`id`
+           LEFT JOIN `album` ON `song`.`album` = `album`.`id`
+           LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id`
+               WHERE `list`.`playlist` = ?
+            ORDER BY `artist`.`name` ASC,
+                     `album`.`name` ASC,
+                     `album`.`year` ASC,
+                     `album`.`disk` ASC,
+                     `song`.`track` ASC,
+                     `song`.`title` ASC,
+                     `song`.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
         $count   = 1;
