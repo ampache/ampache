@@ -1,10 +1,15 @@
 # CHANGELOG
 
-## Ampache 4.4.1-develop
+## Ampache 4.4.1-release
 
 ### Added
 
-* If you have an MBID in you artist, use that for last.fm queries
+* If you have an MBID in your artist, use that for last.fm queries
+
+### Changed
+
+* Updated composer dependencies
+* Default podcast_keep and podcast_new_download preferences are set to 0 (unlimited)
 
 ### Removed
 
@@ -19,8 +24,9 @@
 * Sorting album browses by artist name could fail with mysql
 * SubSonic: getPlaylists should always send a user
 * Album browsing SQL didn't include Artist name in grouping
+* CVE-2021-21399: Unauthenticated SubSonic backend access in Ampache
 
-### API 4.4.1-develop
+### API 4.4.1
 
 ### Fixed
 
