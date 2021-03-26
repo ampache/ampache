@@ -104,6 +104,7 @@ final class AlbumsMethod implements MethodInterface
             $include,
             $gatekeeper->getUser()->getId(),
             true,
+            true,
             (int) $input['limit'],
             (int) $input['offset']
         );

@@ -1077,6 +1077,10 @@ abstract class Catalog extends database_object
             // only update info when you haven't done it for 6 months
             $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
+        if ($filter === 'count') {
+            // Update for things added in the last run or empty ones
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1113,8 +1117,11 @@ abstract class Catalog extends database_object
             // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
+        $album_type = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
 
-        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" . "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where . "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " . $sql_limit;
+        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, $album_type AS `albums` " .
+            "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where .
+            "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, $album_type ORDER BY `artist`.`name` " . $sql_limit;
 
         $results    = array();
         $db_results = Dba::read($sql);
@@ -1726,6 +1733,8 @@ abstract class Catalog extends database_object
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                $libitem->update_album_count();
+                $libitem->update_song_count();
                 $libitem->update_time();
                 break;
         } // end switch type
@@ -2161,12 +2170,18 @@ abstract class Catalog extends database_object
      */
     public static function clean_empty_albums()
     {
-        $sql        = "SELECT `id` FROM `album` WHERE NOT EXISTS " . "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS " . "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
-        while ($albumid = Dba::fetch_assoc($db_results)) {
-            $object_id  = $albumid['id'];
+        $artists    = array();
+        while ($album = Dba::fetch_assoc($db_results)) {
+            $object_id  = $album['id'];
             $sql        = "DELETE FROM `album` WHERE `id` = ?";
             $db_results = Dba::write($sql, array($object_id));
+            $artists[]  = (int) $album['album_artist'];
+        }
+        // removing an album means their counts have changed too
+        foreach ($artists as $artist_id) {
+            Artist::update_artist_counts($artist_id);
         }
     }
 

@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
@@ -105,6 +106,11 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $catalog->add_to_catalog($options);
                 Album::update_album_artist();
+                // update artists who need a recent update
+                $artists = $catalog->get_artist_ids('count');
+                foreach ($artists as $artist_id) {
+                    Artist::update_artist_counts($artist_id);
+                }
                 $interactor->info('------------------', true);
             } elseif ($addArt === true) {
                 // Look for media art

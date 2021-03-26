@@ -20,16 +20,19 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
+* Search: Add 'possible_duplicate' to song, artist and album searches
 
 ### Changed
 
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Move artist counts (song, album) to a DB column
 
 ### Removed
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
+* 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
 
 ### API develop
 
@@ -522,7 +525,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
-  * Refer to the wiki for information about search rules. (<http://ampache.org/api/api-advanced-search>)
+  * Refer to the wiki for information about search rules. (<https://ampache.org/api/api-advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
 * Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
@@ -761,7 +764,7 @@ Bump API version to 400003 (4.0.0 build 003)
 
 #### Added
 
-* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
+* user_numeric searches also available in the API. ([<https://ampache.org/api/api-xml-methods>])
 
 #### Changed
 
@@ -951,7 +954,7 @@ Notes about this release that can't be summed up in a log line
 
 #### Added
 
-* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
+* Documented the Ampache API [<https://ampache.org/api/api-xml-methods>]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)

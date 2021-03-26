@@ -50,3 +50,4 @@
 * manuelglez86
 * theTendo
 * lusum: Our official Kodi addon developer
+* RyanCopley: ampache.com domain name donation

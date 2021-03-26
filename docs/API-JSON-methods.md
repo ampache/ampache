@@ -294,7 +294,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page for details about creating searches.
+Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page for details about creating searches.
 
 **NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
 Just add 1 to the rule value to create a new group of rules.

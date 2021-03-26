@@ -169,6 +169,12 @@ class Search extends playlist_object
             'sql' => '<'
         );
 
+        $this->basetypes['is_true'][] = array(
+            'name' => 'true',
+            'description' => T_('is true'),
+            'sql' => '1'
+        );
+
         $this->basetypes['boolean'][] = array(
             'name' => 'true',
             'description' => T_('is true'),
@@ -474,13 +480,14 @@ class Search extends playlist_object
      * True or false generic searches
      * @param string $name
      * @param string $label
+     * @param string $type
      */
-    private function type_boolean($name, $label)
+    private function type_boolean($name, $label, $type = 'boolean')
     {
         $this->types[] = array(
             'name' => $name,
             'label' => $label,
-            'type' => 'boolean',
+            'type' => $type,
             'widget' => array('input', 'hidden')
         );
     }
@@ -608,6 +615,7 @@ class Search extends playlist_object
         $this->type_text('mbid', T_('MusicBrainz ID'));
         $this->type_text('mbid_album', T_('MusicBrainz ID (Album)'));
         $this->type_text('mbid_artist', T_('MusicBrainz ID (Artist)'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
 
         if (AmpConfig::get('enable_custom_metadata')) {
             $metadataFields          = array();
@@ -669,6 +677,7 @@ class Search extends playlist_object
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
     } // artisttypes
 
     /**
@@ -725,6 +734,7 @@ class Search extends playlist_object
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
+        $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
     } // albumtypes
 
     /**
@@ -1458,6 +1468,11 @@ class Search extends playlist_object
                 case 'mbid':
                     $where[] = "`album`.`mbid` $sql_match_operator '$input'";
                     break;
+                case 'possible_duplicate':
+                    $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
+                    break;
                 default:
                     break;
             } // switch on ruletype album
@@ -1689,6 +1704,11 @@ class Search extends playlist_object
                     break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'possible_duplicate':
+                    $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`))) AS `Counting` FROM `artist` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `artist`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`))) AS `Counting` FROM `artist` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `artist`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 default:
                     break;
@@ -2114,6 +2134,11 @@ class Search extends playlist_object
                 case 'mbid_artist':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     $where[]         = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'possible_duplicate':
+                    $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM song LEFT JOIN `album` on song.album = album.id LEFT JOIN `artist` on song.artist = artist.id GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` on `song`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM song LEFT JOIN `album` on song.album = album.id LEFT JOIN `artist` on song.artist = artist.id GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` on `song`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 case 'metadata':
                     $field = (int)$rule[3];

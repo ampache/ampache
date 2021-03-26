@@ -940,7 +940,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $sql .= 'ORDER BY `time`, `bitrate`, `size`';
 
             if ($search_type == 'album') {
-                $sql = "SELECT `id` from `song` " . "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search` ON song.album = `dupe_search`.`dupe_id1` " . "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " . "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " . "ORDER BY `album`, `track`";
+                $sql = "SELECT `id` from `song` " . "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` " . "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " . "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " . "ORDER BY `album`, `track`";
             }
 
             $db_results = Dba::read($sql);
@@ -1540,6 +1540,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Userflag::migrate('artist', $old_artist, $new_artist);
         Rating::migrate('artist', $old_artist, $new_artist);
         Art::migrate('artist', $old_artist, $new_artist);
+        Artist::update_artist_counts($new_artist);
     } // update_artist
 
     /**

@@ -4,11 +4,11 @@ metaTitle: "API 5"
 metaDescription: "API documentation"
 ---
 
-The [Ampache API](http://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
-simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://ampache.org/api/http://amarok.kde.org/),
+The [Ampache API](https://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
+simple XML (and JSON!) documents. This was originally created for use by [Amarok](https://ampache.org/api/http://amarok.kde.org/),
 but there is no reason it couldn't be used to create other front-ends to the Ampache data.
 
-Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls).
+Access to the API is controlled by the Internal [Access Control Lists](https://ampache.org/api/api-acls).
 Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results
 pass offset as an additional parameter.
 
@@ -21,63 +21,20 @@ The current stable release is documented under it's own version page.
 Refer to the taged versions if you just want to follow the stable releases.
 
 * [Ampache 4.4.0-release](https://github.com/ampache/ampache/releases/tag/4.4.0)
-* [API 4 Documentation](http://ampache.org/api/api-4)
+* [API 4 Documentation](https://ampache.org/api/api-4)
 
 ## Archived Version Documentation
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 Note that API 4.1 docs cover all previous versions.
 
-* [API 4.3 Documentation](http://ampache.org/api/versions/api-4.3)
-* [API 4.2 Documentation](http://ampache.org/api/versions/api-4.2)
-* [API 4.1 Documentation](http://ampache.org/api/versions/api-4.1)
+* [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
+* [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
+* [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
 
 ## Changelog API develop
 
-All API code that used 'Tag' now references 'Genre' instead
-
-### Added
-
-* NEW API functions
-  * Api::song_delete (Delete files when you are allowed to)
-  * Api::user_preferences (Get your user preferences)
-  * Api::user_preference (Get your preference by name)
-  * Api::system_update (Check Ampache for updates and run the update if there is one.)
-  * Api::system_preferences (Preferences for the system user)
-  * Api::system_preference (Get a system preference by name)
-  * Api::preference_create (Add a new preference to Ampache)
-  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
-  * Api::preference_delete (Delete a preference by name)
-  * Api::labels (list your record labels)
-  * Api::label (get a label by id)
-  * Api::label_artists (get all artists attached to that label)
-  * Api::get_bookmark (See if you've previously played the file)
-  * Api::bookmarks (List all bookmarks created by your account)
-  * Api::bookmark_create (Create a bookmark to allow revisting later)
-  * Api::bookmark_edit (Edit a bookmark)
-  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
-
-### Changed
-
-* Renamed functions:
-  * tags => genres
-  * tag => genre
-  * tag_artists => genre_artists
-  * tag_albums => genre_albums
-  * tag_songs => genre_songs
-* Don't allow duplicate podcast feeds
-* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
-* Error Codes and response structure has changed
-  * 4700 Access Control not Enabled
-  * 4701 Received Invalid Handshake
-  * 4703 Access Denied
-  * 4704 Not Found
-  * 4705 Missing Method
-  * 4706 Depreciated Method
-  * 4710 Bad Request
-  * 4742 Failed Access Check
-* stats: Removed back compat from older versions. Only 'type' is mandatory
-* Return empty objects when the request was correct but the results were empty
+Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to keep an eye on changes between versions
 
 ## Sending Handshake Request
 
@@ -201,8 +158,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation](http://ampache.org/api/api-xml-methods)
-* [JSON Documentation](http://ampache.org/api/api-json-methods)
+* [XML Documentation](https://ampache.org/api/api-xml-methods)
+* [JSON Documentation](https://ampache.org/api/api-json-methods)
 
 ### Auth Methods
 
@@ -226,7 +183,7 @@ All Non-Data methods return HTTP 200 responses
 All Data methods return HTTP 200 responses
 
 * get_indexes
-* [advanced_search](http://ampache.org/api/api-advanced-search)
+* [advanced_search](https://ampache.org/api/api-advanced-search)
 * artists
 * artist
 * artist_songs

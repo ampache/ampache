@@ -211,6 +211,9 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                     if ($write || $download || $all) {
                         $created_config = $created_config && $this->installationHelper->install_create_config($download);
+                        if ($download && !$created_config) {
+                            return null;
+                        }
                     }
                 }
             // No break on purpose
