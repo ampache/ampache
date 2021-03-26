@@ -826,12 +826,12 @@ class Catalog_local extends Catalog
             if ($options['move_match_pattern']) {
                 $patres = vainfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
                 if ($patres['artist'] != $results['artist'] || $patres['album'] != $results['album'] || $patres['track'] != $results['track'] || $patres['title'] != $results['title']) {
+                    $pattern = $this->sort_pattern . DIRECTORY_SEPARATOR . $this->rename_pattern;
                     // Remove first left directories from filename to match pattern
                     $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
                     $filepart = explode(DIRECTORY_SEPARATOR, $file);
                     if (count($filepart) > $cntslash) {
                         $mvfile  = implode(DIRECTORY_SEPARATOR, array_slice($filepart, 0, count($filepart) - $cntslash));
-                        $pattern = $this->sort_pattern . DIRECTORY_SEPARATOR . $this->rename_pattern;
                         preg_match_all('/\%\w/', $pattern, $elements);
                         foreach ($elements[0] as $key => $value) {
                             $key     = translate_pattern_code($value);

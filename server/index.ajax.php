@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
                 $artist->format();
                 $biography = Recommendation::get_artist_info($artist->id);
             } else {
-                $biography = Recommendation::get_artist_info(null, rawurldecode($_REQUEST['fullname']));
+                $biography = Recommendation::get_artist_info_by_name(rawurldecode($_REQUEST['fullname']));
             }
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist_info.inc.php');

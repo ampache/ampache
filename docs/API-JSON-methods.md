@@ -106,7 +106,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](api-4.3/api-advanced-search) page for details about creating searches.
+Refer to the [Advanced Search](https://ampache.org/api/api-4/api-advanced-search) page for details about creating searches.
 
 * INPUTS
   * ampache_url = (string)
@@ -145,6 +145,7 @@ This takes a collection of inputs and returns artist objects.
 | 'offset'  | integer    | Return results starting from this index position                              |      YES |
 | 'limit'   | integer    | Maximum number of results to return                                           |      YES |
 | 'include' | string     | 'albums', 'songs' and will include the corresponding JSON                     |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artists.json)
 
 ## artist
@@ -167,6 +168,7 @@ This returns the albums of an artist
 | 'filter' | integer | UID of Artist, returns Album JSON                |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artist_albums.json)
 
 ## artist_songs
@@ -178,6 +180,7 @@ This returns the songs of the specified artist
 | 'filter' | integer | UID of Artist, returns Song JSON                 |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/artist_songs.json)
 
 ## albums
@@ -195,6 +198,7 @@ This returns albums based on the provided search filters
 | 'offset'  | integer    | Return results starting from this index position                              |      YES |
 | 'limit'   | integer    | Maximum number of results to return                                           |      YES |
 | 'include' | string     | 'albums', 'songs' will include nested in the album JSON                       |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/albums.json)
 
 ## album
@@ -205,6 +209,7 @@ This returns a single album based on the UID provided
 |-----------|---------|----------------------------------------------------------------------|---------:|
 | 'filter'  | integer | UID of Album, returns album JSON                                     |       NO |
 | 'include' | string  | 'songs' will include the corresponding JSON nested in the album JSON |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/album.json)
 
 ## album_songs
@@ -216,6 +221,7 @@ This returns the songs of a specified album
 | 'filter' | integer | UID of Album, returns song JSON                  |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/album_songs.json)
 
 ## tags
@@ -291,6 +297,7 @@ Returns songs based on the specified filter
 | 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
 | 'offset' | integer    | Return results starting from this index position                              |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                           |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/songs.json)
 
 ## song
@@ -300,6 +307,7 @@ returns a single song
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
 | 'filter' | integer | UID of Song, returns song JSON |       NO |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/song.json)
 
 ## playlists
@@ -317,6 +325,7 @@ This returns playlists based on the specified filter
 | 'offset'      | integer    | Return results starting from this index position                              |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                           |      YES |
 | 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result                 |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlists.json)
 
 ## playlist
@@ -326,6 +335,7 @@ This returns a single playlist
 | Input    | Type   | Description                            | Optional |
 |----------|--------|----------------------------------------|---------:|
 | 'filter' | string | UID of playlist, returns playlist JSON |       NO |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlist.json)
 
 ## playlist_songs
@@ -337,6 +347,7 @@ This returns the songs for a playlist
 | 'filter' | string  | UID of Playlist, returns song JSON               |       NO |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/playlist_songs.json)
 
 ## playlist_create
@@ -526,6 +537,7 @@ This searches the songs and returns... songs
 | 'filter' | string  | Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song JSON |       NO |
 | 'offset' | integer | Return results starting from this index position                                           |      YES |
 | 'limit'  | integer | Maximum number of results to return                                                        |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/json-responses/search_songs.json)
 
 ## videos

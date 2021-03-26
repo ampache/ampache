@@ -267,7 +267,7 @@ class Recommendation
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
         if (!$cache['id']) {
             $similars = array();
-            $query    = 'artist=' . rawurlencode($artist->name);
+            $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($artist->f_full_name);
 
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
@@ -351,61 +351,71 @@ class Recommendation
     } // get_artists_like
 
     /**
-     * get_artist_info
+     * get_artist_info_by_name
      * Returns artist information
-     * @param integer $artist_id
      * @param string $fullname
      * @return array
      */
-    public static function get_artist_info($artist_id, $fullname = '')
+    public static function get_artist_info_by_name($fullname)
     {
-        $artist = null;
-        if ($artist_id) {
-            $artist = new Artist($artist_id);
-            $artist->format();
-            $fullname = $artist->f_full_name;
-
-            // Data newer than 6 months, use it
-            if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
-                $results                = array();
-                $results['id']          = $artist_id;
-                $results['summary']     = $artist->summary;
-                $results['placeformed'] = $artist->placeformed;
-                $results['yearformed']  = $artist->yearformed;
-                $results['largephoto']  = Art::url($artist->id, 'artist');
-                $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
-                $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
-                $results['megaphoto']   = $results['largephoto'];
-
-                return $results;
-            }
-        }
-
         $query = 'artist=' . rawurlencode($fullname);
+        $xml   = self::get_lastfm_results('artist.getinfo', $query);
 
+        $results            = array();
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
+            (string)$xml->artist->bio->summary));
+        $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
+        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
+        $results['yearformed']  = (string)$xml->artist->bio->yearformed;
+
+        return $results;
+    } // get_artist_info_by_name
+
+    /**
+     * get_artist_info
+     * Returns artist information
+     * @param integer $artist_id
+     * @return array
+     */
+    public static function get_artist_info($artist_id)
+    {
+        $artist = new Artist($artist_id);
+        $query  = ($artist->mbid)
+            ? 'mbid=' . rawurlencode($artist->mbid)
+            : 'artist=' . rawurlencode(trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name)));
+
+        // Data newer than 6 months, use it
+        if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
+            $results                = array();
+            $results['id']          = $artist_id;
+            $results['summary']     = $artist->summary;
+            $results['placeformed'] = $artist->placeformed;
+            $results['yearformed']  = $artist->yearformed;
+            $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
+            $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
+            $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
+            $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
+
+            return $results;
+        }
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
-        $results                = array();
-        $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
+        $results            = array();
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
+            (string)$xml->artist->bio->summary));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = (string) $xml->artist->bio->placeformed;
-        $results['yearformed']  = (string) $xml->artist->bio->yearformed;
+        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
+        $results['yearformed']  = (string)$xml->artist->bio->yearformed;
 
-        if ($artist) {
+        if ($artist->id) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], (int) $results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], (int)$results['yearformed']);
             }
-            if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
-                $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
-                $rurl  = pathinfo((string) $results['megaphoto']);
-                $mime  = 'image/' . $rurl['extension'];
-                $art   = new Art($artist->id, 'artist');
-                $art->reset();
-                $art->insert($image, $mime);
-                $results['largephoto'] = Art::url($artist->id, 'artist');
-                $results['megaphoto']  = $results['largephoto'];
-            }
+            $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
+            $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
+            $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
+            $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
         }
 
         return $results;

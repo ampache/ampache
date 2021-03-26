@@ -270,6 +270,27 @@ class User extends database_object
     } // get_valid_users
 
     /**
+     * get_valid_usernames
+     * This returns all valid users in database.
+     * @param boolean $include_disabled
+     * @return array
+     */
+    public static function get_valid_usernames($include_disabled = false)
+    {
+        $users = array();
+        $sql   = ($include_disabled)
+            ? "SELECT `username` FROM `user`"
+            : "SELECT `username` FROM `user` WHERE `disabled` = '0'";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = $results['username'];
+        }
+
+        return $users;
+    } // get_valid_users
+
+    /**
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
@@ -1388,16 +1409,15 @@ class User extends database_object
      * get_recently_played
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
-     * @param string $limit
      * @param string $type
+     * @param string $count
+     * @param integer $offset
      * @param boolean $newest
      * @return integer[]
      */
-    public function get_recently_played($limit, $type = '', $newest = true)
+    public function get_recently_played($type, $count, $offset = 0, $newest = true)
     {
-        if (!$type) {
-            $type = 'song';
-        }
+        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .

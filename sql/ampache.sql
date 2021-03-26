@@ -21,8 +21,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Mar 02, 2021 at 06:42 PM
--- Server version: 10.5.8-MariaDB-3
+-- Generation Time: Mar 26, 2021 at 02:56 PM
+-- Server version: 10.5.9-MariaDB-1
 -- PHP Version: 7.4.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -37,7 +37,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache`
+-- Database: `ampache441`
 --
 
 -- --------------------------------------------------------
@@ -783,8 +783,6 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'),
 (104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'),
 (105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'),
-(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'),
-(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'),
 (108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'),
 (109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
 (110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', NULL),
@@ -1274,7 +1272,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '400022'),
+('db_version', '400023'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1300,10 +1298,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `state` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `rsstoken` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1436,8 +1434,6 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 110, '0'),
 (-1, 109, '0'),
 (-1, 108, '1'),
-(-1, 107, '0'),
-(-1, 106, '0'),
 (-1, 105, '0'),
 (-1, 104, '0'),
 (-1, 103, '7'),
@@ -1494,8 +1490,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 96, ''),
 (-1, 97, ''),
 (-1, 98, ''),
-(-1, 144, '10'),
-(-1, 145, '1'),
+(-1, 144, '0'),
+(-1, 145, '0'),
 (-1, 146, '1'),
 (-1, 147, '0'),
 (-1, 148, '0'),

@@ -105,7 +105,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](api-4.3/api-advanced-search) page for details about creating searches.
+Refer to the [Advanced Search](https://ampache.org/api/api-4/api-advanced-search) page for details about creating searches.
 
 * INPUTS
   * ampache_url = (string)
@@ -324,6 +324,7 @@ This returns playlists based on the specified filter
 | 'offset'      | integer    | Return results starting from this index position                              |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                           |      YES |
 | 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result                 |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlists.xml)
 
 ## playlist
@@ -479,6 +480,7 @@ Takes the file id with optional description and expires parameters.
 | 'type'        | string  | object_type                                   |       NO |
 | 'description' | string  | description (will be filled for you if empty) |      YES |
 | 'expires'     | integer | days to keep active                           |      YES |
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/share_create.xml)
 
 ## share_edit

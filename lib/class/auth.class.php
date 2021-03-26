@@ -95,6 +95,11 @@ class Auth
      */
     public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
+        $results = array();
+        // check usernames
+        if (!in_array($username, User::get_valid_usernames())) {
+            return $results;
+        }
         // Check for token auth with apikey
         $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
@@ -103,7 +108,6 @@ class Auth
             return $token_check;
         }
 
-        $results = array();
         // If no token check the regular methods
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
@@ -500,11 +504,11 @@ class Auth
     {
         // subsonic token auth with apikey
         if (strlen((string) $token) && strlen((string) $salt) && strlen((string) $username)) {
-            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
             $row        = Dba::fetch_assoc($db_results);
             $hash_token = hash('md5', ($row['apikey'] . $salt));
-            if ($token == $hash_token) {
+            if ($token == $hash_token && $row['username'] == $username && isset($row['apikey'])) {
                 return array(
                     'success' => true,
                     'type' => 'api',

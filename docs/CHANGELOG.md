@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## Ampache 4.4.1-release
+
+### Added
+
+* If you have an MBID in your artist, use that for last.fm queries
+
+### Changed
+
+* Updated composer dependencies
+* Default podcast_keep and podcast_new_download preferences are set to 0 (unlimited)
+
+### Removed
+
+* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.
+
+### Fixed
+
+* Grid View shouldn't change the artist image
+* Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
+* Album::get_random_songs not returning id's
+* Bookmark::get_bookmarks typo for get_bookmark_ids
+* Sorting album browses by artist name could fail with mysql
+* SubSonic: getPlaylists should always send a user
+* Album browsing SQL didn't include Artist name in grouping
+* CVE-2021-21399: Unauthenticated SubSonic backend access in Ampache
+
+### API 4.4.1
+
+### Fixed
+
+* API::stats would not offset recent calls
+
 ## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)

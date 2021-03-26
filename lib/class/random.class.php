@@ -203,7 +203,7 @@ class Random
         $results = array();
 
         // Get the last album played by us
-        $data        = Core::get_global('user')->get_recently_played('1', 'album');
+        $data        = Core::get_global('user')->get_recently_played('album', 1);
         $where_sql   = "";
         $multi_where = 'WHERE';
 
@@ -258,7 +258,7 @@ class Random
     {
         $results = array();
 
-        $data        = Core::get_global('user')->get_recently_played('1', 'artist');
+        $data        = Core::get_global('user')->get_recently_played('artist', 1);
         $where_sql   = "";
         $multi_where = 'WHERE';
         if ($data[0]) {

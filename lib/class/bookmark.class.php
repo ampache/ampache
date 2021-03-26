@@ -131,7 +131,7 @@ class Bookmark extends database_object
     public static function get_bookmarks($user)
     {
         $bookmarks = array();
-        $ids       = self::get_bookmarks_id($user);
+        $ids       = self::get_bookmark_ids($user);
         foreach ($ids as $bookmarkid) {
             $bookmarks[] = new Bookmark($bookmarkid);
         }

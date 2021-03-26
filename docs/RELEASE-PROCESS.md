@@ -25,6 +25,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
 * ~~Run composer install~~ (adding pchart updates everything)
+* Check `lib/components/prettyphoto/images` exists
 * Get missing map files
 
 ```shell
