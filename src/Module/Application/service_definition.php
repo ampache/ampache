@@ -243,8 +243,6 @@ return [
     Admin\Catalog\UpdateAllCatalogsAction::class => autowire(),
     Admin\Catalog\EnableDisabledAction::class => autowire(),
     Admin\Catalog\UpdateCatalogSettingsAction::class => autowire(),
-    Admin\Duplicates\ShowAction::class => autowire(),
-    Admin\Duplicates\FindDuplicatesAction::class => autowire(),
     Admin\Index\ShowAction::class => autowire(),
     Admin\License\ShowAction::class => autowire(),
     Admin\License\DeleteAction::class => autowire(),
