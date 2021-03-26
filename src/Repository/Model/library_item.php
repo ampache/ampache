@@ -31,6 +31,10 @@ namespace Ampache\Repository\Model;
  */
 interface library_item extends playable_item
 {
+    public function getId(): int;
+
+    public function isNew(): bool;
+
     /**
      * @return mixed
      */
