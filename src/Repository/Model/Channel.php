@@ -93,6 +93,11 @@ class Channel extends database_object implements Media, library_item
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * update_start
      * @param string $start_date
