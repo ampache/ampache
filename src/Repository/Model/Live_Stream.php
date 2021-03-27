@@ -110,6 +110,11 @@ class Live_Stream extends database_object implements Media, library_item
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * format
      * This takes the normal data from the database and makes it pretty

@@ -107,6 +107,11 @@ class Broadcast extends database_object implements library_item
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * Update broadcast state.
      * @param boolean $started
