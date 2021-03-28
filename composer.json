@@ -56,6 +56,7 @@
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
         "doctrine/cache": "1.*.*",
+        "doctrine/dbal": "^3.0",
         "endroid/qr-code": "^4.0",
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",

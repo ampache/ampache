@@ -31,7 +31,10 @@ use Ampache\Config\Init\InitializationHandlerDatabaseUpdate;
 use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -89,4 +92,7 @@ return [
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
     BuilderInterface::class => autowire(),
+    Connection::class => static function (): Connection {
+        return Dba::createDbalConnection();
+    }
 ];

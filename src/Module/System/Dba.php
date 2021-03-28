@@ -25,8 +25,10 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 use PDO;
-use PDOException;
 use PDOStatement;
 
 /**
@@ -294,6 +296,50 @@ class Dba
     }
 
     /**
+     * Creates a new dbal instance
+     * Should behave like the direct pdo adapter creation, also allows access to the pdo instance afterwards
+     * to preserve backward compatibility
+     */
+    public static function createDbalConnection(): ?Connection
+    {
+        $hostname             = AmpConfig::get('database_hostname', '');
+        $charsetConfiguration = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
+
+        if ($hostname === '') {
+            return null;
+        }
+
+        if (strpos($hostname, '/') === 0) {
+            $params = [
+                'unix_socket' => $hostname,
+            ];
+        } else {
+            $params = [
+                'user' => AmpConfig::get('database_username'),
+                'password' => AmpConfig::get('database_password'),
+                'host' => $hostname,
+                'port' => (int) AmpConfig::get('database_port'),
+            ];
+        }
+
+        // @todo move to config at some point in future
+        $params['driver']  = 'pdo_mysql';
+        $params['charset'] = $charsetConfiguration['charset'];
+        $params['dbname']  = AmpConfig::get('database_name');
+
+        debug_event(__CLASS__, 'Database connection...', 5);
+
+        try {
+            return DriverManager::getConnection($params);
+        } catch (Exception $e) {
+            debug_event(__CLASS__, 'Connection failed: ' . $e->getMessage(), 1);
+            self::$_error = $e->getMessage();
+
+            return null;
+        }
+    }
+
+    /**
      * _connect
      *
      * This connects to the database, used by the DBH function
@@ -301,69 +347,20 @@ class Dba
      */
     private static function _connect()
     {
-        $username = AmpConfig::get('database_username');
-        $hostname = AmpConfig::get('database_hostname', '');
-        $password = AmpConfig::get('database_password');
-        $port     = AmpConfig::get('database_port');
-
-        if ($hostname === '') {
+        $connection = self::createDbalConnection();
+        if ($connection === null) {
             return null;
         }
 
-        // Build the data source name
-        if (strpos($hostname, '/') === 0) {
-            $dsn = 'mysql:unix_socket=' . $hostname;
-        } else {
-            $dsn = 'mysql:host=' . $hostname;
-        }
-        if ($port) {
-            $dsn .= ';port=' . (int)($port);
-        }
-
-        try {
-            debug_event(__CLASS__, 'Database connection...', 5);
-            $dbh = new PDO($dsn, $username, $password);
-        } catch (PDOException $error) {
-            self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Connection failed: ' . $error->getMessage(), 1);
-
-            return null;
-        }
-
-        return $dbh;
-    }
-
-    /**
-     * _setup_dbh
-     * @param null|PDO $dbh
-     * @param string $database
-     * @return boolean
-     */
-    private static function _setup_dbh($dbh, $database)
-    {
-        if (!$dbh) {
-            return false;
-        }
-
-        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
-        $charset = $charset['charset'];
-        if ($dbh->exec('SET NAMES ' . $charset) === false) {
-            debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
-        }
-
-        if ($dbh->exec('USE `' . $database . '`') === false) {
-            self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()),
-                1);
-        }
+        $pdo = $connection->getWrappedConnection()->getWrappedConnection();
 
         if (AmpConfig::get('sql_profiling')) {
-            $dbh->exec('SET profiling=1');
-            $dbh->exec('SET profiling_history_size=50');
-            $dbh->exec('SET query_cache_type=0');
+            $pdo->exec('SET profiling=1');
+            $pdo->exec('SET profiling_history_size=50');
+            $pdo->exec('SET query_cache_type=0');
         }
 
-        return true;
+        return $pdo;
     }
 
     /**
@@ -448,7 +445,6 @@ class Dba
 
         if (!is_object(AmpConfig::get($handle))) {
             $dbh = self::_connect();
-            self::_setup_dbh($dbh, $database);
             AmpConfig::set($handle, $dbh, true);
 
             return $dbh;
