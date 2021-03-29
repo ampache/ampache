@@ -20,6 +20,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
+* Search: Add 'possible_duplicate' to song, artist and album searches
 
 ### Changed
 
@@ -31,6 +32,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Removed
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
+* 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
 
 ### API develop
 

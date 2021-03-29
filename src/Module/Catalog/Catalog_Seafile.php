@@ -47,7 +47,7 @@ class Catalog_Seafile extends Catalog
     private static $version     = '000001';
     private static $type        = 'seafile';
     private static $description = 'Seafile Remote Catalog';
-    private static $table_name  = 'Ampache\Module\Catalog\Catalog_Seafile';
+    private static $table_name  = 'catalog_seafile';
 
     private $seafile;
 
