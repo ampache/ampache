@@ -5,6 +5,7 @@
 ### Fixed
 
 * Require a valid database hostname instead of assuming localhost
+* A valid transcode_cmd is required to transcode media
 
 ## Ampache 4.4.1-release
 
