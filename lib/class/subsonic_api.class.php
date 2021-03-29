@@ -1193,6 +1193,11 @@ class Subsonic_Api
     {
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $sub_id = str_replace('pl-', '', $sub_id);
+        // sometimes we're sent a full art url...
+        preg_match('/\/artist\/([0-9]*)\//', $sub_id, $matches);
+        if (!empty($matches)) {
+            $sub_id = (string)(100000000 + (int)$matches[1]);
+        }
         $size   = $input['size'];
         $type   = Subsonic_XML_Data::getAmpacheType($sub_id);
         if ($type == "") {
