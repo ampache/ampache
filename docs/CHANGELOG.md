@@ -9,6 +9,7 @@
 * SubSonic clients might send you a file path of Artist art instead of the id
 * SubSonic strings don't need json conversion checks
 * SubSonic send the cover art id for playlists
+* SubSonic check for artist and podcast prefixes on art id's
 
 ## Ampache 4.4.1-release
 

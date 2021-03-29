@@ -1200,7 +1200,9 @@ class Subsonic_Api
     public static function getcoverart($input)
     {
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
+        $sub_id = str_replace('pod-', '', $sub_id);
         // sometimes we're sent a full art url...
         preg_match('/\/artist\/([0-9]*)\//', $sub_id, $matches);
         if (!empty($matches)) {
