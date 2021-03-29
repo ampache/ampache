@@ -315,18 +315,22 @@ class Dba
         $password = AmpConfig::get('database_password');
         $port     = AmpConfig::get('database_port');
 
+        if ($hostname === '') {
+            return null;
+        }
+
         // Build the data source name
         if (strpos($hostname, '/') === 0) {
             $dsn = 'mysql:unix_socket=' . $hostname;
         } else {
-            $dsn = 'mysql:host=' . $hostname ?: 'localhost';
+            $dsn = 'mysql:host=' . $hostname;
         }
         if ($port) {
             $dsn .= ';port=' . (int) ($port);
         }
 
         try {
-            debug_event(self::class, 'Database connection...', 6);
+            debug_event(self::class, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $error) {
             self::$_error = $error->getMessage();

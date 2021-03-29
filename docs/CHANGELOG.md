@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 4.4.2-develop
+
+### Fixed
+
+* Require a valid database hostname instead of assuming localhost
+
 ## Ampache 4.4.1-release
 
 ### Added
