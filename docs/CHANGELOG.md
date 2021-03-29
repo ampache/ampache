@@ -7,6 +7,7 @@
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
 * SubSonic clients might send you a file path of Artist art instead of the id
+* SubSonic strings don't need json conversion checks
 
 ## Ampache 4.4.1-release
 

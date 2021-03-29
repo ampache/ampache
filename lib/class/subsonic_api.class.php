@@ -312,14 +312,22 @@ class Subsonic_Api
                     }
 
                     if (!isset($tagsArray[$childTagName])) {
-                        // only entry with this key
-                        if (count($childProperties) === 0) {
-                            $tagsArray[$childTagName] = (object) $childProperties;
-                        } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
-                            $tagsArray[$childTagName] = (object) $childProperties;
+                        // plain strings aren't countable/nested
+                        if (!is_string($childProperties)) {
+                            // only entry with this key
+                            if (count($childProperties) === 0) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } else {
+                                // test if tags of this type should always be arrays, no matter the element count
+                                $tagsArray[$childTagName] = in_array($childTagName,
+                                    $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            }
                         } else {
                             // test if tags of this type should always be arrays, no matter the element count
-                            $tagsArray[$childTagName] = in_array($childTagName, $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            $tagsArray[$childTagName] = in_array($childTagName,
+                                $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
                     } elseif (
                             is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)
