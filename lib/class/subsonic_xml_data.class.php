@@ -1012,10 +1012,11 @@ class Subsonic_XML_Data
      */
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
-        $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
+        $playlist_id = (string) self::getPlaylistId($playlist->id);
+        $songcount   = $playlist->get_media_count('song');
+        $duration    = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        $xplaylist   = $xml->addChild('playlist');
+        $xplaylist->addAttribute('id', $playlist_id);
         $xplaylist->addAttribute('name', (string) self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', (string) $user->username);
@@ -1024,6 +1025,7 @@ class Subsonic_XML_Data
         $xplaylist->addAttribute('changed', date("c", (int) $playlist->last_update));
         $xplaylist->addAttribute('songCount', (string) $songcount);
         $xplaylist->addAttribute('duration', (string) $duration);
+        $xplaylist->addAttribute('coverArt', $playlist_id);
 
         if ($songs) {
             $allsongs = $playlist->get_songs();
@@ -1041,7 +1043,8 @@ class Subsonic_XML_Data
      */
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
-        $xplaylist = $xml->addChild('playlist');
+        $playlist_id = (string) self::getSmartPlId($playlist->id);
+        $xplaylist   = $xml->addChild('playlist');
         debug_event(self::class, 'addsmartplaylist ' . $playlist->id, 5);
         $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', (string) self::checkName($playlist->name));
@@ -1056,6 +1059,7 @@ class Subsonic_XML_Data
             $xplaylist->addAttribute('songCount', (string) count($allitems));
             $duration = (count($allitems) > 0) ? Search::get_total_duration($allitems) : 0;
             $xplaylist->addAttribute('duration', (string) $duration);
+            $xplaylist->addAttribute('coverArt', $playlist_id);
             foreach ($allitems as $item) {
                 $song = new Song($item['object_id']);
                 self::addSong($xplaylist, $song->id, false, "entry");
@@ -1063,6 +1067,7 @@ class Subsonic_XML_Data
         } else {
             $xplaylist->addAttribute('songCount', (string) $playlist->last_count);
             $xplaylist->addAttribute('duration', (string) $playlist->last_duration);
+            $xplaylist->addAttribute('coverArt', $playlist_id);
         }
     }
 

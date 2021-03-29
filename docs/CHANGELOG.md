@@ -8,6 +8,7 @@
 * A valid transcode_cmd is required to transcode media
 * SubSonic clients might send you a file path of Artist art instead of the id
 * SubSonic strings don't need json conversion checks
+* SubSonic send the cover art id for playlists
 
 ## Ampache 4.4.1-release
 
