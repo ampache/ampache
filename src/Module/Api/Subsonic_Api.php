@@ -347,11 +347,18 @@ class Subsonic_Api
                     }
 
                     if (!isset($tagsArray[$childTagName])) {
-                        // only entry with this key
-                        if (count($childProperties) === 0) {
-                            $tagsArray[$childTagName] = (object)$childProperties;
-                        } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
-                            $tagsArray[$childTagName] = (object)$childProperties;
+                        // plain strings aren't countable/nested
+                        if (!is_string($childProperties)) {
+                            // only entry with this key
+                            if (count($childProperties) === 0) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } else {
+                                // test if tags of this type should always be arrays, no matter the element count
+                                $tagsArray[$childTagName] = in_array($childTagName,
+                                    $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            }
                         } else {
                             // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array($childTagName,
@@ -1246,6 +1253,11 @@ class Subsonic_Api
     {
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $sub_id = str_replace('pl-', '', $sub_id);
+        // sometimes we're sent a full art url...
+        preg_match('/\/artist\/([0-9]*)\//', $sub_id, $matches);
+        if (!empty($matches)) {
+            $sub_id = (string)(100000000 + (int)$matches[1]);
+        }
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
