@@ -358,11 +358,18 @@ class Subsonic_Api
                     }
 
                     if (!isset($tagsArray[$childTagName])) {
-                        // only entry with this key
-                        if (count($childProperties) === 0) {
-                            $tagsArray[$childTagName] = (object)$childProperties;
-                        } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
-                            $tagsArray[$childTagName] = (object)$childProperties;
+                        // plain strings aren't countable/nested
+                        if (!is_string($childProperties)) {
+                            // only entry with this key
+                            if (count($childProperties) === 0) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
+                                $tagsArray[$childTagName] = (object)$childProperties;
+                            } else {
+                                // test if tags of this type should always be arrays, no matter the element count
+                                $tagsArray[$childTagName] = in_array($childTagName,
+                                    $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
+                            }
                         } else {
                             // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array($childTagName,
@@ -1006,25 +1013,25 @@ class Subsonic_Api
     {
         $playlistId = $input['playlistId'];
         $name       = $input['name'];
-        $songId     = array();
+        $songIdList = array();
         if (is_array($input['songId'])) {
-            $songId = $input['songId'];
+            $songIdList = $input['songId'];
         } elseif (is_string($input['songId'])) {
-            $songId = explode(',', $input['songId']);
+            $songIdList = explode(',', $input['songId']);
         }
 
         if ($playlistId) {
-            self::_updatePlaylist($playlistId, $name, $songId);
+            self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_Xml_Data::createSuccessResponse('createplaylist');
         } else {
             if (!empty($name)) {
-                $playlistId = static::getPlaylistRepository()->create(
-                    $name,
-                    'private',
-                    Core::get_global('user')->getId()
-                );
-                if (count($songId) > 0) {
-                    self::_updatePlaylist($playlistId, "", $songId);
+                if (count($songIdList) > 0) {
+                    $playlistId = static::getPlaylistRepository()->create(
+                        $name,
+                        'private',
+                        Core::get_global('user')->getId()
+                    );
+                    self::_updatePlaylist($playlistId, "", $songIdList, [], true, true);
                 }
                 $response = Subsonic_Xml_Data::createSuccessResponse('createplaylist');
             } else {
@@ -1041,20 +1048,25 @@ class Subsonic_Api
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
      * @param boolean $public
+     * @param boolean $clearFirst
      */
     private static function _updatePlaylist(
         $playlist_id,
         $name,
         $songsIdToAdd = array(),
         $songIndexToRemove = array(),
-        $public = true
+        $public = true,
+        $clearFirst = false
     ) {
-        $playlist           = new Playlist($playlist_id);
+        $playlist           = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlist_id));
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
+        if ($clearFirst) {
+            $playlist->delete_all();
+        }
 
         if ($songsIdToAdd_count > 0) {
             for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
@@ -1264,7 +1276,14 @@ class Subsonic_Api
     public static function getcoverart($input)
     {
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
+        $sub_id = str_replace('pod-', '', $sub_id);
+        // sometimes we're sent a full art url...
+        preg_match('/\/artist\/([0-9]*)\//', $sub_id, $matches);
+        if (!empty($matches)) {
+            $sub_id = (string)(100000000 + (int)$matches[1]);
+        }
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
@@ -1311,7 +1330,7 @@ class Subsonic_Api
             $art  = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
+                $art  = new Art($song->album, "album");
             }
         }
         if (!$art || $art->get() == '') {
@@ -1708,12 +1727,12 @@ class Subsonic_Api
     public static function updateshare($input)
     {
         $username    = self::check_parameter($input, 'username');
-        $id          = self::check_parameter($input, 'id');
+        $share_id    = self::check_parameter($input, 'id');
         $user        = User::get_from_username((string)$username);
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $share = new Share($id);
+            $share = new Share(Subsonic_Xml_Data::getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = $share->expire_days;
                 if (isset($input['expires'])) {
