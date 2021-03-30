@@ -1080,8 +1080,7 @@ class Subsonic_Xml_Data
             $xplaylist->addAttribute('duration', (string)$duration);
             $xplaylist->addAttribute('coverArt', $playlist_id);
             foreach ($allitems as $item) {
-                $song = new Song($item['object_id']);
-                self::addSong($xplaylist, $song->id, false, "entry");
+                self::addSong($xplaylist, (int)$item['object_id'], false, "entry");
             }
         } else {
             $xplaylist->addAttribute('songCount', (string)$playlist->last_count);
