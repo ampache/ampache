@@ -472,9 +472,13 @@ class Playlist extends playlist_object
      * add_medias
      * @param array $medias
      * @param bool $unique
+     * @return bool
      */
     public function add_medias($medias, $unique)
     {
+        if (!empty($medias)) {
+            return false;
+        }
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
@@ -482,7 +486,6 @@ class Playlist extends playlist_object
         debug_event(self::class, "add_medias to: " . $this->id, 5);
         $track_data = $this->get_songs();
         $base_track = count($track_data);
-        $track      = 0;
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
@@ -500,9 +503,10 @@ class Playlist extends playlist_object
             } // if valid id
         } // end foreach medias
         Dba::write(rtrim($sql, ', '), $values);
-        debug_event(self::class, "Added $track tracks to playlist: " . $this->id, 5);
-
+        debug_event(self::class, "Added $count tracks to playlist: " . $this->id, 5);
         $this->update_last_update();
+
+        return true;
     }
 
     /**
