@@ -1286,8 +1286,7 @@ class Subsonic_XML_Data
         $xshare->addAttribute('visitCount', (string) $share->counter);
 
         if ($share->object_type == 'song') {
-            $song = new Song($share->object_id);
-            self::addSong($xshare, $song->id, false, "entry");
+            self::addSong($xshare, $share->object_id, false, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
@@ -1417,10 +1416,8 @@ class Subsonic_XML_Data
     {
         $xsimilar = $xml->addChild($child);
         foreach ($similar_songs as $similar_song) {
-            $song = new Song($similar_song['id']);
-            $song->format();
-            if ($song->id) {
-                self::addSong($xsimilar, $song->id);
+            if ($similar_song['id'] !== null) {
+                self::addSong($xsimilar, $similar_song['id']);
             }
         }
     }
@@ -1535,8 +1532,7 @@ class Subsonic_XML_Data
         $xbookmark->addAttribute('created', date("c", (int) $bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int) $bookmark->update_date));
         if ($bookmark->object_type == "song") {
-            $song = new Song($bookmark->object_id);
-            self::addSong($xbookmark, $song->id, false, 'entry');
+            self::addSong($xbookmark, $bookmark->object_id, false, 'entry');
         } elseif ($bookmark->object_type == "video") {
             self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
