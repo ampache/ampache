@@ -10,6 +10,7 @@
 * SubSonic strings don't need json conversion checks
 * SubSonic send the cover art id for playlists
 * SubSonic check for artist and podcast prefixes on art id's
+* Don't get null playlist objects from the DB
 
 ## Ampache 4.4.1-release
 
