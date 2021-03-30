@@ -2176,13 +2176,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
-        // fall back to resampling if no defuault
+        // fall back to resampling if no default
         if (!$target) {
             $target = $source;
             debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        if (empty($cmd)) {
+            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
+
+            return array();
+        }
+
         $args = '';
         if (AmpConfig::get('encode_ss_frame') && isset($options['frame'])) {
             $args .= ' ' . AmpConfig::get('encode_ss_frame');
@@ -2190,7 +2196,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (AmpConfig::get('encode_ss_duration') && isset($options['duration'])) {
             $args .= ' ' . AmpConfig::get('encode_ss_duration');
         }
-
         $args .= ' ' . AmpConfig::get('transcode_input');
 
         if (AmpConfig::get('encode_srt') && $options['subtitle']) {
