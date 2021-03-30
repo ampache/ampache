@@ -953,22 +953,22 @@ class Subsonic_Api
     public static function createplaylist($input)
     {
         $playlistId = $input['playlistId'];
-        $name       = $input['name'];
-        $songId     = array();
+        $name       = (string) $input['name'];
+        $songIdList = array();
         if (is_array($input['songId'])) {
-            $songId = $input['songId'];
+            $songIdList = $input['songId'];
         } elseif (is_string($input['songId'])) {
-            $songId = explode(',', $input['songId']);
+            $songIdList = explode(',', $input['songId']);
         }
 
         if ($playlistId) {
-            self::_updatePlaylist($playlistId, $name, $songId);
+            self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_XML_Data::createSuccessResponse('createplaylist');
         } else {
             if (!empty($name)) {
                 $playlistId = Playlist::create($name, 'private');
-                if (count($songId) > 0) {
-                    self::_updatePlaylist($playlistId, "", $songId);
+                if (count($songIdList) > 0) {
+                    self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
                 }
                 $response = Subsonic_XML_Data::createSuccessResponse('createplaylist');
             } else {
@@ -979,13 +979,14 @@ class Subsonic_Api
     }
 
     /**
-     * @param $playlist_id
+     * @param string $playlist_id
      * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
      * @param boolean $public
+     * @param boolean $clearFirst
      */
-    private static function _updatePlaylist($playlist_id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
+    private static function _updatePlaylist($playlist_id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true, $clearFirst = false)
     {
         $playlist           = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlist_id));
         $songsIdToAdd_count = count($songsIdToAdd);
@@ -993,6 +994,9 @@ class Subsonic_Api
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
+        if ($clearFirst) {
+            $playlist->delete_all();
+        }
 
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order

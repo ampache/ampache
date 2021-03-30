@@ -2,6 +2,10 @@
 
 ## Ampache 4.4.2-develop
 
+### Changed
+
+* SubSonic - When calling createPlaylist, assume that the list needs to be empty first
+
 ### Fixed
 
 * Require a valid database hostname instead of assuming localhost
