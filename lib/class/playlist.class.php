@@ -478,7 +478,7 @@ class Playlist extends playlist_object
      */
     public function add_medias($medias, $unique = false)
     {
-        if (!empty($medias)) {
+        if (empty($medias)) {
             return false;
         }
         /* We need to pull the current 'end' track and then use that to
