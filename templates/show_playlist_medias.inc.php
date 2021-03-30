@@ -33,7 +33,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
-    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media">
+    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start() ?>">
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
