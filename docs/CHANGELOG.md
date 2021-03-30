@@ -6,11 +6,12 @@
 
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
-* SubSonic clients might send you a file path of Artist art instead of the id
-* SubSonic strings don't need json conversion checks
-* SubSonic send the cover art id for playlists
-* SubSonic check for artist and podcast prefixes on art id's
+* SubSonic - Clients might send you a file path of Artist art instead of the id
+* SubSonic - Strings don't need json conversion checks
+* SubSonic - Send the cover art id for playlists
+* SubSonic - Check for artist and podcast prefixes on art id's
 * Don't get null playlist objects from the DB
+* SubSonic - Bugs when converting between SubSonic id and Ampache id
 
 ## Ampache 4.4.1-release
 
