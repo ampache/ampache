@@ -987,19 +987,13 @@ class Subsonic_Api
      */
     private static function _updatePlaylist($playlist_id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
     {
-        $playlist           = new Playlist($playlist_id);
+        $playlist           = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlist_id));
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
 
-        if ($songsIdToAdd_count > 0) {
-            for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
-                $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
-            }
-            $playlist->add_songs($songsIdToAdd, (bool) AmpConfig::get('unique_playlist'));
-        }
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order
             rsort($songIndexToRemove);
@@ -1008,6 +1002,12 @@ class Subsonic_Api
             }
             $playlist->set_items();
             $playlist->regenerate_track_numbers(); // reorder now that the tracks are removed
+        }
+        if ($songsIdToAdd_count > 0) {
+            for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
+                $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
+            }
+            $playlist->add_songs($songsIdToAdd, (bool) AmpConfig::get('unique_playlist'));
         }
     }
 
@@ -1253,7 +1253,7 @@ class Subsonic_Api
             $art  = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+                $art  = new Art($song->album, "album");
             }
         }
         if (!$art || $art->get() == '') {
@@ -1628,12 +1628,12 @@ class Subsonic_Api
     public static function updateshare($input)
     {
         $username    = self::check_parameter($input, 'username');
-        $id          = self::check_parameter($input, 'id');
+        $share_id    = self::check_parameter($input, 'id');
         $user        = User::get_from_username((string) $username);
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $share = new Share($id);
+            $share = new Share(Subsonic_Xml_Data::getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = $share->expire_days;
                 if (isset($input['expires'])) {
