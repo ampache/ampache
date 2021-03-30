@@ -1306,8 +1306,7 @@ class Subsonic_Xml_Data
         $xshare->addAttribute('visitCount', (string)$share->counter);
 
         if ($share->object_type == 'song') {
-            $song = new Song($share->object_id);
-            self::addSong($xshare, $song->id, false, "entry");
+            self::addSong($xshare, $share->object_id, false, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
@@ -1315,8 +1314,7 @@ class Subsonic_Xml_Data
                 self::addSong($xshare, $songid, false, "entry");
             }
         } elseif ($share->object_type == 'album') {
-            $album = new Album($share->object_id);
-            $songs = static::getSongRepository()->getByAlbum($album->id);
+            $songs = static::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $songid) {
                 self::addSong($xshare, $songid, false, "entry");
             }
@@ -1437,10 +1435,8 @@ class Subsonic_Xml_Data
     {
         $xsimilar = $xml->addChild($child);
         foreach ($similar_songs as $similar_song) {
-            $song = new Song($similar_song['id']);
-            $song->format();
-            if ($song->id) {
-                self::addSong($xsimilar, $song->id);
+            if ($similar_song['id'] !== null) {
+                self::addSong($xsimilar, $similar_song['id']);
             }
         }
     }
