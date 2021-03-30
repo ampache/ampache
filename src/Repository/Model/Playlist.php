@@ -275,7 +275,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
+        $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' AND `object_id` IS NOT NULL ORDER BY `track`";
         $db_results  = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
