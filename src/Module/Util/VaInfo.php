@@ -817,7 +817,9 @@ class VaInfo
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'track_number':
+                case 'track':
                     $parsed['track'] = $data[0];
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
