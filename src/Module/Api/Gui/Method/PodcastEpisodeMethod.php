@@ -100,7 +100,7 @@ final class PodcastEpisodeMethod implements MethodInterface
                     [$objectId],
                     $gatekeeper->getUser()->getId(),
                     false,
-                    false,
+                    true,
                     true
                 )
             )
