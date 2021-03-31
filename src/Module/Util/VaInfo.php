@@ -931,6 +931,7 @@ class VaInfo
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
+                case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
                 case 'rating':
