@@ -583,7 +583,7 @@ class Label extends database_object implements library_item
                 $label_id = Label::lookup(array('name' => $value));
                 if ($label_id === 0) {
                     debug_event(self::class, 'Creating a label directly from artist editing is not allowed.', 3);
-                    //$label_id = Label::create(array('name' => $lv));
+                    //$label_id = self::create(array('name' => $lv));
                 }
                 if ($label_id > 0) {
                     $clabel = new Label($label_id);
