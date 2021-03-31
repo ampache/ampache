@@ -1761,16 +1761,16 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "4.2.1",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "88a0186e652a7e4689251bda8b4602e7c04b67ab"
+                "reference": "adcea818d7a850dc42202def000f818c0207b512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/88a0186e652a7e4689251bda8b4602e7c04b67ab",
-                "reference": "88a0186e652a7e4689251bda8b4602e7c04b67ab",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/adcea818d7a850dc42202def000f818c0207b512",
+                "reference": "adcea818d7a850dc42202def000f818c0207b512",
                 "shasum": ""
             },
             "require": {
@@ -1805,9 +1805,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwilsson/spotify-web-api-php/issues",
-                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/4.2.1"
+                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/4.3.0"
             },
-            "time": "2021-01-31T18:14:53+00:00"
+            "time": "2021-03-28T12:27:47+00:00"
         },
         {
             "name": "kevinrob/guzzle-cache-middleware",
@@ -8650,16 +8650,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.2.4",
+            "version": "v5.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "710d364200997a5afde34d9fe57bd52f3cc1e108"
+                "reference": "8c86a82f51658188119e62cff0a050a12d09836f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/710d364200997a5afde34d9fe57bd52f3cc1e108",
-                "reference": "710d364200997a5afde34d9fe57bd52f3cc1e108",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/8c86a82f51658188119e62cff0a050a12d09836f",
+                "reference": "8c86a82f51658188119e62cff0a050a12d09836f",
                 "shasum": ""
             },
             "require": {
@@ -8692,7 +8692,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.2.4"
+                "source": "https://github.com/symfony/filesystem/tree/v5.2.6"
             },
             "funding": [
                 {
@@ -8708,7 +8708,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-12T10:38:38+00:00"
+            "time": "2021-03-28T14:30:26+00:00"
         },
         {
             "name": "symfony/finder",
