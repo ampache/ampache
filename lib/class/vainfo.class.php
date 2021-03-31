@@ -61,7 +61,7 @@ class vainfo
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param $file
+     * @param string $file
      * @param array $gather_types
      * @param string $encoding
      * @param string $encoding_id3v1
@@ -921,6 +921,7 @@ class vainfo
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
+                case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
                 case 'rating':
