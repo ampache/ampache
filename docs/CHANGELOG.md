@@ -17,6 +17,7 @@
 * Don't get null playlist objects from the DB
 * SubSonic - Bugs when converting between SubSonic id and Ampache id
 * Using 'Save Track Order' would not apply the offset 
+* Vorbis/Ogg comments use organization for publisher
 
 ## Ampache 4.4.1-release
 
