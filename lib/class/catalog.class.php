@@ -2029,7 +2029,8 @@ abstract class Catalog extends database_object
         }
         if ($song->label && AmpConfig::get('label')) {
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = Label::lookup(array('name' => $label_name));
+                $label_id = Label::helper($label_name)
+                    ?: Label::lookup(array('name' => $label_name));
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
                     $artists = $label->get_artists();
