@@ -887,6 +887,7 @@ class VaInfo
                     $parsed[$tag] = $this->parseGenres($data);
                     break;
                 case 'tracknumber':
+                case 'track_number':
                     $parsed['track'] = $data[0];
                     break;
                 case 'discnumber':
