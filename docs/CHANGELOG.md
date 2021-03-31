@@ -18,6 +18,7 @@
 * SubSonic - Bugs when converting between SubSonic id and Ampache id
 * Using 'Save Track Order' would not apply the offset 
 * Vorbis/Ogg comments use organization for publisher
+* Automated Label creation when updating from tags
 
 ## Ampache 4.4.1-release
 
