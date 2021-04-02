@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
@@ -768,6 +769,7 @@ class Ui implements UiInterface
             case 'sidebar_light':
             case 'cron_cache':
             case 'show_lyrics':
+            case ConfigurationKeyEnum::ALBUM_USE_ORIGINAL_YEAR:
             case 'unique_playlist':
                 $is_true  = '';
                 $is_false = '';

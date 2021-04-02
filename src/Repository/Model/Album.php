@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
@@ -1055,6 +1056,25 @@ class Album extends database_object implements library_item
         }
 
         return (int)$disk;
+    }
+
+    /**
+     * Returns the year depending on the users config. Mostly used for ui
+     */
+    public function getYearConditional(): ?int
+    {
+        $year = null;
+        if (AmpConfig::get(ConfigurationKeyEnum::ALBUM_USE_ORIGINAL_YEAR)) {
+            if ($this->original_year) {
+                $year = (int) $this->original_year;
+            }
+        } else {
+            if ($this->year) {
+                $year = (int) $this->year;
+            }
+        }
+
+        return $year;
     }
 
     /**

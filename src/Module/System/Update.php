@@ -224,6 +224,9 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br />" . "These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />" . "* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
 
+        $update_string = "* Add `use_album_original_year` into a per user preference.<br/ > ";
+        $version[]     = array('version' => '500000', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1184,4 +1187,25 @@ class Update
 
         return $retval;
     }
-} // end update.class
+
+    /**
+     * Add use_album_original_year
+     */
+    public static function update_500000()
+    {
+        $sql = <<<SQL
+        INSERT INTO
+            `preference`
+        (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`)
+        VALUES
+        ('album_use_original_year', '0', 'Album - Use original year instead of release year', 25, 'boolean', 'interface', 'library')
+        SQL;
+
+        Dba::write($sql);
+
+        return Dba::write(
+            'INSERT INTO `user_preference` VALUES (-1,?, \'\')',
+            [Dba::insert_id()]
+        );
+    }
+}

@@ -44,10 +44,12 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 /** @var AlbumRepositoryInterface $albumRepository */
 
+$year = $album->getYearConditional();
+
 // Title for this album
 $title = scrub_out($album->name);
-if ($album->year > 0) {
-    $title .= '&nbsp;(' . $album->year . ')';
+if ($year !== null) {
+    $title .= '&nbsp;(' . $year . ')';
 }
 if ($album->disk && !AmpConfig::get('album_group') && count($albumRepository->getAlbumSuite($album)) > 1) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";

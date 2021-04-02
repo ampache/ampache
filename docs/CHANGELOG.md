@@ -40,6 +40,8 @@ All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
 
+* Config option to use an albums original year instead of the release year within the gui
+
 * NEW API functions
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)

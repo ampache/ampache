@@ -81,9 +81,12 @@ if (Art::is_enabled()) {
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
-<td class="cel_year"><?php if ($libitem->year > 0) {
-                echo $libitem->year;
-            } ?></td>
+<td class="cel_year"><?php
+    $year = $libitem->getYearConditional();
+    if ($year !== null) {
+        echo $year;
+    }
+?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
         <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>

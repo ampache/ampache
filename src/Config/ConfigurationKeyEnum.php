@@ -108,4 +108,5 @@ final class ConfigurationKeyEnum
     public const COMPOSER_BINARY_PATH          = 'composer_binary_path';
     public const ART_ZIP_ADD                   = 'art_zip_add';
     public const FILE_ZIP_COMMENT              = 'file_zip_comment';
+    public const ALBUM_USE_ORIGINAL_YEAR       = 'album_use_original_year';
 }
