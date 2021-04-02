@@ -95,7 +95,7 @@ class Ampachechartlyrics
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title);
         $request = $this->getExternalResourceLoader()->retrieve($uri);
         if ($request !== null && $request->getStatusCode() === StatusCode::OK) {
-            $xml = simplexml_load_string($request->getBody()->getContents());
+            $xml = simplexml_load_string((string) $request->getBody());
             if ($xml) {
                 if (!empty($xml->Lyric)) {
                     return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);

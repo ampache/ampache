@@ -1590,7 +1590,7 @@ class Subsonic_Api
                     $result = static::getExternalResourceLoader()->retrieve($avatar['url']);
                     if ($result !== null) {
                         header("Content-Type: " . $result->getHeaderLine('Content-Type'));
-                        echo $result->getBody()->getContents();
+                        echo (string) $result->getBody();
                     }
                 }
             } else {

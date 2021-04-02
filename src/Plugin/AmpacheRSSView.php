@@ -101,7 +101,7 @@ class AmpacheRSSView
     public function display_home()
     {
         $xmlstr = $this->getExternalResourceLoader()->retrieve($this->feed_url);
-        $xml    = simplexml_load_string($xmlstr->getBody()->getContents());
+        $xml    = simplexml_load_string((string) $xmlstr->getBody());
         if ($xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;

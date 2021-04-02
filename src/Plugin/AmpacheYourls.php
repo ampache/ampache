@@ -115,7 +115,7 @@ class AmpacheYourls
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
             $request  = $this->getExternalResourceLoader()->retrieve($apiurl);
-            $shorturl = $request->getBody()->getContents();
+            $shorturl = (string) $request->getBody();
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
                 // WARNING: http_build_url requires php-pecl-http module.

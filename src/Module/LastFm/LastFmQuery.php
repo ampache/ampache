@@ -59,7 +59,7 @@ final class LastFmQuery implements LastFmQueryInterface
     {
         debug_event(__CLASS__, 'search url : ' . $url, 5);
 
-        $result = $this->externalResourceLoader->retrieve($url)->getBody()->getContents();
+        $result = (string) $this->externalResourceLoader->retrieve($url)->getBody();
 
         return simplexml_load_string($result);
     }

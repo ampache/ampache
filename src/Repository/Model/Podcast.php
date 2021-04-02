@@ -471,7 +471,7 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        $xml = simplexml_load_string($xmlstr->getBody()->getContents());
+        $xml = simplexml_load_string((string) $xmlstr->getBody());
         if ($xml === false) {
             debug_event(self::class, 'Cannot read feed ' . $this->feed, 1);
 

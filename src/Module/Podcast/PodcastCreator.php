@@ -41,7 +41,7 @@ final class PodcastCreator implements PodcastCreatorInterface
         ModelFactoryInterface $modelFactory,
         ExternalResourceLoaderInterface $externalResourceLoader
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory           = $modelFactory;
         $this->externalResourceLoader = $externalResourceLoader;
     }
 
@@ -90,7 +90,7 @@ final class PodcastCreator implements PodcastCreatorInterface
         if ($xmlstr === null) {
             AmpError::add('feed', T_('Can not access the feed'));
         } else {
-            $xml = simplexml_load_string($xmlstr->getBody()->getContents());
+            $xml = simplexml_load_string((string) $xmlstr->getBody());
             if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {

@@ -101,7 +101,7 @@ class AmpacheGoogleMaps
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
             $request = $this->getExternalResourceLoader()->retrieve($url);
 
-            $place = json_decode($request->getBody()->getContents(), true);
+            $place = json_decode((string) $request->getBody(), true);
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }

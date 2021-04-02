@@ -914,7 +914,7 @@ class Art extends database_object
                 $options['timeout'] = 10;
                 Requests::register_autoloader();
                 $request = static::getExternalResourceLoader()->retrieve($data['url']);
-                $raw     = $request->getBody()->getContents();
+                $raw     = (string) $request->getBody();
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
                 $raw = '';

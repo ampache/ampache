@@ -101,7 +101,7 @@ class Ampacheflickr
         debug_event('flickr.plugin', 'Calling ' . $url, 5);
         $request = $this->getExternalResourceLoader()->retrieve($url);
         if ($request !== null && $request->getStatusCode() === StatusCode::OK) {
-            $xml = simplexml_load_string($request->getBody()->getContents());
+            $xml = simplexml_load_string((string) $request->getBody());
             if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = array(

@@ -81,7 +81,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        $html = $result->getBody()->getContents();
+        $html = (string) $result->getBody();
 
         if (
             preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)

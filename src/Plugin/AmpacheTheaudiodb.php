@@ -214,7 +214,7 @@ class AmpacheTheaudiodb
             return null;
         }
 
-        return json_decode($request->getBody()->getContents());
+        return json_decode((string) $request->getBody());
     }
 
     /**

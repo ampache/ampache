@@ -96,7 +96,7 @@ class AmpacheOmdb
         }
         $request = $this->getExternalResourceLoader()->retrieve($url);
 
-        return json_decode($request->getBody()->getContents());
+        return json_decode((string) $request->getBody());
     }
 
     /**

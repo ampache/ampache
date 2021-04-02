@@ -111,7 +111,7 @@ class AmpacheBitly
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request = $this->getExternalResourceLoader()->retrieve($apiurl);
 
-            return json_decode($request->getBody()->getContents())->data->url;
+            return json_decode((string) $request->getBody())->data->url;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 

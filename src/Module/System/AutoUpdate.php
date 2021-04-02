@@ -114,7 +114,7 @@ class AutoUpdate implements AutoUpdateInterface
                 return null;
             }
 
-            return json_decode($request->getBody()->getContents());
+            return json_decode((string) $request->getBody());
         } catch (Exception $error) {
             debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
 
