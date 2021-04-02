@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -92,11 +91,17 @@ final class GrantAction implements ApplicationActionInterface
                 $this->ui->showConfirmation($title, $text, $next_url);
             }
         }
-        $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
 
-        // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
+        $user = $gatekeeper->getUser();
+
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $user->fullname,
+                'preferences' => $user->get_preferences($_REQUEST['tab']),
+                'ui' => $this->ui,
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

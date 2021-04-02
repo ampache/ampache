@@ -86,4 +86,19 @@ interface UiInterface
      * Show a javascript notification to the user
      */
     public function displayNotification(string $message, int $timeout = 5000): string;
+
+    /**
+     * takes the key and then creates the correct type of input for updating it
+     */
+    public function createPreferenceInput(
+        string $name,
+        $value
+    );
+
+    /**
+     * This shows the preference box for the preferences pages.
+     *
+     * @var array<string, mixed> $preferences
+     */
+    public function showPreferenceBox(array $preferences): void;
 }

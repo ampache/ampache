@@ -64,7 +64,8 @@ final class ShowAction implements ApplicationActionInterface
             [
                 'fullname' => $user->fullname,
                 'preferences' => $user->get_preferences($tab),
-                'apiKeyQrCode' => $apiKeyQrCode
+                'apiKeyQrCode' => $apiKeyQrCode,
+                'ui' => $this->ui,
             ]
         );
         $this->ui->showQueryStats();

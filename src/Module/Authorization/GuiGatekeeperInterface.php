@@ -32,12 +32,12 @@ interface GuiGatekeeperInterface
     public function mayAccess(string $access_type, int $access_level): bool;
 
     /**
-     * Returns the id of the current logged in user
+     * Returns the id of the currently logged in user
      */
     public function getUserId(): int;
 
     /**
-     * Returns the current logged in user
+     * Returns the currently logged in user
      */
     public function getUser(): User;
 }

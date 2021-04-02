@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,17 +36,13 @@ final class ShowPreferencesAction extends AbstractUserAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private PreferenceRepositoryInterface $preferenceRepository;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         PreferenceRepositoryInterface $preferenceRepository
     ) {
         $this->ui                   = $ui;
-        $this->modelFactory         = $modelFactory;
         $this->preferenceRepository = $preferenceRepository;
     }
 
@@ -55,15 +50,15 @@ final class ShowPreferencesAction extends AbstractUserAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        $userId = $gatekeeper->getUserId();
-        $user   = $this->modelFactory->createUser($userId);
+        $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
         $this->ui->show(
             'show_user_preferences.inc.php',
             [
                 'client' => $user,
-                'preferences' => $this->preferenceRepository->getAll($userId)
+                'preferences' => $this->preferenceRepository->getAll($user->getId()),
+                'ui' => $this->ui,
             ]
         );
         $this->ui->showQueryStats();

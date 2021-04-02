@@ -96,7 +96,8 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'fullname' => $userName,
                     'preferences' => $preferences,
-                    'apiKeyQrCode' => $apiKeyQrCode
+                    'apiKeyQrCode' => $apiKeyQrCode,
+                    'ui' => $this->ui,
                 ]
             )
             ->once();

@@ -97,13 +97,13 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
-
         if (Core::get_post('method') == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
         } else {
             $notification_text = T_('User preferences updated successfully');
         }
+
+        $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
 
@@ -111,12 +111,14 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             echo $this->ui->displayNotification($notification_text);
         }
 
+        // Show the default preferences page
         $this->ui->show(
             'show_preferences.inc.php',
             [
                 'fullname' => $fullname,
-                'preferences' => $preferences,
                 'apiKeyQrCode' => $apiKeyQrCode,
+                'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
+                'ui' => $this->ui,
             ]
         );
         $this->ui->showQueryStats();

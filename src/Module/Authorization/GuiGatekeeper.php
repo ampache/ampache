@@ -50,7 +50,7 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
 
     public function getUserId(): int
     {
-        return (int) $this->getUser()->id;
+        return $this->getUser()->getId();
     }
 
     public function getUser(): User
