@@ -20,14 +20,12 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,13 +44,17 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
+        $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
-
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $user->fullname,
+                'preferences' => $user->get_preferences($request->getQueryParams()['tab'] ?? ''),
+                'ui' => $this->ui,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -26,8 +26,6 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,12 +48,19 @@ final class ShowPreferencesAction extends AbstractUserAction
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
+        $client = $this->modelFactory->createUser(
+            (int) ($request->getQueryParams()['user_id'] ?? 0)
+        );
+
         $this->ui->showHeader();
-
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
-
-        $preferences = Preference::get_all($client->id);
-        require_once Ui::find_template('show_user_preferences.inc.php');
+        $this->ui->show(
+            'show_user_preferences.inc.php',
+            [
+                'ui' => $this->ui,
+                'preferences' => Preference::get_all($client->id),
+                'client' => $client
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

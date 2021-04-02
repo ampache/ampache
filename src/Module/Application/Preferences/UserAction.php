@@ -20,17 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,16 +36,12 @@ final class UserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'user';
 
-    private ModelFactoryInterface $modelFactory;
-
     private UiInterface $ui;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->ui = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,15 +50,17 @@ final class UserAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $user = $gatekeeper->getUser();
+
         $this->ui->showHeader();
-
-        $client      = $this->modelFactory->createUser((int) Core::get_request('user_id'));
-        $fullname    = $client->fullname;
-        $preferences = $client->get_preferences($_REQUEST['tab']);
-
-        // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $user->fullname,
+                'preferences' => $user->get_preferences($request->getQueryParams()['tab'] ?? ''),
+                'ui' => $this->ui,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
