@@ -20,24 +20,11 @@
  *
  */
 
-namespace Ampache\Module\Authorization;
+namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
-interface GuiGatekeeperInterface
+interface ExternalResourceLoaderInterface
 {
-    /**
-     * Checks if the user may access the requested resource
-     */
-    public function mayAccess(string $access_type, int $access_level): bool;
-
-    /**
-     * Returns the id of the currently logged in user
-     */
-    public function getUserId(): int;
-
-    /**
-     * Returns the currently logged in user
-     */
-    public function getUser(): User;
+    public function retrieve(string $url): ?ResponseInterface;
 }

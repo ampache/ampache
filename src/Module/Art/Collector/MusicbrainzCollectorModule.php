@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -32,19 +33,24 @@ use Exception;
 use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;
 use Requests;
+use Teapot\StatusCode;
 
 final class MusicbrainzCollectorModule implements CollectorModuleInterface
 {
+    private ExternalResourceLoaderInterface $externalResourceLoader;
+
     private MusicBrainz $musicBrainz;
 
     private LoggerInterface $logger;
 
     public function __construct(
+        ExternalResourceLoaderInterface $externalResourceLoader,
         MusicBrainz $musicBrainz,
         LoggerInterface $logger
     ) {
-        $this->musicBrainz = $musicBrainz;
-        $this->logger      = $logger;
+        $this->externalResourceLoader = $externalResourceLoader;
+        $this->musicBrainz            = $musicBrainz;
+        $this->logger                 = $logger;
     }
 
     /**
@@ -116,8 +122,11 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
 
-                $request = Requests::get($url, [], Core::requests_options());
-                if ($request->status_code == 200) {
+                $request = $this->externalResourceLoader->retrieve($url);
+                if (
+                    $request !== null &&
+                    $request->getStatusCode() === StatusCode::OK
+                ) {
                     $num_found++;
 
                     $this->logger->debug(

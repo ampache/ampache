@@ -78,7 +78,8 @@ class AdminActionTest extends MockeryTestCase
 
         $apiKey       = 'some-api-key';
         $apiKeyQrCode = 'some-api-key-qrcode';
-        $preferences  = ['some-preferences'];
+        $preferences  = ['some' => 'preference'];
+        $tab          = 'account';
 
         $user->apikey = $apiKey;
 
@@ -94,7 +95,7 @@ class AdminActionTest extends MockeryTestCase
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
-            ->andReturn(['tab' => 'account']);
+            ->andReturn(['tab' => $tab]);
 
         $this->qrCodeGenerator->shouldReceive('generate')
             ->with($apiKey, 156)
@@ -102,7 +103,7 @@ class AdminActionTest extends MockeryTestCase
             ->andReturn($apiKeyQrCode);
 
         $user->shouldReceive('get_preferences')
-            ->with('account', true)
+            ->with($tab, true)
             ->once()
             ->andReturn($preferences);
 
@@ -116,6 +117,7 @@ class AdminActionTest extends MockeryTestCase
                     'fullname' => 'Server',
                     'preferences' => $preferences,
                     'apiKeyQrCode' => $apiKeyQrCode,
+                    'ui' => $this->ui,
                 ]
             )
             ->once();

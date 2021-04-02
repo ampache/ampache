@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -99,8 +100,8 @@ class AmpacheRSSView
      */
     public function display_home()
     {
-        $xmlstr = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
-        $xml    = simplexml_load_string($xmlstr);
+        $xmlstr = $this->getExternalResourceLoader()->retrieve($this->feed_url);
+        $xml    = simplexml_load_string((string) $xmlstr->getBody());
         if ($xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;
@@ -152,5 +153,15 @@ class AmpacheRSSView
         $this->maxitems = (int)($data['rssview_max_items']);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

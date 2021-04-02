@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -108,9 +109,9 @@ class AmpacheBitly
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
-            $request = Requests::get($apiurl, array(), Core::requests_options());
+            $request = $this->getExternalResourceLoader()->retrieve($apiurl);
 
-            return json_decode($request->body)->data->url;
+            return json_decode((string) $request->getBody())->data->url;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
@@ -153,4 +154,14 @@ class AmpacheBitly
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

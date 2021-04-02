@@ -23,10 +23,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Requests;
+use Teapot\StatusCode;
 
 class Ampacheflickr
 {
@@ -97,9 +99,9 @@ class Ampacheflickr
         $photos = array();
         $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event('flickr.plugin', 'Calling ' . $url, 5);
-        $request = Requests::get($url, array(), Core::requests_options());
-        if ($request->status_code == 200) {
-            $xml = simplexml_load_string($request->body);
+        $request = $this->getExternalResourceLoader()->retrieve($url);
+        if ($request !== null && $request->getStatusCode() === StatusCode::OK) {
+            $xml = simplexml_load_string((string) $request->getBody());
             if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = array(
@@ -173,4 +175,14 @@ class Ampacheflickr
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

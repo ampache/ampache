@@ -26,9 +26,11 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
 use Requests;
+use Teapot\StatusCode;
 
 /**
  * AutoUpdate Class
@@ -103,16 +105,16 @@ class AutoUpdate implements AutoUpdateInterface
         try {
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = static::getExternalResourceLoader()->retrieve($url);
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
-            if ($request->status_code != 200) {
-                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+            if ($request === null || $request->getStatusCode() !== StatusCode::OK) {
+                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->getStatusCode(), 1);
 
                 return null;
             }
 
-            return json_decode((string)$request->body);
+            return json_decode((string) $request->getBody());
         } catch (Exception $error) {
             debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
 
@@ -374,5 +376,12 @@ class AutoUpdate implements AutoUpdateInterface
             echo T_('Done') . '<br />';
         }
         ob_flush();
+    }
+
+    private static function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

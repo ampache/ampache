@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
@@ -912,8 +913,8 @@ class Art extends database_object
             try {
                 $options['timeout'] = 10;
                 Requests::register_autoloader();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
-                $raw     = $request->body;
+                $request = static::getExternalResourceLoader()->retrieve($data['url']);
+                $raw     = (string) $request->getBody();
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
                 $raw = '';
@@ -1391,5 +1392,15 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -113,8 +114,8 @@ class AmpacheYourls
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
-            $request  = Requests::get($apiurl, array(), Core::requests_options());
-            $shorturl = $request->body;
+            $request  = $this->getExternalResourceLoader()->retrieve($apiurl);
+            $shorturl = (string) $request->getBody();
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
                 // WARNING: http_build_url requires php-pecl-http module.
@@ -168,4 +169,14 @@ class AmpacheYourls
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

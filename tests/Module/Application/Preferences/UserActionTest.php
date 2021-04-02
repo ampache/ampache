@@ -30,16 +30,12 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\QrCodeGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UserActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|ModelFactoryInterface */
-    private MockInterface $modelFactory;
-
     /** @var UiInterface|MockInterface */
     private MockInterface $ui;
 
@@ -50,12 +46,10 @@ class UserActionTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
         $this->qrCodeGenerator = $this->mock(QrCodeGeneratorInterface::class);
 
         $this->subject = new UserAction(
-            $this->modelFactory,
             $this->ui,
             $this->qrCodeGenerator
         );
@@ -105,14 +99,14 @@ class UserActionTest extends MockeryTestCase
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
-
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
             ->once()
             ->andReturn($user);
 
         $user->shouldReceive('get_preferences')
             ->with('account')
+
             ->once()
             ->andReturn($preferences);
 
@@ -125,7 +119,8 @@ class UserActionTest extends MockeryTestCase
                 [
                     'fullname' => $userName,
                     'preferences' => $preferences,
-                    'apiKeyQrCode' => $apiKeyQrCode
+                    'apiKeyQrCode' => $apiKeyQrCode,
+                    'ui' => $this->ui,
                 ]
             )
             ->once();

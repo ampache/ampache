@@ -38,18 +38,14 @@ final class UserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'user';
 
-    private ModelFactoryInterface $modelFactory;
-
     private UiInterface $ui;
 
     private QrCodeGeneratorInterface $qrCodeGenerator;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         QrCodeGeneratorInterface $qrCodeGenerator
     ) {
-        $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
         $this->qrCodeGenerator = $qrCodeGenerator;
     }
@@ -62,9 +58,9 @@ final class UserAction implements ApplicationActionInterface
         $queryParams = $request->getQueryParams();
         $tab         = $queryParams['tab'] ?? '0';
 
-        $client = $this->modelFactory->createUser((int) ($queryParams['user_id'] ?? 0));
+        $user = $gatekeeper->getUser();
 
-        $apiKey       = $client->apikey;
+        $apiKey       = $user->apikey;
         $apiKeyQrCode = '';
         if ($apiKey && $tab === 'account') {
             $apiKeyQrCode = $this->qrCodeGenerator->generate($apiKey, 156);
@@ -74,9 +70,10 @@ final class UserAction implements ApplicationActionInterface
         $this->ui->show(
             'show_preferences.inc.php',
             [
-                'fullname' => $client->fullname,
-                'preferences' => $client->get_preferences($tab),
+                'fullname' => $user->fullname,
+                'preferences' => $user->get_preferences($tab),
                 'apiKeyQrCode' => $apiKeyQrCode,
+                'ui' => $this->ui,
             ]
         );
         $this->ui->showQueryStats();

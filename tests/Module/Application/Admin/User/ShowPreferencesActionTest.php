@@ -27,7 +27,6 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use Mockery\MockInterface;
@@ -38,9 +37,6 @@ class ShowPreferencesActionTest extends MockeryTestCase
     /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     /** @var PreferenceRepositoryInterface|MockInterface|null */
     private MockInterface $preferenceRepository;
 
@@ -49,12 +45,10 @@ class ShowPreferencesActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->ui                   = $this->mock(UiInterface::class);
-        $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
         $this->preferenceRepository = $this->mock(PreferenceRepositoryInterface::class);
 
         $this->subject = new ShowPreferencesAction(
             $this->ui,
-            $this->modelFactory,
             $this->preferenceRepository
         );
     }
@@ -68,19 +62,19 @@ class ShowPreferencesActionTest extends MockeryTestCase
         $userId      = 666;
         $preferences = ['some-preference'];
 
-        $gatekeeper->shouldReceive('getUserId')
+        $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
-            ->andReturn($userId);
+            ->andReturn($user);
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
+        $user->shouldReceive('getId')
+            ->withNoArgs()
             ->once()
-            ->andReturn($user);
+            ->andReturn($userId);
 
         $this->preferenceRepository->shouldReceive('getAll')
             ->with($userId)
@@ -95,7 +89,8 @@ class ShowPreferencesActionTest extends MockeryTestCase
                 'show_user_preferences.inc.php',
                 [
                     'client' => $user,
-                    'preferences' => $preferences
+                    'preferences' => $preferences,
+                    'ui' => $this->ui,
                 ]
             )
             ->once();

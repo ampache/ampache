@@ -71,6 +71,7 @@ final class AdminAction implements ApplicationActionInterface
                 'fullname' => T_('Server'),
                 'preferences' => $user->get_preferences($tab, true),
                 'apiKeyQrCode' => $apiKeyQrCode,
+                'ui' => $this->ui,
             ]
         );
         $this->ui->showQueryStats();

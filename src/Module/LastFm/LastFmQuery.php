@@ -26,20 +26,23 @@ declare(strict_types=0);
 namespace Ampache\Module\LastFm;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Core;
-use Requests;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use SimpleXMLElement;
 
 final class LastFmQuery implements LastFmQueryInterface
 {
-    private const API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
+    private const API_URL = 'https://ws.audioscrobbler.com/2.0/?method=';
 
     private ConfigContainerInterface $configContainer;
 
+    private ExternalResourceLoaderInterface $externalResourceLoader;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ExternalResourceLoaderInterface $externalResourceLoader
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer        = $configContainer;
+        $this->externalResourceLoader = $externalResourceLoader;
     }
 
     public function getLastFmResults(string $method, string $query): SimpleXMLElement
@@ -56,8 +59,8 @@ final class LastFmQuery implements LastFmQueryInterface
     {
         debug_event(__CLASS__, 'search url : ' . $url, 5);
 
-        $request = Requests::get($url, [], Core::requests_options());
+        $result = (string) $this->externalResourceLoader->retrieve($url)->getBody();
 
-        return simplexml_load_string((string)$request->body);
+        return simplexml_load_string($result);
     }
 }

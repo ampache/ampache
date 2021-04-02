@@ -31,6 +31,7 @@ use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
@@ -1586,9 +1587,11 @@ class Subsonic_Api
                 // Get Session key
                 $avatar = $user->get_avatar(true, $input);
                 if (isset($avatar['url']) && !empty($avatar['url'])) {
-                    $request = Requests::get($avatar['url'], array(), Core::requests_options());
-                    header("Content-Type: " . $request->headers['Content-Type']);
-                    echo $request->body;
+                    $result = static::getExternalResourceLoader()->retrieve($avatar['url']);
+                    if ($result !== null) {
+                        header("Content-Type: " . $result->getHeaderLine('Content-Type'));
+                        echo (string) $result->getBody();
+                    }
                 }
             } else {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getavatar');
@@ -2767,5 +2770,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

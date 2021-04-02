@@ -453,29 +453,6 @@ class Core
     }
 
     /**
-     * requests_options
-     * @param array $options
-     * @return array
-     */
-    public static function requests_options($options = array())
-    {
-        if (!isset($options['proxy'])) {
-            if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy   = array();
-                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                if (AmpConfig::get('proxy_user')) {
-                    $proxy[] = AmpConfig::get('proxy_user');
-                    $proxy[] = AmpConfig::get('proxy_pass');
-                }
-
-                $options['proxy'] = $proxy;
-            }
-        }
-
-        return $options;
-    }
-
-    /**
      * get_tmp_dir
      *
      * @return string

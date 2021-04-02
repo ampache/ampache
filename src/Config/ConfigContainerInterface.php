@@ -115,4 +115,9 @@ interface ConfigContainerInterface
      * Returns the access level needed for localplay control
      */
     public function getLocalplayLevel(): int;
+
+    /**
+     * @return array{"host": string, "port": int, "user": string, "pass": string}
+     */
+    public function getProxyOptions(): array;
 }

@@ -115,14 +115,17 @@ final class UpdateUserAction implements ApplicationActionInterface
 
         echo $this->ui->displayNotification(T_('User updated successfully'));
 
+        $user = $gatekeeper->getUser();
+
         $this->ui->show(
             'show_preferences.inc.php',
             [
                 'fullname' => $user->fullname,
                 'apiKeyQrCode' => $apiKeyQrCode,
+                'preferences' => $user->get_preferences($_REQUEST['tab']),
+                'ui' => $this->ui
             ]
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

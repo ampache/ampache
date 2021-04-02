@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -93,9 +94,9 @@ class AmpacheOmdb
         if (!empty($year)) {
             $url .= '&y=' . rawurlencode($year);
         }
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = $this->getExternalResourceLoader()->retrieve($url);
 
-        return json_decode($request->body);
+        return json_decode((string) $request->getBody());
     }
 
     /**
@@ -198,5 +199,15 @@ class AmpacheOmdb
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         return Art::gather_metadata_plugin($this, $type, $options);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

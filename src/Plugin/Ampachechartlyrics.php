@@ -23,10 +23,12 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Requests;
+use Teapot\StatusCode;
 
 class Ampachechartlyrics
 {
@@ -91,9 +93,9 @@ class Ampachechartlyrics
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title);
-        $request = Requests::get($uri, array(), Core::requests_options());
-        if ($request->status_code == 200) {
-            $xml = simplexml_load_string($request->body);
+        $request = $this->getExternalResourceLoader()->retrieve($uri);
+        if ($request !== null && $request->getStatusCode() === StatusCode::OK) {
+            $xml = simplexml_load_string((string) $request->getBody());
             if ($xml) {
                 if (!empty($xml->Lyric)) {
                     return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);
@@ -103,4 +105,14 @@ class Ampachechartlyrics
 
         return false;
     } // get_lyrics
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }
