@@ -26,6 +26,10 @@
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
+
+/** @var UiInterface $ui */
+/** @var array<string, mixed> $preferences */
 
 if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
     $is_admin = true;
@@ -67,7 +71,7 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
         <tr class="<?php echo Ui::flip_class() ?>">
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php create_preference_input($pref['name'], $pref['value']); ?>
+                <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>

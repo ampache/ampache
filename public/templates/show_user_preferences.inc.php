@@ -26,11 +26,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var User $client */
+/** @var array<string, mixed> $preferences */
+/** @var UiInterface $ui */
 
 ?>
 <?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
@@ -48,7 +51,7 @@ use Ampache\Module\Util\Ui;
         <tr class="<?php echo Ui::flip_class(); ?>">
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
-                        <?php create_preference_input($pref['name'], $pref['value']); ?>
+                        <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
 <?php
