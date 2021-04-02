@@ -25,36 +25,43 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Plugin;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Module\System\LegacyLogger;
+use Psr\Log\LoggerInterface;
 use Exception;
 use getID3;
 use getid3_writetags;
 
-class VaInfo
+/**
+ * This class handels the retrieval of media tags
+ */
+final class VaInfo implements VaInfoInterface
 {
-    public $encoding       = '';
-    public $encoding_id3v1 = '';
-    public $encoding_id3v2 = '';
+    public $encoding          = '';
+    public $encoding_id3v1    = '';
+    public $encoding_id3v2    = '';
 
-    public $filename = '';
-    public $type     = '';
-    public $tags     = array();
+    public $filename          = '';
+    public $type              = '';
+    public $tags              = array();
     public $islocal;
-    public $gather_types = array();
+    public $gather_types      = array();
 
-    protected $_raw        = array();
-    protected $_getID3     = null;
-    protected $_forcedSize = 0;
+    protected $_raw           = array();
+    protected $_getID3        = null;
+    protected $_forcedSize    = 0;
 
     protected $_file_encoding = '';
     protected $_file_pattern  = '';
     protected $_dir_pattern   = '';
 
     private $_pathinfo;
-    private $_broken = false;
+    private $_broken          = false;
 
     /**
      * Constructor
@@ -81,10 +88,10 @@ class VaInfo
         $file_pattern = '',
         $islocal = true
     ) {
-        $this->islocal      = $islocal;
-        $this->filename     = $file;
-        $this->gather_types = $gather_types;
-        $this->encoding     = $encoding ?: AmpConfig::get('site_charset');
+        $this->islocal         = $islocal;
+        $this->filename        = $file;
+        $this->gather_types    = $gather_types;
+        $this->encoding        = $encoding ?: $this->getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
 
         /* These are needed for the filename mojo */
         $this->_file_pattern = $file_pattern;
@@ -118,14 +125,18 @@ class VaInfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
-                debug_event(self::class, 'getID3 Broken file detected: $file: ' . $error->getMessage(), 1);
+                $this->getLogger()->error(
+                    'getID3 Broken file detected: $file: ' . $error->getMessage(),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+
                 $this->_broken = true;
 
                 return false;
             }
 
-            if (AmpConfig::get('mb_detect_order')) {
-                $mb_order = AmpConfig::get('mb_detect_order');
+            if ($this->getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
+                $mb_order = $this->getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
@@ -147,8 +158,8 @@ class VaInfo
                 $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
-            if (AmpConfig::get('getid3_detect_id3v2_encoding')) {
-                // The user has told us to be moronic, so let's do that thing
+            if ($this->getConfigContainer()->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
+                    // The user has told us to be moronic, so let's do that thing
                 $tags = array();
                 foreach ($test_tags as $tag) {
                     if ($value = $this->_raw['id3v2']['comments'][$tag]) {
@@ -164,7 +175,7 @@ class VaInfo
         }
 
         return true;
-    }
+    } // constructor
 
     /**
      * @param $size
@@ -242,7 +253,10 @@ class VaInfo
                 try {
                     $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
                 } catch (Exception $error) {
-                    debug_event(self::class, 'getID2 Unable to catalog file: ' . $error->getMessage(), 1);
+                    $this->getLogger()->error(
+                        'getID3 Unable to catalog file: ' . $error->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                 }
             }
 
@@ -279,7 +293,10 @@ class VaInfo
         } elseif ($extension = 'oga') {
             $format = 'vorbiscomment';
         } else {
-            debug_event('Writing Tags:', "Files with '" . $extension . "' extensions are currently ignored.", 5);
+            $this->getLogger()->debug(
+                sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return;
         }
@@ -292,13 +309,19 @@ class VaInfo
         $tagWriter->tag_data          = $tag_data;
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
-                debug_event(self::class, 'Warning Writing Image: ' . $message, 5);
-            }
+                $this->getLogger()->debug(
+                    'Warning Writing Image: ' . $message,
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                }
         }
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
-                debug_event(self::class, 'Error Writing Image: ' . $message, 1);
-            }
+                $this->getLogger()->error(
+                    'Error Writing Image: ' . $message,
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                }
         }
     } // write_id3
 
@@ -342,7 +365,10 @@ class VaInfo
 
             return $this->_raw;
         } catch (Exception $error) {
-            debug_event(self::class, "Unable to read file:" . $error->getMessage(), 1);
+            $this->getLogger()->error(
+                'Unable to read file:' . $error->getMessage(),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
         }
 
         return array();
@@ -361,7 +387,8 @@ class VaInfo
      */
     public static function get_tag_type($results, $config_key = 'metadata_order')
     {
-        $order = (array)AmpConfig::get($config_key);
+        $configContainer = new ConfigContainerInterface();
+        $order = (array)$configContainer->get('ConfigurationKeyEnum::'.strtoupper($config_key));
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
@@ -400,6 +427,8 @@ class VaInfo
      */
     public static function clean_tag_info($results, $keys, $filename = null)
     {
+        $configContainer = new ConfigContainerInterface();
+
         $info = array();
 
         $info['file'] = $filename;
@@ -448,6 +477,7 @@ class VaInfo
             if (trim((string)$tags['release_type']) !== '') {
                 $info['release_type'] = $info['release_type'] ?: trim((string)$tags['release_type']);
             }
+            $info['artists']          = $info['artists'] ?: trim((string)$tags['artists']);
 
             $info['original_year']  = $info['original_year'] ?: trim((string)$tags['original_year']);
             $info['barcode']        = $info['barcode'] ?: trim((string)$tags['barcode']);
@@ -490,7 +520,7 @@ class VaInfo
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim((string) $tags['tvshow_season_art']);
             $info['art']               = $info['art'] ?: trim((string) $tags['art']);
 
-            if (AmpConfig::get('enable_custom_metadata') && is_array($tags)) {
+            if ($configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
                     if (!array_key_exists($tag, $info) && !is_array($value)) {
@@ -589,48 +619,78 @@ class VaInfo
                     case 'avi':
                     case 'flv':
                     case 'matroska':
-                        debug_event(self::class, 'Cleaning ' . $key, 5);
+                        $this->getLogger()->debug(
+                            'Cleaning ' . $key,
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'vorbiscomment':
-                        debug_event(self::class, 'Cleaning vorbis', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning vorbis',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v1':
-                        debug_event(self::class, 'Cleaning id3v1', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning id3v1',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
-                        debug_event(self::class, 'Cleaning id3v2', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning id3v2',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        debug_event(self::class, 'Cleaning quicktime', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning quicktime',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        debug_event(self::class, 'Cleaning riff', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning riff',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_riff($tag_array);
                         break;
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        debug_event(self::class, 'Cleaning MPEG', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning MPEG',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'asf':
                     case 'wmv':
                     case 'wma':
                         $key = 'asf';
-                        debug_event(self::class, 'Cleaning WMV/WMA/ASF', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning WMV/WMA/ASF',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'lyrics3':
-                        debug_event(self::class, 'Cleaning lyrics3', 5);
+                        $this->getLogger()->debug(
+                            'Cleaning lyrics3',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     default:
-                        debug_event(self::class, 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
+                        $this->getLogger()->debug(
+                            'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename,
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -666,7 +726,7 @@ class VaInfo
      */
     private function get_metadata_order()
     {
-        return (array)AmpConfig::get($this->get_metadata_order_key());
+        return (array)$this->getConfigContainer()->get('ConfigurationKeyEnum::'.strtoupper($this->get_metadata_order_key()));
     }
 
     /**
@@ -792,7 +852,10 @@ class VaInfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event(self::class, 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 3);
+                $this->getLogger()->warning(
+                    'Unable to determine file type from ' . $type . ' on file ' . $this->filename,
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
 
                 return $type;
         }
@@ -939,8 +1002,8 @@ class VaInfo
                     break;
                 case 'rating':
                     $rating_user = -1;
-                    if (AmpConfig::get('rating_file_tag_user')) {
-                        $rating_user = (int)AmpConfig::get('rating_file_tag_user');
+                    if ($this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                        $rating_user = (int)$this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
@@ -1052,10 +1115,13 @@ class VaInfo
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
-            $enable_custom_metadata = AmpConfig::get('enable_custom_metadata');
+            $enable_custom_metadata = $this->getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
                 //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
+                    case 'artists':
+                        $parsed['artists'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
@@ -1127,8 +1193,8 @@ class VaInfo
                 } // Rating made by an unknown user, adding it to super user (id=-1)
                 else {
                     $rating_user = -1;
-                    if (AmpConfig::get('rating_file_tag_user')) {
-                        $rating_user = (int)AmpConfig::get('rating_file_tag_user');
+                    if ($this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                        $rating_user = (int)$this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
                 }
@@ -1362,6 +1428,8 @@ class VaInfo
      */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
+        $logger          = new LoggerInterface();
+
         $results         = array();
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
@@ -1390,12 +1458,18 @@ class VaInfo
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        debug_event(self::class, 'Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, 5);
+        $logger->debug(
+            'Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);
-            debug_event(self::class, $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
-
+            $logger->debug(
+                $pattern . ' matched ' . $matched . ' on ' . $filepath,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+    
             // Iterate over what we found
             foreach ($matches as $key => $value) {
                 $new_key = translate_pattern_code($elements['0'][$key]);
@@ -1417,7 +1491,7 @@ class VaInfo
      */
     private function removeCommonAbbreviations($name)
     {
-        $abbr         = explode(",", AmpConfig::get('common_abbr'));
+        $abbr         = explode(",", $this->getConfigContainer()->get(ConfigurationKeyEnum::COMMON_ABBR));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
         $abbr_count   = count($commonabbr);
@@ -1451,7 +1525,7 @@ class VaInfo
     public function set_broken()
     {
         /* Pull In the config option */
-        $order = AmpConfig::get('tag_order');
+        $order = $this->getConfigContainer()->get(ConfigurationKeyEnum::TAG_ORDER);
 
         if (!is_array($order)) {
             $order = array($order);
@@ -1480,7 +1554,7 @@ class VaInfo
         // get rid of that annoying genre!
         $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
         // read additional id3v2 delimiters from config
-        $delimiters = AmpConfig::get('additional_genre_delimiters');
+        $delimiters = $this->getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_GENRE_DELIMITERS);
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $genres  = preg_split($pattern, reset($data));
@@ -1501,5 +1575,25 @@ class VaInfo
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getConfigContainer(): ConfigContainerInterface
+    {
+        global $dic;
+
+        return $dic->get(ConfigContainerInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getLogger(): LoggerInterface
+    {
+        global $dic;
+
+        return $dic->get(LoggerInterface::class);
     }
 }
