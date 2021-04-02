@@ -42,4 +42,5 @@ return [
     CookieSetterInterface::class => autowire(CookieSetter::class),
     XmlWriterInterface::class => autowire(XmlWriter::class),
     QrCodeGeneratorInterface::class => autowire(QrCodeGenerator::class),
+    ExternalResourceLoaderInterface::class => autowire(ExternalResourceLoader::class),
 ];

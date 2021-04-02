@@ -26,6 +26,8 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ExternalResourceLoader;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use PDOStatement;
 use SimpleXMLElement;
 
@@ -463,13 +465,13 @@ class Podcast extends database_object implements library_item
     {
         debug_event(self::class, 'Syncing feed ' . $this->feed . ' ...', 4);
 
-        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
+        $xmlstr = $this->getExternalResourceLoader()->retrieve($this->feed);
+        if ($xmlstr === null) {
             debug_event(self::class, 'Cannot access feed ' . $this->feed, 1);
 
             return false;
         }
-        $xml = simplexml_load_string($xmlstr);
+        $xml = simplexml_load_string($xmlstr->getBody()->getContents());
         if ($xml === false) {
             debug_event(self::class, 'Cannot read feed ' . $this->feed, 1);
 
@@ -521,5 +523,12 @@ class Podcast extends database_object implements library_item
         }
 
         return true;
+    }
+
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

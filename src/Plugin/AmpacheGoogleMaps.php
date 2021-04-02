@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -98,9 +99,9 @@ class AmpacheGoogleMaps
         $name = "";
         try {
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = $this->getExternalResourceLoader()->retrieve($url);
 
-            $place = json_decode($request->body, true);
+            $place = json_decode($request->getBody()->getContents(), true);
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }
@@ -187,4 +188,14 @@ class AmpacheGoogleMaps
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

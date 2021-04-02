@@ -23,12 +23,14 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
 use Requests;
+use Teapot\StatusCode;
 
 class AmpacheTheaudiodb
 {
@@ -206,13 +208,13 @@ class AmpacheTheaudiodb
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = $this->getExternalResourceLoader()->retrieve($url);
 
-        if ($request->status_code != 200) {
+        if ($request === null || $request->getStatusCode() !== StatusCode::OK) {
             return null;
         }
 
-        return json_decode($request->body);
+        return json_decode($request->getBody()->getContents());
     }
 
     /**
@@ -269,5 +271,15 @@ class AmpacheTheaudiodb
     private function get_track($mbid)
     {
         return $this->api_call('track-mb.php?i=' . $mbid);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }

@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast;
 
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -35,10 +35,14 @@ final class PodcastCreator implements PodcastCreatorInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private ExternalResourceLoaderInterface $externalResourceLoader;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ExternalResourceLoaderInterface $externalResourceLoader
     ) {
         $this->modelFactory = $modelFactory;
+        $this->externalResourceLoader = $externalResourceLoader;
     }
 
     public function create(
@@ -82,11 +86,11 @@ final class PodcastCreator implements PodcastCreatorInterface
             }
         }
 
-        $xmlstr = file_get_contents($feedUrl, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
+        $xmlstr = $this->externalResourceLoader->retrieve($feedUrl);
+        if ($xmlstr === null) {
             AmpError::add('feed', T_('Can not access the feed'));
         } else {
-            $xml = simplexml_load_string($xmlstr);
+            $xml = simplexml_load_string($xmlstr->getBody()->getContents());
             if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {

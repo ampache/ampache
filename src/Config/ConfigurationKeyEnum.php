@@ -122,4 +122,8 @@ final class ConfigurationKeyEnum
     public const AJAX_LOAD                     = 'ajax_load';
     public const ART_ZIP_ADD                   = 'art_zip_add';
     public const FILE_ZIP_COMMENT              = 'file_zip_comment';
+    public const PROXY_HOST                    = 'proxy_host';
+    public const PROXY_PORT                    = 'proxy_port';
+    public const PROXY_USER                    = 'proxy_user';
+    public const PROXY_PASS                    = 'proxy_pass';
 }
