@@ -32,44 +32,8 @@ use Psr\Log\LoggerInterface;
  */
 final class UtilityFactory implements UtilityFactoryInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private LoggerInterface $logger;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
-    ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-    }
-
     public function createMailer(): MailerInterface
     {
         return new Mailer();
-    }
-
-    public function createVaInfo(
-        string $file,
-        array $gatherTypes = array(),
-        ?string $encoding = null,
-        ?string $encodingId3v1 = null,
-        ?string $encodingId3v2 = null,
-        string $dirPattern = '',
-        string $filePattern = '',
-        bool $isLocal = true
-    ): VaInfoInterface {
-        return new VaInfo(
-            $this->configContainer,
-            $this->logger,
-            $file,
-            $gatherTypes = array(),
-            $encoding = null,
-            $encodingId3v1 = null,
-            $encodingId3v2 = null,
-            $dirPattern = '',
-            $filePattern = '',
-            $isLocal = true
-        );
     }
 }
