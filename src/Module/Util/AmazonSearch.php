@@ -162,13 +162,10 @@ class AmazonSearch
         // create the parser
         $this->createParser();
 
-        // get the proxy config
-        $options = $this->getProxyConfig();
-
         debug_event(self::class, 'Amazon request: ' . $url, 5);
         // make the request and retrieve the response
-        $request  = Requests::get($url, array(), $options);
-        $contents = $request->body;
+        $request  = $this->getExternalResourceLoader()->retrieve($url);
+        $contents = (string) $request->getBody();
 
         //debug_event(self::class, $contents, 5);
         if (!xml_parse($this->_parser, $contents)) {
@@ -295,10 +292,6 @@ class AmazonSearch
      */
     public function runSearchAsin($asin)
     {
-
-        // get the proxy config
-        $options = $this->getProxyConfig();
-
         // create the xml parser
         $this->createParser();
 
@@ -330,8 +323,8 @@ class AmazonSearch
         $url = 'http://' . $this->base_url . $this->url_suffix . '?' . $canonicalized_query . '&Signature=' . $this->signString($string_to_sign);
 
         // make the request
-        $request  = Requests::get($url, array(), $options);
-        $contents = $request->body;
+        $request  = $this->getExternalResourceLoader()->retrieve($url);
+        $contents = (string) $request->getBody();
 
         if (!xml_parse($this->_parser, $contents)) {
             debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
@@ -408,4 +401,11 @@ class AmazonSearch
         // zero the tag
         $this->_currentTag = '';
     } // endElement
+
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

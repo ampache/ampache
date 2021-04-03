@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\MockeryTestCase;
 use Endroid\QrCode\Builder\Builder;
+use GuzzleHttp\Client;
 
 class UtilityFactoryTest extends MockeryTestCase
 {
@@ -49,6 +50,14 @@ class UtilityFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             Builder::class,
             $this->subject->createQrCodeBuilder()
+        );
+    }
+
+    public function testCreateHttpClient(): void
+    {
+        $this->assertInstanceOf(
+            Client::class,
+            $this->subject->createHttpClient()
         );
     }
 }
