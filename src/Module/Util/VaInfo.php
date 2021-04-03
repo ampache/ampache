@@ -124,7 +124,7 @@ final class VaInfo implements VaInfoInterface
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
-                $this->getLogger()->error(
+                static::getLogger()->error(
                     'getID3 Broken file detected: $file: ' . $error->getMessage(),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
