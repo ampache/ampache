@@ -26,8 +26,6 @@ namespace Ampache\Plugin;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
-use Requests;
 use Teapot\StatusCode;
 
 class Ampachechartlyrics

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Module\Util\QrCodeGeneratorInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

@@ -67,7 +67,6 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
-use Requests;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use SimpleXMLElement;

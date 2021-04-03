@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Clip;
-use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\ModelFactoryInterface;

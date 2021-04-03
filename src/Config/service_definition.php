@@ -34,7 +34,6 @@ use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;

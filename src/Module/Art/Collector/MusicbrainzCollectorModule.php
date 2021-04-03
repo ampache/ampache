@@ -27,12 +27,10 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;
-use Requests;
 use Teapot\StatusCode;
 
 final class MusicbrainzCollectorModule implements CollectorModuleInterface

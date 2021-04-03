@@ -26,9 +26,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
 use Exception;
-use Requests;
 
 class AmpacheOmdb
 {
