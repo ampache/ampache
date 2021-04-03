@@ -309,7 +309,7 @@ final class VaInfo implements VaInfoInterface
         $tagWriter->tag_data          = $tag_data;
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
-                $logger()->debug(
+                $logger->debug(
                     'Warning Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
@@ -317,7 +317,7 @@ final class VaInfo implements VaInfoInterface
         }
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
-                $logger()->error(
+                $logger->error(
                     'Error Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
@@ -624,42 +624,42 @@ final class VaInfo implements VaInfoInterface
                     case 'avi':
                     case 'flv':
                     case 'matroska':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning ' . $key,
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'vorbiscomment':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning vorbis',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v1':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning id3v1',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning id3v2',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning quicktime',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning riff',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -668,7 +668,7 @@ final class VaInfo implements VaInfoInterface
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning MPEG',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -678,21 +678,21 @@ final class VaInfo implements VaInfoInterface
                     case 'wmv':
                     case 'wma':
                         $key = 'asf';
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning WMV/WMA/ASF',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'lyrics3':
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning lyrics3',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     default:
-                        $logger()->debug(
+                        $logger->debug(
                             'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename,
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -1014,7 +1014,7 @@ final class VaInfo implements VaInfoInterface
                 case 'rating':
                     $rating_user = -1;
                     if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int)static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                        $rating_user = (int) static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
@@ -1205,7 +1205,7 @@ final class VaInfo implements VaInfoInterface
                 else {
                     $rating_user = -1;
                     if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int)static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                        $rating_user = (int) static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
                 }
