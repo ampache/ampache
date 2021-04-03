@@ -36,7 +36,6 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Doctrine\DBAL\Connection;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
-use GuzzleHttp\ClientInterface;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;

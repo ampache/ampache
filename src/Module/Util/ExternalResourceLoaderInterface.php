@@ -26,5 +26,8 @@ use Psr\Http\Message\ResponseInterface;
 
 interface ExternalResourceLoaderInterface
 {
-    public function retrieve(string $url): ?ResponseInterface;
+    public function retrieve(
+        string $url,
+        ?array $options
+    ): ?ResponseInterface;
 }

@@ -27,11 +27,10 @@ namespace Ampache\Module\Util;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Requests;
-use Requests_Exception;
 
 /**
  * Retrieve the content of an external url
@@ -44,29 +43,40 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
 
     private LoggerInterface $logger;
 
+    private UtilityFactoryInterface $utilityFactory;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UtilityFactoryInterface $utilityFactory
     ) {
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->utilityFactory  = $utilityFactory;
     }
 
     public function retrieve(
-        string $url
+        string $url,
+        ?array $options = null
     ): ?ResponseInterface {
+        $client  = $this->utilityFactory->createHttpClient();
+        $options = $options
+            ? $options
+            : $this->getRequestsOptions();
+
+        $options['headers'] = [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
+        ];
+
         try {
-            // Need this to not be considered as a bot (are we? ^^)
-            $result = Requests::get(
+            return $client->request(
+                'GET',
                 $url,
-                [
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
-                ],
-                $this->getRequestsOptions()
+                $options
             );
-        } catch (Requests_Exception $e) {
+        } catch (GuzzleException $e) {
             $this->logger->error(
                 sprintf('Error getting google images: %s', $e->getMessage()),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -74,11 +84,6 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
 
             return null;
         }
-
-        $response = $this->responseFactory->createResponse((int) $result->status_code);
-        $response->getBody()->write($result->body);
-
-        return $response->withHeader('Content-Type', $result->headers['Content-Type'] ?? '');
     }
 
     private function getRequestsOptions(): array
@@ -88,18 +93,22 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
         $proxyConfig = $this->configContainer->getProxyOptions();
 
         if ($proxyConfig[ConfigurationKeyEnum::PROXY_HOST] && $proxyConfig[ConfigurationKeyEnum::PROXY_PORT]) {
-            $proxy   = [];
-            $proxy[] = sprintf(
-                '%s:%d',
+            $credentials = '';
+
+            if ($proxyConfig[ConfigurationKeyEnum::PROXY_USER]) {
+                $credentials = sprintf(
+                    '%s:%s@',
+                    $proxyConfig[ConfigurationKeyEnum::PROXY_USER],
+                    $proxyConfig[ConfigurationKeyEnum::PROXY_PASS]
+                );
+            }
+
+            $options['proxy'] = sprintf(
+                'http://%s%s:%d',
+                $credentials,
                 $proxyConfig[ConfigurationKeyEnum::PROXY_HOST],
                 $proxyConfig[ConfigurationKeyEnum::PROXY_PORT]
             );
-            if ($proxyConfig[ConfigurationKeyEnum::PROXY_USER]) {
-                $proxy[] = $proxyConfig[ConfigurationKeyEnum::PROXY_USER];
-                $proxy[] = $proxyConfig[ConfigurationKeyEnum::PROXY_PASS];
-            }
-
-            $options['proxy'] = $proxy;
         }
 
         return $options;

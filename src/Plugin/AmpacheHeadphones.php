@@ -23,11 +23,10 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
-use Exception;
-use Requests;
 
 class AmpacheHeadphones
 {
@@ -140,18 +139,22 @@ class AmpacheHeadphones
         }
 
         debug_event(self::class, 'Headphones api call: ' . $url, 5);
-        try {
-            // We assume Headphone server is local, don't use proxy here
-            $request = Requests::get($url, array(), array(
+
+        // We assume Headphone server is local, don't use proxy here
+        $request = $this->getExternalResourceLoader()->retrieve(
+            $url,
+            [
                 'timeout' => 600
-            ));
-        } catch (Exception $error) {
-            debug_event(self::class, 'Headphones api http exception: ' . $error->getMessage(), 1);
+            ]
+        );
+
+        if ($request === null) {
+            debug_event(self::class, 'Headphones api http exception', 1);
 
             return false;
         }
 
-        return $request->body;
+        return (string) $request->getBody();
     }
 
     /**
@@ -189,4 +192,11 @@ class AmpacheHeadphones
 
         return true;
     } // load
+
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
+    }
 }

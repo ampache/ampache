@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -126,9 +127,9 @@ class AmpacheDiscogs
         $url .= (strpos($query, '?') !== false) ? '&' : '?';
         $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
         debug_event(self::class, 'Discogs request: ' . $url, 5);
-        $request = Requests::get($url);
+        $result = $this->getExternalResourceLoader()->retrieve($url);
 
-        return json_decode($request->body, true);
+        return json_decode((string) $result->getBody(), true);
     }
 
     /**
@@ -231,5 +232,12 @@ class AmpacheDiscogs
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         return Art::gather_metadata_plugin($this, $type, $options);
+    }
+
+    private function getExternalResourceLoader(): ExternalResourceLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ExternalResourceLoaderInterface::class);
     }
 }
