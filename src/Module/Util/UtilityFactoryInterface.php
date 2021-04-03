@@ -27,14 +27,14 @@ interface UtilityFactoryInterface
     public function createMailer(): MailerInterface;
 
     public function createVaInfo(
-        $file,
-        $gather_types = array(),
-        $encoding = null,
-        $encoding_id3v1 = null,
-        $encoding_id3v2 = null,
-        $dir_pattern = '',
-        $file_pattern = '',
-        $islocal = true,
+        string $file,
+        array $gatherTypes = array(),
+        ?string $encoding = null,
+        ?string $encodingId3v1 = null,
+        ?string $encodingId3v2 = null,
+        string $dirPattern = '',
+        string $filePattern = '',
+        bool $isLocal = true,
     ): VaInfoInterface;
 }
 

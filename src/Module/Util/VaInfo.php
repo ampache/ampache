@@ -27,7 +27,6 @@ namespace Ampache\Module\Util;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
@@ -283,6 +282,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function write_id3($tag_data)
     {
+        $logger        = $this->getLogger();
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
@@ -293,7 +293,7 @@ final class VaInfo implements VaInfoInterface
         } elseif ($extension = 'oga') {
             $format = 'vorbiscomment';
         } else {
-            $this->getLogger()->debug(
+            $logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
@@ -309,7 +309,7 @@ final class VaInfo implements VaInfoInterface
         $tagWriter->tag_data          = $tag_data;
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
-                $this->getLogger()->debug(
+                $logger()->debug(
                     'Warning Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
@@ -317,7 +317,7 @@ final class VaInfo implements VaInfoInterface
         }
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
-                $this->getLogger()->error(
+                $logger()->error(
                     'Error Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
@@ -387,8 +387,13 @@ final class VaInfo implements VaInfoInterface
      */
     public static function get_tag_type($results, $config_key = 'metadata_order')
     {
-        $configContainer = new ConfigContainerInterface();
-        $order = (array)$configContainer->get('ConfigurationKeyEnum::'.strtoupper($config_key));
+        $tagorderMap = [
+            'metadata_order'       => ConfigurationKeyEnum::METADATA_ORDER,
+            'metadata_order_video' => ConfigurationKeyEnum::METADATA_ORDER_VIDEO,
+            'getid3_tag_order'     => ConfigurationKeyEnum::GETID3_TAG_ORDER
+        ];
+
+        $order = (array) ($tagorderMap[$config_key] ?? '');
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
@@ -427,7 +432,8 @@ final class VaInfo implements VaInfoInterface
      */
     public static function clean_tag_info($results, $keys, $filename = null)
     {
-        $configContainer = new ConfigContainerInterface();
+        global $dic;
+        $configContainer = $dic->get(ConfigContainerInterface::class);
 
         $info = array();
 
@@ -610,6 +616,8 @@ final class VaInfo implements VaInfoInterface
     {
         $results = array();
 
+        $logger  = $this->getLogger();
+
         // The tags can come in many different shapes and colors
         // depending on the encoding time of day and phase of the moon.
         if (is_array($this->_raw['tags'])) {
@@ -619,42 +627,42 @@ final class VaInfo implements VaInfoInterface
                     case 'avi':
                     case 'flv':
                     case 'matroska':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning ' . $key,
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'vorbiscomment':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning vorbis',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v1':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning id3v1',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning id3v2',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning quicktime',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning riff',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -663,7 +671,7 @@ final class VaInfo implements VaInfoInterface
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning MPEG',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -673,21 +681,21 @@ final class VaInfo implements VaInfoInterface
                     case 'wmv':
                     case 'wma':
                         $key = 'asf';
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning WMV/WMA/ASF',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'lyrics3':
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning lyrics3',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     default:
-                        $this->getLogger()->debug(
+                        $logger()->debug(
                             'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename,
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -726,7 +734,13 @@ final class VaInfo implements VaInfoInterface
      */
     private function get_metadata_order()
     {
-        return (array)$this->getConfigContainer()->get('ConfigurationKeyEnum::'.strtoupper($this->get_metadata_order_key()));
+        $tagorderMap = [
+            'metadata_order'       => ConfigurationKeyEnum::METADATA_ORDER,
+            'metadata_order_video' => ConfigurationKeyEnum::METADATA_ORDER_VIDEO,
+            'getid3_tag_order'     => ConfigurationKeyEnum::GETID3_TAG_ORDER
+        ];
+
+        return (array) ($tagorderMap[$this->get_metadata_order_key()] ?? '');
     }
 
     /**
