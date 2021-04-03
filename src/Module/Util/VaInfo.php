@@ -90,7 +90,7 @@ final class VaInfo implements VaInfoInterface
         $this->islocal         = $islocal;
         $this->filename        = $file;
         $this->gather_types    = $gather_types;
-        $this->encoding        = $encoding ?: $this->getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
+        $this->encoding        = $encoding ?: static::getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
 
         /* These are needed for the filename mojo */
         $this->_file_pattern = $file_pattern;
@@ -134,8 +134,8 @@ final class VaInfo implements VaInfoInterface
                 return false;
             }
 
-            if ($this->getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
-                $mb_order = $this->getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
+            if (static::getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
+                $mb_order = static::getConfigContainer()->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
@@ -157,7 +157,7 @@ final class VaInfo implements VaInfoInterface
                 $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
-            if ($this->getConfigContainer()->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
+            if (static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
                     // The user has told us to be moronic, so let's do that thing
                 $tags = array();
                 foreach ($test_tags as $tag) {
@@ -252,7 +252,7 @@ final class VaInfo implements VaInfoInterface
                 try {
                     $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
                 } catch (Exception $error) {
-                    $this->getLogger()->error(
+                    static::getLogger()->error(
                         'getID3 Unable to catalog file: ' . $error->getMessage(),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
@@ -282,7 +282,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function write_id3($tag_data)
     {
-        $logger        = $this->getLogger();
+        $logger        = static::getLogger();
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
@@ -365,7 +365,7 @@ final class VaInfo implements VaInfoInterface
 
             return $this->_raw;
         } catch (Exception $error) {
-            $this->getLogger()->error(
+            static::getLogger()->error(
                 'Unable to read file:' . $error->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
@@ -388,9 +388,9 @@ final class VaInfo implements VaInfoInterface
     public static function get_tag_type($results, $config_key = 'metadata_order')
     {
         $tagorderMap = [
-            'metadata_order'       => ConfigurationKeyEnum::METADATA_ORDER,
-            'metadata_order_video' => ConfigurationKeyEnum::METADATA_ORDER_VIDEO,
-            'getid3_tag_order'     => ConfigurationKeyEnum::GETID3_TAG_ORDER
+            'metadata_order'       => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order'     => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
         $order = (array) ($tagorderMap[$config_key] ?? '');
@@ -432,9 +432,6 @@ final class VaInfo implements VaInfoInterface
      */
     public static function clean_tag_info($results, $keys, $filename = null)
     {
-        global $dic;
-        $configContainer = $dic->get(ConfigContainerInterface::class);
-
         $info = array();
 
         $info['file'] = $filename;
@@ -526,7 +523,7 @@ final class VaInfo implements VaInfoInterface
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim((string) $tags['tvshow_season_art']);
             $info['art']               = $info['art'] ?: trim((string) $tags['art']);
 
-            if ($configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
+            if (static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
                     if (!array_key_exists($tag, $info) && !is_array($value)) {
@@ -616,7 +613,7 @@ final class VaInfo implements VaInfoInterface
     {
         $results = array();
 
-        $logger  = $this->getLogger();
+        $logger  = static::getLogger();
 
         // The tags can come in many different shapes and colors
         // depending on the encoding time of day and phase of the moon.
@@ -735,9 +732,9 @@ final class VaInfo implements VaInfoInterface
     private function get_metadata_order()
     {
         $tagorderMap = [
-            'metadata_order'       => ConfigurationKeyEnum::METADATA_ORDER,
-            'metadata_order_video' => ConfigurationKeyEnum::METADATA_ORDER_VIDEO,
-            'getid3_tag_order'     => ConfigurationKeyEnum::GETID3_TAG_ORDER
+            'metadata_order'       => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order'     => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
         return (array) ($tagorderMap[$this->get_metadata_order_key()] ?? '');
@@ -866,7 +863,7 @@ final class VaInfo implements VaInfoInterface
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                $this->getLogger()->warning(
+                static::getLogger()->warning(
                     'Unable to determine file type from ' . $type . ' on file ' . $this->filename,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
@@ -1016,8 +1013,8 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'rating':
                     $rating_user = -1;
-                    if ($this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int)$this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                    if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                        $rating_user = (int)static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
@@ -1129,7 +1126,7 @@ final class VaInfo implements VaInfoInterface
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
-            $enable_custom_metadata = $this->getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
+            $enable_custom_metadata = static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
                 //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
@@ -1207,8 +1204,8 @@ final class VaInfo implements VaInfoInterface
                 } // Rating made by an unknown user, adding it to super user (id=-1)
                 else {
                     $rating_user = -1;
-                    if ($this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int)$this->getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                    if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                        $rating_user = (int)static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
                     $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
                 }
@@ -1442,7 +1439,7 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
-        $logger          = new LoggerInterface();
+        $logger          = static::getLogger();
 
         $results         = array();
         $slash_type_preg = DIRECTORY_SEPARATOR;
@@ -1505,7 +1502,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function removeCommonAbbreviations($name)
     {
-        $abbr         = explode(",", $this->getConfigContainer()->get(ConfigurationKeyEnum::COMMON_ABBR));
+        $abbr         = explode(",", static::getConfigContainer()->get(ConfigurationKeyEnum::COMMON_ABBR));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
         $abbr_count   = count($commonabbr);
@@ -1539,7 +1536,7 @@ final class VaInfo implements VaInfoInterface
     public function set_broken()
     {
         /* Pull In the config option */
-        $order = $this->getConfigContainer()->get(ConfigurationKeyEnum::TAG_ORDER);
+        $order = static::getConfigContainer()->get(ConfigurationKeyEnum::TAG_ORDER);
 
         if (!is_array($order)) {
             $order = array($order);
@@ -1568,7 +1565,7 @@ final class VaInfo implements VaInfoInterface
         // get rid of that annoying genre!
         $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
         // read additional id3v2 delimiters from config
-        $delimiters = $this->getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_GENRE_DELIMITERS);
+        $delimiters = static::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_GENRE_DELIMITERS);
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $genres  = preg_split($pattern, reset($data));
@@ -1594,7 +1591,7 @@ final class VaInfo implements VaInfoInterface
     /**
      * @deprecated inject by constructor
      */
-    private function getConfigContainer(): ConfigContainerInterface
+    private static function getConfigContainer(): ConfigContainerInterface
     {
         global $dic;
 
@@ -1604,7 +1601,7 @@ final class VaInfo implements VaInfoInterface
     /**
      * @deprecated inject by constructor
      */
-    private function getLogger(): LoggerInterface
+    private static function getLogger(): LoggerInterface
     {
         global $dic;
 
