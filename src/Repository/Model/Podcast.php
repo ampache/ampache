@@ -24,9 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ExternalResourceLoader;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use PDOStatement;
 use SimpleXMLElement;

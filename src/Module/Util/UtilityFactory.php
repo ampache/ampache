@@ -26,6 +26,8 @@ namespace Ampache\Module\Util;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Builder\BuilderInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Factory to create utility classes and new instances of classes which may not be used as a singleton
@@ -40,5 +42,11 @@ final class UtilityFactory implements UtilityFactoryInterface
     public function createQrCodeBuilder(): BuilderInterface
     {
         return new Builder();
+    }
+
+    public function createHttpClient(
+        array $options = []
+    ): ClientInterface {
+        return new Client($options);
     }
 }

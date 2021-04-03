@@ -27,11 +27,8 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Exception;
 use Psr\Log\LoggerInterface;
-use Requests;
 
 final class GoogleCollectorModule implements CollectorModuleInterface
 {

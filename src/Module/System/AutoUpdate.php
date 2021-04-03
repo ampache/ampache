@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
-use Requests;
 use Teapot\StatusCode;
 
 /**

@@ -21,7 +21,6 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
 interface UserRepositoryInterface

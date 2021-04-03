@@ -27,7 +27,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
-use Tmdb\ApiToken;
 use Tmdb\Client;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Repository\ConfigurationRepository;
@@ -129,8 +128,9 @@ class AmpacheTmdb
         }
 
         try {
-            $token            = new ApiToken($this->api_key);
-            $client           = new Client($token);
+            $client           = new Client([
+                'api_token' => $this->api_key
+            ]);
             $configRepository = new ConfigurationRepository($client);
             $config           = $configRepository->load();
             $imageHelper      = new ImageHelper($config);

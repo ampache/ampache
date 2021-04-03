@@ -27,7 +27,6 @@ namespace Ampache\Module\Playback\Scrobble;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Requests;
 use Thread;
-use Ampache\Repository\Model\User;
 
 abstract class ScrobblerAsync extends Thread
 {

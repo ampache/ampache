@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Podcast_Episode;
 
 final class PodcastRepository implements PodcastRepositoryInterface
 {

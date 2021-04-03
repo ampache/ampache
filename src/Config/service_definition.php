@@ -34,9 +34,9 @@ use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
+use GuzzleHttp\ClientInterface;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
@@ -94,5 +94,5 @@ return [
     BuilderInterface::class => autowire(),
     Connection::class => static function (): Connection {
         return Dba::createDbalConnection();
-    }
+    },
 ];

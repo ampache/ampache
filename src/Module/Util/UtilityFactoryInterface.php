@@ -23,10 +23,18 @@
 namespace Ampache\Module\Util;
 
 use Endroid\QrCode\Builder\BuilderInterface;
+use GuzzleHttp\ClientInterface;
 
 interface UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface;
 
     public function createQrCodeBuilder(): BuilderInterface;
+
+    /**
+     * Creates a fresh http client instance
+     */
+    public function createHttpClient(
+        array $options = []
+    ): ClientInterface;
 }
