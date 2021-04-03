@@ -1697,12 +1697,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "a3092344eef722af837b34a76ab127f8d493a4bc"
+                "reference": "558db4c09df22752681444f4c3f7e4a6ae2405d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/a3092344eef722af837b34a76ab127f8d493a4bc",
-                "reference": "a3092344eef722af837b34a76ab127f8d493a4bc",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/558db4c09df22752681444f4c3f7e4a6ae2405d3",
+                "reference": "558db4c09df22752681444f4c3f7e4a6ae2405d3",
                 "shasum": ""
             },
             "require": {
@@ -1757,7 +1757,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-03-13T20:25:07+00:00"
+            "time": "2021-04-02T23:30:52+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
