@@ -1108,7 +1108,7 @@ final class JsonOutput implements ApiOutputInterface
             case 'album':
                 $include_array = ($include) ? ['songs'] : [];
 
-                return $this->albums($objectIds, $include_array, $userId, true, $limit, $offset);
+                return $this->albums($objectIds, $include_array, $userId, true, true, $limit, $offset);
             case 'artist':
                 $include_array = ($include) ? ['songs', 'albums'] : [];
 
