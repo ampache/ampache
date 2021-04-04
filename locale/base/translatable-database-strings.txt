@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 06.03.2021 01:34:30 CET 
+ # Last Update: 04.04.2021 12:53:04 CEST 
 
  #######################################################################
 
@@ -189,14 +189,6 @@ msgstr ""
 
 #: Database preference table id 105
 msgid "Broadcast web player by default"
-msgstr ""
-
-#: Database preference table id 106
-msgid "Limit number of future events"
-msgstr ""
-
-#: Database preference table id 107
-msgid "Limit number of past events"
 msgstr ""
 
 #: Database preference table id 108
