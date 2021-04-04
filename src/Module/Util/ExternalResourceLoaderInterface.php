@@ -28,6 +28,6 @@ interface ExternalResourceLoaderInterface
 {
     public function retrieve(
         string $url,
-        ?array $options
+        ?array $options = null
     ): ?ResponseInterface;
 }

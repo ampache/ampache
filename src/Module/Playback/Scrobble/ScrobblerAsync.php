@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Scrobble;
 
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
-use Requests;
 use Thread;
 
 abstract class ScrobblerAsync extends Thread
@@ -46,7 +45,6 @@ abstract class ScrobblerAsync extends Thread
 
     public function run()
     {
-        Requests::register_autoloader();
         if ($this->song_info) {
             $this->getUserMediaPlaySaverAdapter()->save($this->user, $this->song_info);
         }
