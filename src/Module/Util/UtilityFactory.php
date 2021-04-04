@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\ConfigContainerInterface;
-use Psr\Log\LoggerInterface;
-
 /**
  * Factory to create utility classes like Mailer
  */

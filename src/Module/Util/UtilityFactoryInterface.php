@@ -26,4 +26,3 @@ interface UtilityFactoryInterface
 {
     public function createMailer(): MailerInterface;
 }
-
