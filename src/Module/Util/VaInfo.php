@@ -817,7 +817,9 @@ class VaInfo
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'track_number':
+                case 'track':
                     $parsed['track'] = $data[0];
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
@@ -887,6 +889,7 @@ class VaInfo
                     $parsed[$tag] = $this->parseGenres($data);
                     break;
                 case 'tracknumber':
+                case 'track_number':
                     $parsed['track'] = $data[0];
                     break;
                 case 'discnumber':
@@ -931,6 +934,7 @@ class VaInfo
                     $parsed['catalog_number'] = $data[0];
                     break;
                 case 'label':
+                case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
                 case 'rating':

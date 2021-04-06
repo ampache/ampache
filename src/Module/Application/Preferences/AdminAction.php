@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
@@ -28,8 +28,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,13 +50,18 @@ final class AdminAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
             throw new AccessDeniedException();
         }
-        $fullname    = T_('Server');
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
+
+        $tab = $request->getQueryParams()['tab'] ?? '';
 
         $this->ui->showHeader();
-
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => T_('Server'),
+                'preferences' => $gatekeeper->getUser()->get_preferences($tab, true),
+                'ui' => $this->ui
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

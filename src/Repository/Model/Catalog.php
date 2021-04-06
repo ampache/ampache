@@ -1854,7 +1854,7 @@ abstract class Catalog extends database_object
         } else {
             $new_song->license = null;
         }
-        $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
+        $new_song->label = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $new_song->label)) as $label_name) {
@@ -1962,7 +1962,8 @@ abstract class Catalog extends database_object
             $labelRepository = static::getLabelRepository();
 
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = $labelRepository->lookup($label_name);
+                $label_id = Label::helper($label_name)
+                    ?: $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
                     $artists = $label->get_artists();
