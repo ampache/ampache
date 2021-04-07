@@ -52,6 +52,8 @@ final class LocalplayMethod
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
+     * id
      * @return boolean
      */
     public static function localplay(array $input)
@@ -99,8 +101,11 @@ final class LocalplayMethod
                     $result = $localplay->add_url($streams);
                 }
                 break;
-            case 'next':
             case 'skip':
+                // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
+                $result = $localplay->skip((int)$input['track'] - 1);
+                break;
+            case 'next':
                 $result = $localplay->next();
                 break;
             case 'prev':
