@@ -92,8 +92,8 @@ if ($directplay_limit > 0) {
     } ?>
         <?php if ($show_playlist_add) { ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
-            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to Temporary Playlist'), 'play_full_text_'); ?>
+            <?php echo Ajax::button('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
+            <?php echo Ajax::text('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), T_('Add to Temporary Playlist'), 'play_full_text_'); ?>
         </li>
         <li>
             <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_'); ?>

@@ -23,6 +23,7 @@
 * Using 'Save Track Order' would not apply the offset 
 * Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
 * Automated Label creation when updating from tags
+* Grouped album downloads and rightbar actions
 
 ## Ampache 4.4.1-release
 

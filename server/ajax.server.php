@@ -140,15 +140,16 @@ switch ($action) {
                         Core::get_global('user')->playlist->add_object($object_id, 'song');
                     }
                     break;
+                case 'album_full':
+                    $songs = Album::get_songs_grouped(explode(',', $_REQUEST['id']));
+                    foreach ($songs as $song_id) {
+                        Core::get_global('user')->playlist->add_object($song_id, 'song');
+                    }
+                    break;
                 case 'album_random':
-                    $data = explode('_', $_REQUEST['type']);
-                    $type = $data['0'];
-                    foreach ($_REQUEST['id'] as $i) {
-                        $object = new $type($i);
-                        $songs  = $object->get_random_songs();
-                        foreach ($songs as $song_id) {
-                            Core::get_global('user')->playlist->add_object($song_id, 'song');
-                        }
+                    $songs = Album::get_random_songs_grouped(explode(',', $_REQUEST['id']));
+                    foreach ($songs as $song_id) {
+                        Core::get_global('user')->playlist->add_object($song_id, 'song');
                     }
                     break;
                 case 'artist_random':

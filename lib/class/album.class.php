@@ -624,6 +624,23 @@ class Album extends database_object implements library_item
     } // get_songs
 
     /**
+     * gets songs from this album group
+     *
+     * @param array $album_list
+     * @return int[] Song ids
+     */
+    public static function get_songs_grouped($album_list)
+    {
+        $results = array();
+        foreach ($album_list as $album_id) {
+            $album   = new Album((int) $album_id);
+            $results = array_merge($results, $album->get_songs());
+        }
+
+        return $results;
+    }
+
+    /**
      * get_http_album_query_ids
      * return the html album parameters with all album suite ids
      * @param string $url_param_name
@@ -637,7 +654,7 @@ class Album extends database_object implements library_item
             $suite_array = array($this->id);
         }
 
-        return http_build_query(array($url_param_name => $suite_array));
+        return $url_param_name . '=' . implode(',', $suite_array);
     }
 
     /**
@@ -1057,6 +1074,24 @@ class Album extends database_object implements library_item
 
         return $results;
     } // get_random_songs
+
+    /**
+     * gets a random order of songs from this album group
+     *
+     * @param array $album_list
+     * @return int[] Album ids
+     */
+    public static function get_random_songs_grouped($album_list)
+    {
+        $results = array();
+        foreach ($album_list as $album_id) {
+            $album   = new Album((int) $album_id);
+            $results = array_merge($results, $album->get_random_songs());
+        }
+        shuffle($results);
+
+        return $results;
+    }
 
     /**
      * update_time
