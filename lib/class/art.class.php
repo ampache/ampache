@@ -2022,6 +2022,15 @@ class Art extends database_object
                 $size['height']    = 128;
                 $size['width']     = 128;
                 break;
+            case 22:
+                $size['height'] = 256;
+                $size['width']  = 256;
+                break;
+            case 32:
+                // Single Album & Podcast pages
+                $size['height'] = 384;
+                $size['width']  = 384;
+                break;
             case 3:
                 /* This is used by the embedded web player */
                 $size['height']    = 80;

@@ -2,6 +2,10 @@
 
 ## Ampache 4.4.2-develop
 
+### Added
+
+* Larger artist images when you don't have a text summary available
+
 ### Changed
 
 * SubSonic - When calling createPlaylist, assume that the list needs to be empty first
