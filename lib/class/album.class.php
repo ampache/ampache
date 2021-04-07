@@ -596,18 +596,18 @@ class Album extends database_object implements library_item
     public function get_songs($limit = 0, $artist = '')
     {
         $results = array();
-
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
+        $sql     = "SELECT `song`.`id` FROM `song` ";
+        $params  = array($this->id);
+        $catalog = AmpConfig::get('catalog_disable');
+        if ($catalog) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
         $sql .= "WHERE `song`.`album` = ? ";
-        $params = array($this->id);
         if (strlen((string) $artist)) {
             $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
@@ -617,7 +617,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -1052,24 +1052,30 @@ class Album extends database_object implements library_item
     /**
      * get_random_songs
      * gets a random number, and a random assortment of songs from this album
+     * @param integer $limit
      * @return integer[]
      */
-    public function get_random_songs()
+    public function get_random_songs($limit = 0)
     {
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
+        $results = array();
+        $sql     = "SELECT `song`.`id` FROM `song` ";
+        $params  = array($this->id);
+        $catalog = AmpConfig::get('catalog_disable');
+        if ($catalog) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
         $sql .= "WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql, array($this->id));
+        if ($limit > 0) {
+            $sql .= " LIMIT " . (string) $limit;
+        }
+        $db_results = Dba::read($sql, $params);
 
-        $results = array();
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = $row['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
         }
 
         return $results;
