@@ -118,6 +118,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $sql .= 'AND `catalog`.`enabled` = \'1\' ';
         }
+        $sql .= "ORDER BY `song`.`track`";
         $db_results = Dba::read($sql, [$albumId]);
 
         $results = [];
@@ -181,7 +182,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     ): array {
         $results = array();
         foreach ($albumIdList as $album_id) {
-            $results = array_merge($results, self::getRandomSongs($album_id));
+            $results = array_merge($results, self::getRandomSongs((int)$album_id));
         }
         shuffle($results);
 
