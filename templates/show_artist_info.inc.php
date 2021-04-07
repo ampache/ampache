@@ -21,36 +21,23 @@
  */ ?>
 
 <div class="item_info">
-    <?php if ($biography['id']) {
-    $thumb = 2;
-    Art::display('artist', $biography['id'], $artist->f_name, $thumb);
-} else { ?>
-        <div class="item_art">
-            <?php if ($biography && is_array($biography)) { ?>
-                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-            <?php
-    } ?>
-        </div>
-    <?php
-} ?>
+    <?php $thumb = (empty(trim($biography['summary']))) ? 32 : 2; ?>
+    <?php Art::display('artist', $artist->id, $artist->f_name, $thumb); ?>
     <div class="item_properties">
-        <?php
-        if (! empty($biography) && is_array($biography)) {
-            $dcol = array();
-            if ($biography['placeformed']) {
-                $dcol[] = $biography['placeformed'];
-            }
-            if ($biography['yearformed']) {
-                $dcol[] = $biography['yearformed'];
-            }
-            if (count($dcol) > 0) {
-                echo implode(',', $dcol);
-            }
+        <?php $dcol = array();
+        if ($biography['placeformed']) {
+            $dcol[] = $biography['placeformed'];
+        }
+        if ($biography['yearformed']) {
+            $dcol[] = $biography['yearformed'];
+        }
+        if (count($dcol) > 0) {
+            echo implode(',', $dcol);
         } ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if (! empty($biography) && is_array($biography)) { ?>
+    <?php if (!empty(trim($biography['summary']))) { ?>
         <?php echo nl2br($biography['summary'], true); ?>
     <?php
         }?>
