@@ -129,8 +129,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $randtotemp = T_('Random to Temporary Playlist');
         $addtoexist = T_('Add to playlist'); ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', $addtotemp, 'play_full_' . $album->id); ?>
-            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), $addtotemp, 'play_full_text_' . $album->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', $addtotemp, 'play_full_' . $album->id); ?>
+            <?php echo Ajax::text('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), $addtotemp, 'play_full_text_' . $album->id); ?>
         </li>
         <li>
             <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', $randtotemp, 'play_random_' . $album->id); ?>

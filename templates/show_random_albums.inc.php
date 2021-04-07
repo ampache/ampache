@@ -56,7 +56,7 @@ if ($albums) {
                     } ?>
         <?php
                 } ?>
-        <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $album->id); ?>
+        <?php echo Ajax::button('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $album->id); ?>
         </div>
         <?php
             } ?>

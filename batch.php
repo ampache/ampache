@@ -62,7 +62,7 @@ if (!check_can_zip($object_type)) {
     return false;
 }
 
-if (Core::is_playable_item($object_type)) {
+if (Core::is_playable_item($object_type) && $object_type !== 'album') {
     $object_id = $_REQUEST['id'];
     if (!is_array($object_id)) {
         $object_id = array($object_id);
@@ -83,6 +83,15 @@ if (Core::is_playable_item($object_type)) {
         case 'tmp_playlist':
             $media_ids = Core::get_global('user')->playlist->get_items();
             $name      = Core::get_global('user')->username . ' - Playlist';
+            break;
+        case 'album':
+            $albumList = explode(',', $_REQUEST['id']);
+            $media_ids = Album::get_songs_grouped($albumList);
+            $libitem   = new Album($albumList[0]);
+            if ($libitem->id) {
+                $libitem->format();
+                $name = $libitem->get_fullname();
+            }
             break;
         case 'browse':
             $object_id        = (int) scrub_in(Core::get_post('browse_id'));
