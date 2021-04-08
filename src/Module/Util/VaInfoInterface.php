@@ -42,10 +42,10 @@ interface VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $tag_data
+     * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tag_data);
+    public function write_id3($tagData);
 
     /**
      * prepare_id3_frames
@@ -71,10 +71,10 @@ interface VaInfoInterface
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
      * @param array $results
-     * @param string $config_key
+     * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $config_key = 'metadata_order');
+    public static function get_tag_type($results, $configKey = 'metadata_order');
 
     /**
      * clean_tag_info
@@ -92,11 +92,11 @@ interface VaInfoInterface
     /**
      * parse_pattern
      * @param string $filepath
-     * @param string $dir_pattern
-     * @param string $file_pattern
+     * @param string $dirPattern
+     * @param string $filePattern
      * @return array
      */
-    public static function parse_pattern($filepath, $dir_pattern, $file_pattern);
+    public static function parse_pattern($filepath, $dirPattern, $filePattern);
 
     /**
      * set_broken
