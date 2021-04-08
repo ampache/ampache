@@ -45,6 +45,9 @@ final class LastFmQuery implements LastFmQueryInterface
         $this->externalResourceLoader = $externalResourceLoader;
     }
 
+    /**
+     * @throws Exception\LastFmQueryFailedException
+     */
     public function getLastFmResults(string $method, string $query): SimpleXMLElement
     {
         $lang    = (string) $this->configContainer->get('lang');
@@ -55,12 +58,21 @@ final class LastFmQuery implements LastFmQueryInterface
         return $this->queryLastFm($url);
     }
 
+    /**
+     * @throws Exception\LastFmQueryFailedException
+     */
     public function queryLastFm(string $url): SimpleXMLElement
     {
         debug_event(__CLASS__, 'search url : ' . $url, 5);
 
         $result = (string) $this->externalResourceLoader->retrieve($url)->getBody();
 
-        return simplexml_load_string($result);
+        $data = simplexml_load_string($result);
+
+        if ($data === false) {
+            throw new Exception\LastFmQueryFailedException();
+        }
+
+        return $data;
     }
 }

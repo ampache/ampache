@@ -17,24 +17,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\LastFm;
+declare(strict_types=1);
 
-use SimpleXMLElement;
+namespace Ampache\Module\LastFm\Exception;
 
-interface LastFmQueryInterface
+use Exception;
+
+final class LastFmQueryFailedException extends Exception
 {
-    /**
-     * Runs a last.fm query and returns the parsed results
-     *
-     * @throws Exception\LastFmQueryFailedException
-     */
-    public function getLastFmResults(string $method, string $query): SimpleXMLElement;
-
-    /**
-     * @throws Exception\LastFmQueryFailedException
-     */
-    public function queryLastFm(string $url): SimpleXMLElement;
 }

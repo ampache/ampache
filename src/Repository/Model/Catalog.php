@@ -2629,6 +2629,12 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog($options);
+
+                            // update artists who need a recent update
+                            $artists = $catalog->get_artist_ids('count');
+                            foreach ($artists as $artist_id) {
+                                Artist::update_artist_counts($artist_id);
+                            }
                         }
                     }
 
