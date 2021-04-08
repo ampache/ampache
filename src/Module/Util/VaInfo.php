@@ -42,14 +42,14 @@ use getid3_writetags;
 final class VaInfo implements VaInfoInterface
 {
     public $encoding          = '';
-    public $encoding_id3v1    = '';
-    public $encoding_id3v2    = '';
+    public $encodingId3v1    = '';
+    public $encodingId3v2    = '';
 
     public $filename          = '';
     public $type              = '';
     public $tags              = array();
     public $islocal;
-    public $gather_types      = array();
+    public $gatherTypes       = array();
 
     protected $_raw           = array();
     protected $_getID3        = null;
@@ -69,32 +69,32 @@ final class VaInfo implements VaInfoInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $file
-     * @param array $gather_types
+     * @param array $gatherTypes
      * @param string $encoding
-     * @param string $encoding_id3v1
-     * @param string $encoding_id3v2
-     * @param string $dir_pattern
-     * @param string $file_pattern
+     * @param string $encodingId3v1
+     * @param string $encodingId3v2
+     * @param string $dirPattern
+     * @param string $filePattern
      * @param boolean $islocal
      */
     public function __construct(
         $file,
-        $gather_types = array(),
+        $gatherTypes = array(),
         $encoding = null,
-        $encoding_id3v1 = null,
-        $encoding_id3v2 = null,
-        $dir_pattern = '',
-        $file_pattern = '',
+        $encodingId3v1 = null,
+        $encodingId3v2 = null,
+        $dirPattern = '',
+        $filePattern = '',
         $islocal = true
     ) {
-        $this->islocal         = $islocal;
-        $this->filename        = $file;
-        $this->gather_types    = $gather_types;
-        $this->encoding        = $encoding ?: static::getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
+        $this->islocal       = $islocal;
+        $this->filename      = $file;
+        $this->gatherTypes   = $gatherTypes;
+        $this->encoding      = $encoding ?: static::getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
 
         /* These are needed for the filename mojo */
-        $this->_file_pattern = $file_pattern;
-        $this->_dir_pattern  = $dir_pattern;
+        $this->_file_pattern = $filePattern;
+        $this->_dir_pattern  = $dirPattern;
 
         // FIXME: This looks ugly and probably wrong
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
@@ -144,8 +144,8 @@ final class VaInfo implements VaInfoInterface
 
             $test_tags = array('artist', 'album', 'genre', 'title');
 
-            if ($encoding_id3v1 !== null) {
-                $this->encoding_id3v1 = $encoding_id3v1;
+            if ($encodingId3v1 !== null) {
+                $this->encodingId3v1 = $encodingId3v1;
             } else {
                 $tags = array();
                 foreach ($test_tags as $tag) {
@@ -154,7 +154,7 @@ final class VaInfo implements VaInfoInterface
                     }
                 }
 
-                $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
+                $this->encodingId3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
             if (static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
@@ -166,11 +166,11 @@ final class VaInfo implements VaInfoInterface
                     }
                 }
 
-                $this->encoding_id3v2    = self::_detect_encoding($tags, $mb_order);
-                $this->_getID3->encoding = $this->encoding_id3v2;
+                $this->encodingId3v2    = self::_detect_encoding($tags, $mb_order);
+                $this->_getID3->encoding = $this->encodingId3v2;
             }
 
-            $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
+            $this->_getID3->encoding_id3v1 = $this->encodingId3v1;
         }
 
         return true;
@@ -245,54 +245,53 @@ final class VaInfo implements VaInfoInterface
         // time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
-        } else {
-            $enabled_sources = (array)$this->get_metadata_order();
-
-            if (in_array('getID3', $enabled_sources) && $this->islocal) {
-                try {
-                    $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
-                } catch (Exception $error) {
-                    static::getLogger()->error(
-                        'getID3 Unable to catalog file: ' . $error->getMessage(),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                }
-            }
-
-            /* Figure out what type of file we are dealing with */
-            $this->type = $this->_get_type() ?: '';
-
-            if (in_array('filename', $enabled_sources)) {
-                $this->tags['filename'] = $this->_parse_filename($this->filename);
-            }
-
-            if (in_array('getID3', $enabled_sources) && $this->islocal) {
-                $this->tags['getID3'] = $this->_get_tags();
-            }
-
-            $this->_get_plugin_tags();
+            return;
         }
+        $enabled_sources = (array)$this->get_metadata_order();
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
+            try {
+                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
+            } catch (Exception $error) {
+                static::getLogger()->error(
+                    'getID3 Unable to catalog file: ' . $error->getMessage(),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+            }
+        }
+
+        /* Figure out what type of file we are dealing with */
+        $this->type = $this->_get_type() ?: '';
+
+        if (in_array('filename', $enabled_sources)) {
+            $this->tags['filename'] = $this->_parse_filename($this->filename);
+        }
+
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
+            $this->tags['getID3'] = $this->_get_tags();
+        }
+
+        $this->_get_plugin_tags();
     } // get_info
 
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $tag_data
+     * @param $tagData
      * @throws Exception
      */
-    public function write_id3($tag_data)
+    public function write_id3($tagData)
     {
         $logger        = static::getLogger();
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
-        if ($extension == 'mp3') {
-            $format = 'id3v2.3';
-        } elseif ($extension == 'flac') {
-            $format = 'metaflac';
-        } elseif ($extension = 'oga') {
-            $format = 'vorbiscomment';
-        } else {
+        $extensionMap  = [
+            'mp3'  => 'id3v2.3',
+            'flac' => 'metaflac',
+            'oga'  => 'vorbiscomment'
+        ];
+        if (!in_array($extension, $extensionMap)) {
             $logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -301,19 +300,21 @@ final class VaInfo implements VaInfoInterface
             return;
         }
 
+        $format = $extensionMap[$extension];
+
         $tagWriter->filename          = $this->filename;
         $tagWriter->tagformats        = array($format);
         $tagWriter->overwrite_tags    = true;
         $tagWriter->tag_encoding      = $TaggingFormat;
         $tagWriter->remove_other_tags = true;
-        $tagWriter->tag_data          = $tag_data;
+        $tagWriter->tag_data          = $tagData;
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
                 $logger->debug(
                     'Warning Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                }
+            }
         }
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
@@ -321,7 +322,7 @@ final class VaInfo implements VaInfoInterface
                     'Error Writing Image: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                }
+            }
         }
     } // write_id3
 
@@ -382,10 +383,10 @@ final class VaInfo implements VaInfoInterface
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
      * @param array $results
-     * @param string $config_key
+     * @param string $configKey
      * @return array
      */
-    public static function get_tag_type($results, $config_key = 'metadata_order')
+    public static function get_tag_type($results, $configKey = 'metadata_order')
     {
         $tagorderMap = [
             'metadata_order'       => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
@@ -393,7 +394,7 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order'     => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        $order = (array) ($tagorderMap[$config_key] ?? '');
+        $order = (array) ($tagorderMap[$configKey] ?? '');
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
@@ -718,7 +719,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function get_metadata_order_key()
     {
-        if (!in_array('music', $this->gather_types)) {
+        if (!in_array('music', $this->gatherTypes)) {
             return 'metadata_order_video';
         }
 
@@ -747,7 +748,9 @@ final class VaInfo implements VaInfoInterface
      */
     private function _get_plugin_tags()
     {
-        $tag_order = $this->get_metadata_order();
+        // convert to lower case to be sure it matches pluginnames in Ampache\Plugin\PluginEnum
+        // log info if none are enabled or maybe mistyped ?
+        $tag_order = array_map('strtolower', $this->get_metadata_order());
 
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
@@ -756,7 +759,7 @@ final class VaInfo implements VaInfoInterface
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
                     if ($plugin->load(Core::get_global('user'))) {
-                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gather_types,
+                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gatherTypes,
                             self::clean_tag_info($this->tags,
                                 self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
                     }
@@ -777,7 +780,7 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = array();
 
-        if ((in_array('movie', $this->gather_types)) || (in_array('tvshow', $this->gather_types))) {
+        if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
         } else {
             $parsed['title'] = urldecode($this->_pathinfo['filename']);
@@ -1201,14 +1204,14 @@ final class VaInfo implements VaInfoInterface
                         // Ratings are out of 255; scale it
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
                     }
-                } // Rating made by an unknown user, adding it to super user (id=-1)
-                else {
-                    $rating_user = -1;
-                    if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int) static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
-                    }
-                    $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
+                    continue;
                 }
+                // Rating made by an unknown user, adding it to super user (id=-1)
+                $rating_user = -1;
+                if (static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                    $rating_user = (int) static::getConfigContainer()->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                }
+                $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
             }
         }
 
@@ -1337,7 +1340,7 @@ final class VaInfo implements VaInfoInterface
         $results = array();
         $file    = pathinfo($filepath, PATHINFO_FILENAME);
 
-        if (in_array('tvshow', $this->gather_types)) {
+        if (in_array('tvshow', $this->gatherTypes)) {
             $season  = array();
             $episode = array();
             $tvyear  = array();
@@ -1415,11 +1418,11 @@ final class VaInfo implements VaInfoInterface
             $results['title'] = $results['tvshow'];
         }
 
-        if (in_array('movie', $this->gather_types)) {
+        if (in_array('movie', $this->gatherTypes)) {
             $results['original_name'] = $results['title'] = $this->formatVideoName($file);
         }
 
-        if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
+        if (in_array('music', $this->gatherTypes) || in_array('clip', $this->gatherTypes)) {
             $patres  = VaInfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
             $results = array_merge($results, $patres);
             if ($this->islocal) {
@@ -1433,11 +1436,11 @@ final class VaInfo implements VaInfoInterface
     /**
      * parse_pattern
      * @param string $filepath
-     * @param string $dir_pattern
-     * @param string $file_pattern
+     * @param string $dirPattern
+     * @param string $filePattern
      * @return array
      */
-    public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
+    public static function parse_pattern($filepath, $dirPattern, $filePattern)
     {
         $logger          = static::getLogger();
 
@@ -1447,7 +1450,7 @@ final class VaInfo implements VaInfoInterface
             $slash_type_preg .= DIRECTORY_SEPARATOR;
         }
         // Combine the patterns
-        $pattern = preg_quote($dir_pattern) . $slash_type_preg . preg_quote($file_pattern);
+        $pattern = preg_quote($dirPattern) . $slash_type_preg . preg_quote($filePattern);
 
         // Remove first left directories from filename to match pattern
         $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
