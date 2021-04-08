@@ -77,8 +77,14 @@ final class LocalPlayCommandMapper implements LocalPlayCommandMapperInterface
 
                 return $result;
             },
-            'skip' => function (LocalPlay $localPlay): bool {
-                return $localPlay->next();
+            'skip' => function (
+                LocalPlay $localPlay,
+                int $objectId,
+                string $type,
+                int $clear,
+                int $track
+            ): bool {
+                return $localPlay->skip($track - 1);
             },
             'next' => function (LocalPlay $localPlay): bool {
                 return $localPlay->next();

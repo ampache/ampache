@@ -66,6 +66,27 @@ class LocalPlayCommandMapperTest extends MockeryTestCase
         );
     }
 
+    public function testSkipSetsPreviousTrack(): void
+    {
+        $track = 42;
+
+        $callable  = $this->subject->map('skip');
+        $localplay = $this->mock(LocalPlay::class);
+
+        $localplay->shouldReceive('skip')
+            ->with($track - 1)
+            ->once()
+            ->andReturnTrue();
+
+        $callable(
+            $localplay,
+            666,
+            'video',
+            1,
+            $track
+        );
+    }
+
     /**
      * @dataProvider localPlayCommandDataProvider
      */
@@ -88,7 +109,6 @@ class LocalPlayCommandMapperTest extends MockeryTestCase
     public function localPlayCommandDataProvider(): array
     {
         return [
-            ['skip', 'next'],
             ['next', 'next'],
             ['prev', 'prev'],
             ['stop', 'stop'],

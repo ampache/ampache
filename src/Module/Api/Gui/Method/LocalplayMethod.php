@@ -73,6 +73,8 @@ final class LocalplayMethod implements MethodInterface
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
+     * id
      *
      * @return ResponseInterface
      *
@@ -120,9 +122,10 @@ final class LocalplayMethod implements MethodInterface
 
         $result = $commandCallable(
             $localPlay,
-            $object_id = (int) ($input['oid'] ?? 0),
+            (int) ($input['oid'] ?? 0),
             (string) ($input['type'] ?? 'Song'),
-            (int) ($input['clear'] ?? 0)
+            (int) ($input['clear'] ?? 0),
+            (int) ($input['track'] ?? 0)
         );
 
         return $response->withBody(

@@ -869,9 +869,14 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
-        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret = Dba::write($sql,
-            array($summary, $placeformed, Catalog::normalize_year($yearformed), time(), $manual ? 1 : 0, $this->id));
+        // set null values if missing
+        $summary     = (empty($summary)) ? null : $summary;
+        $placeformed = (empty($placeformed)) ? null : $placeformed;
+        $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
+
+        $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
+        $sqlret  = Dba::write($sql,
+            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
