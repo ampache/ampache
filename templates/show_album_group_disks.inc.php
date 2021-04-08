@@ -54,7 +54,7 @@ if ($directplay_limit > 0) {
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-        $thumb = UI::is_grid_view('album') ? 2 : 11;
+        $thumb = UI::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>

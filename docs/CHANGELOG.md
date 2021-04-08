@@ -5,6 +5,7 @@
 ### Added
 
 * Larger artist images when you don't have a text summary available
+* Expanded artist, album and podcast thumbnails to reduce blank space
 
 ### Changed
 
