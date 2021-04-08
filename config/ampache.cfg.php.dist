@@ -249,7 +249,7 @@ deferred_ext_metadata = "true"
 ; This list specifies possible delimiters additional to \0
 ; This setting takes a regex pattern.
 ; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
+additional_delimiters = "[/]{2}|[/\\\\|,;]"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this

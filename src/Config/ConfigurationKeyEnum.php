@@ -113,7 +113,7 @@ final class ConfigurationKeyEnum
     public const RATING_FILE_TAG_USER          = 'rating_file_tag_user';
     public const COMMON_ABBR                   = 'common_abbr';
     public const TAG_ORDER                     = 'tag_order';
-    public const ADDITIONAL_GENRE_DELIMITERS   = 'additional_genre_delimiters';
+    public const ADDITIONAL_DELIMITERS         = 'additional_delimiters';
     public const METADATA_ORDER                = 'metadata_order';
     public const METADATA_ORDER_VIDEO          = 'metadata_order_video';
     public const GETID3_TAG_ORDER              = 'getid3_tag_order';
