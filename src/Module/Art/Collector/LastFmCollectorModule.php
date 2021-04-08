@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -74,16 +75,17 @@ final class LastFmCollectorModule implements CollectorModuleInterface
             $coverart = [];
             // search for album objects
             if ((!empty($data['artist']) && !empty($data['album']))) {
-                $xmldata = $this->lastFmQuery->queryLastFm(
-                    sprintf(
-                        '%s?method=album.getInfo&artist=%s&album=%s&api_key=%s',
-                        static::API_URL,
-                        urlencode($data['artist']),
-                        urlencode($data['album']),
-                        $lastFmApiKey
-                    )
-                );
-                if (!$xmldata) {
+                try {
+                    $xmldata = $this->lastFmQuery->queryLastFm(
+                        sprintf(
+                            '%s?method=album.getInfo&artist=%s&album=%s&api_key=%s',
+                            static::API_URL,
+                            urlencode($data['artist']),
+                            urlencode($data['album']),
+                            $lastFmApiKey
+                        )
+                    );
+                } catch (LastFmQueryFailedException $e) {
                     return [];
                 }
                 if (!$xmldata->album->image) {
