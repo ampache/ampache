@@ -554,7 +554,7 @@ class Album extends database_object implements library_item
             $suite_array = array($this->id);
         }
 
-        return http_build_query(array($url_param_name => $suite_array));
+        return $url_param_name . '=' . implode(',', $suite_array);
     }
 
     /**

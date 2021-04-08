@@ -94,16 +94,16 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
+                        case 'album_full':
+                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $_REQUEST['id']));
+                            foreach ($songs as $song_id) {
+                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                            }
+                            break;
                         case 'album_random':
-                            $data = explode('_', $_REQUEST['type']);
-                            $type = $data['0'];
-                            foreach ($_REQUEST['id'] as $i) {
-                                $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                                $object     = new $class_name($i);
-                                $songs      = $this->albumRepository->getRandomSongs($object->id);
-                                foreach ($songs as $song_id) {
-                                    Core::get_global('user')->playlist->add_object($song_id, 'song');
-                                }
+                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $_REQUEST['id']));
+                            foreach ($songs as $song_id) {
+                                Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
                         case 'artist_random':
