@@ -2931,7 +2931,7 @@ abstract class Catalog extends database_object
                 AmpConfig::set('write_id3_art', 'true', true);
 
                 $id3Writer = static::getSongId3TagWriter();
-
+                set_time_limit(0);
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
