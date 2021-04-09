@@ -65,8 +65,8 @@ final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
                 $date,
                 $artistName,
                 $albumName,
-                $album->mbid_group,
-                $album->mbid
+                (string)$album->mbid_group,
+                (string)$album->mbid
             );
 
             return;
