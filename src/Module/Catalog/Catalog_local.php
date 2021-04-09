@@ -495,7 +495,6 @@ class Catalog_local extends Catalog
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
-        $current_time = time();
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == "podcast") {
@@ -527,6 +526,8 @@ class Catalog_local extends Catalog
 
         /* Update the Catalog last_update */
         $this->update_last_add();
+
+        $current_time = time();
 
         $time_diff = ($current_time - $start_time) ?: 0;
         $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);

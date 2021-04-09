@@ -66,7 +66,7 @@ if (Art::is_enabled()) {
     <span class="cel_item_add">
         <?php
             if ($show_playlist_add) {
-                echo Ajax::button('?action=basket&type=album&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'add_album_' . $libitem->id);
+                echo Ajax::button('?action=basket&type=album_full&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'add_album_' . $libitem->id);
                 echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to Temporary Playlist'), 'random_album_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (count($libitem->album_suite) <= 1) {
                     echo $libitem->id;

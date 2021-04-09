@@ -29,10 +29,10 @@ use Ampache\Module\Util\Ui;
 ?>
 
 <div class="item_info">
-    <?php Art::display('artist', $artist->id, $artist->f_name, 2); ?>
+    <?php $thumb = (empty(trim($biography['summary']))) ? 32 : 2; ?>
+    <?php Art::display('artist', $artist->id, $artist->f_name, $thumb); ?>
     <div class="item_properties">
-    <?php if (! empty($biography) && is_array($biography)) {
-    $dcol = array();
+    <?php $dcol = array();
     if ($biography['placeformed']) {
         $dcol[] = $biography['placeformed'];
     }
@@ -41,12 +41,11 @@ use Ampache\Module\Util\Ui;
     }
     if (count($dcol) > 0) {
         echo implode(',', $dcol);
-    }
-} ?>
+    } ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if (! empty($biography) && is_array($biography)) { ?>
+    <?php if (!empty(trim($biography['summary']))) { ?>
         <?php echo nl2br($biography['summary'], true); ?>
     <?php
         }?>

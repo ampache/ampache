@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2021-03-06 01:34+0100\n"
+"POT-Creation-Date: 2021-04-04 12:52+0200\n"
 "PO-Revision-Date: 2021-03-04 23:29+0000\n"
 "Last-Translator: Transifex Bot <>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/ampache/ampache/"
@@ -71,7 +71,7 @@ msgstr "Dal cím"
 #: ../../public/templates/show_search_form.inc.php:45
 #: ../../public/templates/sidebar_home.inc.php:44
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:117
-#: ../../src/Config/functions.php:1169 ../../src/Module/Api/Upnp_Api.php:628
+#: ../../src/Config/functions.php:827 ../../src/Module/Api/Upnp_Api.php:628
 #: ../../src/Repository/Model/Browse.php:226
 msgid "Albums"
 msgstr "Albumok"
@@ -85,10 +85,6 @@ msgstr "Albumok"
 #: ../../public/templates/show_democratic_playlist.inc.php:114
 #: ../../public/templates/show_disabled_songs.inc.php:35
 #: ../../public/templates/show_disabled_songs.inc.php:63
-#: ../../public/templates/show_duplicates_filtered.inc.php:34
-#: ../../public/templates/show_duplicates_filtered.inc.php:72
-#: ../../public/templates/show_duplicates.inc.php:34
-#: ../../public/templates/show_duplicates.inc.php:77
 #: ../../public/templates/show_edit_album_row.inc.php:38
 #: ../../public/templates/show_edit_catalog.inc.php:37
 #: ../../public/templates/show_edit_song_row.inc.php:42
@@ -105,10 +101,10 @@ msgstr "Albumok"
 #: ../../public/templates/show_song_previews.inc.php:30
 #: ../../public/templates/show_tagcloud.inc.php:31
 #: ../../public/templates/show_wanted_albums.inc.php:32
-#: ../../src/Repository/Model/Album.php:676
-#: ../../src/Repository/Model/Artist.php:446
+#: ../../src/Repository/Model/Album.php:675
+#: ../../src/Repository/Model/Artist.php:503
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1770
+#: ../../src/Repository/Model/Song.php:1771
 msgid "Artist"
 msgstr "Előadó"
 
@@ -116,8 +112,8 @@ msgstr "Előadó"
 #: ../../public/templates/show_add_live_stream.inc.php:57
 #: ../../public/templates/show_add_podcast.inc.php:39
 #: ../../public/templates/show_export.inc.php:37
-#: ../../src/Repository/Model/Search.php:606
-#: ../../src/Repository/Model/Search.php:721
+#: ../../src/Repository/Model/Search.php:613
+#: ../../src/Repository/Model/Search.php:730
 msgid "Catalog"
 msgstr "Katalógus"
 
@@ -128,7 +124,7 @@ msgstr "Katalógus"
 #: ../../public/templates/show_export.inc.php:40
 #: ../../public/templates/show_mail_users.inc.php:36
 #: ../../public/templates/show_random.inc.php:73
-#: ../../src/Config/functions.php:1512
+#: ../../src/Config/functions.php:1160
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:52
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:75
 msgid "All"
@@ -198,9 +194,9 @@ msgstr "Süti"
 #: ../../public/templates/show_plugins.inc.php:32
 #: ../../public/templates/show_plugins.inc.php:73
 #: ../../src/Module/Cli/AdminAddUserCommand.php:46
-#: ../../src/Repository/Model/Search.php:635
-#: ../../src/Repository/Model/Search.php:747
+#: ../../src/Repository/Model/Search.php:643
 #: ../../src/Repository/Model/Search.php:757
+#: ../../src/Repository/Model/Search.php:767
 msgid "Name"
 msgstr "Név"
 
@@ -280,7 +276,7 @@ msgstr "A Zene Szeretetéért"
 
 #: ../../public/templates/error_page.inc.php:56
 #: ../../public/templates/test_error_page.inc.php:54
-#: ../../src/Config/functions.php:915
+#: ../../src/Config/functions.php:573
 msgid "Error"
 msgstr "Hiba"
 
@@ -309,7 +305,7 @@ msgstr "Copyright"
 msgid "Show/Hide Player"
 msgstr "Lejátszó megjelenítése/elrejtése"
 
-#: ../../public/templates/header.inc.php:40 ../../src/Config/functions.php:1119
+#: ../../public/templates/header.inc.php:40 ../../src/Config/functions.php:777
 msgid "Home"
 msgstr "Kezdőlap"
 
@@ -364,8 +360,8 @@ msgstr "Lejátszás"
 #: ../../public/templates/show_user.inc.php:136
 #: ../../public/templates/sidebar_home.inc.php:43
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:84
-#: ../../src/Config/functions.php:1173 ../../src/Module/Api/Upnp_Api.php:606
-#: ../../src/Repository/Model/Album.php:640
+#: ../../src/Config/functions.php:831 ../../src/Module/Api/Upnp_Api.php:606
+#: ../../src/Repository/Model/Album.php:639
 #: ../../src/Repository/Model/Browse.php:244
 msgid "Artists"
 msgstr "Előadó"
@@ -401,7 +397,7 @@ msgstr "Lejátszási listák"
 #: ../../public/templates/show_tvshows.inc.php:56
 #: ../../public/templates/show_tvshows.inc.php:109
 #: ../../public/templates/show_videos.inc.php:63
-#: ../../public/templates/show_videos.inc.php:121
+#: ../../public/templates/show_videos.inc.php:122
 #: ../../public/templates/sidebar_home.inc.php:49
 #: ../../src/Gui/Song/SongViewAdapter.php:346
 #: ../../src/Module/Application/Browse/TagAction.php:75
@@ -411,9 +407,9 @@ msgstr "Műfajok"
 
 #: ../../public/templates/header.inc.php:46
 #: ../../public/templates/sidebar_home.inc.php:170
-#: ../../src/Repository/Model/Search.php:511
-#: ../../src/Repository/Model/Search.php:646
-#: ../../src/Repository/Model/Search.php:694
+#: ../../src/Repository/Model/Search.php:518
+#: ../../src/Repository/Model/Search.php:654
+#: ../../src/Repository/Model/Search.php:703
 msgid "Favorites"
 msgstr "Kedvencek"
 
@@ -423,7 +419,7 @@ msgstr "Kedvencek"
 #: ../../public/templates/show_artist.inc.php:217
 #: ../../public/templates/sidebar_preferences.inc.php:71
 #: ../../public/templates/sidebar_preferences.inc.php:73
-#: ../../src/Config/functions.php:1122
+#: ../../src/Config/functions.php:780
 msgid "Upload"
 msgstr "Feltöltés"
 
@@ -462,17 +458,17 @@ msgstr "Legújabb Előadók"
 msgid "Newest Shouts"
 msgstr "Legújabb Shout-ok"
 
-#: ../../public/templates/header.inc.php:117
+#: ../../public/templates/header.inc.php:115
 msgid "Save"
 msgstr "Mentés"
 
-#: ../../public/templates/header.inc.php:118
+#: ../../public/templates/header.inc.php:116
 #: ../../public/templates/show_confirmation.inc.php:37
 #: ../../public/templates/show_get_art.inc.php:137
 msgid "Cancel"
 msgstr "Mégsem"
 
-#: ../../public/templates/header.inc.php:336
+#: ../../public/templates/header.inc.php:334
 #: ../../public/templates/show_album_row.inc.php:46
 #: ../../public/templates/show_artist_row.inc.php:48
 #: ../../public/templates/show_playlist_row.inc.php:44
@@ -486,7 +482,7 @@ msgstr "Mégsem"
 msgid "Play next"
 msgstr "Lejátszás következőnek"
 
-#: ../../public/templates/header.inc.php:337
+#: ../../public/templates/header.inc.php:335
 #: ../../public/templates/show_album_group_disks.inc.php:106
 #: ../../public/templates/show_album_group_disks.inc.php:166
 #: ../../public/templates/show_album.inc.php:134
@@ -512,7 +508,7 @@ msgstr "Lejátszás következőnek"
 msgid "Play last"
 msgstr "Lejátszás utolsónak"
 
-#: ../../public/templates/header.inc.php:338
+#: ../../public/templates/header.inc.php:336
 #: ../../public/templates/show_album_group_disks.inc.php:114
 #: ../../public/templates/show_album_group_disks.inc.php:170
 #: ../../public/templates/show_album.inc.php:148
@@ -534,7 +530,7 @@ msgstr "Lejátszás utolsónak"
 msgid "Add to Temporary Playlist"
 msgstr "Hozzáadás átmeneti lejátszási listához"
 
-#: ../../public/templates/header.inc.php:339
+#: ../../public/templates/header.inc.php:337
 #: ../../public/templates/rightbar.inc.php:50
 #: ../../public/templates/show_album.inc.php:150
 #: ../../public/templates/show_album_row.inc.php:76
@@ -549,7 +545,7 @@ msgstr "Hozzáadás átmeneti lejátszási listához"
 msgid "Add to playlist"
 msgstr "Hozzáadás Lejátszási listához"
 
-#: ../../public/templates/header.inc.php:349
+#: ../../public/templates/header.inc.php:347
 #: ../../public/templates/sidebar_home.inc.php:157
 #: ../../src/Module/Application/Stats/HighestAction.php:72
 #: ../../src/Module/Application/Stats/NewestAction.php:72
@@ -560,39 +556,39 @@ msgstr "Hozzáadás Lejátszási listához"
 msgid "Information"
 msgstr "Információ"
 
-#: ../../public/templates/header.inc.php:367
+#: ../../public/templates/header.inc.php:365
 msgid "New messages"
 msgstr "Új üzenetek"
 
-#: ../../public/templates/header.inc.php:374
+#: ../../public/templates/header.inc.php:372
 #: ../../public/templates/show_login_form.inc.php:87
 #: ../../public/templates/show_user_activate.inc.php:52
 msgid "Login"
 msgstr "Belépés"
 
-#: ../../public/templates/header.inc.php:377
+#: ../../public/templates/header.inc.php:375
 #: ../../public/templates/show_login_form.inc.php:96
 #: ../../public/templates/show_user_registration.inc.php:167
 msgid "Register"
 msgstr "Regisztráció"
 
-#: ../../public/templates/header.inc.php:385
+#: ../../public/templates/header.inc.php:383
 msgid "Show/Hide Playlist"
 msgstr "Lejátszási lista megjelenítése/elrejtése"
 
-#: ../../public/templates/header.inc.php:498
+#: ../../public/templates/header.inc.php:496
 msgid "Loading"
 msgstr "Betöltés"
 
-#: ../../public/templates/header.inc.php:518
+#: ../../public/templates/header.inc.php:516
 msgid "Your Ampache config file is out of date!"
 msgstr "Az Ampache config fájlod elavult!"
 
-#: ../../public/templates/header.inc.php:520
+#: ../../public/templates/header.inc.php:518
 msgid "Download a new config file to manually update"
 msgstr "Új config fájl letöltése a kézi frissítéshez"
 
-#: ../../public/templates/header.inc.php:521
+#: ../../public/templates/header.inc.php:519
 msgid "Write a new config file directly to disk"
 msgstr "Új config fájl írása közvetlenül a lemezre"
 
@@ -756,7 +752,7 @@ msgid "More"
 msgstr "Több"
 
 #: ../../public/templates/show_access_list.inc.php:30
-#: ../../public/templates/sidebar_admin.inc.php:71
+#: ../../public/templates/sidebar_admin.inc.php:70
 msgid "Access Control"
 msgstr "Hozzáférés szabályzás"
 
@@ -809,12 +805,11 @@ msgstr "Szint"
 #: ../../public/templates/show_manage_shoutbox.inc.php:62
 #: ../../public/templates/show_missing_albums.inc.php:33
 #: ../../public/templates/show_preference_admin.inc.php:46
-#: ../../public/templates/show_preference_box.inc.php:79
+#: ../../public/templates/show_preference_box.inc.php:83
 #: ../../public/templates/show_shared_objects.inc.php:33
 #: ../../public/templates/show_wanted_albums.inc.php:34
-#: ../../src/Config/functions.php:678
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:130
-#: ../../src/Plugin/AmpacheFlattr.php:101
+#: ../../src/Module/Util/Ui.php:898 ../../src/Plugin/AmpacheFlattr.php:101
 #: ../../src/Plugin/AmpachePaypal.php:105
 #: ../../src/Repository/Model/User.php:974
 msgid "User"
@@ -873,7 +868,7 @@ msgstr "Típus"
 #: ../../public/templates/show_users.inc.php:105
 #: ../../public/templates/show_video.inc.php:93
 #: ../../public/templates/show_videos.inc.php:75
-#: ../../public/templates/show_videos.inc.php:133
+#: ../../public/templates/show_videos.inc.php:134
 msgid "Action"
 msgstr "Akció"
 
@@ -945,6 +940,7 @@ msgstr "E-mail"
 #: ../../public/templates/show_live_stream.inc.php:53
 #: ../../public/templates/show_podcast_episode.inc.php:128
 #: ../../public/templates/show_podcast.inc.php:99
+#: ../../public/templates/show_podcast.inc.php:100
 #: ../../public/templates/show_podcast_row.inc.php:73
 #: ../../public/templates/show_user_registration.inc.php:115
 #: ../../src/Module/Cli/AdminAddUserCommand.php:45
@@ -1116,11 +1112,6 @@ msgstr "Mezők automatikus beszúrása"
 #: ../../public/templates/show_democratic_playlist.inc.php:113
 #: ../../public/templates/show_disabled_songs.inc.php:34
 #: ../../public/templates/show_disabled_songs.inc.php:62
-#: ../../public/templates/show_duplicate.inc.php:35
-#: ../../public/templates/show_duplicates_filtered.inc.php:35
-#: ../../public/templates/show_duplicates_filtered.inc.php:73
-#: ../../public/templates/show_duplicates.inc.php:35
-#: ../../public/templates/show_duplicates.inc.php:78
 #: ../../public/templates/show_edit_catalog.inc.php:36
 #: ../../public/templates/show_edit_song_row.inc.php:51
 #: ../../public/templates/show_lyrics.inc.php:48
@@ -1134,8 +1125,8 @@ msgstr "Mezők automatikus beszúrása"
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:31
 #: ../../src/Gui/Song/SongViewAdapter.php:344
-#: ../../src/Repository/Model/Album.php:681
-#: ../../src/Repository/Model/Search.php:497
+#: ../../src/Repository/Model/Album.php:680
+#: ../../src/Repository/Model/Search.php:504
 msgid "Album"
 msgstr "Album"
 
@@ -1146,7 +1137,7 @@ msgstr "Album"
 #: ../../public/templates/show_manage_shoutbox.inc.php:35
 #: ../../public/templates/show_manage_shoutbox.inc.php:64
 #: ../../src/Gui/Song/SongViewAdapter.php:358
-#: ../../src/Repository/Model/Search.php:572
+#: ../../src/Repository/Model/Search.php:579
 msgid "Comment"
 msgstr "Megjegyzés"
 
@@ -1169,9 +1160,9 @@ msgstr "Szám (0-val feltöltve)"
 #: ../../public/templates/show_edit_catalog.inc.php:41
 #: ../../public/templates/show_song_previews.inc.php:33
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:114
-#: ../../src/Config/functions.php:1240
+#: ../../src/Config/functions.php:888
 #: ../../src/Module/Api/Subsonic_Xml_Data.php:839
-#: ../../src/Repository/Model/Album.php:628
+#: ../../src/Repository/Model/Album.php:627
 msgid "Disk"
 msgstr "Lemez"
 
@@ -1179,9 +1170,9 @@ msgstr "Lemez"
 #: ../../public/templates/show_broadcasts.inc.php:36
 #: ../../public/templates/show_edit_broadcast_row.inc.php:44
 #: ../../public/templates/show_edit_catalog.inc.php:42
-#: ../../src/Repository/Model/Search.php:531
-#: ../../src/Repository/Model/Search.php:658
-#: ../../src/Repository/Model/Search.php:706
+#: ../../src/Repository/Model/Search.php:538
+#: ../../src/Repository/Model/Search.php:666
+#: ../../src/Repository/Model/Search.php:715
 #: ../../src/Repository/Model/Tag.php:856
 msgid "Genre"
 msgstr "Műfaj"
@@ -1205,9 +1196,9 @@ msgstr "Műfaj"
 #: ../../public/templates/show_songs.inc.php:58
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:347
-#: ../../src/Repository/Model/Search.php:502
-#: ../../src/Repository/Model/Search.php:637
-#: ../../src/Repository/Model/Search.php:684
+#: ../../src/Repository/Model/Search.php:509
+#: ../../src/Repository/Model/Search.php:645
+#: ../../src/Repository/Model/Search.php:693
 msgid "Year"
 msgstr "Év"
 
@@ -1215,14 +1206,14 @@ msgstr "Év"
 #: ../../public/templates/show_edit_album_row.inc.php:110
 #: ../../public/templates/show_edit_catalog.inc.php:45
 #: ../../src/Gui/Song/SongViewAdapter.php:348
-#: ../../src/Repository/Model/Search.php:685
+#: ../../src/Repository/Model/Search.php:694
 msgid "Original Year"
 msgstr "Megjelenés éve"
 
 #: ../../public/templates/show_add_catalog.inc.php:53
 #: ../../public/templates/show_edit_album_row.inc.php:98
 #: ../../public/templates/show_edit_catalog.inc.php:46
-#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:695
 msgid "Release Type"
 msgstr "Kiadás típusa"
 
@@ -1283,7 +1274,6 @@ msgstr "Epizód"
 #: ../../public/templates/show_democratic_playlist.inc.php:112
 #: ../../public/templates/show_disabled_songs.inc.php:33
 #: ../../public/templates/show_disabled_songs.inc.php:61
-#: ../../public/templates/show_duplicate.inc.php:32
 #: ../../public/templates/show_edit_catalog.inc.php:53
 #: ../../public/templates/show_edit_podcast_episode_row.inc.php:31
 #: ../../public/templates/show_edit_podcast_row.inc.php:35
@@ -1298,12 +1288,12 @@ msgstr "Epizód"
 #: ../../public/templates/show_podcasts.inc.php:112
 #: ../../public/templates/show_video.inc.php:141
 #: ../../public/templates/show_videos.inc.php:49
-#: ../../public/templates/show_videos.inc.php:107
+#: ../../public/templates/show_videos.inc.php:108
 #: ../../src/Gui/Song/SongViewAdapter.php:339
 #: ../../src/Repository/Model/Podcast_Episode.php:196
-#: ../../src/Repository/Model/Search.php:496
-#: ../../src/Repository/Model/Search.php:681
-#: ../../src/Repository/Model/Song.php:1775
+#: ../../src/Repository/Model/Search.php:503
+#: ../../src/Repository/Model/Search.php:690
+#: ../../src/Repository/Model/Song.php:1776
 #: ../../src/Repository/Model/Video.php:340
 msgid "Title"
 msgstr "Cím"
@@ -1468,13 +1458,9 @@ msgstr "Stream típus"
 
 #: ../../public/templates/show_add_channel.inc.php:94
 #: ../../public/templates/show_channels.inc.php:43
-#: ../../public/templates/show_duplicates_filtered.inc.php:37
-#: ../../public/templates/show_duplicates_filtered.inc.php:75
-#: ../../public/templates/show_duplicates.inc.php:37
-#: ../../public/templates/show_duplicates.inc.php:80
 #: ../../public/templates/show_edit_channel_row.inc.php:89
 #: ../../src/Gui/Song/SongViewAdapter.php:367
-#: ../../src/Repository/Model/Search.php:593
+#: ../../src/Repository/Model/Search.php:600
 msgid "Bitrate"
 msgstr "Bitrate"
 
@@ -1495,7 +1481,7 @@ msgstr "Címke hozzáadása"
 #: ../../public/templates/show_labels.inc.php:58
 #: ../../public/templates/show_labels.inc.php:88
 #: ../../public/templates/show_podcast_episode.inc.php:124
-#: ../../src/Repository/Model/Search.php:758
+#: ../../src/Repository/Model/Search.php:768
 msgid "Category"
 msgstr "Kategória"
 
@@ -1569,7 +1555,7 @@ msgstr "Stream URL"
 #: ../../public/templates/show_live_streams.inc.php:84
 #: ../../public/templates/show_video.inc.php:147
 #: ../../public/templates/show_videos.inc.php:56
-#: ../../public/templates/show_videos.inc.php:114
+#: ../../public/templates/show_videos.inc.php:115
 msgid "Codec"
 msgstr "Kodek"
 
@@ -1653,8 +1639,8 @@ msgstr "Megtalálva"
 #: ../../public/templates/show_search_row.inc.php:57
 #: ../../public/templates/show_video.inc.php:54
 #: ../../public/templates/sidebar_localplay.inc.php:63
-#: ../../src/Config/functions.php:586 ../../src/Config/functions.php:623
-#: ../../src/Config/functions.php:1441
+#: ../../src/Config/functions.php:1089 ../../src/Module/Util/Ui.php:806
+#: ../../src/Module/Util/Ui.php:843
 msgid "None"
 msgstr "Nincs"
 
@@ -1732,7 +1718,7 @@ msgstr "Hagyd üresen az előadó és album mezőket a fájl tagek felolvasásá
 
 #: ../../public/templates/show_add_upload.inc.php:204
 #: ../../public/templates/show_edit_song_row.inc.php:100
-#: ../../src/Repository/Model/Search.php:551
+#: ../../src/Repository/Model/Search.php:558
 msgid "Music License"
 msgstr "Zene Licensz"
 
@@ -1755,7 +1741,7 @@ msgstr "Böngészés"
 
 #: ../../public/templates/show_add_user.inc.php:32
 #: ../../public/templates/show_add_user.inc.php:91
-#: ../../public/templates/sidebar_admin.inc.php:56
+#: ../../public/templates/sidebar_admin.inc.php:55
 msgid "Add User"
 msgstr "Felhasználó hozzáadása"
 
@@ -1776,7 +1762,7 @@ msgstr "Felhasználó hozzáadása"
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:197
 #: ../../src/Module/User/Registration.php:67
 #: ../../src/Module/User/Registration.php:81
-#: ../../src/Repository/Model/Search.php:768
+#: ../../src/Repository/Model/Search.php:778
 msgid "Username"
 msgstr "Felhasználó"
 
@@ -1807,7 +1793,7 @@ msgstr "Felhasználó hozzáférési szintje"
 #: ../../public/templates/show_add_user.inc.php:75
 #: ../../public/templates/show_edit_user.inc.php:94
 #: ../../public/templates/show_preference_admin.inc.php:45
-#: ../../public/templates/show_preference_box.inc.php:78
+#: ../../public/templates/show_preference_box.inc.php:82
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:127
 #: ../../src/Repository/Model/Shoutbox.php:322
 #: ../../src/Repository/Model/User.php:976
@@ -1817,7 +1803,7 @@ msgstr "Vendég"
 #: ../../public/templates/show_add_user.inc.php:77
 #: ../../public/templates/show_create_democratic.inc.php:84
 #: ../../public/templates/show_edit_user.inc.php:96
-#: ../../public/templates/show_preference_box.inc.php:80
+#: ../../public/templates/show_preference_box.inc.php:84
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:133
 #: ../../src/Repository/Model/User.php:972
 msgid "Content Manager"
@@ -1826,7 +1812,7 @@ msgstr "Tartalom kezelő"
 #: ../../public/templates/show_add_user.inc.php:78
 #: ../../public/templates/show_create_democratic.inc.php:87
 #: ../../public/templates/show_edit_user.inc.php:97
-#: ../../public/templates/show_preference_box.inc.php:81
+#: ../../public/templates/show_preference_box.inc.php:85
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:136
 #: ../../src/Repository/Model/User.php:970
 msgid "Catalog Manager"
@@ -1839,10 +1825,10 @@ msgstr "Katalógus kezelő"
 #: ../../public/templates/show_edit_user.inc.php:98
 #: ../../public/templates/show_mail_users.inc.php:38
 #: ../../public/templates/show_preference_admin.inc.php:47
-#: ../../public/templates/show_preference_box.inc.php:82
-#: ../../public/templates/sidebar.inc.php:44 ../../src/Config/functions.php:680
+#: ../../public/templates/show_preference_box.inc.php:86
+#: ../../public/templates/sidebar.inc.php:44
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:139
-#: ../../src/Repository/Model/User.php:968
+#: ../../src/Module/Util/Ui.php:900 ../../src/Repository/Model/User.php:968
 msgid "Admin"
 msgstr "Admin"
 
@@ -1890,8 +1876,8 @@ msgstr ""
 
 #: ../../public/templates/show_album_group_disks.inc.php:76
 #: ../../public/templates/show_lyrics.inc.php:35
-#: ../../src/Repository/Model/Album.php:457
-#: ../../src/Repository/Model/Artist.php:618
+#: ../../src/Repository/Model/Album.php:456
+#: ../../src/Repository/Model/Artist.php:675
 msgid "Unknown (Orphaned)"
 msgstr "Ismeretlen (Árva)"
 
@@ -2013,9 +1999,9 @@ msgstr "átlagos"
 
 #: ../../public/templates/show_album.inc.php:111
 #: ../../public/templates/show_artist.inc.php:103
-#: ../../src/Repository/Model/Search.php:525
-#: ../../src/Repository/Model/Search.php:654
-#: ../../src/Repository/Model/Search.php:702
+#: ../../src/Repository/Model/Search.php:532
+#: ../../src/Repository/Model/Search.php:662
+#: ../../src/Repository/Model/Search.php:711
 msgid "Played"
 msgstr "Lejátszva"
 
@@ -2048,7 +2034,6 @@ msgstr "RSS Hírfolyam"
 #: ../../public/templates/show_podcast_episode.inc.php:106
 #: ../../public/templates/show_podcast.inc.php:84
 #: ../../public/templates/show_podcast.inc.php:85
-#: ../../public/templates/show_podcast.inc.php:100
 #: ../../public/templates/show_user.inc.php:111
 #: ../../public/templates/show_video.inc.php:125
 #: ../../src/Gui/Song/SongViewAdapter.php:265
@@ -2082,7 +2067,7 @@ msgstr "Album szerkesztése"
 #: ../../public/templates/show_tvshows.inc.php:50
 #: ../../public/templates/show_tvshows.inc.php:103
 #: ../../public/templates/show_videos.inc.php:46
-#: ../../public/templates/show_videos.inc.php:104
+#: ../../public/templates/show_videos.inc.php:105
 msgid "Art"
 msgstr "Borító"
 
@@ -2090,8 +2075,8 @@ msgstr "Borító"
 #: ../../public/templates/show_albums.inc.php:128
 #: ../../public/templates/show_edit_album_row.inc.php:53
 #: ../../src/Gui/Song/SongViewAdapter.php:342
-#: ../../src/Repository/Model/Search.php:499
-#: ../../src/Repository/Model/Search.php:682
+#: ../../src/Repository/Model/Search.php:506
+#: ../../src/Repository/Model/Search.php:691
 msgid "Album Artist"
 msgstr "Album Előadó"
 
@@ -2133,11 +2118,11 @@ msgstr "Dalok"
 #: ../../public/templates/show_songs.inc.php:144
 #: ../../public/templates/show_video.inc.php:162
 #: ../../public/templates/show_videos.inc.php:60
-#: ../../public/templates/show_videos.inc.php:118
+#: ../../public/templates/show_videos.inc.php:119
 #: ../../src/Gui/Song/SongViewAdapter.php:386
-#: ../../src/Repository/Model/Search.php:515
-#: ../../src/Repository/Model/Search.php:650
-#: ../../src/Repository/Model/Search.php:698
+#: ../../src/Repository/Model/Search.php:522
+#: ../../src/Repository/Model/Search.php:658
+#: ../../src/Repository/Model/Search.php:707
 msgid "# Played"
 msgstr "# Lejátszva"
 
@@ -2166,7 +2151,7 @@ msgstr "# Lejátszva"
 #: ../../public/templates/show_tvshows.inc.php:112
 #: ../../public/templates/show_video.inc.php:73
 #: ../../public/templates/show_videos.inc.php:66
-#: ../../public/templates/show_videos.inc.php:124
+#: ../../public/templates/show_videos.inc.php:125
 msgid "Rating"
 msgstr "Értékelés"
 
@@ -2194,7 +2179,7 @@ msgstr "Értékelés"
 #: ../../public/templates/show_tvshows.inc.php:116
 #: ../../public/templates/show_video.inc.php:83
 #: ../../public/templates/show_videos.inc.php:70
-#: ../../public/templates/show_videos.inc.php:128
+#: ../../public/templates/show_videos.inc.php:129
 msgid "Fav."
 msgstr "Kedv."
 
@@ -2304,7 +2289,7 @@ msgstr "Címkék"
 #: ../../public/templates/show_songs.inc.php:60
 #: ../../public/templates/show_songs.inc.php:138
 #: ../../public/templates/show_videos.inc.php:58
-#: ../../public/templates/show_videos.inc.php:116
+#: ../../public/templates/show_videos.inc.php:117
 msgid "Time"
 msgstr "Hossz"
 
@@ -2427,12 +2412,6 @@ msgstr "Videók"
 
 #: ../../public/templates/show_catalog_row.inc.php:32
 #: ../../public/templates/show_catalog_types.inc.php:48
-#: ../../public/templates/show_duplicates_filtered.inc.php:32
-#: ../../public/templates/show_duplicates_filtered.inc.php:50
-#: ../../public/templates/show_duplicates_filtered.inc.php:70
-#: ../../public/templates/show_duplicates.inc.php:32
-#: ../../public/templates/show_duplicates.inc.php:54
-#: ../../public/templates/show_duplicates.inc.php:75
 #: ../../public/templates/show_ip_history.inc.php:33
 #: ../../public/templates/show_localplay_controllers.inc.php:48
 #: ../../public/templates/show_user_row.inc.php:85
@@ -2444,8 +2423,6 @@ msgstr "Letilt"
 
 #: ../../public/templates/show_catalog_row.inc.php:35
 #: ../../public/templates/show_disabled_songs.inc.php:70
-#: ../../public/templates/show_duplicates_filtered.inc.php:53
-#: ../../public/templates/show_duplicates.inc.php:57
 #: ../../public/templates/show_localplay_controllers.inc.php:51
 #: ../../public/templates/show_test_table.inc.php:193
 #: ../../public/templates/show_user_row.inc.php:83
@@ -2517,7 +2494,7 @@ msgstr "Katalógus nem található"
 #: ../../public/templates/show_localplay_controllers.inc.php:71
 #: ../../public/templates/show_plugins.inc.php:34
 #: ../../public/templates/show_plugins.inc.php:75
-#: ../../src/Module/System/Update.php:241
+#: ../../src/Module/System/Update.php:247
 msgid "Version"
 msgstr "Verzió"
 
@@ -2596,7 +2573,7 @@ msgstr "Demokratikus lejátszás kényszerítése"
 
 #: ../../public/templates/show_debug.inc.php:34
 #: ../../public/templates/show_test.inc.php:48
-#: ../../public/templates/sidebar_admin.inc.php:91
+#: ../../public/templates/sidebar_admin.inc.php:90
 msgid "Ampache Debug"
 msgstr "Ampache Debug"
 
@@ -2663,9 +2640,9 @@ msgstr "Beállítások"
 
 #: ../../public/templates/show_debug.inc.php:87
 #: ../../public/templates/show_debug.inc.php:140
-#: ../../public/templates/show_preference_box.inc.php:47
-#: ../../public/templates/show_preference_box.inc.php:95
-#: ../../public/templates/show_user_preferences.inc.php:45
+#: ../../public/templates/show_preference_box.inc.php:51
+#: ../../public/templates/show_preference_box.inc.php:99
+#: ../../public/templates/show_user_preferences.inc.php:48
 msgid "Value"
 msgstr "Érték"
 
@@ -2721,9 +2698,9 @@ msgstr "Aktuális konfiguráció"
 #: ../../public/templates/show_debug.inc.php:139
 #: ../../public/templates/show_preference_admin.inc.php:34
 #: ../../public/templates/show_preference_admin.inc.php:54
-#: ../../public/templates/show_preference_box.inc.php:46
-#: ../../public/templates/show_preference_box.inc.php:94
-#: ../../public/templates/show_user_preferences.inc.php:44
+#: ../../public/templates/show_preference_box.inc.php:50
+#: ../../public/templates/show_preference_box.inc.php:98
+#: ../../public/templates/show_user_preferences.inc.php:47
 msgid "Preference"
 msgstr "Beállítás"
 
@@ -2806,15 +2783,11 @@ msgstr ""
 
 #: ../../public/templates/show_disabled_songs.inc.php:36
 #: ../../public/templates/show_disabled_songs.inc.php:64
-#: ../../public/templates/show_duplicates_filtered.inc.php:39
-#: ../../public/templates/show_duplicates_filtered.inc.php:77
-#: ../../public/templates/show_duplicates.inc.php:39
-#: ../../public/templates/show_duplicates.inc.php:82
 #: ../../public/templates/show_import_playlist.inc.php:33
 #: ../../public/templates/show_video.inc.php:155
 #: ../../src/Gui/Song/SongViewAdapter.php:379
-#: ../../src/Repository/Model/Search.php:574
-#: ../../src/Repository/Model/Search.php:737
+#: ../../src/Repository/Model/Search.php:581
+#: ../../src/Repository/Model/Search.php:747
 msgid "Filename"
 msgstr "Fájlnév"
 
@@ -2823,79 +2796,23 @@ msgstr "Fájlnév"
 msgid "Addition Time"
 msgstr "Hozzáadás ideje"
 
-#: ../../public/templates/show_duplicate.inc.php:28
-#: ../../public/templates/show_duplicate.inc.php:38
-#: ../../public/templates/sidebar_admin.inc.php:45
-msgid "Find Duplicates"
-msgstr "Duplikátumok keresése"
-
-#: ../../public/templates/show_duplicate.inc.php:31
-msgid "Search Type"
-msgstr "Keresés típusa"
-
-#: ../../public/templates/show_duplicate.inc.php:33
-msgid "Artist and Title"
-msgstr "Előadó és Cím"
-
-#: ../../public/templates/show_duplicate.inc.php:34
-msgid "Artist, Album and Title"
-msgstr "Előadó, Album és Cím"
-
-#: ../../public/templates/show_duplicates_filtered.inc.php:28
-#: ../../public/templates/show_duplicates.inc.php:28
-msgid "Duplicate Songs"
-msgstr "Duplikált Dalok"
-
-#: ../../public/templates/show_duplicates_filtered.inc.php:33
-#: ../../public/templates/show_duplicates_filtered.inc.php:71
-#: ../../public/templates/show_duplicates.inc.php:33
-#: ../../public/templates/show_duplicates.inc.php:76
-#: ../../public/templates/show_lyrics.inc.php:41
-#: ../../public/templates/show_now_playing_row.inc.php:50
-#: ../../public/templates/show_partial_clip.inc.php:24
-#: ../../public/templates/show_recently_played.inc.php:40
-#: ../../public/templates/show_recently_played.inc.php:160
-#: ../../public/templates/show_tagcloud.inc.php:33
-#: ../../src/Repository/Model/Catalog.php:1691
-msgid "Song"
-msgstr "Dal"
-
-#: ../../public/templates/show_duplicates_filtered.inc.php:36
-#: ../../public/templates/show_duplicates_filtered.inc.php:74
-#: ../../public/templates/show_duplicates.inc.php:36
-#: ../../public/templates/show_duplicates.inc.php:79
-#: ../../public/templates/show_podcast_episode.inc.php:130
-#: ../../public/templates/show_random.inc.php:78
-#: ../../public/templates/show_video.inc.php:142
-#: ../../src/Gui/Song/SongViewAdapter.php:349
-msgid "Length"
-msgstr "Hossz"
-
-#: ../../public/templates/show_duplicates_filtered.inc.php:38
-#: ../../public/templates/show_duplicates_filtered.inc.php:76
-#: ../../public/templates/show_duplicates.inc.php:38
-#: ../../public/templates/show_duplicates.inc.php:81
-#: ../../public/templates/show_podcast_episode.inc.php:135
-msgid "Size"
-msgstr "Méret"
-
 #: ../../public/templates/show_edit_access.inc.php:31
 msgid "Edit Access Control List"
 msgstr "Hozzáférési Lista (ACL) szerkesztése"
 
 #: ../../public/templates/show_edit_album_row.inc.php:45
 #: ../../public/templates/show_install_config.inc.php:66
+#: ../../src/Repository/Model/Album.php:639
 #: ../../src/Repository/Model/Album.php:640
-#: ../../src/Repository/Model/Album.php:641
 msgid "Various"
 msgstr "Különféle"
 
 #: ../../public/templates/show_edit_album_row.inc.php:76
 #: ../../public/templates/show_edit_artist_row.inc.php:39
 #: ../../public/templates/show_edit_song_row.inc.php:66
-#: ../../src/Repository/Model/Search.php:608
-#: ../../src/Repository/Model/Search.php:667
-#: ../../src/Repository/Model/Search.php:723
+#: ../../src/Repository/Model/Search.php:615
+#: ../../src/Repository/Model/Search.php:675
+#: ../../src/Repository/Model/Search.php:732
 msgid "MusicBrainz ID"
 msgstr "MusicBrainz ID"
 
@@ -2996,7 +2913,7 @@ msgstr "Szám"
 
 #: ../../public/templates/show_edit_song_row.inc.php:78
 #: ../../src/Gui/Song/SongViewAdapter.php:345
-#: ../../src/Repository/Model/Search.php:500
+#: ../../src/Repository/Model/Search.php:507
 msgid "Composer"
 msgstr "Szerző"
 
@@ -3005,7 +2922,7 @@ msgstr "Szerző"
 #: ../../public/templates/show_labels.inc.php:87
 #: ../../src/Gui/Song/SongViewAdapter.php:363
 #: ../../src/Repository/Model/Label.php:195
-#: ../../src/Repository/Model/Search.php:544
+#: ../../src/Repository/Model/Search.php:551
 msgid "Label"
 msgstr "Címke"
 
@@ -3052,10 +2969,10 @@ msgstr "Előre beállított config"
 #: ../../public/templates/show_edit_user.inc.php:162
 #: ../../public/templates/show_playtype_switch.inc.php:51
 #: ../../public/templates/sidebar_home.inc.php:139
-#: ../../src/Config/functions.php:591
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:486
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:485
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:501
+#: ../../src/Module/Util/Ui.php:811
 msgid "Democratic"
 msgstr "Demokratikus"
 
@@ -3064,7 +2981,7 @@ msgstr "Demokratikus"
 #: ../../public/templates/sidebar_home.inc.php:147
 #: ../../public/templates/sidebar.inc.php:41
 #: ../../public/templates/sidebar_localplay.inc.php:49
-#: ../../src/Config/functions.php:594 ../../src/Config/functions.php:1125
+#: ../../src/Config/functions.php:783 ../../src/Module/Util/Ui.php:814
 msgid "Localplay"
 msgstr "Localplay"
 
@@ -3075,7 +2992,7 @@ msgstr "Flash"
 #: ../../public/templates/show_edit_user.inc.php:165
 #: ../../public/templates/show_live_stream.inc.php:54
 #: ../../public/templates/show_playtype_switch.inc.php:39
-#: ../../src/Config/functions.php:588
+#: ../../src/Module/Util/Ui.php:808
 msgid "Stream"
 msgstr "Stream"
 
@@ -3094,7 +3011,7 @@ msgstr "Felhasználó frissítése"
 #: ../../public/templates/show_edit_video_row.inc.php:39
 #: ../../public/templates/show_video.inc.php:146
 #: ../../public/templates/show_videos.inc.php:55
-#: ../../public/templates/show_videos.inc.php:113
+#: ../../public/templates/show_videos.inc.php:114
 msgid "Release Date"
 msgstr "Kiadás dátuma"
 
@@ -3144,8 +3061,8 @@ msgid "Direct URL to Image"
 msgstr "Direkt URL a képhez"
 
 #: ../../public/templates/show_get_art.inc.php:72
-#: ../../src/Repository/Model/Search.php:669
-#: ../../src/Repository/Model/Search.php:725
+#: ../../src/Repository/Model/Search.php:677
+#: ../../src/Repository/Model/Search.php:734
 msgid "Local Image"
 msgstr "Helyi kép"
 
@@ -3255,7 +3172,7 @@ msgid "Repeat Off"
 msgstr "Ismétlés ki"
 
 #: ../../public/templates/show_html5_player.inc.php:176
-#: ../../src/Repository/Model/Song.php:1735
+#: ../../src/Repository/Model/Song.php:1736
 msgid "Show Lyrics"
 msgstr "Dalszöveg mutatása"
 
@@ -3415,7 +3332,7 @@ msgstr "Ellenőrzés"
 #: ../../public/templates/show_install_check.inc.php:44
 #: ../../public/templates/show_test.inc.php:63
 #: ../../public/templates/show_user.inc.php:118
-#: ../../src/Repository/Model/Catalog.php:1691
+#: ../../src/Repository/Model/Catalog.php:1698
 #: ../../src/Repository/Model/Channel.php:310
 msgid "Status"
 msgstr "Állapot"
@@ -3519,8 +3436,8 @@ msgstr ""
 
 #: ../../public/templates/show_install_config.inc.php:117
 #: ../../public/templates/show_manage_democratic.inc.php:36
-#: ../../src/Config/functions.php:716 ../../src/Config/functions.php:723
-#: ../../src/Config/functions.php:746
+#: ../../src/Module/Util/Ui.php:936 ../../src/Module/Util/Ui.php:943
+#: ../../src/Module/Util/Ui.php:966
 msgid "Default"
 msgstr "Alapértelmezett"
 
@@ -3678,10 +3595,10 @@ msgstr "config/ampache.cfg.php művelet"
 #: ../../src/Application/Api/Upnp/ControlReplyApplication.php:37
 #: ../../src/Application/Api/Upnp/MediaServiceDescriptionApplication.php:37
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:38
-#: ../../src/Config/functions.php:467 ../../src/Config/functions.php:657
-#: ../../src/Config/functions.php:677
 #: ../../src/Module/Api/DaapApiApplication.php:35
 #: ../../src/Module/Api/SubsonicApiApplication.php:52
+#: ../../src/Module/Util/Ui.php:687 ../../src/Module/Util/Ui.php:877
+#: ../../src/Module/Util/Ui.php:897
 #: ../../src/Module/WebDav/WebDavApplication.php:48
 msgid "Disabled"
 msgstr "Letiltva"
@@ -3916,6 +3833,16 @@ msgstr ""
 msgid "Submit"
 msgstr "Küldés"
 
+#: ../../public/templates/show_lyrics.inc.php:41
+#: ../../public/templates/show_now_playing_row.inc.php:50
+#: ../../public/templates/show_partial_clip.inc.php:24
+#: ../../public/templates/show_recently_played.inc.php:40
+#: ../../public/templates/show_recently_played.inc.php:160
+#: ../../public/templates/show_tagcloud.inc.php:33
+#: ../../src/Repository/Model/Catalog.php:1698
+msgid "Song"
+msgstr "Dal"
+
 #: ../../public/templates/show_lyrics.inc.php:63
 msgid "No lyrics found."
 msgstr "Dalszöveg nem található."
@@ -3925,7 +3852,7 @@ msgid "Show more"
 msgstr "Több mutatása"
 
 #: ../../public/templates/show_mail_users.inc.php:29
-#: ../../public/templates/sidebar_admin.inc.php:60
+#: ../../public/templates/sidebar_admin.inc.php:59
 msgid "E-mail Users"
 msgstr "E-mail felhasználók"
 
@@ -4018,8 +3945,7 @@ msgstr "Létező fájlok frissítése itt: %s"
 #: ../../public/templates/show_playlist_title.inc.php:23
 #: ../../public/templates/sidebar_home.inc.php:47
 #: ../../public/templates/sidebar_preferences.inc.php:63
-#: ../../src/Config/functions.php:1131
-#: ../../src/Repository/Model/Search.php:560
+#: ../../src/Config/functions.php:789 ../../src/Repository/Model/Search.php:567
 msgid "Playlist"
 msgstr "Lejátszási lista"
 
@@ -4143,7 +4069,7 @@ msgstr "Lejátszási lista szerkesztés"
 #: ../../public/templates/show_searches.inc.php:50
 #: ../../public/templates/show_searches.inc.php:79
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
-#: ../../src/Repository/Model/Search.php:570
+#: ../../src/Repository/Model/Search.php:577
 msgid "Playlist Name"
 msgstr "Lejátszási lista neve"
 
@@ -4170,7 +4096,7 @@ msgid "No playlist found"
 msgstr "Lejátszási lista nem található"
 
 #: ../../public/templates/show_playtype_switch.inc.php:56
-#: ../../src/Config/functions.php:596
+#: ../../src/Module/Util/Ui.php:816
 msgid "Web Player"
 msgstr "Web Lejátszó"
 
@@ -4204,9 +4130,20 @@ msgstr "Podcast Epizód szerkesztés"
 msgid "Publication Date"
 msgstr "Publikálás dátuma"
 
+#: ../../public/templates/show_podcast_episode.inc.php:130
+#: ../../public/templates/show_random.inc.php:78
+#: ../../public/templates/show_video.inc.php:142
+#: ../../src/Gui/Song/SongViewAdapter.php:349
+msgid "Length"
+msgstr "Hossz"
+
 #: ../../public/templates/show_podcast_episode.inc.php:134
 msgid "File"
 msgstr "Fájl"
+
+#: ../../public/templates/show_podcast_episode.inc.php:135
+msgid "Size"
+msgstr "Méret"
 
 #: ../../public/templates/show_podcast_episode_row.inc.php:96
 #: ../../public/templates/show_podcast.inc.php:110
@@ -4248,30 +4185,30 @@ msgstr "Podcast nem található"
 #: ../../public/templates/show_user_row.inc.php:78
 #: ../../public/templates/sidebar.inc.php:43
 #: ../../public/templates/sidebar_preferences.inc.php:36
-#: ../../src/Config/functions.php:1137
+#: ../../src/Config/functions.php:795
 msgid "Preferences"
 msgstr "Beállítások"
 
-#: ../../public/templates/show_preference_box.inc.php:49
-#: ../../public/templates/show_preference_box.inc.php:97
+#: ../../public/templates/show_preference_box.inc.php:53
+#: ../../public/templates/show_preference_box.inc.php:101
 msgid "Apply to All"
 msgstr "Alkalmaz mindre"
 
-#: ../../public/templates/show_preference_box.inc.php:50
-#: ../../public/templates/show_preference_box.inc.php:98
+#: ../../public/templates/show_preference_box.inc.php:54
+#: ../../public/templates/show_preference_box.inc.php:102
 #: ../../src/Module/Cli/AdminAddUserCommand.php:47
 msgid "Access Level"
 msgstr "Elérési szint"
 
 #. HINT: Username FullName
-#: ../../public/templates/show_preferences.inc.php:34
-#: ../../public/templates/show_user_preferences.inc.php:36
+#: ../../public/templates/show_preferences.inc.php:39
+#: ../../public/templates/show_user_preferences.inc.php:39
 #, php-format
 msgid "Editing %s Preferences"
 msgstr "%s beállításainak szerkesztése"
 
-#: ../../public/templates/show_preferences.inc.php:41
-#: ../../public/templates/show_user_preferences.inc.php:59
+#: ../../public/templates/show_preferences.inc.php:46
+#: ../../public/templates/show_user_preferences.inc.php:62
 msgid "Update Preferences"
 msgstr "Beállítások frissítése"
 
@@ -4364,7 +4301,7 @@ msgstr "Várakozókhoz ad"
 #: ../../public/templates/show_songs.inc.php:56
 #: ../../public/templates/show_songs.inc.php:135
 #: ../../src/Gui/Song/SongViewAdapter.php:340
-#: ../../src/Repository/Model/Search.php:498
+#: ../../src/Repository/Model/Search.php:505
 msgid "Song Artist"
 msgstr ""
 
@@ -4492,7 +4429,7 @@ msgstr "Újabb szabály hozzáadása"
 #: ../../public/templates/show_search_bar.inc.php:31
 #: ../../public/templates/show_search_form.inc.php:108
 #: ../../public/templates/sidebar_home.inc.php:51
-#: ../../src/Config/functions.php:1134
+#: ../../src/Config/functions.php:792
 msgid "Search"
 msgstr "Keresés"
 
@@ -4588,7 +4525,7 @@ msgstr "Licensz"
 #: ../../public/templates/show_songs.inc.php:69
 #: ../../public/templates/show_songs.inc.php:147
 #: ../../src/Gui/Song/SongViewAdapter.php:389
-#: ../../src/Repository/Model/Search.php:517
+#: ../../src/Repository/Model/Search.php:524
 msgid "# Skipped"
 msgstr "# Kihagyása"
 
@@ -4642,7 +4579,7 @@ msgid "Web Installation"
 msgstr "Web telepítés"
 
 #: ../../public/templates/show_test_table.inc.php:42
-#: ../../src/Config/functions.php:915
+#: ../../src/Config/functions.php:573
 msgid "OK"
 msgstr "OK"
 
@@ -5016,8 +4953,7 @@ msgstr "A használt ellenőrzőkulcs nem megfelelő"
 
 #: ../../public/templates/show_user.inc.php:44
 #: ../../public/templates/show_users.inc.php:80
-#: ../../src/Config/functions.php:722
-#: ../../src/Repository/Model/Catalog.php:599
+#: ../../src/Module/Util/Ui.php:942 ../../src/Repository/Model/Catalog.php:599
 #: ../../src/Repository/Model/Catalog.php:600
 #: ../../src/Repository/Model/Catalog.php:601
 #: ../../src/Repository/Model/User.php:884
@@ -5141,7 +5077,7 @@ msgstr "Videószerkesztés"
 
 #: ../../public/templates/show_video.inc.php:148
 #: ../../public/templates/show_videos.inc.php:57
-#: ../../public/templates/show_videos.inc.php:115
+#: ../../public/templates/show_videos.inc.php:116
 msgid "Resolution"
 msgstr "Felbontás"
 
@@ -5168,7 +5104,7 @@ msgstr "Utoljára frissítve"
 
 #: ../../public/templates/show_video.inc.php:160
 #: ../../src/Gui/Song/SongViewAdapter.php:384
-#: ../../src/Repository/Model/Search.php:594
+#: ../../src/Repository/Model/Search.php:601
 msgid "Added"
 msgstr "Hozzáadva"
 
@@ -5176,7 +5112,7 @@ msgstr "Hozzáadva"
 msgid "Video Information"
 msgstr "Videó információ"
 
-#: ../../public/templates/show_videos.inc.php:95
+#: ../../public/templates/show_videos.inc.php:96
 msgid "No video found"
 msgstr "Videó nem található"
 
@@ -5186,10 +5122,10 @@ msgid "Catalogs"
 msgstr "Katalógusok"
 
 #: ../../public/templates/sidebar_admin.inc.php:40
-#: ../../public/templates/sidebar_admin.inc.php:54
-#: ../../public/templates/sidebar_admin.inc.php:71
-#: ../../public/templates/sidebar_admin.inc.php:80
-#: ../../public/templates/sidebar_admin.inc.php:89
+#: ../../public/templates/sidebar_admin.inc.php:53
+#: ../../public/templates/sidebar_admin.inc.php:70
+#: ../../public/templates/sidebar_admin.inc.php:79
+#: ../../public/templates/sidebar_admin.inc.php:88
 #: ../../public/templates/sidebar_home.inc.php:50
 #: ../../public/templates/sidebar_localplay.inc.php:49
 #: ../../public/templates/sidebar_localplay.inc.php:61
@@ -5201,55 +5137,55 @@ msgstr "Katalógusok"
 msgid "Expand/Collapse"
 msgstr "Kinyitás/Összecsukás"
 
-#: ../../public/templates/sidebar_admin.inc.php:47
+#: ../../public/templates/sidebar_admin.inc.php:46
 msgid "Manage Licenses"
 msgstr "Licenszek kezelése"
 
-#: ../../public/templates/sidebar_admin.inc.php:54
+#: ../../public/templates/sidebar_admin.inc.php:53
 msgid "User Tools"
 msgstr "Felhasználói eszközök"
 
-#: ../../public/templates/sidebar_admin.inc.php:57
+#: ../../public/templates/sidebar_admin.inc.php:56
 #: ../../src/Repository/Model/Browse.php:240
 msgid "Browse Users"
 msgstr "Felhasználók böngészése"
 
-#: ../../public/templates/sidebar_admin.inc.php:64
+#: ../../public/templates/sidebar_admin.inc.php:63
 msgid "Manage Shoutbox"
 msgstr "Shoutbox kezelése"
 
-#: ../../public/templates/sidebar_admin.inc.php:67
+#: ../../public/templates/sidebar_admin.inc.php:66
 msgid "Clear Now Playing"
 msgstr "Most Lejátszott ürítése"
 
-#: ../../public/templates/sidebar_admin.inc.php:73
+#: ../../public/templates/sidebar_admin.inc.php:72
 msgid "Add ACL"
 msgstr "ACL hozzáadása"
 
-#: ../../public/templates/sidebar_admin.inc.php:74
+#: ../../public/templates/sidebar_admin.inc.php:73
 msgid "Show ACL(s)"
 msgstr "ACL(ek) mutatása"
 
-#: ../../public/templates/sidebar_admin.inc.php:80
+#: ../../public/templates/sidebar_admin.inc.php:79
 msgid "Modules"
 msgstr "Modulok"
 
-#: ../../public/templates/sidebar_admin.inc.php:82
+#: ../../public/templates/sidebar_admin.inc.php:81
 #: ../../src/Module/Application/Admin/Modules/ShowLocalplayAction.php:59
 msgid "Localplay Controllers"
 msgstr "Localplay Vezérlők"
 
-#: ../../public/templates/sidebar_admin.inc.php:83
+#: ../../public/templates/sidebar_admin.inc.php:82
 #: ../../src/Module/Application/Admin/Modules/ShowCatalogTypesAction.php:59
 msgid "Catalog Types"
 msgstr "Katalógus típusok"
 
-#: ../../public/templates/sidebar_admin.inc.php:84
+#: ../../public/templates/sidebar_admin.inc.php:83
 #: ../../src/Module/Application/Admin/Modules/ShowPluginsAction.php:59
 msgid "Manage Plugins"
 msgstr "Pluginek kezelése"
 
-#: ../../public/templates/sidebar_admin.inc.php:89
+#: ../../public/templates/sidebar_admin.inc.php:88
 msgid "Server Config"
 msgstr "Szerver Config"
 
@@ -5299,7 +5235,7 @@ msgid "Shares"
 msgstr "Megosztások"
 
 #: ../../public/templates/sidebar_home.inc.php:179
-#: ../../src/Config/functions.php:1177
+#: ../../src/Config/functions.php:835
 #: ../../src/Module/Application/Stats/ShowAction.php:76
 msgid "Statistics"
 msgstr "Statisztikák"
@@ -5422,144 +5358,54 @@ msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
 msgid "Unknown %s"
 msgstr "Ismeretlen %s"
 
-#: ../../src/Config/functions.php:465
-msgid "Enabled"
-msgstr "Engedélyezve"
-
-#: ../../src/Config/functions.php:560 ../../src/Config/functions.php:1603
-msgid "On"
-msgstr "Be"
-
-#: ../../src/Config/functions.php:561 ../../src/Config/functions.php:1605
-msgid "Off"
-msgstr "Ki"
-
-#: ../../src/Config/functions.php:603
-msgid "M3U"
-msgstr "M3U"
-
-#: ../../src/Config/functions.php:604
-msgid "Simple M3U"
-msgstr "Egyszerű M3U"
-
-#: ../../src/Config/functions.php:605
-msgid "PLS"
-msgstr "PLS"
-
-#: ../../src/Config/functions.php:606
-msgid "Asx"
-msgstr "Asx"
-
-#: ../../src/Config/functions.php:607
-msgid "RAM"
-msgstr "RAM"
-
-#: ../../src/Config/functions.php:608
-msgid "XSPF"
-msgstr "XSPF"
-
-#: ../../src/Config/functions.php:658 ../../src/Repository/Model/Search.php:86
-msgid "1 Star"
-msgstr "1 Csillag"
-
-#: ../../src/Config/functions.php:659 ../../src/Repository/Model/Search.php:87
-msgid "2 Stars"
-msgstr "2 Csillag"
-
-#: ../../src/Config/functions.php:660 ../../src/Repository/Model/Search.php:88
-msgid "3 Stars"
-msgstr "3 Csillag"
-
-#: ../../src/Config/functions.php:661 ../../src/Repository/Model/Search.php:89
-msgid "4 Stars"
-msgstr "4 Csillag"
-
-#: ../../src/Config/functions.php:662 ../../src/Repository/Model/Search.php:90
-msgid "5 Stars"
-msgstr "5 Csillag"
-
-#: ../../src/Config/functions.php:679
-msgid "Manager"
-msgstr "Menedzser"
-
-#: ../../src/Config/functions.php:713
-msgid "Send on Add"
-msgstr "Küldés hozzáadáskor"
-
-#: ../../src/Config/functions.php:714
-msgid "Send and Clear on Add"
-msgstr "Küldés és eltüntetés hozzáadáskor"
-
-#: ../../src/Config/functions.php:715
-msgid "Clear on Send"
-msgstr "Eltüntetés hozzáadáskor"
-
-#: ../../src/Config/functions.php:724
-msgid "Always"
-msgstr "Mindig"
-
-#: ../../src/Config/functions.php:747
-msgid "Year ascending"
-msgstr "Év növekvő"
-
-#: ../../src/Config/functions.php:748
-msgid "Year descending"
-msgstr "Év csökkenő"
-
-#: ../../src/Config/functions.php:749
-msgid "Name ascending"
-msgstr "Név növekvő"
-
-#: ../../src/Config/functions.php:750
-msgid "Name descending"
-msgstr "Név csökkenő"
-
-#. HINT: Plugin Name
-#: ../../src/Config/functions.php:785
-#, php-format
-msgid "Click to grant %s access to Ampache"
-msgstr "Klikkelj a %s jogosultság hozzáadásához az Ampache-hoz"
-
-#: ../../src/Config/functions.php:1128
+#: ../../src/Config/functions.php:786
 msgid "Random Play"
 msgstr "Véletlenszerű lejátszás"
 
-#: ../../src/Config/functions.php:1141
+#: ../../src/Config/functions.php:799
 msgid "Admin-Catalog"
 msgstr "Admin-Katalógus"
 
-#: ../../src/Config/functions.php:1145
+#: ../../src/Config/functions.php:803
 msgid "Admin-User Management"
 msgstr "Admin-Felhasználókezelés"
 
-#: ../../src/Config/functions.php:1149
+#: ../../src/Config/functions.php:807
 msgid "Admin-Mail Users"
 msgstr "Admin-Levelezés felhasználók"
 
-#: ../../src/Config/functions.php:1153
+#: ../../src/Config/functions.php:811
 msgid "Admin-Manage Access Lists"
 msgstr "Admin-Elérési listák kezelése"
 
-#: ../../src/Config/functions.php:1157
+#: ../../src/Config/functions.php:815
 msgid "Admin-Site Preferences"
 msgstr "Admin-Weboldal beállításai"
 
-#: ../../src/Config/functions.php:1161
+#: ../../src/Config/functions.php:819
 msgid "Admin-Manage Modules"
 msgstr "Admin-Modulok kezelése"
 
-#: ../../src/Config/functions.php:1165
+#: ../../src/Config/functions.php:823
 msgid "Browse Music"
 msgstr "Zene böngészése"
 
-#: ../../src/Config/functions.php:1251 ../../src/Config/functions.php:1310
-#: ../../src/Config/functions.php:1360 ../../src/Config/functions.php:1409
+#: ../../src/Config/functions.php:899 ../../src/Config/functions.php:958
+#: ../../src/Config/functions.php:1008 ../../src/Config/functions.php:1057
 msgid "Add New"
 msgstr "Új hozzáadása"
 
-#: ../../src/Config/functions.php:1498
+#: ../../src/Config/functions.php:1146
 msgid "View License"
 msgstr "Licensz megtekintése"
+
+#: ../../src/Config/functions.php:1251 ../../src/Module/Util/Ui.php:780
+msgid "On"
+msgstr "Be"
+
+#: ../../src/Config/functions.php:1253 ../../src/Module/Util/Ui.php:781
+msgid "Off"
+msgstr "Ki"
 
 #: ../../src/Gui/Song/SongViewAdapter.php:279
 msgid "Song Edit"
@@ -5598,7 +5444,7 @@ msgid "ReplayGain Album Gain"
 msgstr "ReplayGain Album erősítés"
 
 #: ../../src/Gui/Song/SongViewAdapter.php:393
-#: ../../src/Repository/Model/Search.php:573
+#: ../../src/Repository/Model/Search.php:580
 msgid "Lyrics"
 msgstr "Dalszöveg"
 
@@ -5662,7 +5508,7 @@ msgid "Invalid Request"
 msgstr "Érvénytelen kérés"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#: ../../src/Module/Api/Api.php:307 ../../src/Module/Api/Json_Data.php:225
+#: ../../src/Module/Api/Api.php:308 ../../src/Module/Api/Json_Data.php:225
 #: ../../src/Module/Api/Method/AdvancedSearchMethod.php:88
 #: ../../src/Module/Api/Method/AlbumMethod.php:84
 #: ../../src/Module/Api/Method/CatalogActionMethod.php:66
@@ -5703,7 +5549,7 @@ msgid "Bad Request: %s"
 msgstr ""
 
 #. HINT: Access level, eg 75, 100
-#: ../../src/Module/Api/Api.php:334
+#: ../../src/Module/Api/Api.php:335
 #, php-format
 msgid "Require: %s"
 msgstr ""
@@ -5888,6 +5734,7 @@ msgid "Enable: licensing"
 msgstr ""
 
 #: ../../src/Module/Api/Method/LocalplayMethod.php:70
+#: ../../src/Module/Api/Method/LocalplaySongsMethod.php:61
 msgid "Unable to connect to localplay controller"
 msgstr ""
 
@@ -5998,7 +5845,7 @@ msgstr "Ilyen ACL bejegyzés már létezik"
 #: ../../src/Module/Application/Podcast/ConfirmDeleteAction.php:76
 #: ../../src/Module/Application/Podcast/CreateAction.php:78
 #: ../../src/Module/Application/PodcastEpisode/ConfirmDeleteAction.php:83
-#: ../../src/Module/Application/Preferences/GrantAction.php:72
+#: ../../src/Module/Application/Preferences/GrantAction.php:76
 #: ../../src/Module/Application/Preferences/UpdateUserAction.php:100
 #: ../../src/Module/Application/PrivateMessage/AddMessageAction.php:110
 #: ../../src/Module/Application/PrivateMessage/ConfirmDeleteAction.php:92
@@ -6115,13 +5962,13 @@ msgstr "A Katalógus törölve"
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:72
 #: ../../src/Module/Application/Podcast/ConfirmDeleteAction.php:85
 #: ../../src/Module/Application/PodcastEpisode/ConfirmDeleteAction.php:89
-#: ../../src/Module/Application/Preferences/GrantAction.php:79
+#: ../../src/Module/Application/Preferences/GrantAction.php:83
 #: ../../src/Module/Application/Song/ConfirmDeleteAction.php:89
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:82
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
 #: ../../src/Module/Catalog/Catalog_Seafile.php:487
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:195
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:201
 msgid "There Was a Problem"
 msgstr "Probléma adódott"
 
@@ -6462,7 +6309,7 @@ msgstr "A Lejátszási lista törölve"
 msgid "The Ampache database username or password is missing"
 msgstr "Az Ampache adatbázis felhasználónév és jelszó hiányzik"
 
-#: ../../src/Module/Application/Installation/DefaultAction.php:225
+#: ../../src/Module/Application/Installation/DefaultAction.php:228
 msgid "Configuration files were either not found or unreadable"
 msgstr "A konfigurációs fájlok nem találhatóak vagy nem olvashatóak"
 
@@ -6553,25 +6400,25 @@ msgstr "A Podcast Epizód törlése nem sikerült"
 msgid "The Podcast Episode will be deleted"
 msgstr "A Podcast Epizód törölve lesz"
 
-#: ../../src/Module/Application/Preferences/AdminAction.php:55
+#: ../../src/Module/Application/Preferences/AdminAction.php:60
 #: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:72
 msgid "Server"
 msgstr "Szerver"
 
-#: ../../src/Module/Application/Preferences/GrantAction.php:73
+#: ../../src/Module/Application/Preferences/GrantAction.php:77
 #: ../../src/Module/Application/Preferences/UpdateUserAction.php:101
 msgid "Your account has been updated"
 msgstr "A fiókod frissítve"
 
-#: ../../src/Module/Application/Preferences/GrantAction.php:80
+#: ../../src/Module/Application/Preferences/GrantAction.php:84
 msgid "Your account has not been updated"
 msgstr "A fiókod nem lett frissítve"
 
-#: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:90
+#: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:88
 msgid "Server preferences updated successfully"
 msgstr "Szerverbeállítások sikeresen frissítve"
 
-#: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:92
+#: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:90
 msgid "User preferences updated successfully"
 msgstr "Felhasználóbeállítások sikeresen frissítve"
 
@@ -7030,8 +6877,8 @@ msgstr "Nem sikerült beszúrni a Dalt - %s"
 #: ../../src/Module/Catalog/Catalog_remote.php:307
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:336
 #: ../../src/Module/Catalog/Catalog_subsonic.php:296
-#: ../../src/Repository/Model/Catalog.php:1705
-#: ../../src/Repository/Model/Search.php:595
+#: ../../src/Repository/Model/Catalog.php:1712
+#: ../../src/Repository/Model/Search.php:602
 msgid "Updated"
 msgstr "Frissítve"
 
@@ -7234,51 +7081,51 @@ msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr ""
 "A \"%s\" nevű Seafile könyvtár nem található, média frissítés nem történt"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:59
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:60
 msgid "Deactivated PHP memory limit"
 msgstr "PHP memórialimit kikapcsolva"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:78
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:173
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:79
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:179
 #, php-format
 msgid "Reading Catalog: \"%s\""
 msgstr "\"%s\" Katalógus olvasása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:85
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:86
 msgid "Start cleaning orphaned media entries"
 msgstr "Az árva médiabejegyzések takarításának indítása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:94
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:95
 msgid "Start verifying media related to Catalog entries"
 msgstr "A Katalógusbejegyzésekhez tartozó média ellenőrzésének indítása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:103
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:104
 msgid "Start adding new media"
 msgstr "Új média hozzáadásának indítása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:112
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:118
 msgid "Start searching new media art"
 msgstr "Új médiaborító keresésének indítása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:121
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:127
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:51
 msgid "Update artist information and fetch similar artists from last.fm"
 msgstr ""
 "Előadó információk frissítése, és hasonló előadók keresése a last.fm-en"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:135
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:141
 msgid "Optimizing database tables"
 msgstr "Adatbázistáblák optimizálása"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:177
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:183
 msgid "Moving Catalog path"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:190
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:196
 msgid "The Catalog path has changed"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:201
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:207
 msgid "There is an error with your parameters"
 msgstr ""
 
@@ -8156,6 +8003,96 @@ msgstr "Fájl másolása nem sikerült. A forrás fájl nem lesz törölve"
 msgid "File moved..."
 msgstr "Fájl áthelyezve..."
 
+#: ../../src/Module/Util/Ui.php:685
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+#: ../../src/Module/Util/Ui.php:823
+msgid "M3U"
+msgstr "M3U"
+
+#: ../../src/Module/Util/Ui.php:824
+msgid "Simple M3U"
+msgstr "Egyszerű M3U"
+
+#: ../../src/Module/Util/Ui.php:825
+msgid "PLS"
+msgstr "PLS"
+
+#: ../../src/Module/Util/Ui.php:826
+msgid "Asx"
+msgstr "Asx"
+
+#: ../../src/Module/Util/Ui.php:827
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../src/Module/Util/Ui.php:828
+msgid "XSPF"
+msgstr "XSPF"
+
+#: ../../src/Module/Util/Ui.php:878 ../../src/Repository/Model/Search.php:86
+msgid "1 Star"
+msgstr "1 Csillag"
+
+#: ../../src/Module/Util/Ui.php:879 ../../src/Repository/Model/Search.php:87
+msgid "2 Stars"
+msgstr "2 Csillag"
+
+#: ../../src/Module/Util/Ui.php:880 ../../src/Repository/Model/Search.php:88
+msgid "3 Stars"
+msgstr "3 Csillag"
+
+#: ../../src/Module/Util/Ui.php:881 ../../src/Repository/Model/Search.php:89
+msgid "4 Stars"
+msgstr "4 Csillag"
+
+#: ../../src/Module/Util/Ui.php:882 ../../src/Repository/Model/Search.php:90
+msgid "5 Stars"
+msgstr "5 Csillag"
+
+#: ../../src/Module/Util/Ui.php:899
+msgid "Manager"
+msgstr "Menedzser"
+
+#: ../../src/Module/Util/Ui.php:933
+msgid "Send on Add"
+msgstr "Küldés hozzáadáskor"
+
+#: ../../src/Module/Util/Ui.php:934
+msgid "Send and Clear on Add"
+msgstr "Küldés és eltüntetés hozzáadáskor"
+
+#: ../../src/Module/Util/Ui.php:935
+msgid "Clear on Send"
+msgstr "Eltüntetés hozzáadáskor"
+
+#: ../../src/Module/Util/Ui.php:944
+msgid "Always"
+msgstr "Mindig"
+
+#: ../../src/Module/Util/Ui.php:967
+msgid "Year ascending"
+msgstr "Év növekvő"
+
+#: ../../src/Module/Util/Ui.php:968
+msgid "Year descending"
+msgstr "Év csökkenő"
+
+#: ../../src/Module/Util/Ui.php:969
+msgid "Name ascending"
+msgstr "Név növekvő"
+
+#: ../../src/Module/Util/Ui.php:970
+msgid "Name descending"
+msgstr "Név csökkenő"
+
+#. HINT: Plugin Name
+#: ../../src/Module/Util/Ui.php:1005
+#, php-format
+msgid "Click to grant %s access to Ampache"
+msgstr "Klikkelj a %s jogosultság hozzáadásához az Ampache-hoz"
+
 #: ../../src/Plugin/Ampache7digital.php:51
 msgid "Song preview from 7digital"
 msgstr "Dal előnézet a 7digital-tól"
@@ -8565,15 +8502,15 @@ msgstr "YOURLS IDN használat"
 msgid "YOURLS API key"
 msgstr "YOURLS API key"
 
-#: ../../src/Repository/Model/Album.php:666
+#: ../../src/Repository/Model/Album.php:665
 msgid "Album MusicBrainzID"
 msgstr "Album MusicBrainzID"
 
-#: ../../src/Repository/Model/Album.php:671
+#: ../../src/Repository/Model/Album.php:670
 msgid "Release Group MusicBrainzID"
 msgstr "Kiadó Csoport MusicBrainzID"
 
-#: ../../src/Repository/Model/Artist.php:441
+#: ../../src/Repository/Model/Artist.php:498
 msgid "Artist MusicBrainzID"
 msgstr "Előadó MusicBrainzID"
 
@@ -8645,41 +8582,41 @@ msgstr[1] "órák"
 msgid "Failed to create the catalog, check the debug logs"
 msgstr "Nem sikerült a katalógus létrehozása, ellenőrizd a debug logokat"
 
-#: ../../src/Repository/Model/Catalog.php:1711
+#: ../../src/Repository/Model/Catalog.php:1718
 msgid "No Update Needed"
 msgstr "Frissítés nem szükséges"
 
-#: ../../src/Repository/Model/Catalog.php:2199
+#: ../../src/Repository/Model/Catalog.php:2215
 msgid "Catalog Cleaned"
 msgstr "Katalógus megtisztítva"
 
-#: ../../src/Repository/Model/Catalog.php:2200
+#: ../../src/Repository/Model/Catalog.php:2216
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d fájl eltávolítva."
 msgstr[1] "%d fájl eltávolítva."
 
-#: ../../src/Repository/Model/Catalog.php:2225
+#: ../../src/Repository/Model/Catalog.php:2241
 msgid "Catalog Verified"
 msgstr "Katalógus ellenőrizve"
 
-#: ../../src/Repository/Model/Catalog.php:2226
+#: ../../src/Repository/Model/Catalog.php:2242
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d fájl frissítve."
 msgstr[1] "%d fájl frissítve."
 
-#: ../../src/Repository/Model/Catalog.php:2498
+#: ../../src/Repository/Model/Catalog.php:2514
 msgid "Failed to create playlist"
 msgstr "Nem sikerült a lejátszási lista létrehozása"
 
-#: ../../src/Repository/Model/Catalog.php:2519
+#: ../../src/Repository/Model/Catalog.php:2535
 msgid "No valid songs found in playlist file"
 msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
 
-#: ../../src/Repository/Model/Catalog.php:2884
+#: ../../src/Repository/Model/Catalog.php:2900
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -8793,245 +8730,253 @@ msgid "is less than"
 msgstr "kisebb"
 
 #: ../../src/Repository/Model/Search.php:174
+#: ../../src/Repository/Model/Search.php:180
 msgid "is true"
 msgstr "igaz"
 
-#: ../../src/Repository/Model/Search.php:180
+#: ../../src/Repository/Model/Search.php:186
 msgid "is false"
 msgstr "hamis"
 
-#: ../../src/Repository/Model/Search.php:186
-#: ../../src/Repository/Model/Search.php:254
+#: ../../src/Repository/Model/Search.php:192
+#: ../../src/Repository/Model/Search.php:260
 msgid "contains"
 msgstr "tartalmaz"
 
-#: ../../src/Repository/Model/Search.php:194
-#: ../../src/Repository/Model/Search.php:262
+#: ../../src/Repository/Model/Search.php:200
+#: ../../src/Repository/Model/Search.php:268
 msgid "does not contain"
 msgstr "nem tartalmaz"
 
-#: ../../src/Repository/Model/Search.php:202
-#: ../../src/Repository/Model/Search.php:270
+#: ../../src/Repository/Model/Search.php:208
+#: ../../src/Repository/Model/Search.php:276
 msgid "starts with"
 msgstr "a kezdete"
 
-#: ../../src/Repository/Model/Search.php:210
-#: ../../src/Repository/Model/Search.php:278
+#: ../../src/Repository/Model/Search.php:216
+#: ../../src/Repository/Model/Search.php:284
 msgid "ends with"
 msgstr "végződik"
-
-#: ../../src/Repository/Model/Search.php:218
-#: ../../src/Repository/Model/Search.php:286
-#: ../../src/Repository/Model/Search.php:298
-#: ../../src/Repository/Model/Search.php:310
-msgid "is"
-msgstr "pontosan"
 
 #: ../../src/Repository/Model/Search.php:224
 #: ../../src/Repository/Model/Search.php:292
 #: ../../src/Repository/Model/Search.php:304
 #: ../../src/Repository/Model/Search.php:316
+msgid "is"
+msgstr "pontosan"
+
+#: ../../src/Repository/Model/Search.php:230
+#: ../../src/Repository/Model/Search.php:298
+#: ../../src/Repository/Model/Search.php:310
+#: ../../src/Repository/Model/Search.php:322
 msgid "is not"
 msgstr "nem egyezik"
 
-#: ../../src/Repository/Model/Search.php:230
+#: ../../src/Repository/Model/Search.php:236
 msgid "sounds like"
 msgstr "hasonlít"
 
-#: ../../src/Repository/Model/Search.php:236
+#: ../../src/Repository/Model/Search.php:242
 msgid "does not sound like"
 msgstr "nem hasonlít"
 
-#: ../../src/Repository/Model/Search.php:242
+#: ../../src/Repository/Model/Search.php:248
 msgid "matches regular expression"
 msgstr "megfelel a reguláris kifejezésnek"
 
-#: ../../src/Repository/Model/Search.php:248
+#: ../../src/Repository/Model/Search.php:254
 msgid "does not match regular expression"
 msgstr "nem felel meg a reguláris kifejezésnek"
 
-#: ../../src/Repository/Model/Search.php:322
+#: ../../src/Repository/Model/Search.php:328
 msgid "before"
 msgstr "előtt"
 
-#: ../../src/Repository/Model/Search.php:328
+#: ../../src/Repository/Model/Search.php:334
 msgid "after"
 msgstr "után"
 
-#: ../../src/Repository/Model/Search.php:334
+#: ../../src/Repository/Model/Search.php:340
 msgid "before (x) days ago"
 msgstr "(x) napnál régebben"
 
-#: ../../src/Repository/Model/Search.php:340
+#: ../../src/Repository/Model/Search.php:346
 msgid "after (x) days ago"
 msgstr "(x) napnál frissebb"
 
-#: ../../src/Repository/Model/Search.php:346
 #: ../../src/Repository/Model/Search.php:352
+#: ../../src/Repository/Model/Search.php:358
 msgid "# songs"
 msgstr "# dal"
 
-#: ../../src/Repository/Model/Search.php:358
+#: ../../src/Repository/Model/Search.php:364
 msgid "has loved"
 msgstr "kedvelte"
 
-#: ../../src/Repository/Model/Search.php:364
+#: ../../src/Repository/Model/Search.php:370
 msgid "has rated 5 stars"
 msgstr "5 csillagra értékelte"
 
-#: ../../src/Repository/Model/Search.php:370
+#: ../../src/Repository/Model/Search.php:376
 msgid "has rated 4 stars"
 msgstr "4 csillagra értékelte"
 
-#: ../../src/Repository/Model/Search.php:376
+#: ../../src/Repository/Model/Search.php:382
 msgid "has rated 3 stars"
 msgstr "3 csillagra értékelte"
 
-#: ../../src/Repository/Model/Search.php:382
+#: ../../src/Repository/Model/Search.php:388
 msgid "has rated 2 stars"
 msgstr "2 csillagra értékelte"
 
-#: ../../src/Repository/Model/Search.php:388
+#: ../../src/Repository/Model/Search.php:394
 msgid "has rated 1 star"
 msgstr "1 csillagra értékelte"
 
-#: ../../src/Repository/Model/Search.php:394
+#: ../../src/Repository/Model/Search.php:400
 msgid "has not rated"
 msgstr "nem értékelte"
 
-#: ../../src/Repository/Model/Search.php:495
+#: ../../src/Repository/Model/Search.php:502
 msgid "Any searchable text"
 msgstr "Bármely kereshető szöveg"
 
-#: ../../src/Repository/Model/Search.php:505
-#: ../../src/Repository/Model/Search.php:641
-#: ../../src/Repository/Model/Search.php:689
+#: ../../src/Repository/Model/Search.php:512
+#: ../../src/Repository/Model/Search.php:649
+#: ../../src/Repository/Model/Search.php:698
 msgid "My Rating"
 msgstr "Értékelésem"
 
-#: ../../src/Repository/Model/Search.php:506
-#: ../../src/Repository/Model/Search.php:642
-#: ../../src/Repository/Model/Search.php:690
+#: ../../src/Repository/Model/Search.php:513
+#: ../../src/Repository/Model/Search.php:650
+#: ../../src/Repository/Model/Search.php:699
 msgid "Rating (Average)"
 msgstr "Értékelés (Átlag)"
 
-#: ../../src/Repository/Model/Search.php:507
+#: ../../src/Repository/Model/Search.php:514
 msgid "My Rating (Album)"
 msgstr "Értékelésem (Album)"
 
-#: ../../src/Repository/Model/Search.php:508
+#: ../../src/Repository/Model/Search.php:515
 msgid "My Rating (Artist)"
 msgstr "Értékelésem (Előadó)"
 
 #. HINT: Number of times object has been played OR skipped
-#: ../../src/Repository/Model/Search.php:519
+#: ../../src/Repository/Model/Search.php:526
 msgid "# Played or Skipped"
 msgstr ""
 
 #. HINT: Percentage of (Times Played / Times skipped) * 100
-#: ../../src/Repository/Model/Search.php:521
+#: ../../src/Repository/Model/Search.php:528
 msgid "Played/Skipped ratio"
 msgstr "Lejátszás / Átugrás aránya"
 
-#: ../../src/Repository/Model/Search.php:522
-#: ../../src/Repository/Model/Search.php:651
-#: ../../src/Repository/Model/Search.php:699
+#: ../../src/Repository/Model/Search.php:529
+#: ../../src/Repository/Model/Search.php:659
+#: ../../src/Repository/Model/Search.php:708
 msgid "My Last Play"
 msgstr "Utolsó Lejátszásom"
 
-#: ../../src/Repository/Model/Search.php:523
-#: ../../src/Repository/Model/Search.php:652
-#: ../../src/Repository/Model/Search.php:700
+#: ../../src/Repository/Model/Search.php:530
+#: ../../src/Repository/Model/Search.php:660
+#: ../../src/Repository/Model/Search.php:709
 msgid "My Last Skip"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:524
-#: ../../src/Repository/Model/Search.php:653
-#: ../../src/Repository/Model/Search.php:701
+#: ../../src/Repository/Model/Search.php:531
+#: ../../src/Repository/Model/Search.php:661
+#: ../../src/Repository/Model/Search.php:710
 msgid "My Last Play or Skip"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:526
-#: ../../src/Repository/Model/Search.php:655
-#: ../../src/Repository/Model/Search.php:703
+#: ../../src/Repository/Model/Search.php:533
+#: ../../src/Repository/Model/Search.php:663
+#: ../../src/Repository/Model/Search.php:712
 msgid "Played by Me"
 msgstr "Általam lejátszva"
 
-#: ../../src/Repository/Model/Search.php:527
+#: ../../src/Repository/Model/Search.php:534
 msgid "Played by Me (Album)"
 msgstr "Általam lejátszva (Album)"
 
-#: ../../src/Repository/Model/Search.php:528
+#: ../../src/Repository/Model/Search.php:535
 msgid "Played by Me (Artist)"
 msgstr "Általam lejátszva (Előadó)"
 
-#: ../../src/Repository/Model/Search.php:529
-#: ../../src/Repository/Model/Search.php:656
-#: ../../src/Repository/Model/Search.php:704
+#: ../../src/Repository/Model/Search.php:536
+#: ../../src/Repository/Model/Search.php:664
+#: ../../src/Repository/Model/Search.php:713
 msgid "Length (in minutes)"
 msgstr "Hossz (percben)"
 
-#: ../../src/Repository/Model/Search.php:532
+#: ../../src/Repository/Model/Search.php:539
 msgid "Album Tag"
 msgstr "Album címke"
 
-#: ../../src/Repository/Model/Search.php:533
+#: ../../src/Repository/Model/Search.php:540
 msgid "Artist Tag"
 msgstr "Előadócímke"
 
-#: ../../src/Repository/Model/Search.php:540
-#: ../../src/Repository/Model/Search.php:665
-#: ../../src/Repository/Model/Search.php:713
+#: ../../src/Repository/Model/Search.php:547
+#: ../../src/Repository/Model/Search.php:673
+#: ../../src/Repository/Model/Search.php:722
 msgid "Another User"
 msgstr "Másik felhasználó"
 
-#: ../../src/Repository/Model/Search.php:541
+#: ../../src/Repository/Model/Search.php:548
 msgid "Another User (Album)"
 msgstr "Másik felhasználó (Album)"
 
-#: ../../src/Repository/Model/Search.php:542
+#: ../../src/Repository/Model/Search.php:549
 msgid "Another User (Artist)"
 msgstr "Másik felhasználó (Előadó)"
 
-#: ../../src/Repository/Model/Search.php:568
+#: ../../src/Repository/Model/Search.php:575
 msgid "Smart Playlist"
 msgstr "Okos Lejátszási lista"
 
-#: ../../src/Repository/Model/Search.php:597
+#: ../../src/Repository/Model/Search.php:604
 msgid "Recently added"
 msgstr "Nemrég hozzáadott"
 
-#: ../../src/Repository/Model/Search.php:598
+#: ../../src/Repository/Model/Search.php:605
 msgid "Recently updated"
 msgstr "Nemrég frissített"
 
-#: ../../src/Repository/Model/Search.php:609
+#: ../../src/Repository/Model/Search.php:616
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
-#: ../../src/Repository/Model/Search.php:610
+#: ../../src/Repository/Model/Search.php:617
 msgid "MusicBrainz ID (Artist)"
 msgstr "MusicBrainz ID (Előadó)"
 
-#: ../../src/Repository/Model/Search.php:620
+#: ../../src/Repository/Model/Search.php:618
+#: ../../src/Repository/Model/Search.php:680
+#: ../../src/Repository/Model/Search.php:737
+#, fuzzy
+msgid "Possible Duplicate"
+msgstr "Duplikátumok eltávolítása"
+
+#: ../../src/Repository/Model/Search.php:628
 msgid "Metadata"
 msgstr "Metaadat"
 
-#: ../../src/Repository/Model/Search.php:638
+#: ../../src/Repository/Model/Search.php:646
 msgid "Place"
 msgstr "Hely"
 
-#: ../../src/Repository/Model/Search.php:670
-#: ../../src/Repository/Model/Search.php:726
+#: ../../src/Repository/Model/Search.php:678
+#: ../../src/Repository/Model/Search.php:735
 msgid "Image Width"
 msgstr "Kép szélesség"
 
-#: ../../src/Repository/Model/Search.php:671
-#: ../../src/Repository/Model/Search.php:727
+#: ../../src/Repository/Model/Search.php:679
+#: ../../src/Repository/Model/Search.php:736
 msgid "Image Height"
 msgstr "Kép magasság"
 
-#: ../../src/Repository/Model/Search.php:691
+#: ../../src/Repository/Model/Search.php:700
 msgid "Rating (Artist)"
 msgstr "Értékelés (Előadó)"
 
@@ -9053,7 +8998,7 @@ msgstr "Egy új shout érkezett %1$s-től a %2$s tartalmadra"
 msgid "by"
 msgstr "tőle:"
 
-#: ../../src/Repository/Model/Song.php:1765
+#: ../../src/Repository/Model/Song.php:1766
 msgid "Track MusicBrainzID"
 msgstr "Szám MusicBrainzID"
 
@@ -9061,7 +9006,7 @@ msgstr "Szám MusicBrainzID"
 msgid "Username is required"
 msgstr "Felhasználónév szükséges"
 
-#: ../../src/Repository/Model/User.php:1179
+#: ../../src/Repository/Model/User.php:1178
 msgid "User avatar"
 msgstr "Felhasználó avatár"
 
@@ -9851,7 +9796,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.03.2021 22:42:33 CET
+# Last Update: 06.03.2021 01:34:30 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -10040,14 +9985,6 @@ msgstr "Előadó diavetítés inaktivitási idő"
 #: Database preference table id 105
 msgid "Broadcast web player by default"
 msgstr "Web lejátszó műsorszórása alapbeállításként"
-
-#: Database preference table id 106
-msgid "Limit number of future events"
-msgstr "Jövőbeli események számának korlátozása"
-
-#: Database preference table id 107
-msgid "Limit number of past events"
-msgstr "Múltbeli események számának korlátozása"
 
 #: Database preference table id 108
 msgid "Album - Group multiple disks"

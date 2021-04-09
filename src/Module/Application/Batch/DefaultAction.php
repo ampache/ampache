@@ -36,6 +36,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,6 +54,8 @@ final class DefaultAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
@@ -60,12 +63,14 @@ final class DefaultAction implements ApplicationActionInterface
         LoggerInterface $logger,
         ZipHandlerInterface $zipHandler,
         FunctionCheckerInterface $functionChecker,
+        AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->zipHandler      = $zipHandler;
         $this->functionChecker = $functionChecker;
+        $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
     }
 
@@ -99,7 +104,7 @@ final class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+        if (InterfaceImplementationChecker::is_playable_item($object_type) && $object_type !== 'album') {
             $object_id = $_REQUEST['id'];
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
@@ -124,6 +129,16 @@ final class DefaultAction implements ApplicationActionInterface
                 case 'tmp_playlist':
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
+                    break;
+                case 'album':
+                    $albumList  = explode(',', $_REQUEST['id']);
+                    $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
+                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $libitem    = new $class_name($albumList[0]);
+                    if ($libitem->id) {
+                        $libitem->format();
+                        $name = $libitem->get_fullname();
+                    }
                     break;
                 case 'browse':
                     $object_id        = (int) scrub_in(Core::get_post('browse_id'));

@@ -70,7 +70,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
 
         ob_end_clean();
-        ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
@@ -81,24 +80,48 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
 
             if ($cleanup === true) {
+                ob_start();
+
                 // Clean out dead files
                 $interactor->info(
                     T_('Start cleaning orphaned media entries'),
                     true
                 );
                 $catalog->clean_catalog();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             }
             if ($verification === true) {
+                ob_start();
+
                 // Verify Existing
                 $interactor->info(
                     T_('Start verifying media related to Catalog entries'),
                     true
                 );
                 $catalog->verify_catalog_proc();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             }
             if ($addNew === true) {
+                ob_start();
+
                 // Look for new files
                 $interactor->info(
                     T_('Start adding new media'),
@@ -111,17 +134,39 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 foreach ($artists as $artist_id) {
                     Artist::update_artist_counts($artist_id);
                 }
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             } elseif ($addArt === true) {
+                ob_start();
+
                 // Look for media art
                 $interactor->info(
                     T_('Start searching new media art'),
                     true
                 );
                 $catalog->gather_art();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             }
             if ($updateInfo === true) {
+                ob_start();
+
                 // Look for updated artist information. (missing or < 6 months since last update)
                 $interactor->info(
                     T_('Update artist information and fetch similar artists from last.fm'),
@@ -129,6 +174,15 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $artist_info = $catalog->get_artist_ids('info');
                 $catalog->gather_artist_info($artist_info);
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             }
         }
@@ -136,23 +190,26 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $this->catalogGarbageCollector->collect();
         }
         if ($optimizeDatabase === true) {
+            ob_start();
+
             // Optimize Database Tables
             $interactor->info(
                 T_('Optimizing database tables'),
                 true
             );
             Dba::optimize_tables();
+
+            $buffer = ob_get_contents();
+
+            ob_end_clean();
+
+            $interactor->info(
+                $this->cleanBuffer($buffer),
+                true
+            );
+
             $interactor->info('------------------', true);
         }
-
-        $buffer = ob_get_contents();
-
-        ob_end_clean();
-
-        $interactor->info(
-            $this->cleanBuffer($buffer),
-            true
-        );
     }
 
     public function updatePath(
