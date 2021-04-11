@@ -375,6 +375,9 @@ class Core
      */
     public static function get_filesize($filename)
     {
+        if (!file_exists($filename)) {
+            return false;
+        }
         $size = filesize($filename);
         if ($size === false) {
             $filepointer = fopen($filename, 'rb');
