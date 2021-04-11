@@ -10,6 +10,7 @@
 ### Changed
 
 * SubSonic - When calling createPlaylist, assume that the list needs to be empty first
+* Simplify flagging/rating multi-disk albums
 
 ### Fixed
 

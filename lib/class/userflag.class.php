@@ -167,18 +167,16 @@ class Userflag extends database_object
         if ($user_id === 0) {
             return false;
         }
-        $results = array();
+        // albums may be a group of id's
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` FROM `album`" .
-                    " WHERE `id` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $results    = Dba::fetch_assoc($db_results);
-        }
-        if (!empty($results)) {
-            return self::set_flag_for_group($flagged, $results, $user_id);
-        }
-        debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
+            $album       = new Album($this->id);
+            $album_array = $album->get_group_disks_ids();
+            self::set_flag_for_group($flagged, $album_array, $user_id);
 
+            return true;
+        }
+        // Everything else is a single item
+        debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
         if (!$flagged) {
             $sql = "DELETE FROM `user_flag` WHERE " .
                 "`object_id` = ? AND " .
@@ -236,35 +234,14 @@ class Userflag extends database_object
      * set_flag_for_group
      * This function sets the user flag for an album group.
      * @param boolean $flagged
-     * @param $album
+     * @param array $album_array
      * @param integer $user_id
      * @return boolean
      */
-    public static function set_flag_for_group($flagged, $album, $user_id = null)
+    public static function set_flag_for_group($flagged, $album_array, $user_id = null)
     {
-        $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
-        if ($album['album_artist']) {
-            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
-        } else {
-            $sql .= " AND `album`.`album_artist` IS NULL";
-        }
-        if ($album['mbid']) {
-            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
-        } else {
-            $sql .= " AND `album`.`mbid` IS NULL";
-        }
-        if ($album['prefix']) {
-            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
-        } else {
-            $sql .= " AND `album`.`prefix` IS NULL";
-        }
-        $results    = array();
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        foreach ($results as $album_id) {
+        foreach ($album_array as $album_id) {
+            debug_event(self::class, "Setting userflag for Album $album_id to $flagged", 4);
             if (!$flagged) {
                 $sql = "DELETE FROM `user_flag` WHERE " .
                     "`object_id` = " . $album_id . " AND " .
