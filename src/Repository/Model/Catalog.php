@@ -1777,10 +1777,10 @@ abstract class Catalog extends database_object
 
         $functions = [
             'song' => static function ($results, $media) {
-                return Catalog::update_song_from_tags($results, $media);
+                return self::update_song_from_tags($results, $media);
             },
             'video' => static function ($results, $media) {
-                return Catalog::update_video_from_tags($results, $media);
+                return self::update_video_from_tags($results, $media);
             },
         ];
 
