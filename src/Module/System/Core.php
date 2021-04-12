@@ -376,18 +376,18 @@ class Core
     public static function get_filesize($filename)
     {
         if (!file_exists($filename)) {
-            return false;
+            return 0;
         }
         $size = filesize($filename);
         if ($size === false) {
             $filepointer = fopen($filename, 'rb');
             if (!$filepointer) {
-                return false;
+                return 0;
             }
             $offset = PHP_INT_MAX - 1;
             $size   = (float)$offset;
             if (!fseek($filepointer, $offset)) {
-                return false;
+                return 0;
             }
             $chunksize = 8192;
             while (!feof($filepointer)) {
@@ -398,7 +398,7 @@ class Core
             $size = sprintf("%u", $size);
         }
 
-        return $size;
+        return (int)$size;
     }
 
     /**
