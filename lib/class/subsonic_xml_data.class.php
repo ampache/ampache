@@ -1204,20 +1204,20 @@ class Subsonic_XML_Data
     public static function addUser($xml, $user)
     {
         $xuser = $xml->addChild('user');
-        $xuser->addAttribute('username', (string) $user->username);
-        $xuser->addAttribute('email', (string) $user->email);
+        $xuser->addAttribute('username', (string)$user->username);
+        $xuser->addAttribute('email', (string)$user->email);
         $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
         $isAdmin   = ($user->access >= 100);
-        $xuser->addAttribute('adminRole', (string) $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('adminRole', ($isAdmin) ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
-        $xuser->addAttribute('coverArtRole', (string) $isManager ? 'true' : 'false');
-        $xuser->addAttribute('commentRole', 'false');
-        $xuser->addAttribute('podcastRole', 'false');
+        $xuser->addAttribute('coverArtRole', ($isManager) ? 'true' : 'false');
+        $xuser->addAttribute('commentRole', (AmpConfig::get('social')) ? 'true' : 'false');
+        $xuser->addAttribute('podcastRole', (AmpConfig::get('podcast')) ? 'true' : 'false');
         $xuser->addAttribute('streamRole', 'true');
-        $xuser->addAttribute('jukeboxRole', 'false');
+        $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) ? 'true' : 'false');
         $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
     }
 
