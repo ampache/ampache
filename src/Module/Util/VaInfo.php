@@ -241,8 +241,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function get_info()
     {
-        // If this is broken, don't waste time figuring it out a second
-        // time, just return their rotting carcass of a media file.
+        // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
             return;
@@ -749,9 +748,7 @@ final class VaInfo implements VaInfoInterface
     private function _get_plugin_tags()
     {
         // convert to lower case to be sure it matches pluginnames in Ampache\Plugin\PluginEnum
-        // log info if none are enabled or maybe mistyped ?
-        $tag_order = array_map('strtolower', $this->get_metadata_order());
-
+        $tag_order    = array_map('strtolower', $this->get_metadata_order());
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
@@ -764,6 +761,8 @@ final class VaInfo implements VaInfoInterface
                                 self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
                     }
                 }
+            } else {
+                debug_event(self::class, '_get_plugin_tags: ' . tag_source . ' is not a valid metadata_order plugin', 5);
             }
         }
     }
