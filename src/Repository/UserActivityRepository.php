@@ -200,7 +200,9 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                 $objectType,
                 $objectId,
                 $date,
-                $artistName,
+                empty($artistMbId)
+                    ? null
+                    : $artistMbId,
                 $artistMbId,
             ]
         );
@@ -234,8 +236,12 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                 $date,
                 $artistName,
                 $albumName,
-                $artistMbId,
-                $albumMbId
+                empty($artistMbId)
+                    ? null
+                    : $artistMbId,
+                empty($albumMbId)
+                    ? null
+                    : $albumMbId
             ]
         );
     }

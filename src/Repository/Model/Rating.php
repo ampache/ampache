@@ -288,21 +288,18 @@ class Rating extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-
-        $results = array();
+        // albums may be a group of id's
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql        = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` FROM `album`" . " WHERE `id` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $results    = Dba::fetch_assoc($db_results);
-        }
-        if (!empty($results)) {
-            return self::set_rating_for_group($rating, $results, $user_id);
-        }
+            $album       = new Album($this->id);
+            $album_array = $album->get_group_disks_ids();
+            self::set_rating_for_group($rating, $album_array, $user_id);
 
+            return true;
+        }
+        // Everything else is a single item
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
-
-        // If score is -1, then remove rating
         if ($rating == '-1') {
+            // If score is -1, then remove rating
             $sql    = "DELETE FROM `rating` WHERE " . "`object_id` = ? AND " . "`object_type` = ? AND " . "`user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
@@ -323,37 +320,16 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
      * @param string $rating
-     * @param array $album
+     * @param array $album_array
      * @param string $user_id
      * @return boolean
      */
-    private static function set_rating_for_group($rating, $album, $user_id = null)
+    private static function set_rating_for_group($rating, $album_array, $user_id = null)
     {
-        $sql = "SELECT `album`.`id` FROM `album`" . " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
-        if ($album['album_artist']) {
-            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
-        } else {
-            $sql .= " AND `album`.`album_artist` IS NULL";
-        }
-        if ($album['mbid']) {
-            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
-        } else {
-            $sql .= " AND `album`.`mbid` IS NULL";
-        }
-        if ($album['prefix']) {
-            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
-        } else {
-            $sql .= " AND `album`.`prefix` IS NULL";
-        }
-        $results    = array();
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        foreach ($results as $album_id) {
+        foreach ($album_array as $album_id) {
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
-            // If score is -1, then remove rating
             if ($rating == '-1') {
+                // If score is -1, then remove rating
                 $sql = "DELETE FROM `rating`" . " WHERE `object_id` = '" . $album_id . "' AND " . " `object_type` = 'album' AND" . " `user` = " . $user_id;
                 Dba::write($sql);
             } else {

@@ -231,8 +231,7 @@ class VaInfo
      */
     public function get_info()
     {
-        // If this is broken, don't waste time figuring it out a second
-        // time, just return their rotting carcass of a media file.
+        // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
         } else {
@@ -676,11 +675,10 @@ class VaInfo
      */
     private function _get_plugin_tags()
     {
-        $tag_order = $this->get_metadata_order();
-
+        $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
-            if (in_array($tag_source, $plugin_names)) {
+            if (in_array(strtolower($tag_source), $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {

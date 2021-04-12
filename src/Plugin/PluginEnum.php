@@ -49,7 +49,7 @@ final class PluginEnum
         'librefm' => Ampachelibrefm::class,
         'listenbrainz' => Ampachelistenbrainz::class,
         'matomo' => AmpacheMatomo::class,
-        'musicbrains' => AmpacheMusicBrainz::class,
+        'musicbrainz' => AmpacheMusicBrainz::class,
         'omdb' => AmpacheOmdb::class,
         'paypal' => AmpachePaypal::class,
         'piwik' => AmpachePiwik::class,
