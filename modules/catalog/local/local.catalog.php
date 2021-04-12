@@ -127,7 +127,7 @@ class Catalog_local extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) ($catalog_id);
+            $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
