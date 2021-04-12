@@ -26,6 +26,8 @@
 * Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
 * Automated Label creation when updating from tags
 * Grouped album downloads and rightbar actions
+* SubSonic - Assign roles based on preferences (fixes jukebox, podcast and share roles)
+* Preference::get_by_user was caching into a single value
 
 ## Ampache 4.4.1-release
 
