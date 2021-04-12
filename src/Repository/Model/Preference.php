@@ -164,8 +164,8 @@ class Preference extends database_object
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
-        if (parent::is_cached('get_by_user', $user_id)) {
-            return (int)(parent::get_from_cache('get_by_user', $user_id))[0];
+        if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
+            return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
@@ -176,7 +176,7 @@ class Preference extends database_object
         }
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('get_by_user', $user_id, $data);
+        parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
 
         return $data['value'];
     } // get_by_user
