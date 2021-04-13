@@ -37,24 +37,22 @@ use getID3;
 use getid3_writetags;
 
 /**
- * This class handels the retrieval of media tags
+ * This class handles the retrieval of media tags
  */
 final class VaInfo implements VaInfoInterface
 {
     public $encoding          = '';
-    public $encodingId3v1    = '';
-    public $encodingId3v2    = '';
-
+    public $encodingId3v1     = '';
+    public $encodingId3v2     = '';
     public $filename          = '';
     public $type              = '';
     public $tags              = array();
-    public $islocal;
     public $gatherTypes       = array();
+    public $islocal;
 
     protected $_raw           = array();
     protected $_getID3        = null;
     protected $_forcedSize    = 0;
-
     protected $_file_encoding = '';
     protected $_file_pattern  = '';
     protected $_dir_pattern   = '';
@@ -158,7 +156,7 @@ final class VaInfo implements VaInfoInterface
             }
 
             if (static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
-                    // The user has told us to be moronic, so let's do that thing
+                // The user has told us to be moronic, so let's do that thing
                 $tags = array();
                 foreach ($test_tags as $tag) {
                     if ($value = $this->_raw['id3v2']['comments'][$tag]) {
@@ -166,7 +164,7 @@ final class VaInfo implements VaInfoInterface
                     }
                 }
 
-                $this->encodingId3v2    = self::_detect_encoding($tags, $mb_order);
+                $this->encodingId3v2     = self::_detect_encoding($tags, $mb_order);
                 $this->_getID3->encoding = $this->encodingId3v2;
             }
 
@@ -244,6 +242,7 @@ final class VaInfo implements VaInfoInterface
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
+
             return;
         }
         $enabled_sources = (array)$this->get_metadata_order();
@@ -286,9 +285,9 @@ final class VaInfo implements VaInfoInterface
         $tagWriter     = new getid3_writetags();
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
         $extensionMap  = [
-            'mp3'  => 'id3v2.3',
+            'mp3' => 'id3v2.3',
             'flac' => 'metaflac',
-            'oga'  => 'vorbiscomment'
+            'oga' => 'vorbiscomment'
         ];
         if (!in_array($extension, $extensionMap)) {
             $logger->debug(
@@ -388,9 +387,9 @@ final class VaInfo implements VaInfoInterface
     public static function get_tag_type($results, $configKey = 'metadata_order')
     {
         $tagorderMap = [
-            'metadata_order'       => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
             'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order'     => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
         $order = (array) ($tagorderMap[$configKey] ?? '');
@@ -732,9 +731,9 @@ final class VaInfo implements VaInfoInterface
     private function get_metadata_order()
     {
         $tagorderMap = [
-            'metadata_order'       => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
             'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order'     => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
         return (array) ($tagorderMap[$this->get_metadata_order_key()] ?? '');

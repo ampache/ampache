@@ -2303,7 +2303,7 @@ abstract class Catalog extends database_object
         $items      = preg_split($pattern, $string);
         $items      = array_map('trim', $items);
 
-        if ((isset($items) && isset($items[0]) && $items[0] != '') && $doTrim ) {
+        if ((isset($items) && isset($items[0]) && $items[0] != '') && $doTrim) {
             return $items[0];
         }
 
