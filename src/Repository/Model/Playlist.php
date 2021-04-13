@@ -124,46 +124,6 @@ class Playlist extends playlist_object
     } // get_playlists
 
     /**
-<<<<<<< HEAD
-=======
-     * get_smartlists
-     * Returns a list of playlists accessible by the user.
-     * @param integer $user_id
-     * @param string $playlist_name
-     * @param boolean $like
-     * @return array
-     */
-    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true)
-    {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
-        }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
-        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
-        $params   = array();
-
-        if (!$is_admin) {
-            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
-            $params[] = $user_id;
-        }
-        if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
-        }
-        $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_smartlists ' . $sql, 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_smartlists
-
-    /**
->>>>>>> develop
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
