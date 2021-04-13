@@ -293,7 +293,7 @@ final class SongSorter implements SongSorterInterface
             $new_sum = Core::get_filesize($fullname);
             $old_sum = Core::get_filesize($song->file);
 
-            if ($new_sum != $old_sum || !$new_sum) {
+            if ($new_sum != $old_sum || $new_sum == 0) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),

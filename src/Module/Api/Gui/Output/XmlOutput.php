@@ -977,9 +977,9 @@ final class XmlOutput implements ApiOutputInterface
                         $string .= "<$type id=\"" . $objectId . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
-                            if ($album_id) {
-                                $album = new Album($album_id[0]);
-                                $string .= "\t<album id=\"" . $album_id[0] .
+                            if ($album_id > 0) {
+                                $album = new Album($album_id);
+                                $string .= "\t<album id=\"" . $album_id .
                                     '"><![CDATA[' . $album->full_name .
                                     "]]></album>\n";
                             }

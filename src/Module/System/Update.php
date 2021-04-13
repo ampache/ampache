@@ -488,7 +488,7 @@ class Update
      * update_380012
      *
      * Fix change in https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee
-     * That left the userbase with an inconsistent database.
+     * That left the user base with an inconsistent database.
      * For more information, please look at update_360035.
      */
     public static function update_380012()

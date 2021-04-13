@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @todo Check if those `clear cache` calls are really necessary
  * Those caches exist just for the lifetime of a request (or a cli process).
- * It makes no sense to eplicitly clear them within a gui request
+ * It makes no sense to explicitly clear them within a gui request
  */
 final class ClearCacheAction implements ApplicationActionInterface
 {

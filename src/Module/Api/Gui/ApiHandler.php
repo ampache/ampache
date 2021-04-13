@@ -173,7 +173,7 @@ final class ApiHandler implements ApiHandlerInterface
             $action != HandshakeMethod::ACTION && $action != PingMethod::ACTION
         ) {
             /**
-             * @todo get rid of implicit user registration and pass the user explicitely
+             * @todo get rid of implicit user registration and pass the user explicitly
              */
             $GLOBALS['user'] = $gatekeeper->getUser();
         }

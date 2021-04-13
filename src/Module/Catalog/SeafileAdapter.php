@@ -243,7 +243,7 @@ class SeafileAdapter
         }
     }
 
-    // run a function for all files in the seafile library.
+    // run a function for all files in the Seafile library.
     // the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
     // (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
     // Returns number added, or -1 on failure

@@ -80,7 +80,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         } elseif ($art->type == 'album' || $art->type == 'artist') {
             $data = $this->gatherSongTags($art, $limit);
         } elseif (($art->type == 'song') && (AmpConfig::get('gather_song_art', false))) {
-            $data = $this->gatherSsongTagsSingle($art, $limit);
+            $data = $this->gatherSongTagsSingle($art, $limit);
         } else {
             $data = [];
         }
@@ -181,7 +181,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param int $limit
      * @return array
      */
-    public function gatherSsongTagsSingle(Art $art, $limit = 5)
+    public function gatherSongTagsSingle(Art $art, $limit = 5)
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);

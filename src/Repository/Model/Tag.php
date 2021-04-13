@@ -629,9 +629,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     /**
      * get_display
-     * This returns a csv formated version of the tags that we are given
+     * This returns a csv formatted version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
-     * by the formating functions of the different objects
+     * by the formatting functions of the different objects
      * @param array $tags
      * @param boolean $link
      * @param string $filter_type

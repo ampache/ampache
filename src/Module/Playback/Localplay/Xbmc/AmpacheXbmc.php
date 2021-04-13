@@ -229,7 +229,7 @@ class AmpacheXbmc extends localplay_controller
             $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
+        $user_id = $user_id ?: Core::get_global('user')->id;
 
         Preference::update('xbmc_active', $user_id, $uid);
         AmpConfig::set('xbmc_active', $uid, true);
@@ -273,10 +273,10 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param $track
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($track)
+    public function delete_track($object_id)
     {
         if (!$this->_xbmc) {
             return false;
@@ -285,7 +285,7 @@ class AmpacheXbmc extends localplay_controller
         try {
             $this->_xbmc->Playlist->Remove(array(
                 'playlistid' => $this->_playlistId,
-                'position' => $track
+                'position' => $object_id
             ));
 
             return true;

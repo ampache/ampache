@@ -169,7 +169,7 @@ class Preference extends database_object
         $pref_id   = static::getPreferenceRepository()->getIdByName($pref_name);
 
         $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('get_by_user', (int) $user_id);
+        $cacheItem = $cache->retrieve('get_by_user-' . $pref_name, (int) $user_id);
 
         if ($cacheItem !== []) {
             return $cacheItem[0];
@@ -183,7 +183,7 @@ class Preference extends database_object
         }
         $data = Dba::fetch_assoc($db_results);
 
-        $cache->add('get_by_user', (int) $user_id, $data);
+        $cache->add('get_by_user-' . $pref_name, (int) $user_id, $data);
 
         return $data['value'];
     } // get_by_user

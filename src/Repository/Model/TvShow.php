@@ -174,7 +174,7 @@ class TvShow extends database_object implements library_item
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */

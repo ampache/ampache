@@ -264,7 +264,6 @@ class Userflag extends database_object
      */
     public static function set_flag_for_group($flagged, $album_array, $user_id)
     {
-
         $cache = static::getDatabaseObjectCache();
 
         foreach ($album_array as $album_id) {

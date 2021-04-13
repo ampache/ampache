@@ -84,7 +84,7 @@ final class ControlReplyApplication implements ApplicationInterface
         debug_event('control-reply', 'Action: ' . $upnpRequest['action'] . ' with filter [' . $filter . ']', 5);
         switch ($upnpRequest['action']) {
             case 'systemupdateID':
-                // Should reflect changes to the database; Catalog::GetLaststUpdate() doesn't cut it though
+                // Should reflect changes to the database; Catalog::GetLatestUpdate() doesn't cut it though
                 // debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
                 $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
                 $soapXML = "<?xml version=\"1.0\"?>" .

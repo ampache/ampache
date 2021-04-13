@@ -43,7 +43,7 @@ class CliHandler extends Handler
     protected $handlerCommand;
 
     /**
-     * Field seperator for beets field format
+     * Field separator for beets field format
      * @var string
      */
     protected $seperator = '###';

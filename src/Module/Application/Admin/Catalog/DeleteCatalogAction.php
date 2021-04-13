@@ -62,7 +62,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
         $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
         $deleted  = true;
-        /* Delete the sucker, we don't need to check perms as thats done above */
+        // Delete the sucker, we don't need to check perms as that's done above
         foreach ($catalogs as $catalog_id) {
             $deleted = Catalog::delete($catalog_id);
             if (!$deleted) {

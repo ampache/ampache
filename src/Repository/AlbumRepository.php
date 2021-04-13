@@ -118,7 +118,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $sql .= 'AND `catalog`.`enabled` = \'1\' ';
         }
-        $sql .= "ORDER BY `song`.`track`";
+        $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumId]);
 
         $results = [];

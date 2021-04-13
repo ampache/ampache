@@ -56,7 +56,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->set_active_instance($_REQUEST['instance']);
                 Preference::update('play_type', Core::get_global('user')->id, $type);
 
-                // We should also refesh the sidebar
+                // We should also refresh the sidebar
                 ob_start();
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
@@ -134,7 +134,6 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_track':
-                // Load Connect... yada yada
                 if (!Access::check('localplay', 50)) {
                     debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 

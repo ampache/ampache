@@ -66,7 +66,7 @@ final class XmlApiApplication implements ApiApplicationInterface
     {
         $response = $this->responseFactory->createResponse();
 
-        // @todo add headers to reponse after all api methods have been modernized
+        // @todo add headers to response after all api methods have been modernized
         /* Set the correct headers */
         header(sprintf('Content-type: text/xml; charset=%s', $this->configContainer->get('site_charset')));
         header('Content-Disposition: attachment; filename=information.xml');

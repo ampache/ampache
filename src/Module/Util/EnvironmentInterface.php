@@ -84,7 +84,7 @@ interface EnvironmentInterface
     public function check_php_memory(): bool;
 
     /**
-     * This checks to make sure that the php timelimit is set to some
+     * This checks to make sure that the php time limit is set to some
      * semi-sane limit, IE greater then 60 seconds
      */
     public function check_php_timelimit(): bool;

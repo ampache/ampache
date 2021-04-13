@@ -325,7 +325,7 @@ class HttpQPlayer
 
     /**
      * volume_up
-     * This increases the volume by Wimamp's defined amount
+     * This increases the volume by Winamp's defined amount
      */
     public function volume_up()
     {
@@ -432,7 +432,7 @@ class HttpQPlayer
 
     /**
      * get_tracks
-     * This returns a delimiated string of all of the filenames
+     * This returns a delimited string of all of the filenames
      * current in your playlist
      */
     public function get_tracks()

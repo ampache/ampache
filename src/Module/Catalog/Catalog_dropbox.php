@@ -693,7 +693,7 @@ class Catalog_dropbox extends Catalog
      * gather_art
      *
      * This runs through all of the albums and finds art for them
-     * This runs through all of the needs art albums and trys
+     * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
      * @param integer[]|null $songs
      * @param integer[]|null $videos

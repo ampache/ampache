@@ -28,7 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
- * This class is used to intantiate model objects (like Playlist, Song, ...)
+ * This class is used to instantiate model objects (like Playlist, Song, ...)
  */
 final class ModelFactory implements ModelFactoryInterface
 {

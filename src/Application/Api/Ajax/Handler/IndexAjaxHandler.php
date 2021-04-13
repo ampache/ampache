@@ -96,7 +96,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
         $moment  = (int) AmpConfig::get('of_the_moment');
         $user    = Core::get_global('user');
-        // filter album and video of the Moment instead of hardcoding
+        // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
             $moment = 6;
         }

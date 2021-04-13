@@ -28,8 +28,8 @@ namespace Ampache\Config;
 use Ampache\Module\Authorization\AccessLevelEnum;
 
 /**
- * The ConfigContainer is a containment for all of ampaches configuration data.
- * Once initialized, the data is immuteable
+ * The ConfigContainer is a containment for all of Ampache's configuration data.
+ * Once initialized, the data is immutable
  */
 final class ConfigContainer implements ConfigContainerInterface
 {

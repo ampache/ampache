@@ -24,6 +24,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\ArtItemGatherer;
@@ -1277,24 +1279,22 @@ abstract class Catalog extends database_object
         $options  = array();
         $libitem->format();
         if ($libitem->id) {
-            if (count($options) == 0) {
-                // Only search on items with default art kind as `default`.
-                if ($libitem->get_default_art_kind() == 'default') {
-                    $keywords = $libitem->get_keywords();
-                    $keyword  = '';
-                    foreach ($keywords as $key => $word) {
-                        $options[$key] = $word['value'];
-                        if ($word['important'] && !empty($word['value'])) {
-                            $keyword .= ' ' . $word['value'];
-                        }
+            // Only search on items with default art kind as `default`.
+            if ($libitem->get_default_art_kind() == 'default') {
+                $keywords = $libitem->get_keywords();
+                $keyword  = '';
+                foreach ($keywords as $key => $word) {
+                    $options[$key] = $word['value'];
+                    if ($word['important'] && !empty($word['value'])) {
+                        $keyword .= ' ' . $word['value'];
                     }
-                    $options['keyword'] = $keyword;
                 }
+                $options['keyword'] = $keyword;
+            }
 
-                $parent = $libitem->get_parent();
-                if (!empty($parent)) {
-                    self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
-                }
+            $parent = $libitem->get_parent();
+            if (!empty($parent)) {
+                self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
             }
         }
 
@@ -2107,29 +2107,25 @@ abstract class Catalog extends database_object
 
     /**
      * trim_slashed_list
-     * Return only the first item from / separated list
+     * Split items by configurable delimiter
+     * Return first item as string = default
+     * Return all items as array if doTrim = false passed as optional parameter
      * @param string $string
-     * @return string
+     * @param bool $doTrim
+     * @return string|array
      */
-    public static function trim_slashed_list($string)
+    public static function trim_slashed_list($string, $doTrim = true)
     {
-        $first = '';
-        if ($string) {
-            $items = explode("\x00", $string);
-            $first = trim((string)$items[0]);
-            // if first is the same as string, nothing was exploded, try other delimiters
-            if ($first === $string) {
-                // try splitting with ; and then /
-                $items = explode(";", $string);
-                $first = trim((string)$items[0]);
-                if ($first === $string) {
-                    $items = explode("/", $string);
-                    $first = trim((string)$items[0]);
-                }
-            }
+        $delimiters = static::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
+        $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
+        $items      = preg_split($pattern, $string);
+        $items      = array_map('trim', $items);
+
+        if ((isset($items) && isset($items[0])) && $doTrim) {
+            return $items[0];
         }
 
-        return $first;
+        return $items;
     } // trim_slashed_list
 
     /**
@@ -2147,7 +2143,7 @@ abstract class Catalog extends database_object
      * check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
-     * filename and trys to set the title based on that
+     * filename and tries to set the title based on that
      * @param string $title
      * @param string $file
      * @return string
@@ -2951,5 +2947,25 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getConfigContainer(): ConfigContainerInterface
+    {
+        global $dic;
+
+        return $dic->get(ConfigContainerInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getLogger(): LoggerInterface
+    {
+        global $dic;
+
+        return $dic->get(LoggerInterface::class);
     }
 }

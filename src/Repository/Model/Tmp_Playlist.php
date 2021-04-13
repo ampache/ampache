@@ -37,14 +37,14 @@ class Tmp_Playlist extends database_object
 {
     protected const DB_TABLENAME = 'tmp_playlist';
 
-    /* Variables from the Datbase */
+    // Variables from the Database
     public $id;
     public $session;
     public $type;
     public $object_type;
     public $base_playlist;
 
-    /* Generated Elements */
+    // Generated Elements
     public $items = array();
 
     /**
@@ -316,14 +316,14 @@ class Tmp_Playlist extends database_object
     /**
      * delete_track
      * This deletes a track from the tmpplaylist
-     * @param $id
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($id)
+    public function delete_track($object_id)
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
-        Dba::write($sql, array($id));
+        Dba::write($sql, array($object_id));
 
         return true;
     } // delete_track

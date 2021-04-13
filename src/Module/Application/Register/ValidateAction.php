@@ -70,7 +70,7 @@ final class ValidateAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
             define('CAPTCHA_INVERSE', 1);
             /**
-             * @todo broken, the path does not exist anylonger
+             * @todo broken, the path does not exist any longer
              */
             define(
                 'CAPTCHA_BASE_URL',
