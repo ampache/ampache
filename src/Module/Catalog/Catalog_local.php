@@ -757,8 +757,7 @@ class Catalog_local extends Catalog
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
-        } // if error
-        else {
+        } else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
                 debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
             }
@@ -996,7 +995,7 @@ class Catalog_local extends Catalog
 
     /**
      * check_path
-     * Checks the path to see if it's there or conflicting with an existing catalot
+     * Checks the path to see if it's there or conflicting with an existing catalog
      * @param string $path
      * @return boolean
      */

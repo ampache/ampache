@@ -1373,24 +1373,22 @@ abstract class Catalog extends database_object
         $options  = array();
         $libitem->format();
         if ($libitem->id) {
-            if (count($options) == 0) {
-                // Only search on items with default art kind as `default`.
-                if ($libitem->get_default_art_kind() == 'default') {
-                    $keywords = $libitem->get_keywords();
-                    $keyword  = '';
-                    foreach ($keywords as $key => $word) {
-                        $options[$key] = $word['value'];
-                        if ($word['important'] && !empty($word['value'])) {
-                            $keyword .= ' ' . $word['value'];
-                        }
+            // Only search on items with default art kind as `default`.
+            if ($libitem->get_default_art_kind() == 'default') {
+                $keywords = $libitem->get_keywords();
+                $keyword  = '';
+                foreach ($keywords as $key => $word) {
+                    $options[$key] = $word['value'];
+                    if ($word['important'] && !empty($word['value'])) {
+                        $keyword .= ' ' . $word['value'];
                     }
-                    $options['keyword'] = $keyword;
                 }
+                $options['keyword'] = $keyword;
+            }
 
-                $parent = $libitem->get_parent();
-                if (!empty($parent)) {
-                    self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
-                }
+            $parent = $libitem->get_parent();
+            if (!empty($parent)) {
+                self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
             }
         }
 
@@ -2327,7 +2325,7 @@ abstract class Catalog extends database_object
      * check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
-     * filename and trys to set the title based on that
+     * filename and tries to set the title based on that
      * @param string $title
      * @param string $file
      * @return string

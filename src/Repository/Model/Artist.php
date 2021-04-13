@@ -420,7 +420,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * format
      * this function takes an array of artist
-     * information and reformats the relevent values
+     * information and formats the relevant values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
      * @param boolean $details

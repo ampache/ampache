@@ -108,7 +108,7 @@ final class ArtCollector implements ArtCollectorInterface
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($artOrder as $method) {
             $data = [];
-            if (in_array($method, $plugin_names)) {
+            if (in_array(strtolower($method), $plugin_names)) {
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {

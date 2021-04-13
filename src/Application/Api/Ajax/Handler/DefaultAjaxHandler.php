@@ -151,10 +151,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 if (User::is_registered()) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
-                    $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
+                    $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                    $userflag = new Userflag($flag_id, $flagtype);
                     $userflag->set_flag($_GET['userflag']);
-                    echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
-                    $key           = "userflag_" . Core::get_get('object_id') . "_" . $flagtype;
+                    echo Userflag::show($flag_id, $flagtype);
+                    $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
                 } else {
