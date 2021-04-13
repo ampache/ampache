@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
@@ -379,8 +380,15 @@ class Catalog_dropbox extends Catalog
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
 
-            $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
-                $this->rename_pattern, $readfile);
+            $vainfo = $this->getUtilityFactory()->createVaInfo(
+                $outfile,
+                $this->get_gather_types('music'),
+                '',
+                '',
+                $this->sort_pattern,
+                $this->rename_pattern,
+                $readfile
+            );
             $vainfo->get_info();
 
             $key     = VaInfo::get_tag_type($vainfo->tags);
@@ -438,8 +446,16 @@ class Catalog_dropbox extends Catalog
 
             if ($res) {
                 $gtypes = $this->get_gather_types('video');
-                $vainfo = new VaInfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern,
-                    $readfile);
+
+                $vainfo = $this->getUtilityFactory()->createVaInfo(
+                    $outfile,
+                    $gtypes,
+                    '',
+                    '',
+                    $this->sort_pattern,
+                    $this->rename_pattern,
+                    $readfile
+                );
                 $vainfo->get_info();
 
                 $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
@@ -509,8 +525,9 @@ class Catalog_dropbox extends Catalog
 
         set_time_limit(0);
 
-        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox = new Dropbox($app);
+        $utilityFactory = $this->getUtilityFactory();
+        $app            = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
+        $dropbox        = new Dropbox($app);
         try {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
@@ -529,8 +546,15 @@ class Catalog_dropbox extends Catalog
                     debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
 
-                    $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
-                        $this->rename_pattern, $readfile);
+                    $vainfo = $utilityFactory->createVaInfo(
+                        $outfile,
+                        $this->get_gather_types('music'),
+                        '',
+                        '',
+                        $this->sort_pattern,
+                        $this->rename_pattern,
+                        $readfile
+                    );
                     $vainfo->forceSize($filesize);
                     $vainfo->get_info();
 
@@ -751,5 +775,15 @@ class Catalog_dropbox extends Catalog
         Ui::update_text('count_art_' . $this->id, $search_count);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

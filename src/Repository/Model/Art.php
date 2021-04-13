@@ -25,14 +25,14 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\System\Core;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
@@ -372,11 +372,14 @@ class Art extends database_object
                 /** Use special treatment for artists */
                 $songs = $this->getSongRepository()->getByArtist($object);
             }
+
+            $utilityFactory = $this->getUtilityFactory();
+
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
                 $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
-                $id3         = new vainfo($song->file);
+                $id3         = $utilityFactory->createVaInfo($song->file);
                 $ndata       = array();
                 $data        = $id3->read_id3();
                 if (isset($data['id3v2']['APIC'])) {
@@ -1384,5 +1387,15 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

@@ -46,6 +46,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -2102,7 +2103,14 @@ abstract class Catalog extends database_object
             $rename_pattern = $this->rename_pattern;
         }
 
-        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $media->file,
+            $gather_types,
+            '',
+            '',
+            $sort_pattern,
+            $rename_pattern
+        );
         try {
             $vainfo->get_info();
         } catch (Exception $error) {
@@ -3100,12 +3108,12 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @deprecated inject by constructor
+     * @deprecated Inject by constructor
      */
-    private static function getLogger(): LoggerInterface
+    private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
 
-        return $dic->get(LoggerInterface::class);
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

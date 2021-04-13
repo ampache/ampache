@@ -23,6 +23,7 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
@@ -36,12 +37,16 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
     private LoggerInterface $logger;
 
+    private UtilityFactoryInterface $utilityFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UtilityFactoryInterface $utilityFactory
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->utilityFactory  = $utilityFactory;
     }
 
     /**
@@ -68,7 +73,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     $meta[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-            $id3    = new VaInfo($song->file);
+
+            $id3    = $this->utilityFactory->createVaInfo($song->file);
             $result = $id3->read_id3();
             if ($result['fileformat'] == 'mp3') {
                 $tdata = $result['tags']['id3v2'];

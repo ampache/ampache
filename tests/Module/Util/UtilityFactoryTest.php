@@ -24,15 +24,36 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Repository\UserRepositoryInterface;
+use Mockery\MockInterface;
+use Psr\Log\LoggerInterface;
 
 class UtilityFactoryTest extends MockeryTestCase
 {
+    /** @var UserRepositoryInterface|MockInterface */
+    private MockInterface $userRepository;
+
+    /** @var ConfigContainerInterface|MockInterface */
+    private MockInterface $configContainer;
+
+    /** @var LoggerInterface|MockInterface */
+    private MockInterface $logger;
+
     private ?UtilityFactory $subject;
 
     public function setUp(): void
     {
-        $this->subject = new UtilityFactory();
+        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
+
+        $this->subject = new UtilityFactory(
+            $this->userRepository,
+            $this->configContainer,
+            $this->logger
+        );
     }
 
     public function testCreateMailerReturnsInstance(): void
