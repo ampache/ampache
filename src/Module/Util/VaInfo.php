@@ -759,7 +759,7 @@ final class VaInfo implements VaInfoInterface
                                 self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
                     }
                 }
-            } else {
+            } elseif (!in_array($tag_source, array('filename', 'getid3'))) {
                 $logger->debug(
                     '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
