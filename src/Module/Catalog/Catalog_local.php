@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -776,8 +777,14 @@ class Catalog_local extends Catalog
      */
     private function insert_local_song($file, $options = array())
     {
-        $vainfo = new VaInfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
-            $this->rename_pattern);
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $file,
+            $this->get_gather_types('music'),
+            '',
+            '',
+            $this->sort_pattern,
+            $this->rename_pattern
+        );
         $vainfo->get_info();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
@@ -895,7 +902,15 @@ class Catalog_local extends Catalog
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
-        $vainfo = new VaInfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
+
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $file,
+            $gtypes,
+            '',
+            '',
+            $this->sort_pattern,
+            $this->rename_pattern
+        );
         $vainfo->get_info();
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
@@ -1052,4 +1067,14 @@ class Catalog_local extends Catalog
 
         return true;
     } // move_catalog_proc
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
+    }
 }

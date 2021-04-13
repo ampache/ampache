@@ -28,12 +28,31 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Builder\BuilderInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Factory to create utility classes and new instances of classes which may not be used as a singleton
  */
 final class UtilityFactory implements UtilityFactoryInterface
 {
+    private UserRepositoryInterface $userRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    private LoggerInterface $logger;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger
+    ) {
+        $this->userRepository  = $userRepository;
+        $this->configContainer = $configContainer;
+        $this->logger          = $logger;
+    }
+
     public function createMailer(): MailerInterface
     {
         return new Mailer();
@@ -48,5 +67,28 @@ final class UtilityFactory implements UtilityFactoryInterface
         array $options = []
     ): ClientInterface {
         return new Client($options);
+    }
+
+    public function createVaInfo(
+        string $file,
+        array $gatherTypes = [],
+        ?string $encoding = null,
+        ?string $encodingId3v1 = null,
+        string $dirPattern = '',
+        string $filePattern = '',
+        bool $isLocal = true
+    ): VaInfoInterface {
+        return new VaInfo(
+            $this->userRepository,
+            $this->configContainer,
+            $this->logger,
+            $file,
+            $gatherTypes,
+            $encoding,
+            $encodingId3v1,
+            $dirPattern,
+            $filePattern,
+            $isLocal
+        );
     }
 }

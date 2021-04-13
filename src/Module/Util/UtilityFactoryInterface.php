@@ -37,4 +37,14 @@ interface UtilityFactoryInterface
     public function createHttpClient(
         array $options = []
     ): ClientInterface;
+
+    public function createVaInfo(
+        string $file,
+        array $gatherTypes = [],
+        ?string $encoding = null,
+        ?string $encodingId3v1 = null,
+        string $dirPattern = '',
+        string $filePattern = '',
+        bool $isLocal = true
+    ): VaInfoInterface;
 }

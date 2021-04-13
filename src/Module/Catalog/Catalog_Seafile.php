@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -370,7 +371,15 @@ class Catalog_Seafile extends Catalog
             $gather_types = $this->get_gather_types('music');
         }
 
-        $vainfo = new VaInfo($tempfilename, $gather_types, '', '', '', $sort_pattern, $rename_pattern, true);
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $tempfilename,
+            $gather_types,
+            '',
+            '',
+            $sort_pattern,
+            $rename_pattern,
+            true
+        );
         $vainfo->forceSize($file->size);
         $vainfo->get_info();
 
@@ -585,5 +594,15 @@ class Catalog_Seafile extends Catalog
         }
 
         return $media;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }
