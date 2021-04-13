@@ -29,6 +29,12 @@
 * SubSonic - Assign roles based on preferences (fixes jukebox, podcast and share roles)
 * Preference::get_by_user was caching into a single value
 
+### API 4.4.2
+
+### Fixed
+
+* API::indexes Artist albums were being added incorrectly for XML
+
 ## Ampache 4.4.1-release
 
 ### Added
