@@ -1442,8 +1442,8 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_pattern($filepath, $dirPattern, $filePattern)
     {
-        $logger  = static::getLogger();
-        $results = array();
+        $logger          = static::getLogger();
+        $results         = array();
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
             $slash_type_preg .= DIRECTORY_SEPARATOR;
