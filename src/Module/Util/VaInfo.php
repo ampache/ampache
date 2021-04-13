@@ -745,7 +745,7 @@ final class VaInfo implements VaInfoInterface
     private function _get_plugin_tags()
     {
         $logger = static::getLogger();
-        // convert to lower case to be sure it matches pluginnames in Ampache\Plugin\PluginEnum
+        // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
         $tag_order    = array_map('strtolower', $this->get_metadata_order());
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
@@ -761,7 +761,7 @@ final class VaInfo implements VaInfoInterface
                 }
             } else {
                 $logger->debug(
-                    '_get_plugin_tags: ' . tag_source . ' is not a valid metadata_order plugin',
+                    '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
