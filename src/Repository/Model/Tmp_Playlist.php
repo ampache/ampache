@@ -316,14 +316,14 @@ class Tmp_Playlist extends database_object
     /**
      * delete_track
      * This deletes a track from the tmpplaylist
-     * @param $id
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($id)
+    public function delete_track($object_id)
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
-        Dba::write($sql, array($id));
+        Dba::write($sql, array($object_id));
 
         return true;
     } // delete_track

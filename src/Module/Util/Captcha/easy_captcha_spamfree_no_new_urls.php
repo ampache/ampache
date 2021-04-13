@@ -35,10 +35,10 @@ class easy_captcha_spamfree_no_new_urls
     #-- you have to adapt this, to check for newly added URLs only, in Wikis e.g.
     #   - for simple comment submission forms, this default however suffices:
     /**
-     * @param integer $ignore
+     * @param integer $input
      * @return boolean
      */
-    public function solved($ignore = 0)
+    public function solved($input = 0)
     {
         // FIXME $uu is undefined
         return !preg_match("#(https?://\w+[^/,.]+)#ims", serialize($_GET + $_POST), $uu);

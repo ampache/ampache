@@ -1038,7 +1038,7 @@ class Json_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param  integer[]    $object_ids Object IDs
+     * @param  array        $object_ids Object IDs
      * @param  integer|null $user_id
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return string       JSON Object "song"

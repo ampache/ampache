@@ -251,16 +251,16 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_track
      * Delete a track from the UPnP playlist
-     * @param $track
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($track)
+    public function delete_track($object_id)
     {
         if (!$this->_upnp) {
             return false;
         }
 
-        $this->_upnp->PlaylistRemove($track);
+        $this->_upnp->PlaylistRemove($object_id);
 
         return true;
     }

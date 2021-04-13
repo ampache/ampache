@@ -45,12 +45,12 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- simple IS-EQUAL check
 
     /**
-     * @param $result
+     * @param $input
      * @return boolean
      */
-    public function solved($result = null)
+    public function solved($input = null)
     {
-        return (int)$this->solution == (int)$result;
+        return (int)$this->solution == (int)$input;
     }
 
     #-- make new captcha formula string

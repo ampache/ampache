@@ -130,10 +130,10 @@ class easy_captcha
     #-- check backends for correctness of solution
 
     /**
-     * @param $input
+     * @param $input (parameter only used in subclasses)
      * @return boolean
      */
-    public function solved($input = null/*parameter only used in subclasses*/)
+    public function solved($input = null)
     {
         $okay = false;
 
