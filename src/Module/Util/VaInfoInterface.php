@@ -23,7 +23,7 @@
 namespace Ampache\Module\Util;
 
 /**
- * This class handels the retrieval of media tags
+ * This class handles the retrieval of media tags
  */
 interface VaInfoInterface
 {

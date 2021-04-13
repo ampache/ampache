@@ -611,11 +611,9 @@ final class VaInfo implements VaInfoInterface
     private function _get_tags()
     {
         $results = array();
-
         $logger  = static::getLogger();
 
-        // The tags can come in many different shapes and colors
-        // depending on the encoding time of day and phase of the moon.
+        // The tags can come in many different shapes and colors depending on the encoding.
         if (is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
@@ -761,7 +759,10 @@ final class VaInfo implements VaInfoInterface
                     }
                 }
             } else {
-                debug_event(self::class, '_get_plugin_tags: ' . tag_source . ' is not a valid metadata_order plugin', 5);
+                $logger->debug(
+                    '_get_plugin_tags: ' . tag_source . ' is not a valid metadata_order plugin',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             }
         }
     }
