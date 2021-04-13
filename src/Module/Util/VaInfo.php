@@ -744,6 +744,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _get_plugin_tags()
     {
+        $logger = static::getLogger();
         // convert to lower case to be sure it matches pluginnames in Ampache\Plugin\PluginEnum
         $tag_order    = array_map('strtolower', $this->get_metadata_order());
         $plugin_names = Plugin::get_plugins('get_metadata');
