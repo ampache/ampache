@@ -85,10 +85,10 @@ final class VaInfo implements VaInfoInterface
         $filePattern = '',
         $islocal = true
     ) {
-        $this->islocal       = $islocal;
-        $this->filename      = $file;
-        $this->gatherTypes   = $gatherTypes;
-        $this->encoding      = $encoding ?: static::getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
+        $this->islocal     = $islocal;
+        $this->filename    = $file;
+        $this->gatherTypes = $gatherTypes;
+        $this->encoding    = $encoding ?: static::getConfigContainer()->get(ConfigurationKeyEnum::SITE_CHARSET);
 
         /* These are needed for the filename mojo */
         $this->_file_pattern = $filePattern;
@@ -1378,10 +1378,10 @@ final class VaInfo implements VaInfoInterface
                 }
             }
 
-            $results['tvshow_season']                              = $season[0];
-            $results['tvshow_episode']                             = $episode[0];
-            $results['tvshow']                                     = $this->formatVideoName($temp[0]);
-            $results['original_name']                              = $this->formatVideoName($temp[1]);
+            $results['tvshow_season']  = $season[0];
+            $results['tvshow_episode'] = $episode[0];
+            $results['tvshow']         = $this->formatVideoName($temp[0]);
+            $results['original_name']  = $this->formatVideoName($temp[1]);
 
             // Try to identify the show information from parent folder
             if (!$results['tvshow']) {
@@ -1395,15 +1395,15 @@ final class VaInfo implements VaInfoInterface
                     if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i',
                         $filepath, $matches)) {
                         if ($matches != null) {
-                            $results['tvshow']                      = $this->formatVideoName($matches[1]);
-                            $results['tvshow_season']               = $matches[2];
+                            $results['tvshow']        = $this->formatVideoName($matches[1]);
+                            $results['tvshow_season'] = $matches[2];
                             if (isset($matches[5])) {
                                 $results['tvshow_episode'] = $matches[5];
                             } else {
                                 // match pattern like 10.episode name.mp4
                                 if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
-                                    $results['tvshow_episode']               = $matches[1];
-                                    $results['original_name']                = $this->formatVideoName($matches[2]);
+                                    $results['tvshow_episode'] = $matches[1];
+                                    $results['original_name']  = $this->formatVideoName($matches[2]);
                                 } else {
                                     // Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
                                     preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
@@ -1442,9 +1442,8 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_pattern($filepath, $dirPattern, $filePattern)
     {
-        $logger          = static::getLogger();
-
-        $results         = array();
+        $logger  = static::getLogger();
+        $results = array();
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
             $slash_type_preg .= DIRECTORY_SEPARATOR;
