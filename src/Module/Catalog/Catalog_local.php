@@ -721,7 +721,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
-            if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {
+            if ($file_info < 1) {
                 debug_event('local.catalog', 'File not found or empty: ' . $results['file'], 5);
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
@@ -751,14 +751,13 @@ class Catalog_local extends Catalog
     public function clean_file($file, $media_type = 'song')
     {
         $file_info = Core::get_filesize(Core::conv_lc_file($file));
-        if (!file_exists(Core::conv_lc_file($file)) || $file_info < 1) {
+        if ($file_info < 1) {
             debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
-        } // if error
-        else {
+        } else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
                 debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
             }
@@ -996,7 +995,7 @@ class Catalog_local extends Catalog
 
     /**
      * check_path
-     * Checks the path to see if it's there or conflicting with an existing catalot
+     * Checks the path to see if it's there or conflicting with an existing catalog
      * @param string $path
      * @return boolean
      */
