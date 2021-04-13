@@ -41,13 +41,13 @@ use getid3_writetags;
  */
 final class VaInfo implements VaInfoInterface
 {
-    public $encoding          = '';
-    public $encodingId3v1     = '';
-    public $encodingId3v2     = '';
-    public $filename          = '';
-    public $type              = '';
-    public $tags              = array();
-    public $gatherTypes       = array();
+    public $encoding      = '';
+    public $encodingId3v1 = '';
+    public $encodingId3v2 = '';
+    public $filename      = '';
+    public $type          = '';
+    public $tags          = array();
+    public $gatherTypes   = array();
     public $islocal;
 
     protected $_raw           = array();
@@ -57,8 +57,8 @@ final class VaInfo implements VaInfoInterface
     protected $_file_pattern  = '';
     protected $_dir_pattern   = '';
 
+    private $_broken = false;
     private $_pathinfo;
-    private $_broken          = false;
 
     /**
      * Constructor
