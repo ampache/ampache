@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 /**
- * This class contains informations about plugins
+ * This class contains information about plugins
  */
 final class PluginEnum
 {

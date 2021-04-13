@@ -40,7 +40,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
     }
 
     /**
-     * Update the labels list based on commated list (ex. label1,label2,label3,..)
+     * Update the labels list based on a comma separated list (ex. label1,label2,label3,..)
      */
     public function update(
         string $labelsComma,

@@ -229,7 +229,7 @@ class AmpacheXbmc extends localplay_controller
             $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
+        $user_id = $user_id ?: Core::get_global('user')->id;
 
         Preference::update('xbmc_active', $user_id, $uid);
         AmpConfig::set('xbmc_active', $uid, true);

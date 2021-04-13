@@ -229,7 +229,7 @@ getid3_tag_order = "vorbiscomment,id3v2,id3v1,quicktime,matroska,ape,asf,avi,mpe
 ; POSSIBLE VALUES (builtins): filename and getID3
 ; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
 ; DEFAULT: getID3 filename
-metadata_order = "getID3,filename"
+metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
@@ -615,7 +615,7 @@ sociable = "true"
 ; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
 ; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
-art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
+art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 
 ; Gather song art
 ; Gather song art additionally to the album art. This will add each

@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 /**
- * The ConfigContainer is a containment for all of ampaches configuration data
+ * The ConfigContainer is a containment for all of Ampache's configuration data
  */
 interface ConfigContainerInterface
 {

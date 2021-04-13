@@ -132,7 +132,7 @@ class UPnPPlayer
     /**
      * GetPlayListItems
      * This returns a delimited string of all of the filenames
-     * current in your playlist, only url's at the moment
+     * current in your playlist, only urls at the moment
      */
     public function GetPlaylistItems()
     {

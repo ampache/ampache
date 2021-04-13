@@ -91,7 +91,7 @@ class JsonHandler extends Handler
         $item = '';
         while (!feof($handle)) {
             $item .= $char = fgetc($handle);
-            // Check for the brace prevents unneded call of itemIsComlete() which saves a whole lot of time
+            // Check for the brace prevents unneeded call of itemIsComplete() which saves a whole lot of time
             if ($char === '}' && $this->itemIsComlete($item)) {
                 $song = $this->parse($item);
                 $this->dispatch($song);

@@ -1157,8 +1157,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 continue;
             }
 
-            // Represent the value as a string for simpler comparaison.
-            // For array, ensure to sort similarly old/new values
+            // Represent the value as a string for simpler comparison. For array, ensure to sort similarly old/new values
             if (is_array($media->$key)) {
                 $arr = $media->$key;
                 sort($arr);
@@ -1182,7 +1181,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $newMediaData = $new_media->$key;
             }
 
-            // If it's a stringie thing
+            // If it's a string thing
             if (in_array($key, $string_array)) {
                 $mediaData    = self::clean_string_field_value($mediaData);
                 $newMediaData = self::clean_string_field_value($newMediaData);
@@ -1190,7 +1189,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
-            } // in array of stringies
+            } // in array of strings
             elseif ($newMediaData !== null) {
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
@@ -1672,7 +1671,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * format
      * This takes the current song object
-     * and does a ton of formating on it creating f_??? variables on the current
+     * and does a ton of formatting on it creating f_??? variables on the current
      * object
      * @param boolean $details
      */

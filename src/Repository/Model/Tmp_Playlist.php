@@ -37,14 +37,14 @@ class Tmp_Playlist extends database_object
 {
     protected const DB_TABLENAME = 'tmp_playlist';
 
-    /* Variables from the Datbase */
+    // Variables from the Database
     public $id;
     public $session;
     public $type;
     public $object_type;
     public $base_playlist;
 
-    /* Generated Elements */
+    // Generated Elements
     public $items = array();
 
     /**

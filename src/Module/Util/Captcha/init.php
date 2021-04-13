@@ -33,7 +33,7 @@ declare(strict_types=0);
  * #                               Warning                             #
  * #                               #######                             #
  * # This external file is Ampache-adapted and probably unsynced with  #
- * # origin because abandonned by its original authors.                #
+ * # origin because abandoned by its original authors.                #
  * #                                                                   #
  * #####################################################################
  *
@@ -46,7 +46,7 @@ declare(strict_types=0);
  * config:
  * <const name="CAPTCHA_PERSISTENT" value="1"  type="boolean" title="persistent cookie" description="sets a cookie after user successfully solved it, spares further captchas for a few days" />
  * <const name="CAPTCHA_NEW_URLS" value="0"  type="boolean" title="new URLs only Javascript" description="uses Javascript detection to engage CAPTCHA only if a new URL was entered into any input box" />
- * <const name="CAPTCHA_AJAX" value="1" type="boolean" title="AJAX quickcheck" description="verfies the solution (visually) while user enters it" />
+ * <const name="CAPTCHA_AJAX" value="1" type="boolean" title="AJAX quickcheck" description="verifies the solution (visually) while user enters it" />
  * <const name="CAPTCHA_IMAGE_SIZE" value="200x60" type="string" regex="\d+x\d+" title="image size" description="height x width of CAPTCHA image" />
  * <const name="CAPTCHA_INVERSE" value="1"  type="boolean" title="inverse color" description="make captcha white on black" />
  * <const name="CAPTCHA_PIXEL" value="1" type="multi" multi="1=single pixel|2=greyscale 2x2|3=smooth color" title="smooth drawing" description="image pixel assembly method and speed" />

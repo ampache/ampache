@@ -113,7 +113,7 @@ abstract class localplay_controller
     {
         // This might not be an object!
         if (!is_object($object)) {
-            // Stupiidly we'll just blindly add it for now
+            // Stupidly we'll just blindly add it for now
             return $object;
         }
 

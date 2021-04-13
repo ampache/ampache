@@ -108,7 +108,7 @@ class Scrobbler
         }
         $context = stream_context_create($opts);
         if ($params != '') {
-            // If there are paramters for GET request, adding the "?" caracter before
+            // If there are parameters for GET request, adding the "?" character before
             $params = '?' . $params;
         }
         $target   = $this->scheme . '://' . $this->host . $url . $params;
@@ -226,8 +226,8 @@ class Scrobbler
 
     /**
      * submit_tracks
-     * This actually talks to LastFM / Libre.fm submiting the tracks that are queued up.
-     * It passed the API key, session key combinted with the signature
+     * This actually talks to LastFM / Libre.fm submitting the tracks that are queued up.
+     * It passed the API key, session key combined with the signature
      */
     public function submit_tracks()
     {

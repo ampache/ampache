@@ -83,7 +83,7 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) === true &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION) === true
         ) {
-            // Check to see if they've got an interface session or a valid API session, if not GTFO
+            // Check to see if they've got an interface session or a valid API session
             $token_check = $this->authenticationManager->tokenLogin(
                 Core::get_request('u'),
                 Core::get_request('t'),

@@ -102,7 +102,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
         } // end foreach preferences
 
-        // Now that we've done that we need to invalidate the cached preverences
+        // Now that we've done that we need to invalidate the cached preferences
         Preference::clear_from_session();
     }
 }
