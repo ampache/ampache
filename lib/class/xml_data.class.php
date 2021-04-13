@@ -343,9 +343,9 @@ class XML_Data
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
-                            if ($album_id) {
-                                $album = new Album($album_id[0]);
-                                $string .= "\t<album id=\"" . $album_id[0] . '"><![CDATA[' . $album->full_name . "]]></album>\n";
+                            if ($album_id > 0) {
+                                $album = new Album($album_id);
+                                $string .= "\t<album id=\"" . $album_id . '"><![CDATA[' . $album->full_name . "]]></album>\n";
                             }
                         }
                         $string .= "</$object_type>\n";

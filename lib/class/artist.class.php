@@ -347,7 +347,7 @@ class Artist extends database_object implements library_item
                     $results = array_merge($results_sort, $results);
                 }
             } else {
-                $results[] = $row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 
