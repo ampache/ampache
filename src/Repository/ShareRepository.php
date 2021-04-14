@@ -82,4 +82,11 @@ final class ShareRepository implements ShareRepositoryInterface
             [$newObjectId, $objectType, $oldObjectId]
         );
     }
+
+    public function collectGarbage(): void
+    {
+        Dba::write(
+            'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < ' . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)"
+        );
+    }
 }

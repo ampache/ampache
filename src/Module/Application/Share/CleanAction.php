@@ -27,11 +27,11 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +43,16 @@ final class CleanAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,13 +65,14 @@ final class CleanAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $this->shareRepository->collectGarbage();
 
-        Share::garbage_collection();
         $next_url = sprintf(
             '%s/stats.php?action=share',
             $this->configContainer->getWebPath()
         );
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Expired shares have been cleaned'),

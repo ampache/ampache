@@ -39,4 +39,6 @@ interface ShareRepositoryInterface
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    public function collectGarbage(): void;
 }

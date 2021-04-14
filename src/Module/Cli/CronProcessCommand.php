@@ -35,6 +35,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 
 final class CronProcessCommand extends Command
 {
@@ -46,11 +47,14 @@ final class CronProcessCommand extends Command
 
     private BookmarkRepositoryInterface $bookmarkRepository;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
-        BookmarkRepositoryInterface $bookmarkRepository
+        BookmarkRepositoryInterface $bookmarkRepository,
+        ShareRepositoryInterface $shareRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
@@ -58,6 +62,7 @@ final class CronProcessCommand extends Command
         $this->objectCache             = $objectCache;
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->bookmarkRepository      = $bookmarkRepository;
+        $this->shareRepository         = $shareRepository;
     }
 
     public function execute(): void
@@ -111,7 +116,7 @@ final class CronProcessCommand extends Command
         /**
          * Clean up remaining functions.
          */
-        Share::garbage_collection();
+        $this->shareRepository->collectGarbage();
         Stream::garbage_collection();
         Podcast_Episode::garbage_collection();
         $this->bookmarkRepository->collectGarbage();
