@@ -1,0 +1,9 @@
+[Unit]
+Description=start ampache_podcast.service
+
+[Timer]
+OnCalendar=*-*-* 01:00:00
+Unit=ampache_podcast.service
+
+[Install]
+WantedBy=timers.target
