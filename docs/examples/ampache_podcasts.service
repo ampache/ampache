@@ -1,5 +1,5 @@
 [Unit]
-Description=ampache_podcast
+Description=ampache_podcasts
 After=network.target remote-fs.target nss-lookup.target
 Documentation=https://github.com/ampache/ampache/wiki
 
