@@ -25,19 +25,32 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Dba;
-use PDOStatement;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\UseractivityInterface;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * @return int[]
+     * @return UseractivityInterface[]
      */
     public function getFriendsActivities(int $user_id, int $limit = 0, int $since = 0): array
     {
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = $this->configContainer->getPopularThreshold(10);
         }
 
         $params = [$user_id];
@@ -50,14 +63,14 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
         }
 
         return $results;
     }
 
     /**
-     * @return int[]
+     * @return UseractivityInterface[]
      */
     public function getActivities(
         int $user_id,
@@ -65,7 +78,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         int $since = 0
     ): array {
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = $this->configContainer->getPopularThreshold(10);
         }
 
         $params = array($user_id);
@@ -78,7 +91,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
         }
 
         return $results;

@@ -22,10 +22,12 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\UseractivityInterface;
+
 interface UserActivityRepositoryInterface
 {
     /**
-     * @return int[]
+     * @return UseractivityInterface[]
      */
     public function getFriendsActivities(
         int $user_id,
@@ -34,7 +36,7 @@ interface UserActivityRepositoryInterface
     ): array;
 
     /**
-     * @return int[]
+     * @return UseractivityInterface[]
      */
     public function getActivities(
         int $user_id,

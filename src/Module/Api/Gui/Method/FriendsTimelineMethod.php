@@ -79,16 +79,16 @@ final class FriendsTimelineMethod implements MethodInterface
             throw new FunctionDisabledException(T_('Enable: sociable'));
         }
 
-        $activityIds = $this->userActivityRepository->getFriendsActivities(
+        $activities = $this->userActivityRepository->getFriendsActivities(
             $gatekeeper->getUser()->getId(),
             (int) ($input['limit'] ?? 0),
             (int) ($input['since'] ?? 0)
         );
 
-        if ($activityIds === []) {
+        if ($activities === []) {
             $result = $output->emptyResult('activity');
         } else {
-            $result = $output->timeline($activityIds);
+            $result = $output->timeline($activities);
         }
 
         return $response->withBody(

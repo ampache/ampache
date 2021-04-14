@@ -27,7 +27,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
@@ -35,12 +34,14 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 /** @var User $client */
 /** @var PlaylistRepositoryInterface $playlistRepository */
+/** @var UseractivityInterface[] $activities */
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
@@ -219,10 +220,8 @@ if ($client->f_avatar) {
             <div id="timeline" class="tab_content">
                 <?php
                 if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
-                    foreach ($activities as $activity_id) {
-                        echo $userActivityRenderer->show(
-                            new Useractivity($activity_id)
-                        );
+                    foreach ($activities as $activity) {
+                        echo $userActivityRenderer->show($activity);
                     }
                 } ?>
             </div>

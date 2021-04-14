@@ -112,7 +112,7 @@ final class TimelineMethod implements MethodInterface
         if (!$this->userPreferenceRetriever->retrieve($userId, 'allow_personal_info_recent')) {
             throw new AccessDeniedException();
         }
-        $activityIds = $this->userActivityRepository->getActivities(
+        $activities = $this->userActivityRepository->getActivities(
             $userId,
             (int) ($input['limit'] ?? 0),
             (int) ($input['since'] ?? 0)
@@ -120,7 +120,7 @@ final class TimelineMethod implements MethodInterface
 
         return $response->withBody(
             $this->streamFactory->createStream(
-                $output->timeline($activityIds)
+                $output->timeline($activities)
             )
         );
     }

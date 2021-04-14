@@ -33,7 +33,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
@@ -457,15 +456,15 @@ class JsonOutputTest extends MockeryTestCase
         $useractivity = $this->mock(UseractivityInterface::class);
         $user         = $this->mock(User::class);
 
-        $this->modelFactory->shouldReceive('createUseractivity')
-            ->with($activityId)
-            ->once()
-            ->andReturn($useractivity);
         $this->modelFactory->shouldReceive('createUser')
             ->with($userId)
             ->once()
             ->andReturn($user);
 
+        $useractivity->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($activityId);
         $useractivity->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
@@ -503,7 +502,7 @@ class JsonOutputTest extends MockeryTestCase
                     ]
                 ]]
             ], JSON_PRETTY_PRINT),
-            $this->subject->timeline([$activityId])
+            $this->subject->timeline([$useractivity])
         );
     }
 

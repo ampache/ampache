@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
@@ -948,19 +949,17 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * This return user activity to the user
      *
-     * @param int[] $activityIds Activity identifier list
+     * @param UseractivityInterface[] $activities Activity identifier list
      */
-    public function timeline(array $activityIds): string
+    public function timeline(array $activities): string
     {
         $result = [];
-        foreach ($activityIds as $activityId) {
-            $activity = $this->modelFactory->createUseractivity($activityId);
+        foreach ($activities as $activity) {
             $userId   = $activity->getUser();
-
             $user     = $this->modelFactory->createUser($userId);
 
             $result[] = [
-                'id' => (string) $activityId,
+                'id' => (string) $activity->getId(),
                 'date' => $activity->getActivityDate(),
                 'object_type' => $activity->getObjectType(),
                 'object_id' => $activity->getObjectId(),

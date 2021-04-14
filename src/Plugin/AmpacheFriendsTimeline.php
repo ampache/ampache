@@ -28,7 +28,6 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
@@ -110,15 +109,13 @@ class AmpacheFriendsTimeline
                     (int) $user_id,
                     (int) $this->maxitems
                 );
-                if (count($activities) > 0) {
+                if ($activities !== []) {
                     Ui::show_box_top(T_('Friends Timeline'));
 
                     $activityRenderer = $this->getUserActivityRenderer();
 
-                    foreach ($activities as $activity_id) {
-                        echo $activityRenderer->show(
-                            new Useractivity($activity_id)
-                        );
+                    foreach ($activities as $activity) {
+                        echo $activityRenderer->show($activity);
                     }
                     Ui::show_box_bottom();
                 }

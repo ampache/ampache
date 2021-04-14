@@ -23,6 +23,7 @@
 namespace Ampache\Module\Api\Gui\Output;
 
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\UseractivityInterface;
 
 interface ApiOutputInterface
 {
@@ -290,10 +291,10 @@ interface ApiOutputInterface
     /**
      * This return user activity to the user
      *
-     * @param int[] $activityIds Activity identifier list
+     * @param UseractivityInterface[] $activities Activity identifier list
      */
     public function timeline(
-        array $activityIds
+        array $activities
     ): string;
 
     /**

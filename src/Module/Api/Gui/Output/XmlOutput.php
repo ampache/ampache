@@ -45,6 +45,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
@@ -836,15 +837,15 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * This handles creating an xml document for an activity list
      *
-     * @param int[] $activityIds Activity identifier list
+     * @param UseractivityInterface[] $activities Activity identifier list
      */
-    public function timeline(array $activityIds): string
+    public function timeline(array $activities): string
     {
         $string = '';
-        foreach ($activityIds as $activityId) {
-            $activity = $this->modelFactory->createUseractivity($activityId);
-            $user     = $this->modelFactory->createUser($activity->getUser());
-            $string .= "\t<activity id=\"" . $activityId . "\">\n" . "\t\t<date>" . $activity->getActivityDate() . "</date>\n" . "\t\t<object_type><![CDATA[" . $activity->getObjectType() . "]]></object_type>\n" . "\t\t<object_id>" . $activity->getObjectId() . "</object_id>\n" . "\t\t<action><![CDATA[" . $activity->getAction() . "]]></action>\n";
+        foreach ($activities as $activity) {
+            $user = $this->modelFactory->createUser($activity->getUser());
+
+            $string .= "\t<activity id=\"" . $activity->getId() . "\">\n" . "\t\t<date>" . $activity->getActivityDate() . "</date>\n" . "\t\t<object_type><![CDATA[" . $activity->getObjectType() . "]]></object_type>\n" . "\t\t<object_id>" . $activity->getObjectId() . "</object_id>\n" . "\t\t<action><![CDATA[" . $activity->getAction() . "]]></action>\n";
             if ($user->id) {
                 $string .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
             }
