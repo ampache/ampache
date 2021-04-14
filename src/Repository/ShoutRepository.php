@@ -118,4 +118,15 @@ final class ShoutRepository implements ShoutRepositoryInterface
 
         return $shouts;
     }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        Dba::write(
+            'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
+    }
 }

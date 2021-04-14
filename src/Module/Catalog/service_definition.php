@@ -39,4 +39,5 @@ return [
     Process\CatalogProcessTypeMapperInterface::class => autowire(Process\CatalogProcessTypeMapper::class),
     SingleItemUpdaterInterface::class => autowire(SingleItemUpdater::class),
     ArtItemGathererInterface::class => autowire(ArtItemGatherer::class),
+    DataMigratorInterface::class => autowire(DataMigrator::class),
 ];

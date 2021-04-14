@@ -71,4 +71,15 @@ final class ShareRepository implements ShareRepositoryInterface
 
         return Dba::affected_rows($result);
     }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        Dba::write(
+            'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
+    }
 }

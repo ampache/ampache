@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
@@ -890,15 +891,9 @@ class Album extends database_object implements library_item
             }
             $current_id = $album_id;
             $updated    = true;
-            Stats::migrate('album', $this->id, $album_id);
-            $this->getUseractivityRepository()->migrate('album', $this->id, $album_id);
-            Recommendation::migrate('album', $this->id, $album_id);
-            Share::migrate('album', $this->id, $album_id);
-            Shoutbox::migrate('album', $this->id, $album_id);
-            Tag::migrate('album', $this->id, $album_id);
-            Userflag::migrate('album', $this->id, $album_id);
-            Rating::migrate('album', $this->id, $album_id);
-            Art::migrate('album', $this->id, $album_id);
+
+            $this->getDataMigrator()->migrate('album', $this->id, $album_id);
+
             if (!$cron_cache) {
                 $this->getAlbumRepository()->collectGarbage();
             }
@@ -1111,5 +1106,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getDataMigrator(): DataMigratorInterface
+    {
+        global $dic;
+
+        return $dic->get(DataMigratorInterface::class);
     }
 }

@@ -361,18 +361,4 @@ class Share extends database_object
 
         return $result;
     }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
-    }
 }

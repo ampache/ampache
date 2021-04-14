@@ -55,4 +55,9 @@ return [
     DemocraticRepositoryInterface::class => autowire(DemocraticRepository::class),
     PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
+    RecommendationRepositoryInterface::class => autowire(RecommendationRepository::class),
+    StatsRepositoryInterface::class => autowire(StatsRepository::class),
+    UserflagRepositoryInterface::class => autowire(UserflagRepository::class),
+    RatingRepositoryInterface::class => autowire(RatingRepository::class),
+    ArtRepositoryInterface::class => autowire(ArtRepository::class),
 ];

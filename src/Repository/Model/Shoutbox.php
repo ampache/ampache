@@ -24,16 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Authorization\Access;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use PDOStatement;
 use Ampache\Module\Util\Ui;
 
 class Shoutbox
@@ -271,20 +270,6 @@ class Shoutbox
         $html .= "</div>";
 
         return $html;
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**

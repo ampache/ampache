@@ -48,4 +48,9 @@ interface ShoutRepositoryInterface
      * @return int[]
      */
     public function getTop(int $limit, ?int $userId = null): array;
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 }

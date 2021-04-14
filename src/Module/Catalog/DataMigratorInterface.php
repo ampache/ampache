@@ -17,34 +17,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Catalog;
 
-interface TagRepositoryInterface
+interface DataMigratorInterface
 {
     /**
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     *
-     * @return int[]
+     * Migrate an object associate data to a new object
      */
-    public function getTagObjectIds(
-        string $type,
-        int $tagId,
-        ?int $limit = null,
-        int $offset = 0
-    ): array;
-
-    /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     *
-     * @return string[]
-     */
-    public function getSongTags(string $type, int $objectId): array;
-
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+    public function migrate(
+        string $objectType,
+        int $oldObjectId,
+        int $newObjectId
+    ): bool;
 }

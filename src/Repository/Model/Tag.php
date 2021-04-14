@@ -29,7 +29,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\TagRepositoryInterface;
-use PDOStatement;
 
 /**
  * Tag Class
@@ -939,20 +938,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (Art::has_db($this->id, 'tag') || $force) {
             Art::display('tag', $this->id, $this->get_fullname(), $thumb);
         }
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**

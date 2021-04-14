@@ -37,11 +37,11 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
+use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Catalog\MediaDeletionChecker;
 use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -59,7 +59,6 @@ use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
-use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
 use PDOStatement;
 use ReflectionException;
@@ -1733,8 +1732,13 @@ abstract class Catalog extends database_object
         }
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
-        if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album,
-                $new_song->album)) {
+
+        $dataMigrator = static::getDataMigrator();
+
+        if (
+            $dataMigrator->migrate('artist', $song->artist, $new_song->artist) ||
+            $dataMigrator->migrate('album', $song->album, $new_song->album)
+        ) {
             Song::update_utime($song->id, $update_time);
         }
 
@@ -2770,34 +2774,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Migrate an object associate images to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        if ($old_object_id != $new_object_id) {
-            debug_event(__CLASS__, 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
-
-            Stats::migrate($object_type, $old_object_id, $new_object_id);
-            static::getUserActivityRespository()->migrate($object_type, $old_object_id, $new_object_id);
-            Recommendation::migrate($object_type, $old_object_id, $new_object_id);
-            Share::migrate($object_type, $old_object_id, $new_object_id);
-            Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
-            Tag::migrate($object_type, $old_object_id, $new_object_id);
-            Userflag::migrate($object_type, $old_object_id, $new_object_id);
-            Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::migrate($object_type, $old_object_id, $new_object_id);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * xml_get_footer
      * This takes the type and returns the correct xml footer
      * @param string $type
@@ -2981,10 +2957,10 @@ abstract class Catalog extends database_object
     /**
      * @deprecated Inject by constructor
      */
-    private static function getUserActivityRespository(): UserActivityRepositoryInterface
+    private static function getDataMigrator(): DataMigratorInterface
     {
         global $dic;
 
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $dic->get(DataMigratorInterface::class);
     }
 }

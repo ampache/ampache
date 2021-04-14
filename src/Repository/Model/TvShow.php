@@ -24,10 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\DataMigratorInterface;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
@@ -398,15 +397,9 @@ class TvShow extends database_object implements library_item
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
-                static::getUseractivityRepository()->migrate('tvshow', $this->id, (int)$tvshow_id);
-                Recommendation::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Share::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Shoutbox::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Tag::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Userflag::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Rating::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Art::migrate('tvshow', $this->id, (int)$tvshow_id);
+
+                static::getDataMigrator()->migrate('tvshow', $this->id, (int)$tvshow_id);
+
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }
@@ -512,5 +505,15 @@ class TvShow extends database_object implements library_item
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getDataMigrator(): DataMigratorInterface
+    {
+        global $dic;
+
+        return $dic->get(DataMigratorInterface::class);
     }
 }

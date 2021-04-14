@@ -25,13 +25,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
@@ -80,20 +80,6 @@ class Stats
         foreach (array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
             Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
-    {
-        $sql = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**

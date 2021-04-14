@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -782,15 +783,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
                 $updated    = true;
                 $current_id = $artist_id;
-                Stats::migrate('artist', $this->id, $artist_id);
-                $this->getUseractivityRepository()->migrate('artist', $this->id, $artist_id);
-                Recommendation::migrate('artist', $this->id, $artist_id);
-                Share::migrate('artist', $this->id, $artist_id);
-                Shoutbox::migrate('artist', $this->id, $artist_id);
-                Tag::migrate('artist', $this->id, $artist_id);
-                Userflag::migrate('artist', $this->id, $artist_id);
-                Rating::migrate('artist', $this->id, $artist_id);
-                Art::migrate('artist', $this->id, $artist_id);
+
+                $this->getDataMigrator()->migrate('artist', $this->id, $artist_id);
+
                 if (!$cron_cache) {
                     self::garbage_collection();
                 }
@@ -1039,5 +1034,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getDataMigrator(): DataMigratorInterface
+    {
+        global $dic;
+
+        return $dic->get(DataMigratorInterface::class);
     }
 }

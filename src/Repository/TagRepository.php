@@ -104,4 +104,15 @@ final class TagRepository implements TagRepositoryInterface
 
         return $tags;
     }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        Dba::write(
+            'UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
+        );
+    }
 }

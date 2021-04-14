@@ -23,21 +23,20 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Metadata\Metadata;
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\Model\Metadata\Metadata;
 use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
@@ -1503,15 +1502,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('artist', $new_artist, $song_id, 50);
 
         // migrate stats for the old artist
-        Stats::migrate('artist', $old_artist, $new_artist);
-        static::getUserActivityRepository()->migrate('artist', $old_artist, $new_artist);
-        Recommendation::migrate('artist', $old_artist, $new_artist);
-        Share::migrate('artist', $old_artist, $new_artist);
-        Shoutbox::migrate('artist', $old_artist, $new_artist);
-        Tag::migrate('artist', $old_artist, $new_artist);
-        Userflag::migrate('artist', $old_artist, $new_artist);
-        Rating::migrate('artist', $old_artist, $new_artist);
-        Art::migrate('artist', $old_artist, $new_artist);
+        static::getDataMigrator()->migrate('artist', $old_artist, $new_artist);
+
         Artist::update_artist_counts($new_artist);
     } // update_artist
 
@@ -1527,15 +1519,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('album', $new_album, $song_id, 50, true);
 
         // migrate stats for the old album
-        Stats::migrate('album', $old_album, $new_album);
-        static::getUserActivityRepository()->migrate('album', $old_album, $new_album);
-        Recommendation::migrate('album', $old_album, $new_album);
-        Share::migrate('album', $old_album, $new_album);
-        Shoutbox::migrate('album', $old_album, $new_album);
-        Tag::migrate('album', $old_album, $new_album);
-        Userflag::migrate('album', $old_album, $new_album);
-        Rating::migrate('album', $old_album, $new_album);
-        Art::migrate('album', $old_album, $new_album);
+        static::getDataMigrator()->migrate('album', $old_album, $new_album);
     } // update_album
 
     /**
@@ -2354,12 +2338,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
-     * @deprecated inject dependency
+     * @deprecated Inject by constructor
      */
-    private static function getUserActivityRepository(): UserActivityRepositoryInterface
+    private static function getDataMigrator(): DataMigratorInterface
     {
         global $dic;
 
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $dic->get(DataMigratorInterface::class);
     }
 }
