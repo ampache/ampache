@@ -26,7 +26,6 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\User;
 use Exception;
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
 class AmpacheMusicBrainz
 {
@@ -99,13 +98,12 @@ class AmpacheMusicBrainz
             return null;
         }
 
-        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'artists',
             'releases'
         );
         try {
-            $track = $mbrainz->lookup('recording', $mbid, $includes);
+            $track = $this->getMusisBrainz()->lookup('recording', $mbid, $includes);
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
@@ -128,4 +126,14 @@ class AmpacheMusicBrainz
 
         return $results;
     } // get_metadata
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMusisBrainz(): MusicBrainz
+    {
+        global $dic;
+
+        return $dic->get(MusicBrainz::class);
+    }
 }

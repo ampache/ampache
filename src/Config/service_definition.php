@@ -33,11 +33,11 @@ use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Module\Util\IntermediateHttpAdapter;
 use Doctrine\DBAL\Connection;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
@@ -45,6 +45,7 @@ use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -62,8 +63,8 @@ return [
         return new ConfigContainer(AmpConfig::get_all());
     }),
     getID3::class => autowire(getID3::class),
-    MusicBrainz::class => factory(static function (): MusicBrainz {
-        return new MusicBrainz(new RequestsHttpAdapter());
+    MusicBrainz::class => factory(static function (ContainerInterface $c): MusicBrainz {
+        return new MusicBrainz($c->get(IntermediateHttpAdapter::class));
     }),
     SpotifyWebAPI::class => factory(static function (): SpotifyWebAPI {
         return new SpotifyWebAPI();
@@ -88,6 +89,7 @@ return [
     UploadedFileFactoryInterface::class => autowire(Psr17Factory::class),
     ServerRequestCreatorInterface::class => autowire(ServerRequestCreator::class),
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
+    RequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
     BuilderInterface::class => autowire(),

@@ -43,4 +43,5 @@ return [
     XmlWriterInterface::class => autowire(XmlWriter::class),
     QrCodeGeneratorInterface::class => autowire(QrCodeGenerator::class),
     ExternalResourceLoaderInterface::class => autowire(ExternalResourceLoader::class),
+    IntermediateHttpAdapter::class => autowire(),
 ];
