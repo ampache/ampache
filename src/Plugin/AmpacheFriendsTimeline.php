@@ -112,7 +112,6 @@ class AmpacheFriendsTimeline
                 );
                 if (count($activities) > 0) {
                     Ui::show_box_top(T_('Friends Timeline'));
-                    Useractivity::build_cache($activities);
 
                     $activityRenderer = $this->getUserActivityRenderer();
 

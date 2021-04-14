@@ -59,6 +59,7 @@ use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
 use PDOStatement;
 use ReflectionException;
@@ -2781,7 +2782,7 @@ abstract class Catalog extends database_object
             debug_event(__CLASS__, 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id);
-            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
+            static::getUserActivityRespository()->migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id, $new_object_id);
             Share::migrate($object_type, $old_object_id, $new_object_id);
             Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
@@ -2975,5 +2976,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserActivityRespository(): UserActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

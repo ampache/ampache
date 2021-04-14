@@ -955,16 +955,18 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
         foreach ($activityIds as $activityId) {
             $activity = $this->modelFactory->createUseractivity($activityId);
-            $user     = $this->modelFactory->createUser((int) $activity->user);
+            $userId   = $activity->getUser();
+
+            $user     = $this->modelFactory->createUser($userId);
 
             $result[] = [
                 'id' => (string) $activityId,
-                'date' => $activity->activity_date,
-                'object_type' => $activity->object_type,
-                'object_id' => $activity->object_id,
-                'action' => $activity->action,
+                'date' => $activity->getActivityDate(),
+                'object_type' => $activity->getObjectType(),
+                'object_id' => $activity->getObjectId(),
+                'action' => $activity->getAction(),
                 'user' => [
-                    'id' => (string) $activity->user,
+                    'id' => (string) $userId,
                     'username' => $user->username
                 ]
             ];

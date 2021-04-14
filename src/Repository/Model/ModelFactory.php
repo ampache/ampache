@@ -206,7 +206,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createUseractivity(
         int $useractivityId
-    ): Useractivity {
+    ): UseractivityInterface {
         return new Useractivity($useractivityId);
     }
 

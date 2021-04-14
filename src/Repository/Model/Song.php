@@ -37,6 +37,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
@@ -1503,7 +1504,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // migrate stats for the old artist
         Stats::migrate('artist', $old_artist, $new_artist);
-        Useractivity::migrate('artist', $old_artist, $new_artist);
+        static::getUserActivityRepository()->migrate('artist', $old_artist, $new_artist);
         Recommendation::migrate('artist', $old_artist, $new_artist);
         Share::migrate('artist', $old_artist, $new_artist);
         Shoutbox::migrate('artist', $old_artist, $new_artist);
@@ -1527,7 +1528,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // migrate stats for the old album
         Stats::migrate('album', $old_album, $new_album);
-        Useractivity::migrate('album', $old_album, $new_album);
+        static::getUserActivityRepository()->migrate('album', $old_album, $new_album);
         Recommendation::migrate('album', $old_album, $new_album);
         Share::migrate('album', $old_album, $new_album);
         Shoutbox::migrate('album', $old_album, $new_album);
@@ -2350,5 +2351,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(UserActivityPosterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityRepository(): UserActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

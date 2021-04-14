@@ -219,7 +219,6 @@ if ($client->f_avatar) {
             <div id="timeline" class="tab_content">
                 <?php
                 if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
-                    Useractivity::build_cache($activities);
                     foreach ($activities as $activity_id) {
                         echo $userActivityRenderer->show(
                             new Useractivity($activity_id)

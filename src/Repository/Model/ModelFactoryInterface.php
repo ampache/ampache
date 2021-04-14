@@ -139,7 +139,7 @@ interface ModelFactoryInterface
 
     public function createUseractivity(
         int $useractivityId
-    ): Useractivity;
+    ): UseractivityInterface;
 
     public function createUserflag(
         int $userFlagId,

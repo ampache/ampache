@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
+use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -453,7 +454,7 @@ class JsonOutputTest extends MockeryTestCase
         $action       = 'some-action';
         $username     = 'some-username';
 
-        $useractivity = $this->mock(Useractivity::class);
+        $useractivity = $this->mock(UseractivityInterface::class);
         $user         = $this->mock(User::class);
 
         $this->modelFactory->shouldReceive('createUseractivity')
@@ -465,11 +466,26 @@ class JsonOutputTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
-        $useractivity->user          = $userId;
-        $useractivity->activity_date = $activityDate;
-        $useractivity->object_type   = $objectType;
-        $useractivity->object_id     = $objectId;
-        $useractivity->action        = $action;
+        $useractivity->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+        $useractivity->shouldReceive('getActivityDate')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($activityDate);
+        $useractivity->shouldReceive('getObjectType')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectType);
+        $useractivity->shouldReceive('getObjectId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+        $useractivity->shouldReceive('getAction')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($action);
 
         $user->username = $username;
 

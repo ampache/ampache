@@ -24,11 +24,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Useractivity;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\UseractivityInterface;
 
 final class UserActivityRenderer implements UserActivityRendererInterface
 {
@@ -48,22 +47,24 @@ final class UserActivityRenderer implements UserActivityRendererInterface
      * Show the activity entry.
      */
     public function show(
-        Useractivity $useractivity
+        UseractivityInterface $useractivity
     ): string {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('userflags') || !$useractivity->id) {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS)) {
             return '';
         }
 
-        $user = $this->modelFactory->createUser((int) $useractivity->user);
+        $user = $this->modelFactory->createUser($useractivity->getUser());
         $user->format();
 
-        $class_name = ObjectTypeToClassNameMapper::map($useractivity->object_type);
-        $libitem    = new $class_name($useractivity->object_id);
+        $libitem = $this->modelFactory->mapObjectType(
+            $useractivity->getObjectType(),
+            $useractivity->getObjectId()
+        );
         $libitem->format();
 
         $descr = $user->f_link . ' ';
-        switch ($useractivity->action) {
+        switch ($useractivity->getAction()) {
             case 'shout':
                 $descr .= T_('commented on');
                 break;
@@ -86,7 +87,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
 
         return sprintf(
             '<div>%s %s %s</div>',
-            get_datetime((int) $useractivity->activity_date),
+            get_datetime($useractivity->getActivityDate()),
             $descr,
             $libitem->f_link
         );

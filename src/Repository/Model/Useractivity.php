@@ -20,87 +20,65 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
-use PDOStatement;
-
-class Useractivity extends database_object
+final class Useractivity extends database_object implements UseractivityInterface
 {
     protected const DB_TABLENAME = 'user_activity';
 
-    /* Variables from DB */
-    public $id;
-    public $user;
-    public $object_type;
-    public $object_id;
-    public $action;
-    public $activity_date;
+    private int $id;
 
     /**
-     * Constructor
-     * This is run every time a new object is created, and requires
-     * the id and type of object that we need to pull the flag for
-     * @param integer $useract_id
+     * Once loaded from db, holds the internal state
+     *
+     * @var null|array<string, mixed>
      */
-    public function __construct($useract_id)
+    private ?array $data = null;
+
+    public function __construct(int $id)
     {
-        if (!$useract_id) {
-            return false;
+        $this->id = $id;
+    }
+
+    private function getData(): array
+    {
+        if ($this->data === null) {
+            /* Get the information from the db */
+            $this->data = $this->get_info($this->id, 'user_activity');
         }
 
-        /* Get the information from the db */
-        $info = $this->get_info($useract_id, 'user_activity');
-
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        } // foreach info
-
-        return true;
-    } // Constructor
+        return $this->data;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->getData()['id'] ?? 0);
     }
 
-    /**
-     * this attempts to build a cache of the data from the passed activities all in one query
-     * @param integer[] $ids
-     * @return boolean
-     */
-    public static function build_cache($ids)
+    public function getUser(): int
     {
-        if (empty($ids)) {
-            return false;
-        }
-
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('user_activity', $row['id'], $row);
-        }
-
-        return true;
+        return (int) ($this->getData()['user'] ?? 0);
     }
 
-    /**
-     * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public function getObjectType(): string
     {
-        $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        return (string) ($this->getData()['object_type'] ?? '');
+    }
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    public function getObjectId(): int
+    {
+        return (int) ($this->getData()['object_id'] ?? 0);
+    }
+
+    public function getAction(): string
+    {
+        return (string) ($this->getData()['action'] ?? '');
+    }
+
+    public function getActivityDate(): int
+    {
+        return (int) ($this->getData()['activity_date'] ?? 0);
     }
 }

@@ -20,14 +20,19 @@
  *
  */
 
-namespace Ampache\Module\User\Activity;
+namespace Ampache\Repository\Model;
 
-use Ampache\Repository\Model\UseractivityInterface;
-
-interface UserActivityRendererInterface
+interface UseractivityInterface
 {
-    /**
-     * Show the activity entry.
-     */
-    public function show(UseractivityInterface $useractivity): string;
+    public function getId(): int;
+
+    public function getUser(): int;
+
+    public function getObjectType(): string;
+
+    public function getObjectId(): int;
+
+    public function getAction(): string;
+
+    public function getActivityDate(): int;
 }

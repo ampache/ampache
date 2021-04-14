@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {
@@ -243,6 +244,17 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                     ? null
                     : $albumMbId
             ]
+        );
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        Dba::write(
+            'UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
         );
     }
 }
