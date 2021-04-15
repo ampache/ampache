@@ -28,6 +28,7 @@
 * Grouped album downloads and rightbar actions
 * SubSonic - Assign roles based on preferences (fixes jukebox, podcast and share roles)
 * Preference::get_by_user was caching into a single value
+* A user who owned a playlist was unable to reorder (but could still save the order)
 
 ### API 4.4.2
 
