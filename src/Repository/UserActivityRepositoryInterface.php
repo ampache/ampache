@@ -30,7 +30,7 @@ interface UserActivityRepositoryInterface
      * @return UseractivityInterface[]
      */
     public function getFriendsActivities(
-        int $user_id,
+        int $userId,
         int $limit = 0,
         int $since = 0
     ): array;
@@ -39,7 +39,7 @@ interface UserActivityRepositoryInterface
      * @return UseractivityInterface[]
      */
     public function getActivities(
-        int $user_id,
+        int $userId,
         int $limit = 0,
         int $since = 0
     ): array;
@@ -50,15 +50,15 @@ interface UserActivityRepositoryInterface
     public function deleteByDate(
         int $date,
         string $action,
-        int $user_id = 0
+        int $userId = 0
     ): void;
 
     /**
      * Remove activities for items that no longer exist.
      */
     public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
+        ?string $objectType = null,
+        ?int $objectId = null
     ): void;
 
     /**
@@ -72,12 +72,12 @@ interface UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $songName,
-        string $artistName,
-        string $albumName,
-        string $songMbId,
-        string $artistMbId,
-        string $albumMbId
+        ?string $songName,
+        ?string $artistName,
+        ?string $albumName,
+        ?string $songMbId,
+        ?string $artistMbId,
+        ?string $albumMbId
     ): void;
 
     /**
@@ -88,7 +88,7 @@ interface UserActivityRepositoryInterface
     public function registerGenericEntry(
         int $userId,
         string $action,
-        string $object_type,
+        string $objectType,
         int $objectId,
         int $date
     ): void;
@@ -104,8 +104,8 @@ interface UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $artistName,
-        string $artistMbId
+        ?string $artistName,
+        ?string $artistMbId
     ): void;
 
     /**
@@ -119,10 +119,10 @@ interface UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $artistName,
-        string $albumName,
-        string $artistMbId,
-        string $albumMbId
+        ?string $artistName,
+        ?string $albumName,
+        ?string $artistMbId,
+        ?string $albumMbId
     ): void;
 
     /**

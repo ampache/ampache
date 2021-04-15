@@ -24,11 +24,13 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\UseractivityInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\SQLSrv\Result;
+use Psr\Log\LoggerInterface;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {
@@ -36,33 +38,46 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private Connection $connection;
+
+    private LoggerInterface $logger;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        Connection $connection,
+        LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
+        $this->connection      = $connection;
+        $this->logger          = $logger;
     }
 
     /**
      * @return UseractivityInterface[]
      */
-    public function getFriendsActivities(int $user_id, int $limit = 0, int $since = 0): array
+    public function getFriendsActivities(int $userId, int $limit = 0, int $since = 0): array
     {
         if ($limit < 1) {
             $limit = $this->configContainer->getPopularThreshold(10);
         }
 
-        $params = [$user_id];
-        $sql    = "SELECT `user_activity`.`id` FROM `user_activity` INNER JOIN `user_follower` ON `user_follower`.`follow_user` = `user_activity`.`user` WHERE `user_follower`.`user` = ?";
+        $params = [$userId];
+        $sql    = 'SELECT `user_activity`.`id` FROM `user_activity` INNER JOIN `user_follower` ON `user_follower`.`follow_user` = `user_activity`.`user` WHERE `user_follower`.`user` = ?';
         if ($since > 0) {
-            $sql .= " AND `user_activity`.`activity_date` <= ?";
+            $sql .= ' AND `user_activity`.`activity_date` <= ?';
             $params[] = $since;
         }
-        $sql .= " ORDER BY `user_activity`.`activity_date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
+
+        $db_result = $this->connection->executeQuery(
+            sprintf('%s ORDER BY `user_activity`.`activity_date` DESC LIMIT %d', $sql, $limit),
+            $params
+        );
+
+        $results = [];
+
+        while ($row = $db_result->fetchAssociative()) {
             $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
         }
 
@@ -73,7 +88,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
      * @return UseractivityInterface[]
      */
     public function getActivities(
-        int $user_id,
+        int $userId,
         int $limit = 0,
         int $since = 0
     ): array {
@@ -81,16 +96,25 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             $limit = $this->configContainer->getPopularThreshold(10);
         }
 
-        $params = array($user_id);
-        $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ?";
+        $params = [$userId];
+        $sql    = 'SELECT `id` FROM `user_activity` WHERE `user` = ?';
         if ($since > 0) {
-            $sql .= " AND `activity_date` <= ?";
+            $sql .= ' AND `activity_date` <= ?';
             $params[] = $since;
         }
-        $sql .= " ORDER BY `activity_date` DESC LIMIT " . $limit;
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
+
+        $db_result = $this->connection->executeQuery(
+            sprintf(
+                '%s ORDER BY `activity_date` DESC LIMIT %d',
+                $sql,
+                $limit
+            ),
+            $params
+        );
+
+        $results = [];
+
+        while ($row = $db_result->fetchAssociative()) {
             $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
         }
 
@@ -103,11 +127,11 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
     public function deleteByDate(
         int $date,
         string $action,
-        int $user_id = 0
+        int $userId = 0
     ): void {
-        Dba::write(
-            "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?",
-            [$date, $action, $user_id]
+        $this->connection->executeQuery(
+            'DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?',
+            [$date, $action, $userId]
         );
     }
 
@@ -115,21 +139,34 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
      * Remove activities for items that no longer exist.
      */
     public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
+        ?string $objectType = null,
+        ?int $objectId = null
     ): void {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+        $types = ['song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season'];
 
-        if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
+        if ($objectType !== null) {
+            if (in_array($objectType, $types)) {
+                $this->connection->executeQuery(
+                    'DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?',
+                    [$objectType, $objectId]
+                );
             } else {
-                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                $this->logger->critical(
+                    sprintf('Garbage collect on type `%s` is not supported.', $objectType),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `$type` ON `$type`.`id` = `user_activity`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+                $this->connection->executeQuery(
+                    sprintf(
+                        'DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `%s` ON `%s`.`id` = `user_activity`.`object_id` WHERE `object_type` = \'%s\' AND `%s`.`id` IS NULL',
+                        $type,
+                        $type,
+                        $type,
+                        $type
+                    )
+                );
             }
         }
     }
@@ -145,17 +182,21 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $songName,
-        string $artistName,
-        string $albumName,
-        string $songMbId,
-        string $artistMbId,
-        string $albumMbId
+        ?string $songName,
+        ?string $artistName,
+        ?string $albumName,
+        ?string $songMbId,
+        ?string $artistMbId,
+        ?string $albumMbId
     ): void {
-        Dba::write(
-            'INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_track`, `name_artist`, `name_album`, `mbid_track`, `mbid_artist`, `mbid_album`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        $sql = <<<SQL
+            INSERT INTO `user_activity`
+            (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_track`, `name_artist`, `name_album`, `mbid_track`, `mbid_artist`, `mbid_album`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        SQL;
+
+        $this->connection->executeQuery(
+            $sql,
             [
                 $userId,
                 $action,
@@ -180,13 +221,13 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
     public function registerGenericEntry(
         int $userId,
         string $action,
-        string $object_type,
+        string $objectType,
         int $objectId,
         int $date
     ): void {
-        Dba::write(
-            "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)",
-            [$userId, $action, $object_type, $objectId, $date]
+        $this->connection->executeQuery(
+            'INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)',
+            [$userId, $action, $objectType, $objectId, $date]
         );
     }
 
@@ -201,22 +242,23 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $artistName,
-        string $artistMbId
+        ?string $artistName,
+        ?string $artistMbId
     ): void {
-        Dba::write(
-            "INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)
-                VALUES (?, ?, ?, ?, ?, ?, ?)",
+        $sql = <<<SQL
+        INSERT INTO `user_activity`
+        (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        SQL;
+
+        $this->connection->executeQuery(
+            $sql,
             [
                 $userId,
                 $action,
                 $objectType,
                 $objectId,
                 $date,
-                empty($artistMbId)
-                    ? null
-                    : $artistMbId,
                 $artistMbId,
             ]
         );
@@ -233,15 +275,19 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         string $objectType,
         int $objectId,
         int $date,
-        string $artistName,
-        string $albumName,
-        string $artistMbId,
-        string $albumMbId
+        ?string $artistName,
+        ?string $albumName,
+        ?string $artistMbId,
+        ?string $albumMbId
     ): void {
-        Dba::write(
-            'INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        $sql = <<<SQL
+        INSERT INTO `user_activity`
+        (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        SQL;
+
+        $this->connection->executeQuery(
+            $sql,
             [
                 $userId,
                 $action,
@@ -250,12 +296,8 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                 $date,
                 $artistName,
                 $albumName,
-                empty($artistMbId)
-                    ? null
-                    : $artistMbId,
-                empty($albumMbId)
-                    ? null
-                    : $albumMbId
+                $artistMbId,
+                $albumMbId
             ]
         );
     }
@@ -265,7 +307,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
-        Dba::write(
+        $this->connection->executeQuery(
             'UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
         );
