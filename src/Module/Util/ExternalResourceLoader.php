@@ -63,8 +63,7 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
     ): ?ResponseInterface {
         $client  = $this->utilityFactory->createHttpClient();
         $options = $options
-            ? $options
-            : $this->getRequestsOptions();
+            ?: $this->getRequestsOptions();
 
         $options['headers'] = [
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
@@ -78,7 +77,7 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
             );
         } catch (GuzzleException $e) {
             $this->logger->error(
-                sprintf('Error getting google images: %s', $e->getMessage()),
+                sprintf('Web request failed: %s', $e->getMessage()),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 

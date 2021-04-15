@@ -108,7 +108,7 @@ class AutoUpdate implements AutoUpdateInterface
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request === null || $request->getStatusCode() !== StatusCode::OK) {
-                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->getStatusCode(), 1);
+                debug_event(self::class, 'Github API request ' . $url . ' failed', 1);
 
                 return null;
             }
