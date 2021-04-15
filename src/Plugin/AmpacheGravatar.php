@@ -23,16 +23,14 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Core;
 
 class AmpacheGravatar
 {
     public $name        = 'Gravatar';
     public $categories  = 'avatar';
     public $description = 'User\'s avatars with Gravatar';
-    public $url         = 'http://gravatar.com';
+    public $url         = 'https://gravatar.com';
     public $version     = '000001';
     public $min_ampache = '360040';
     public $max_ampache = '999999';
@@ -84,18 +82,14 @@ class AmpacheGravatar
      */
     public function get_avatar_url($user, $size = 80)
     {
-        $url = "";
+        $url = '';
         if (!empty($user->email)) {
-            if (!empty(AmpConfig::get('force_ssl')) || (filter_has_var(INPUT_SERVER,
-                        'HTTPS') && Core::get_server('HTTPS') !== 'off')) {
-                $url = "https://secure.gravatar.com";
-            } else {
-                $url = "http://www.gravatar.com";
-            }
-            $url .= "/avatar/";
-            $url .= md5(strtolower(trim($user->email)));
-            $url .= "?s=" . $size . "&r=g";
-            $url .= "&d=identicon";
+            $url = sprintf(
+                '%s/avatar/%s?s=%d&r=g&d=identicon',
+                $this->url,
+                md5(strtolower(trim($user->email))),
+                $size
+            );
         }
 
         return $url;

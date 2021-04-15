@@ -1008,6 +1008,13 @@ final class VaInfo implements VaInfoInterface
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
+                case 'originaldate':
+                    $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
+                    if (strlen($data['0']) > 4) {
+                        $data[0] = date('Y', $parsed['originaldate']);
+                    }
+                    $parsed['original_year'] = ($parsed['original_year']) ?: $data[0];
+                    break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];
                     break;
@@ -1100,6 +1107,13 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
+                    break;
+                case 'originaldate':
+                    $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
+                    if (strlen($data['0']) > 4) {
+                        $data[0] = date('Y', $parsed['originaldate']);
+                    }
+                    $parsed['original_year'] = ($parsed['original_year']) ?: $data[0];
                     break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];
@@ -1293,6 +1307,13 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
+                    break;
+                case 'originaldate':
+                    $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
+                    if (strlen($data['0']) > 4) {
+                        $data[0] = date('Y', $parsed['originaldate']);
+                    }
+                    $parsed['original_year'] = ($parsed['original_year']) ?: $data[0];
                     break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];

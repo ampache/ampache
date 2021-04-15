@@ -84,6 +84,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * Don't transcode podcast_episodes
 * localplay
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
+* Plugins: Use only https for building gravatar urls
 
 ## Ampache 4.4.0-release
 
