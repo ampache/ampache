@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -66,10 +67,10 @@ final class ShowAction implements ApplicationActionInterface
             'show_access_list.inc.php',
             [
                 'list' => array_map(
-                    function (int $accessId): Lib\AccessListItemInterface {
+                    function (Access $access): Lib\AccessListItemInterface {
                         return new Lib\AccessListItem(
                             $this->modelFactory,
-                            $this->modelFactory->createAccess($accessId)
+                            $access
                         );
                     },
                     $this->accessRepository->getAccessLists()

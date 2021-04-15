@@ -22,6 +22,8 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Authorization\Access;
+
 /**
  * This repository contains all db calls related to the `access_list` table
  */
@@ -29,7 +31,8 @@ interface AccessRepositoryInterface
 {
     /**
      * Returns a full listing of all access rules on this server
-     * @return int[]
+     *
+     * @return Access[]
      */
     public function getAccessLists(): array;
 

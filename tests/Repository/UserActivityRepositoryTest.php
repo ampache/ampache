@@ -90,12 +90,12 @@ class UserActivityRepositoryTest extends MockeryTestCase
             ->once()
             ->andReturn($result);
 
-        $result->shouldReceive('fetchAssociative')
+        $result->shouldReceive('fetchOne')
             ->withNoArgs()
             ->times(2)
-            ->andReturn(['id' => (string) $activityId], false);
+            ->andReturn((string) $activityId, false);
 
-        $this->modelFactory->shouldReceive('createUserActivity')
+        $this->modelFactory->shouldReceive('createUseractivity')
             ->with($activityId)
             ->once()
             ->andReturn($activity);
@@ -106,7 +106,7 @@ class UserActivityRepositoryTest extends MockeryTestCase
         );
     }
 
-    public function testActivitiesReturnsData(): void
+    public function testGetActivitiesReturnsData(): void
     {
         $userId     = 666;
         $limit      = 33;
@@ -132,12 +132,12 @@ class UserActivityRepositoryTest extends MockeryTestCase
             ->once()
             ->andReturn($result);
 
-        $result->shouldReceive('fetchAssociative')
+        $result->shouldReceive('fetchOne')
             ->withNoArgs()
             ->times(2)
-            ->andReturn(['id' => (string) $activityId], false);
+            ->andReturn((string) $activityId, false);
 
-        $this->modelFactory->shouldReceive('createUserActivity')
+        $this->modelFactory->shouldReceive('createUseractivity')
             ->with($activityId)
             ->once()
             ->andReturn($activity);

@@ -24,23 +24,37 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Authorization\Access;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Doctrine\DBAL\Connection;
 
 final class AccessRepository implements AccessRepositoryInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    private Connection $connection;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        Connection $connection
+    ) {
+        $this->modelFactory = $modelFactory;
+        $this->connection   = $connection;
+    }
+
     /**
      * Returns a full listing of all access rules on this server
-     * @return int[]
+     *
+     * @return Access[]
      */
     public function getAccessLists(): array
     {
-        $sql        = 'SELECT `id` FROM `access_list`';
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->executeQuery('SELECT `id` FROM `access_list`');
 
-        $results = array();
+        $results = [];
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($id = $dbResults->fetchOne()) {
+            $results[] = $this->modelFactory->createAccess((int) $id);
         }
 
         return $results;
@@ -55,18 +69,21 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type,
         ?int $userId
     ): bool {
-        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
+        $sql = 'SELECT `id` FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
-        $params  = array(inet_pton($userIp), inet_pton($userIp), $level, $type);
+        $params  = [inet_pton($userIp), inet_pton($userIp), $level, $type];
 
         if ($userId !== null && $userId != -1) {
-            $sql .= " AND `user` IN(?, '-1')";
+            $sql .= ' AND `user` IN (?, -1)';
             $params[] = $userId;
         } else {
-            $sql .= " AND `user` = '-1'";
+            $sql .= ' AND `user` = -1';
         }
 
-        return Dba::num_rows(Dba::read($sql, $params)) > 0;
+        return $this->connection->executeQuery(
+            $sql,
+            $params
+        )->rowCount() > 0;
     }
 
     /**
@@ -74,7 +91,10 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function delete(int $accessId): void
     {
-        Dba::write('DELETE FROM `access_list` WHERE `id` = ?', [$accessId]);
+        $this->connection->executeQuery(
+            'DELETE FROM `access_list` WHERE `id` = ?',
+            [$accessId]
+        );
     }
 
     /**
@@ -87,12 +107,10 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type,
         int $userId
     ): bool {
-        $db_results = Dba::read(
-            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?',
+        return $this->connection->executeQuery(
+            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
             [$inAddrStart, $inAddrEnd, $type, $userId]
-        );
-
-        return Dba::num_rows($db_results) > 0;
+        )->rowCount() > 0;
     }
 
     /**
@@ -113,7 +131,7 @@ final class AccessRepository implements AccessRepositoryInterface
         int $level,
         string $type
     ): void {
-        Dba::write(
+        $this->connection->executeQuery(
             'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
             [$name, $level, $startIp, $endIp, $userId, $type]
         );
@@ -139,8 +157,8 @@ final class AccessRepository implements AccessRepositoryInterface
         int $level,
         string $type
     ): void {
-        Dba::write(
-            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
+        $this->connection->executeQuery(
+            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
             [$startIp, $endIp, $level, $userId, $name, $type, $accessId]
         );
     }

@@ -29,7 +29,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\UseractivityInterface;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\SQLSrv\Result;
 use Psr\Log\LoggerInterface;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
@@ -70,15 +69,15 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             $params[] = $since;
         }
 
-        $db_result = $this->connection->executeQuery(
+        $dbResult = $this->connection->executeQuery(
             sprintf('%s ORDER BY `user_activity`.`activity_date` DESC LIMIT %d', $sql, $limit),
             $params
         );
 
         $results = [];
 
-        while ($row = $db_result->fetchAssociative()) {
-            $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
+        while ($id = $dbResult->fetchOne()) {
+            $results[] = $this->modelFactory->createUseractivity((int) $id);
         }
 
         return $results;
@@ -103,7 +102,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             $params[] = $since;
         }
 
-        $db_result = $this->connection->executeQuery(
+        $dbResult = $this->connection->executeQuery(
             sprintf(
                 '%s ORDER BY `activity_date` DESC LIMIT %d',
                 $sql,
@@ -114,8 +113,8 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
 
         $results = [];
 
-        while ($row = $db_result->fetchAssociative()) {
-            $results[] = $this->modelFactory->createUseractivity((int) $row['id']);
+        while ($id = $dbResult->fetchOne()) {
+            $results[] = $this->modelFactory->createUseractivity((int) $id);
         }
 
         return $results;

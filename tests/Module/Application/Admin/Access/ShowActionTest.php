@@ -84,8 +84,6 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $access     = $this->mock(Access::class);
 
-        $accessId = 666;
-
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
@@ -112,12 +110,7 @@ class ShowActionTest extends MockeryTestCase
         $this->accessRepository->shouldReceive('getAccessLists')
             ->withNoArgs()
             ->once()
-            ->andReturn([$accessId]);
-
-        $this->modelFactory->shouldReceive('createAccess')
-            ->with($accessId)
-            ->once()
-            ->andReturn($access);
+            ->andReturn([$access]);
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
