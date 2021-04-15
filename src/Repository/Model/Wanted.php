@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -34,7 +34,6 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
 class Wanted extends database_object
 {
@@ -133,7 +132,7 @@ class Wanted extends database_object
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
-        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz  = static::getMusicBrainz();
         $includes = array('release-groups');
         $types    = explode(',', AmpConfig::get('wanted_types'));
 
@@ -232,7 +231,7 @@ class Wanted extends database_object
     public static function delete_wanted_release($mbid)
     {
         if (static::getWantedRepository()->getAcceptedCount() > 0) {
-            $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+            $mbrainz = static::getMusicBrainz();
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
                 $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
@@ -297,7 +296,7 @@ class Wanted extends database_object
      */
     public function load_all($track_details = true)
     {
-        $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz     = static::getMusicBrainz();
         $this->songs = array();
 
         try {
@@ -413,5 +412,15 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(MissingArtistLookupInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getMusicBrainz(): MusicBrainz
+    {
+        global $dic;
+
+        return $dic->get(MusicBrainz::class);
     }
 }
