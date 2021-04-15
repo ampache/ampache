@@ -346,12 +346,12 @@ final class VaInfo implements VaInfoInterface
         foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':
-                   foreach ($text as $tkey => $data) {
-                       $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
-                   }
-                   break;
+                    foreach ($text as $tkey => $data) {
+                        $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                    }
+                    break;
                 default:
-                   $ndata[$key][] = $key[0];
+                    $ndata[$key][] = $key[0];
                     break;
             }
         }
@@ -498,7 +498,7 @@ final class VaInfo implements VaInfoInterface
             $info['comment']  = $info['comment'] ?: trim((string)$tags['comment']);
 
             $info['lyrics']    = $info['lyrics']
-                    ?: strip_tags(nl2br((string) $tags['lyrics']), "<br>");
+                ?: strip_tags(nl2br((string) $tags['lyrics']), "<br>");
 
             // extended checks to make sure "0" makes it through, which would otherwise eval to false
             $info['replaygain_track_gain'] = isset($info['replaygain_track_gain']) ? $info['replaygain_track_gain'] : (!is_null($tags['replaygain_track_gain']) ? (float) $tags['replaygain_track_gain'] : null);
@@ -577,6 +577,21 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $arr;
+    }
+
+    /**
+     * get_mbid_array
+     * @param string $mbid
+     * @return array
+     */
+    public static function get_mbid_array($mbid)
+    {
+        $mbid_match_string = '/[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]/';
+        if (preg_match($mbid_match_string, $mbid, $matches)) {
+            return $matches;
+        }
+
+        return array($mbid);
     }
 
     /**
@@ -1510,7 +1525,7 @@ final class VaInfo implements VaInfoInterface
                 $pattern . ' matched ' . $matched . ' on ' . $filepath,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-    
+
             // Iterate over what we found
             foreach ($matches as $key => $value) {
                 $new_key = translate_pattern_code($elements['0'][$key]);

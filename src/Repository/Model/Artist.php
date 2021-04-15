@@ -29,6 +29,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -687,12 +688,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $exists    = false;
 
         if ($mbid !== '') {
-            $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
-            $db_results = Dba::read($sql, array($mbid));
+            $matches = VaInfo::get_mbid_array($mbid);
+            foreach ($matches as $mbid_string) {
+                $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+                $db_results = Dba::read($sql, array($mbid_string));
 
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$row['id'];
-                $exists    = true;
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    $artist_id = (int)$row['id'];
+                    $exists    = true;
+                }
             }
         }
 
@@ -708,13 +712,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             if (count($id_array)) {
                 if ($mbid !== '') {
-                    if (isset($id_array['null']) && !$readonly) {
-                        $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-                        Dba::write($sql, array($mbid, $id_array['null']));
-                    }
-                    if (isset($id_array['null'])) {
-                        $artist_id = $id_array['null'];
-                        $exists    = true;
+                    $matches = VaInfo::get_mbid_array($mbid);
+                    foreach ($matches as $mbid_string) {
+                        if (isset($id_array['null']) && !$readonly) {
+                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                            Dba::write($sql, array($mbid_string, $id_array['null']));
+                        }
+                        if (isset($id_array['null'])) {
+                            $artist_id = $id_array['null'];
+                            $exists    = true;
+                        }
                     }
                 } else {
                     // Pick one at random
