@@ -693,7 +693,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
                 $db_results = Dba::read($sql, array($mbid_string));
 
-                if ($row = Dba::fetch_assoc($db_results)) {
+                if ($row = Dba::fetch_assoc($db_results) && !$exists) {
+                    $artist_id = (int)$row['id'];
+                    $exists    = true;
+                }
+            }
+            // try the whole string if it didn't work
+            if (!$exists) {
+                $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+                $db_results = Dba::read($sql, array($mbid));
+
+                if ($row = Dba::fetch_assoc($db_results) && !$exists) {
                     $artist_id = (int)$row['id'];
                     $exists    = true;
                 }
@@ -718,8 +728,18 @@ class Artist extends database_object implements library_item, GarbageCollectible
                             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
                             Dba::write($sql, array($mbid_string, $id_array['null']));
                         }
-                        if (isset($id_array['null'])) {
+                        if (isset($id_array['null']) && !$exists) {
                             $artist_id = $id_array['null'];
+                            $exists    = true;
+                        }
+                    }
+                    // try the whole string if it didn't work
+                    if (!$exists) {
+                        $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+                        $db_results = Dba::read($sql, array($mbid));
+
+                        if ($row = Dba::fetch_assoc($db_results) && !$exists) {
+                            $artist_id = (int)$row['id'];
                             $exists    = true;
                         }
                     }
