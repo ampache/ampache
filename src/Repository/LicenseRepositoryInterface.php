@@ -21,12 +21,14 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\LicenseInterface;
+
 interface LicenseRepositoryInterface
 {
     /**
      * Returns a list of licenses accessible by the current user.
      *
-     * @return int[]
+     * @return LicenseInterface[]
      */
     public function getAll(): array;
 
@@ -62,4 +64,11 @@ interface LicenseRepositoryInterface
      * Searches for the License by name and external link
      */
     public function find(string $searchValue): ?int;
+
+    /**
+     * Fetches the data for a certain entry
+     *
+     * @return array{"id": int, "name": string|null, "description": string|null, "external_link": ?string}
+     */
+    public function getDataById(int $licenseId): array;
 }

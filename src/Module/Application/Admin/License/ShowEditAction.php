@@ -56,7 +56,7 @@ final class ShowEditAction implements ApplicationActionInterface
         }
 
         $license = $this->modelFactory->createLicense(
-            (int) $request->getQueryParams()['license_id'] ?? 0
+            (int) ($request->getQueryParams()['license_id'] ?? 0)
         );
 
         $this->ui->showHeader();

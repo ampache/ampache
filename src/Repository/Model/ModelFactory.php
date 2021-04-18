@@ -26,12 +26,22 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * This class is used to instantiate model objects (like Playlist, Song, ...)
  */
 final class ModelFactory implements ModelFactoryInterface
 {
+    private ContainerInterface $dic;
+
+    public function __construct(
+        ContainerInterface $dic
+    ) {
+        $this->dic = $dic;
+    }
+
     public function createPlaylist(
         int $id
     ): Playlist {
@@ -169,9 +179,12 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createLicense(
-        int $licenseId
-    ): License {
-        return new License($licenseId);
+        int $licenseId = 0
+    ): LicenseInterface {
+        return new License(
+            $this->dic->get(LicenseRepositoryInterface::class),
+            $licenseId
+        );
     }
 
     public function createAccess(

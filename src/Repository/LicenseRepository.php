@@ -23,23 +23,36 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\LicenseInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Doctrine\DBAL\Connection;
 
 final class LicenseRepository implements LicenseRepositoryInterface
 {
+    private Connection $connection;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        Connection $connection,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->connection   = $connection;
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * Returns a list of licenses accessible by the current user.
      *
-     * @return int[]
+     * @return LicenseInterface[]
      */
     public function getAll(): array
     {
-        $sql        = 'SELECT `id` from `license` ORDER BY `name`';
-        $db_results = Dba::read($sql);
+        $dbResults = $this->connection->executeQuery('SELECT `id` from `license` ORDER BY `name`');
 
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $results = [];
+        while ($rowId = $dbResults->fetchOne()) {
+            $results[] = $this->modelFactory->createLicense((int) $rowId);
         }
 
         return $results;
@@ -55,12 +68,12 @@ final class LicenseRepository implements LicenseRepositoryInterface
         string $description,
         string $externalLink
     ): int {
-        Dba::write(
-            "INSERT INTO `license` (`name`, `description`, `external_link`) " . 'VALUES (? , ?, ?)',
+        $this->connection->executeQuery(
+            'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (? , ?, ?)',
             [$name, $description, $externalLink]
         );
 
-        return (int) Dba::insert_id();
+        return (int) $this->connection->lastInsertId();
     }
 
     /**
@@ -72,7 +85,7 @@ final class LicenseRepository implements LicenseRepositoryInterface
         string $description,
         string $externalLink
     ): void {
-        Dba::write(
+        $this->connection->executeQuery(
             'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
             [$name, $description, $externalLink, $licenseId]
         );
@@ -84,7 +97,7 @@ final class LicenseRepository implements LicenseRepositoryInterface
     public function delete(
         int $licenseId
     ): void {
-        Dba::write(
+        $this->connection->executeQuery(
             'DELETE FROM `license` WHERE `id` = ?',
             [$licenseId]
         );
@@ -96,20 +109,37 @@ final class LicenseRepository implements LicenseRepositoryInterface
     public function find(string $searchValue): ?int
     {
         // lookup the license by name
-        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
-        $db_results = Dba::read($sql, array($searchValue));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
-        }
-        // lookup the license by external_link
-        $sql        = 'SELECT `id` from `license` WHERE `external_link` = ?';
-        $db_results = Dba::read($sql, array($searchValue));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
+        $licenseId = $this->connection->fetchOne(
+            'SELECT `id` from `license` WHERE `name` = ?',
+            [$searchValue]
+        );
+        if ($licenseId === false) {
+            // lookup the license by external_link
+            $licenseId = $this->connection->fetchOne(
+                'SELECT `id` from `license` WHERE `external_link` = ?',
+                [$searchValue]
+            );
         }
 
-        return null;
+        if ($licenseId === false) {
+            return null;
+        }
+
+        return (int) $licenseId;
+    }
+
+    /**
+     * Fetches the data for a certain entry
+     *
+     * @return array{"id": int, "name": string|null, "description": string|null, "external_link": ?string}
+     */
+    public function getDataById(int $licenseId): array
+    {
+        $data = $this->connection->fetchAssociative(
+            'SELECT * FROM `license` WHERE `id` = ?',
+            [$licenseId]
+        );
+
+        return $data ?: [];
     }
 }

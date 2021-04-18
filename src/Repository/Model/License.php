@@ -20,48 +20,34 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\LicenseRepositoryInterface;
 
-class License
+final class License implements LicenseInterface
 {
-    /**
-     * @var integer $id
-     */
-    private $id;
+    private LicenseRepositoryInterface $licenseRepository;
+
+    private int $id;
+
+    private ?array $data = null;
 
     /**
-     * @var string $name
+     * This pulls the license information from the database
      */
-    private $name;
-    /**
-     * @var string $description
-     */
-    private $description;
-    /**
-     * @var string $external_link
-     */
-    private $external_link;
-
-    /**
-     * This pulls the license information from the database and returns
-     * a constructed object
-     * @param integer $license_id
-     */
-    public function __construct($license_id)
-    {
-        // Load the data from the database
-        $this->has_info($license_id);
-
-        return true;
-    } // Constructor
+    public function __construct(
+        LicenseRepositoryInterface $licenseRepository,
+        int $id
+    ) {
+        $this->licenseRepository = $licenseRepository;
+        $this->id                = $id;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->getData()['id'] ?? 0);
     }
 
     public function isNew(): bool
@@ -69,50 +55,43 @@ class License
         return $this->getId() === 0;
     }
 
-    /**
-     * does the db call, reads from the license table
-     * @param integer $license_id
-     * @return boolean
-     */
-    private function has_info($license_id)
-    {
-        $sql        = "SELECT * FROM `license` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($license_id));
-
-        $data = Dba::fetch_assoc($db_results);
-
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
-    } // has_info
-
     public function getLinkFormatted(): string
     {
-        if ($this->external_link) {
+        $name         = $this->getName();
+        $externalLink = $this->getLink();
+
+        if ($externalLink !== '') {
             return sprintf(
                 '<a href="%s">%s</a>',
-                $this->external_link,
-                $this->name
+                $externalLink,
+                $name
             );
         }
 
-        return (string) $this->name;
+        return $name;
     }
 
     public function getName(): string
     {
-        return (string) $this->name;
+        return (string) ($this->getData()['name'] ?? '');
     }
 
     public function getLink(): string
     {
-        return (string) $this->external_link;
+        return (string) ($this->getData()['external_link'] ?? '');
     }
 
     public function getDescription(): string
     {
-        return (string) $this->description;
+        return (string) ($this->getData()['description'] ?? '');
+    }
+
+    private function getData(): array
+    {
+        if ($this->data === null) {
+            $this->data = $this->licenseRepository->getDataById($this->id);
+        }
+
+        return $this->data;
     }
 }

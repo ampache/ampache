@@ -28,7 +28,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Tag;
@@ -318,7 +318,7 @@ class JsonOutputTest extends MockeryTestCase
         $description = 'some-description';
         $link        = 'some-link';
 
-        $license = $this->mock(License::class);
+        $license = $this->mock(LicenseInterface::class);
 
         $this->modelFactory->shouldReceive('createLicense')
             ->with($licenseId)
@@ -358,7 +358,7 @@ class JsonOutputTest extends MockeryTestCase
         $description = 'some-description';
         $link        = 'some-link';
 
-        $license = $this->mock(License::class);
+        $license = $this->mock(LicenseInterface::class);
 
         $this->modelFactory->shouldReceive('createLicense')
             ->with($licenseId)

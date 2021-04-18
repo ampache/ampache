@@ -1704,7 +1704,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
 
         if (AmpConfig::get('licensing') && $this->license !== null) {
-            $license = new License($this->license);
+            $license = $this->getModelFactory()->createLicense((int) $this->license);
 
             $this->f_license = $license->getLinkFormatted();
         }
@@ -2345,5 +2345,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(DataMigratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

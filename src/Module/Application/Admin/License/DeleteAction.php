@@ -67,7 +67,7 @@ final class DeleteAction implements ApplicationActionInterface
         }
 
         $license = $this->modelFactory->createLicense(
-            (int) $request->getQueryParams()['license_id'] ?? 0
+            (int) ($request->getQueryParams()['license_id'] ?? 0)
         );
 
         $this->licenseRepository->delete($license->getId());
