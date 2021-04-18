@@ -24,11 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Song;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -52,15 +51,20 @@ final class ShowLyricsAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        $this->ui->showHeader();
+        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
 
-        $song = $this->modelFactory->createSong((int) $_REQUEST['song_id']);
+        $song = $this->modelFactory->createSong($songId);
         $song->format();
         $song->fill_ext_info();
-        $lyrics = $song->get_lyrics();
-        require_once Ui::find_template('show_lyrics.inc.php');
 
-        // Show the Footer
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_lyrics.inc.php',
+            [
+                'song' => $song,
+                'lyrics' => $song->get_lyrics()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

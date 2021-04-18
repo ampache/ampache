@@ -23,6 +23,10 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song;
+
+/** @var Song $song */
+/** @var array $lyrics */
 
 $web_path = AmpConfig::get('web_path');
 Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
@@ -39,21 +43,21 @@ if ($album != T_('Unknown (Orphaned)')) {
 <div class="np_group">
   <div class="np_cell cel_song">
       <label><?php echo T_('Song'); ?>:</label>
-      <a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_song&song_id=<?php echo $song->id; ?>">
+      <a title="<?php echo $title; ?>" href="<?php echo $web_path; ?>/song.php?action=show_song&song_id=<?php echo $song->id; ?>">
           <?php echo $title; ?>
       </a>
   </div>
 
   <div class="np_cell cel_album">
       <label><?php echo T_('Album'); ?>:</label>
-      <a title="<?php echo scrub_out($song->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+      <a title="<?php echo $album; ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
               <?php echo $album; ?>
       </a>
   </div>
 
   <div class="np_cell cel_artist">
       <label><?php echo T_('Artist'); ?>:</label>
-      <a title="<?php echo scrub_out($song->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+      <a title="<?php echo $artist; ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
               <?php echo $artist; ?>
       </a>
   </div>
