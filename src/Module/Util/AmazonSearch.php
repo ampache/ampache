@@ -24,8 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Requests;
-
 /**
  * AmazonSearch Class
  *
