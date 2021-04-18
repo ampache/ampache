@@ -44,4 +44,5 @@ return [
     QrCodeGeneratorInterface::class => autowire(QrCodeGenerator::class),
     ExternalResourceLoaderInterface::class => autowire(ExternalResourceLoader::class),
     IntermediateHttpAdapter::class => autowire(),
+    NowPlayingRendererInterface::class => autowire(NowPlayingRenderer::class),
 ];

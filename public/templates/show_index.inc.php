@@ -21,12 +21,15 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\NowPlayingRendererInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var NowPlayingRendererInterface $nowPlayingRenderer */
 
 ?>
 <div id="browse_header">
@@ -45,7 +48,7 @@ if ($user) {
 
 <?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
-    <?php show_now_playing(); ?>
+    <?php echo $nowPlayingRenderer->render(); ?>
 </div> <!-- Close Now Playing Div -->
 <?php
 } ?>

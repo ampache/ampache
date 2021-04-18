@@ -29,9 +29,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\NowPlayingRendererInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
@@ -50,8 +50,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
-    private ArtCollectorInterface $artCollector;
-
     private SlideshowInterface $slideshow;
 
     private AlbumRepositoryInterface $albumRepository;
@@ -68,8 +66,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private NowPlayingRendererInterface $nowPlayingRenderer;
+
     public function __construct(
-        ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
@@ -77,17 +76,18 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         WantedRepositoryInterface $wantedRepository,
         VideoRepositoryInterface $videoRepository,
         CatalogRepositoryInterface $catalogRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        NowPlayingRendererInterface $nowPlayingRenderer
     ) {
-        $this->artCollector      = $artCollector;
-        $this->slideshow         = $slideshow;
-        $this->albumRepository   = $albumRepository;
-        $this->labelRepository   = $labelRepository;
-        $this->songRepository    = $songRepository;
-        $this->wantedRepository  = $wantedRepository;
-        $this->videoRepository   = $videoRepository;
-        $this->catalogRepository = $catalogRepository;
-        $this->configContainer   = $configContainer;
+        $this->slideshow          = $slideshow;
+        $this->albumRepository    = $albumRepository;
+        $this->labelRepository    = $labelRepository;
+        $this->songRepository     = $songRepository;
+        $this->wantedRepository   = $wantedRepository;
+        $this->videoRepository    = $videoRepository;
+        $this->catalogRepository  = $catalogRepository;
+        $this->configContainer    = $configContainer;
+        $this->nowPlayingRenderer = $nowPlayingRenderer;
     }
 
     public function handle(): void
@@ -280,14 +280,13 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'reloadnp':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
                 $data = Song::get_recently_played();
+
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_played.inc.php');
+
                 $results['recently_played'] = ob_get_clean();
+                $results['now_playing']     = $this->nowPlayingRenderer->render();
                 break;
             case 'sidebar':
                 switch ($_REQUEST['button']) {

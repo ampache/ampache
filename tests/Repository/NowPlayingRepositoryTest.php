@@ -17,32 +17,34 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\MockeryTestCase;
 use Doctrine\DBAL\Connection;
+use Mockery\MockInterface;
 
-final class NowPlayingRepository implements NowPlayingRepositoryInterface
+class NowPlayingRepositoryTest extends MockeryTestCase
 {
-    private Connection $connection;
+    /** @var MockInterface|Connection */
+    private MockInterface $connection;
 
-    public function __construct(
-        Connection $connection
-    ) {
-        $this->connection = $connection;
+    private NowPlayingRepository $subject;
+
+    public function setUp(): void
+    {
+        $this->connection = $this->mock(Connection::class);
+
+        $this->subject = new NowPlayingRepository(
+            $this->connection
+        );
     }
 
-    /**
-     * This will garbage collect the Now Playing data,
-     * this is done on every play start.
-     */
-    public function collectGarbage(): void
+    public function testCollectGarbageDeletes(): void
     {
-        // Remove any Now Playing entries for sessions that have been GC'd
         $sql = <<<SQL
         DELETE FROM `now_playing` USING `now_playing`
         LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id`
@@ -52,18 +54,22 @@ final class NowPlayingRepository implements NowPlayingRepositoryInterface
         ) OR `now_playing`.`expire` < ?
         SQL;
 
-        $this->connection->executeQuery(
-            $sql,
-            [time()]
-        );
+        $this->connection->shouldReceive('executeQuery')
+            ->with(
+                $sql,
+                \Mockery::type('array')
+            )
+            ->once();
+
+        $this->subject->collectGarbage();
     }
 
-    /**
-     * There really isn't anywhere else for this function, shouldn't have
-     * deleted it in the first place.
-     */
-    public function truncate(): void
+    public function testTruncateDeletes(): void
     {
-        $this->connection->executeQuery('TRUNCATE `now_playing`');
+        $this->connection->shouldReceive('executeQuery')
+            ->with('TRUNCATE `now_playing`')
+            ->once();
+
+        $this->subject->truncate();
     }
 }

@@ -29,7 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\NowPlayingRendererInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,12 +42,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private NowPlayingRendererInterface $nowPlayingRenderer;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        NowPlayingRendererInterface $nowPlayingRenderer
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui                 = $ui;
+        $this->configContainer    = $configContainer;
+        $this->nowPlayingRenderer = $nowPlayingRenderer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,12 +76,21 @@ final class ShowAction implements ApplicationActionInterface
             $refreshLimit > 5 &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
-            $refresh_limit = $refreshLimit;
-            $ajax_url      = '?page=index&action=reloadnp';
-            require_once Ui::find_template('javascript_refresh.inc.php');
+            $this->ui->show(
+                'javascript_refresh.inc.php',
+                [
+                    'refresh_limit' => $refreshLimit,
+                    'ajax_url' => '?page=index&action=reloadnp',
+                ]
+            );
         }
 
-        require_once Ui::find_template('show_index.inc.php');
+        $this->ui->show(
+            'show_index.inc.php',
+            [
+                'nowPlayingRenderer' => $this->nowPlayingRenderer,
+            ]
+        );
 
         // Show the Footer
         $this->ui->showQueryStats();

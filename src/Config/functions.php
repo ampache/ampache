@@ -23,18 +23,14 @@
 declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\TVShow_Season;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\Ui;
-use Ampache\Repository\NowPlayingRepositoryInterface;
-use Ampache\Repository\SessionRepositoryInterface;
 use Gettext\Translator;
 use Psr\Log\LoggerInterface;
 
@@ -1240,23 +1236,6 @@ function print_bool($value)
 
     return $string;
 } // print_bool
-
-/**
- * show_now_playing
- * This shows the Now Playing templates and does some garbage collection
- * this should really be somewhere else
- */
-function show_now_playing()
-{
-    /** @todo remove global dic usage */
-    global $dic;
-    $dic->get(SessionRepositoryInterface::class)->collectGarbage();
-    $dic->get(NowPlayingRepositoryInterface::class)->collectGarbage();
-
-    $web_path = AmpConfig::get('web_path');
-    $results  = Stream::get_now_playing();
-    require_once Ui::find_template('show_now_playing.inc.php');
-} // show_now_playing
 
 /**
  * @param boolean $render
