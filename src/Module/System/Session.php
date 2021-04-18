@@ -24,18 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Util\CookieSetterInterface;
-use Ampache\Repository\Model\Query;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Horde_Browser;
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\Util\CookieSetterInterface;
+use Ampache\Module\Util\Horde_Browser;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\SessionRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
-use Ampache\Repository\Model\Song_Preview;
-use Ampache\Repository\Model\Tmp_Playlist;
 
 /**
  * This class handles all of the session related stuff in Ampache
@@ -48,14 +45,18 @@ final class Session implements SessionInterface
 
     private UserRepositoryInterface $userRepository;
 
+    private SessionRepositoryInterface $sessionRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        SessionRepositoryInterface $sessionRepository
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->userRepository        = $userRepository;
+        $this->sessionRepository     = $sessionRepository;
     }
 
     public function auth(): bool
@@ -196,26 +197,6 @@ final class Session implements SessionInterface
         $cookieSetter->set(sprintf('%s_lang', $session_name), '', $options);
 
         return true;
-    }
-
-    /**
-     * garbage_collection
-     *
-     * This function is randomly called and it cleans up the expired sessions
-     */
-    public static function garbage_collection()
-    {
-        $sql = 'DELETE FROM `session` WHERE `expire` < ?';
-        Dba::write($sql, array(time()));
-
-        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
-        Dba::write($sql, array(time()));
-
-        // Also clean up things that use sessions as keys
-        Query::garbage_collection();
-        Tmp_Playlist::garbage_collection();
-        Stream_Playlist::garbage_collection();
-        Song_Preview::garbage_collection();
     }
 
     /**
@@ -536,7 +517,7 @@ final class Session implements SessionInterface
                 return self::destroy($key);
             },
             static function (): void {
-                self::garbage_collection();
+                $this->sessionRepository->collectGarbage();
             }
         );
 

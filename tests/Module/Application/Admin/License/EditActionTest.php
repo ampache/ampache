@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -89,7 +89,7 @@ class EditActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $license    = $this->mock(License::class);
+        $license    = $this->mock(LicenseInterface::class);
 
         $licenseId     = 666;
         $webPath       = 'some-path';

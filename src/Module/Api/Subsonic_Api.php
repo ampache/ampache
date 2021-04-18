@@ -54,6 +54,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\NowPlayingRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
@@ -2580,7 +2581,7 @@ class Subsonic_Api
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // track has just started
             if ($position < 1) {
-                Stream::garbage_collection();
+                static::getNowPlayingRepository()->collectGarbage();
                 Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
                 // repeated plays aren't called by scrobble so make sure we call this too
                 if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
@@ -2779,5 +2780,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ExternalResourceLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getNowPlayingRepository(): NowPlayingRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(NowPlayingRepositoryInterface::class);
     }
 }

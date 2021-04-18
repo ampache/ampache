@@ -362,21 +362,6 @@ class Stream
     }
 
     /**
-     * garbage_collection
-     *
-     * This will garbage collect the Now Playing data,
-     * this is done on every play start.
-     */
-    public static function garbage_collection()
-    {
-        // Remove any Now Playing entries for sessions that have been GC'd
-        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-            "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
-            "WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
-        Dba::write($sql);
-    }
-
-    /**
      * insert_now_playing
      *
      * This will insert the Now Playing data.
@@ -393,21 +378,6 @@ class Stream
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
         Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
-    }
-
-    /**
-     * clear_now_playing
-     *
-     * There really isn't anywhere else for this function, shouldn't have
-     * deleted it in the first place.
-     * @return boolean
-     */
-    public static function clear_now_playing()
-    {
-        $sql = 'TRUNCATE `now_playing`';
-        Dba::write($sql);
-
-        return true;
     }
 
     /**

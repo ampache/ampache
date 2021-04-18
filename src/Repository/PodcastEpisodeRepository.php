@@ -49,4 +49,12 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
 
         return $results;
     }
+
+    /**
+     * Cleans up the podcast_episode table
+     */
+    public function collectGarbage(): void
+    {
+        Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
+    }
 }

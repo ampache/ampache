@@ -31,4 +31,9 @@ interface RecommendationRepositoryInterface
         int $oldObjectId,
         int $newObjectId
     ): void;
+
+    /**
+     * This cleans out old recommendations cache
+     */
+    public function collectGarbage(): void;
 }

@@ -17,43 +17,34 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Doctrine\DBAL\Connection;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Query;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Tmp_Playlist;
 
-final class RecommendationRepository implements RecommendationRepositoryInterface
+final class SessionRepository implements SessionRepositoryInterface
 {
-    private Connection $connection;
-
-    public function __construct(
-        Connection $connection
-    ) {
-        $this->connection = $connection;
-    }
-
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->executeQuery(
-            'UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
-    }
-
-    /**
-     * This cleans out old recommendations cache
+     * This function is randomly called and it cleans up the expired sessions
      */
     public function collectGarbage(): void
     {
-        $this->connection->executeQuery(
-            'DELETE FROM `recommendation` WHERE `last_update` < ?',
-            [(time() - 604800)]
-        );
+        $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        Dba::write($sql, [time()]);
+
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
+        Dba::write($sql, [time()]);
+
+        // Also clean up things that use sessions as keys
+        Query::garbage_collection();
+        Tmp_Playlist::garbage_collection();
+        Stream_Playlist::garbage_collection();
+        Song_Preview::garbage_collection();
     }
 }

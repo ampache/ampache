@@ -26,16 +26,18 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Share;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\Cron;
-use Ampache\Module\Util\Recommendation;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\NowPlayingRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\RecommendationRepositoryInterface;
+use Ampache\Repository\SessionRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class CronProcessCommand extends Command
 {
@@ -49,28 +51,55 @@ final class CronProcessCommand extends Command
 
     private ShareRepositoryInterface $shareRepository;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private LoggerInterface $logger;
+
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private RecommendationRepositoryInterface $recommendationRepository;
+
+    private SessionRepositoryInterface $sessionRepository;
+
+    private NowPlayingRepositoryInterface $nowPlayingRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         BookmarkRepositoryInterface $bookmarkRepository,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        LoggerInterface $logger,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        RecommendationRepositoryInterface $recommendationRepository,
+        SessionRepositoryInterface $sessionRepository,
+        NowPlayingRepositoryInterface $nowPlayingRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
-        $this->configContainer         = $configContainer;
-        $this->objectCache             = $objectCache;
-        $this->catalogGarbageCollector = $catalogGarbageCollector;
-        $this->bookmarkRepository      = $bookmarkRepository;
-        $this->shareRepository         = $shareRepository;
+        $this->configContainer          = $configContainer;
+        $this->objectCache              = $objectCache;
+        $this->catalogGarbageCollector  = $catalogGarbageCollector;
+        $this->bookmarkRepository       = $bookmarkRepository;
+        $this->shareRepository          = $shareRepository;
+        $this->updateInfoRepository     = $updateInfoRepository;
+        $this->logger                   = $logger;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->recommendationRepository = $recommendationRepository;
+        $this->sessionRepository        = $sessionRepository;
+        $this->nowPlayingRepository     = $nowPlayingRepository;
     }
 
     public function execute(): void
     {
         $io = $this->app()->io();
 
-        if (!$this->configContainer->get('cron_cache')) {
-            debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CRON_CACHE)) {
+            $this->logger->debug(
+                'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             $io->error(
                 T_('Cron cache not enabled'),
@@ -79,7 +108,11 @@ final class CronProcessCommand extends Command
 
             return;
         }
-        debug_event('cron', 'started cron process', 3);
+
+        $this->logger->info(
+            'started cron process',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         /**
          * Catalog garbage_collection covers these functions
@@ -92,10 +125,10 @@ final class CronProcessCommand extends Command
          * Art::garbage_collection();
          * Stats::garbage_collection();
          * Rating::garbage_collection();
-         * Ampache\Model\Userflag::garbage_collection();
-         * Ampache\Model\Useractivity::garbage_collection();
+         * AUserflag::garbage_collection();
+         * Useractivity::garbage_collection();
          * Playlist::garbage_collection();
-         * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session
+         * Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session
          * Shoutbox::garbage_collection();
          * Tag::garbage_collection();
          * Metadata::garbage_collection();
@@ -108,29 +141,34 @@ final class CronProcessCommand extends Command
          *
          * Query::garbage_collection();
          * Stream_Playlist::garbage_collection();
-         * Ampache\Model\Song_Preview::garbage_collection();
-         * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
+         * Song_Preview::garbage_collection();
+         * Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
          */
-        Session::garbage_collection();
+        $this->sessionRepository->collectGarbage();
 
         /**
          * Clean up remaining functions.
          */
         $this->shareRepository->collectGarbage();
-        Stream::garbage_collection();
-        Podcast_Episode::garbage_collection();
+        $this->nowPlayingRepository->collectGarbage();
+        $this->podcastEpisodeRepository->collectGarbage();
         $this->bookmarkRepository->collectGarbage();
-        Recommendation::garbage_collection();
+        $this->recommendationRepository->collectGarbage();
 
         /**
          * Run compute_cache
          */
         $this->objectCache->compute();
 
-        // mark the date this cron was completed.
-        Cron::set_cron_date();
+        /**
+         *mark the date this cron was completed.
+         */
+        $this->updateInfoRepository->setLastCronDate();
 
-        debug_event('cron', 'finished cron process', 4);
+        $this->logger->info(
+            'finished cron process',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         $io->white(T_('Cron process finished'), true);
     }

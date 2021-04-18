@@ -17,32 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Repository\Model;
 
-interface UpdateInfoRepositoryInterface
+interface LicenseInterface
 {
-    /**
-     * Updates the count of item by table name
-     */
-    public function updateCountByTableName(string $tableName): int;
+    public function getId(): int;
 
-    /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function countServer(bool $enabled = false, string $table = ''): array;
+    public function isNew(): bool;
 
-    /**
-     * Record when the cron has finished.
-     */
-    public function setLastCronDate(): void;
+    public function getLinkFormatted(): string;
 
-    /**
-     * This returns the date cron has finished.
-     */
-    public function getLastCronDate(): int;
+    public function getName(): string;
+
+    public function getLink(): string;
+
+    public function getDescription(): string;
 }

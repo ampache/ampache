@@ -17,32 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository;
 
-interface UpdateInfoRepositoryInterface
+interface NowPlayingRepositoryInterface
 {
     /**
-     * Updates the count of item by table name
+     * This will garbage collect the Now Playing data,
+     * this is done on every play start.
      */
-    public function updateCountByTableName(string $tableName): int;
+    public function collectGarbage(): void;
 
     /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
      */
-    public function countServer(bool $enabled = false, string $table = ''): array;
-
-    /**
-     * Record when the cron has finished.
-     */
-    public function setLastCronDate(): void;
-
-    /**
-     * This returns the date cron has finished.
-     */
-    public function getLastCronDate(): int;
+    public function truncate(): void;
 }

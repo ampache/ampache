@@ -35,7 +35,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
 
-class Podcast_Episode extends database_object implements Media, library_item, GarbageCollectibleInterface
+class Podcast_Episode extends database_object implements Media, library_item
 {
     protected const DB_TABLENAME = 'podcast_episode';
 
@@ -117,16 +117,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public function isNew(): bool
     {
         return $this->getId() === 0;
-    }
-
-    /**
-     * garbage_collection
-     *
-     * Cleans up the podcast_episode table
-     */
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
     }
 
     /**

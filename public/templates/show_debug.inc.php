@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
@@ -71,7 +70,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
     <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
-        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
+        <div><?php echo T_('The last cron was completed'); ?>: <?php echo $lastCronDate; ?></div>
         <br />
     <?php Ui::show_box_bottom();
 } ?>

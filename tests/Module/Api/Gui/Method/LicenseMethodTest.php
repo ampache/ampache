@@ -32,7 +32,7 @@ use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -114,7 +114,7 @@ class LicenseMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $license    = $this->mock(License::class);
+        $license    = $this->mock(LicenseInterface::class);
 
         $objectId = 666;
 
@@ -149,7 +149,7 @@ class LicenseMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $license    = $this->mock(License::class);
+        $license    = $this->mock(LicenseInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $objectId = 666;

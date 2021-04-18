@@ -135,4 +135,5 @@ final class ConfigurationKeyEnum
     public const METADATA_ORDER                = 'metadata_order';
     public const METADATA_ORDER_VIDEO          = 'metadata_order_video';
     public const GETID3_TAG_ORDER              = 'getid3_tag_order';
+    public const CRON_CACHE                    = 'cron_cache';
 }

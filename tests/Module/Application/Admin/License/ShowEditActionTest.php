@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -77,7 +77,7 @@ class ShowEditActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $license    = $this->mock(License::class);
+        $license    = $this->mock(LicenseInterface::class);
 
         $licenseId = 666;
 

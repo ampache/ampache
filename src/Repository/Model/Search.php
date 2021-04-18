@@ -554,9 +554,8 @@ class Search extends playlist_object
         $this->type_text('label', T_('Label'));
         if (AmpConfig::get('licensing')) {
             $licenses = array();
-            foreach ($this->getLicenseRepository()->getAll() as $license_id) {
-                $license               = new License($license_id);
-                $licenses[$license_id] = $license->getName();
+            foreach ($this->getLicenseRepository()->getAll() as $license) {
+                $licenses[$license->getId()] = $license->getName();
             }
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
         }

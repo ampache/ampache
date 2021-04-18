@@ -17,43 +17,44 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Repository;
+namespace Ampache\Repository\Model;
 
-use Doctrine\DBAL\Connection;
+use Ampache\MockeryTestCase;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Mockery\MockInterface;
+use Psr\Container\ContainerInterface;
 
-final class RecommendationRepository implements RecommendationRepositoryInterface
+class ModelFactoryTest extends MockeryTestCase
 {
-    private Connection $connection;
+    /** @var MockInterface|ContainerInterface */
+    private MockInterface $dic;
 
-    public function __construct(
-        Connection $connection
-    ) {
-        $this->connection = $connection;
-    }
+    private ModelFactory $subject;
 
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    public function setUp(): void
     {
-        $this->connection->executeQuery(
-            'UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
+        $this->dic = $this->mock(ContainerInterface::class);
+
+        $this->subject = new ModelFactory(
+            $this->dic
         );
     }
 
-    /**
-     * This cleans out old recommendations cache
-     */
-    public function collectGarbage(): void
+    public function testGetLicenseReturnsLicense(): void
     {
-        $this->connection->executeQuery(
-            'DELETE FROM `recommendation` WHERE `last_update` < ?',
-            [(time() - 604800)]
+        $this->dic->shouldReceive('get')
+            ->with(LicenseRepositoryInterface::class)
+            ->once()
+            ->andReturn($this->mock(LicenseRepositoryInterface::class));
+
+        $this->assertInstanceOf(
+            License::class,
+            $this->subject->createLicense()
         );
     }
 }
