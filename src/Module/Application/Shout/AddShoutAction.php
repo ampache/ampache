@@ -25,14 +25,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Shout\ShoutCreatorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,20 +41,20 @@ final class AddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_shout';
 
-    private UiInterface $ui;
-
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
 
+    private ShoutCreatorInterface $shoutCreator;
+
     public function __construct(
-        UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ShoutCreatorInterface $shoutCreator
     ) {
-        $this->ui              = $ui;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
+        $this->shoutCreator    = $shoutCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,7 +76,10 @@ final class AddShoutAction implements ApplicationActionInterface
             unset($_POST['date']);
         }
 
-        Shoutbox::create($_POST);
+        $this->shoutCreator->create(
+            $gatekeeper->getUser(),
+            $_POST
+        );
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

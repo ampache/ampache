@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,6 +46,9 @@ class EditShoutActionTest extends MockeryTestCase
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var MockInterface|ShoutRepositoryInterface */
+    private MockInterface $shoutRepository;
+
     private ?EditShoutAction $subject;
 
     public function setUp(): void
@@ -52,11 +56,13 @@ class EditShoutActionTest extends MockeryTestCase
         $this->ui              = $this->mock(UiInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->shoutRepository = $this->mock(ShoutRepositoryInterface::class);
 
         $this->subject = new EditShoutAction(
             $this->ui,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->shoutRepository
         );
     }
 
@@ -81,10 +87,11 @@ class EditShoutActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $shoutbox   = $this->mock(Shoutbox::class);
 
-        $shout_id     = 666;
-        $data         = ['shout_id' => (string) $shout_id];
-        $webPath      = 'some-path';
-        $shoutbox->id = $shout_id;
+        $shoutId = 666;
+        $webPath = 'some-path';
+        $comment = 'some-comment';
+        $sticky  = 'true';
+        $data    = ['shout_id' => (string) $shoutId, 'comment' => $comment, 'sticky' => $sticky];
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
@@ -97,12 +104,25 @@ class EditShoutActionTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->modelFactory->shouldReceive('createShoutbox')
-            ->with($shout_id)
+            ->with($shoutId)
             ->once()
             ->andReturn($shoutbox);
 
-        $shoutbox->shouldReceive('update')
-            ->with($data)
+        $shoutbox->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $shoutbox->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($shoutId);
+
+        $this->shoutRepository->shouldReceive('update')
+            ->with(
+                $shoutId,
+                $comment,
+                (bool) $sticky
+            )
             ->once();
 
         $request->shouldReceive('getParsedBody')

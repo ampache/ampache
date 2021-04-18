@@ -27,8 +27,8 @@ interface ShoutRepositoryInterface
      * @return int[]
      */
     public function getBy(
-        string $object_type,
-        int $object_id
+        string $objectType,
+        int $objectId
     ): array;
 
     /**
@@ -39,7 +39,7 @@ interface ShoutRepositoryInterface
     /**
      * This function deletes the shoutbox entry
      */
-    public function delete(int $shoutboxId): void;
+    public function delete(int $shoutId): void;
 
     /**
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
@@ -53,4 +53,23 @@ interface ShoutRepositoryInterface
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Inserts a new shout item and returns the created id
+     */
+    public function insert(
+        int $userId,
+        int $date,
+        string $comment,
+        int $sticky,
+        int $objectId,
+        string $objectType,
+        string $data
+    ): int;
+
+
+    /**
+     * This updates a shoutbox entry
+     */
+    public function update(int $shoutId, string $comment, bool $isSticky): void;
 }

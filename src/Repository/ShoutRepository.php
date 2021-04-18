@@ -24,20 +24,38 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
 final class ShoutRepository implements ShoutRepositoryInterface
 {
+    private Connection $connection;
+
+    private LoggerInterface $logger;
+
+    public function __construct(
+        Connection $connection,
+        LoggerInterface $logger
+    ) {
+        $this->connection = $connection;
+        $this->logger     = $logger;
+    }
+
     /**
      * @return int[]
      */
-    public function getBy(string $object_type, int $object_id): array
+    public function getBy(string $objectType, int $objectId): array
     {
-        $sql        = 'SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC';
-        $db_results = Dba::read($sql, [$object_type, $object_id]);
-        $results    = array();
+        $dbResults = $this->connection->executeQuery(
+            'SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
+            [$objectType, $objectId]
+        );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $results = [];
+
+        while ($rowId = $dbResults->fetchOne()) {
+            $results[] = (int) $rowId;
         }
 
         return $results;
@@ -50,18 +68,26 @@ final class ShoutRepository implements ShoutRepositoryInterface
         ?string $object_type = null,
         ?int $object_id = null
     ): void {
-        $types = array('song', 'album', 'artist', 'label');
+        $types = ['song', 'album', 'artist', 'label'];
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
+                $this->connection->executeQuery(
+                    'DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?',
+                    [$object_type, $object_id]
+                );
             } else {
-                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                $this->logger->critical(
+                    'Garbage collect on type `' . $object_type . '` is not supported.',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$type` ON `$type`.`id` = `user_shout`.`object_id` WHERE `$type`.`id` IS NULL AND `user_shout`.`object_type` = '$type'");
+                $this->connection->executeQuery(
+                    'DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `' . $type . '` ON `' . $type . '`.`id` = `user_shout`.`object_id` WHERE `' . $type . '`.`id` IS NULL AND `user_shout`.`object_type` = ?',
+                    [$type]
+                );
             }
         }
     }
@@ -69,11 +95,11 @@ final class ShoutRepository implements ShoutRepositoryInterface
     /**
      * this function deletes the shoutbox entry
      */
-    public function delete(int $shoutboxId): void
+    public function delete(int $shoutId): void
     {
-        Dba::write(
+        $this->connection->executeQuery(
             'DELETE FROM `user_shout` WHERE `id` = ?',
-            [$shoutboxId]
+            [$shoutId]
         );
     }
 
@@ -124,9 +150,40 @@ final class ShoutRepository implements ShoutRepositoryInterface
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
-        Dba::write(
+        $this->connection->executeQuery(
             'UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
+        );
+    }
+
+    /**
+     * Inserts a new shout item and returns the created id
+     */
+    public function insert(
+        int $userId,
+        int $date,
+        string $comment,
+        int $sticky,
+        int $objectId,
+        string $objectType,
+        string $data
+    ): int {
+        $this->connection->executeQuery(
+            'INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (? , ?, ?, ?, ?, ?, ?)',
+            [$userId, $date, $comment, $sticky, $objectId, $objectType, $data]
+        );
+
+        return (int) $this->connection->lastInsertId();
+    }
+
+    /**
+     * This updates a shoutbox entry
+     */
+    public function update(int $shoutId, string $comment, bool $isSticky): void
+    {
+        $this->connection->executeQuery(
+            'UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?',
+            [$comment, (int) $isSticky, $shoutId]
         );
     }
 }

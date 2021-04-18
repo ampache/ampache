@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +45,18 @@ final class EditShoutAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
+        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,22 +65,25 @@ final class EditShoutAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $body = $request->getParsedBody();
 
         $shout = $this->modelFactory->createShoutbox(
-            (int) $body['shout_id'] ?? 0
+            (int) ($body['shout_id'] ?? 0)
         );
-        if ($shout->id) {
-            $shout->update($body);
+        if ($shout->isNew() === false) {
+            $this->shoutRepository->update(
+                $shout->getId(),
+                (string) ($body['comment'] ?? ''),
+                (bool) $body['sticky']
+            );
         }
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been updated'),
             sprintf('%s/admin/shout.php', $this->configContainer->getWebPath())
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
