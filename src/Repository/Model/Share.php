@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Share\ExpirationDateCalculator;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -299,36 +298,6 @@ class Share extends database_object
     public function get_user_owner()
     {
         return $this->user;
-    }
-
-    /**
-     * get_expiry
-     * @param integer $days
-     * @return integer
-     *
-     * @deprecated
-     * @see ExpirationDateCalculator::calculate()
-     */
-    public static function get_expiry($days = null)
-    {
-        if (isset($days)) {
-            $expires = $days;
-            // no limit expiry
-            if ($expires == 0) {
-                $expire_days = 0;
-            } else {
-                // Parse as a string to work on 32-bit computers
-                if (strlen((string)$expires) > 3) {
-                    $expires = (int)(substr($expires, 0, -3));
-                }
-                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
-            }
-        } else {
-            // fall back to config defaults
-            $expire_days = AmpConfig::get('share_expire');
-        }
-
-        return (int)$expire_days;
     }
 
     /**

@@ -28,6 +28,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Share\ExpirationDateCalculator;
+use Ampache\Module\Share\ExpirationDateCalculatorInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
@@ -1648,7 +1650,7 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $expire_days = Share::get_expiry($input['expires']);
+            $expire_days = static::getExpirationDateCalculator()->calculate((int) $input['expires']);
             $object_id   = null;
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_Xml_Data::isSong($libitem_id[0])) {
@@ -2790,5 +2792,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(NowPlayingRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getExpirationDateCalculator(): ExpirationDateCalculatorInterface
+    {
+        global $dic;
+
+        return $dic->get(ExpirationDateCalculatorInterface::class);
     }
 }

@@ -46,7 +46,7 @@ final class ExpirationDateCalculator implements ExpirationDateCalculatorInterfac
             } else {
                 // Parse as a string to work on 32-bit computers
                 if (strlen((string)$expires) > 3) {
-                    $expires = (int)(substr($expires, 0, -3));
+                    $expires = (int)(substr((string) $expires, 0, -3));
                 }
                 $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             }
