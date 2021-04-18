@@ -776,39 +776,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
-     * find_duplicates
-     *
-     * This function takes a search type and returns a list of probable
-     * duplicates
-     * @param string $search_type
-     * @return array
-     */
-    public static function find_duplicates($search_type)
-    {
-        $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = 'SELECT `artist`, `album`, `title`, ' . 'COUNT(`title`) FROM `song` ' . $where_sql . ' GROUP BY `artist`, `album`, `title`';
-
-        if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
-            $sql .= ',`artist`';
-        }
-        if ($search_type == 'artist_album_title') {
-            $sql .= ',`album`';
-        }
-
-        $sql .= ' HAVING COUNT(`title`) > 1 ORDER BY `title`';
-
-        $db_results = Dba::read($sql);
-
-        $results = array();
-
-        while ($item = Dba::fetch_assoc($db_results)) {
-            $results[] = $item;
-        } // end while
-
-        return $results;
-    }
-
-    /**
      * find
      * @param array $data
      * @return boolean
@@ -863,42 +830,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return false;
-    }
-
-    /**
-     * Get duplicate information.
-     * @param array $dupe
-     * @param string $search_type
-     * @return integer[]
-     */
-    public static function get_duplicate_info($dupe, $search_type)
-    {
-        $results = array();
-        if (isset($dupe['id'])) {
-            $results[] = $dupe['id'];
-        } else {
-            $sql = "SELECT `id` FROM `song` WHERE " . "`title`='" . Dba::escape($dupe['title']) . "' ";
-
-            if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
-                $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
-            }
-            if ($search_type == 'artist_album_title') {
-                $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
-            }
-            $sql .= 'ORDER BY `time`, `bitrate`, `size`';
-
-            if ($search_type == 'album') {
-                $sql = "SELECT `id` from `song` " . "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` " . "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " . "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " . "ORDER BY `album`, `track`";
-            }
-
-            $db_results = Dba::read($sql);
-
-            while ($item = Dba::fetch_assoc($db_results)) {
-                $results[] = $item['id'];
-            } // end while
-        }
-
-        return $results;
     }
 
     /**
