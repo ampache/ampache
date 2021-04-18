@@ -17,23 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository;
 
-interface RecommendationRepositoryInterface
+interface NowPlayingRepositoryInterface
 {
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(
-        string $objectType,
-        int $oldObjectId,
-        int $newObjectId
-    ): void;
-
-    /**
-     * This cleans out old recommendations cache
+     * This will garbage collect the Now Playing data,
+     * this is done on every play start.
      */
     public function collectGarbage(): void;
+
+    /**
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
+     */
+    public function truncate(): void;
 }

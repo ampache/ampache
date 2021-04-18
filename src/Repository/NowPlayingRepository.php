@@ -17,43 +17,37 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Doctrine\DBAL\Connection;
+use Ampache\Module\System\Dba;
 
-final class RecommendationRepository implements RecommendationRepositoryInterface
+final class NowPlayingRepository implements NowPlayingRepositoryInterface
 {
-    private Connection $connection;
-
-    public function __construct(
-        Connection $connection
-    ) {
-        $this->connection = $connection;
-    }
 
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->executeQuery(
-            'UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
-    }
-
-    /**
-     * This cleans out old recommendations cache
+     * This will garbage collect the Now Playing data,
+     * this is done on every play start.
      */
     public function collectGarbage(): void
     {
-        $this->connection->executeQuery(
-            'DELETE FROM `recommendation` WHERE `last_update` < ?',
-            [(time() - 604800)]
-        );
+        // Remove any Now Playing entries for sessions that have been GC'd
+        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
+            "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
+            "WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
+        Dba::write($sql);
+    }
+
+    /**
+     * There really isn't anywhere else for this function, shouldn't have
+     * deleted it in the first place.
+     */
+    public function truncate(): void
+    {
+        Dba::write('TRUNCATE `now_playing`');
     }
 }

@@ -60,4 +60,6 @@ return [
     UserflagRepositoryInterface::class => autowire(UserflagRepository::class),
     RatingRepositoryInterface::class => autowire(RatingRepository::class),
     ArtRepositoryInterface::class => autowire(ArtRepository::class),
+    SessionRepositoryInterface::class => autowire(SessionRepository::class),
+    NowPlayingRepositoryInterface::class => autowire(NowPlayingRepository::class),
 ];

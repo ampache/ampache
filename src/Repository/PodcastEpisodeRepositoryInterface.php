@@ -32,4 +32,9 @@ interface PodcastEpisodeRepositoryInterface
         int $catalogId,
         int $count
     ): array;
+
+    /**
+     * Cleans up the podcast_episode table
+     */
+    public function collectGarbage(): void;
 }

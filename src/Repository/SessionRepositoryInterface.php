@@ -17,23 +17,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Repository;
 
-interface RecommendationRepositoryInterface
+interface SessionRepositoryInterface
 {
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(
-        string $objectType,
-        int $oldObjectId,
-        int $newObjectId
-    ): void;
-
-    /**
-     * This cleans out old recommendations cache
+     * This function is randomly called and it cleans up the expired sessions
      */
     public function collectGarbage(): void;
 }

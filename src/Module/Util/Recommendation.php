@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\RecommendationRepositoryInterface;
 use SimpleXMLElement;
 
 class Recommendation implements RecommendationInterface
@@ -54,16 +55,6 @@ class Recommendation implements RecommendationInterface
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out old recommendations cache
-     */
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 604800)));
-    }
-
-    /**
      * @param string $type
      * @param integer $object_id
      * @param boolean $get_items
@@ -72,7 +63,7 @@ class Recommendation implements RecommendationInterface
     protected static function get_recommendation_cache($type, $object_id, $get_items = false)
     {
         if (!AmpConfig::get('cron_cache')) {
-            self::garbage_collection();
+            static::getRecommentationRepository()->collectGarbage();
         }
 
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
@@ -453,4 +444,14 @@ class Recommendation implements RecommendationInterface
 
         return $results;
     } // get_artist_info
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getRecommentationRepository(): RecommendationRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(RecommendationRepositoryInterface::class);
+    }
 }

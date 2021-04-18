@@ -223,4 +223,21 @@ class LicenseRepositoryTest extends MockeryTestCase
             $this->subject->getDataById($licenseId)
         );
     }
+
+    public function testUpdateUpdates(): void
+    {
+        $licenseId    = 666;
+        $name         = 'some-name';
+        $description  = 'some-description';
+        $externalLink = 'some-external-link';
+
+        $this->connection->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                [$name, $description, $externalLink, $licenseId]
+            )
+            ->once();
+
+        $this->subject->update($licenseId, $name, $description, $externalLink);
+    }
 }

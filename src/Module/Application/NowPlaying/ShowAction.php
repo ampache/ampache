@@ -34,6 +34,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\NowPlayingRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -48,14 +49,18 @@ final class ShowAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private NowPlayingRepositoryInterface $nowPlayingRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        NowPlayingRepositoryInterface $nowPlayingRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->logger               = $logger;
+        $this->nowPlayingRepository = $nowPlayingRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,7 +73,7 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        Stream::garbage_collection();
+        $this->nowPlayingRepository->collectGarbage();
 
         $css                    = '';
         $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE);

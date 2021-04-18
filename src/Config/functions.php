@@ -33,6 +33,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\NowPlayingRepositoryInterface;
+use Ampache\Repository\SessionRepositoryInterface;
 use Gettext\Translator;
 use Psr\Log\LoggerInterface;
 
@@ -1246,8 +1248,10 @@ function print_bool($value)
  */
 function show_now_playing()
 {
-    Session::garbage_collection();
-    Stream::garbage_collection();
+    /** @todo remove global dic usage */
+    global $dic;
+    $dic->get(SessionRepositoryInterface::class)->collectGarbage();
+    $dic->get(NowPlayingRepositoryInterface::class)->collectGarbage();
 
     $web_path = AmpConfig::get('web_path');
     $results  = Stream::get_now_playing();

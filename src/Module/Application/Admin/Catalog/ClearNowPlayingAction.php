@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -30,8 +30,8 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\NowPlayingRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +43,16 @@ final class ClearNowPlayingAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private NowPlayingRepositoryInterface $nowPlayingRepository;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        NowPlayingRepositoryInterface $nowPlayingRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui                   = $ui;
+        $this->configContainer      = $configContainer;
+        $this->nowPlayingRepository = $nowPlayingRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,7 +69,7 @@ final class ClearNowPlayingAction implements ApplicationActionInterface
 
             return null;
         }
-        Stream::clear_now_playing();
+        $this->nowPlayingRepository->truncate();
 
         $this->ui->showConfirmation(
             T_('No Problem'),
