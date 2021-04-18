@@ -23,13 +23,12 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Recommendation;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;

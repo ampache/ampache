@@ -23,13 +23,12 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

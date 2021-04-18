@@ -27,9 +27,19 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 
 final class SongRepository implements SongRepositoryInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * gets the songs for an album takes an optional limit
      *
@@ -235,5 +245,23 @@ final class SongRepository implements SongRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * Gets a list of the disabled songs for and returns an array of Songs
+     *
+     * @return Song[]
+     */
+    public function getDisabled(): array
+    {
+        $results = [];
+
+        $db_results = Dba::read("SELECT `id` FROM `song` WHERE `enabled`='0'");
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $this->modelFactory->createSong((int) $row['id']);
+        }
+
+        return $results;
     }
 }

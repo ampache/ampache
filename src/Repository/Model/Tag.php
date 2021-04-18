@@ -461,7 +461,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer $user
      * @return boolean|mixed
      */
-    public static function tag_map_exists($type, $object_id, $tag_id, $user)
+    private static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(__CLASS__, 'Requested type is not a library item.', 3);
@@ -535,45 +535,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         return $results;
     } // get_object_tags
-
-    /**
-     * get_tag_ids
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @param string $type
-     * @param string $count
-     * @param string $offset
-     * @return integer[]
-     */
-    public static function get_tag_ids($type, $count = '', $offset = '')
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return array();
-        }
-
-        $limit_sql = "";
-        if ($count) {
-            $limit_sql = " LIMIT ";
-            if ($offset) {
-                $limit_sql .= (string)($offset) . ', ';
-            }
-            $limit_sql .= (string)($count);
-        }
-
-        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " . "WHERE `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-        $sql .= $limit_sql;
-        $db_results = Dba::read($sql, array($type));
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['tag_id'];
-        }
-
-        return $results;
-    } // get_tag_ids
 
     /**
      * get_tags

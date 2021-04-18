@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 
 interface SongRepositoryInterface
 {
@@ -90,4 +91,11 @@ interface SongRepositoryInterface
         string $artist_mbid = '',
         string $album_mbid = ''
     ): ?int;
+
+    /**
+     * Gets a list of the disabled songs for and returns an array of Songs
+     *
+     * @return Song[]
+     */
+    public function getDisabled(): array;
 }

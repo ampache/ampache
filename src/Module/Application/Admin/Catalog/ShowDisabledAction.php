@@ -26,13 +26,12 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +43,16 @@ final class ShowDisabledAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        SongRepositoryInterface $songRepository
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->songRepository  = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,11 +70,17 @@ final class ShowDisabledAction implements ApplicationActionInterface
             return null;
         }
 
-        $songs = Song::get_disabled();
-        if (count($songs)) {
-            require Ui::find_template('show_disabled_songs.inc.php');
+        $songs = $this->songRepository->getDisabled();
+
+        if ($songs !== []) {
+            $this->ui->show(
+                'show_disabled_songs.inc.php',
+                [
+                    'songs' => $songs
+                ]
+            );
         } else {
-            echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
+            echo sprintf('<div class="error show-disabled">%s</div>', T_('No disabled Songs found'));
         }
 
         $this->ui->showQueryStats();
