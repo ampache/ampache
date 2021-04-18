@@ -26,16 +26,16 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class CronProcessCommand extends Command
 {
@@ -49,12 +49,18 @@ final class CronProcessCommand extends Command
 
     private ShareRepositoryInterface $shareRepository;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private LoggerInterface $logger;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         BookmarkRepositoryInterface $bookmarkRepository,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
@@ -63,6 +69,8 @@ final class CronProcessCommand extends Command
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->bookmarkRepository      = $bookmarkRepository;
         $this->shareRepository         = $shareRepository;
+        $this->updateInfoRepository    = $updateInfoRepository;
+        $this->logger                  = $logger;
     }
 
     public function execute(): void
@@ -128,7 +136,7 @@ final class CronProcessCommand extends Command
         $this->objectCache->compute();
 
         // mark the date this cron was completed.
-        Cron::set_cron_date();
+        $this->updateInfoRepository->setLastCronDate();
 
         debug_event('cron', 'finished cron process', 4);
 

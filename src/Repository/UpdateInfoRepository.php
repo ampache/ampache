@@ -116,6 +116,32 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
     }
 
     /**
+     * Record when the cron has finished.
+     */
+    public function setLastCronDate(): void
+    {
+        Dba::write(
+            'REPLACE INTO `update_info` SET `key`= \'cron_date\', `value`=UNIX_TIMESTAMP()'
+        );
+    }
+
+    /**
+     * This returns the date cron has finished.
+     */
+    public function getLastCronDate(): int
+    {
+        $db_results = Dba::read(
+            'SELECT * FROM `update_info` WHERE `key` = \'cron_date\''
+        );
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['value'];
+        }
+
+        return 0;
+    }
+
+    /**
      * write the total_counts to update_info
      */
     private function setCount(string $tableName, int $value): void

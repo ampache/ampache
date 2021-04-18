@@ -35,4 +35,14 @@ interface UpdateInfoRepositoryInterface
      * @return array<string, int>
      */
     public function countServer(bool $enabled = false, string $table = ''): array;
+
+    /**
+     * Record when the cron has finished.
+     */
+    public function setLastCronDate(): void;
+
+    /**
+     * This returns the date cron has finished.
+     */
+    public function getLastCronDate(): int;
 }

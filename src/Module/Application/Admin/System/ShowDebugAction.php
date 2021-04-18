@@ -33,8 +33,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,12 +46,16 @@ final class ShowDebugAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        UpdateInfoRepositoryInterface $updateInfoRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->updateInfoRepository = $updateInfoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,15 +66,18 @@ final class ShowDebugAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
+        if (Core::get_request('autoupdate') == 'force') {
+            AutoUpdate::get_latest_version(true);
+        }
 
         $this->ui->showHeader();
-
-        $configuration = AmpConfig::get_all();
-        if (Core::get_request('autoupdate') == 'force') {
-            $version = AutoUpdate::get_latest_version(true);
-        }
-        require_once Ui::find_template('show_debug.inc.php');
-
+        $this->ui->show(
+            'show_debug.inc.php',
+            [
+                'configuration' => AmpConfig::get_all(),
+                'lastCronDate' => get_datetime($this->updateInfoRepository->getLastCronDate())
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
