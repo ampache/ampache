@@ -32,6 +32,7 @@
 * When creating shares, don't allow secret to be longer than database limit (20)
 * Album full name wasn't being used in some places
 * SubSonic - CreateUser could overwrite admin access level
+* SubSonic - UpdateUser didn't write the access level
 
 ### API 4.4.2
 
