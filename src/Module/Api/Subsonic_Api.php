@@ -1778,10 +1778,11 @@ class Subsonic_Api
 
         if (Access::check('interface', 100)) {
             $access = 25;
+            if ($coverArtRole) {
+                $access = 75;
+            }
             if ($adminRole) {
                 $access = 100;
-            } elseif ($coverArtRole) {
-                $access = 75;
             }
             $password = self::decrypt_password($password);
             $user_id  = User::create($username, $username, $email, null, $password, $access);
