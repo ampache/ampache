@@ -30,12 +30,14 @@
 * Preference::get_by_user was caching into a single value
 * A user who owned a playlist was unable to reorder (but could still save the order)
 * When creating shares, don't allow secret to be longer than database limit (20)
+* Album full name wasn't being used in some places
 
 ### API 4.4.2
 
 ### Fixed
 
 * API::indexes Artist albums were being added incorrectly for XML
+* Send back the full album name in responses
 
 ## Ampache 4.4.1-release
 

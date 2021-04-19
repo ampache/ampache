@@ -929,11 +929,8 @@ class Song extends database_object implements media, library_item
             $album_id = $this->album;
         }
         $album = new Album($album_id);
-        if ($album->prefix) {
-            return $album->prefix . " " . $album->name;
-        } else {
-            return $album->name;
-        }
+
+        return $album->full_name;
     } // get_album_name
 
     /**

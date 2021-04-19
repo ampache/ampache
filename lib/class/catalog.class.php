@@ -1693,7 +1693,7 @@ abstract class Catalog extends database_object
                         /* HINT: count of files written */
                         printf(T_("Art files written: %s"), $count);
                         echo "\n";
-                        debug_event(self::class, "$album->name Art written to $file", 5);
+                        debug_event(self::class, "$album->full_name Art written to $file", 5);
                     }
                 } else {
                     debug_event(self::class, "Unable to open $file for writing", 3);

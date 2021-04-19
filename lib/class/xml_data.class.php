@@ -612,7 +612,7 @@ class XML_Data
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
 
             $string .= "<album id=\"" . $album->id . "\">\n" .
-                    "\t<name><![CDATA[" . $album->name . "]]></name>\n";
+                    "\t<name><![CDATA[" . $album->full_name . "]]></name>\n";
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {

@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
+$title = scrub_out($album->full_name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
