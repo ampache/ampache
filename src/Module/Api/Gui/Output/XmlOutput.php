@@ -133,7 +133,7 @@ final class XmlOutput implements ApiOutputInterface
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
 
-            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->name . "]]></name>\n";
+            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->full_name . "]]></name>\n";
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {
@@ -995,7 +995,7 @@ final class XmlOutput implements ApiOutputInterface
                         $album = new Album($objectId);
                         $album->format();
                         $string .= "<$type id=\"" . $objectId . "\">\n" .
-                            "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
+                            "\t<name><![CDATA[" . $album->full_name . "]]></name>\n" .
                             "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                             "</$type>\n";
                     }

@@ -24,38 +24,48 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
-use Ampache\Module\Podcast\PodcastCreatorInterface;
-use Ampache\Module\Podcast\PodcastDeleterInterface;
-use Ampache\Module\Share\ExpirationDateCalculator;
-use Ampache\Module\Share\ExpirationDateCalculatorInterface;
-use Ampache\Module\Share\ShareCreatorInterface;
-use Ampache\Module\User\Management\Exception\UserCreationFailedException;
-use Ampache\Module\User\Management\UserCreatorInterface;
-use Ampache\Module\Util\ExternalResourceLoaderInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Random;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Share\ExpirationDateCalculatorInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
+use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Random;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\NowPlayingRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -65,18 +75,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Share;
 use SimpleXMLElement;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /**
  * Subsonic Class
@@ -606,7 +605,7 @@ class Subsonic_Api
         $addAmpacheInfo = ($input['ampache'] == "1");
 
         $album = new Album(Subsonic_Xml_Data::getAmpacheId($albumid));
-        if (empty($album->name)) {
+        if (!$album->id) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Album not found.",
                 'getalbum');
         } else {
@@ -778,7 +777,7 @@ class Subsonic_Api
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->name;
+                    $finput   = $album->full_name;
                     $operator = 4;
                     $ftype    = "artist";
                 } else {
@@ -1802,12 +1801,13 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if (Access::check('interface', 100)) {
+        if (Access::check('interface', AccessLevelEnum::LEVEL_ADMIN)) {
             $access = AccessLevelEnum::LEVEL_USER;
+            if ($coverArtRole) {
+                $access = AccessLevelEnum::LEVEL_MANAGER;
+            }
             if ($adminRole) {
                 $access = AccessLevelEnum::LEVEL_ADMIN;
-            } elseif ($coverArtRole) {
-                $access = AccessLevelEnum::LEVEL_MANAGER;
             }
             $password = self::decrypt_password($password);
 
@@ -1862,16 +1862,19 @@ class Subsonic_Api
 
         if (Access::check('interface', 100)) {
             $access = 25;
+            if ($coverArtRole) {
+                $access = 75;
+            }
             if ($adminRole) {
                 $access = 100;
-            } elseif ($coverArtRole) {
-                $access = 75;
             }
             // identify the user to modify
             $user    = User::get_from_username((string)$username);
             $user_id = $user->id;
 
             if ($user_id > 0) {
+                // update access level
+                $user->update_access($access);
                 // update password
                 if ($password && !AmpConfig::get('simple_user_mode')) {
                     $password = self::decrypt_password($password);

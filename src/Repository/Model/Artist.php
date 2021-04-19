@@ -691,62 +691,68 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         $artist_id = 0;
         $exists    = false;
+        $matches   = array();
 
+        // check for artists by mbid and split-mbid
         if ($mbid !== '') {
+            $sql     = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $matches = VaInfo::get_mbid_array($mbid);
             foreach ($matches as $mbid_string) {
-                $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
                 $db_results = Dba::read($sql, array($mbid_string));
 
-                if ($row = Dba::fetch_assoc($db_results) && !$exists) {
+                if (!$exists) {
+                    $row       = Dba::fetch_assoc($db_results);
                     $artist_id = (int)$row['id'];
-                    $exists    = true;
+                    $exists    = ($artist_id > 0);
+                    $mbid      = ($exists)
+                        ? $mbid_string
+                        : $mbid;
                 }
             }
             // try the whole string if it didn't work
             if (!$exists) {
-                $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
                 $db_results = Dba::read($sql, array($mbid));
 
-                if ($row = Dba::fetch_assoc($db_results) && !$exists) {
+                if ($row = Dba::fetch_assoc($db_results)) {
                     $artist_id = (int)$row['id'];
-                    $exists    = true;
+                    $exists    = ($artist_id > 0);
                 }
             }
         }
-
+        // search by the artist name and build an array
         if (!$exists) {
             $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
-
-            $id_array = array();
+            $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key            = $row['mbid'] ?: 'null';
                 $id_array[$key] = $row['id'];
             }
-
             if (count($id_array)) {
                 if ($mbid !== '') {
                     $matches = VaInfo::get_mbid_array($mbid);
                     foreach ($matches as $mbid_string) {
+                        // reverse search artist id if it's still not found for some reason
+                        if (isset($id_array[$mbid_string]) && !$exists) {
+                            $artist_id = (int)$id_array[$mbid_string];
+                            $exists    = ($artist_id > 0);
+                            $mbid      = ($exists)
+                                ? $mbid_string
+                                : $mbid;
+                        }
+                        // update empty artists that match names
                         if (isset($id_array['null']) && !$readonly) {
                             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
                             Dba::write($sql, array($mbid_string, $id_array['null']));
                         }
-                        if (isset($id_array['null']) && !$exists) {
-                            $artist_id = $id_array['null'];
-                            $exists    = true;
-                        }
                     }
-                    // try the whole string if it didn't work
-                    if (!$exists) {
-                        $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
-                        $db_results = Dba::read($sql, array($mbid));
-
-                        if ($row = Dba::fetch_assoc($db_results) && !$exists) {
-                            $artist_id = (int)$row['id'];
-                            $exists    = true;
+                    if (isset($id_array['null'])) {
+                        if (!$readonly) {
+                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                            Dba::write($sql, array($mbid, $id_array['null']));
                         }
+                        $artist_id = (int)$id_array['null'];
+                        $exists    = true;
                     }
                 } else {
                     // Pick one at random
@@ -755,14 +761,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         }
-
+        // cache and return the result
         if ($exists) {
             self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
             return (int)$artist_id;
         }
-
-        $sql = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
+        // if all else fails, insert a new artist, cache it and return the id
+        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
+        $mbid = (!empty($matches)) ? $matches[0] : $mbid; // TODO only use primary mbid until multi-artist is ready
 
         $db_results = Dba::write($sql, array($name, $prefix, $mbid));
         if (!$db_results) {

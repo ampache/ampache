@@ -844,11 +844,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_id = $this->album;
         }
         $album = new Album($album_id);
-        if ($album->prefix) {
-            return $album->prefix . " " . $album->name;
-        } else {
-            return $album->name;
-        }
+
+        return $album->full_name;
     } // get_album_name
 
     /**
