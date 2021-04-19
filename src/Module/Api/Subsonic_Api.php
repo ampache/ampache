@@ -592,7 +592,7 @@ class Subsonic_Api
         $addAmpacheInfo = ($input['ampache'] == "1");
 
         $album = new Album(Subsonic_Xml_Data::getAmpacheId($albumid));
-        if (empty($album->name)) {
+        if (!$album->id) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Album not found.",
                 'getalbum');
         } else {
@@ -764,7 +764,7 @@ class Subsonic_Api
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->name;
+                    $finput   = $album->full_name;
                     $operator = 4;
                     $ftype    = "artist";
                 } else {
