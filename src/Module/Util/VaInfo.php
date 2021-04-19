@@ -112,7 +112,7 @@ final class VaInfo implements VaInfoInterface
         $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
         // convert all tag sources always to lowercase or results doesn't contains plugin results
-        $enabled_sources = (array)array_map('strtolower', $this->get_metadata_order());
+        $enabled_sources = array_map('strtolower', $this->get_metadata_order());
 
         if (in_array('getid3', $enabled_sources) && $this->islocal) {
             // Initialize getID3 engine
