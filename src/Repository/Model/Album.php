@@ -1063,18 +1063,17 @@ class Album extends database_object implements library_item
      */
     public function getYearConditional(): ?int
     {
-        $year = null;
         if (AmpConfig::get(ConfigurationKeyEnum::ALBUM_USE_ORIGINAL_YEAR)) {
             if ($this->original_year) {
-                $year = (int) $this->original_year;
-            }
-        } else {
-            if ($this->year) {
-                $year = (int) $this->year;
+                return (int) $this->original_year;
             }
         }
+        // allow fallback when original_year is null
+        if ($this->year) {
+            return (int) $this->year;
+        }
 
-        return $year;
+        return null;
     }
 
     /**
