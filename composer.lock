@@ -1158,16 +1158,16 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "06b0ac1c2a0633628c1ae904e6ae13fd6808d3ee"
+                "reference": "68a996d5f0038ffa4ec6498ebae9b7db6bfa3b92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/06b0ac1c2a0633628c1ae904e6ae13fd6808d3ee",
-                "reference": "06b0ac1c2a0633628c1ae904e6ae13fd6808d3ee",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/68a996d5f0038ffa4ec6498ebae9b7db6bfa3b92",
+                "reference": "68a996d5f0038ffa4ec6498ebae9b7db6bfa3b92",
                 "shasum": ""
             },
             "require": {
@@ -1184,8 +1184,7 @@
                 "ext-gd": "Enables you to write PNG images",
                 "khanamiryan/qrcode-detector-decoder": "Enables you to use the image validator",
                 "roave/security-advisories": "Makes sure package versions with known security issues are not installed",
-                "setasign/fpdf": "Enables you to use the PDF writer.",
-                "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
+                "setasign/fpdf": "Enables you to use the PDF writer"
             },
             "type": "library",
             "extra": {
@@ -1219,7 +1218,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.0.3"
+                "source": "https://github.com/endroid/qr-code/tree/4.0.4"
             },
             "funding": [
                 {
@@ -1227,7 +1226,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-21T10:51:29+00:00"
+            "time": "2021-04-19T15:10:22+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -1697,12 +1696,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "e54782d655120e5993ceeca9fb0e01895255ed07"
+                "reference": "422485c471958a56b4197854303a8aaa3004cce0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/e54782d655120e5993ceeca9fb0e01895255ed07",
-                "reference": "e54782d655120e5993ceeca9fb0e01895255ed07",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/422485c471958a56b4197854303a8aaa3004cce0",
+                "reference": "422485c471958a56b4197854303a8aaa3004cce0",
                 "shasum": ""
             },
             "require": {
@@ -1757,7 +1756,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-04-08T14:03:49+00:00"
+            "time": "2021-04-16T16:46:20+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -3182,16 +3181,16 @@
         },
         {
             "name": "php-tmdb/api",
-            "version": "4.0.4",
+            "version": "4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-tmdb/api.git",
-                "reference": "8a36349dc2c1840b5014ac874553506629162d29"
+                "reference": "0980c7d9a41da387205d9e4affb16d776706d5c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-tmdb/api/zipball/8a36349dc2c1840b5014ac874553506629162d29",
-                "reference": "8a36349dc2c1840b5014ac874553506629162d29",
+                "url": "https://api.github.com/repos/php-tmdb/api/zipball/0980c7d9a41da387205d9e4affb16d776706d5c6",
+                "reference": "0980c7d9a41da387205d9e4affb16d776706d5c6",
                 "shasum": ""
             },
             "require": {
@@ -3270,9 +3269,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-tmdb/api/issues",
-                "source": "https://github.com/php-tmdb/api/tree/4.0.4"
+                "source": "https://github.com/php-tmdb/api/tree/4.0.6"
             },
-            "time": "2021-03-07T15:03:07+00:00"
+            "time": "2021-04-15T16:28:14+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -5252,16 +5251,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.2.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665"
+                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5fa56b4074d1ae755beb55617ddafe6f5d78f665",
-                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5f38c8804a9e97d23e0c8d63341088cd8a22d627",
+                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627",
                 "shasum": ""
             },
             "require": {
@@ -5270,7 +5269,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-main": "2.4-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -5299,7 +5298,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/master"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.4.0"
             },
             "funding": [
                 {
@@ -5315,7 +5314,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-07T11:33:47+00:00"
+            "time": "2021-03-23T23:28:01+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
