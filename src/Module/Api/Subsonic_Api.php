@@ -1829,16 +1829,19 @@ class Subsonic_Api
 
         if (Access::check('interface', 100)) {
             $access = 25;
+            if ($coverArtRole) {
+                $access = 75;
+            }
             if ($adminRole) {
                 $access = 100;
-            } elseif ($coverArtRole) {
-                $access = 75;
             }
             // identify the user to modify
             $user    = User::get_from_username((string)$username);
             $user_id = $user->id;
 
             if ($user_id > 0) {
+                // update access level
+                $user->update_access($access);
                 // update password
                 if ($password && !AmpConfig::get('simple_user_mode')) {
                     $password = self::decrypt_password($password);
