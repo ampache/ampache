@@ -469,7 +469,7 @@ class Json_Data
             $theArray = [];
 
             $theArray["id"]   = (string)$album->id;
-            $theArray["name"] = $album->name;
+            $theArray["name"] = $album->full_name;
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {
