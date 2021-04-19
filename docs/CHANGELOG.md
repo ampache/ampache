@@ -21,6 +21,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 * php-intl is now required for translation of date formats into your locale
 * Search: Add 'possible_duplicate' to song, artist and album searches
+* Config option to use an albums original year instead of the release year within the Webui
 
 ### Changed
 
@@ -39,8 +40,6 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
-
-* Config option to use an albums original year instead of the release year within the gui
 
 * NEW API functions
   * Api::song_delete (Delete files when you are allowed to)
