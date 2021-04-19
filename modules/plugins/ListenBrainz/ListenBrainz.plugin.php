@@ -129,7 +129,7 @@ class Ampachelistenbrainz
                 'additional_info' => $additional_info,
                 'artist_name' => $artist->name,
                 'track_name' => $song->title,
-                'release_name' => $album->name,
+                'release_name' => $album->full_name,
             );
         if (empty($additional_info)) {
             $track_metadata = array_splice($track_metadata, 1);
