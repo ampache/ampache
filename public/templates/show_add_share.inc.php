@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?: $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>
