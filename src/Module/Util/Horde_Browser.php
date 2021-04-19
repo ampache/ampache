@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
  *  #                               Warning                             #
  *  #                               #######                             #
  *  # This external file is Ampache-adapted and probably unsynced with  #
- *  # origin because abandonned by its original authors.                #
+ *  # origin because abandoned by its original authors.                #
  *  #                                                                   #
  *  #####################################################################
  *
@@ -148,7 +148,7 @@ class Horde_Browser
     }
 
     /**
-     * Parses the user agent string and inititializes the object with all the
+     * Parses the user agent string and initializes the object with all the
      * known features and quirks for the given browser.
      *
      * @param string $userAgent The browser string to parse.

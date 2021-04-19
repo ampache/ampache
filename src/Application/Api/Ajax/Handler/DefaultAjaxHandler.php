@@ -94,16 +94,16 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
+                        case 'album_full':
+                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $_REQUEST['id']));
+                            foreach ($songs as $song_id) {
+                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                            }
+                            break;
                         case 'album_random':
-                            $data = explode('_', $_REQUEST['type']);
-                            $type = $data['0'];
-                            foreach ($_REQUEST['id'] as $i) {
-                                $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                                $object     = new $class_name($i);
-                                $songs      = $this->albumRepository->getRandomSongs($object->id);
-                                foreach ($songs as $song_id) {
-                                    Core::get_global('user')->playlist->add_object($song_id, 'song');
-                                }
+                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $_REQUEST['id']));
+                            foreach ($songs as $song_id) {
+                                Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
                         case 'artist_random':
@@ -151,10 +151,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 if (User::is_registered()) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
-                    $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
+                    $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                    $userflag = new Userflag($flag_id, $flagtype);
                     $userflag->set_flag($_GET['userflag']);
-                    echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
-                    $key           = "userflag_" . Core::get_get('object_id') . "_" . $flagtype;
+                    echo Userflag::show($flag_id, $flagtype);
+                    $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
                 } else {

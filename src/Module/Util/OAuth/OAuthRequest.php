@@ -196,7 +196,7 @@ class OAuthRequest
      *
      * The base string defined as the method, the url
      * and the parameters (normalized), each urlencoded
-     * and the concated with &.
+     * and the concatenated with &.
      */
     public function get_signature_base_string()
     {
@@ -212,7 +212,7 @@ class OAuthRequest
     }
 
     /**
-     * just uppercases the http method
+     * just uppercase the http method
      */
     public function get_normalized_http_method()
     {

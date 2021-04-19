@@ -103,7 +103,50 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * gets a random number, and a random assortment of songs from this album
+     * gets songs from this album
+     *
+     * @return int[] Album ids
+     */
+    public function getSongs(
+        int $albumId
+    ): array {
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ';
+        }
+        $sql .= 'WHERE `song`.`album` = ? ';
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
+        }
+        $sql .= "ORDER BY `song`.`track`, `song`.`title`";
+        $db_results = Dba::read($sql, [$albumId]);
+
+        $results = [];
+        while ($row = Dba::fetch_row($db_results)) {
+            $results[] = (int) $row['0'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets songs from this album group
+     *
+     * @return int[] Song ids
+     */
+    public function getSongsGrouped(
+        array $albumIdList
+    ): array {
+        $results = array();
+        foreach ($albumIdList as $album_id) {
+            $results = array_merge($results, self::getSongs((int)$album_id));
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets a random order of songs from this album
      *
      * @return int[] Album ids
      */
@@ -125,6 +168,23 @@ final class AlbumRepository implements AlbumRepositoryInterface
         while ($row = Dba::fetch_row($db_results)) {
             $results[] = (int) $row['0'];
         }
+
+        return $results;
+    }
+
+    /**
+     * gets a random order of songs from this album group
+     *
+     * @return int[] Album ids
+     */
+    public function getRandomSongsGrouped(
+        array $albumIdList
+    ): array {
+        $results = array();
+        foreach ($albumIdList as $album_id) {
+            $results = array_merge($results, self::getRandomSongs((int)$album_id));
+        }
+        shuffle($results);
 
         return $results;
     }

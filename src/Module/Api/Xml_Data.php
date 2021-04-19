@@ -417,9 +417,9 @@ class Xml_Data
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
-                            if ($album_id) {
-                                $album = new Album($album_id[0]);
-                                $string .= "\t<album id=\"" . $album_id[0] .
+                            if ($album_id > 0) {
+                                $album = new Album($album_id);
+                                $string .= "\t<album id=\"" . $album_id .
                                     '"><![CDATA[' . $album->full_name .
                                     "]]></album>\n";
                             }
@@ -1148,9 +1148,9 @@ class Xml_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param  integer[] $object_ids Object IDs
-     * @param  integer   $user_id
-     * @return string    return xml
+     * @param  array    $object_ids Object IDs
+     * @param  integer  $user_id
+     * @return string   return xml
      */
     public static function democratic($object_ids = array(), $user_id = null)
     {

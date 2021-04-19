@@ -28,7 +28,7 @@ namespace Ampache\Repository;
 interface AccessRepositoryInterface
 {
     /**
-     * Rreturns a full listing of all access rules on this server
+     * Returns a full listing of all access rules on this server
      * @return int[]
      */
     public function getAccessLists(): array;

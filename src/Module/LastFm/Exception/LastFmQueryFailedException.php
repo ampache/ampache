@@ -19,16 +19,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Module\Label;
+declare(strict_types=1);
 
-interface LabelListUpdaterInterface
+namespace Ampache\Module\LastFm\Exception;
+
+use Exception;
+
+final class LastFmQueryFailedException extends Exception
 {
-    /**
-     * Update the labels list based on a comma separated list (ex. label1,label2,label3,..)
-     */
-    public function update(
-        string $labelsComma,
-        int $artistId,
-        bool $overwrite
-    ): bool;
 }

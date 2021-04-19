@@ -52,8 +52,7 @@ class Dba
      */
     public static function query($sql, $params = array())
     {
-        // json_encode throws errors about UTF-8 cleanliness, which we don't
-        // care about here.
+        // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
 
         // Be aggressive, be strong, be dumb

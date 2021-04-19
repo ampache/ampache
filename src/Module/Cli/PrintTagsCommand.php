@@ -25,27 +25,22 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Channel\ChannelRunnerInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\Model\Catalog;
 use Exception;
 
 final class PrintTagsCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ChannelRunnerInterface $channelRunner;
+    private UtilityFactoryInterface $utilityFactory;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ChannelRunnerInterface $channelRunner
+        UtilityFactoryInterface $utilityFactory
     ) {
         parent::__construct('print:tags', T_('Print file tags'));
 
-        $this->configContainer = $configContainer;
-        $this->channelRunner   = $channelRunner;
+        $this->utilityFactory = $utilityFactory;
 
         $this
             ->argument('<filename>', T_('File Path'))
@@ -72,7 +67,14 @@ final class PrintTagsCommand extends Command
         $dir_pattern  = $catalog->sort_pattern;
         $file_pattern = $catalog->rename_pattern;
 
-        $info = new VaInfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
+        $info = $this->utilityFactory->createVaInfo(
+            $filename,
+            ['music'],
+            '',
+            '',
+            $dir_pattern,
+            $file_pattern
+        );
         if (isset($dir_pattern) || isset($file_pattern)) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $io->info(

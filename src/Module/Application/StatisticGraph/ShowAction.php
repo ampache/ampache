@@ -54,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Check to see if they've got an interface session or a valid API session, if not GTFO
+        // Check to see if they've got an interface session or a valid API session
         if (
             !Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()]) &&
             !Session::exists('api', $_REQUEST['auth'])

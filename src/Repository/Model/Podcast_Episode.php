@@ -28,6 +28,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -136,7 +137,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
@@ -524,7 +525,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
                     debug_event(self::class, 'Download completed.', 4);
                     $this->file = $file;
 
-                    $vainfo = new VaInfo($this->file);
+                    $vainfo = $this->getUtilityFactory()->createVaInfo($this->file);
                     $vainfo->get_info();
                     $key   = VaInfo::get_tag_type($vainfo->tags);
                     $infos = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
@@ -555,5 +556,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public static function type_to_mime($type)
     {
         return Song::type_to_mime($type);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

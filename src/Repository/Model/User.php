@@ -309,7 +309,7 @@ class User extends database_object
      * This is a little more complicate now that we've got many types of preferences
      * This function pulls all of them an arranges them into a spiffy little array
      * You can specify a type to limit it to a single type of preference
-     * []['title'] = ucased type name
+     * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
      * @param integer $type
@@ -1113,7 +1113,7 @@ class User extends database_object
     /**
      * is_online
      * delay how long since last_seen in seconds default of 20 min
-     * calcs difference between now and last_seen
+     * calculates difference between now and last_seen
      * if less than delay, we consider them still online
      * @param integer $delay
      * @return boolean

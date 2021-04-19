@@ -57,7 +57,7 @@ class Ui implements UiInterface
     /**
      * find_template
      *
-     * Return the path to the template file wanted. The file can be overwriten
+     * Return the path to the template file wanted. The file can be overwritten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
      * @param string $template

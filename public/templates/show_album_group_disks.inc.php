@@ -111,7 +111,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     } ?>
         <?php if ($show_playlist_add) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_'); ?>

@@ -44,12 +44,39 @@ interface AlbumRepositoryInterface
     ): int;
 
     /**
-     * gets a random number, and a random assortment of songs from this album
+     * gets songs from this album
      *
      * @return int[] Album ids
      */
+    public function getSongs(
+        int $albumId
+    ): array;
+
+    /**
+     * gets songs from this album group
+     *
+     * @return int[] Song ids
+     */
+    public function getSongsGrouped(
+        array $albumIdList
+    ): array;
+
+    /**
+     * gets a random order of songs from this album
+     *
+     * @return int[] Song ids
+     */
     public function getRandomSongs(
         int $albumId
+    ): array;
+
+    /**
+     * gets a random order of songs from this album group
+     *
+     * @return int[] Song ids
+     */
+    public function getRandomSongsGrouped(
+        array $albumIdList
     ): array;
 
     /**

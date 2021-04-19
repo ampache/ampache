@@ -29,6 +29,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -420,7 +421,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * format
      * this function takes an array of artist
-     * information and reformats the relevent values
+     * information and formats the relevant values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
      * @param boolean $details
@@ -685,35 +686,67 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         $artist_id = 0;
         $exists    = false;
+        $matches   = array();
 
+        // check for artists by mbid and split-mbid
         if ($mbid !== '') {
-            $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
-            $db_results = Dba::read($sql, array($mbid));
+            $sql     = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+            $matches = VaInfo::get_mbid_array($mbid);
+            foreach ($matches as $mbid_string) {
+                $db_results = Dba::read($sql, array($mbid_string));
 
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$row['id'];
-                $exists    = true;
+                if (!$exists) {
+                    $row       = Dba::fetch_assoc($db_results);
+                    $artist_id = (int)$row['id'];
+                    $exists    = ($artist_id > 0);
+                    $mbid      = ($exists)
+                        ? $mbid_string
+                        : $mbid;
+                }
+            }
+            // try the whole string if it didn't work
+            if (!$exists) {
+                $db_results = Dba::read($sql, array($mbid));
+
+                if ($row = Dba::fetch_assoc($db_results)) {
+                    $artist_id = (int)$row['id'];
+                    $exists    = ($artist_id > 0);
+                }
             }
         }
-
+        // search by the artist name and build an array
         if (!$exists) {
             $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
-
-            $id_array = array();
+            $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key            = $row['mbid'] ?: 'null';
                 $id_array[$key] = $row['id'];
             }
-
             if (count($id_array)) {
                 if ($mbid !== '') {
-                    if (isset($id_array['null']) && !$readonly) {
-                        $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-                        Dba::write($sql, array($mbid, $id_array['null']));
+                    $matches = VaInfo::get_mbid_array($mbid);
+                    foreach ($matches as $mbid_string) {
+                        // reverse search artist id if it's still not found for some reason
+                        if (isset($id_array[$mbid_string]) && !$exists) {
+                            $artist_id = (int)$id_array[$mbid_string];
+                            $exists    = ($artist_id > 0);
+                            $mbid      = ($exists)
+                                ? $mbid_string
+                                : $mbid;
+                        }
+                        // update empty artists that match names
+                        if (isset($id_array['null']) && !$readonly) {
+                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                            Dba::write($sql, array($mbid_string, $id_array['null']));
+                        }
                     }
                     if (isset($id_array['null'])) {
-                        $artist_id = $id_array['null'];
+                        if (!$readonly) {
+                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                            Dba::write($sql, array($mbid, $id_array['null']));
+                        }
+                        $artist_id = (int)$id_array['null'];
                         $exists    = true;
                     }
                 } else {
@@ -723,14 +756,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         }
-
+        // cache and return the result
         if ($exists) {
             self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
             return (int)$artist_id;
         }
-
-        $sql = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
+        // if all else fails, insert a new artist, cache it and return the id
+        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
+        $mbid = (!empty($matches)) ? $matches[0] : $mbid; // TODO only use primary mbid until multi-artist is ready
 
         $db_results = Dba::write($sql, array($name, $prefix, $mbid));
         if (!$db_results) {
@@ -864,9 +898,14 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
-        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret = Dba::write($sql,
-            array($summary, $placeformed, Catalog::normalize_year($yearformed), time(), $manual ? 1 : 0, $this->id));
+        // set null values if missing
+        $summary     = (empty($summary)) ? null : $summary;
+        $placeformed = (empty($placeformed)) ? null : $placeformed;
+        $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
+
+        $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
+        $sqlret  = Dba::write($sql,
+            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;

@@ -109,4 +109,13 @@ final class ConfigurationKeyEnum
     public const ART_ZIP_ADD                   = 'art_zip_add';
     public const FILE_ZIP_COMMENT              = 'file_zip_comment';
     public const ALBUM_USE_ORIGINAL_YEAR       = 'album_use_original_year';
+    public const MB_DETECT_ORDER               = 'mb_detect_order';
+    public const GETID3_DETECT_ID3V2_ENCODING  = 'getid3_detect_id3v2_encoding';
+    public const RATING_FILE_TAG_USER          = 'rating_file_tag_user';
+    public const COMMON_ABBR                   = 'common_abbr';
+    public const TAG_ORDER                     = 'tag_order';
+    public const ADDITIONAL_DELIMITERS         = 'additional_genre_delimiters';
+    public const METADATA_ORDER                = 'metadata_order';
+    public const METADATA_ORDER_VIDEO          = 'metadata_order_video';
+    public const GETID3_TAG_ORDER              = 'getid3_tag_order';
 }

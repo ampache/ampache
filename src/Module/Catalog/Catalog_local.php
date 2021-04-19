@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -495,7 +496,6 @@ class Catalog_local extends Catalog
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
-        $current_time = time();
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == "podcast") {
@@ -527,6 +527,8 @@ class Catalog_local extends Catalog
 
         /* Update the Catalog last_update */
         $this->update_last_add();
+
+        $current_time = time();
 
         $time_diff = ($current_time - $start_time) ?: 0;
         $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
@@ -720,7 +722,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
-            if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {
+            if ($file_info < 1) {
                 debug_event('local.catalog', 'File not found or empty: ' . $results['file'], 5);
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
@@ -750,14 +752,13 @@ class Catalog_local extends Catalog
     public function clean_file($file, $media_type = 'song')
     {
         $file_info = Core::get_filesize(Core::conv_lc_file($file));
-        if (!file_exists(Core::conv_lc_file($file)) || $file_info < 1) {
+        if ($file_info < 1) {
             debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
-        } // if error
-        else {
+        } else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
                 debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
             }
@@ -776,8 +777,14 @@ class Catalog_local extends Catalog
      */
     private function insert_local_song($file, $options = array())
     {
-        $vainfo = new VaInfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
-            $this->rename_pattern);
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $file,
+            $this->get_gather_types('music'),
+            '',
+            '',
+            $this->sort_pattern,
+            $this->rename_pattern
+        );
         $vainfo->get_info();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
@@ -895,7 +902,15 @@ class Catalog_local extends Catalog
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
-        $vainfo = new VaInfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
+
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $file,
+            $gtypes,
+            '',
+            '',
+            $this->sort_pattern,
+            $this->rename_pattern
+        );
         $vainfo->get_info();
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
@@ -995,7 +1010,7 @@ class Catalog_local extends Catalog
 
     /**
      * check_path
-     * Checks the path to see if it's there or conflicting with an existing catalot
+     * Checks the path to see if it's there or conflicting with an existing catalog
      * @param string $path
      * @return boolean
      */
@@ -1052,4 +1067,14 @@ class Catalog_local extends Catalog
 
         return true;
     } // move_catalog_proc
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
+    }
 }

@@ -28,6 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Album;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
@@ -191,14 +192,13 @@ class Userflag extends database_object
         if ($user_id === 0) {
             return false;
         }
-        $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql        = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` FROM `album`" . " WHERE `id` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $results    = Dba::fetch_assoc($db_results);
-        }
-        if (!empty($results)) {
-            return self::set_flag_for_group($flagged, $results, $user_id);
+            $album = new Album($this->id);
+            $album->get_group_disks_ids();
+            $album_array = $album->get_group_disks_ids();
+            self::set_flag_for_group($flagged, $album_array, $user_id);
+
+            return true;
         }
         debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
 
@@ -254,43 +254,23 @@ class Userflag extends database_object
      * set_flag_for_group
      * This function sets the user flag for an album group.
      * @param boolean $flagged
-     * @param $album
+     * @param array $album_array
      * @param integer $user_id
      * @return boolean
      */
-    public static function set_flag_for_group($flagged, $album, $user_id = null)
+    public static function set_flag_for_group($flagged, $album_array, $user_id)
     {
-        $sql = "SELECT `album`.`id` FROM `album`" . " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
-        if ($album['album_artist']) {
-            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
-        } else {
-            $sql .= " AND `album`.`album_artist` IS NULL";
-        }
-        if ($album['mbid']) {
-            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
-        } else {
-            $sql .= " AND `album`.`mbid` IS NULL";
-        }
-        if ($album['prefix']) {
-            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
-        } else {
-            $sql .= " AND `album`.`prefix` IS NULL";
-        }
-        $results    = array();
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        foreach ($results as $album_id) {
+        foreach ($album_array as $album_id) {
+            debug_event(self::class, "Setting userflag for Album $album_id to $flagged", 4);
             if (!$flagged) {
                 $sql = "DELETE FROM `user_flag` WHERE " . "`object_id` = " . $album_id . " AND " . "`object_type` = 'album' AND " . "`user` = " . $user_id;
                 Dba::write($sql);
             } else {
-                $sql    = "REPLACE INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
+                $sql    = "INSERT INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
+                Dba::write($sql, $params);
 
                 static::getUserActivityPoster()->post((int) $user_id, 'userflag', 'album', (int) $album_id, time());
-                Dba::write($sql, $params);
             }
 
             parent::add_to_cache('userflag_album_user' . $user_id, $album_id, array($flagged));

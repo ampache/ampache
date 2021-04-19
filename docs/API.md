@@ -20,7 +20,7 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 The current stable release is documented under it's own version page.
 Refer to the taged versions if you just want to follow the stable releases.
 
-* [Ampache 4.4.0-release](https://github.com/ampache/ampache/releases/tag/4.4.0)
+* [Ampache 4.4.1-release](https://github.com/ampache/ampache/releases/tag/4.4.1)
 * [API 4 Documentation](https://ampache.org/api/api-4)
 
 ## Archived Version Documentation

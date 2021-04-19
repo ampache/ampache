@@ -151,10 +151,8 @@ class AmpacheMpd extends localplay_controller
     public function delete_instance($uid)
     {
         $uid = Dba::escape($uid);
-
-        // Go ahead and delete this mofo!
-        $sql        = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
+        Dba::write($sql);
 
         return true;
     } // delete_instance
@@ -244,7 +242,7 @@ class AmpacheMpd extends localplay_controller
             $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
+        $user_id = $user_id ?: Core::get_global('user')->id;
 
         Preference::update('mpd_active', $user_id, $uid);
         AmpConfig::set('mpd_active', $uid, true);
@@ -304,7 +302,7 @@ class AmpacheMpd extends localplay_controller
 
     /**
      * clear_playlist
-     * This deletes the entire MPD playlist... nuff said
+     * This deletes the entire MPD playlist
      */
     public function clear_playlist()
     {

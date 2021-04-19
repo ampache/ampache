@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 final class AccessRepository implements AccessRepositoryInterface
 {
     /**
-     * Rreturns a full listing of all access rules on this server
+     * Returns a full listing of all access rules on this server
      * @return int[]
      */
     public function getAccessLists(): array

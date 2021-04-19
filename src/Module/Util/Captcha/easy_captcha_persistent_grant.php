@@ -36,10 +36,10 @@ class easy_captcha_persistent_grant extends easy_captcha
     }
 
     /**
-     * @param integer $ignore
+     * @param integer $input
      * @return boolean
      */
-    public function solved($ignore = 0)
+    public function solved($input = 0)
     {
         if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));

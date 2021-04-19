@@ -232,7 +232,7 @@ class AmpacheHttpq extends localplay_controller
             $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
+        $user_id = $user_id ?: Core::get_global('user')->id;
 
         Preference::update('httpq_active', $user_id, $uid);
         AmpConfig::set('httpq_active', $uid, true);
@@ -306,8 +306,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function play()
     {
-        // A play when it's already playing causes a track restart,
-        // so doublecheck its state
+        // A play when it's already playing causes a track restart, so double check its state
         if ($this->_httpq->state() == 'play') {
             return true;
         }
@@ -567,7 +566,7 @@ class AmpacheHttpq extends localplay_controller
         $options      = self::get_instance();
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
-        // Test our connection by retriving the version
+        // Test our connection by retrieving the version
         if ($this->_httpq->version() !== null) {
             return true;
         }

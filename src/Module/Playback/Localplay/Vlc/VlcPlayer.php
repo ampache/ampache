@@ -360,8 +360,8 @@ class VlcPlayer
 
     /**
      * get_tracks
-     * This returns a delimiated string of all of the filenames
-     * current in your playlist, only url's at the moment,normal files put in the playlist with VLC wil not show'
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
      */
     public function get_tracks()
     {
