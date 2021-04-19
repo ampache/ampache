@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
@@ -562,7 +563,7 @@ class Catalog_dropbox extends Catalog
                     $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
-                    $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
+                    $info            = ($song->id) ? static::getSongFromTagUpdater()->update($results, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated['updated']++;
@@ -785,5 +786,15 @@ class Catalog_dropbox extends Catalog
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongFromTagUpdater(): SongFromTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongFromTagUpdaterInterface::class);
     }
 }

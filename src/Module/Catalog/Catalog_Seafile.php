@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
@@ -428,7 +429,7 @@ class Catalog_Seafile extends Catalog
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
-                    $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
+                    $info = ($song->id) ? static::getSongFromTagUpdater()->update($metadata, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results['updated']++;
@@ -604,5 +605,15 @@ class Catalog_Seafile extends Catalog
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongFromTagUpdater(): SongFromTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongFromTagUpdaterInterface::class);
     }
 }

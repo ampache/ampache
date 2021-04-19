@@ -17,19 +17,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Song\Tag;
 
-namespace Ampache\Module\Song;
+use Ampache\Repository\Model\Song;
 
-use function DI\autowire;
-
-return [
-    SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
-    SongSorterInterface::class => autowire(SongSorter::class),
-    Tag\SongId3TagWriterInterface::class => autowire(Tag\SongId3TagWriter::class),
-    Tag\SongFromTagUpdaterInterface::class => autowire(Tag\SongFromTagUpdater::class),
-    Deletion\SongDeleterInterface::class => autowire(Deletion\SongDeleter::class),
-];
+interface SongFromTagUpdaterInterface
+{
+    /**
+     * Updates the song info based on tags; this is called from a bunch of
+     * different places and passes in a full fledged song object
+     * FIXME: This is an ugly mess, this really needs to be consolidated and
+     * cleaned up.
+     * @param array $results
+     * @param Song $song
+     * @return array
+     */
+    public function update(
+        array $results,
+        Song $song
+    ): array;
+}
