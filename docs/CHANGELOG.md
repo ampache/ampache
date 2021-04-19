@@ -29,6 +29,7 @@
 * SubSonic - Assign roles based on preferences (fixes jukebox, podcast and share roles)
 * Preference::get_by_user was caching into a single value
 * A user who owned a playlist was unable to reorder (but could still save the order)
+* When creating shares, don't allow secret to be longer than database limit (20)
 
 ### API 4.4.2
 
