@@ -1701,12 +1701,14 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
+        // only admins can create users
         if (Access::check('interface', 100)) {
             $access = 25;
+            if ($coverArtRole) {
+                $access = 75;
+            }
             if ($adminRole) {
                 $access = 100;
-            } elseif ($coverArtRole) {
-                $access = 75;
             }
             $password = self::decrypt_password($password);
             $user_id  = User::create($username, $username, $email, null, $password, $access);
@@ -1970,17 +1972,19 @@ class Subsonic_Api
             $time     = isset($input['time']) ? (int) $input['time'] / 1000 : time();
             $previous = Stats::get_last_play($user->id, $client, $time);
             $media    = Subsonic_XML_Data::getAmpacheObject($subsonic_id);
-            $media->format();
+            if ($media) {
+                $media->format();
 
-            // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if ($submission && get_class($media) == 'Song' && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
-                // stream has finished
-                debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                User::save_mediaplay($user, $media);
-            }
-            // Submission is false and not a repeat. let repeats go though to saveplayqueue
-            if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
-                $media->set_played($user->id, $client, array(), $time);
+                // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
+                if ($submission && get_class($media) == 'Song' && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
+                    // stream has finished
+                    debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
+                    User::save_mediaplay($user, $media);
+                }
+                // Submission is false and not a repeat. let repeats go though to saveplayqueue
+                if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
+                    $media->set_played($user->id, $client, array(), $time);
+                }
             }
         }
 
