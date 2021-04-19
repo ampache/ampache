@@ -556,7 +556,7 @@ class Subsonic_Api
         $addAmpacheInfo = ($input['ampache'] == "1");
 
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
-        if (!$album->id)) {
+        if (!$album->id) {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.", 'getalbum');
         } else {
             $response = Subsonic_XML_Data::createSuccessResponse('getalbum');
