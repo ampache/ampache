@@ -47,7 +47,7 @@ $web_path = AmpConfig::get('web_path');
 $year = $album->getYearConditional();
 
 // Title for this album
-$title = scrub_out($album->name);
+$title = scrub_out($album->full_name);
 if ($year !== null) {
     $title .= '&nbsp;(' . $year . ')';
 }
