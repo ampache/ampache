@@ -1790,7 +1790,7 @@ abstract class Catalog extends database_object
                     ?: $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
-                    $artists = $label->get_artists();
+                    $artists = static::getLabelRepository()->getArtists($label->getId());
                     if (!in_array($song->artist, $artists)) {
                         debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
                         $labelRepository->addArtistAssoc($label->id, $song->artist);

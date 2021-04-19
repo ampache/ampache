@@ -136,7 +136,7 @@ class Label extends database_object implements library_item
         $this->f_name  = scrub_out($this->name);
         $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
         $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
-        $this->artists = count($this->get_artists());
+        $this->artists = count(static::getLabelRepository()->getArtists($this->getId()));
     }
 
     /**
@@ -152,16 +152,17 @@ class Label extends database_object implements library_item
      */
     public function get_childrens()
     {
-        $medias  = array();
-        $artists = $this->get_artists();
-        foreach ($artists as $artist_id) {
-            $medias[] = array(
-                'object_type' => 'artist',
-                'object_id' => $artist_id
-            );
-        }
-
-        return array('artist' => $medias);
+        return [
+            'artist' => array_map(
+                static function (int $artistId): array {
+                    return [
+                        'object_type' => 'artist',
+                        'object_id' => $artistId
+                    ];
+                },
+                static::getLabelRepository()->getArtists($this->getId())
+            )
+        ];
     }
 
     /**
@@ -344,22 +345,6 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * get_artists
-     * @return integer[]
-     */
-    public function get_artists()
-    {
-        $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['artist'];
-        }
-
-        return $results;
-    }
-
-    /**
      * get_display
      * This returns a csv formatted version of the labels that we are given
      * @param $labels
@@ -386,9 +371,7 @@ class Label extends database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim((string)$results, ', ');
-
-        return $results;
+        return rtrim((string)$results, ', ');
     } // get_display
 
     private static function getLabelRepository(): LabelRepositoryInterface

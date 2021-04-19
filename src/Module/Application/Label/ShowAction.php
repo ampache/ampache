@@ -69,7 +69,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $label_id = (int) $request->getQueryParams()['label'] ?? 0;
+        $label_id = (int) ($request->getQueryParams()['label'] ?? 0);
         if (!$label_id) {
             $name = $_REQUEST['name'] ?? null;
             if ($name !== null) {
@@ -83,7 +83,7 @@ final class ShowAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_label.inc.php',
                 [
-                    'object_ids' => $label->get_artists(),
+                    'object_ids' => $this->labelRepository->getArtists($label_id),
                     'object_type' => 'artist',
                     'label' => $label,
                     'isLabelEditable' => $this->isEditable(

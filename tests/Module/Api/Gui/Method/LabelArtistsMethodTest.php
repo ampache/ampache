@@ -30,6 +30,7 @@ use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
@@ -48,6 +49,9 @@ class LabelArtistsMethodTest extends MockeryTestCase
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
+    /** @var MockInterface|LabelRepositoryInterface */
+    private MockInterface $labelRepository;
+
     private ?LabelArtistsMethod $subject;
 
     public function setUp(): void
@@ -55,11 +59,13 @@ class LabelArtistsMethodTest extends MockeryTestCase
         $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->labelRepository = $this->mock(LabelRepositoryInterface::class);
 
         $this->subject = new LabelArtistsMethod(
             $this->streamFactory,
             $this->modelFactory,
-            $this->configContainer
+            $this->configContainer,
+            $this->labelRepository
         );
     }
 
@@ -128,8 +134,13 @@ class LabelArtistsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($label);
 
-        $label->shouldReceive('get_artists')
+        $label->shouldReceive('getId')
             ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+
+        $this->labelRepository->shouldReceive('getArtists')
+            ->with($objectId)
             ->once()
             ->andReturn([]);
 
@@ -182,8 +193,13 @@ class LabelArtistsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($label);
 
-        $label->shouldReceive('get_artists')
+        $label->shouldReceive('getId')
             ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+
+        $this->labelRepository->shouldReceive('getArtists')
+            ->with($objectId)
             ->once()
             ->andReturn($artistIds);
 

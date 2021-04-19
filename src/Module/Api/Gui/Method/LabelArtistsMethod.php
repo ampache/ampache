@@ -31,6 +31,7 @@ use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -45,14 +46,18 @@ final class LabelArtistsMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        LabelRepositoryInterface $labelRepository
     ) {
         $this->streamFactory   = $streamFactory;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->labelRepository = $labelRepository;
     }
 
     /**
@@ -93,7 +98,7 @@ final class LabelArtistsMethod implements MethodInterface
 
         $label = $this->modelFactory->createLabel((int) $input['filter']);
 
-        $artistIds = $label->get_artists();
+        $artistIds = $this->labelRepository->getArtists($label->getId());
         if ($artistIds === []) {
             $result = $output->emptyResult('artist');
         } else {

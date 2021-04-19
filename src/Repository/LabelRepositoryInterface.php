@@ -35,11 +35,18 @@ interface LabelRepositoryInterface
      */
     public function getAll(): array;
 
-    public function lookup(string $labelName, int $label_id = 0): int;
+    public function lookup(string $labelName, int $labelId = 0): int;
 
     public function removeArtistAssoc(int $labelId, int $artistId): void;
 
     public function addArtistAssoc(int $labelId, int $artistId): void;
 
     public function delete(int $labelId): bool;
+
+    /**
+     * Returns a list of artist ids associated with the given label
+     *
+     * @return int[]
+     */
+    public function getArtists(int $labelId): array;
 }

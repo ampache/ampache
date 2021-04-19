@@ -23,23 +23,31 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Doctrine\DBAL\Connection;
 
 final class LabelRepository implements LabelRepositoryInterface
 {
+    private Connection $connection;
+
+    public function __construct(
+        Connection $connection
+    ) {
+        $this->connection = $connection;
+    }
+
     /**
      * @return array<int, string>
      */
     public function getByArtist(int $artistId): array
     {
-        $results = [];
-
-        $db_results = Dba::read(
-            "SELECT `label`.`id`, `label`.`name` FROM `label` " . "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " . 'WHERE `label_asso`.`artist` = ?',
+        $dbResults = $this->connection->executeQuery(
+            'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?',
             [$artistId]
         );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $results = [];
+
+        while ($row = $dbResults->fetchAssociative()) {
             $results[(int) $row['id']] = $row['name'];
         }
 
@@ -53,31 +61,32 @@ final class LabelRepository implements LabelRepositoryInterface
      */
     public function getAll(): array
     {
-        $db_results = Dba::read('SELECT `id`, `name` FROM `label`');
-        $results    = [];
+        $db_results = $this->connection->executeQuery('SELECT `id`, `name` FROM `label`');
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $results = [];
+
+        while ($row = $db_results->fetchAssociative()) {
             $results[(int) $row['id']] = $row['name'];
         }
 
         return $results;
     }
 
-    public function lookup(string $labelName, int $label_id = 0): int
+    public function lookup(string $labelName, int $labelId = 0): int
     {
         $ret  = -1;
         $name = trim($labelName);
         if (!empty($name)) {
             $ret    = 0;
-            $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
+            $sql    = 'SELECT `id` FROM `label` WHERE `name` = ?';
             $params = [$name];
-            if ($label_id > 0) {
-                $sql .= " AND `id` != ?";
-                $params[] = $label_id;
+            if ($labelId > 0) {
+                $sql .= ' AND `id` != ?';
+                $params[] = $labelId;
             }
-            $db_results = Dba::read($sql, $params);
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $ret = (int) $row['id'];
+            $dbResult = $this->connection->fetchOne($sql, $params);
+            if ($dbResult !== false) {
+                $ret = (int) $dbResult;
             }
         }
 
@@ -86,7 +95,7 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function removeArtistAssoc(int $labelId, int $artistId): void
     {
-        Dba::write(
+        $this->connection->executeQuery(
             'DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?',
             [$labelId, $artistId]
         );
@@ -94,7 +103,7 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function addArtistAssoc(int $labelId, int $artistId): void
     {
-        Dba::write(
+        $this->connection->executeQuery(
             'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
             [$labelId, $artistId, time()]
         );
@@ -102,11 +111,32 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function delete(int $labelId): bool
     {
-        $result = Dba::write(
-            "DELETE FROM `label` WHERE `id` = ?",
+        $result = $this->connection->executeQuery(
+            'DELETE FROM `label` WHERE `id` = ?',
             [$labelId]
         );
 
-        return $result !== false;
+        return $result->rowCount() > 0;
+    }
+
+    /**
+     * Returns a list of artist ids associated with the given label
+     *
+     * @return int[]
+     */
+    public function getArtists(int $labelId): array
+    {
+        $db_results = $this->connection->executeQuery(
+            'SELECT `artist` FROM `label_asso` WHERE `label` = ?',
+            [$labelId]
+        );
+
+        $results = [];
+
+        while ($artistId = $db_results->fetchOne()) {
+            $results[] = (int) $artistId;
+        }
+
+        return $results;
     }
 }
