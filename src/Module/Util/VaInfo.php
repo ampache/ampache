@@ -1643,7 +1643,7 @@ final class VaInfo implements VaInfoInterface
             if ($items === false) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
-        $data = $items;
+            $data = $items;
         }
         if ((isset($data) && isset($data[0])) && $doTrim) {
             return $data[0];
