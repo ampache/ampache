@@ -792,7 +792,7 @@ class Tag extends database_object implements library_item
      * If a type is specific only counts for said type are returned
      * @param string $type
      * @param integer $user_id
-     * @return array
+     * @return integer[]
      */
     public function count($type = '', $user_id = 0)
     {
@@ -814,7 +814,7 @@ class Tag extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['object_type']] = $row['count'];
+            $results[$row['object_type']] = (int) $row['count'];
         }
 
         return $results;
