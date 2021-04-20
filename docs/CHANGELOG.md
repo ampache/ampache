@@ -33,6 +33,7 @@
 * Album full name wasn't being used in some places
 * SubSonic - CreateUser could overwrite admin access level
 * SubSonic - UpdateUser didn't write the access level
+* Tag::get_tag_objects was not grouping albums
 
 ### API 4.4.2
 
