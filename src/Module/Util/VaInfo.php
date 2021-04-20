@@ -402,7 +402,7 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        $order = array_map('strtolower', $tagorderMap[$configKey] ?? '');
+        $order = array_map('strtolower', $tagorderMap[$configKey] ?? []);
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
@@ -761,7 +761,7 @@ final class VaInfo implements VaInfoInterface
         ];
 
         // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
-        return array_map('strtolower', $tagorderMap[$this->get_metadata_order_key()] ?? '');
+        return array_map('strtolower', $tagorderMap[$this->get_metadata_order_key()] ?? []);
     }
 
     /**
