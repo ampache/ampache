@@ -111,9 +111,10 @@ final class VaInfo implements VaInfoInterface
         }
         $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
-        $enabled_sources = (array)$this->get_metadata_order();
+        // convert all tag sources always to lowercase or results doesn't contains plugin results
+        $enabled_sources = array_map('strtolower', $this->get_metadata_order());
 
-        if (in_array('getID3', $enabled_sources) && $this->islocal) {
+        if (in_array('getid3', $enabled_sources) && $this->islocal) {
             // Initialize getID3 engine
             $this->_getID3 = new getID3();
 
@@ -257,7 +258,7 @@ final class VaInfo implements VaInfoInterface
         }
         $enabled_sources = (array)$this->get_metadata_order();
 
-        if (in_array('getID3', $enabled_sources) && $this->islocal) {
+        if (in_array('getid3', $enabled_sources) && $this->islocal) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
@@ -275,8 +276,8 @@ final class VaInfo implements VaInfoInterface
             $this->tags['filename'] = $this->_parse_filename($this->filename);
         }
 
-        if (in_array('getID3', $enabled_sources) && $this->islocal) {
-            $this->tags['getID3'] = $this->_get_tags();
+        if (in_array('getid3', $enabled_sources) && $this->islocal) {
+            $this->tags['getid3'] = $this->_get_tags();
         }
 
         $this->_get_plugin_tags();
@@ -401,7 +402,7 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        $order = (array) ($tagorderMap[$configKey] ?? '');
+        $order = array_map('strtolower', $tagorderMap[$configKey] ?? []);
 
         // Iterate through the defined key order adding them to an ordered array.
         $returned_keys = array();
@@ -488,7 +489,8 @@ final class VaInfo implements VaInfoInterface
             if (trim((string)$tags['release_type']) !== '') {
                 $info['release_type'] = $info['release_type'] ?: trim((string)$tags['release_type']);
             }
-            $info['artists']          = $info['artists'] ?: trim((string)$tags['artists']);
+            // artists is an array treat it as one
+            $info['artists'] = self::clean_array_tag('artists', $info, $tags);
 
             $info['original_year']  = $info['original_year'] ?: trim((string)$tags['original_year']);
             $info['barcode']        = $info['barcode'] ?: trim((string)$tags['barcode']);
@@ -568,8 +570,9 @@ final class VaInfo implements VaInfoInterface
                 // not all tag formats will return an array, but we need one
                 $arr[] = trim((string)$tags[$field]);
             } else {
-                foreach ($tags[$field] as $genre) {
-                    $arr[] = trim((string)$genre);
+                // not only used for genre might otherwise be misleading
+                foreach ($tags[$field] as $data) {
+                    $arr[] = trim((string)$data);
                 }
             }
         } else {
@@ -757,7 +760,8 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-        return (array) ($tagorderMap[$this->get_metadata_order_key()] ?? '');
+        // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
+        return array_map('strtolower', $tagorderMap[$this->get_metadata_order_key()] ?? []);
     }
 
     /**
@@ -767,9 +771,10 @@ final class VaInfo implements VaInfoInterface
      */
     private function _get_plugin_tags()
     {
-        // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
-        $tag_order    = array_map('strtolower', $this->get_metadata_order());
+        $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
+        // don't loop over getid3 and filename
+        $tag_order    = array_diff($tag_order, array('getid3','filename'));
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
@@ -1170,7 +1175,8 @@ final class VaInfo implements VaInfoInterface
                 //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
-                        $parsed['artists'] = $id3v2['comments']['text'][$txxx['description']];
+                        // return artists as array not as string of artists with delimiter, don't process metadata in catalog
+                        $parsed['artists'] = $this->splitSlashedlist($id3v2['comments']['text'][$txxx['description']], false);
                         break;
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1190,6 +1196,8 @@ final class VaInfo implements VaInfoInterface
                             array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]),
                                 array('')));
                         break;
+                    // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
+                    // all replaygain values aren't always correctly retrieved
                     case 'replaygain_track_gain':
                         $parsed['replaygain_track_gain'] = (float) $txxx['data'];
                         break;
@@ -1609,19 +1617,40 @@ final class VaInfo implements VaInfoInterface
     {
         // get rid of that annoying genre!
         $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
-        // read additional id3v2 delimiters from config
-        $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
-        if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
-            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
-            $genres  = preg_split($pattern, reset($data));
-            if ($genres === false) {
-                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
-            }
-            $data = $genres;
+        if (isset($data) && is_array($data) && count($data) === 1) {
+            $data = $this->splitSlashedlist((string)(reset($data)), false);
         }
 
         return $data;
     }
+
+    /**
+     * splitSlashedlist
+     * Split items by configurable delimiter
+     * Return first item as string = default
+     * Return all items as array if doTrim = false passed as optional parameter
+     * @param string $data
+     * @param bool $doTrim
+     * @return string|array
+     */
+    public function splitSlashedlist($data, $doTrim = true)
+    {
+        $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
+        if (isset($data) && isset($delimiters)) {
+            $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $items      = preg_split($pattern, $data);
+            $items      = array_map('trim', $items);
+            if ($items === false) {
+                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
+            }
+            $data = $items;
+        }
+        if ((isset($data) && isset($data[0])) && $doTrim) {
+            return $data[0];
+        }
+
+        return $data;
+    } // splitSlashedlist
 
     /**
      * @deprecated inject by constructor
