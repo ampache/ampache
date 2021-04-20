@@ -65,12 +65,21 @@ final class TagRepository implements TagRepositoryInterface
             $limit_sql .= (string)($limit);
         }
 
-        $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE $tag_sql `tag_map`.`object_type` = ? ";
+        $sql = ($type == 'album')
+            ? 'SELECT DISTINCT MIN(`tag_map`.`object_id`) as `object_id` FROM `tag_map` LEFT JOIN `album` ON `tag_map`.`object_id` = `album`.`id` '
+            : 'SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` ';
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE) === true &&
             in_array($type, ['song', 'artist', 'album'])
         ) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
+        }
+        if ($type == 'album') {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
+                $sql .= 'GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`';
+            } else {
+                $sql .= 'GROUP BY `album`.`id`, `album`.`disk`';
+            }
         }
         $sql .= $limit_sql;
         $db_results = Dba::read($sql, $sql_param);

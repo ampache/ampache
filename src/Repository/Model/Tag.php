@@ -738,7 +738,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['object_type']] = $row['count'];
+            $results[$row['object_type']] = (int)$row['count'];
         }
 
         return $results;
