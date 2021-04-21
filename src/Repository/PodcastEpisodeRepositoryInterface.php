@@ -21,20 +21,106 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
+use Ampache\Repository\Model\PodcastInterface;
+
 interface PodcastEpisodeRepositoryInterface
 {
     /**
      * This returns an array of ids of latest podcast episodes in this catalog
      *
-     * @return int[]
+     * @return iterable<Podcast_Episode>
      */
-    public function getNewestPodcastsIds(
+    public function getNewestPodcastEpisodes(
         int $catalogId,
         int $count
+    ): iterable;
+
+    /**
+     * @return iterable<Podcast_Episode>
+     */
+    public function getDownloadableEpisodes(
+        PodcastInterface $podcast,
+        int $limit
+    ): iterable;
+
+    /**
+     * @return iterable<Podcast_Episode>
+     */
+    public function getDeletableEpisodes(
+        PodcastInterface $podcast,
+        int $limit
+    ): iterable;
+
+    public function create(
+        PodcastInterface $podcast,
+        string $title,
+        string $guid,
+        string $source,
+        string $website,
+        string $description,
+        string $author,
+        string $category,
+        int $time,
+        int $publicationDate
+    ): bool;
+
+    /**
+     * Gets all episodes for the podcast
+     *
+     * @return int[]
+     */
+    public function getEpisodeIds(
+        PodcastInterface $podcast,
+        ?string $state_filter = null
     ): array;
+
+    public function remove(PodcastEpisodeInterface $podcastEpisode): bool;
+
+    public function changeState(
+        PodcastEpisodeInterface $podcastEpisode,
+        string $state
+    ): void;
+
+    /**
+     * Sets the vital meta informations after the episode has been downloaded
+     */
+    public function updateDownloadState(
+        PodcastEpisodeInterface $podcastEpisode,
+        string $filePath,
+        int $size,
+        int $duration,
+        ?int $bitrate,
+        ?int $frequency,
+        ?string $mode
+    ): void;
 
     /**
      * Cleans up the podcast_episode table
      */
     public function collectGarbage(): void;
+
+    /**
+     * Returns the amount of available episodes for a certain podcast
+     */
+    public function getEpisodeCount(PodcastInterface $podcast): int;
+
+    public function findById(
+        int $id
+    ): ?PodcastEpisodeInterface;
+
+    public function update(
+        PodcastEpisodeInterface $podcastEpisode,
+        ?string $title,
+        ?string $website,
+        ?string $description,
+        ?string $author,
+        ?string $category
+    ): void;
+
+    /**
+     * Sets the played state for the episode
+     */
+    public function setPlayed(PodcastEpisodeInterface $episode): void;
 }

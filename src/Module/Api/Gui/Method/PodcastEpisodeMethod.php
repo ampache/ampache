@@ -32,7 +32,7 @@ use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -42,18 +42,18 @@ final class PodcastEpisodeMethod implements MethodInterface
 
     private StreamFactoryInterface $streamFactory;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
+
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
-        $this->streamFactory   = $streamFactory;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->streamFactory            = $streamFactory;
+        $this->configContainer          = $configContainer;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     /**
@@ -88,9 +88,9 @@ final class PodcastEpisodeMethod implements MethodInterface
             );
         }
 
-        $podcast = $this->modelFactory->createPodcastEpisode((int) $objectId);
+        $podcastEpisode = $this->podcastEpisodeRepository->findById((int) $objectId);
 
-        if ($podcast->isNew()) {
+        if ($podcastEpisode === null) {
             throw new ResultEmptyException((string) $objectId);
         }
 

@@ -19,13 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Podcast_Episode $libitem */
 
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
 
+/** @var PodcastEpisodeInterface $libitem */
 ?>
 <div>
-    <form method="post" id="edit_podcast_episode_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_podcast_episode_<?php echo $libitem->getId(); ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
@@ -33,23 +33,23 @@ use Ampache\Repository\Model\Podcast_Episode;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->description); ?></textarea></td>
+                <td><textarea name="description" cols="44" rows="4"><?php echo scrub_out($libitem->getDescription()); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('GUID') ?></td>
-                <td><input type="text" name="guid" value="<?php echo scrub_out($libitem->guid); ?>" /></td>
+                <td><input type="text" name="guid" value="<?php echo scrub_out($libitem->getGuid()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Author') ?></td>
-                <td><input type="text" name="author" value="<?php echo scrub_out($libitem->author); ?>" /></td>
+                <td><input type="text" name="author" value="<?php echo scrub_out($libitem->getAuthor()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Category') ?></td>
-                <td><input type="text" name="category" value="<?php echo scrub_out($libitem->category); ?>" /></td>
+                <td><input type="text" name="category" value="<?php echo scrub_out($libitem->getCategory()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
-                <td><input type="text" name="website" value="<?php echo scrub_out($libitem->website); ?>" /></td>
+                <td><input type="text" name="website" value="<?php echo scrub_out($libitem->getWebsite()); ?>" /></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

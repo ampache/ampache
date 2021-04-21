@@ -26,12 +26,12 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,14 +46,18 @@ final class CreateAction implements ApplicationActionInterface
 
     private PodcastCreatorInterface $podcastCreator;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PodcastCreatorInterface $podcastCreator
+        PodcastCreatorInterface $podcastCreator,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->podcastCreator  = $podcastCreator;
+        $this->formVerificator = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,24 +69,34 @@ final class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_podcast')
+            !$this->formVerificator->verify($request, 'add_podcast')
         ) {
             throw new AccessDeniedException();
         }
 
+        $body = $request->getParsedBody();
+
+        $feedUrl   = (string) ($body['feed'] ?? 'https://');
+        $catalogId = (int) ($body['catalog'] ?? 0);
+
+        $result = $this->podcastCreator->create($feedUrl, $catalogId);
+
         $this->ui->showHeader();
 
-        // Try to create the sucker
-        $results = $this->podcastCreator->create((string) $_POST['feed'], (int) $_POST['catalog']);
-
-        if ($results === null) {
-            $this->ui->show('show_add_podcast.inc.php');
+        if ($result === null) {
+            $this->ui->show(
+                'show_add_podcast.inc.php',
+                [
+                    'feedUrl' => $feedUrl,
+                    'catalogId' => $catalogId,
+                    'verificationSnippet' => $this->formVerificator->register('add_podcast'),
+                    'ui' => $this->ui,
+                ]
+            );
         } else {
-            $title  = T_('No Problem');
-            $body   = T_('Subscribed to the Podcast');
             $this->ui->showConfirmation(
-                $title,
-                $body,
+                T_('No Problem'),
+                T_('Subscribed to the Podcast'),
                 sprintf(
                     '%s/browse.php?action=podcast',
                     $this->configContainer->getWebPath()

@@ -21,6 +21,9 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
+
 interface PodcastRepositoryInterface
 {
     /**
@@ -31,6 +34,42 @@ interface PodcastRepositoryInterface
     public function getPodcastIds(int $catalogId): array;
 
     public function remove(
-        int $podcastId
+        PodcastInterface $podcast
     ): bool;
+
+    public function updateLastsync(
+        Podcast $podcast,
+        int $time
+    ): void;
+
+    public function update(
+        int $podcastId,
+        string $feed,
+        string $title,
+        string $website,
+        string $description,
+        string $generator,
+        string $copyright
+    ): void;
+
+    public function insert(
+        string $feedUrl,
+        int $catalogId,
+        string $title,
+        string $website,
+        string $description,
+        string $language,
+        string $copyright,
+        string $generator,
+        int $lastBuildDate
+    ): ?int;
+
+    /**
+     * Looks for existing podcast having a certain feed url to detect duplicated
+     */
+    public function findByFeedUrl(
+        string $feedUrl
+    ): ?int;
+
+    public function findById(int $id): ?PodcastInterface;
 }

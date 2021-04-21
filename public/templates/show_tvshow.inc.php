@@ -40,7 +40,7 @@ $browse->set_type($object_type);
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6); ?>
+    echo Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6); ?>
     <?php if ($tvshow->summary) { ?>
     <div id="item_summary">
         <?php echo $tvshow->summary; ?>

@@ -33,10 +33,10 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -45,6 +45,8 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class JsonOutput implements ApiOutputInterface
@@ -58,14 +60,22 @@ final class JsonOutput implements ApiOutputInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->modelFactory     = $modelFactory;
-        $this->albumRepository  = $albumRepository;
-        $this->songRepository   = $songRepository;
+        $this->modelFactory             = $modelFactory;
+        $this->albumRepository          = $albumRepository;
+        $this->songRepository           = $songRepository;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastRepository        = $podcastRepository;
     }
 
     /**
@@ -356,7 +366,7 @@ final class JsonOutput implements ApiOutputInterface
             $ourSong['rating']                = ($rating->get_user_rating() ?: null);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
             $ourSong['playcount']             = (int)$song->played;
-            $ourSong['catalog']               = (int)$song->catalog;
+            $ourSong['catalog']               = $song->getCatalogId();
             $ourSong['composer']              = $song->composer;
             $ourSong['channels']              = $song->channels;
             $ourSong['comment']               = $song->comment;
@@ -679,31 +689,31 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($podcastIds as $podcast_id) {
-            $podcast = new Podcast($podcast_id);
-            $podcast->format();
+            $podcast             = $this->podcastRepository->findById($podcast_id);
             $rating              = new Rating($podcast_id, 'podcast');
             $flag                = new Userflag($podcast_id, 'podcast');
             $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
-            $podcast_name        = $podcast->f_title;
-            $podcast_description = $podcast->description;
-            $podcast_language    = $podcast->f_language;
-            $podcast_copyright   = $podcast->f_copyright;
-            $podcast_feed_url    = $podcast->feed;
-            $podcast_generator   = $podcast->f_generator;
-            $podcast_website     = $podcast->f_website;
-            $podcast_build_date  = $podcast->f_lastbuilddate;
-            $podcast_sync_date   = $podcast->f_lastsync;
-            $podcast_public_url  = $podcast->link;
+            $podcast_name        = $podcast->getTitleFormatted();
+            $podcast_description = $podcast->getDescription();
+            $podcast_language    = $podcast->getLanguageFormatted();
+            $podcast_copyright   = $podcast->getCopyrightFormatted();
+            $podcast_feed_url    = $podcast->getFeed();
+            $podcast_generator   = $podcast->getGeneratorFormatted();
+            $podcast_website     = $podcast->getWebsiteFormatted();
+            $podcast_build_date  = $podcast->getLastBuildDateFormatted();
+            $podcast_sync_date   = $podcast->getLastSyncFormatted();
+            $podcast_public_url  = $podcast->getLink();
             $podcast_episodes    = array();
             if ($episodes) {
-                $items            = $podcast->get_episodes();
-                $podcast_episodes = $this->podcast_episodes($items,
+                $podcast_episodes = $this->podcast_episodes(
+                    $this->podcastEpisodeRepository->getEpisodeIds($podcast),
                     $userId,
                     false,
                     true,
                     true,
                     $limit,
-                    $offset);
+                    $offset
+                );
             }
 
             // Build this element
@@ -759,36 +769,35 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($podcastEpisodeIds as $episode_id) {
-            $episode = new Podcast_Episode($episode_id);
-            $episode->format();
+            $episode = $this->podcastEpisodeRepository->findById($episode_id);
             $rating  = new Rating($episode_id, 'podcast_episode');
             $flag    = new Userflag($episode_id, 'podcast_episode');
-            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $art_url = Art::url($episode->getPodcast()->getId(), 'podcast', Core::get_request('auth'));
 
             $result[] = [
                 'id' => (string) $episode_id,
-                'title' => $episode->f_title,
-                'name' => $episode->f_title,
-                'description' => $episode->f_description,
-                'category' => $episode->f_category,
-                'author' => $episode->f_author,
-                'author_full' => $episode->f_artist_full,
-                'website' => $episode->f_website,
-                'pubdate' => $episode->f_pubdate,
-                'state' => $episode->f_state,
-                'filelength' => $episode->f_time_h,
-                'filesize' => $episode->f_size,
-                'filename' => $episode->f_file,
+                'title' => $episode->getTitleFormatted(),
+                'name' => $episode->getTitleFormatted(),
+                'description' => $episode->getDescriptionFormatted(),
+                'category' => $episode->getCategoryFormatted(),
+                'author' => $episode->getAuthorFormatted(),
+                'author_full' => $episode->getAuthorFormatted(),
+                'website' => $episode->getWebsiteFormatted(),
+                'pubdate' => $episode->getPublicationDateFormatted(),
+                'state' => $episode->getStateFormatted(),
+                'filelength' => $episode->getFullDurationFormatted(),
+                'filesize' => $episode->getSizeFormatted(),
+                'filename' => $episode->getFilename(),
                 'mime' => $episode->mime,
-                'public_url' => $episode->link,
+                'public_url' => $episode->getLink(),
                 'url' => $episode->play_url('', 'api', false, $userId),
-                'catalog' => $episode->catalog,
+                'catalog' => $episode->getPodcast()->getCatalog(),
                 'art' => $art_url,
                 'flag' => (!$flag->get_flag($userId, false) ? 0 : 1),
                 'preciserating' => ($rating->get_user_rating($userId) ?: null),
                 'rating' => ($rating->get_user_rating($userId) ?: null),
                 'averagerating' => (string) ($rating->get_average_rating() ?: null),
-                'played' => $episode->played
+                'played' => $episode->getPlayed()
             ];
         }
         if (!$encode) {
@@ -1153,6 +1162,7 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($objectIds as $row_id => $data) {
+            /** @var Media&PlayableMediaInterface $song */
             $song = $this->modelFactory->mapObjectType(
                 $data['object_type'],
                 (int) $data['object_id']
@@ -1165,7 +1175,7 @@ final class JsonOutput implements ApiOutputInterface
             $result[] = [
                 'id' => (string) $song->id,
                 'title' => $song->title,
-                'artist' => ['id' => (string) $song->artist, 'name' => $song->f_artist_full],
+                'artist' => ['id' => (string) $song->artist, 'name' => $song->getFullArtistNameFormatted()],
                 'album' => ['id' => (string) $song->album, 'name' => $song->f_album_full],
                 'genre' => $this->genre_array($song->tags),
                 'track' => (int) $song->track,

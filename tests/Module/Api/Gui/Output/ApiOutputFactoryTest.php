@@ -28,6 +28,8 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 class ApiOutputFactoryTest extends MockeryTestCase
@@ -41,7 +43,9 @@ class ApiOutputFactoryTest extends MockeryTestCase
             $this->mock(ModelFactoryInterface::class),
             $this->mock(AlbumRepositoryInterface::class),
             $this->mock(SongRepositoryInterface::class),
-            $this->mock(XmlWriterInterface::class)
+            $this->mock(XmlWriterInterface::class),
+            $this->mock(PodcastEpisodeRepositoryInterface::class),
+            $this->mock(PodcastRepositoryInterface::class)
         );
     }
 

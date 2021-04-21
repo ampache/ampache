@@ -23,7 +23,7 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Module\Api\SubsonicApiApplication;
+use Ampache\Module\Api\SubSonic\SubsonicApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

@@ -81,7 +81,7 @@ if ($directplay_limit > 0) {
     <?php
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
-        Art::display('album', $album->id, $name, $thumb); ?>
+        echo Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) {

@@ -33,6 +33,9 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -287,7 +290,7 @@ class AmpacheRss
                 $xml_array = array(
                     'title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
                     'link' => str_replace('&amp;', '&', $song->link),
-                    'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
+                    'description' => $song->title . ' - ' . $song->getFullArtistNameFormatted() . ' - ' . $song->f_album_full,
                     'comments' => $client->username,
                     'pubDate' => date("r", (int)$item['date'])
                 );
@@ -470,9 +473,9 @@ class AmpacheRss
         $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
         //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
         $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
-        if (Art::has_db($libitem->id, $libitem_type)) {
+        if (Art::has_db($libitem->getId(), $libitem_type)) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
-            $ximg->addAttribute("href", Art::url($libitem->id, $libitem_type));
+            $ximg->addAttribute("href", Art::url($libitem->getId(), $libitem_type));
         }
         $summary = $libitem->get_description();
         if (!empty($summary)) {
@@ -493,8 +496,8 @@ class AmpacheRss
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
             $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
-            $media      = new $class_name($media_info['object_id']);
-            $media->format();
+            /** @var Podcast_Episode $media */
+            $media = new $class_name($media_info['object_id']);
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));
             if ($media->f_artist) {
@@ -509,7 +512,7 @@ class AmpacheRss
             if (!empty($description)) {
                 $xitem->addChild("description", htmlentities($description));
             }
-            $xitem->addChild("xmlns:itunes:duration", $media->f_time);
+            $xitem->addChild("xmlns:itunes:duration", $media->getDurationFormatted());
             if ($media->mime) {
                 $surl  = $media->play_url('', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");

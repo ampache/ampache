@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
-use GuzzleHttp\Exception\GuzzleException;
+use Exception;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -75,7 +75,7 @@ final class ExternalResourceLoader implements ExternalResourceLoaderInterface
                 $url,
                 $options
             );
-        } catch (GuzzleException $e) {
+        } catch (Exception $e) {
             $this->logger->error(
                 sprintf('Web request failed: %s', $e->getMessage()),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

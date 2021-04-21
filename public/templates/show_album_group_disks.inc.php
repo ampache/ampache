@@ -76,7 +76,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
-        Art::display('album', $album->id, $name, $thumb);
+        echo Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>
 <?php if (User::is_registered()) { ?>

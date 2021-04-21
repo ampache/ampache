@@ -29,4 +29,5 @@ use function DI\autowire;
 return [
     GuiFactoryInterface::class => autowire(GuiFactory::class),
     TalFactoryInterface::class => autowire(TalFactory::class),
+    FormVerificatorInterface::class => autowire(FormVerificator::class),
 ];

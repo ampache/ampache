@@ -143,7 +143,7 @@ class AmpacheLastfm
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time,
+        if (!$scrobbler->queue_track($song->getFullArtistNameFormatted(), $song->f_album_full, $song->title, time(), $song->time,
             $song->track)) {
             return false;
         }
@@ -177,7 +177,7 @@ class AmpacheLastfm
         }
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!$scrobbler->love($flagged, $song->f_artist_full, $song->title)) {
+        if (!$scrobbler->love($flagged, $song->getFullArtistNameFormatted(), $song->title)) {
             debug_event('lastfm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return false;

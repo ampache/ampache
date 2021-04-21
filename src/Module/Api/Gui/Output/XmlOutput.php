@@ -35,7 +35,9 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -48,6 +50,8 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class XmlOutput implements ApiOutputInterface
@@ -63,16 +67,24 @@ final class XmlOutput implements ApiOutputInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         XmlWriterInterface $xmlWriter,
         AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->xmlWriter       = $xmlWriter;
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
+        $this->modelFactory             = $modelFactory;
+        $this->xmlWriter                = $xmlWriter;
+        $this->albumRepository          = $albumRepository;
+        $this->songRepository           = $songRepository;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastRepository        = $podcastRepository;
     }
 
     /**
@@ -330,7 +342,7 @@ final class XmlOutput implements ApiOutputInterface
                 "\t<rating>" . ($rating->get_user_rating($userId) ?: null) . "</rating>\n" .
                 "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
                 "\t<playcount>" . $song->played . "</playcount>\n" .
-                "\t<catalog>" . $song->catalog . "</catalog>\n" .
+                "\t<catalog>" . $song->getCatalogId() . "</catalog>\n" .
                 "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                 "\t<channels>" . $song->channels . "</channels>\n" .
                 "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n" .
@@ -610,31 +622,30 @@ final class XmlOutput implements ApiOutputInterface
         $string = "<total_count>" . Catalog::get_count('podcast') . "</total_count>\n";
 
         foreach ($podcastIds as $podcastId) {
-            $podcast = new Podcast($podcastId);
-            $podcast->format();
+            $podcast = $this->podcastRepository->findById($podcastId);
             $rating  = new Rating($podcastId, 'podcast');
             $flag    = new Userflag($podcastId, 'podcast');
             $art_url = Art::url($podcastId, 'podcast', Core::get_request('auth'));
             $string .= "<podcast id=\"$podcastId\">\n" .
-                "\t<name><![CDATA[" . $podcast->f_title . "]]></name>\n" .
-                "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" .
-                "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" .
-                "\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n" .
-                "\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n" .
-                "\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n" .
-                "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" .
-                "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .
-                "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
-                "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n" .
+                "\t<name><![CDATA[" . $podcast->getTitleFormatted() . "]]></name>\n" .
+                "\t<description><![CDATA[" . $podcast->getDescription() . "]]></description>\n" .
+                "\t<language><![CDATA[" . $podcast->getLanguageFormatted() . "]]></language>\n" .
+                "\t<copyright><![CDATA[" . $podcast->getCopyrightFormatted() . "]]></copyright>\n" .
+                "\t<feed_url><![CDATA[" . $podcast->getFeed() . "]]></feed_url>\n" .
+                "\t<generator><![CDATA[" . $podcast->getGeneratorFormatted() . "]]></generator>\n" .
+                "\t<website><![CDATA[" . $podcast->getWebsiteFormatted() . "]]></website>\n" .
+                "\t<build_date><![CDATA[" . $podcast->getLastBuildDateFormatted() . "]]></build_date>\n" .
+                "\t<sync_date><![CDATA[" . $podcast->getLastSyncFormatted() . "]]></sync_date>\n" .
+                "\t<public_url><![CDATA[" . $podcast->getLink() . "]]></public_url>\n" .
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t<flag>" . (!$flag->get_flag($userId, false) ? 0 : 1) . "</flag>\n" .
                 "\t<preciserating>" . ($rating->get_user_rating($userId) ?: null) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating($userId) ?: null) . "</rating>\n" .
                 "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n";
             if ($episodes) {
-                $items = $podcast->get_episodes();
+                $items = $this->podcastEpisodeRepository->getEpisodeIds($podcast);
                 if (count($items) > 0) {
-                    $string .= $this->podcast_episodes($items, $userId, false);
+                    $string .= $this->podcast_episodes($items, $userId);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -671,34 +682,33 @@ final class XmlOutput implements ApiOutputInterface
         $string = ($simple === false) ? "<total_count>" . Catalog::get_count('podcast_episode') . "</total_count>\n" : '';
 
         foreach ($podcastEpisodeIds as $episodeId) {
-            $episode = new Podcast_Episode($episodeId);
-            $episode->format();
+            $episode = $this->podcastEpisodeRepository->findById($episodeId);
             $rating  = new Rating($episodeId, 'podcast_episode');
             $flag    = new Userflag($episodeId, 'podcast_episode');
-            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $art_url = Art::url($episode->getPodcast()->getId(), 'podcast', Core::get_request('auth'));
             $string .= "\t<podcast_episode id=\"$episodeId\">\n" .
-                "\t\t<title><![CDATA[" . $episode->f_title . "]]></title>\n" .
-                "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
-                "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
-                "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
-                "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" .
-                "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" .
-                "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" .
-                "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" .
-                "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" .
-                "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
-                "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
-                "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
+                "\t\t<title><![CDATA[" . $episode->getTitleFormatted() . "]]></title>\n" .
+                "\t\t<name><![CDATA[" . $episode->getTitleFormatted() . "]]></name>\n" .
+                "\t\t<description><![CDATA[" . $episode->getDescriptionFormatted() . "]]></description>\n" .
+                "\t\t<category><![CDATA[" . $episode->getCategoryFormatted() . "]]></category>\n" .
+                "\t\t<author><![CDATA[" . $episode->getAuthorFormatted() . "]]></author>\n" .
+                "\t\t<author_full><![CDATA[" . $episode->getAuthorFormatted() . "]]></author_full>\n" .
+                "\t\t<website><![CDATA[" . $episode->getWebsiteFormatted() . "]]></website>\n" .
+                "\t\t<pubdate><![CDATA[" . $episode->getPublicationDateFormatted() . "]]></pubdate>\n" .
+                "\t\t<state><![CDATA[" . $episode->getStateFormatted() . "]]></state>\n" .
+                "\t\t<filelength><![CDATA[" . $episode->getFullDurationFormatted() . "]]></filelength>\n" .
+                "\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n" .
+                "\t\t<filename><![CDATA[" . $episode->getFilename() . "]]></filename>\n" .
                 "\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n" .
-                "\t\t<public_url><![CDATA[" . $episode->link . "]]></public_url>\n" .
+                "\t\t<public_url><![CDATA[" . $episode->getLink() . "]]></public_url>\n" .
                 "\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $userId) . "]]></url>\n" .
-                "\t\t<catalog><![CDATA[" . $episode->catalog . "]]></catalog>\n" .
+                "\t\t<catalog><![CDATA[" . $episode->getPodcast()->getCatalog() . "]]></catalog>\n" .
                 "\t\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t\t<flag>" . (!$flag->get_flag($userId, false) ? 0 : 1) . "</flag>\n" .
                 "\t\t<preciserating>" . ($rating->get_user_rating($userId) ?: null) . "</preciserating>\n" .
                 "\t\t<rating>" . ($rating->get_user_rating($userId) ?: null) . "</rating>\n" .
                 "\t\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
-                "\t\t<played>" . $episode->played . "</played>\n";
+                "\t\t<played>" . $episode->getPlayed() . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         }
 
@@ -1051,23 +1061,22 @@ final class XmlOutput implements ApiOutputInterface
                     $string .= $this->shares($objectIds);
                     break;
                 case 'podcast':
-                    $podcast = new Podcast($objectId);
-                    $podcast->format();
+                    $podcast = $this->podcastRepository->findById($objectId);
                     $string .= "<podcast id=\"$objectId\">\n" .
-                        "\t<name><![CDATA[" . $podcast->f_title . "]]></name>\n" .
-                        "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" .
-                        "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" .
-                        "\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n" .
-                        "\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n" .
-                        "\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n" .
-                        "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" .
-                        "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .
-                        "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
-                        "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
+                        "\t<name><![CDATA[" . $podcast->getTitleFormatted() . "]]></name>\n" .
+                        "\t<description><![CDATA[" . $podcast->getDescription() . "]]></description>\n" .
+                        "\t<language><![CDATA[" . $podcast->getLanguageFormatted() . "]]></language>\n" .
+                        "\t<copyright><![CDATA[" . $podcast->getCopyrightFormatted() . "]]></copyright>\n" .
+                        "\t<feed_url><![CDATA[" . $podcast->getFeed() . "]]></feed_url>\n" .
+                        "\t<generator><![CDATA[" . $podcast->getGeneratorFormatted() . "]]></generator>\n" .
+                        "\t<website><![CDATA[" . $podcast->getWebsiteFormatted() . "]]></website>\n" .
+                        "\t<build_date><![CDATA[" . $podcast->getLastBuildDateFormatted() . "]]></build_date>\n" .
+                        "\t<sync_date><![CDATA[" . $podcast->getLastSyncFormatted() . "]]></sync_date>\n" .
+                        "\t<public_url><![CDATA[" . $podcast->getLink() . "]]></public_url>\n";
                     if ($include) {
-                        $episodes = $podcast->get_episodes();
-                        foreach ($episodes as $episode_id) {
-                            $string .= $this->podcast_episodes(array($episode_id), $userId, false);
+                        $episodeIds = $this->podcastEpisodeRepository->getEpisodeIds($podcast);
+                        foreach ($episodeIds as $episodeId) {
+                            $string .= $this->podcast_episodes(array($episodeId), $userId);
                         }
                     }
                     $string .= "\t</podcast>\n";
@@ -1107,6 +1116,7 @@ final class XmlOutput implements ApiOutputInterface
         $string     = '';
 
         foreach ($objectIds as $row_id => $data) {
+            /** @var Media&PlayableMediaInterface $song */
             $song = $this->modelFactory->mapObjectType($data['object_type'], (int) $data['object_id']);
             $song->format();
 
@@ -1125,7 +1135,7 @@ final class XmlOutput implements ApiOutputInterface
                 // Title is an alias for name
                 "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                 "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
-                "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
+                "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->getFullArtistNameFormatted() . "]]></artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
                 "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
                 $tag_string .

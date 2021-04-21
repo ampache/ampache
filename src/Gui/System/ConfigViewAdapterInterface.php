@@ -29,4 +29,16 @@ interface ConfigViewAdapterInterface
     public function isWaveformEnabled(): bool;
 
     public function isDirectplayEnabled(): bool;
+
+    public function isLicensingEnabled(): bool;
+
+    public function isShowSkippedTimesEnabled(): bool;
+
+    public function isShowPlayedTimesEnabled(): bool;
+
+    public function isRatingEnabled(): bool;
+
+    public function isStatisticalGraphsEnabled(): bool;
+
+    public function isRssEnabled(): bool;
 }

@@ -23,29 +23,42 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 
+/**
+ * Deletes a Podcast including its episodes
+ */
 final class PodcastDeleter implements PodcastDeleterInterface
 {
     private PodcastRepositoryInterface $podcastRepository;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private PodcastEpisodeDeleterInterface $podcastEpisodeDeleter;
+
     public function __construct(
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastEpisodeDeleterInterface $podcastEpisodeDeleter
     ) {
-        $this->podcastRepository = $podcastRepository;
+        $this->podcastRepository        = $podcastRepository;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastEpisodeDeleter    = $podcastEpisodeDeleter;
     }
 
     public function delete(
-        Podcast $podcast
+        PodcastInterface $podcast
     ): bool {
-        $episodes = $podcast->get_episodes();
-        foreach ($episodes as $episode_id) {
-            $episode = new Podcast_Episode($episode_id);
-            $episode->remove();
+        $episodeIds = $this->podcastEpisodeRepository->getEpisodeIds($podcast);
+
+        foreach ($episodeIds as $episodeId) {
+            $this->podcastEpisodeDeleter->delete(
+                $this->podcastEpisodeRepository->findById($episodeId)
+            );
         }
 
-        return $this->podcastRepository->remove($podcast->getId());
+        return $this->podcastRepository->remove($podcast);
     }
 }

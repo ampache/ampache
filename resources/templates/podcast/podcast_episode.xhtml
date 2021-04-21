@@ -1,0 +1,114 @@
+<html>
+<metal:macro metal:use-macro="macros/macros.xhtml/box">
+    <metal:macro
+            metal:fill-slot="title"
+            tal:content="structure EPISODE/getBoxTitle"
+        >
+        TITLE
+    </metal:macro>
+    <metal:macro metal:fill-slot="content">
+        <dl class="media_details">
+            <tal:block tal:condition="EPISODE/isRealUser">
+                <tal:block tal:condition="CONFIG/isRatingEnabled">
+                    <dt class="even" i18n:translate="">Rating</dt>
+                    <dd class="even">
+                        <div id="rating_${EPISODE_ID}_podcast_episode" tal:content="structure EPISODE/getRating">RATING</div>
+                    </dd>
+                </tal:block>
+                <tal:block tal:condition="CONFIG/isUserFlagsEnabled">
+                    <dt class="odd" i18n:translate="">Fav.</dt>
+                    <dd class="odd">
+                        <div id="userflag_${EPISODE_ID}_podcast_episode" tal:content="structure EPISODE/getUserFlags">FLAGS</div>
+                    </dd>
+                </tal:block>
+            </tal:block>
+            <dt i18n:translate="">Action</dt>
+            <dd>
+                <tal:block tal:condition="EPISODE/hasFile">
+                    <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+                        <tal:block tal:replace="structure EPISODE/getDirectplayButton">DIRECTPLAY_BUTTON</tal:block>
+                        <tal:block
+                            tal:condition="EPISODE/canAppendNext"
+                            tal:replace="structure EPISODE/getAppendNextButton"
+                            >
+                            NEXT BUTTON
+                        </tal:block>
+                        <tal:block
+                            tal:condition="EPISODE/canAutoplayAppend"
+                            tal:replace="structure EPISODE/getAutoplayAppendButton"
+                            >
+                            AUTOPLAY APPEND BUTTON
+                        </tal:block>
+                    </tal:block>
+                    <tal:block tal:replace="structure EPISODE/getTemporaryPlaylistButton">TEMPORARY PLAYLIST BUTTON</tal:block>
+                </tal:block>
+                <a
+                    tal:condition="EPISODE/canPostShout"
+                    href="${WEB_PATH}/shout.php?action=show_add_shout&type=podcast_episode&id=${EPISODE_ID}"
+                    tal:content="structure EPISODE/getShoutButtonIcon"
+                >SHOUT</a>
+                <tal:block tal:condition="EPISODE/canShare" tal:content="structure EPISODE/getShareButton">
+                    SHARE
+                </tal:block>
+                <tal:block tal:condition="EPISODE/canDownload">
+                    <a
+                        class="nohtml"
+                        tal:attributes="href EPISODE/getPlayUrl"
+                        tal:content="structure EPISODE/getPlayButtonIcon"
+                    >PLAY BUTTON</a>
+                    <a
+                        class="nohtml"
+                        href="${WEB_PATH}/stream.php?action=download&amp;podcast_episode_id=${EPISODE_ID}"
+                        tal:content="structure EPISODE/getDownloadButtonIcon"
+                    >DOWNLOAD BUTTON</a>
+                </tal:block>
+                <a
+                    tal:condition="EPISODE/canShowStats"
+                    href="${WEB_PATH}/stats.php?action=graph&object_type=podcast_episode&object_id=${EPISODE_ID}"
+                    tal:content="structure EPISODE/getStatsButtonIcon"
+                >STATS BUTTON</a>
+                <a
+                    tal:condition="EPISODE/canEdit"
+                    onclick="showEditDialog('podcast_episode_row', '${EPISODE_ID}', 'edit_podcast_episode_${EPISODE_ID}', '${EPISODE/getEditButtonLabel}', '')"
+                    tal:content="structure EPISODE/getEditButtonIcon"
+                >EDIT</a>
+                <a
+                    tal:condition="EPISODE/canDelete"
+                    href="${WEB_PATH}/podcast_episode.php?action=delete&podcast_episode_id=${EPISODE_ID}"
+                    tal:content="structure EPISODE/getDeletionICon"
+                >DELETION</a>
+            </dd>
+            <dt i18n:translate="">Title</dt>
+            <dd tal:content="structure EPISODE/getTitle">TITLE</dd>
+            <dt i18n:translate="">Description</dt>
+            <dd tal:content="structure EPISODE/getDescription">DESCRIPTION</dd>
+            <tal:block tal:condition="EPISODE/getCategory">
+                <dt i18n:translate="">Category</dt>
+                <dd tal:content="structure EPISODE/getCategory">CATEGORY</dd>
+            </tal:block>
+            <tal:block tal:condition="EPISODE/getAuthor">
+                <dt i18n:translate="">Author</dt>
+                <dd tal:content="structure EPISODE/getAuthor">AUTHOR</dd>
+            </tal:block>
+            <dt i18n:translate="">Publication Date</dt>
+            <dd tal:content="structure EPISODE/getPublicationDate">PUBLICATION DATE</dd>
+            <dt i18n:translate="">State</dt>
+            <dd tal:content="structure EPISODE/getState">STATE</dd>
+            <dt i18n:translate="">Website</dt>
+            <dd tal:content="structure EPISODE/getWebsite">WEBSITE</dd>
+            <dt i18n:translate="">Length</dt>
+            <dd tal:content="structure EPISODE/getDuration">DURATION</dd>
+            <tal:block tal:condition="EPISODE/getBitrate">
+                <dt i18n:translate="">Bitrate</dt>
+                <dd tal:content="EPISODE/getBitrate">BITRATE</dd>
+            </tal:block>
+            <tal:block tal:condition="EPISODE/hasFile">
+                <dt i18n:translate="">File</dt>
+                <dd tal:content="structure EPISODE/getFile">FILE</dd>
+                <dt i18n:translate="">Size</dt>
+                <dd tal:content="structure EPISODE/getSize">SIZE</dd>
+            </tal:block>
+        </dl>
+    </metal:macro>
+</metal:macro>
+</html>

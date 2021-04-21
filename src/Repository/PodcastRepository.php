@@ -23,10 +23,25 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
+use Doctrine\DBAL\Connection;
 
 final class PodcastRepository implements PodcastRepositoryInterface
 {
+    private Connection $connection;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        Connection $connection,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->connection   = $connection;
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * This returns an array of ids of podcasts in this catalog
      *
@@ -35,27 +50,122 @@ final class PodcastRepository implements PodcastRepositoryInterface
     public function getPodcastIds(
         int $catalogId
     ): array {
-        $results = array();
-
-        $db_results = Dba::read(
-            'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?',
+        $result = $this->connection->executeQuery(
+            'SELECT `id` FROM `podcast` WHERE `catalog` = ?',
             [$catalogId]
         );
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $podcastIds = [];
+
+        while ($row = $result->fetchOne()) {
+            $podcastIds[] = (int) $row;
         }
 
-        return $results;
+        return $podcastIds;
     }
 
     public function remove(
-        int $podcastId
+        PodcastInterface $podcast
     ): bool {
-        $result = Dba::write(
+        $result = $this->connection->executeQuery(
             'DELETE FROM `podcast` WHERE `id` = ?',
-            [$podcastId]
+            [$podcast->getId()]
         );
 
-        return $result !== false;
+        return $result->rowCount() !== 0;
+    }
+
+    public function updateLastsync(
+        Podcast $podcast,
+        int $time
+    ): void {
+        $this->connection->executeQuery(
+            'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
+            [$time, $podcast->getId()]
+        );
+    }
+
+    public function update(
+        int $podcastId,
+        string $feed,
+        string $title,
+        string $website,
+        string $description,
+        string $generator,
+        string $copyright
+    ): void {
+        $this->connection->executeQuery(
+            'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?',
+            [$feed, $title, $website, $description, $generator, $copyright, $podcastId]
+        );
+    }
+
+    public function insert(
+        string $feedUrl,
+        int $catalogId,
+        string $title,
+        string $website,
+        string $description,
+        string $language,
+        string $copyright,
+        string $generator,
+        int $lastBuildDate
+    ): ?int {
+        $sql = <<<SQL
+        INSERT INTO
+            `podcast`
+            (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`)
+        VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        SQL;
+
+        $result = $this->connection->executeQuery(
+            $sql,
+            [
+                $feedUrl,
+                $catalogId,
+                $title,
+                $website,
+                $description,
+                $language,
+                $copyright,
+                $generator,
+                $lastBuildDate
+            ]
+        );
+
+        if ($result->rowCount() === 0) {
+            return null;
+        }
+
+        return (int) $this->connection->lastInsertId();
+    }
+
+    /**
+     * Looks for existing podcast having a certain feed url to detect duplicated
+     */
+    public function findByFeedUrl(
+        string $feedUrl
+    ): ?int {
+        $result = $this->connection->executeQuery(
+            'SELECT `id` FROM `podcast` WHERE `feed`= ?',
+            [$feedUrl]
+        );
+        $podcastId = $result->fetchOne();
+
+        if ($podcastId === false) {
+            return null;
+        }
+
+        return (int) $podcastId;
+    }
+
+    public function findById(int $id): ?PodcastInterface
+    {
+        $podcast = $this->modelFactory->createPodcast($id);
+        if ($podcast->isNew()) {
+            return null;
+        }
+
+        return $podcast;
     }
 }

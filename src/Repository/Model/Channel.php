@@ -66,6 +66,8 @@ class Channel extends database_object implements Media, library_item
     private $playlist;
     private $song_pos;
     private $songs;
+
+    /** @var Song|null */
     public $media;
     private $media_bytes_streamed;
     private $transcoder;
@@ -431,7 +433,7 @@ class Channel extends database_object implements Media, library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'channel') || $force) {
-            Art::display('channel', $this->id, $this->get_fullname(), $thumb);
+            echo Art::display('channel', $this->id, $this->get_fullname(), $thumb);
         }
     }
 
@@ -590,9 +592,10 @@ class Channel extends database_object implements Media, library_item
                 }
                 $this->media->format();
 
-                if ($this->media->catalog) {
-                    $catalog = Catalog::create_from_id($this->media->catalog);
-                    if (make_bool($this->media->isEnabled())) {
+                $mediaCatalogId = $this->media->getCatalogId();
+                if ($mediaCatalogId) {
+                    $catalog = Catalog::create_from_id($mediaCatalogId);
+                    if ($this->media->isEnabled()) {
                         if (AmpConfig::get('lock_songs')) {
                             if (!Stream::check_lock_media($this->media->id, 'song')) {
                                 debug_event(self::class, 'Media ' . $this->media->id . ' locked, skipped.', 3);

@@ -131,13 +131,13 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createPodcast(
         int $podcastId
-    ): Podcast {
+    ): PodcastInterface {
         return new Podcast($podcastId);
     }
 
     public function createPodcastEpisode(
         int $podcastEpisodeId
-    ): Podcast_Episode {
+    ): PodcastEpisodeInterface {
         return new Podcast_Episode($podcastEpisodeId);
     }
 

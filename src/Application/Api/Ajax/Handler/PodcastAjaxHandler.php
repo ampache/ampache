@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,18 +21,42 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 
 final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
+    private PodcastSyncerInterface $podcastSyncer;
+
+    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
+
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
+    public function __construct(
+        PodcastSyncerInterface $podcastSyncer,
+        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastRepositoryInterface $podcastRepository
+    ) {
+        $this->podcastSyncer            = $podcastSyncer;
+        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastRepository        = $podcastRepository;
+    }
+
     public function handle(): void
     {
-
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'sync':
@@ -45,18 +67,20 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (isset($_REQUEST['podcast_id'])) {
-                    $podcast = new Podcast($_REQUEST['podcast_id']);
-                    if ($podcast->id) {
-                        $podcast->sync_episodes(true);
+                    $podcast = $this->podcastRepository->findById((int) $_REQUEST['podcast_id']);
+                    if ($podcast !== null) {
+                        $this->podcastSyncer->sync($podcast, true);
                     } else {
                         debug_event('podcast.ajax', 'Cannot find podcast', 1);
                     }
                 } elseif (isset($_REQUEST['podcast_episode_id'])) {
-                    $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-                    if ($episode->id !== null) {
-                        $episode->gather();
-                    } else {
+                    $episode = $this->podcastEpisodeRepository->findById(
+                        (int) $_REQUEST['podcast_episode_id']
+                    );
+                    if ($episode === null) {
                         debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
+                    } else {
+                        $this->podcastEpisodeDownloader->download($episode);
                     }
                 }
                 $results['rfc3514'] = '0x1';

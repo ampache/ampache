@@ -31,8 +31,9 @@ use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -40,22 +41,27 @@ use Psr\Http\Message\StreamInterface;
 
 class UpdatePodcastMethodTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     /** @var StreamFactoryInterface|MockInterface|null */
     private MockInterface $streamFactory;
+
+    /** @var MockInterface|PodcastSyncerInterface */
+    private MockInterface $podcastSyncer;
+
+    /** @var MockInterface|PodcastRepositoryInterface */
+    private MockInterface $podcastRepository;
 
     private UpdatePodcastMethod $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
+        $this->streamFactory     = $this->mock(StreamFactoryInterface::class);
+        $this->podcastSyncer     = $this->mock(PodcastSyncerInterface::class);
+        $this->podcastRepository = $this->mock(PodcastRepositoryInterface::class);
 
         $this->subject = new UpdatePodcastMethod(
-            $this->modelFactory,
-            $this->streamFactory
+            $this->streamFactory,
+            $this->podcastSyncer,
+            $this->podcastRepository
         );
     }
 
@@ -115,15 +121,10 @@ class UpdatePodcastMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createPodcast')
+        $this->podcastRepository->shouldReceive('findById')
             ->with($objectId)
             ->once()
-            ->andReturn($podcast);
-
-        $podcast->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
+            ->andReturnNull();
 
         $this->subject->handle(
             $gatekeeper,
@@ -150,17 +151,13 @@ class UpdatePodcastMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createPodcast')
+        $this->podcastRepository->shouldReceive('findById')
             ->with($objectId)
             ->once()
             ->andReturn($podcast);
 
-        $podcast->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-        $podcast->shouldReceive('sync_episodes')
-            ->with(true)
+        $this->podcastSyncer->shouldReceive('sync')
+            ->with($podcast, true)
             ->once()
             ->andReturnFalse();
 
@@ -188,17 +185,13 @@ class UpdatePodcastMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->modelFactory->shouldReceive('createPodcast')
+        $this->podcastRepository->shouldReceive('findById')
             ->with($objectId)
             ->once()
             ->andReturn($podcast);
 
-        $podcast->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-        $podcast->shouldReceive('sync_episodes')
-            ->with(true)
+        $this->podcastSyncer->shouldReceive('sync')
+            ->with($podcast, true)
             ->once()
             ->andReturnTrue();
 

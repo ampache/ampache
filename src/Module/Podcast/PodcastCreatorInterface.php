@@ -21,12 +21,12 @@
 
 namespace Ampache\Module\Podcast;
 
-use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
 
 interface PodcastCreatorInterface
 {
     public function create(
         string $feedUrl,
         int $catalog_id
-    ): ?Podcast;
+    ): ?PodcastInterface;
 }

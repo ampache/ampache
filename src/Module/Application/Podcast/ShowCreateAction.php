@@ -20,17 +20,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,12 +43,16 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->formVerificator = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,9 +66,15 @@ final class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_add_podcast.inc.php');
-
+        $this->ui->show(
+            'show_add_podcast.inc.php',
+            [
+                'feedUrl' => 'https://',
+                'catalogId' => 0,
+                'verificationSnippet' => $this->formVerificator->register('add_podcast'),
+                'ui' => $this->ui,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

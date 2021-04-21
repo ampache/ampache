@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Gui\Output;
 use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class ApiOutputFactory implements ApiOutputFactoryInterface
@@ -39,16 +41,24 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
 
     private XmlWriterInterface $xmlWriter;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository,
-        XmlWriterInterface $xmlWriter
+        XmlWriterInterface $xmlWriter,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
-        $this->xmlWriter       = $xmlWriter;
+        $this->modelFactory             = $modelFactory;
+        $this->albumRepository          = $albumRepository;
+        $this->songRepository           = $songRepository;
+        $this->xmlWriter                = $xmlWriter;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastRepository        = $podcastRepository;
     }
 
     public function createJsonOutput(): ApiOutputInterface
@@ -56,7 +66,9 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
         return new JsonOutput(
             $this->modelFactory,
             $this->albumRepository,
-            $this->songRepository
+            $this->songRepository,
+            $this->podcastEpisodeRepository,
+            $this->podcastRepository
         );
     }
 
@@ -66,7 +78,9 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
             $this->modelFactory,
             $this->xmlWriter,
             $this->albumRepository,
-            $this->songRepository
+            $this->songRepository,
+            $this->podcastEpisodeRepository,
+            $this->podcastRepository
         );
     }
 }

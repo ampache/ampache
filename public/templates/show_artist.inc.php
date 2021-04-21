@@ -72,7 +72,7 @@ Ui::show_box_top($artist->f_name, 'info-box'); ?>
     <?php
 } else {
         $thumb = 32;
-        Art::display('artist', $artist->id, $artist->f_name, $thumb);
+        echo Art::display('artist', $artist->id, $artist->f_name, $thumb);
     } ?>
 </div>
 

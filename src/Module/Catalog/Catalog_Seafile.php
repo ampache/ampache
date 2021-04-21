@@ -586,7 +586,7 @@ class Catalog_Seafile extends Catalog
             $tempfile = $this->seafile->download($file);
 
             $media->file   = $tempfile;
-            $media->f_file = $fileinfo['filename'];
+            $media->setFilename($fileinfo['filename']);
 
             // in case this didn't get set for some reason
             if ($media->size == 0) {

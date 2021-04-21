@@ -35,7 +35,12 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
+class Video extends database_object implements
+    Media,
+    library_item,
+    GarbageCollectibleInterface,
+    MediaFileInterface,
+    PlayableMediaInterface
 {
     protected const DB_TABLENAME = 'video';
 
@@ -147,18 +152,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $f_full_title;
     /**
-     * @var string $f_artist_full
-     */
-    public $f_artist_full;
-    /**
-     * @var string $f_time
-     */
-    public $f_time;
-    /**
-     * @var string $f_time_h
-     */
-    public $f_time_h;
-    /**
      * @var string $link
      */
     public $link;
@@ -199,13 +192,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $f_length;
     /**
-     * @var string $f_file
-     */
-    public $f_file;
-    /**
      * @var string $f_release_date
      */
     public $f_release_date;
+
+    private ?string $filename = null;
 
     /**
      * Constructor
@@ -313,14 +304,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
 
-        // Format the Time
-        $min            = floor($this->time / 60);
-        $sec            = sprintf("%02d", ($this->time % 60));
-        $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
-        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
         if ($details) {
             // Get the top tags
             $this->tags   = Tag::get_top_tags('video', $this->id);
@@ -328,7 +311,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
-        $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
@@ -413,7 +395,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_catalogs()
     {
-        return array($this->catalog);
+        return [$this->getCatalogId()];
     }
 
     /**
@@ -450,7 +432,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -542,49 +524,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
-    }
-
-    /**
-     * type_to_mime
-     *
-     * Returns the mime type for the specified file extension/type
-     * @param string $type
-     * @return string
-     */
-    public static function type_to_mime($type)
-    {
-        // FIXME: This should really be done the other way around.
-        // Store the mime type in the database, and provide a function
-        // to make it a human-friendly type.
-        switch ($type) {
-            case 'avi':
-                return 'video/avi';
-            case 'ogg':
-            case 'ogv':
-                return 'application/ogg';
-            case 'wmv':
-                return 'audio/x-ms-wmv';
-            case 'mp4':
-            case 'm4v':
-                return 'video/mp4';
-            case 'mkv':
-                return 'video/x-matroska';
-            case 'mov':
-                return 'video/quicktime';
-            case 'divx':
-                return 'video/x-divx';
-            case 'webm':
-                return 'video/webm';
-            case 'flv':
-                return 'video/x-flv';
-            case 'ts':
-                return 'video/mp2t';
-            case 'mpg':
-            case 'mpeg':
-            case 'm2ts':
-            default:
-                return 'video/mpeg';
-        }
     }
 
     /**
@@ -1118,6 +1057,55 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information
+
+    public function getFilename(): string
+    {
+        if ($this->filename === null) {
+            $this->filename = sprintf(
+                '%s.%s',
+                filter_var($this->title,
+                    FILTER_SANITIZE_STRING,
+                    FILTER_FLAG_NO_ENCODE_QUOTES
+                ),
+                $this->type
+            );
+        }
+
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
+    }
+
+    public function getFullArtistNameFormatted(): string
+    {
+        return '';
+    }
+
+    public function getFullDurationFormatted(): string
+    {
+        $min   = floor($this->time / 60);
+        $sec   = sprintf("%02d", ($this->time % 60));
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
+
+        return sprintf('%s:%s:%s', $hour, $min_h, $sec);
+    }
+
+    public function getDurationFormatted(): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+
+        return sprintf('%s:%s', $min, $sec);
+    }
+
+    public function getCatalogId(): int
+    {
+        return (int) $this->catalog;
+    }
 
     /**
      * @deprecated

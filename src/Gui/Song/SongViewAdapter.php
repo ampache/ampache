@@ -346,7 +346,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
-        $songprops[T_('Length')]        = scrub_out($this->song->f_time);
+        $songprops[T_('Length')]        = scrub_out($this->song->getDurationFormatted());
         $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
         $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
         $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
@@ -469,7 +469,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getPlayDuration(): string
     {
-        return $this->song->f_time;
+        return $this->song->getDurationFormatted();
     }
 
     public function getLicenseLink(): string

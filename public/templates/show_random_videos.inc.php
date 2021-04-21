@@ -40,13 +40,15 @@ if ($videos) {
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
-            $art_showed = false;
+            $art_showed = null;
             if ($video->get_default_art_kind() == 'preview') {
                 $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
             }
-            if (!$art_showed) {
+            if ($art_showed === null) {
                 $thumb = Ui::is_grid_view('video') ? 7 : 6;
-                Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
+                echo Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
+            } else {
+                echo $art_showed;
             }
         } else { ?>
                 <?php echo $video->get_fullname(); ?>

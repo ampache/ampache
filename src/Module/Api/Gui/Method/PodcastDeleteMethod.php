@@ -35,7 +35,7 @@ use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -48,24 +48,24 @@ final class PodcastDeleteMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
     private PodcastDeleterInterface $podcastDeleter;
 
+    private PodcastRepositoryInterface $podcastRepository;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         UpdateInfoRepositoryInterface $updateInfoRepository,
-        PodcastDeleterInterface $podcastDeleter
+        PodcastDeleterInterface $podcastDeleter,
+        PodcastRepositoryInterface $podcastRepository
     ) {
         $this->streamFactory        = $streamFactory;
         $this->configContainer      = $configContainer;
-        $this->modelFactory         = $modelFactory;
         $this->updateInfoRepository = $updateInfoRepository;
         $this->podcastDeleter       = $podcastDeleter;
+        $this->podcastRepository    = $podcastRepository;
     }
 
     /**
@@ -106,9 +106,9 @@ final class PodcastDeleteMethod implements MethodInterface
             );
         }
 
-        $podcast = $this->modelFactory->createPodcast((int) $objectId);
+        $podcast = $this->podcastRepository->findById((int) $objectId);
 
-        if ($podcast->isNew() === true) {
+        if ($podcast === null) {
             throw new ResultEmptyException((string) $objectId);
         }
 

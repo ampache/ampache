@@ -69,4 +69,15 @@ final class ConfigViewAdapter implements ConfigViewAdapterInterface
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS);
     }
+
+    public function isStatisticalGraphsEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
+            is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
+    }
+
+    public function isRssEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS);
+    }
 }

@@ -26,13 +26,13 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Podcast\PodcastDeleterInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,20 +44,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private PodcastDeleterInterface $podcastDeleter;
+
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        PodcastDeleterInterface $podcastDeleter
+        PodcastDeleterInterface $podcastDeleter,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->podcastDeleter  = $podcastDeleter;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->podcastDeleter    = $podcastDeleter;
+        $this->podcastRepository = $podcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,7 +73,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $podcast = $this->modelFactory->createPodcast((int) ($request->getQueryParams()['podcast_id'] ?? 0));
+        $podcast = $this->podcastRepository->findById(
+            (int) ($request->getQueryParams()['podcast_id'] ?? 0)
+        );
 
         $this->ui->showHeader();
 

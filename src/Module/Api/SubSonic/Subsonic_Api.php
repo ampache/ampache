@@ -22,7 +22,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\SubSonic;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
@@ -32,8 +32,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
-use Ampache\Module\Podcast\PodcastCreatorInterface;
-use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Share\ExpirationDateCalculatorInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
@@ -56,8 +54,6 @@ use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -69,6 +65,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\NowPlayingRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -200,8 +197,8 @@ class Subsonic_Api
                     CURLOPT_HEADER => false,
                     CURLOPT_RETURNTRANSFER => false,
                     CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_WRITEFUNCTION => array('Ampache\Module\Api\Subsonic_Api', 'output_body'),
-                    CURLOPT_HEADERFUNCTION => array('Ampache\Module\Api\Subsonic_Api', 'output_header'),
+                    CURLOPT_WRITEFUNCTION => array('Ampache\Module\Api\SubSonic\Subsonic_Api', 'output_body'),
+                    CURLOPT_HEADERFUNCTION => array('Ampache\Module\Api\SubSonic\Subsonic_Api', 'output_header'),
                     // Ignore invalid certificate
                     // Default trusted chain is crap anyway and currently no custom CA option
                     CURLOPT_SSL_VERIFYPEER => false,
@@ -1185,8 +1182,10 @@ class Subsonic_Api
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
-            $object = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $object = static::getPodcastEpisodeRepository()->findById(
+                (int) Subsonic_Xml_Data::getAmpacheId($fileid)
+            );
+            $url = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
@@ -1215,8 +1214,10 @@ class Subsonic_Api
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
-            $object = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $object = static::getPodcastEpisodeRepository()->findById(
+                (int) Subsonic_Xml_Data::getAmpacheId($fileid)
+            );
+            $url = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -2225,7 +2226,7 @@ class Subsonic_Api
             // randomize and slice
             shuffle($songs);
             $songs = array_slice($songs, 0, $count);
-        //} elseif (Ampache\Module\Api\Subsonic_Xml_Data::isAlbum($id)) {
+        //} elseif (Ampache\Module\Api\SubSonic\Subsonic_Xml_Data::isAlbum($id)) {
             //    // TODO: support similar songs for albums
         } elseif (Subsonic_Xml_Data::isSong($id)) {
             $songs = Recommendation::get_songs_like(Subsonic_Xml_Data::getAmpacheId($id), $count);
@@ -2249,195 +2250,6 @@ class Subsonic_Api
     public static function getsimilarsongs2($input)
     {
         self::getsimilarsongs($input, "similarSongs2");
-    }
-
-    /**
-     * getPodcasts
-     * Get all podcast channels.
-     * Takes the optional includeEpisodes and channel id in parameters
-     * @param array $input
-     */
-    public static function getpodcasts($input)
-    {
-        $podcast_id      = $input['id'];
-        $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
-
-        if (AmpConfig::get('podcast')) {
-            if ($podcast_id) {
-                $podcast = new Podcast(Subsonic_Xml_Data::getAmpacheId($podcast_id));
-                if ($podcast->id) {
-                    $response = Subsonic_Xml_Data::createSuccessResponse('getpodcasts');
-                    Subsonic_Xml_Data::addPodcasts($response, array($podcast), $includeEpisodes);
-                } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                        'getpodcasts');
-                }
-            } else {
-                $podcasts = Catalog::get_podcasts();
-                $response = Subsonic_Xml_Data::createSuccessResponse('getpodcasts');
-                Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
-            }
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'getpodcasts');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * getNewestPodcasts
-     * Get the most recently published podcast episodes.
-     * Takes the optional count in parameters
-     * @param array $input
-     */
-    public static function getnewestpodcasts($input)
-    {
-        $count = $input['count'] ?: AmpConfig::get('podcast_new_download');
-
-        if (AmpConfig::get('podcast')) {
-            $response = Subsonic_Xml_Data::createSuccessResponse('getnewestpodcasts');
-            $episodes = Catalog::get_newest_podcasts($count);
-            Subsonic_Xml_Data::addNewestPodcastEpisodes($response, $episodes);
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'getnewestpodcasts');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * refreshPodcasts
-     * Request the server to check for new podcast episodes.
-     * Takes no parameters.
-     * @param array $input
-     */
-    public static function refreshpodcasts($input)
-    {
-        if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $podcasts = Catalog::get_podcasts();
-            foreach ($podcasts as $podcast) {
-                $podcast->sync_episodes(true);
-            }
-            $response = Subsonic_Xml_Data::createSuccessResponse('refreshpodcasts');
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'refreshpodcasts');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * createPodcastChannel
-     * Add a new podcast channel.
-     * Takes the podcast url in parameter.
-     * @param array $input
-     */
-    public static function createpodcastchannel($input)
-    {
-        $url = self::check_parameter($input, 'url');
-
-        if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $catalogs = static::getCatalogRepository()->getList('podcast');
-            if (count($catalogs) > 0) {
-                if (static::getPodcastCreator()->create($url, $catalogs[0])) {
-                    $response = Subsonic_Xml_Data::createSuccessResponse('createpodcastchannel');
-                } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'createpodcastchannel');
-                }
-            } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                    'createpodcastchannel');
-            }
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'createpodcastchannel');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * deletePodcastChannel
-     * Delete an existing podcast channel
-     * Takes the podcast id in parameter.
-     * @param array $input
-     */
-    public static function deletepodcastchannel($input)
-    {
-        $podcast_id = (int)self::check_parameter($input, 'id');
-
-        if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $podcast = new Podcast(Subsonic_Xml_Data::getAmpacheId($podcast_id));
-            if ($podcast->id) {
-                if (static::getPodcastDeleter()->delete($podcast)) {
-                    $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastchannel');
-                } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'deletepodcastchannel');
-                }
-            } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'deletepodcastchannel');
-            }
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'deletepodcastchannel');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * deletePodcastEpisode
-     * Delete a podcast episode
-     * Takes the podcast episode id in parameter.
-     * @param array $input
-     */
-    public static function deletepodcastepisode($input)
-    {
-        $id = self::check_parameter($input, 'id');
-
-        if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $episode = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($id));
-            if ($episode->id !== null) {
-                if ($episode->remove()) {
-                    $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastepisode');
-                } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'deletepodcastepisode');
-                }
-            } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'deletepodcastepisode');
-            }
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'deletepodcastepisode');
-        }
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * downloadPodcastEpisode
-     * Request the server to download a podcast episode
-     * Takes the podcast episode id in parameter.
-     * @param array $input
-     */
-    public static function downloadpodcastepisode($input)
-    {
-        $id = self::check_parameter($input, 'id');
-
-        if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $episode = new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($id));
-            if ($episode->id !== null) {
-                $episode->gather();
-                $response = Subsonic_Xml_Data::createSuccessResponse('downloadpodcastepisode');
-            } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'downloadpodcastepisode');
-            }
-        } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'downloadpodcastepisode');
-        }
-        self::apiOutput($input, $response);
     }
 
     /**
@@ -2722,16 +2534,6 @@ class Subsonic_Api
     /**
      * @deprecated Inject by constructor
      */
-    private static function getPodcastCreator(): PodcastCreatorInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastCreatorInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getSearchRepository(): SearchRepositoryInterface
     {
         global $dic;
@@ -2772,11 +2574,11 @@ class Subsonic_Api
     /**
      * @deprecated Inject by constructor
      */
-    private static function getPodcastDeleter(): PodcastDeleterInterface
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(PodcastDeleterInterface::class);
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 
     /**

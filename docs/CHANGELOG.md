@@ -28,6 +28,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
 * Move artist counts (song, album) to a DB column
+* podcast episode downloader does not add the original title to the filename anylonger
 
 ### Removed
 

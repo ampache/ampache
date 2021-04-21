@@ -60,7 +60,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             return;
         }
 
-        $catalog = Catalog::create_from_id($song->catalog);
+        $catalog = Catalog::create_from_id($song->getCatalogId());
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing id3 metadata to file %s', $song->file),
@@ -154,7 +154,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['title']       = $song->title;
         $meta['comment']     = $song->comment;
         $meta['album']       = $song->f_album_full;
-        $meta['artist']      = $song->f_artist_full;
+        $meta['artist']      = $song->getFullArtistNameFormatted();
         $meta['albumartist'] = $song->f_albumartist_full;
         $meta['composer']    = $song->composer;
         $meta['publisher']   = $song->f_publisher;
@@ -187,7 +187,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['title']         = $song->title;
         $meta['comment']       = $song->comment;
         $meta['album']         = $song->f_album_full;
-        $meta['artist']        = $song->f_artist_full;
+        $meta['artist']        = $song->getFullArtistNameFormatted();
         $meta['band']          = $song->f_albumartist_full;
         $meta['composer']      = $song->composer;
         $meta['publisher']     = $song->f_publisher;

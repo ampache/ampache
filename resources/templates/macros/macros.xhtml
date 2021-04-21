@@ -1,0 +1,22 @@
+<html>
+    <metal:macro metal:define-macro="box">
+        <div class="info-box">
+            <div class="box-inside">
+                <div class="box-top">
+                    <div class="box-left-top"></div>
+                    <div class="box-right-top"></div>
+                </div>
+                <h3 class="box-title">
+                    <metal:macro define-slot="title" />
+                </h3>
+                <div class="box-content clearfix">
+                    <metal:macro define-slot="content" />
+                </div>
+                <div class="box-bottom">
+                    <div class="box-left-bottom"></div>
+                    <div class="box-right-bottom"></div>
+                </div>
+            </div>
+        </div>
+    </metal:macro>
+</html>

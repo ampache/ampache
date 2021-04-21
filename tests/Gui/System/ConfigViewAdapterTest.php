@@ -129,4 +129,40 @@ class ConfigViewAdapterTest extends MockeryTestCase
             $this->subject->isRatingEnabled()
         );
     }
+
+    public function testIsStatisticalGraphsEnabledReturnsFalseIfDisabled(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->isStatisticalGraphsEnabled()
+        );
+    }
+
+    public function testIsStatisticalGraphsEnabledReturnsTrueIfEnabledAndInstalled(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->isStatisticalGraphsEnabled()
+        );
+    }
+
+    public function testIsRssEnabledReturnsTrue(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::USE_RSS)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->isRssEnabled()
+        );
+    }
 }

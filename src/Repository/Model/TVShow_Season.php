@@ -309,7 +309,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         if ($tvshow_id !== null && $type !== null) {
-            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

@@ -26,11 +26,13 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Podcast\Gui\PodcastGuiFactoryInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,16 +44,28 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    private TalFactoryInterface $talFactory;
+
+    private PodcastGuiFactoryInterface $podcastGuiFactory;
+
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        TalFactoryInterface $talFactory,
+        PodcastGuiFactoryInterface $podcastGuiFactory,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->ui                       = $ui;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->talFactory               = $talFactory;
+        $this->podcastGuiFactory        = $podcastGuiFactory;
+        $this->podcastRepository        = $podcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,16 +73,19 @@ final class ShowAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
             return null;
         }
+        $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
 
         $this->ui->showHeader();
+        if ($podcastId > 0) {
+            $podcast = $this->podcastRepository->findById($podcastId);
 
-        $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
-        if ($podcast_id > 0) {
-            $podcast = $this->modelFactory->createPodcast($podcast_id);
-            $podcast->format();
-            $object_ids  = $podcast->get_episodes();
-            $object_type = 'podcast_episode';
-            require_once Ui::find_template('show_podcast.inc.php');
+            echo $this->talFactory
+                ->createTalView()
+                ->setTemplate('podcast/podcast.xhtml')
+                ->setContext('PODCAST', $this->podcastGuiFactory->createPodcastViewAdapter($podcast))
+                ->setContext('PODCAST_ID', $podcastId)
+                ->setContext('WEB_PATH', $this->configContainer->getWebPath())
+                ->render();
         }
 
         $this->ui->showQueryStats();

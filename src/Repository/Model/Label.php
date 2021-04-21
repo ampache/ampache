@@ -123,7 +123,7 @@ class Label extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'label') || $force) {
-            Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

@@ -22,37 +22,39 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\SubSonic;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Config\AmpConfig;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use SimpleXMLElement;
 
 /**
  * XML_Data Class
@@ -733,7 +735,7 @@ class Subsonic_Xml_Data
         }
         $extension       = pathinfo((string)$results['file'], PATHINFO_EXTENSION);
         $results['type'] = strtolower((string)$extension);
-        $results['mime'] = Song::type_to_mime($results['type']);
+        $results['mime'] = static::getExtensionToMimeTypeMapper()->mapAudio($results['type']);
 
         return $results;
     }
@@ -885,7 +887,10 @@ class Subsonic_Xml_Data
             // $transcode_settings = Song::get_transcode_settings_for_media(null, null, 'api', 'song');
             $transcode_type = AmpConfig::get('encode_player_api_target', 'mp3');
             $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
-            $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+            $xsong->addAttribute(
+                'transcodedContentType',
+                static::getExtensionToMimeTypeMapper()->mapAudio($transcode_type)
+            );
         }
 
         return $xsong;
@@ -931,7 +936,7 @@ class Subsonic_Xml_Data
      * getAmpacheObject
      * Return the Ampache media object
      * @param integer $object_id
-     * @return Song|Video|Podcast_Episode|null
+     * @return Song|Video|PodcastEpisodeInterface|null
      */
     public static function getAmpacheObject($object_id)
     {
@@ -942,7 +947,9 @@ class Subsonic_Xml_Data
             return new Video(Subsonic_Xml_Data::getAmpacheId($object_id));
         }
         if (Subsonic_Xml_Data::isPodcastEp($object_id)) {
-            return new Podcast_Episode(Subsonic_Xml_Data::getAmpacheId($object_id));
+            return static::getPodcastEpisodeRepository()->findById(
+                (int) Subsonic_Xml_Data::getAmpacheId($object_id)
+            );
         }
 
         return null;
@@ -1063,7 +1070,10 @@ class Subsonic_Xml_Data
             if (!empty($transcode_settings)) {
                 $transcode_type = $transcode_settings['format'];
                 $xvideo->addAttribute('transcodedSuffix', (string)$transcode_type);
-                $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
+                $xvideo->addAttribute(
+                    'transcodedContentType',
+                    static::getExtensionToMimeTypeMapper()->mapVideo($transcode_type)
+                );
             }
         }
     }
@@ -1516,21 +1526,22 @@ class Subsonic_Xml_Data
     {
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
-            $podcast->format();
             $xchannel = $xpodcasts->addChild('channel');
             $xchannel->addAttribute('id', (string)self::getPodcastId($podcast->id));
-            $xchannel->addAttribute('url', (string)$podcast->feed);
-            $xchannel->addAttribute('title', (string)self::checkName($podcast->f_title));
-            $xchannel->addAttribute('description', (string)$podcast->f_description);
+            $xchannel->addAttribute('url', $podcast->getFeed());
+            $xchannel->addAttribute('title', (string)self::checkName($podcast->getTitleFormatted()));
+            $xchannel->addAttribute('description', (string)$podcast->getDescriptionFormatted());
             if (Art::has_db($podcast->id, 'podcast')) {
                 $xchannel->addAttribute('coverArt', 'pod-' . self::getPodcastId($podcast->id));
             }
             $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
-                $episodes = $podcast->get_episodes();
+                $episodes = static::getPodcastEpisodeRepository()->getEpisodeIds($podcast);
                 foreach ($episodes as $episode_id) {
-                    $episode = new Podcast_Episode($episode_id);
-                    self::addPodcastEpisode($xchannel, $episode);
+                    self::addPodcastEpisode(
+                        $xchannel,
+                        static::getPodcastEpisodeRepository()->findById($episode_id)
+                    );
                 }
             }
         }
@@ -1539,32 +1550,34 @@ class Subsonic_Xml_Data
     /**
      * addPodcastEpisode
      * @param SimpleXMLElement $xml
-     * @param Podcast_Episode $episode
+     * @param PodcastEpisodeInterface $episode
      * @param string $elementName
      */
     private static function addPodcastEpisode($xml, $episode, $elementName = 'episode')
     {
-        $episode->format();
+        $podcastId = $episode->getPodcast()->getId();
+        $episodeId = $episode->getId();
+
         $xepisode = $xml->addChild($elementName);
-        $xepisode->addAttribute('id', (string)self::getPodcastEpId($episode->id));
-        $xepisode->addAttribute('channelId', (string)self::getPodcastId($episode->podcast));
-        $xepisode->addAttribute('title', (string)self::checkName($episode->f_title));
-        $xepisode->addAttribute('album', (string)$episode->f_podcast);
-        $xepisode->addAttribute('description', (string)self::checkName($episode->f_description));
+        $xepisode->addAttribute('id', (string)self::getPodcastEpId($episodeId));
+        $xepisode->addAttribute('channelId', (string)self::getPodcastId($podcastId));
+        $xepisode->addAttribute('title', (string)self::checkName($episode->getTitleFormatted()));
+        $xepisode->addAttribute('album', (string)$episode->getPodcast()->getTitleFormatted());
+        $xepisode->addAttribute('description', (string)self::checkName($episode->getDescriptionFormatted()));
         $xepisode->addAttribute('duration', (string)$episode->time);
         $xepisode->addAttribute('genre', "Podcast");
         $xepisode->addAttribute('isDir', "false");
-        $xepisode->addAttribute('publishDate', date("c", (int)$episode->pubdate));
-        $xepisode->addAttribute('status', (string)$episode->state);
-        $xepisode->addAttribute('parent', (string)self::getPodcastId($episode->podcast));
-        if (Art::has_db($episode->podcast, 'podcast')) {
-            $xepisode->addAttribute('coverArt', (string)self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute('publishDate', date("c", $episode->getPublicationDate()));
+        $xepisode->addAttribute('status', $episode->getState());
+        $xepisode->addAttribute('parent', (string)self::getPodcastId($podcastId));
+        if (Art::has_db($podcastId, 'podcast')) {
+            $xepisode->addAttribute('coverArt', (string)self::getPodcastId($podcastId));
         }
 
-        self::setIfStarred($xepisode, 'podcast_episode', $episode->id);
+        self::setIfStarred($xepisode, 'podcast_episode', $episodeId);
 
         if ($episode->file) {
-            $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episode->id));
+            $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episodeId));
             $xepisode->addAttribute('size', (string)$episode->size);
             $xepisode->addAttribute('suffix', (string)$episode->type);
             $xepisode->addAttribute('contentType', (string)$episode->mime);
@@ -1577,13 +1590,12 @@ class Subsonic_Xml_Data
     /**
      * addNewestPodcastEpisodes
      * @param SimpleXMLElement $xml
-     * @param Podcast_Episode[] $episodes
+     * @param PodcastEpisodeInterface[] $episodes
      */
     public static function addNewestPodcastEpisodes($xml, $episodes)
     {
         $xpodcasts = $xml->addChild('newestPodcasts');
         foreach ($episodes as $episode) {
-            $episode->format();
             self::addPodcastEpisode($xpodcasts, $episode);
         }
     }
@@ -1620,7 +1632,11 @@ class Subsonic_Xml_Data
         } elseif ($bookmark->object_type == "video") {
             self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
-            self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
+            self::addPodcastEpisode(
+                $xbookmark,
+                static::getPodcastEpisodeRepository()->findById((int) $bookmark->object_id),
+                'entry'
+            );
         }
     }
 
@@ -1687,5 +1703,25 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getExtensionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
+    {
+        global $dic;
+
+        return $dic->get(ExtensionToMimeTypeMapperInterface::class);
     }
 }

@@ -224,6 +224,9 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br />" . "These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />" . "* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
 
+        $update_string = "* Adds bitrate, rate and mode information to podcast_episode<br/ > ";
+        $version[]     = array('version' => '510001', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1180,6 +1183,22 @@ class Update
         $sql    = "ALTER TABLE `artist` ADD `album_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= Dba::write($sql);
         $sql    = "ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * Add bitrate, rate and mode to podcast_episode
+     */
+    public static function update_510001()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `podcast_episode` ADD `rate` mediumint(8) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `podcast_episode` ADD `mode` enum ('abr', 'vbr', 'cbr') charset utf8 null;";
         $retval &= Dba::write($sql);
 
         return $retval;

@@ -866,7 +866,7 @@ class Album extends database_object implements library_item
 
         if ($album_id !== null && $type !== null) {
             $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
-            Art::display($type, $album_id, $title, $thumb, $this->link);
+            echo Art::display($type, $album_id, $title, $thumb, $this->link);
         }
     }
 

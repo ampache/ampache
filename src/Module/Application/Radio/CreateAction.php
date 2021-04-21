@@ -26,14 +26,13 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Live_Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -70,7 +69,12 @@ final class CreateAction implements ApplicationActionInterface
         $results = Live_Stream::create($_POST);
 
         if (!$results) {
-            require_once Ui::find_template('show_add_live_stream.inc.php');
+            $this->ui->show(
+                'show_add_live_stream.inc.php',
+                [
+                    'ui' => $this->ui,
+                ]
+            );
         } else {
             $body  = T_('Radio Station created');
             $title = '';

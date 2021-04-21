@@ -35,7 +35,7 @@ use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -47,20 +47,20 @@ final class PodcastEditMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private UiInterface $ui;
+
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->streamFactory   = $streamFactory;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
+        $this->streamFactory     = $streamFactory;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->podcastRepository = $podcastRepository;
     }
 
     /**
@@ -113,20 +113,20 @@ final class PodcastEditMethod implements MethodInterface
         }
 
         $podcastId = (int) $podcastId;
-        $podcast   = $this->modelFactory->createPodcast($podcastId);
+        $podcast   = $this->podcastRepository->findById($podcastId);
 
-        if ($podcast->isNew()) {
+        if ($podcast === null) {
             throw new ResultEmptyException(
                 sprintf(T_('Not Found: %d'), $podcastId)
             );
         }
 
-        $feed           = filter_var($input['feed'] ?? '', FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
-        $title          = isset($input['title']) ? $this->ui->scrubIn($input['title']) : $podcast->title;
-        $website        = filter_var($input['website'] ?? '', FILTER_VALIDATE_URL) ? $this->ui->scrubIn($input['website']) : $podcast->website;
-        $description    = isset($input['description']) ? $this->ui->scrubIn($input['description']) : $podcast->description;
-        $generator      = isset($input['generator']) ? $this->ui->scrubIn($input['generator']) : $podcast->generator;
-        $copyright      = isset($input['copyright']) ? $this->ui->scrubIn($input['copyright']) : $podcast->copyright;
+        $feed           = filter_var($input['feed'] ?? '', FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->getFeed();
+        $title          = isset($input['title']) ? $this->ui->scrubIn($input['title']) : $podcast->getTitle();
+        $website        = filter_var($input['website'] ?? '', FILTER_VALIDATE_URL) ? $this->ui->scrubIn($input['website']) : $podcast->getWebsite();
+        $description    = isset($input['description']) ? $this->ui->scrubIn($input['description']) : $podcast->getDescription();
+        $generator      = isset($input['generator']) ? $this->ui->scrubIn($input['generator']) : $podcast->getGenerator();
+        $copyright      = isset($input['copyright']) ? $this->ui->scrubIn($input['copyright']) : $podcast->getCopyright();
         $data           = array(
             'feed' => $feed,
             'title' => $title,

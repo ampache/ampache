@@ -120,8 +120,12 @@ final class ConfigurationKeyEnum
     public const SHARE_EXPIRE                  = 'share_expire';
     public const LIVE_STREAM                   = 'live_stream';
     public const AJAX_LOAD                     = 'ajax_load';
+    public const PODCAST_NEW_DOWNLOAD          = 'podcast_new_download';
+    public const PODCAST_KEEP                  = 'podcast_keep';
     public const ART_ZIP_ADD                   = 'art_zip_add';
     public const FILE_ZIP_COMMENT              = 'file_zip_comment';
+    public const OFFSET_LIMIT                  = 'offset_limit';
+    public const JWT_INSECURE                  = 'jwt_insecure';
     public const PROXY_HOST                    = 'proxy_host';
     public const PROXY_PORT                    = 'proxy_port';
     public const PROXY_USER                    = 'proxy_user';

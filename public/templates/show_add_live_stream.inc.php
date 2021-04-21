@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,7 +24,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 
+/** @var UiInterface $ui */
 ?>
 <?php Ui::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
 <form name="radio" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=create">
@@ -55,7 +57,7 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
-    <td><?php show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?></td>
+    <td><?php echo $ui->showCatalogSelect('catalog', (int) ($_REQUEST['catalog'])); ?></td>
 </tr>
 </table>
 <div class="formValidation">

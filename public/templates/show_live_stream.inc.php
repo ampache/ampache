@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 <div class="item_right_info">
     <?php
         $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
-        Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
+        echo Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
 </div>
 <dl class="media_details">
 <?php $rowparity = Ui::flip_class(); ?>

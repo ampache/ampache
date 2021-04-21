@@ -30,6 +30,7 @@ use Ampache\Module\Api\Gui\JsonApiApplication;
 use Ampache\Module\Api\Gui\XmlApiApplication;
 use Ampache\Module\Api\Gui\Output\ApiOutputFactory;
 use Ampache\Module\Api\Gui\Output\ApiOutputFactoryInterface;
+use Ampache\Module\Api\SubSonic\SubsonicApiApplication;
 use function DI\autowire;
 
 return [
@@ -137,4 +138,9 @@ return [
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
     Gui\Authentication\HandshakeInterface::class => autowire(Gui\Authentication\Handshake::class),
+    SubSonic\Method\GetPodcastsMethod::class => autowire(),
+    SubSonic\Method\GetNewestPodcastsMethod::class => autowire(),
+    SubSonic\Method\DownloadPodcastEpisodeMethod::class => autowire(),
+    SubSonic\Method\DeletePodcastEpisode::class => autowire(),
+    SubSonic\Method\RefreshPodcastsMethod::class => autowire(),
 ];

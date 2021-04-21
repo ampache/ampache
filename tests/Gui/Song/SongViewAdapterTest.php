@@ -332,7 +332,10 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $value = 'some-duration';
 
-        $this->song->f_time = $value;
+        $this->song->shouldReceive('getDurationFormatted')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,

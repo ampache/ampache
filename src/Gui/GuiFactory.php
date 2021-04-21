@@ -39,14 +39,14 @@ use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
-use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\VideoRepositoryInterface;
 
 final class GuiFactory implements GuiFactoryInterface
@@ -74,13 +74,13 @@ final class GuiFactory implements GuiFactoryInterface
         CatalogRepositoryInterface $catalogRepository,
         CatalogLoaderInterface $catalogLoader
     ) {
-        $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
-        $this->ajaxUriRetriever  = $ajaxUriRetriever;
-        $this->playlistLoader    = $playlistLoader;
-        $this->videoRepository   = $videoRepository;
-        $this->catalogRepository = $catalogRepository;
-        $this->catalogLoader     = $catalogLoader;
+        $this->configContainer          = $configContainer;
+        $this->modelFactory             = $modelFactory;
+        $this->ajaxUriRetriever         = $ajaxUriRetriever;
+        $this->playlistLoader           = $playlistLoader;
+        $this->videoRepository          = $videoRepository;
+        $this->catalogRepository        = $catalogRepository;
+        $this->catalogLoader            = $catalogLoader;
     }
 
     public function createSongViewAdapter(

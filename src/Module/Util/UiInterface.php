@@ -101,4 +101,16 @@ interface UiInterface
      * @var array<string, mixed> $preferences
      */
     public function showPreferenceBox(array $preferences): void;
+
+    /**
+     * Yet another one of these buggers. this shows a drop down of all of your
+     * catalogs.
+     */
+    public function showCatalogSelect(
+        string $name,
+        int $catalog_id,
+        string $style = '',
+        bool $allow_none = false,
+        string $filter_type = ''
+    ): string;
 }

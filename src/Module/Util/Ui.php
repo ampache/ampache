@@ -796,7 +796,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true);
+                echo $this->showCatalogSelect('upload_catalog', $value, '', true);
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -1054,5 +1054,45 @@ class Ui implements UiInterface
                 'ui' => $this
             ]
         );
+    }
+
+    /**
+     * Yet another one of these buggers. this shows a drop down of all of your
+     * catalogs.
+     */
+    public function showCatalogSelect(
+        string $name,
+        int $catalog_id,
+        string $style = '',
+        bool $allow_none = false,
+        string $filter_type = ''
+    ): string {
+        $result = "<select name=\"$name\" style=\"$style\">\n";
+
+        $params = array();
+        $sql    = "SELECT `id`, `name` FROM `catalog` ";
+        if (!empty($filter_type)) {
+            $sql .= "WHERE `gather_types` = ?";
+            $params[] = $filter_type;
+        }
+        $sql .= "ORDER BY `name`";
+        $db_results = Dba::read($sql, $params);
+
+        if ($allow_none) {
+            $result .= "\t<option value=\"-1\">" . T_('None') . "</option>\n";
+        }
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $selected = '';
+            if ($row['id'] == (string) $catalog_id) {
+                $selected = "selected=\"selected\"";
+            }
+
+            $result .= "\t<option value=\"" . $row['id'] . "\" $selected>" . $this->scrubOut($row['name']) . "</option>\n";
+        } // end while
+
+        $result .= "</select>\n";
+
+        return $result;
     }
 }

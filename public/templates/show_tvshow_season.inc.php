@@ -40,7 +40,7 @@ $browse->set_type($object_type);
 Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    Art::display('tvshow_season', $season->id, $season->f_name, 6); ?>
+    echo Art::display('tvshow_season', $season->id, $season->f_name, 6); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php

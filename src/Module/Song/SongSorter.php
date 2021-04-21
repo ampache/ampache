@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Song;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
@@ -97,7 +98,7 @@ final class SongSorter implements SongSorterInterface
      * Get the directory for this file from the catalog and the song info using the sort_pattern
      * takes into account various artists and the alphabet_prefix
      * @param Interactor $interactor
-     * @param $song
+     * @param Song $song
      * @param $sort_pattern
      * @param $base
      * @param string $various_artist
@@ -118,7 +119,7 @@ final class SongSorter implements SongSorterInterface
 
         /* Create the filename that this file should have */
         $album  = $this->sort_clean_name($song->f_album_full) ?: '%A';
-        $artist = $this->sort_clean_name($song->f_artist_full) ?: '%a';
+        $artist = $this->sort_clean_name($song->getFullArtistNameFormatted()) ?: '%a';
         $track  = $this->sort_clean_name($song->track) ?: '%T';
         if ((int) $track < 10 && (int) $track > 0) {
             $track = '0' . (string) $track;

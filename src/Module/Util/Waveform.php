@@ -85,7 +85,7 @@ class Waveform
                 $waveform = $song->waveform;
             }
             if ($waveform === null && $waveform !== false) {
-                $catalog = Catalog::create_from_id($song->catalog);
+                $catalog = Catalog::create_from_id($song->getCatalogId());
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');

@@ -34,11 +34,18 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Module\Util\ExtensionToMimeTypeMapper;
+use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
 
-class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
+class Song extends database_object implements
+    Media,
+    library_item,
+    GarbageCollectibleInterface,
+    MediaFileInterface,
+    PlayableMediaInterface
 {
     use Metadata;
 
@@ -219,10 +226,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_album;
     /**
-     * @var string $f_artist_full
-     */
-    public $f_artist_full;
-    /**
      * @var integer $albumartist
      */
     public $albumartist;
@@ -234,14 +237,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var string $f_album_full
      */
     public $f_album_full;
-    /**
-     * @var string $f_time
-     */
-    public $f_time;
-    /**
-     * @var string $f_time_h
-     */
-    public $f_time_h;
     /**
      * @var string $f_track
      */
@@ -258,10 +253,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var string $link
      */
     public $link;
-    /**
-     * @var string $f_file
-     */
-    public $f_file;
     /**
      * @var string $f_title_full
      */
@@ -332,6 +323,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var boolean $_fake
      */
     public $_fake = false; // If this is a 'construct_from_array' object
+
+    private ?string $filename = null;
 
     /**
      * Aliases used in insert function
@@ -733,43 +726,13 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * Returns the mime type for the specified file extension/type
      * @param string $type
      * @return string
+     *
+     * @deprecated
+     * @see ExtensionToMimeTypeMapper
      */
     public static function type_to_mime($type)
     {
-        // FIXME: This should really be done the other way around.
-        // Store the mime type in the database, and provide a function
-        // to make it a human-friendly type.
-        switch ($type) {
-            case 'spx':
-            case 'ogg':
-                return 'application/ogg';
-            case 'opus':
-                return 'audio/ogg; codecs=opus';
-            case 'wma':
-            case 'asf':
-                return 'audio/x-ms-wma';
-            case 'rm':
-            case 'ra':
-                return 'audio/x-realaudio';
-            case 'flac':
-                return 'audio/x-flac';
-            case 'wv':
-                return 'audio/x-wavpack';
-            case 'aac':
-            case 'mp4':
-            case 'm4a':
-                return 'audio/mp4';
-            case 'aacp':
-                return 'audio/aacp';
-            case 'mpc':
-                return 'audio/x-musepack';
-            case 'mkv':
-                return 'audio/x-matroska';
-            case 'mpeg3':
-            case 'mp3':
-            default:
-                return 'audio/mpeg';
-        }
+        return static::getExtentionToMimeTypeMapper()->mapAudio($type);
     }
 
     /**
@@ -1555,8 +1518,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_album      = $this->f_album_full;
 
         // Format the artist name
-        $this->f_artist_full = $this->get_artist_name();
-        $this->f_artist      = $this->f_artist_full;
+        $this->f_artist = $this->get_artist_name();
 
         // Format the album_artist name
         $this->f_albumartist_full = $this->get_album_artist_name();
@@ -1569,21 +1531,13 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->link          = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
         $this->f_link        = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_album_link  = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
-        $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+        $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_name()) . "\"> " . scrub_out($this->f_artist) . "</a>";
         if (!empty($this->albumartist)) {
             $this->f_albumartist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->albumartist . "\" title=\"" . scrub_out($this->f_albumartist_full) . "\"> " . scrub_out($this->f_albumartist_full) . "</a>";
         }
 
         // Format the Bitrate
         $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
-
-        // Format the Time
-        $min            = floor($this->time / 60);
-        $sec            = sprintf("%02d", ($this->time % 60));
-        $this->f_time   = $min . ":" . $sec;
-        $hour           = sprintf("%02d", floor($min / 60));
-        $min_h          = sprintf("%02d", ($min % 60));
-        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         // Format the track (there isn't really anything to do here)
         $this->f_track = (string)$this->track;
@@ -1592,12 +1546,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_size = Ui::format_bytes($this->size);
 
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
-
-        $this->f_file = $this->f_artist . ' - ';
-        if ($this->track) {
-            $this->f_file .= $this->track . ' - ';
-        }
-        $this->f_file .= $this->f_title . '.' . $this->type;
 
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
@@ -1703,7 +1651,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_catalogs()
     {
-        return array($this->catalog);
+        return array($this->getCatalogId());
     }
 
     /**
@@ -1770,7 +1718,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         if ($object_id !== null && $type !== null) {
-            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -2204,6 +2152,52 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         return (bool) $this->enabled;
     }
 
+    public function getFilename(): string
+    {
+        if ($this->filename === null) {
+            $this->filename = $this->get_artist_name() . ' - ';
+            if ($this->track) {
+                $this->filename .= $this->track . ' - ';
+            }
+            $this->filename .= $this->title . '.' . $this->type;
+        }
+
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
+    }
+
+    public function getFullArtistNameFormatted(): string
+    {
+        return $this->get_artist_name();
+    }
+
+    public function getFullDurationFormatted(): string
+    {
+        $min   = floor($this->time / 60);
+        $sec   = sprintf("%02d", ($this->time % 60));
+        $hour  = sprintf("%02d", floor($min / 60));
+        $min_h = sprintf("%02d", ($min % 60));
+
+        return sprintf('%s:%s:%s', $hour, $min_h, $sec);
+    }
+
+    public function getDurationFormatted(): string
+    {
+        $min = floor($this->time / 60);
+        $sec = sprintf("%02d", ($this->time % 60));
+
+        return sprintf('%s:%s', $min, $sec);
+    }
+
+    public function getCatalogId(): int
+    {
+        return (int) $this->catalog;
+    }
+
     /**
      * @deprecated
      */
@@ -2246,6 +2240,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * @deprecated Inject by constructor
+     */
+    private static function getExtentionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
+    {
+        global $dic;
+
+        return $dic->get(ExtensionToMimeTypeMapperInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
      */
     private static function getDataMigrator(): DataMigratorInterface
     {

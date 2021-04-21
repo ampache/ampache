@@ -81,11 +81,11 @@ interface ModelFactoryInterface
 
     public function createPodcast(
         int $podcastId
-    ): Podcast;
+    ): PodcastInterface;
 
     public function createPodcastEpisode(
         int $podcastEpisodeId
-    ): Podcast_Episode;
+    ): PodcastEpisodeInterface;
 
     public function createPrivateMsg(
         int $privateMessageId

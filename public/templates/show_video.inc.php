@@ -39,13 +39,15 @@ use Ampache\Module\Util\Ui;
 <?php Ui::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-$gart = false;
+$gart = null;
 // The release type is not the video itself, we probably want preview
 if (get_class($video) != Movie::class) {
     $gart = Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
 }
-if (!$gart) {
-    $gart = Art::display('video', $video->id, $video->f_title, 7);
+if ($gart === null) {
+    echo Art::display('video', $video->id, $video->f_title, 7);
+} else {
+    echo $gart;
 } ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
@@ -139,7 +141,7 @@ $subtitles = $video->get_subtitles();
     </dd>
 <?php
   $videoprops[T_('Title')]   = scrub_out($video->f_title);
-  $videoprops[T_('Length')]  = scrub_out($video->f_time);
+  $videoprops[T_('Length')]  = scrub_out($video->getDurationFormatted());
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
 }

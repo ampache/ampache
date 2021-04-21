@@ -53,15 +53,15 @@ $media->format(); ?>
         <div class="np_group" id="np_group_3">
             <div class="np_cell cel_albumart">
                 <?php
-                    //$release_art = $media->get_release_item_art();
-        //Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link);
-            $art_showed = false;
+            $art_showed = null;
         if ($media->get_default_art_kind() == 'preview') {
             $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->link, false, 'preview');
         }
-        if (!$art_showed) {
-            Art::display('video', $media->id, $media->f_full_title, 6, $media->link);
-        } ?>
+        if ($art_showed === null) {
+            echo Art::display('video', $media->id, $media->f_full_title, 6, $media->link);
+        } else {
+            echo $art_showed;
+        }?>
             </div>
         </div>
     <?php

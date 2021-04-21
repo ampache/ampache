@@ -24,26 +24,23 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Podcast\PodcastByCatalogLoaderInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\CatalogRepositoryInterface;
-use Ampache\Repository\LiveStreamRepositoryInterface;
-use Ampache\Repository\PlaylistRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use DateTime;
-use DOMDocument;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -51,6 +48,12 @@ use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use DateTime;
+use DOMDocument;
 use Exception;
 use XMLReader;
 
@@ -742,16 +745,14 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $podcast = new Podcast($pathreq[1]);
-                        if ($podcast->id) {
-                            $podcast->format();
+                        $podcast = static::getPodcastRepository()->findById((int) $pathreq[1]);
+                        if ($podcast !== null) {
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                         break;
                     case 3:
-                        $episode = new Podcast_Episode($pathreq[2]);
-                        if ($episode->id !== null) {
-                            $episode->format();
+                        $episode = static::getPodcastEpisodeRepository()->findById((int) $pathreq[2]);
+                        if ($episode !== null) {
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
                         break;
@@ -949,21 +950,21 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
-                        $podcasts                  = Catalog::get_podcasts();
-                        [$maxCount, $podcasts]     = self::_slice($podcasts, $start, $count);
+                        $podcasts              = static::getPodcastByCatalogLoader()->load();
+                        [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
                         foreach ($podcasts as $podcast) {
                             $podcast->format();
                             $mediaItems[] = self::_itemPodcast($podcast, $parent);
                         }
                         break;
                     case 2: // Get podcast episodes list
-                        $podcast = new Podcast($pathreq[1]);
-                        if ($podcast->id) {
-                            $episodes                  = $podcast->get_episodes();
-                            [$maxCount, $episodes]     = self::_slice($episodes, $start, $count);
+                        $podcast = static::getPodcastRepository()->findById((int) $pathreq[1]);
+                        if ($podcast !== null) {
+                            $podcastEpisodeRepository = static::getPodcastEpisodeRepository();
+                            $episodes                 = $podcastEpisodeRepository->getEpisodeIds($podcast);
+                            [$maxCount, $episodes]    = self::_slice($episodes, $start, $count);
                             foreach ($episodes as $episode_id) {
-                                $episode = new Podcast_Episode($episode_id);
-                                $episode->format();
+                                $episode      = $podcastEpisodeRepository->findById($episode_id);
                                 $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
                             }
                         }
@@ -1721,7 +1722,7 @@ class Upnp_Api
             'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
-            'duration' => $song->f_time_h . '.0',
+            'duration' => $song->getFullDurationFormatted() . '.0',
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2',  // Just say its stereo as we don't have the real info
@@ -1790,7 +1791,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $video
+     * @param Video $video
      * @param string $parent
      * @return array
      */
@@ -1814,12 +1815,12 @@ class Upnp_Api
             'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
-            'duration' => $video->f_time_h . '.0',
+            'duration' => $video->getFullDurationFormatted() . '.0',
         );
     }
 
     /**
-     * @param $podcast
+     * @param Podcast $podcast
      * @param string $parent
      * @return array
      */
@@ -1829,31 +1830,31 @@ class Upnp_Api
             'id' => 'amp://music/podcasts/' . $podcast->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'childCount' => count($podcast->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($podcast->f_title),
+            'childCount' => $podcast->getEpisodeCount(),
+            'dc:title' => self::_replaceSpecialSymbols($podcast->getTitleFormatted()),
             'upnp:class' => 'object.container',
         );
     }
 
     /**
-     * @param Podcast_Episode $episode
+     * @param PodcastEpisodeInterface $episode
      * @param string $parent
      * @return array
      */
-    private static function _itemPodcastEpisode($episode, $parent)
+    private static function _itemPodcastEpisode(PodcastEpisodeInterface $episode, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
-        $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
+        $art_url     = Art::url($episode->getPodcast()->getId(), 'podcast', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = (!empty($episode->type)) ? $fileTypesByExt[$episode->type] : array();
 
         $ret = array(
-            'id' => 'amp://music/podcasts/' . $episode->podcast . '/' . $episode->id,
+            'id' => 'amp://music/podcasts/' . $episode->getPodcast()->getId() . '/' . $episode->getId(),
             'parentID' => $parent,
             'restricted' => '1',
-            'dc:title' => self::_replaceSpecialSymbols($episode->f_title),
-            'upnp:album' => self::_replaceSpecialSymbols($episode->f_podcast),
+            'dc:title' => self::_replaceSpecialSymbols($episode->getTitleFormatted()),
+            'upnp:album' => self::_replaceSpecialSymbols($episode->getPodcast()->getTitleFormatted()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url
         );
@@ -1861,7 +1862,7 @@ class Upnp_Api
             $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
-            $ret['duration']     = $episode->f_time_h . '.0';
+            $ret['duration']     = $episode->getFullDurationFormatted() . '.0';
         }
 
         return $ret;
@@ -1978,5 +1979,35 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastByCatalogLoader(): PodcastByCatalogLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastByCatalogLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastRepository(): PodcastRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastRepositoryInterface::class);
     }
 }

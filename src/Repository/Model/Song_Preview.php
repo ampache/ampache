@@ -31,7 +31,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 
-class Song_Preview extends database_object implements Media, playable_item
+class Song_Preview extends database_object implements
+    Media,
+    playable_item,
+    PlayableMediaInterface
 {
     protected const DB_TABLENAME = 'song_preview';
 
@@ -47,9 +50,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public $mime;
     public $mbid; // MusicBrainz ID
 
-    public $f_file;
     public $f_artist;
-    public $f_artist_full;
     public $f_artist_link;
     public $f_title;
     public $f_title_full;
@@ -58,6 +59,9 @@ class Song_Preview extends database_object implements Media, playable_item
     public $f_album_link;
     public $f_album;
     public $f_track;
+
+    /** @var array<string, mixed>|null  */
+    private ?array $missingArtistLookupResult = null;
 
     /**
      * Constructor
@@ -233,17 +237,14 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function format($details = true)
     {
-        unset($details); // dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
-            $this->f_artist_full = $this->get_artist_name();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_name()) . "\"> " . scrub_out($this->get_artist_name()) . "</a>";
         } else {
-            $wartist             = $this->getMissingArtistLookup()->lookup($this->artist_mbid);
+            $wartist             = $this->getMissingArtistLookupResult();
             $this->f_artist_link = $wartist['link'];
-            $this->f_artist_full = $wartist['name'];
         }
-        $this->f_artist = $this->f_artist_full;
+        $this->f_artist = $this->getFullArtistNameFormatted();
 
         // Format the title
         $this->f_title_full = $this->title;
@@ -258,6 +259,15 @@ class Song_Preview extends database_object implements Media, playable_item
 
         return true;
     } // format
+
+    private function getMissingArtistLookupResult(): array
+    {
+        if ($this->missingArtistLookupResult === null) {
+            $this->missingArtistLookupResult = $this->getMissingArtistLookup()->lookup($this->artist_mbid);
+        }
+
+        return $this->missingArtistLookupResult;
+    }
 
     /**
      * @return string
@@ -452,6 +462,30 @@ class Song_Preview extends database_object implements Media, playable_item
     public function isEnabled(): bool
     {
         return true;
+    }
+
+    public function getFullArtistNameFormatted(): string
+    {
+        if ($this->artist) {
+            return $this->get_artist_name();
+        } else {
+            return $this->getMissingArtistLookupResult()['name'] ?? '';
+        }
+    }
+
+    public function getFullDurationFormatted(): string
+    {
+        return '';
+    }
+
+    public function getDurationFormatted(): string
+    {
+        return '';
+    }
+
+    public function getCatalogId(): int
+    {
+        return 0;
     }
 
     /**

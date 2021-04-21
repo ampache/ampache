@@ -33,9 +33,18 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 
 final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements UpdateSingleCatalogFileInterface
 {
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
+    public function __construct(
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+    ) {
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+    }
+
     public function update(
         Interactor $interactor,
         string $catname,
@@ -73,7 +82,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 case 'podcast':
                     $type    = 'podcast_episode';
                     $file_id = Catalog::get_id_from_file($filePath, $type);
-                    $media   = new Podcast_Episode($file_id);
+                    $media   = $this->podcastEpisodeRepository->findById((int) $file_id);
                     break;
                 case 'clip':
                 case 'tvshow':
@@ -108,7 +117,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 );
                 if ($media->id && $verificationMode == 1) {
                     // Verify Existing files
-                    $catalog = $media->catalog;
+                    $catalog = $media->getCatalogId();
                     Catalog::update_media_from_tags($media);
                 }
                 // new files don't have an ID

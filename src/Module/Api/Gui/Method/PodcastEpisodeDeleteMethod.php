@@ -34,7 +34,8 @@ use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Podcast\PodcastEpisodeDeleterInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -47,24 +48,28 @@ final class PodcastEpisodeDeleteMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private MediaDeletionCheckerInterface $mediaDeletionChecker;
 
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
+    private PodcastEpisodeDeleterInterface $podcastEpisodeDeleter;
+
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         MediaDeletionCheckerInterface $mediaDeletionChecker,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        PodcastEpisodeDeleterInterface $podcastEpisodeDeleter,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
-        $this->streamFactory        = $streamFactory;
-        $this->configContainer      = $configContainer;
-        $this->modelFactory         = $modelFactory;
-        $this->mediaDeletionChecker = $mediaDeletionChecker;
-        $this->updateInfoRepository = $updateInfoRepository;
+        $this->streamFactory            = $streamFactory;
+        $this->configContainer          = $configContainer;
+        $this->mediaDeletionChecker     = $mediaDeletionChecker;
+        $this->updateInfoRepository     = $updateInfoRepository;
+        $this->podcastEpisodeDeleter    = $podcastEpisodeDeleter;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     /**
@@ -103,9 +108,9 @@ final class PodcastEpisodeDeleteMethod implements MethodInterface
             );
         }
 
-        $episode = $this->modelFactory->createPodcastEpisode((int) $objectId);
+        $episode = $this->podcastEpisodeRepository->findById((int) $objectId);
 
-        if ($episode->isNew() === true) {
+        if ($episode === null) {
             throw new ResultEmptyException(sprintf(T_('Not Found: %d'), $objectId));
         }
 
@@ -113,7 +118,7 @@ final class PodcastEpisodeDeleteMethod implements MethodInterface
             throw new AccessDeniedException(T_('Require: 75'));
         }
 
-        if ($episode->remove()) {
+        if ($this->podcastEpisodeDeleter->delete($episode)) {
             $this->updateInfoRepository->updateCountByTableName('podcast_episode');
 
             return $response->withBody(

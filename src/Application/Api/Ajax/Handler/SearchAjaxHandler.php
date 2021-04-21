@@ -150,7 +150,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $song->link,
                             'label' => $song->f_title_full,
                             'value' => $song->f_title_full,
-                            'rels' => $song->f_artist_full,
+                            'rels' => $song->getFullArtistNameFormatted(),
                             'image' => Art::url($art_object, $art_type, null, 10),
                         );
                     }

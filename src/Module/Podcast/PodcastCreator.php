@@ -23,32 +23,49 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Podcast\Exception\PodcastFeedLoadingException;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class PodcastCreator implements PodcastCreatorInterface
 {
     private ModelFactoryInterface $modelFactory;
 
-    private ExternalResourceLoaderInterface $externalResourceLoader;
+    private PodcastSyncerInterface $podcastSyncer;
+
+    private CatalogLoaderInterface $catalogLoader;
+
+    private PodcastFeedLoaderInterface $podcastFeedLoader;
+
+    private PodcastRepositoryInterface $podcastRepository;
+
+    private LoggerInterface $logger;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        ExternalResourceLoaderInterface $externalResourceLoader
+        PodcastSyncerInterface $podcastSyncer,
+        CatalogLoaderInterface $catalogLoader,
+        PodcastFeedLoaderInterface $podcastFeedLoader,
+        PodcastRepositoryInterface $podcastRepository,
+        LoggerInterface $logger
     ) {
-        $this->modelFactory           = $modelFactory;
-        $this->externalResourceLoader = $externalResourceLoader;
+        $this->modelFactory      = $modelFactory;
+        $this->podcastSyncer     = $podcastSyncer;
+        $this->catalogLoader     = $catalogLoader;
+        $this->podcastFeedLoader = $podcastFeedLoader;
+        $this->podcastRepository = $podcastRepository;
+        $this->logger            = $logger;
     }
 
     public function create(
         string $feedUrl,
         int $catalog_id
-    ): ?Podcast {
+    ): ?PodcastInterface {
         // Feed must be http/https
         if (strpos($feedUrl, "http://") !== 0 && strpos($feedUrl, "https://") !== 0) {
             AmpError::add('feed', T_('Feed URL is invalid'));
@@ -57,7 +74,7 @@ final class PodcastCreator implements PodcastCreatorInterface
         if ($catalog_id < 1) {
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
-            $catalog = Catalog::create_from_id($catalog_id);
+            $catalog = $this->catalogLoader->byId($catalog_id);
             if ($catalog->gather_types !== "podcast") {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
@@ -67,58 +84,42 @@ final class PodcastCreator implements PodcastCreatorInterface
             return null;
         }
 
-        $title         = T_('Unknown');
-        $website       = null;
-        $description   = null;
-        $language      = null;
-        $copyright     = null;
-        $generator     = null;
-        $lastbuilddate = 0;
-        $episodes      = false;
-        $arturl        = '';
-
         // don't allow duplicate podcasts
-        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= '" . Dba::escape($feedUrl) . "'";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            if ((int) $row['id'] > 0) {
-                return $this->modelFactory->createPodcast((int) $row['id']);
-            }
+        $podcastId = $this->podcastRepository->findByFeedUrl($feedUrl);
+        if ($podcastId !== null) {
+            return $this->podcastRepository->findById($podcastId);
         }
 
-        $xmlstr = $this->externalResourceLoader->retrieve($feedUrl);
-        if ($xmlstr === null) {
-            AmpError::add('feed', T_('Can not access the feed'));
-        } else {
-            $xml = simplexml_load_string((string) $xmlstr->getBody());
-            if ($xml === false) {
-                AmpError::add('feed', T_('Can not read the feed'));
-            } else {
-                $title            = html_entity_decode((string)$xml->channel->title);
-                $website          = (string)$xml->channel->link;
-                $description      = html_entity_decode((string)$xml->channel->description);
-                $language         = (string)$xml->channel->language;
-                $copyright        = html_entity_decode((string)$xml->channel->copyright);
-                $generator        = html_entity_decode((string)$xml->channel->generator);
-                $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
-                if ($lastbuilddatestr) {
-                    $lastbuilddate = strtotime($lastbuilddatestr);
-                }
+        try {
+            $xml = $this->podcastFeedLoader->load($feedUrl);
+        } catch (PodcastFeedLoadingException $e) {
+            AmpError::add('feed', T_('Can not read the feed'));
 
-                if ($xml->channel->image) {
-                    $arturl = (string)$xml->channel->image->url;
-                }
-
-                $episodes = $xml->channel->item;
-            }
-        }
-
-        if (AmpError::occurred()) {
             return null;
         }
 
-        $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array(
+        $title            = html_entity_decode((string)$xml->channel->title);
+        $website          = (string)$xml->channel->link;
+        $description      = html_entity_decode((string)$xml->channel->description);
+        $language         = (string)$xml->channel->language;
+        $copyright        = html_entity_decode((string)$xml->channel->copyright);
+        $generator        = html_entity_decode((string)$xml->channel->generator);
+        $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
+        if ($lastbuilddatestr) {
+            $lastbuilddate = strtotime($lastbuilddatestr);
+        } else {
+            $lastbuilddate = 0;
+        }
+
+        if ($xml->channel->image) {
+            $arturl = (string)$xml->channel->image->url;
+        } else {
+            $arturl = '';
+        }
+
+        $episodes = $xml->channel->item;
+
+        $podcastId = $this->podcastRepository->insert(
             $feedUrl,
             $catalog_id,
             $title,
@@ -128,24 +129,19 @@ final class PodcastCreator implements PodcastCreatorInterface
             $copyright,
             $generator,
             $lastbuilddate
-        ));
-        if (!$db_results) {
+        );
+
+        if ($podcastId === null) {
             return null;
         }
-        $podcast_id = (int)Dba::insert_id();
-        $podcast    = new Podcast($podcast_id);
-        $dirpath    = $podcast->get_root_path();
-        if (!is_dir($dirpath)) {
-            if (mkdir($dirpath) === false) {
-                debug_event(self::class, 'Cannot create directory ' . $dirpath, 1);
-            }
-        }
+
+        $podcast = $this->podcastRepository->findById($podcastId);
         if (!empty($arturl)) {
-            $art = new Art((int)$podcast_id, 'podcast');
+            $art = new Art((int)$podcastId, 'podcast');
             $art->insert_url($arturl);
         }
         if ($episodes) {
-            $podcast->add_episodes($episodes);
+            $this->podcastSyncer->addEpisodes($podcast, $episodes);
         }
 
         return $podcast;

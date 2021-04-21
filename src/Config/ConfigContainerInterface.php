@@ -37,7 +37,6 @@ interface ConfigContainerInterface
 
     /**
      * Compatibility accessor for direct access to the config array
-     * Please use single methods for common keys
      */
     public function get(string $configKey);
 

@@ -1057,45 +1057,6 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
 }
 
 /**
- * show_catalog_select
- * Yet another one of these buggers. this shows a drop down of all of your
- * catalogs.
- * @param string $name
- * @param integer $catalog_id
- * @param string $style
- * @param boolean $allow_none
- * @param string $filter_type
- */
-function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
-{
-    echo "<select name=\"$name\" style=\"$style\">\n";
-
-    $params = array();
-    $sql    = "SELECT `id`, `name` FROM `catalog` ";
-    if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ?";
-        $params[] = $filter_type;
-    }
-    $sql .= "ORDER BY `name`";
-    $db_results = Dba::read($sql, $params);
-
-    if ($allow_none) {
-        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
-    }
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $selected = '';
-        if ($row['id'] == (string) $catalog_id) {
-            $selected = "selected=\"selected\"";
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
-    } // end while
-
-    echo "</select>\n";
-} // show_catalog_select
-
-/**
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id

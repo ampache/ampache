@@ -27,6 +27,8 @@ namespace Ampache\Module\WebDav;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\MediaFileInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Sabre\DAV;
 
 /**
@@ -37,7 +39,7 @@ class WebDavFile extends DAV\File
     private $libitem;
 
     /**
-     * @param Media $libitem
+     * @param Media&MediaFileInterface&PlayableMediaInterface $libitem
      */
     public function __construct(Media $libitem)
     {
@@ -51,7 +53,7 @@ class WebDavFile extends DAV\File
      */
     public function getName()
     {
-        return $this->libitem->f_file;
+        return $this->libitem->getFilename();
     }
 
     /**
@@ -62,8 +64,9 @@ class WebDavFile extends DAV\File
     {
         debug_event(self::class, 'File get', 5);
         // Only media associated to a local catalog is supported
-        if ($this->libitem->catalog) {
-            $catalog = Catalog::create_from_id($this->libitem->catalog);
+        $libitemCatalogId = $this->libitem->getCatalogId();
+        if ($libitemCatalogId) {
+            $catalog = Catalog::create_from_id($libitemCatalogId);
             if ($catalog->get_type() === 'local') {
                 return fopen($this->libitem->file, 'r');
             } else {

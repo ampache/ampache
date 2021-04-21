@@ -40,6 +40,8 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
+    public const DEFAULT_LIMIT = 25;
+
     /**
      * @var integer|string $id
      */

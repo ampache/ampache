@@ -27,9 +27,9 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Teapot\StatusCode;
@@ -39,14 +39,19 @@ class StreamMethodTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var MockInterface|PodcastEpisodeRepositoryInterface */
+    private MockInterface $podcastEpisodeRepository;
+
     private ?StreamMethod $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory             = $this->mock(ModelFactoryInterface::class);
+        $this->podcastEpisodeRepository = $this->mock(PodcastEpisodeRepositoryInterface::class);
 
         $this->subject = new StreamMethod(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->podcastEpisodeRepository
         );
     }
 
@@ -92,7 +97,7 @@ class StreamMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createPodcastEpisode')
+        $this->podcastEpisodeRepository->shouldReceive('findById')
             ->with($songId)
             ->once()
             ->andReturn($podcast);

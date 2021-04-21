@@ -58,14 +58,16 @@ if (!isset($video_type)) {
 if (Art::is_enabled()) { ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php
-    $art_showed = false;
-        if ($libitem->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
-        }
-        if (!$art_showed) {
-            $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
-            Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
-        } ?>
+    $art_showed = null;
+    if ($libitem->get_default_art_kind() == 'preview') {
+        $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
+    }
+    if ($art_showed === null) {
+        $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
+        echo Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
+    } else {
+        echo $art_showed;
+    }?>
 </td>
 <?php
     } ?>

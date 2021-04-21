@@ -39,6 +39,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -54,16 +55,20 @@ final class CatalogFileMethod implements MethodInterface
 
     private StreamFactoryInterface $streamFactory;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     public function __construct(
         SongDeleterInterface $songDeleter,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
-        $this->songDeleter     = $songDeleter;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->streamFactory   = $streamFactory;
+        $this->songDeleter              = $songDeleter;
+        $this->modelFactory             = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->streamFactory            = $streamFactory;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     /**
@@ -134,7 +139,7 @@ final class CatalogFileMethod implements MethodInterface
         switch ($catalog->gather_types) {
             case 'podcast':
                 $type  = 'podcast_episode';
-                $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
+                $media = $this->podcastEpisodeRepository->findById((int) Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
             case 'tvshow':

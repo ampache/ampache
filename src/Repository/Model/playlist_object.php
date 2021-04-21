@@ -257,7 +257,7 @@ abstract class playlist_object extends database_object implements library_item
             }
 
             foreach ($media_arts as $media) {
-                Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
+                echo Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
             }
         }
     }

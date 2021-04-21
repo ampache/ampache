@@ -22,8 +22,17 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\SubSonic;
 
+use Ampache\Module\Api\ApiApplicationInterface;
+use Ampache\Module\Api\SubSonic\Method\CreatePodcastChannelMethod;
+use Ampache\Module\Api\SubSonic\Method\DeletePodcastChannelMethod;
+use Ampache\Module\Api\SubSonic\Method\DeletePodcastEpisode;
+use Ampache\Module\Api\SubSonic\Method\DownloadPodcastEpisodeMethod;
+use Ampache\Module\Api\SubSonic\Method\GetNewestPodcastsMethod;
+use Ampache\Module\Api\SubSonic\Method\GetPodcastsMethod;
+use Ampache\Module\Api\SubSonic\Method\RefreshPodcastsMethod;
+use Ampache\Module\Api\SubSonic\Method\SubsonicApiMethodInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -31,19 +40,34 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Container\ContainerInterface;
 
 final class SubsonicApiApplication implements ApiApplicationInterface
 {
+    private const METHOD_LIST = [
+        'getpodcasts' => GetPodcastsMethod::class,
+        'getnewestpodcasts' => GetNewestPodcastsMethod::class,
+        'downloadpodcastepisode' => DownloadPodcastEpisodeMethod::class,
+        'deletepodcastepisode' => DeletePodcastEpisode::class,
+        'refreshpodcasts' => RefreshPodcastsMethod::class,
+        'createpodcastchannel' => CreatePodcastChannelMethod::class,
+        'deletepodcastchannel' => DeletePodcastChannelMethod::class,
+    ];
+
     private AuthenticationManagerInterface $authenticationManager;
 
     private NetworkCheckerInterface $networkChecker;
 
+    private ContainerInterface $dic;
+
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        ContainerInterface $dic
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
+        $this->dic                   = $dic;
     }
 
     public function run(): void
@@ -160,7 +184,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $query  = explode('&', $query_string);
         $params = array();
         foreach ($query as $param) {
-            list($name, $value) = explode('=', $param);
+            [$name, $value]     = explode('=', $param);
             $decname            = urldecode($name);
             $decvalue           = urldecode($value);
 
@@ -191,21 +215,31 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //debug_event('rest/index', print_r($params, true), 5);
         //debug_event('rest/index', print_r(apache_request_headers(), true), 5);
 
-        // Recurse through them and see if we're calling one of them
-        foreach ($methods as $method) {
-            if (in_array($method, $internal_functions)) {
-                continue;
-            }
+        // Use the new method registry if possible
+        $handlerName = static::METHOD_LIST[strtolower($action)] ?? null;
+        if ($handlerName !== null) {
+            /** @var SubsonicApiMethodInterface $handler */
+            $handler = $this->dic->get($handlerName);
+            $handler->handle($params);
 
-            // If the method is the same as the action being called
-            // Then let's call this function!
+            return;
+        } else {
+            // Recurse through them and see if we're calling one of them
+            foreach ($methods as $method) {
+                if (in_array($method, $internal_functions)) {
+                    continue;
+                }
 
-            if ($action == $method) {
-                call_user_func(array(Subsonic_Api::class, $method), $params);
-                // We only allow a single function to be called, and we assume it's cleaned up!
-                return;
-            }
-        } // end foreach methods in API
+                // If the method is the same as the action being called
+                // Then let's call this function!
+
+                if ($action == $method) {
+                    call_user_func(array(Subsonic_Api::class, $method), $params);
+                    // We only allow a single function to be called, and we assume it's cleaned up!
+                    return;
+                }
+            } // end foreach methods in API
+        }
 
         // If we manage to get here, we still need to hand out an XML document
         ob_end_clean();

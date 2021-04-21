@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Gui\Method;
 use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Teapot\StatusCode;
 
@@ -36,10 +37,14 @@ final class StreamMethod implements MethodInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
     ) {
-        $this->modelFactory  = $modelFactory;
+        $this->modelFactory             = $modelFactory;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
     }
 
     /**
@@ -97,7 +102,7 @@ final class StreamMethod implements MethodInterface
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $userId);
         }
         if ($type == 'podcast') {
-            $media = $this->modelFactory->createPodcastEpisode($objectId);
+            $media = $this->podcastEpisodeRepository->findById($objectId);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $userId);
         }
         if ($url !== '') {

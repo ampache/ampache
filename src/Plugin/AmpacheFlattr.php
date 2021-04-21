@@ -25,6 +25,10 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -99,7 +103,18 @@ class AmpacheFlattr
     public function display_user_field(library_item $libitem = null)
     {
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
-        $link = ($libitem != null && $libitem->link) ? $libitem->link : $this->user->link;
+
+        $link = $this->user->link;
+        if ($libitem !== null) {
+            if ($libitem->link) {
+                $link = $libitem->link;
+            } elseif ($libitem instanceof PodcastInterface || $libitem instanceof PodcastEpisodeInterface) {
+                /**
+                 * @todo special handling for podcasts for now.
+                 */
+                $link = $libitem->getLink();
+            }
+        }
 
         echo "<a class='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='" . T_('Flattr this') . "' title='" . T_('Flattr this') . "'></a>";
     }

@@ -71,7 +71,7 @@ if ($libitem->isEnabled() || Access::check('interface', 50)) { ?>
     } ?>
     </span>
 </td>
-<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->getDurationFormatted() ?></td>
 <?php if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php echo Rating::show($libitem->id, $object_type) ?></td>

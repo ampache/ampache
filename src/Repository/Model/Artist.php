@@ -288,6 +288,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
             //debug_event("artist.class", "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
 
+            $cache = static::getDatabaseObjectCache();
+
             while ($row = Dba::fetch_assoc($db_results)) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
                 $cache->add('artist_extra', $row['artist'], $row);
@@ -369,7 +371,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return (int) $results['album_count'];
     }
-
     /**
      * get_album_group_count
      *
@@ -674,7 +675,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

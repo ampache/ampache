@@ -384,6 +384,18 @@ final class VaInfo implements VaInfoInterface
     } // read_id3
 
     /**
+     * This takes the result set and the tag_order defined in your config
+     * file and tries to figure out which tag type(s) it should use. If your
+     * tag_order doesn't match anything then it throws up its hands and uses
+     * everything in random order.
+     * Acts as a proxy for the static method call
+     */
+    public function getTagType(array $results, string $config_key = 'metadata_order'): array
+    {
+        return static::get_tag_type($results, $config_key);
+    }
+
+    /**
      * get_tag_type
      *
      * This takes the result set and the tag_order defined in your config
@@ -426,6 +438,17 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $returned_keys;
+    }
+
+    /**
+     * This function takes the array from vainfo along with the
+     * key we've decided on and the filename and returns it in a
+     * sanitized format that Ampache can actually use
+     * Acts as a proxt for the static method call
+     */
+    public function cleanTagInfo(array $results, array $keys, ?string $filename = null): array
+    {
+        return static::clean_tag_info($results, $keys, $filename);
     }
 
     /**

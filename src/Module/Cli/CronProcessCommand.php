@@ -49,13 +49,13 @@ final class CronProcessCommand extends Command
 
     private BookmarkRepositoryInterface $bookmarkRepository;
 
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
+
     private ShareRepositoryInterface $shareRepository;
 
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
     private LoggerInterface $logger;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
     private RecommendationRepositoryInterface $recommendationRepository;
 

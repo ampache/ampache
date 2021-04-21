@@ -31,8 +31,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,26 +44,26 @@ class ConfirmDeleteActionTest extends MockeryTestCase
     /** @var UiInterface|MockInterface */
     private MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface */
-    private MockInterface $modelFactory;
-
     /** @var MockInterface|PodcastDeleterInterface */
     private MockInterface $podcastDeleter;
+
+    /** @var MockInterface|PodcastRepositoryInterface */
+    private MockInterface $podcastRepository;
 
     private ConfirmDeleteAction $subject;
 
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->podcastDeleter  = $this->mock(PodcastDeleterInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->podcastDeleter    = $this->mock(PodcastDeleterInterface::class);
+        $this->podcastRepository = $this->mock(PodcastRepositoryInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->configContainer,
             $this->ui,
-            $this->modelFactory,
-            $this->podcastDeleter
+            $this->podcastDeleter,
+            $this->podcastRepository
         );
     }
 
@@ -162,7 +162,7 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['podcast_id' => (string) $podcastId]);
 
-        $this->modelFactory->shouldReceive('createPodcast')
+        $this->podcastRepository->shouldReceive('findById')
             ->with($podcastId)
             ->once()
             ->andReturn($podcast);
@@ -229,7 +229,7 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['podcast_id' => (string) $podcastId]);
 
-        $this->modelFactory->shouldReceive('createPodcast')
+        $this->podcastRepository->shouldReceive('findById')
             ->with($podcastId)
             ->once()
             ->andReturn($podcast);

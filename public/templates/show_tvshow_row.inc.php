@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
 <?php
     if (Art::is_enabled()) { ?>
         <td class="<?php echo $cel_cover; ?>">
-            <?php Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
+            <?php echo Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
         </td>
     <?php
     } ?>

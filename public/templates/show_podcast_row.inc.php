@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -47,12 +47,12 @@ use Ampache\Module\Util\Ui;
 </td>
 <?php if (Art::is_enabled()) { ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->id, $libitem->f_name, 2, $libitem->link); ?>
+    <?php echo Art::display('podcast', $libitem->id, $libitem->getTitleFormatted(), 2, $libitem->getLink()); ?>
 </td>
 <?php
     } ?>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
-<td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
+<td class="cel_title"><?php echo $libitem->getLinkFormatted(); ?></td>
+<td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
@@ -70,7 +70,7 @@ use Ampache\Module\Util\Ui;
     } ?>
 <td class="cel_action">
 <?php
-    echo " <a href=\"" . $libitem->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>";
+    echo " <a href=\"" . $libitem->getWebsite() . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>";
     if (Access::check('interface', 50)) { ?>
     <a id="<?php echo 'edit_podcast_' . $libitem->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_' . $libitem->id ?>', '<?php echo T_('Podcast Edit') ?>', 'podcast_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>

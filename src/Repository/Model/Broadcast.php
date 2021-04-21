@@ -319,7 +319,7 @@ class Broadcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'broadcast') || $force) {
-            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb);
+            echo Art::display('broadcast', $this->id, $this->get_fullname(), $thumb);
         }
     }
 

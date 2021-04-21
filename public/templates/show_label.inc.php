@@ -46,7 +46,7 @@ if ($label->website) {
     </div>
     <div id="artist_biography">
         <div class="item_info">
-            <?php Art::display('label', $label->id, $label->f_name, 2); ?>
+            <?php echo Art::display('label', $label->id, $label->f_name, 2); ?>
             <div class="item_properties">
                 <?php echo scrub_out($label->address); ?>
             </div>

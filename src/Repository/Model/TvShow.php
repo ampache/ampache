@@ -310,7 +310,7 @@ class TvShow extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tvshow') || $force) {
-            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

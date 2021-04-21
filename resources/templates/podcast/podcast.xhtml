@@ -1,0 +1,48 @@
+<html>
+    <metal:macro metal:use-macro="macros/macros.xhtml/box">
+        <metal:macro metal:fill-slot="title" tal:content="structure PODCAST/getTitleFormatted">TITLE</metal:macro>
+        <metal:macro metal:fill-slot="content">
+            <div class="item_right_info" tal:content="structure PODCAST/getArt">ART</div>
+            <div id="item_summary" tal:condition="PODCAST/getDescription" tal:content="PODCAST/getDescription">DESCRIPTION</div>
+            <tal:block tal:condition="PODCAST/isRealUser">
+                <div tal:condition="CONFIG/isRatingEnabled" id="rating_${PODCAST_ID}_podcast" style="display:inline;" tal:content="structure PODCAST/getRating">RATING</div>
+                <div tal:condition="CONFIG/isUserFlagsEnabled" style="display:table-cell;" id="userflag_${PODCAST_ID}_podcast" tal:content="structure PODCAST/getUserFlags">USERFLAG</div>
+            </tal:block>
+            <div id="information_actions">
+                <h3 i18n:translate="">Actions:</h3>
+                <ul>
+                    <li tal:condition="CONFIG/isDirectplayEnabled" tal:content="structure PODCAST/getDirectPlayButton">DIRECT PLAY</li>
+                    <li tal:condition="PODCAST/canAppendNext" tal:content="structure PODCAST/getAppendNextButton">APPEND NEXT</li>
+                    <tal:block tal:condition="PODCAST/canBeManaged">
+                        <li tal:condition="CONFIG/isStatisticalGraphsEnabled">
+                            <a href="${WEB_PATH}/stats.php?action=graph&object_type=podcast&object_id=${PODCAST_ID}" tal:content="structure PODCAST/getStatsIcon">STATS</a>
+                        </li>
+                        <li tal:condition="CONFIG/isRssEnabled" tal:content="structure PODCAST/getRssLink">RSS</li>
+                        <li>
+                            <a tal:attributes="href PODCAST/getWebsite" target="_blank" tal:content="structure PODCAST/getWebsiteIcon">WEBSITE</a>
+                        </li>
+                        <li>
+                            <a id="edit_podcast_${PODCAST_ID}" onclick="showEditDialog('podcast_row', '${PODCAST_ID}', 'edit_podcast_${PODCAST_ID}', '${PODCAST/getEditTitle}', '')" tal:content="structure PODCAST/getEditIcon">EDIT</a>
+                        </li>
+                        <li tal:content="structure PODCAST/getSyncButton">SYNC</li>
+                    </tal:block>
+                    <li tal:condition="PODCAST/canDelete">
+                        <a id="delete_podcast_${PODCAST_ID}" href="${WEB_PATH}/podcast.php?action=delete&podcast_id=${PODCAST_ID}" tal:content="structure PODCAST/getDeleteIcon">DELETE</a>
+                    </li>
+                </ul>
+            </div>
+        </metal:macro>
+    </metal:macro>
+    <div class="tabs_wrapper">
+        <div id="tabs_container">
+            <ul id="tabs">
+                <li class="tab_active"><a href="#episodes" i18n:translate="">Episodes</a></li>
+                <!-- Needed to avoid the 'only one' bug -->
+                <li></li>
+            </ul>
+        </div>
+        <div id="tabs_content">
+            <div id="episodes" class="tab_content" style="display: block;" tal:content="structure PODCAST/getEpisodeList">EPISODES</div>
+        </div>
+    </div>
+</html>

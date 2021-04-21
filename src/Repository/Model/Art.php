@@ -379,7 +379,7 @@ class Art extends database_object
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $description = ($this->type == 'artist') ? $song->getFullArtistNameFormatted() : $object->full_name;
                 $id3         = $utilityFactory->createVaInfo($song->file);
                 $ndata       = array();
                 $data        = $id3->read_id3();
@@ -1282,7 +1282,6 @@ class Art extends database_object
      * @param string $link
      * @param boolean $show_default
      * @param string $kind
-     * @return boolean
      */
     public static function display(
         $object_type,
@@ -1292,15 +1291,15 @@ class Art extends database_object
         $link = null,
         $show_default = true,
         $kind = 'default'
-    ) {
+    ): ?string {
         if (!self::is_valid_type($object_type)) {
-            return false;
+            return null;
         }
 
         if (!$show_default) {
             // Don't show any image if not available
             if (!self::has_db($object_id, $object_type, $kind)) {
-                return false;
+                return null;
             }
         }
         $size        = self::get_thumb_size($thumb);
@@ -1314,12 +1313,13 @@ class Art extends database_object
                 $link .= '&kind=' . $kind;
             }
         }
-        echo "<div class=\"item_art\">";
-        echo "<a href=\"" . $link . "\" title=\"" . $name . "\"";
+
+        $out = "<div class=\"item_art\">";
+        $out .= "<a href=\"" . $link . "\" title=\"" . $name . "\"";
         if ($prettyPhoto) {
-            echo " rel=\"prettyPhoto\"";
+            $out .= " rel=\"prettyPhoto\"";
         }
-        echo ">";
+        $out .= ">";
         $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
@@ -1336,37 +1336,37 @@ class Art extends database_object
         $size['height'] /= 2;
         $size['width'] /= 2;
 
-        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        $out .= "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
 
         // don't put the play icon on really large images.
         if ($size['height'] >= 150 && $size['height'] <= 300) {
-            echo "<div class=\"item_art_play\">";
-            echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
+            $out .= "<div class=\"item_art_play\">";
+            $out .= Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'',
                 '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
                 'directplay_art_' . $object_type . '_' . $object_id);
-            echo "</div>";
+            $out .= "</div>";
         }
 
         if ($prettyPhoto) {
             $class_name = ObjectTypeToClassNameMapper::map($object_type);
             $libitem    = new $class_name($object_id);
-            echo "<div class=\"item_art_actions\">";
+            $out .= "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo Ui::get_icon('edit', T_('Edit/Find Art'));
-                echo "</a>";
+                $out .= "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                $out .= Ui::get_icon('edit', T_('Edit/Find Art'));
+                $out .= "</a>";
 
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
-                echo Ui::get_icon('delete', T_('Reset Art'));
-                echo "</a>";
+                $out .= "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                $out .= Ui::get_icon('delete', T_('Reset Art'));
+                $out .= "</a>";
             }
-            echo "</div>";
+            $out .= "</div>";
         }
 
-        echo "</a>\n";
-        echo "</div>";
+        $out .= "</a>\n";
+        $out .= "</div>";
 
-        return true;
+        return $out;
     }
 
     /**

@@ -41,6 +41,8 @@ class TVShow_Episode extends Video
     public $f_tvshow;
     public $f_tvshow_link;
 
+    private ?string $filename = null;
+
     /**
      * Constructor
      * This pulls the tv show episode information from the database and returns
@@ -186,15 +188,14 @@ class TVShow_Episode extends Video
         $this->f_tvshow      = $season->f_tvshow;
         $this->f_tvshow_link = $season->f_tvshow_link;
 
-        $this->f_file = $this->f_tvshow;
-        if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
-                    $this->episode_number);
-        }
-        $this->f_file .= ' - ' . $this->f_title;
-        $this->f_full_title = $this->f_file;
+        $this->f_full_title = $this->getFilename();
 
         return true;
+    }
+
+    public function getTVShowSeason(): TVShow_Season
+    {
+        return new TVShow_Season($this->season);
     }
 
     /**
@@ -292,7 +293,7 @@ class TVShow_Episode extends Video
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -308,5 +309,23 @@ class TVShow_Episode extends Video
         }
 
         return $deleted;
+    }
+
+    public function getFilename(): string
+    {
+        if ($this->filename === null) {
+            $this->filename = $this->f_tvshow;
+            if ($this->episode_number) {
+                $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->season_number) . 'E' . sprintf('%02d', $this->episode_number);
+            }
+            $this->filename .= ' - ' . $this->f_title;
+        }
+
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
     }
 }

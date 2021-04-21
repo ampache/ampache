@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -29,6 +30,12 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PodcastRepositoryInterface;
+
+/** @var Browse $browse */
+
+global $dic;
+$podcastRepository = $dic->get(PodcastRepositoryInterface::class);
 
 $thcount  = 5;
 $is_table = $browse->is_grid_view();
@@ -88,8 +95,7 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
         }
 
         foreach ($object_ids as $podcast_id) {
-            $libitem = new Podcast($podcast_id);
-            $libitem->format(); ?>
+            $libitem = $podcastRepository->findById((int) $podcast_id); ?>
         <tr id="podcast_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>

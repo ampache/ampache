@@ -54,8 +54,6 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Video\VideoFromTagUpdaterInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
-use Ampache\Repository\PodcastEpisodeRepositoryInterface;
-use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
 use Exception;
 
@@ -1032,6 +1030,7 @@ abstract class Catalog extends database_object
     public function get_artist_ids($filter = '')
     {
         $results = array();
+        $params  = [$this->id];
 
         $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
@@ -1039,13 +1038,15 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+            $sql    = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+            $params = [];
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
+            $sql    = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
+            $params = [];
         }
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['artist'];
@@ -1226,51 +1227,6 @@ abstract class Catalog extends database_object
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     *
-     * @param integer[]|null $catalogs
-     * @return Podcast[]
-     */
-    public static function get_podcasts($catalogs = null)
-    {
-        if (!$catalogs) {
-            $catalogs = static::getCatalogRepository()->getList('podcast');
-        }
-
-        $results = array();
-        foreach ($catalogs as $catalog_id) {
-            $podcast_ids = static::getPodcastRepository()->getPodcastIds((int) $catalog_id);
-            foreach ($podcast_ids as $podcast_id) {
-                $results[] = new Podcast($podcast_id);
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     *
-     * @param integer $count
-     * @return Podcast_Episode[]
-     */
-    public static function get_newest_podcasts($count)
-    {
-        $catalogs = static::getCatalogRepository()->getList('podcast');
-        $results  = array();
-
-        foreach ($catalogs as $catalog_id) {
-            $episode_ids = static::getPodcastEpisodeRepository()->getNewestPodcastsIds(
-                (int) $catalog_id,
-                $count
-            );
-            foreach ($episode_ids as $episode_id) {
-                $results[] = new Podcast_Episode($episode_id);
-            }
         }
 
         return $results;
@@ -1603,9 +1559,9 @@ abstract class Catalog extends database_object
         $sort_pattern = '',
         $rename_pattern = ''
     ) {
-        $catalog = self::create_from_id($media->catalog);
+        $catalog = self::create_from_id($media->getCatalogId());
         if ($catalog === null) {
-            debug_event(self::class, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
+            debug_event(self::class, 'update_media_from_tags: Error loading catalog ' . $media->getCatalogId(), 2);
 
             return array();
         }
@@ -2300,7 +2256,7 @@ abstract class Catalog extends database_object
                     $xml['key']                  = $results['id'];
                     $xml['dict']['Track ID']     = (int)($results['id']);
                     $xml['dict']['Name']         = $song->title;
-                    $xml['dict']['Artist']       = $song->f_artist_full;
+                    $xml['dict']['Artist']       = $song->getFullArtistNameFormatted();
                     $xml['dict']['Album']        = $song->f_album_full;
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
@@ -2321,7 +2277,7 @@ abstract class Catalog extends database_object
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $song = new Song($results['id']);
                     $song->format();
-                    echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
+                    echo '"' . $song->id . '","' . $song->title . '","' . $song->getFullArtistNameFormatted() . '","' . $song->f_album_full . '","' . $song->getDurationFormatted() . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
                 }
                 break;
         } // end switch
@@ -2622,26 +2578,6 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(SingleItemUpdaterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 
     /**
