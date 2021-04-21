@@ -6,6 +6,7 @@
 
 * Larger artist images when you don't have a text summary available
 * Expanded artist, album and podcast thumbnails to reduce blank space
+* Update album tags first when you update artist tags
 
 ### Changed
 
