@@ -47,7 +47,6 @@ class Song_Preview extends database_object implements Media, playable_item
     public $type;
     public $mime;
     public $mbid; // MusicBrainz ID
-    public $enabled = true;
 
     public $f_file;
     public $f_artist;
@@ -452,6 +451,11 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function remove()
     {
+    }
+
+    public function isEnabled(): bool
+    {
+        return true;
     }
 
     /**

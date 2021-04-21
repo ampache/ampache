@@ -445,7 +445,7 @@ final class PlayAction implements ApplicationActionInterface
             $catalog = Catalog::create_from_id($media->catalog);
 
             /* If the media is disabled */
-            if (isset($media->enabled) && !make_bool($media->enabled)) {
+            if ($media->isEnabled() === false) {
                 debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
                 // Check to see if this is a democratic playlist, if so remove it completely
                 if ($demo_id !== '' && isset($democratic)) {

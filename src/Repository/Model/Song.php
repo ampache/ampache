@@ -119,10 +119,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var boolean $played
      */
     public $played;
-    /**
-     * @var boolean $enabled
-     */
-    public $enabled;
+
+    private int $enabled;
     /**
      * @var integer $addition_time
      */
@@ -990,7 +988,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type, $song->disk);
+        unset($song->catalog, $song->played, $song->addition_time, $song->update_time, $song->type, $song->disk);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
         $skip_array   = array(
             'id',
@@ -1005,7 +1003,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             'album_mbid',
             'albumartist_mbid',
             'mb_albumid_group',
-            'disabledMetadataFields'
+            'disabledMetadataFields',
+            'enabled',
         );
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
@@ -1018,6 +1017,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string[] $string_array
      * @param string[] $skip_array
      * @return array
+     *
+     * @todo remove enabled property
      */
     public static function compare_media_information($media, $new_media, $string_array, $skip_array)
     {
@@ -2199,6 +2200,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public function remove()
     {
         return $this->getSongDeleter()->delete($this);
+    }
+
+    public function isEnabled(): bool
+    {
+        return (bool) $this->enabled;
     }
 
     /**

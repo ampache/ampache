@@ -296,7 +296,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         $songId = $this->song->getId();
 
-        if ($this->song->enabled) {
+        if ($this->song->isEnabled()) {
             $icon     = 'disable';
             $icontext = T_('Disable');
         } else {

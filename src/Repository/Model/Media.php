@@ -95,4 +95,9 @@ interface Media
      * @return PDOStatement|boolean
      */
     public function remove();
+
+    /**
+     * Returns the state of the media item
+     */
+    public function isEnabled(): bool;
 }

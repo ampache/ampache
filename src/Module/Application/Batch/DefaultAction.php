@@ -212,7 +212,7 @@ final class DefaultAction implements ApplicationActionInterface
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
-            if ($media->enabled) {
+            if ($media->isEnabled()) {
                 $media->format();
                 $total_size .= sprintf("%.2f", ($media->size / 1048576));
                 $dirname = '';

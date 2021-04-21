@@ -104,7 +104,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 $libitem->format(); ?>
             <tr class="<?php echo Ui::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
                 <?php
-                if ($libitem->enabled || Access::check('interface', 50)) {
+                if ($libitem->isEnabled() || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
                         ->setContext('BROWSE_ARGUMENT', isset($argument) ? $argument : '')
                         ->setContext('USER_IS_REGISTERED', User::is_registered())

@@ -23,6 +23,7 @@
 // Don't show disabled medias to normal users
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
@@ -33,7 +34,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
+/** @var Media $libitem */
+
+if ($libitem->isEnabled() || Access::check('interface', 50)) { ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>' ?></span>
     <div class="cel_play_hover">

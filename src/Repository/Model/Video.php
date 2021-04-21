@@ -51,10 +51,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var boolean $played
      */
     public $played;
-    /**
-     * @var boolean $enabled
-     */
-    public $enabled;
+
+    private int $enabled;
     /**
      * @var string $file
      */
@@ -1096,6 +1094,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
         return true;
     } // _update_item
 
+    public function isEnabled(): bool
+    {
+        return (bool) $this->enabled;
+    }
+
     /**
      * compare_video_information
      * this compares the new ID3 tags of a file against
@@ -1109,9 +1112,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public static function compare_video_information(Video $video, Video $new_video)
     {
         // Remove some stuff we don't care about
-        unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
+        unset($video->catalog, $video->played, $video->addition_time, $video->update_time, $video->type);
         $string_array = array('title', 'tags');
-        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt', 'disabledMetadataFields');
+        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt', 'disabledMetadataFields', 'enabled');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information

@@ -411,4 +411,9 @@ class Live_Stream extends database_object implements Media, library_item
     public function remove()
     {
     }
+
+    public function isEnabled(): bool
+    {
+        return true;
+    }
 }

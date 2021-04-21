@@ -105,7 +105,8 @@ class Shoutbox
 
         if ($object->id > 0) {
             if (strtolower((string)$type) === 'song') {
-                if (!$object->enabled) {
+                /** @var Song $object */
+                if (!$object->isEnabled()) {
                     $object = null;
                 }
             }

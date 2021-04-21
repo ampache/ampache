@@ -595,7 +595,7 @@ class Channel extends database_object implements Media, library_item
 
                 if ($this->media->catalog) {
                     $catalog = Catalog::create_from_id($this->media->catalog);
-                    if (make_bool($this->media->enabled)) {
+                    if (make_bool($this->media->isEnabled())) {
                         if (AmpConfig::get('lock_songs')) {
                             if (!Stream::check_lock_media($this->media->id, 'song')) {
                                 debug_event(self::class, 'Media ' . $this->media->id . ' locked, skipped.', 3);
@@ -815,5 +815,10 @@ class Channel extends database_object implements Media, library_item
 
     public function remove()
     {
+    }
+
+    public function isEnabled(): bool
+    {
+        return true;
     }
 }

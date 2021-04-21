@@ -207,12 +207,12 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
-     * @param media $object
+     * @param Media $object
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_Url
      */
-    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
+    private static function media_object_to_url(Media $object, $additional_params = '', $urltype = 'web')
     {
         $surl = null;
         $url  = array();
@@ -223,7 +223,7 @@ class Stream_Playlist
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-        if (!isset($object->enabled) || make_bool($object->enabled)) {
+        if ($object->isEnabled()) {
             if ($urltype == 'file') {
                 $url['url'] = $object->file;
                 // Relative path

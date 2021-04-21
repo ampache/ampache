@@ -281,7 +281,7 @@ class AmpacheRss
 
             $has_allowed_recent = (bool) $item['user_recent'];
             $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
-            if ($song->enabled && $is_allowed_recent) {
+            if ($song->isEnabled() && $is_allowed_recent) {
                 $song->format();
 
                 $xml_array = array(

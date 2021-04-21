@@ -56,7 +56,7 @@ class Podcast_Episode extends database_object implements Media, library_item
     public $author;
     public $category;
     public $pubdate;
-    public $enabled;
+    private bool $enabled = false;
     public $object_cnt;
     public $catalog;
     public $f_title;
@@ -551,6 +551,11 @@ class Podcast_Episode extends database_object implements Media, library_item
     public static function type_to_mime($type)
     {
         return Song::type_to_mime($type);
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
     }
 
     /**
