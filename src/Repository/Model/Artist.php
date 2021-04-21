@@ -349,6 +349,25 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * get_album_ids
+     *
+     * Get each album id for the artist
+     * @return int[]
+     */
+    public function get_album_ids()
+    {
+        $sql        = "SELECT  DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $db_results = Dba::read($sql, array($this->id));
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_album_count
      *
      * Get count for an artist's albums.
@@ -364,6 +383,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return (int) $results['album_count'];
     }
+
     /**
      * get_album_group_count
      *

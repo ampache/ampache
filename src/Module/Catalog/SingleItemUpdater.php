@@ -127,6 +127,10 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 $this->albumRepository->updateTime($libitem);
                 break;
             case 'artist':
+                foreach ($libitem->get_album_ids() as $album_id) {
+                    $album_tags = $this->tagRepository->getSongTags('album', $album_id);
+                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
+                }
                 $tags = $this->tagRepository->getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
                 $libitem->update_time();
