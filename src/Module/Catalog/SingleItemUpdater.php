@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -42,14 +43,18 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private TagRepositoryInterface $tagRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
-        TagRepositoryInterface $tagRepository
+        TagRepositoryInterface $tagRepository,
+        ConfigContainerInterface $configContainer
     ) {
         $this->songRepository  = $songRepository;
         $this->albumRepository = $albumRepository;
         $this->tagRepository   = $tagRepository;
+        $this->configContainer = $configContainer;
     }
 
     /**
@@ -122,11 +127,13 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         // Update the tags for
         switch ($type) {
             case 'album':
+                /** @var Album $libitem*/
                 $tags = $this->tagRepository->getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
                 $this->albumRepository->updateTime($libitem);
                 break;
             case 'artist':
+                /** @var Artist $libitem */
                 foreach ($libitem->get_album_ids() as $album_id) {
                     $album_tags = $this->tagRepository->getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
@@ -140,7 +147,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         } // end switch type
 
         // Cleanup old objects that are no longer needed
-        if (!AmpConfig::get('cron_cache')) {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CRON_CACHE)) {
             $this->albumRepository->collectGarbage();
             Artist::garbage_collection();
         }
