@@ -375,8 +375,8 @@ class Catalog_Seafile extends Catalog
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $tempfilename,
             $gather_types,
-            '',
-            '',
+            null,
+            null,
             $sort_pattern,
             $rename_pattern,
             true

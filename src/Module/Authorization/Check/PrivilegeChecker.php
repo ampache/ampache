@@ -66,6 +66,8 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
         $user = Core::get_global('user');
         if ($userId !== null) {
             $user = $this->modelFactory->createUser($userId);
+        } elseif ($user === '') {
+            return false;
         }
 
         // Switch on the type

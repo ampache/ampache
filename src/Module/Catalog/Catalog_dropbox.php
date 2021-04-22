@@ -384,8 +384,8 @@ class Catalog_dropbox extends Catalog
             $vainfo = $this->getUtilityFactory()->createVaInfo(
                 $outfile,
                 $this->get_gather_types('music'),
-                '',
-                '',
+                null,
+                null,
                 $this->sort_pattern,
                 $this->rename_pattern,
                 $readfile
@@ -451,8 +451,8 @@ class Catalog_dropbox extends Catalog
                 $vainfo = $this->getUtilityFactory()->createVaInfo(
                     $outfile,
                     $gtypes,
-                    '',
-                    '',
+                    null,
+                    null,
                     $this->sort_pattern,
                     $this->rename_pattern,
                     $readfile
@@ -550,8 +550,8 @@ class Catalog_dropbox extends Catalog
                     $vainfo = $utilityFactory->createVaInfo(
                         $outfile,
                         $this->get_gather_types('music'),
-                        '',
-                        '',
+                        null,
+                        null,
                         $this->sort_pattern,
                         $this->rename_pattern,
                         $readfile

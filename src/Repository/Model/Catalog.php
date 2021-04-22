@@ -421,7 +421,7 @@ abstract class Catalog extends database_object
         if ($results = Dba::fetch_assoc($db_results)) {
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
-                if (!$info[$key]) {
+                if (!array_key_exists($key, $info) || !$info[$key]) {
                     $info[$key] = $value;
                 }
             }
@@ -1666,8 +1666,8 @@ abstract class Catalog extends database_object
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $media->file,
             $gather_types,
-            '',
-            '',
+            null,
+            null,
             $sort_pattern,
             $rename_pattern
         );

@@ -1084,9 +1084,9 @@ class User extends database_object
     {
         $avatar = array();
         $auth   = '';
-        if ($session['t'] && $session['s']) {
+        if (array_key_exists('t', $session) && $session['s']) {
             $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
-        } elseif ($session['auth']) {
+        } elseif (array_key_exists('auth', $session)) {
             $auth = '&auth=' . $session['auth'];
         }
 

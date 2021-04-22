@@ -55,7 +55,7 @@ final class SseApiApplication implements ApiApplicationInterface
         ob_end_clean();
         set_time_limit(0);
 
-        if (!$_REQUEST['html']) {
+        if (!array_key_exists('html', $_REQUEST)) {
             define('SSE_OUTPUT', true);
             header('Content-Type: text/event-stream; charset=utf-8');
             header('Cache-Control: no-cache');

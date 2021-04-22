@@ -70,8 +70,8 @@ final class PrintTagsCommand extends Command
         $info = $this->utilityFactory->createVaInfo(
             $filename,
             ['music'],
-            '',
-            '',
+            null,
+            null,
             $dir_pattern,
             $file_pattern
         );

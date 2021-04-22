@@ -780,8 +780,8 @@ class Catalog_local extends Catalog
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
             $this->get_gather_types('music'),
-            '',
-            '',
+            null,
+            null,
             $this->sort_pattern,
             $this->rename_pattern
         );
@@ -906,8 +906,8 @@ class Catalog_local extends Catalog
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
             $gtypes,
-            '',
-            '',
+            null,
+            null,
             $this->sort_pattern,
             $this->rename_pattern
         );

@@ -67,7 +67,7 @@ class Core
         if (isset($_REQUEST[$variable])) {
             return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if ($_REQUEST[$variable] === null) {
+        if (!array_key_exists($variable, $_REQUEST) || $_REQUEST[$variable] === null) {
             return '';
         }
 
