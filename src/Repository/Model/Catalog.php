@@ -1732,7 +1732,7 @@ abstract class Catalog extends database_object
                 static::getAlbumRepository()->updateTime($libitem);
                 break;
             case 'artist':
-                foreach ($libitem->get_album_ids() as $album_id) {
+                foreach ($libitem->get_child_ids() as $album_id) {
                     $album_tags = self::getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
                 }
