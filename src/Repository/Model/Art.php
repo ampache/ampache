@@ -25,14 +25,14 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
@@ -360,7 +360,6 @@ class Art extends database_object
         // Blow it away!
         $this->reset();
 
-        $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
         if (AmpConfig::get('write_id3_art', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
@@ -372,97 +371,168 @@ class Art extends database_object
                 /** Use special treatment for artists */
                 $songs = $this->getSongRepository()->getByArtist($object);
             }
-
-            $utilityFactory = $this->getUtilityFactory();
-
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
                 $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
-                $id3         = $utilityFactory->createVaInfo($song->file);
+                $id3         = new vainfo($song->file);
                 $ndata       = array();
+                $fileformat = '';
                 $data        = $id3->read_id3();
-                if (isset($data['id3v2']['APIC'])) {
-                    $apics = $data['id3v2']['APIC'];
-                    switch (count($apics)) {
-                         case 1:
-                            $ndata['attached_picture'][0]['data']          = $apics[0]['data'];
-                            $ndata['attached_picture'][0]['mime']          = $apics[0]['mime'];
-                            $ndata['attached_picture'][0]['picturetypeid'] = $apics[0]['picturetypeid'];
-                            $ndata['attached_picture'][0]['description']   = $apics[0]['description'];
-                            if ($apics[0]['picturetypeid'] != $current_picturetypeid) {
-                                $ndata['attached_picture'][1]['data']          = $source;
-                                $ndata['attached_picture'][1]['mime']          = $mime;
-                                $ndata['attached_picture'][1]['picturetypeid'] =  $current_picturetypeid;
-                                $ndata['attached_picture'][1]['description']   = $description;
-                            } else {
-                                debug_event(self::class, "only 1 image of type '" . $this->type . "' is permitted", 1);
-                            }
-                            break;
-                          case 2:
-                            $ndata['attached_picture'] = $this->replace_apic($apics, $mime,$description, $source, $current_picturetypeid);
-                            break;
-                       }
+                $fileformat = $data['fileformat'];
+                if ($fileformat == 'flac') {
+                    $apics = $data['flac']['PICTURE'];
                 } else {
+                    $apics = $data['id3v2']['APIC'];
+                }
+                /* is the file flac or mp3? */
+                $apic_typeid = ($fileformat == 'flac') ? 'typeid' : 'picturetypeid';
+                $apic_mimetype = ($fileformat == 'flac') ? 'mime_type' : 'picturetypeid';
+                
+                if (is_null($apics)) {
                     $ndata['attached_picture'][0]['description']   = $description;
                     $ndata['attached_picture'][0]['data']          = $source;
                     $ndata['attached_picture'][0]['mime']          = $mime;
                     $ndata['attached_picture'][0]['picturetypeid'] = $current_picturetypeid;
+                } else {
+                    $new_data = array('source' => $source, 'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                    switch (count($apics)) {
+                        case 1:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_data, $apic_typeid, $apic_mimetype);
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][] = array('data'=> $source, 'mime' => $mime,
+                                'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                            }
+                            $ndata['attached_picture'][] = $apics[0];
+                            break;
+                        case 2:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_data, $apic_typeid, $apic_mimetype);
+                            /* If $idx is null, it means both images are of opposite types
+                             * of the new image. Either image could be replaced to have
+                             * one cover and one artist image.
+                             */
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][0] = array('data'=> $source, 'mime' => $mime,
+                                                               'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                            } else {
+                                $id = ($idx == 0) ? 1 : 0;
+                                $ndata['attached_picture'][] = $apics[$id];
+                            }
+                            
+                            break;
+                    }
                 }
-                unset($data['id3v2']['APIC']);
-                $ndata   = array_merge($ndata, $id3->prepare_id3_frames($data['tags']['id3v2']));
+                unset($apics);
+                $tags= ($fileformat == 'flac') ? 'vorbiscomment' : 'id3v2';
+                $ndata   = array_merge($ndata, $id3->prepare_metadata_for_writing($data['tags'][$tags]));
                 $id3->write_id3($ndata);
-                //            Catalog::update_media_from_tags($song);
             } // foreach song
         } // write_id3
-
+        $this->write_tag_to_file($source, $mime);
         if (AmpConfig::get('album_art_store_disk')) {
             self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
             $source = null;
         }
-
         // Insert it!
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
     } // insert
-
-    /**
-     * replace_apic
-     * @param array $apics
-     * @param string $mime
-     * @param string $description
-     * @param string $source
-     * @param integer $picturetypeid
-     * @return array
+    
+    /* Tag here means the concantonation of all the metadata frames 
+     *  which overwrites the existing Tag.
      */
-    private function replace_apic($apics, $mime, $description, $source, $picturetypeid)
+    public function write_tag_to_file($source, $mime) {
+        $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
+
+        if (AmpConfig::get('write_id3_art', false)) {
+            $class_name = ObjectTypeToClassNameMapper::map($this->type);
+            $object     = new $class_name($this->uid);
+            debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
+            if ($this->type === 'album') {
+                /** Use special treatment for albums */
+                $songs = $this->getSongRepository()->getByAlbum($object->id);
+            } elseif ($this->type === 'artist') {
+                /** Use special treatment for artists */
+                $songs = $this->getSongRepository()->getByArtist($object);
+            }
+            foreach ($songs as $song_id) {
+                $song   = new Song($song_id);
+                $song->format();
+                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $id3         = new vainfo($song->file);
+                $ndata       = array();
+                $fileformat = '';
+                $data        = $id3->read_id3();
+                $fileformat = $data['fileformat'];
+                if ($fileformat == 'flac') {
+                    $apics = $data['flac']['PICTURE'];
+                } else {
+                    $apics = $data['id3v2']['APIC'];
+                }
+                /* is the file flac or mp3? */
+                $apic_typeid = ($fileformat == 'flac') ? 'typeid' : 'picturetypeid';
+                $apic_mimetype = ($fileformat == 'flac') ? 'mime_type' : 'picturetypeid';
+                
+                if (is_null($apics)) {
+                    $ndata['attached_picture'][0]['description']   = $description;
+                    $ndata['attached_picture'][0]['data']          = $source;
+                    $ndata['attached_picture'][0]['mime']          = $mime;
+                    $ndata['attached_picture'][0]['picturetypeid'] = $current_picturetypeid;
+                } else {
+                    $new_data = array('source' => $source, 'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                    switch (count($apics)) {
+                        case 1:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_data, $apic_typeid, $apic_mimetype);
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][] = array('data'=> $source, 'mime' => $mime,
+                                'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                            }
+                            $ndata['attached_picture'][] = $apics[0];
+                            break;
+                        case 2:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_data, $apic_typeid, $apic_mimetype);
+                            /* If $idx is null, it means both images are of opposite types
+                             * of the new image. Either image could be replaced to have
+                             * one cover and one artist image.
+                             */
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][0] = array('data'=> $source, 'mime' => $mime,
+                                                               'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                            } else {
+                                $id = ($idx == 0) ? 1 : 0;
+                                $ndata['attached_picture'][] = $apics[$id];
+                            }
+                            
+                            break;
+                    }
+                }
+                unset($apics);
+                $tags= ($fileformat == 'flac') ? 'vorbiscomment' : 'id3v2';
+                $ndata   = array_merge($ndata, $id3->prepare_metadata_for_writing($data['tags'][$tags]));
+                $id3->write_id3($ndata);
+            } // foreach song
+        } // write_id3
+
+    }
+    
+    private function check_for_duplicate($apics, &$ndata, $new_data, $apic_typeid, $apic_mimetype)
     {
-        $ndata = array();
-        if ($apics[0]['picturetypeid'] == $picturetypeid) {
-            $ndata[0]['description']   = $description;
-            $ndata[0]['data']          = $source;
-            $ndata[0]['mime']          = $mime;
-            $ndata[0]['picturetypeid'] = $picturetypeid;
-
-            $ndata[1]['description']   = $apics[1]['description'];
-            $ndata[1]['data']          = $apics[1]['data'];
-            $ndata[1]['mime']          = $apics[1]['mime'];
-            $ndata[1]['picturetypeid'] = $apics[1]['picturetypeid'];
-        } else {
-            $ndata[0]['description']   = $apics[0]['description'];
-            $ndata[0]['data']          = $apics[0]['data'];
-            $ndata[0]['mime']          = $apics[0]['mime'];
-            $ndata[0]['picturetypeid'] = $apics[0]['picturetypeid'];
-
-            $ndata[1]['description']   = $description;
-            $ndata[1]['data']          = $source;
-            $ndata[1]['mime']          = $mime;
-            $ndata[1]['picturetypeid'] = $picturetypeid;
+        $idx = null;
+        for ($i=0; $i < count($apics); $i++) {
+            if ($new_data['picturetypeid'] == $apics[$i][$apic_typeid]) {
+                $ndata['attached_picture'][$i]['description']       = $new_data['description'];
+                $ndata['attached_picture'][$i]['data']              = $new_data['source'];
+                $ndata['attached_picture'][$i]['mime']              = $new_data['mime'];
+                $ndata['attached_picture'][$i]['picturetypeid']     = $new_data['picturetypeid'];
+                $idx = $i;
+                break;
+            }
         }
-
-        return $ndata;
+        return $idx;
     }
 
     /**
@@ -1387,15 +1457,5 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getUtilityFactory(): UtilityFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UtilityFactoryInterface::class);
     }
 }
