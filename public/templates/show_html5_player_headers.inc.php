@@ -153,7 +153,8 @@ function NotifyBrowser(title, artist, icon)
     var notyTimeout = <?php echo AmpConfig::get('browser_notify_timeout'); ?>;
     var notification = new Notification(title, {
         body: artist,
-        icon: icon
+        icon: icon,
+        silent: true
     });
 
     if (notyTimeout > 0) {
