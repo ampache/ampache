@@ -465,16 +465,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if (!$this->id) {
             return true;
         }
-        // update artists older than 1 month just in case
-        $is_stale = $this->last_update < (time() - 2629800);
-        if ($is_stale) {
-            $this->time = $this->update_time();
+        if ($this->time == 0) {
+            $this->update_time();
         }
-        if ($is_stale) {
+        if ($this->album_count == 0 && $this->album_group_count == 0 && $this->song_count == 0) {
             $this->update_album_count();
-        }
-        if ($is_stale) {
-            $this->song_count = $this->update_song_count();
+            $this->update_song_count();
+            $this->update_time();
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
@@ -989,6 +986,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($time > 0 && $time !== $this->time && $this->id) {
             $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
+            $this->time = $time;
             self::set_last_update((int) $this->id);
         }
 
@@ -1022,7 +1020,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update_song_count
      *
      * Get song_count for an artist and set it.
-     * @return integer
      */
     public function update_song_count()
     {
@@ -1030,10 +1027,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
             $sql = "UPDATE `artist` SET `song_count`=$song_count WHERE `id`=" . $this->id;
             Dba::write($sql);
+            $this->song_count = $song_count;
             self::set_last_update((int) $this->id);
         }
-
-        return $song_count;
     }
 
     /**
