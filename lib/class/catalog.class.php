@@ -1076,10 +1076,31 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_artist_arrays
+     *
+     * Get each array of [id, full_name, name] for artists in an array of catalog id's
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_artist_arrays($catalogs)
+    {
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name` DESC";
+            $db_results = Dba::read($sql, array($catalog_id));
+
+            while ($row = Dba::fetch_assoc($db_results, false)) {
+                $results[] = $row;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist_ids
      *
-     * This returns an array of ids of artist that have songs in this
-     * catalog
+     * This returns an array of ids of artist that have songs in this catalog
      * @param string $filter
      * @return integer[]
      */
