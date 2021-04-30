@@ -404,7 +404,7 @@ class Art extends database_object
                 } else {
                     switch (count($apics)) {
                         case 1:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid, $apic_mimetype);
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
                                 $ndata['attached_picture'][] = array('data' => $apics[0]['data'], 'description' => $apics[0]['description'],
@@ -412,7 +412,7 @@ class Art extends database_object
                             }
                             break;
                         case 2:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid, $apic_mimetype);
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             /* If $idx is null, it means both images are of opposite types
                              * of the new image. Either image could be replaced to have
                              * one cover and one artist image.
@@ -435,7 +435,7 @@ class Art extends database_object
                 $vainfo->write_id3($ndata);
             } // foreach song
         } // write_id3
-//        $this->write_tag_to_file($source, $mime);
+
         if (AmpConfig::get('album_art_store_disk')) {
             self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
             $source = null;
@@ -446,93 +446,14 @@ class Art extends database_object
 
         return true;
     } // insert
-    
-    /* Tag here means the concantonation of all the metadata frames
-     *  which overwrites the existing Tag.
-     */
-    public function write_tag_to_file($source, $mime)
-    {
-        $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
-        global $dic;
-        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
-        if (AmpConfig::get('write_id3_art', false)) {
-            $class_name = ObjectTypeToClassNameMapper::map($this->type);
-            $object     = new $class_name($this->uid);
-            debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
-            if ($this->type === 'album') {
-                /** Use special treatment for albums */
-                $songs = $this->getSongRepository()->getByAlbum($object->id);
-            } elseif ($this->type === 'artist') {
-                /** Use special treatment for artists */
-                $songs = $this->getSongRepository()->getByArtist($object);
-            }
-            foreach ($songs as $song_id) {
-                $song   = new Song($song_id);
-                $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
-                $vainfo      = $utilityFactory->createVaInfo(
-                    $song->file
-                );
-                $ndata      = array();
-                $fileformat = '';
-                $data       = $vainfo->read_id3();
-                $fileformat = $data['fileformat'];
-                if ($fileformat == 'flac') {
-                    $apics = $data['flac']['PICTURE'];
-                } else {
-                    $apics = $data['id3v2']['APIC'];
-                }
-                /* is the file flac or mp3? */
-                $apic_typeid   = ($fileformat == 'flac') ? 'typeid' : 'picturetypeid';
-                $apic_mimetype = ($fileformat == 'flac') ? 'mime_type' : 'picturetypeid';
-                
-                if (is_null($apics)) {
-                    $ndata['attached_picture'][0]['description']   = $description;
-                    $ndata['attached_picture'][0]['data']          = $source;
-                    $ndata['attached_picture'][0]['mime']          = $mime;
-                    $ndata['attached_picture'][0]['picturetypeid'] = $current_picturetypeid;
-                } else {
-                    $new_pic = array('data' => $source, 'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
-                    switch (count($apics)) {
-                        case 1:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid, $apic_mimetype);
-                            if (is_null($idx)) {
-                                $ndata['attached_picture'][] = $new_pic;
-                            }
-                            $ndata['attached_picture'][] = $apics[0];
-                            break;
-                        case 2:
-                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid, $apic_mimetype);
-                            /* If $idx is null, it means both images are of opposite types
-                             * of the new image. Either image could be replaced to have
-                             * one cover and one artist image.
-                             */
-                            if (is_null($idx)) {
-                                $ndata['attached_picture'][0] = $new_pic;
-                            } else {
-                                $id                           = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][]  = $apics[$id];
-                            }
-                            
-                            break;
-                    }
-                }
-                unset($apics);
-                $tags    = ($fileformat == 'flac') ? 'vorbiscomment' : 'id3v2';
-                $ndata   = array_merge($ndata, $vainfo->prepare_metadata_for_writing($data['tags'][$tags]));
-                $vainfo->write_id3($ndata);
-            } // foreach song
-        } // write_id3
-    }
-    
-    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid, $apic_mimetype)
+    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
     {
         $idx = null;
         for ($i=0; $i < count($apics); $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
+                $ndata['attached_picture'][$i]['description']       = $new_pic['descr
+                iption'];
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
                 $ndata['attached_picture'][$i]['mime']              = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid']     = $new_pic['picturetypeid'];
