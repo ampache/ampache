@@ -193,11 +193,18 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             });
 
             $(function() {
+                var minSearchChars = 2;
                 $( "#searchString" )
-                // don't navigate away from the field on tab when selecting an item
+                    // don't navigate away from the field on tab when selecting an item
                     .bind( "keydown", function( event ) {
                         if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "custom-catcomplete" ).widget().is(":visible") ) {
                             event.preventDefault();
+                        }
+                    })
+                    // reopen previous search results
+                    .bind( "focus", function( event ) {
+                        if ($( this )[0].value.length >= minSearchChars) {
+                            $( this ).data( "custom-catcomplete" ).search();
                         }
                     })
                     .catcomplete({
@@ -212,7 +219,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         },
                         search: function() {
                             // custom minLength
-                            if (this.value.length < 2) {
+                            if (this.value.length < minSearchChars) {
                                 return false;
                             }
                         },
