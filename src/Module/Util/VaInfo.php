@@ -331,8 +331,8 @@ final class VaInfo implements VaInfoInterface
 
                 if ($retval !== 0 || $retval1 !== 0) {
                     $this->logger->debug(
-                       'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
-                       [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                     
                     return;

@@ -399,7 +399,6 @@ class Art extends database_object
                     'picturetypeid' => $current_picturetypeid, 'description' => $description);
 
                 if (is_null($apics)) {
-                    //       $ndata['attached_picture'][]    = $apics[0];
                     $ndata['attached_picture'][]    = $new_pic;
                 } else {
                     switch (count($apics)) {
@@ -420,9 +419,9 @@ class Art extends database_object
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
-                                $id                              = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$id]  = array('data' => $apics[$id]['data'], 'mime' => $apics[$id][$apic_mimetype],
-                    'picturetypeid' => $apics[$id][$apic_typeid], 'description' => $apics[$id]['description']);
+                                $apicsId                              = ($idx == 0) ? 1 : 0;
+                                $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
+                                'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
                                 ;
                             }
                             
@@ -452,8 +451,7 @@ class Art extends database_object
         $idx = null;
         for ($i=0; $i < count($apics); $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i]['description']       = $new_pic['descr
-                iption'];
+                $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
                 $ndata['attached_picture'][$i]['mime']              = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid']     = $new_pic['picturetypeid'];
