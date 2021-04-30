@@ -439,7 +439,7 @@ class Subsonic_XML_Data
         $xindexes = $xml->addChild('indexes');
         self::addIgnoredArticles($xindexes);
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
-        self::addArtists($xindexes, $artists);
+        self::addArtistArrays($xindexes, $artists);
     }
 
     /**
@@ -535,6 +535,68 @@ class Subsonic_XML_Data
                 self::addAlbum($xartist, $album);
             }
         }
+    }
+
+    /**
+     * addArtistArrays
+     * @param SimpleXMLElement $xml
+     * @param array $artists
+     * @param boolean $extra
+     * @param boolean $albumsSet
+     */
+    public static function addArtistArrays($xml, $artists)
+    {
+        $xlastcat     = null;
+        $sharpartists = array();
+        $xlastletter  = '';
+        foreach ($artists as $artist) {
+            if (strlen((string)$artist['name']) > 0) {
+                $letter = strtoupper((string)$artist['name'][0]);
+                if ($letter == "X" || $letter == "Y" || $letter == "Z") {
+                    $letter = "X-Z";
+                } else {
+                    if (!preg_match("/^[A-W]$/", $letter)) {
+                        $sharpartists[] = $artist;
+                        continue;
+                    }
+                }
+
+                if ($letter != $xlastletter) {
+                    $xlastletter = $letter;
+                    $xlastcat    = $xml->addChild('index');
+                    $xlastcat->addAttribute('full_name', (string)$xlastletter);
+                }
+            }
+
+            if ($xlastcat != null) {
+                self::addArtistArray($xlastcat, $artist);
+            }
+        }
+
+        // Always add # index at the end
+        if (count($sharpartists) > 0) {
+            $xsharpcat = $xml->addChild('index');
+            $xsharpcat->addAttribute('full_name', '#');
+
+            foreach ($sharpartists as $artist) {
+                self::addArtistArray($xsharpcat, $artist);
+            }
+        }
+    }
+
+    /**
+     * addArtistArray
+     * @param SimpleXMLElement $xml
+     * @param Artist $artist
+     * @param boolean $extra
+     * @param boolean $albums
+     * @param boolean $albumsSet
+     */
+    public static function addArtistArray($xml, $artist)
+    {
+        $xartist = $xml->addChild('artist');
+        $xartist->addAttribute('id', (string)self::getArtistId($artist['id']));
+        $xartist->addAttribute('name', (string)self::checkName($artist['full_name']));
     }
 
     /**

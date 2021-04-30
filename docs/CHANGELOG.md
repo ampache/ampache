@@ -39,6 +39,7 @@
 * Return integers for tag counts
 * SubSonic - don't return null Genre counts
 * rmccue/requests CVE: CVE-2021-29476
+* SubSonic - fix getting artist indexes for large libraries
 
 ### API 4.4.2
 
