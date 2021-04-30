@@ -79,7 +79,7 @@
         "phpmailer/phpmailer": "6.1.*",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
-        "rmccue/requests": "1.7.*",
+        "rmccue/requests": "1.8.*",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
         "scaron/prettyphoto": "3.*",
