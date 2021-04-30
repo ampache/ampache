@@ -63,7 +63,7 @@ class Subsonic_Api
     }
 
     /**
-     * @param $password
+     * @param string $password
      * @return string
      */
     public static function decrypt_password($password)
@@ -413,8 +413,9 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
+        $catalogs = Catalog::get_catalogs('music');
         $response = Subsonic_XML_Data::createSuccessResponse('getmusicfolders');
-        Subsonic_XML_Data::addMusicFolders($response, Catalog::get_catalogs());
+        Subsonic_XML_Data::addMusicFolders($response, $catalogs);
         self::apiOutput($input, $response);
     }
 
