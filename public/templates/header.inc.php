@@ -165,22 +165,26 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         } else {
                             itemhtml += "<a>";
                         }
-                        if (item.image != '') {
-                            itemhtml += "<img src='" + item.image + "' class='searchart' />";
+                        if (item.image !== '') {
+                            itemhtml += "<img src='" + item.image + "' class='searchart' alt='' />";
                         }
-                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span>";
+                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels)  + "</span>";
                         itemhtml += "</a>";
 
                         return $( "<li class='ui-menu-item'>" )
                             .data("ui-autocomplete-item", item)
-                            .append( itemhtml )
+                            .append( itemhtml + "</li>")
                             .appendTo( ul );
                 },
                 _renderMenu: function( ul, items ) {
                     var that = this, currentType = "";
                     $.each( items, function( index, item ) {
-                        if (item.type != currentType) {
-                            ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
+                        if (item.type !== currentType) {
+                            $( "<li class='ui-autocomplete-category'>")
+                                .data("ui-autocomplete-item", item)
+                                .append( item.type + "</li>" )
+                                .appendTo( ul );
+
                             currentType = item.type;
                         }
                         that._renderItem( ul, item );
