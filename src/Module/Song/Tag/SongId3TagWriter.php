@@ -21,6 +21,7 @@
 
 namespace Ampache\Module\Song\Tag;
 
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\Art;
@@ -33,7 +34,6 @@ use Psr\Log\LoggerInterface;
 final class SongId3TagWriter implements SongId3TagWriterInterface
 {
     private ConfigContainerInterface $configContainer;
-
     private LoggerInterface $logger;
 
     public function __construct(
@@ -55,7 +55,9 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
             return;
         }
-
+        global $dic;
+        $utilityFactory = $dic->get(UtilityFactoryInterface::class);
+ 
         $catalog = Catalog::create_from_id($song->catalog);
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
@@ -68,8 +70,11 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     $meta[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-            $id3    = new VaInfo($song->file);
-            $result = $id3->read_id3();
+            $vainfo = $utilityFactory->createVaInfo(
+                $song->file
+            );
+            
+            $result = $vainfo->read_id3();
             if ($result['fileformat'] == 'mp3') {
                 $tdata = $result['tags']['id3v2'];
                 $apics = $result['id3v2']['APIC'];
@@ -79,7 +84,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $apics = $result['flac']['PICTURE'];
                 $meta  = $this->getVorbisMetadata($song);
             }
-            $ndata = $id3->prepare_metadata_for_writing($tdata);
+            $ndata = $vainfo->prepare_metadata_for_writing($tdata);
 
             if (isset($changed)) {
                 foreach ($changed as $key => $value) {
@@ -115,16 +120,16 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
             }
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
-                $art = new Art($song->album, 'album');
+                $art         = new Art($song->album, 'album');
                 $album_image = $art->get(true);
                 if ($album_image != '') {
-                    $ndata['attached_picture'][] = array('data'=> $album_image, 'mime' => $art->raw_mime,
+                    $ndata['attached_picture'][] = array('data' => $album_image, 'mime' => $art->raw_mime,
                         'picturetypeid' => 3, 'description' => $song->f_album);
                 }
                 $art = new Art($song->artist, 'artist');
                 if ($art->has_db_info()) {
-                    $artist_image = $art->get(true);
-                    $ndata['attached_picture'][] = array('data'=> $artist_image, 'mime' => $art->raw_mime,
+                    $artist_image                = $art->get(true);
+                    $ndata['attached_picture'][] = array('data' => $artist_image, 'mime' => $art->raw_mime,
                         'picturetypeid' => 8, 'description' => $song->f_artist);
                 }
             } else {    // rewrite original images
@@ -134,7 +139,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     }
                 }
             }
-            $id3->write_id3($ndata);
+            $vainfo->write_id3($ndata);
         }
     }
 

@@ -2933,7 +2933,7 @@ abstract class Catalog extends database_object
                 $catalogs = self::get_catalogs();
                 // Intentional break fall-through
             case 'update_file_tags':
-                $write_id3 = AmpConfig::get('write_id3', false);
+                $write_id3     = AmpConfig::get('write_id3', false);
                 $write_id3_art = AmpConfig::get('write_id3_art', false);
                 AmpConfig::set_by_array(['write_id3' => 'true'], true);
                 AmpConfig::set_by_array(['write_id3_art' => 'true'], true);

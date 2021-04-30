@@ -299,7 +299,7 @@ final class VaInfo implements VaInfoInterface
             'flac' => 'metaflac',
             'oga' => 'vorbiscomment'
         ];
-        if (!in_array($extension, $extensionMap)) {
+        if (!array_key_exists(strtolower($extension), $extensionMap)) {
             $this->logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -316,6 +316,36 @@ final class VaInfo implements VaInfoInterface
         $tagWriter->tag_encoding      = $TaggingFormat;
         $tagWriter->remove_other_tags = true;
         $tagWriter->tag_data          = $tagData;
+        /*
+        *  Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
+        *  This hasn't been tested on Windows and there is evidence that
+        *  metaflac.exe behaves differently.
+        */
+        if ($extension !== 'mp3') {
+            if (php_uname('s') == 'Linux') {
+                /* First check for installation of metaflac and
+                *  vorbiscomment system tools.
+                */
+                exec('which metaflac', $output, $retval);
+                exec('which vorbiscomment', $output, $retval1);
+
+                if ($retval !== 0 || $retval1 !== 0) {
+                    $this->logger->debug(
+                       'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
+                       [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    
+                    return;
+                }
+            }
+
+            if (GETID3_OS_ISWINDOWS) {
+                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+            } else {
+                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+            }
+            $commandError = `$command`;
+        }
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
                 $this->logger->debug(
@@ -334,12 +364,12 @@ final class VaInfo implements VaInfoInterface
         }
     } // write_id3
 
-     /**
-     * prepare_metadata_for_writing
-     * Prepares vorbiscomments/id3v2 metadata for writing tag to file
-     * @param array $frames
-     * @return array
-     */
+    /**
+    * prepare_metadata_for_writing
+    * Prepares vorbiscomments/id3v2 metadata for writing tag to file
+    * @param array $frames
+    * @return array
+    */
     public function prepare_metadata_for_writing($frames)
     {
         $ndata = array();
@@ -351,7 +381,7 @@ final class VaInfo implements VaInfoInterface
                     }
                     break;
                 default:
-                    $ndata[$key][] = $key[0];
+                    $ndata[$key][] = $text[0];
                     break;
             }
         }
