@@ -448,8 +448,9 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
+        $catalogs = Catalog::get_catalogs('music');
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
-        Subsonic_Xml_Data::addMusicFolders($response, Catalog::get_catalogs());
+        Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
         self::apiOutput($input, $response);
     }
 
