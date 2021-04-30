@@ -196,7 +196,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 $( "#searchString" )
                 // don't navigate away from the field on tab when selecting an item
                     .bind( "keydown", function( event ) {
-                        if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
+                        if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "custom-catcomplete" ).widget().is(":visible") ) {
                             event.preventDefault();
                         }
                     })
