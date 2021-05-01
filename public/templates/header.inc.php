@@ -203,7 +203,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     })
                     // reopen previous search results
                     .bind( "click", function( event ) {
-                        if ($( this )[0].value.length >= minSearchChars) {
+                        if ($( this ).val().length >= minSearchChars) {
                             $( this ).data( "custom-catcomplete" ).search();
                         }
                     })
@@ -219,7 +219,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         },
                         search: function() {
                             // custom minLength
-                            if (this.value.length < minSearchChars) {
+                            if ($( this ).val().length < minSearchChars) {
                                 return false;
                             }
                         },
