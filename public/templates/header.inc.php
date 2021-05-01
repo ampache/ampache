@@ -202,7 +202,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         }
                     })
                     // reopen previous search results
-                    .bind( "focus", function( event ) {
+                    .bind( "focus click", function( event ) {
                         if ($( this )[0].value.length >= minSearchChars) {
                             $( this ).data( "custom-catcomplete" ).search();
                         }
@@ -235,9 +235,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             if (event.keyCode === $.ui.keyCode.ENTER) {
                                 NavigateTo(ui.item.link);
                             }
-
-                            // remove focus from search after selection
-                            $(this).blur();
 
                             return false;
                         }
