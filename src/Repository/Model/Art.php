@@ -37,7 +37,6 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
-use PDOStatement;
 use RuntimeException;
 
 /**
@@ -1082,7 +1081,6 @@ class Art extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return PDOStatement|boolean
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
@@ -1100,7 +1098,7 @@ class Art extends database_object
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**

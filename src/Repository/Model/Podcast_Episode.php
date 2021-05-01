@@ -33,7 +33,6 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use PDOStatement;
 
 class Podcast_Episode extends database_object implements Media, library_item
 {
@@ -473,7 +472,7 @@ class Podcast_Episode extends database_object implements Media, library_item
 
     /**
      * remove
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function remove()
     {
@@ -493,13 +492,12 @@ class Podcast_Episode extends database_object implements Media, library_item
     /**
      * change_state
      * @param string $state
-     * @return PDOStatement|boolean
      */
-    public function change_state($state)
+    public function change_state($state): void
     {
         $sql = "UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($state, $this->id));
+        Dba::write($sql, array($state, $this->id));
     }
 
     /**

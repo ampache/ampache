@@ -30,7 +30,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 class Channel extends database_object implements Media, library_item
 {
@@ -159,9 +158,8 @@ class Channel extends database_object implements Media, library_item
 
     /**
      * delete
-     * @return PDOStatement|boolean
      */
-    public function delete()
+    public function delete(): bool
     {
         $sql = "DELETE FROM `channel` WHERE `id` = ?";
 
@@ -203,7 +201,6 @@ class Channel extends database_object implements Media, library_item
      * @param string $loop
      * @param string $stream_type
      * @param string $bitrate
-     * @return PDOStatement|boolean
      */
     public static function create(
         $name,
@@ -220,7 +217,7 @@ class Channel extends database_object implements Media, library_item
         $loop,
         $stream_type,
         $bitrate
-    ) {
+    ): bool {
         if (!empty($name)) {
             $sql    = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $params = array(

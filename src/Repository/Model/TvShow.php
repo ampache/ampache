@@ -29,7 +29,6 @@ use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 class TvShow extends database_object implements library_item
 {
@@ -456,10 +455,7 @@ class TvShow extends database_object implements library_item
         }
     }
 
-    /**
-     * @return PDOStatement|boolean
-     */
-    public function remove()
+    public function remove(): bool
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();

@@ -34,7 +34,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
-use PDOStatement;
 
 /**
  * Stats Class
@@ -333,9 +332,8 @@ class Stats
      * @param integer $date
      * @param string $agent
      * @param integer $user_id
-     * @return PDOStatement|boolean
      */
-    public static function skip_last_play($date, $agent, $user_id)
+    private static function skip_last_play($date, $agent, $user_id)
     {
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND " . "`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') " . "ORDER BY `object_count`.`date` DESC";
         Dba::write($sql, array($date, $agent, $user_id));
@@ -343,7 +341,7 @@ class Stats
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast')  AND `date` = ? " . "AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, array($date, $agent, $user_id));
+        Dba::write($sql, array($date, $agent, $user_id));
     } // skip_last_play
 
     /**

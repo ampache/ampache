@@ -37,7 +37,6 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
-use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
@@ -1475,9 +1474,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return PDOStatement|boolean
      */
-    private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
+    private static function _update_item($field, $value, $song_id, $level, $check_owner = false): void
     {
         if ($check_owner) {
             $item = new Song($song_id);
@@ -1487,17 +1485,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         /* Check them Rights! */
         if (!Access::check('interface', $level)) {
-            return false;
+            return;
         }
 
         /* Can't update to blank */
         if (!strlen(trim((string)$value)) && $field != 'comment') {
-            return false;
+            return;
         }
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $song_id));
     } // _update_item
 
     /**
@@ -1509,9 +1507,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $song_id
      * @param integer $level
      * @param boolean $check_owner
-     * @return PDOStatement|boolean
      */
-    private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
+    private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false): void
     {
         if ($check_owner) {
             $item = new Song($song_id);
@@ -1522,12 +1519,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         /* Check them rights boy! */
         if (!Access::check('interface', $level)) {
-            return false;
+            return;
         }
 
         $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $song_id));
     } // _update_ext_item
 
     /**
@@ -2195,7 +2192,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * remove
      * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function remove()
     {

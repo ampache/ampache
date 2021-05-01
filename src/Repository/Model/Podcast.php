@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
-use PDOStatement;
 use SimpleXMLElement;
 
 class Podcast extends database_object implements library_item
@@ -375,9 +374,8 @@ class Podcast extends database_object implements library_item
      * add_episode
      * @param SimpleXMLElement $episode
      * @param integer $afterdate
-     * @return PDOStatement|boolean
      */
-    private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
+    private function add_episode(SimpleXMLElement $episode, $afterdate = 0): void
     {
         debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '...', 4);
 
@@ -416,13 +414,13 @@ class Podcast extends database_object implements library_item
         if ($pubdate < 1) {
             debug_event(self::class, 'Invalid episode publication date, skipped', 3);
 
-            return false;
+            return;
         }
 
         if ($pubdate > $afterdate) {
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            return Dba::write($sql, array(
+            Dba::write($sql, array(
                 $title,
                 $guid,
                 $this->id,
@@ -437,27 +435,24 @@ class Podcast extends database_object implements library_item
             ));
         } else {
             debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
-
-            return true;
         }
     }
 
     /**
      * update_lastsync
      * @param integer $time
-     * @return PDOStatement|boolean
      */
-    private function update_lastsync($time)
+    private function update_lastsync($time): void
     {
         $sql = "UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($time, $this->id));
+        Dba::write($sql, array($time, $this->id));
     }
 
     /**
      * sync_episodes
      * @param boolean $gather
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function sync_episodes($gather = false)
     {

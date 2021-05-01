@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use PDOStatement;
 
 /**
  * Radio Class
@@ -287,9 +286,8 @@ class Live_Stream extends database_object implements Media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return PDOStatement|boolean
      */
-    public static function create(array $data)
+    public static function create(array $data): bool
     {
         // Make sure we've got a name and codec
         if (!strlen((string)$data['name'])) {

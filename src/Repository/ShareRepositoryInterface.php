@@ -33,7 +33,7 @@ interface ShareRepositoryInterface
     public function delete(
         int $shareId,
         User $user
-    ): int;
+    ): bool;
 
     /**
      * Migrate an object associate stats to a new object

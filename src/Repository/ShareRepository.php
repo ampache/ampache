@@ -55,7 +55,7 @@ final class ShareRepository implements ShareRepositoryInterface
     public function delete(
         int $shareId,
         User $user
-    ): int {
+    ): bool {
         $sql    = 'DELETE FROM `share` WHERE `id` = ?';
         $params = [$shareId];
         if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
@@ -66,10 +66,10 @@ final class ShareRepository implements ShareRepositoryInterface
         $result = Dba::write($sql, $params);
 
         if ($result === false) {
-            return 0;
+            return false;
         }
 
-        return Dba::affected_rows($result);
+        return true;
     }
 
     /**

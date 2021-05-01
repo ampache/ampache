@@ -30,7 +30,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use PDOStatement;
 
 class Share extends database_object
 {
@@ -170,7 +169,7 @@ class Share extends database_object
      * update
      * @param array $data
      * @param User $user
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function update(array $data, $user)
     {
@@ -199,13 +198,12 @@ class Share extends database_object
 
     /**
      * save_access
-     * @return PDOStatement|boolean
      */
-    public function save_access()
+    public function save_access(): void
     {
         $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array(time(), $this->id));
+        Dba::write($sql, array(time(), $this->id));
     }
 
     /**

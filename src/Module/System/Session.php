@@ -32,7 +32,6 @@ use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SessionRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
-use PDOStatement;
 
 /**
  * This class handles all of the session related stuff in Ampache
@@ -425,9 +424,8 @@ final class Session implements SessionInterface
      * This takes a SID and extends its expiration.
      * @param string $sid
      * @param string $type
-     * @return PDOStatement|boolean
      */
-    public static function extend($sid, $type = null)
+    public static function extend($sid, $type = null): void
     {
         $time = time();
         if ($type == 'stream') {
@@ -440,8 +438,6 @@ final class Session implements SessionInterface
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
             debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
-
-        return $db_results;
     }
 
     /**
@@ -450,13 +446,12 @@ final class Session implements SessionInterface
      * This takes a SID and update associated username.
      * @param string $sid
      * @param string $username
-     * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
 
-        return Dba::write($sql, array($username, $sid));
+        Dba::write($sql, array($username, $sid));
     }
 
     /**
@@ -639,13 +634,12 @@ final class Session implements SessionInterface
      * @param string $username
      * @param string $token
      * @param integer $remember_length
-     * @return PDOStatement|boolean
      */
-    public static function storeTokenForUser($username, $token, $remember_length)
+    private static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        return Dba::write($sql, array($username, $token, time() + $remember_length));
+        Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 
     /**

@@ -33,7 +33,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\DemocraticRepository;
 use Ampache\Repository\PreferenceRepositoryInterface;
-use PDOStatement;
 
 /**
  * This class handles democratic play, which is a fancy
@@ -383,7 +382,7 @@ class Democratic extends Tmp_Playlist
         $db_results = Dba::write($sql, array($object_id, $this->tmp_playlist));
 
         /* If it's not there, add it and pull ID */
-        if (!$results = Dba::fetch_assoc($db_results)) {
+        if (!$db_results) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) " . "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
             $results['id'] = Dba::insert_id();
@@ -514,7 +513,7 @@ class Democratic extends Tmp_Playlist
      * create
      * This is the democratic play create function it inserts this into the democratic table
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public static function create($data)
     {

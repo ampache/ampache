@@ -31,7 +31,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use PDOStatement;
 
 /**
  * AmpacheMpd Class
@@ -106,7 +105,7 @@ class AmpacheMpd extends localplay_controller
     public function uninstall()
     {
         $sql        = "DROP TABLE `localplay_mpd`";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         Preference::delete('mpd_active');
 
@@ -117,7 +116,6 @@ class AmpacheMpd extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array $data
-     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
@@ -139,7 +137,7 @@ class AmpacheMpd extends localplay_controller
 
         $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) " . "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
 
-        return Dba::write($sql);
+        Dba::write($sql);
     } // add_instance
 
     /**
@@ -208,7 +206,7 @@ class AmpacheMpd extends localplay_controller
         $pass = Dba::escape($data['password']);
 
         $sql        = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
     } // update_instance

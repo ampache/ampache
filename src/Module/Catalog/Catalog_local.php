@@ -683,7 +683,7 @@ class Catalog_local extends Catalog
             if ($dead_count) {
                 $dead_total += $dead_count;
                 $sql        = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
-                $db_results = Dba::write($sql);
+                Dba::write($sql);
             }
         }
 

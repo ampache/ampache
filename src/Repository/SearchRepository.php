@@ -53,7 +53,7 @@ final class SearchRepository implements SearchRepositoryInterface
         if ($playlistName !== '') {
             $playlistName = (!$like) ? "= '" . $playlistName . "'" : "LIKE  '%" . $playlistName . "%' ";
             if ($is_admin) {
-                $sql .=  "AND `name` " . $playlistName;
+                $sql .= "AND `name` " . $playlistName;
             }
         }
         $sql .= 'ORDER BY `name`';

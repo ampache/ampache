@@ -32,7 +32,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This is the class for the VLC Localplay method to remote control
@@ -116,14 +115,16 @@ class AmpacheVlc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new VLC instance
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function add_instance($data)
     {
         $sql = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::query($sql,
-            array($data['name'], $data['host'], $data['port'], $data['password'], Core::get_global('user')->id));
+        Dba::query(
+            $sql,
+            array($data['name'], $data['host'], $data['port'], $data['password'], Core::get_global('user')->id)
+        );
     } // add_instance
 
     /**

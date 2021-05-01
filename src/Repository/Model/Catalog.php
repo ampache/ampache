@@ -58,7 +58,6 @@ use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
 use Exception;
-use PDOStatement;
 
 /**
  * This class handles all actual work in regards to the catalog,
@@ -535,7 +534,6 @@ abstract class Catalog extends database_object
      * @param boolean $value
      * @param integer $catalog_id
      * @param integer $level
-     * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)
     {
@@ -553,7 +551,7 @@ abstract class Catalog extends database_object
 
         $sql = "UPDATE `catalog` SET `$field`='$value' WHERE `id`='$catalog_id'";
 
-        return Dba::write($sql);
+        Dba::write($sql);
     } // _update_item
 
     /**
@@ -1770,7 +1768,7 @@ abstract class Catalog extends database_object
         while ($album = Dba::fetch_assoc($db_results)) {
             $object_id  = $album['id'];
             $sql        = "DELETE FROM `album` WHERE `id` = ?";
-            $db_results = Dba::write($sql, array($object_id));
+            Dba::write($sql, array($object_id));
             $artists[]  = (int) $album['album_artist'];
         }
         // removing an album means their counts have changed too

@@ -74,7 +74,6 @@ abstract class localplay_controller
 
     /**
      * @param $data
-     * @return mixed
      */
     abstract public function add_instance($data);
 

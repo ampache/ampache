@@ -34,7 +34,6 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 class Artist extends database_object implements library_item, GarbageCollectibleInterface
 {
@@ -916,7 +915,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * @param string $placeformed
      * @param integer $yearformed
      * @param boolean $manual
-     * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
     {
@@ -932,20 +930,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
         $this->yearformed  = $yearformed;
-
-        return $sqlret;
     }
 
     /**
      * Update artist associated user.
      * @param integer $user
-     * @return PDOStatement|boolean
      */
     public function update_artist_user($user)
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($user, $this->id));
+        Dba::write($sql, array($user, $this->id));
     }
 
     /**

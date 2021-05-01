@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use RuntimeException;
 use Ampache\Repository\Model\Song;
 
@@ -396,12 +395,11 @@ class Waveform
      * Save waveform to db.
      * @param integer $song_id
      * @param string $waveform
-     * @return PDOStatement|boolean
      */
     protected static function save_to_db($song_id, $waveform)
     {
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($waveform, $song_id));
+        Dba::write($sql, array($waveform, $song_id));
     }
 }

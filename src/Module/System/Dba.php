@@ -128,11 +128,10 @@ class Dba
      * write
      * @param string $sql
      * @param array $params
-     * @return PDOStatement|boolean
      */
-    public static function write($sql, $params = array())
+    public static function write($sql, $params = array()): bool
     {
-        return self::query($sql, $params);
+        return self::query($sql, $params) !== false;
     }
 
     /**

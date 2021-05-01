@@ -28,7 +28,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use PDOStatement;
 
 /**
  * This class handles playlists in ampache. it references the playlist* tables
@@ -334,9 +333,8 @@ class Playlist extends playlist_object
      * @param string $field
      * @param string|integer $value
      * @param integer $level
-     * @return PDOStatement|boolean
      */
-    private function _update_item($field, $value, $level)
+    private function _update_item($field, $value, $level): bool
     {
         if (Core::get_global('user')->id != $this->user && !Access::check('interface', $level)) {
             return false;

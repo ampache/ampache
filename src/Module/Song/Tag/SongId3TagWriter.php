@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
 final class SongId3TagWriter implements SongId3TagWriterInterface

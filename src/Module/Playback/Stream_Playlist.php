@@ -32,7 +32,6 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Media;
-use PDOStatement;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -87,9 +86,8 @@ class Stream_Playlist
 
     /**
      * @param Stream_URL $url
-     * @return PDOStatement|boolean
      */
-    private function _add_url($url)
+    private function _add_url($url): void
     {
         debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
@@ -110,14 +108,13 @@ class Stream_Playlist
         }
         $sql = 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . ')';
 
-        return Dba::write($sql, $values);
+        Dba::write($sql, $values);
     }
 
     /**
      * @param array $urls
-     * @return PDOStatement|boolean
      */
-    private function _add_urls($urls)
+    private function _add_urls($urls): void
     {
         $sql       = 'INSERT INTO `stream_playlist` ';
         $value_sql = 'VALUES ';
@@ -146,17 +143,14 @@ class Stream_Playlist
         }
         $sql .= '(' . implode(',', $fields) . ') ';
 
-        return Dba::write($sql . rtrim($value_sql, ', '), $values);
+        Dba::write($sql . rtrim($value_sql, ', '), $values);
     }
 
-    /**
-     * @return PDOStatement|boolean
-     */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' . 'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' . 'WHERE `session`.`id` IS NULL';
 
-        return Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**

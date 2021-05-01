@@ -29,7 +29,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 class Broadcast extends database_object implements library_item
 {
@@ -150,9 +149,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Delete the broadcast.
-     * @return PDOStatement|boolean
      */
-    public function delete()
+    public function delete(): bool
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
 

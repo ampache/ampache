@@ -30,7 +30,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * AmpacheUPnp Class
@@ -117,13 +116,12 @@ class AmpacheUPnP extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new UPnP instance
      * @param array $data
-     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
         $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " . "VALUES (?, ?, ?)";
 
-        return Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
+        Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
     }
 
     /**

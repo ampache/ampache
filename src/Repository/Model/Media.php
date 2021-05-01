@@ -23,8 +23,6 @@
 
 namespace Ampache\Repository\Model;
 
-use PDOStatement;
-
 /**
  * media Interface
  *
@@ -92,7 +90,7 @@ interface Media
     /**
      * remove
      * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function remove();
 

@@ -28,7 +28,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
 {
@@ -383,10 +382,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return $this->id;
     } // update
 
-    /**
-     * @return PDOStatement|boolean
-     */
-    public function remove()
+    public function remove(): bool
     {
         $deleted = true;
         $videos  = $this->get_episodes();
@@ -417,13 +413,12 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     /**
      * @param $tvshow_id
      * @param $season_id
-     * @return PDOStatement|boolean
      */
-    public static function update_tvshow($tvshow_id, $season_id)
+    public static function update_tvshow($tvshow_id, $season_id): void
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($tvshow_id, $season_id));
+        Dba::write($sql, array($tvshow_id, $season_id));
     }
 
     /**

@@ -30,7 +30,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
-use PDOStatement;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
@@ -439,14 +438,11 @@ class Song_Preview extends database_object implements Media, playable_item
         return $songs;
     }
 
-    /**
-     * @return PDOStatement|boolean
-     */
-    public static function garbage_collection()
+    public static function garbage_collection(): void
     {
         $sql = 'DELETE FROM `song_preview` USING `song_preview` ' . 'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' . 'WHERE `session`.`id` IS NULL';
 
-        return Dba::write($sql);
+        Dba::write($sql);
     }
 
     public function remove()

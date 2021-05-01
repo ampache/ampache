@@ -31,7 +31,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use PDOStatement;
 
 /**
  * AmpacheHttpq Class
@@ -105,7 +104,7 @@ class AmpacheHttpq extends localplay_controller
     public function uninstall()
     {
         $sql        = "DROP TABLE `localplay_httpq`";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Remove the pref we added for this
         Preference::delete('httpq_active');
@@ -117,7 +116,6 @@ class AmpacheHttpq extends localplay_controller
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
      * @param array $data
-     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
@@ -129,7 +127,7 @@ class AmpacheHttpq extends localplay_controller
 
         $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) " . "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
 
-        return Dba::write($sql);
+        Dba::write($sql);
     } // add_instance
 
     /**
@@ -143,7 +141,7 @@ class AmpacheHttpq extends localplay_controller
         $uid = Dba::escape($uid);
 
         $sql        = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
     } // delete_instance
@@ -183,7 +181,7 @@ class AmpacheHttpq extends localplay_controller
         $pass = Dba::escape($data['password']);
 
         $sql        = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
     } // update_instance

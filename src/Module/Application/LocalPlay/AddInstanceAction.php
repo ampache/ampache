@@ -44,8 +44,6 @@ final class AddInstanceAction extends AbstractLocalPlayAction
 
     private ResponseFactoryInterface $responseFactory;
 
-    private UiInterface $ui;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
@@ -54,7 +52,6 @@ final class AddInstanceAction extends AbstractLocalPlayAction
         parent::__construct($configContainer, $ui);
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
-        $this->ui              = $ui;
     }
 
     protected function handle(

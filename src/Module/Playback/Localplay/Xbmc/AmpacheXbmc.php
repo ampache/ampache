@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use XBMC_RPC_ConnectionException;
 use XBMC_RPC_Exception;
 use XBMC_RPC_HTTPClient;
@@ -121,13 +120,12 @@ class AmpacheXbmc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new xbmc instance
      * @param array $data
-     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
         $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) " . "VALUES (?, ?, ?, ?, ?, ?)";
 
-        return Dba::query($sql, array(
+        Dba::query($sql, array(
             $data['name'],
             $data['host'],
             $data['port'],
