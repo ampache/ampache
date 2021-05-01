@@ -23,7 +23,7 @@
 use Ampache\Module\Util\Ui;
 
 ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         foreach ($object_ids as $libitem) { ?>
-        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="song_preview_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>
         <?php

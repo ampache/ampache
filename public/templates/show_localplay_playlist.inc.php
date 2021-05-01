@@ -31,7 +31,7 @@ $status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_track"><?php echo T_('Track'); ?></th>
@@ -46,7 +46,7 @@ $status = $localplay->status(); ?>
             if ($status['track'] == $object['track']) {
                 $class=' class="cel_name lp_current"';
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
+        <tr id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
                 <?php echo scrub_out($object['track']); ?>
             </td>
@@ -59,7 +59,7 @@ $status = $localplay->status(); ?>
         </tr>
         <?php
         } if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php

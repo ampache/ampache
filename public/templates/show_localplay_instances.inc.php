@@ -26,7 +26,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <tr>
     <?php foreach ($fields as $key => $field) { ?>
         <th><?php echo $field['description']; ?></th>
@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 </tr>
 <?php foreach ($instances as $uid => $name) {
     $instance = $localplay->get_instance($uid); ?>
-<tr class="<?php echo Ui::flip_class(); ?>" id="localplay_instance_<?php echo $uid; ?>">
+<tr id="localplay_instance_<?php echo $uid; ?>">
     <?php foreach ($fields as $key => $field) { ?>
     <td>
         <?php

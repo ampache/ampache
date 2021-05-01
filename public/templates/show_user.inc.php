@@ -71,9 +71,8 @@ if ($client->f_avatar) {
 } ?>
 </div>
 <dl class="media_details">
-    <?php $rowparity = Ui::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+    <dt><?php echo T_('Display Name'); ?></dt>
+    <dd>
         <?php echo $client->f_name; ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
@@ -96,16 +95,13 @@ if ($client->f_avatar) {
     } ?>
 
     </dd>
-    <?php $rowparity = Ui::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Member Since'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>"><?php echo $create_date; ?></dd>
-    <?php $rowparity = Ui::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Last Seen'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
-    <?php $rowparity = Ui::flip_class(); ?>
+    <dt><?php echo T_('Member Since'); ?></dt>
+    <dd><?php echo $create_date; ?></dd>
+    <dt><?php echo T_('Last Seen'); ?></dt>
+    <dd><?php echo $last_seen; ?></dd>
     <?php if (Access::check('interface', 50)) { ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
+    <dt><?php echo T_('Activity'); ?></dt>
+    <dd><?php echo $client->f_usage; ?></dd>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
@@ -114,9 +110,8 @@ if ($client->f_avatar) {
     </dd>
     <?php
 } ?>
-    <?php $rowparity = Ui::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+    <dt><?php echo T_('Status'); ?></dt>
+    <dd>
     <?php if ($client->is_logged_in() && $client->is_online()) { ?>
         <i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
     <?php
