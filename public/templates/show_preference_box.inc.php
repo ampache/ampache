@@ -25,7 +25,6 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 
 /** @var UiInterface $ui */
