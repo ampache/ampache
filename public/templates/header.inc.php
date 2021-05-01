@@ -202,7 +202,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         }
                     })
                     // reopen previous search results
-                    .bind( "focus click", function( event ) {
+                    .bind( "click", function( event ) {
                         if ($( this )[0].value.length >= minSearchChars) {
                             $( this ).data( "custom-catcomplete" ).search();
                         }
@@ -228,10 +228,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             return false;
                         },
                         select: function( event, ui ) {
-                            if (ui.item !== null) {
-                                $(this).val(ui.item.value);
-                            }
-
                             if (event.keyCode === $.ui.keyCode.ENTER) {
                                 NavigateTo(ui.item.link);
                             }
