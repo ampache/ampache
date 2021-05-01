@@ -228,9 +228,14 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             return false;
                         },
                         select: function( event, ui ) {
-                            if (ui.item != null) {
+                            if (ui.item !== null) {
                                 $(this).val(ui.item.value);
                             }
+
+                            if (event.keyCode === $.ui.keyCode.ENTER) {
+                                NavigateTo(ui.item.link);
+                            }
+
                             return false;
                         }
                     });
