@@ -29,13 +29,17 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\QrCodeGeneratorInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -51,16 +55,20 @@ final class CreateAction implements ApplicationActionInterface
 
     private QrCodeGeneratorInterface $qrCodeGenerator;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ShareCreatorInterface $shareCreator,
-        QrCodeGeneratorInterface $qrCodeGenerator
+        QrCodeGeneratorInterface $qrCodeGenerator,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->shareCreator    = $shareCreator;
         $this->qrCodeGenerator = $qrCodeGenerator;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,7 +84,19 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
+        $body = $request->getParsedBody();
+
+        $secret    = $_REQUEST['secret'] ?? '';
+        $type      = $body['type'] ?? '';
+        $object_id = $body['id'] ?? null;
+
+        if ($object_id === null) {
+            return null;
+        }
+
+        /** @var ?Song|Album|Playlist|Video $object */
+        $object = $this->modelFactory->mapObjectType($type, (int) $object_id);
+        $object->format();
 
         $share_id = $this->shareCreator->create(
             $_REQUEST['type'],
@@ -84,12 +104,20 @@ final class CreateAction implements ApplicationActionInterface
             make_bool($_REQUEST['allow_stream']),
             make_bool($_REQUEST['allow_download']),
             (int) $_REQUEST['expire'],
-            $_REQUEST['secret'],
+            $secret,
             (int) $_REQUEST['max_counter']
         );
 
+        $this->ui->showHeader();
+
         if (!$share_id) {
-            require_once Ui::find_template('show_add_share.inc.php');
+            $this->ui->show(
+                'show_add_share.inc.php',
+                [
+                    'objectLink' => $object->f_link,
+                    'secret' => $secret
+                ]
+            );
         } else {
             $share = new Share($share_id);
             $body  = T_('Share created') . '<br />' .

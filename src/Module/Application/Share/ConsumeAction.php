@@ -35,7 +35,7 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,18 +45,18 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     private NetworkCheckerInterface $networkChecker;
+
+    private ShareRepositoryInterface $shareRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
         $this->networkChecker  = $networkChecker;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -101,7 +101,11 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $share->save_access();
+        $this->shareRepository->saveAccess(
+            $share,
+            time()
+        );
+
         if ($action == 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';

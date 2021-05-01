@@ -28,11 +28,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 class Share extends database_object
 {
+    public const ALLOWED_SHARE_TYPES = ['album', 'song', 'playlist', 'video'];
+
     protected const DB_TABLENAME = 'share';
 
     public $id;
@@ -50,10 +51,8 @@ class Share extends database_object
     public $public_url;
     public $description;
 
-    public $f_name;
-    public $f_user;
-
-    private $object;
+    /** @var Video|Song|Album|Playlist|null  */
+    private ?database_object $object = null;
 
     /**
      * Constructor
@@ -75,23 +74,6 @@ class Share extends database_object
     public function getId(): int
     {
         return (int) $this->id;
-    }
-
-    /**
-     * @param string $type
-     * @return string
-     */
-    public static function format_type($type)
-    {
-        switch ($type) {
-            case 'album':
-            case 'song':
-            case 'playlist':
-            case 'video':
-                return $type;
-            default:
-                return '';
-        }
     }
 
     /**
@@ -129,8 +111,7 @@ class Share extends database_object
     private function getObject()
     {
         if ($this->object === null) {
-            $class_name   = ObjectTypeToClassNameMapper::map($this->object_type);
-            $this->object = new $class_name($this->object_id);
+            $this->object = $this->getModelFactory()->mapObjectType($this->object_type, $this->object_id);
             $this->object->format();
         }
 
@@ -197,16 +178,6 @@ class Share extends database_object
     }
 
     /**
-     * save_access
-     */
-    public function save_access(): void
-    {
-        $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
-
-        Dba::write($sql, array(time(), $this->id));
-    }
-
-    /**
      * is_valid
      * @param $secret
      * @param $action
@@ -270,9 +241,7 @@ class Share extends database_object
         switch ($this->object_type) {
             case 'album':
             case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
-                $object     = new $class_name($this->object_id);
-                $songs      = $object->get_medias('song');
+                $songs  = $this->getObject()->get_medias('song');
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
@@ -318,5 +287,15 @@ class Share extends database_object
         $result .= '</a>';
 
         return $result;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

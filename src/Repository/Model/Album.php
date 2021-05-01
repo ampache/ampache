@@ -336,7 +336,7 @@ class Album extends database_object implements library_item
             return array();
         }
 
-        $cache = $this->getDatabaseObjectCache();
+        $cache = static::getDatabaseObjectCache();
 
         $cacheItem = $cache->retrieve('album_extra', $this->getId());
         if ($cacheItem !== []) {

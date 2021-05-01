@@ -46,11 +46,10 @@ final class ShareCreator implements ShareCreatorInterface
         int $max_counter = 0,
         string $description = ''
     ): ?int {
-        $object_type = Share::format_type($object_type);
-        if (empty($object_type)) {
-            return null;
-        }
-        if (!$allow_stream && !$allow_download) {
+        if (
+            !in_array($object_type, Share::ALLOWED_SHARE_TYPES) ||
+            (!$allow_stream && !$allow_download)
+        ) {
             return null;
         }
 

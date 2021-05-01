@@ -21,6 +21,7 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
 interface ShareRepositoryInterface
@@ -41,4 +42,9 @@ interface ShareRepositoryInterface
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     public function collectGarbage(): void;
+
+    public function saveAccess(
+        Share $share,
+        int $lastVisitDate
+    ): void;
 }

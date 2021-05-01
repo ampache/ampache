@@ -25,6 +25,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
 final class ShareRepository implements ShareRepositoryInterface
@@ -87,6 +88,16 @@ final class ShareRepository implements ShareRepositoryInterface
     {
         Dba::write(
             'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < ' . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)"
+        );
+    }
+
+    public function saveAccess(
+        Share $share,
+        int $lastVisitDate
+    ): void {
+        Dba::write(
+            'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
+            [$lastVisitDate, $share->getId()]
         );
     }
 }

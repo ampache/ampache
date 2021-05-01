@@ -24,8 +24,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
+
+/** @var string $secret */
+/** @var string $objectLink */
 
 ?>
 <?php Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
@@ -35,11 +37,11 @@ use Ampache\Module\Util\Ui;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->f_link; ?></td>
+    <td><?php echo $objectLink; ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?: $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($secret); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>

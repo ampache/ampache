@@ -26,18 +26,20 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
+use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowCreateAction implements ApplicationActionInterface
 {
@@ -47,20 +49,20 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     private PasswordGeneratorInterface $passwordGenerator;
+
+    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger,
-        PasswordGeneratorInterface $passwordGenerator
+        PasswordGeneratorInterface $passwordGenerator,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
-        $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
+        $this->modelFactory      = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,20 +71,30 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
+        $queryParams = $request->getQueryParams();
+
+        $type      = $queryParams['type'] ?? '';
+        $object_id = $queryParams['id'] ?? null;
+
         $this->ui->showHeader();
 
-        $type = Share::format_type(Core::get_request('type'));
-        if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object_id = Core::get_request('id');
+        if (in_array($type, Share::ALLOWED_SHARE_TYPES) && $object_id !== null) {
             if (is_array($object_id)) {
                 $object_id = $object_id[0];
             }
 
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name($object_id);
-            if ($object->id) {
+            /** @var ?Song|Album|Playlist|Video $object */
+            $object = $this->modelFactory->mapObjectType($type, (int) $object_id);
+            if ($object !== null && !$object->isNew()) {
                 $object->format();
-                require_once Ui::find_template('show_add_share.inc.php');
+
+                $this->ui->show(
+                    'show_add_share.inc.php',
+                    [
+                        'objectLink' => $object->f_link,
+                        'secret' => $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)
+                    ]
+                );
             }
         }
         $this->ui->showFooter();
