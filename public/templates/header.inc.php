@@ -236,6 +236,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                                 NavigateTo(ui.item.link);
                             }
 
+                            // remove focus from search after selection
+                            $(this).blur();
+
                             return false;
                         }
                     });
