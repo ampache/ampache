@@ -462,7 +462,8 @@ class Subsonic_Api
     public static function getmusicfolders($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
-        Subsonic_Xml_Data::addMusicFolders($response, static::getCatalogRepository()->getList());
+        Subsonic_Xml_Data::addMusicFolders($response, static::getCatalogRepository()->getList('music'));
+
         self::apiOutput($input, $response);
     }
 
@@ -516,7 +517,7 @@ class Subsonic_Api
 
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
-            $artists = Catalog::get_artists($fcatalogs);
+            $artists = Catalog::get_artist_arrays($fcatalogs);
             Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
         }
         self::apiOutput($input, $response);

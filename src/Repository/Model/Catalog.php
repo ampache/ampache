@@ -980,7 +980,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_tvshows
      * @param integer[]|null $catalogs
      * @return TvShow[]
      */
@@ -1003,10 +1003,31 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_artist_arrays
+     *
+     * Get each array of [id, full_name, name] for artists in an array of catalog id's
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_artist_arrays($catalogs)
+    {
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name` DESC";
+            $db_results = Dba::read($sql, array($catalog_id));
+
+            while ($row = Dba::fetch_assoc($db_results, false)) {
+                $results[] = $row;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist_ids
      *
-     * This returns an array of ids of artist that have songs in this
-     * catalog
+     * This returns an array of ids of artist that have songs in this catalog
      * @param string $filter
      * @return integer[]
      */
@@ -1140,10 +1161,10 @@ abstract class Catalog extends database_object
      */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
-        $sql_where = "";
+        $sql = "SELECT `album`.`id` FROM `album` ";
         if (is_array($catalogs) && count($catalogs)) {
-            $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $catlist = '(' . implode(',', $catalogs) . ')';
+            $sql     = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN $catlist ";
         }
 
         $sql_limit = "";
@@ -1157,12 +1178,12 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
+        $sql .= "GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1180,10 +1201,14 @@ abstract class Catalog extends database_object
      */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
+        $sql       = "SELECT `album`.`id` FROM `album` ";
         $sql_where = "";
+        $sql_group = "GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid`";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
+            $sql       = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $sql_group = "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid`";
         }
 
         $sql_limit = "";
@@ -1197,12 +1222,12 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " . "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " . "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql .= "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where $sql_group ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
