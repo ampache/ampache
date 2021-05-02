@@ -1609,7 +1609,7 @@ final class VaInfo implements VaInfoInterface
      *
      * @return array Return broken title, album, artist
      */
-    public function set_broken()
+    private function set_broken()
     {
         /* Pull In the config option */
         $order = $this->configContainer->get(ConfigurationKeyEnum::TAG_ORDER);
@@ -1656,7 +1656,7 @@ final class VaInfo implements VaInfoInterface
      * @param bool $doTrim
      * @return string|array
      */
-    public function splitSlashedlist($data, $doTrim = true)
+    private function splitSlashedlist($data, $doTrim = true)
     {
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (isset($data) && isset($delimiters)) {

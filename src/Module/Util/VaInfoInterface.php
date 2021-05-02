@@ -97,13 +97,4 @@ interface VaInfoInterface
      * @return array
      */
     public static function parse_pattern($filepath, $dirPattern, $filePattern);
-
-    /**
-     * set_broken
-     *
-     * This fills all tag types with Unknown (Broken)
-     *
-     * @return array Return broken title, album, artist
-     */
-    public function set_broken();
 }
