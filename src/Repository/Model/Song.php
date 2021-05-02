@@ -366,7 +366,7 @@ class Song extends database_object implements
             }
             $data       = pathinfo($this->file);
             $this->type = strtolower((string)$data['extension']);
-            $this->mime = self::type_to_mime($this->type);
+            $this->mime = $this->getExtentionToMimeTypeMapper()->mapAudio($this->type);
         } else {
             $this->id = null;
 
@@ -706,21 +706,6 @@ class Song extends database_object implements
             } // end foreach
         }
     } // fill_ext_info
-
-    /**
-     * type_to_mime
-     *
-     * Returns the mime type for the specified file extension/type
-     * @param string $type
-     * @return string
-     *
-     * @deprecated
-     * @see ExtensionToMimeTypeMapper
-     */
-    public static function type_to_mime($type)
-    {
-        return static::getExtentionToMimeTypeMapper()->mapAudio($type);
-    }
 
     /**
      * find
@@ -2231,7 +2216,7 @@ class Song extends database_object implements
     /**
      * @deprecated Inject by constructor
      */
-    private static function getExtentionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
+    private function getExtentionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
     {
         global $dic;
 

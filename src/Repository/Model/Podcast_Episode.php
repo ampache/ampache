@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastEpisodeDeleterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 
@@ -78,7 +79,7 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
             if (!empty($this->file)) {
                 $data          = pathinfo($this->file);
                 $this->type    = strtolower((string)$data['extension']);
-                $this->mime    = Song::type_to_mime($this->type);
+                $this->mime    = $this->getExtentionToMimeTypeMapper()->mapAudio($this->type);
                 $this->enabled = true;
             }
         } else {
@@ -608,5 +609,15 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
         global $dic;
 
         return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExtentionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
+    {
+        global $dic;
+
+        return $dic->get(ExtensionToMimeTypeMapperInterface::class);
     }
 }

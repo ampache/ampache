@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 
 class Song_Preview extends database_object implements
@@ -81,7 +82,7 @@ class Song_Preview extends database_object implements
             if ($this->file) {
                 $data       = pathinfo($this->file);
                 $this->type = strtolower((string)$data['extension']) ?: 'mp3';
-                $this->mime = Song::type_to_mime($this->type);
+                $this->mime = $this->getExtentionToMimeTypeMapper()->mapAudio($this->type);
             }
         } else {
             $this->id = null;
@@ -507,5 +508,15 @@ class Song_Preview extends database_object implements
         global $dic;
 
         return $dic->get(ArtistCacheBuilderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getExtentionToMimeTypeMapper(): ExtensionToMimeTypeMapperInterface
+    {
+        global $dic;
+
+        return $dic->get(ExtensionToMimeTypeMapperInterface::class);
     }
 }

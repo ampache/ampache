@@ -26,18 +26,22 @@ namespace Ampache\Module\Channel;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Repository\Model\Channel;
-use Ampache\Repository\Model\Song;
 use RuntimeException;
 
 final class HttpServer implements HttpServerInterface
 {
     private ConfigContainerInterface $configContainer;
 
+    private ExtensionToMimeTypeMapperInterface $extensionToMimeTypeMapper;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ExtensionToMimeTypeMapperInterface $extensionToMimeTypeMapper
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer           = $configContainer;
+        $this->extensionToMimeTypeMapper = $extensionToMimeTypeMapper;
     }
 
     public function serve(
@@ -61,6 +65,8 @@ final class HttpServer implements HttpServerInterface
         if ($h_count > 0) {
             $cmd = explode(" ", $headers[0]);
             if ($cmd['0'] == 'GET') {
+                $mimeType = $this->extensionToMimeTypeMapper->mapAudio($channel->stream_type);
+
                 switch ($cmd['1']) {
                     case '/stream.' . $channel->stream_type:
                         $options = array(
@@ -91,7 +97,7 @@ final class HttpServer implements HttpServerInterface
                             $http = "HTTP/1.1 200 OK\r\n";
                             $http .= "Cache-Control: no-store, no-cache, must-revalidate\r\n";
                         }
-                        $http .= "Content-Type: " . Song::type_to_mime($channel->stream_type) . "\r\n";
+                        $http .= "Content-Type: " . $mimeType . "\r\n";
                         $http .= "Accept-Ranges: none\r\n";
 
                         $genre = $channel->get_genre();
@@ -183,7 +189,7 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Content Type:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . Song::type_to_mime($channel->stream_type) . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $mimeType . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Mount Start:</td>" . "\n";
