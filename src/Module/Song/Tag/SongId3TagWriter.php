@@ -84,6 +84,9 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $apics = $result['flac']['PICTURE'];
                 $meta  = $this->getVorbisMetadata($song);
             }
+            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
+            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
+
             $ndata = $vainfo->prepare_metadata_for_writing($tdata);
 
             if (isset($changed)) {
@@ -119,29 +122,38 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     }
                 }
             }
+            $file_has_pics = (isset($apics) ? true : false);
+            if ($file_has_pics) {
+                foreach ($apics as $apic) {
+                    $ndata['attached_picture'][] = $apic;
+                }
+            }
+            
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
                 $art         = new Art($song->album, 'album');
-                $album_image = $art->get(true);
-                if ($album_image != '') {
-                    $ndata['attached_picture'][] = array('data' => $album_image, 'mime' => $art->raw_mime,
+                if ($art->has_db_info()) {
+                    $album_image                 = $art->get(true);
+                    $new_pic                     = array('data' => $album_image, 'mime' => $art->raw_mime,
                         'picturetypeid' => 3, 'description' => $song->f_album);
+                    $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                    if (is_null($idx)) {
+                        $ndata['attached_picture'][] = $new_pic;
+                    }
                 }
                 $art = new Art($song->artist, 'artist');
                 if ($art->has_db_info()) {
                     $artist_image                = $art->get(true);
-                    $ndata['attached_picture'][] = array('data' => $artist_image, 'mime' => $art->raw_mime,
-                        'picturetypeid' => 8, 'description' => $song->f_artist);
-                }
-            } else {    // rewrite original images
-                if (!is_null($apics)) {
-                    foreach ($apics as $apic) {
-                        $ndata['attached_picture'][] = $apic;
+                    $new_pic                     = array('data' => $artist_image, 'mime' => $art->raw_mime,
+                        'picturetypeid' => 8, 'description' => $song->f_artist_full);
+                    $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                    if (is_null($idx)) {
+                        $ndata['attached_picture'][] = $new_pic;
                     }
                 }
             }
             $vainfo->write_id3($ndata);
         }
-    }
+    } //write
 
     private function getVorbisMetadata(
         Song $song
