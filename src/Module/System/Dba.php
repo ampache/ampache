@@ -267,30 +267,11 @@ class Dba
      * This closes a result handle and clears the memory associated with it
      * @param $resource
      */
-    public static function finish($resource)
+    private static function finish($resource)
     {
         if ($resource) {
             $resource->closeCursor();
         }
-    }
-
-    /**
-     * affected_rows
-     *
-     * This emulates the mysql_affected_rows function
-     * @param $resource
-     * @return integer
-     */
-    public static function affected_rows($resource)
-    {
-        if ($resource) {
-            $result = $resource->rowCount();
-            if ($result) {
-                return $result;
-            }
-        }
-
-        return 0;
     }
 
     /**

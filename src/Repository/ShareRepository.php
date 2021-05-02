@@ -45,7 +45,7 @@ final class ShareRepository implements ShareRepositoryInterface
     public function getList(
         User $user
     ): array {
-        $sql     = 'SELECT `id` FROM `share`';
+        $sql    = 'SELECT `id` FROM `share`';
         $params = [];
 
         if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {

@@ -50,11 +50,11 @@ class ShareRepositoryTest extends MockeryTestCase
 
     public function testGetListReturnsData(): void
     {
-        $user = $this->mock(User::class);
+        $user   = $this->mock(User::class);
         $result = $this->mock(Result::class);
 
         $shareId = 666;
-        $userId = 42;
+        $userId  = 42;
 
         $user->shouldReceive('has_access')
             ->with(AccessLevelEnum::LEVEL_MANAGER)
@@ -89,7 +89,7 @@ class ShareRepositoryTest extends MockeryTestCase
         $user = $this->mock(User::class);
 
         $shareId = 666;
-        $userId = 42;
+        $userId  = 42;
 
         $user->shouldReceive('has_access')
             ->with(AccessLevelEnum::LEVEL_MANAGER)
@@ -138,7 +138,7 @@ class ShareRepositoryTest extends MockeryTestCase
 
     public function testMigrateMigrates(): void
     {
-        $objectType = 'some-type';
+        $objectType  = 'some-type';
         $oldObjectId = 666;
         $newObjectId = 42;
 
@@ -169,7 +169,7 @@ class ShareRepositoryTest extends MockeryTestCase
         $share = $this->mock(ShareInterface::class);
 
         $lastVisitDate = 666;
-        $shareId = 42;
+        $shareId       = 42;
 
         $share->shouldReceive('getId')
             ->withNoArgs()
@@ -190,13 +190,13 @@ class ShareRepositoryTest extends MockeryTestCase
     {
         $share = $this->mock(ShareInterface::class);
 
-        $maxCounter = 666;
-        $expire = 42;
-        $allowStream = 33;
+        $maxCounter    = 666;
+        $expire        = 42;
+        $allowStream   = 33;
         $allowDownload = 44;
-        $description = 'some-description';
-        $userId = 21;
-        $shareId = 11;
+        $description   = 'some-description';
+        $userId        = 21;
+        $shareId       = 11;
 
         $share->shouldReceive('getId')
             ->withNoArgs()

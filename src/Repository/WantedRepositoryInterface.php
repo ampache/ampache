@@ -60,8 +60,8 @@ interface WantedRepositoryInterface
      */
     public function add(
         string $mbid,
-        int $artist,
-        string $artist_mbid,
+        int $artistId,
+        string $artistMbid,
         string $name,
         int $year,
         int $userId,

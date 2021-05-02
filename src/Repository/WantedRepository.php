@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Cache\DatabaseObjectCacheInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Doctrine\DBAL\Connection;
 
 final class WantedRepository implements WantedRepositoryInterface
 {
@@ -33,12 +33,16 @@ final class WantedRepository implements WantedRepositoryInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private Connection $database;
+
     public function __construct(
         DatabaseObjectCacheInterface $databaseObjectCache,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        Connection $database
     ) {
         $this->databaseObjectCache = $databaseObjectCache;
         $this->modelFactory        = $modelFactory;
+        $this->database            = $database;
     }
 
     /**
@@ -48,16 +52,23 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function getAll(?int $userId): array
     {
-        $sql = "SELECT `id` FROM `wanted` ";
+        $sql    = 'SELECT `id` FROM `wanted`';
+        $params = [];
 
         if ($userId !== null) {
-            $sql .= "WHERE `user` = '" . (string) $userId . "'";
+            $sql .= ' WHERE `user` = ?';
+            $params[] = $userId;
         }
-        $db_results = Dba::read($sql);
-        $results    = array();
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $dbResults = $this->database->executeQuery(
+            $sql,
+            $params
+        );
+
+        $results = [];
+
+        while ($rowId = $dbResults->fetchOne()) {
+            $results[] = (int) $rowId;
         }
 
         return $results;
@@ -68,13 +79,14 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function find(string $musicbrainzId, int $userId): ?int
     {
-        $db_results = Dba::read(
+        $dbResults = $this->database->executeQuery(
             'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?',
             [$musicbrainzId, $userId]
         );
 
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
+        $result = $dbResults->fetchOne();
+        if ($result !== false) {
+            return (int) $result;
         }
 
         return null;
@@ -87,14 +99,17 @@ final class WantedRepository implements WantedRepositoryInterface
         string $musicbrainzId,
         ?int $userId
     ): void {
-        $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
+        $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
         $params = [$musicbrainzId];
         if ($userId !== null) {
-            $sql .= " AND `user` = ?";
+            $sql .= ' AND `user` = ?';
             $params[] = $userId;
         }
 
-        Dba::write($sql, $params);
+        $this->database->executeQuery(
+            $sql,
+            $params
+        );
     }
 
     /**
@@ -102,14 +117,11 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function getAcceptedCount(): int
     {
-        $db_results = Dba::read(
-            'SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1'
+        $dbResults = $this->database->executeQuery(
+            'SELECT COUNT(`id`) FROM `wanted` WHERE `accepted` = 1'
         );
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['wanted_cnt'];
-        }
 
-        return 0;
+        return (int) $dbResults->fetchOne();
     }
 
     /**
@@ -130,15 +142,15 @@ final class WantedRepository implements WantedRepositoryInterface
             return $cacheItem;
         }
 
-        $params     = [$wantedId];
-        $sql        = "SELECT * FROM `wanted` WHERE `id`= ?";
-        $db_results = Dba::read($sql, $params);
+        $db_results = $this->database->executeQuery(
+            'SELECT * FROM `wanted` WHERE `id`= ?',
+            [$wantedId]
+        );
 
-        if (!$db_results) {
+        $row = $db_results->fetchAssociative();
+        if ($row === false) {
             return [];
         }
-
-        $row = Dba::fetch_assoc($db_results);
 
         $this->databaseObjectCache->add('wanted', $wantedId, $row);
 
@@ -150,23 +162,24 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function add(
         string $mbid,
-        int $artist,
-        string $artist_mbid,
+        int $artistId,
+        string $artistMbid,
         string $name,
         int $year,
         int $userId,
         bool $accept
     ): void {
-        $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($userId, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
-        Dba::write($sql, $params);
+        $this->database->executeQuery(
+            'INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [$userId, $artistId, $artistMbid, $mbid, $name, $year, time(), '0']
+        );
 
         if ($accept) {
-            $wanted_id = (int)Dba::insert_id();
-            $wanted    = $this->modelFactory->createWanted($wanted_id);
+            $wantedId = (int) $this->database->lastInsertId();
+            $wanted   = $this->modelFactory->createWanted($wantedId);
             $wanted->accept();
 
-            $this->databaseObjectCache->remove('wanted', $wanted_id);
+            $this->databaseObjectCache->remove('wanted', $wantedId);
         }
     }
 
@@ -175,12 +188,11 @@ final class WantedRepository implements WantedRepositoryInterface
      */
     public function getByMusicbrainzId(string $musicbrainzId): int
     {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
-        $db_results = Dba::read($sql, array($musicbrainzId));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int) $row['id'];
-        }
+        $dbResults = $this->database->executeQuery(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
+            [$musicbrainzId]
+        );
 
-        return 0;
+        return (int) $dbResults->fetchOne();
     }
 }
