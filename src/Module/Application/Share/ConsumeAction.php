@@ -26,6 +26,8 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Batch\DefaultAction;
+use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,6 +38,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShareRepositoryInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -49,14 +52,18 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ShareRepositoryInterface $shareRepository;
 
+    private ContainerInterface $dic;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
-        ShareRepositoryInterface $shareRepository
+        ShareRepositoryInterface $shareRepository,
+        ContainerInterface $dic
     ) {
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->shareRepository = $shareRepository;
+        $this->dic             = $dic;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -111,12 +118,13 @@ final class ConsumeAction implements ApplicationActionInterface
                 $_REQUEST['action']                    = 'download';
                 $_REQUEST['type']                      = $share->object_type;
                 $_REQUEST[$share->object_type . '_id'] = $share->object_id;
-                require __DIR__ . '/../../../../public/stream.php';
+
+                return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             } else {
                 $_REQUEST['action'] = $share->object_type;
                 $_REQUEST['id']     = $share->object_id;
-                $object_type        = $share->object_type;
-                require __DIR__ . '/../../../../public/batch.php';
+
+                return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
         } elseif ($action == 'stream') {
             require Ui::find_template('show_share.inc.php');
