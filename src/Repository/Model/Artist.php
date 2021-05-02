@@ -31,11 +31,12 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class Artist extends database_object implements library_item, GarbageCollectibleInterface
+class Artist extends database_object implements library_item
 {
     protected const DB_TABLENAME = 'artist';
 
@@ -250,16 +251,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     } // construct_from_array
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused artists
-     */
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' . 'LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' . 'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' . 'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' . 'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
-    }
-
-    /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param integer[] $ids
      * @param boolean $extra
@@ -298,96 +289,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return true;
     } // build_cache
-
-    /**
-     * get_from_name
-     * This gets an artist object based on the artist name
-     * @param string $name
-     * @return Artist
-     */
-    public static function get_from_name($name)
-    {
-        $sql        = "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ";
-        $db_results = Dba::read($sql, array($name, $name));
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return new Artist($row['id']);
-    } // get_from_name
-
-    /**
-     * get_time
-     *
-     * Get time for an artist's songs.
-     * @param integer $artist_id
-     * @return integer
-     */
-    public static function get_time($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-        // album artists that don't have any songs
-        if ((int) $results['time'] == 0) {
-            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
-            $db_results = Dba::read($sql, $params);
-            $results    = Dba::fetch_assoc($db_results);
-        }
-
-        return (int) $results['time'];
-    }
-
-    /**
-     * get_song_count
-     *
-     * Get count for an artist's songs.
-     * @param integer $artist_id
-     * @return integer
-     */
-    public static function get_song_count($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT COUNT(`song`.`id`) AS `song_count` from `song` WHERE `song`.`artist` = ?";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['song_count'];
-    }
-
-    /**
-     * get_album_count
-     *
-     * Get count for an artist's albums.
-     * @param integer $artist_id
-     * @return integer
-     */
-    public static function get_album_count($artist_id)
-    {
-        $params     = array($artist_id);
-        $sql        = "SELECT  COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['album_count'];
-    }
-    /**
-     * get_album_group_count
-     *
-     * Get count for an artist's albums.
-     * @param integer $artist_id
-     * @return integer
-     */
-    public static function get_album_group_count($artist_id)
-    {
-        $params = array($artist_id);
-        $sql    = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` " .
-            "FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ?  AND `catalog`.`enabled` = '1'";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['album_count'];
-    }
 
     /**
      * _get_extra info
@@ -824,7 +725,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->getDataMigrator()->migrate('artist', $this->id, $artist_id);
 
                 if (!$cron_cache) {
-                    self::garbage_collection();
+                    $this->getArtistRepository()->collectGarbage();
                 }
             } // end if it changed
 
@@ -915,17 +816,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * Update artist associated user.
-     * @param integer $user
-     */
-    public function update_artist_user($user)
-    {
-        $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
-
-        Dba::write($sql, array($user, $this->id));
-    }
-
-    /**
      * update_artist_counts
      *
      * @param integer $artist_id
@@ -958,7 +848,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_time()
     {
-        $time = self::get_time((int) $this->id);
+        $time = $this->getArtistRepository()->getDuration($this);
         if ($time > 0 && $time !== $this->time && $this->id) {
             $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
@@ -976,14 +866,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_album_count()
     {
-        $album_count = self::get_album_count((int) $this->id);
+        $albumRepository = $this->getAlbumRepository();
+
+        $album_count = $albumRepository->getCountByArtist($this);
         if ($album_count > 0 && $album_count !== $this->album_count && $this->id) {
             $sql = "UPDATE `artist` SET `album_count`=$album_count WHERE `id`=" . $this->id;
             Dba::write($sql);
             $this->album_count = $album_count;
             self::set_last_update((int) $this->id);
         }
-        $group_count = self::get_album_group_count((int) $this->id);
+        $group_count = $albumRepository->getGroupedCountByArtist($this);
         if ($group_count > 0 && $group_count !== $this->album_group_count && $this->id) {
             $sql = "UPDATE `artist` SET `album_group_count`=$group_count WHERE `id`=" . $this->id;
             Dba::write($sql);
@@ -999,7 +891,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_song_count()
     {
-        $song_count = self::get_song_count((int) $this->id);
+        $song_count = $this->getSongRepository()->getCountByArtist($this);
         if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
             $sql = "UPDATE `artist` SET `song_count`=$song_count WHERE `id`=" . $this->id;
             Dba::write($sql);
@@ -1076,5 +968,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(DataMigratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

@@ -27,6 +27,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -45,16 +46,20 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ArtistRepositoryInterface $artistRepository;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
         TagRepositoryInterface $tagRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ArtistRepositoryInterface $artistRepository
     ) {
-        $this->songRepository  = $songRepository;
-        $this->albumRepository = $albumRepository;
-        $this->tagRepository   = $tagRepository;
-        $this->configContainer = $configContainer;
+        $this->songRepository   = $songRepository;
+        $this->albumRepository  = $albumRepository;
+        $this->tagRepository    = $tagRepository;
+        $this->configContainer  = $configContainer;
+        $this->artistRepository = $artistRepository;
     }
 
     /**
@@ -149,7 +154,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         // Cleanup old objects that are no longer needed
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CRON_CACHE)) {
             $this->albumRepository->collectGarbage();
-            Artist::garbage_collection();
+            $this->artistRepository->collectGarbage();
         }
 
         return $result;

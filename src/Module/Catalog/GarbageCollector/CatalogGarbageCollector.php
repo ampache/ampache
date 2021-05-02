@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
@@ -51,21 +52,25 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private ArtistRepositoryInterface $artistRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        ArtistRepositoryInterface $artistRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->artistRepository       = $artistRepository;
     }
 
     public function collect(): void
     {
         Song::garbage_collection();
         $this->albumRepository->collectGarbage();
-        Artist::garbage_collection();
+        $this->artistRepository->collectGarbage();
         Video::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();

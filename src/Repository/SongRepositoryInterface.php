@@ -98,4 +98,9 @@ interface SongRepositoryInterface
      * @return Song[]
      */
     public function getDisabled(): array;
+
+    /**
+     * Get count for an artist's songs.
+     */
+    public function getCountByArtist(Artist $artist): int;
 }

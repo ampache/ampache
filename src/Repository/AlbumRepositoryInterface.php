@@ -130,4 +130,14 @@ interface AlbumRepositoryInterface
     public function getDistinctIdsByArtist(
         Artist $artist
     ): array;
+
+    /**
+     * Get count for an artist's albums.
+     */
+    public function getCountByArtist(Artist $artist): int;
+
+    /**
+     * Get count for an artist's albums.
+     */
+    public function getGroupedCountByArtist(Artist $artist): int;
 }

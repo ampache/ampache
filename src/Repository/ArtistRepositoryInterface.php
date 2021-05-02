@@ -21,6 +21,8 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Artist;
+
 interface ArtistRepositoryInterface
 {
     /**
@@ -37,4 +39,24 @@ interface ArtistRepositoryInterface
         int $userId,
         int $count = 1
     ): array;
+
+    /**
+     * Get time for an artist's songs.
+     */
+    public function getDuration(Artist $artist): int;
+
+    /**
+     * This gets an artist object based on the artist name
+     */
+    public function findByName(string $name): ?Artist;
+
+    /**
+     * This cleans out unused artists
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * Update artist associated user.
+     */
+    public function updateArtistUser(Artist $artist, int $user): void;
 }

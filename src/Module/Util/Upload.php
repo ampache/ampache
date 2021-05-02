@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -220,7 +221,7 @@ class Upload
             }
             $artist = new Artist($artist_id);
             if (!$artist->get_user_owner()) {
-                $artist->update_artist_user($user_id);
+                static::getArtistRepository()->updateArtistUser($artist, $user_id);
             }
 
             return (int) $artist_id;
@@ -333,4 +334,14 @@ class Upload
 
         return $rootdir;
     } // get_root
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
+    }
 }

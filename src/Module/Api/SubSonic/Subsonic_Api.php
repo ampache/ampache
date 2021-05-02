@@ -44,6 +44,7 @@ use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
@@ -833,7 +834,7 @@ class Subsonic_Api
         }
         if ($artist) {
             $songs = static::getSongRepository()->getTopSongsByArtist(
-                Artist::get_from_name(urldecode($artist)),
+                static::getArtistRepository()->findByName(urldecode($artist)),
                 $count
             );
         }
@@ -2619,5 +2620,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

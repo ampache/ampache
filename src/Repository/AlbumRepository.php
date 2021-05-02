@@ -399,4 +399,32 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Get count for an artist's albums.
+     */
+    public function getCountByArtist(Artist $artist): int
+    {
+        $dbResults = Dba::read(
+            'SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = \'1\'',
+            [$artist->getId()]
+        );
+
+        $results = Dba::fetch_assoc($dbResults);
+
+        return (int) $results['album_count'];
+    }
+
+    /**
+     * Get count for an artist's albums.
+     */
+    public function getGroupedCountByArtist(Artist $artist): int
+    {
+        $params     = [$artist->getId()];
+        $sql        = 'SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, \'\'), `album`.`name`, COALESCE(`album`.`album_artist`, \'\'), COALESCE(`album`.`mbid`, \'\'), COALESCE(`album`.`year`, \'\'))) AS `album_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ?  AND `catalog`.`enabled` = \'1\'';
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['album_count'];
+    }
 }

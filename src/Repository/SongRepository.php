@@ -264,4 +264,18 @@ final class SongRepository implements SongRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Get count for an artist's songs.
+     */
+    public function getCountByArtist(Artist $artist): int
+    {
+        $dbResults = Dba::read(
+            'SELECT COUNT(`song`.`id`) AS `song_count` from `song` WHERE `song`.`artist` = ?',
+            [$artist->getId()]
+        );
+        $results = Dba::fetch_assoc($dbResults);
+
+        return (int) $results['song_count'];
+    }
 }

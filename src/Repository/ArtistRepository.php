@@ -25,6 +25,7 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Artist;
 
 final class ArtistRepository implements ArtistRepositoryInterface
 {
@@ -83,5 +84,58 @@ final class ArtistRepository implements ArtistRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Get time for an artist's songs.
+     */
+    public function getDuration(Artist $artist): int
+    {
+        $params     = array($artist->getId());
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+        // album artists that don't have any songs
+        if ((int) $results['time'] == 0) {
+            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
+            $db_results = Dba::read($sql, $params);
+            $results    = Dba::fetch_assoc($db_results);
+        }
+
+        return (int) $results['time'];
+    }
+
+    /**
+     * This gets an artist object based on the artist name
+     */
+    public function findByName(string $name): Artist
+    {
+        $dbResults = Dba::read(
+            'SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, \'\'), \' \', `artist`.`name`)) = ? ',
+            [$name, $name]
+        );
+
+        $row = Dba::fetch_assoc($dbResults);
+
+        return new Artist($row['id'] ?? 0);
+    }
+
+    /**
+     * This cleans out unused artists
+     */
+    public function collectGarbage(): void
+    {
+        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' . 'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' . 'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' . 'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
+    }
+
+    /**
+     * Update artist associated user.
+     */
+    public function updateArtistUser(Artist $artist, int $user): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `user` = ? WHERE `id` = ?',
+            [$user, $artist->getId()]
+        );
     }
 }
