@@ -26,6 +26,7 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -333,6 +334,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getProperties(): array
     {
+        $album = new Album($this->song->album);
+
         $songprops = [];
 
         $songprops[T_('Title')]        = scrub_out($this->song->title);
@@ -344,7 +347,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Year')]          = $this->song->year;
-        $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
+        $songprops[T_('Original Year')] = $album->original_year;
         $songprops[T_('Length')]        = scrub_out($this->song->getDurationFormatted());
         $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
         $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
@@ -361,8 +364,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Label')]          = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) ? $label_string : scrub_out($this->song->label);
         $songprops[T_('Song Language')]  = scrub_out($this->song->language);
-        $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
-        $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
+        $songprops[T_('Catalog Number')] = scrub_out($album->catalog_number);
+        $songprops[T_('Barcode')]        = scrub_out($album->barcode);
         $songprops[T_('Bitrate')]        = scrub_out($this->song->f_bitrate);
         $songprops[T_('Channels')]       = scrub_out($this->song->channels);
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);

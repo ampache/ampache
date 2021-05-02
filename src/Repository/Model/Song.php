@@ -723,54 +723,6 @@ class Song extends database_object implements
     } // get_album_name
 
     /**
-     * get_album_catalog_number
-     * gets the catalog_number of $this->album, allows passing of id
-     * @param integer $album_id
-     * @return string
-     */
-    public function get_album_catalog_number($album_id = null)
-    {
-        if ($album_id === null) {
-            $album_id = $this->album;
-        }
-        $album = new Album($album_id);
-
-        return $album->catalog_number;
-    } // get_album_catalog_number
-
-    /**
-     * get_album_original_year
-     * gets the original_year of $this->album, allows passing of id
-     * @param integer $album_id
-     * @return integer
-     */
-    public function get_album_original_year($album_id = null)
-    {
-        if ($album_id === null) {
-            $album_id = $this->album;
-        }
-        $album = new Album($album_id);
-
-        return $album->original_year;
-    } // get_album_original_year
-
-    /**
-     * get_album_barcode
-     * gets the barcode of $this->album, allows passing of id
-     * @param integer $album_id
-     * @return string
-     */
-    public function get_album_barcode($album_id = null)
-    {
-        if (!$album_id) {
-            $album_id = $this->album;
-        }
-        $album = new Album($album_id);
-
-        return $album->barcode;
-    } // get_album_barcode
-
-    /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
      * @param integer $artist_id
