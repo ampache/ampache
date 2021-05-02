@@ -111,7 +111,16 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
                 $pics = array();
                 if (isset($data['id3v2']['APIC'])) {
-                    $pics = Art::prepare_pics($data['id3v2']['APIC']);
+                    $pics = [];
+                    $i    = 0;
+                    foreach ($data['id3v2']['APIC'] as $pic) {
+                        $pics['attached_picture'][$i]['description']   = $pic['description'];
+                        $pics['attached_picture'][$i]['data']          = $pic['data'];
+                        $pics['attached_picture'][$i]['picturetypeid'] = $pic['picturetypeid'];
+                        $pics['attached_picture'][$i]['mime']          = $pic['mime'];
+
+                        $i++;
+                    }
                 }
                 $ndata = array_merge($pics, $ndata);
             } else {

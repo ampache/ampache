@@ -180,7 +180,7 @@ class Art extends database_object
      * @return boolean
      * @throws RuntimeException
      */
-    public static function test_image($source)
+    private static function test_image($source)
     {
         if (strlen((string) $source) < 10) {
             debug_event(self::class, 'Invalid image passed', 1);
@@ -461,27 +461,6 @@ class Art extends database_object
             $ndata[1]['data']          = $source;
             $ndata[1]['mime']          = $mime;
             $ndata[1]['picturetypeid'] = $picturetypeid;
-        }
-
-        return $ndata;
-    }
-
-    /**
-     * Prepares images to be written to file tag.
-     * @param array $pics
-     * @return array
-     */
-    public static function prepare_pics($pics)
-    {
-        $ndata = array();
-        $i     = 0;
-        foreach ($pics as $pic) {
-            $ndata['attached_picture'][$i]['description']   = $pic['description'];
-            $ndata['attached_picture'][$i]['data']          = $pic['data'];
-            $ndata['attached_picture'][$i]['picturetypeid'] = $pic['picturetypeid'];
-            $ndata['attached_picture'][$i]['mime']          = $pic['mime'];
-
-            $i++;
         }
 
         return $ndata;
