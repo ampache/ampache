@@ -24,13 +24,21 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\Model\User;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 final class ShareRepository implements ShareRepositoryInterface
 {
+    private Connection $database;
+
+    public function __construct(
+        Connection $database
+    ) {
+        $this->database = $database;
+    }
+
     /**
      * @return int[]
      */
@@ -38,17 +46,21 @@ final class ShareRepository implements ShareRepositoryInterface
         User $user
     ): array {
         $sql     = 'SELECT `id` FROM `share`';
-        $results = [];
+        $params = [];
 
         if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
             $sql .= ' WHERE `user` = ?';
-            $results[] = $user->getId();
+            $params[] = $user->getId();
         }
 
-        $db_results = Dba::read($sql, $results);
+        $dbResults = $this->database->executeQuery(
+            $sql,
+            $params
+        );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        $results = [];
+        while ($rowId = $dbResults->fetchOne()) {
+            $results[] = (int) $rowId;
         }
 
         return $results;
@@ -60,12 +72,19 @@ final class ShareRepository implements ShareRepositoryInterface
     ): bool {
         $sql    = 'DELETE FROM `share` WHERE `id` = ?';
         $params = [$shareId];
+
         if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
             $sql .= ' AND `user` = ?';
-            $params[] = $user->id;
+            $params[] = $user->getId();
         }
 
-        return Dba::write($sql, $params);
+        try {
+            $this->database->executeQuery($sql, $params);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -73,7 +92,7 @@ final class ShareRepository implements ShareRepositoryInterface
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
-        Dba::write(
+        $this->database->executeQuery(
             'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
         );
@@ -81,16 +100,17 @@ final class ShareRepository implements ShareRepositoryInterface
 
     public function collectGarbage(): void
     {
-        Dba::write(
-            'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < ' . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)"
+        $this->database->executeQuery(
+            'DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < ?) OR (`max_counter` > 0 AND `counter` >= `max_counter`)',
+            [time()]
         );
     }
 
     public function saveAccess(
-        Share $share,
+        ShareInterface $share,
         int $lastVisitDate
     ): void {
-        Dba::write(
+        $this->database->executeQuery(
             'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
             [$lastVisitDate, $share->getId()]
         );
@@ -119,6 +139,9 @@ final class ShareRepository implements ShareRepositoryInterface
             $params[] = $userId;
         }
 
-        Dba::write($sql, $params);
+        $this->database->executeQuery(
+            $sql,
+            $params
+        );
     }
 }

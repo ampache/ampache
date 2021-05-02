@@ -21,7 +21,6 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\Model\User;
 
@@ -45,7 +44,7 @@ interface ShareRepositoryInterface
     public function collectGarbage(): void;
 
     public function saveAccess(
-        Share $share,
+        ShareInterface $share,
         int $lastVisitDate
     ): void;
 
