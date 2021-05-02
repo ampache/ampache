@@ -105,4 +105,9 @@ interface SongRepositoryInterface
     public function getCountByArtist(Artist $artist): int;
 
     public function getByIdList(array $idList): \Generator;
+
+    /**
+     * Cleans up the song_data table
+     */
+    public function collectGarbage();
 }

@@ -44,7 +44,6 @@ use Ampache\Repository\Model\Metadata\Metadata;
 class Song extends database_object implements
     Media,
     library_item,
-    GarbageCollectibleInterface,
     MediaFileInterface,
     PlayableMediaInterface
 {
@@ -540,19 +539,6 @@ class Song extends database_object implements
         Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
 
         return $song_id;
-    }
-
-    /**
-     * garbage_collection
-     *
-     * Cleans up the song_data table
-     */
-    public static function garbage_collection()
-    {
-        // clean up missing catalogs
-        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
-        // delete the rest
-        Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
     }
 
     /**
