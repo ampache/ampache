@@ -31,15 +31,22 @@ use Ampache\Module\Util\Ui;
 ?>
 <?php
 if (Art::is_enabled()) {
-    $name = scrub_out($libitem->f_name); ?>
+    $name = $libitem->getNameFormatted(); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php echo Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
     </td>
     <?php
 } ?>
-<td class="cel_label"><?php echo $libitem->f_link; ?></td>
+<td class="cel_label"><?php
+    $name = $libitem->getNameFormatted();
+    echo sprintf(
+        '<a href="%s" title="%s">%s',
+        $libitem->getLink(),
+        $name,
+        $name
+    ); ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
-<td class="cel_artists"><?php echo $libitem->artists; ?></td>
+<td class="cel_artists"><?php echo $libitem->getArtistCount(); ?></td>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>

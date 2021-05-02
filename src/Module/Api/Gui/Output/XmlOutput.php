@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -584,10 +585,10 @@ final class XmlOutput implements ApiOutputInterface
             $label->format();
 
             $string .= "<license id=\"$labelId\">\n" .
-                "\t<name><![CDATA[$label->f_name]]></name>\n" .
-                "\t<artists><![CDATA[$label->artists]]></artists>\n" .
+                "\t<name><![CDATA[" . scrub_out($label->getNameFormatted()) . "]]></name>\n" .
+                "\t<artists><![CDATA[" . $label->getArtistCount() . "]]></artists>\n" .
                 "\t<summary><![CDATA[$label->summary]]></summary>\n" .
-                "\t<external_link><![CDATA[$label->link]]></external_link>\n" .
+                "\t<external_link><![CDATA[" . $label->getLink() . "]]></external_link>\n" .
                 "\t<address><![CDATA[$label->address]]></address>\n" .
                 "\t<category><![CDATA[$label->category]]></category>\n" .
                 "\t<email><![CDATA[$label->email]]></email>\n" .

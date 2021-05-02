@@ -206,7 +206,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $label->format(false);
                         $results[] = array(
                             'type' => T_('Labels'),
-                            'link' => $label->link,
+                            'link' => $label->getLink(),
                             'label' => $label->name,
                             'value' => $label->name,
                             'rels' => '',

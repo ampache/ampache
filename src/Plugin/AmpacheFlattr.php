@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -108,9 +109,13 @@ class AmpacheFlattr
         if ($libitem !== null) {
             if ($libitem->link) {
                 $link = $libitem->link;
-            } elseif ($libitem instanceof PodcastInterface || $libitem instanceof PodcastEpisodeInterface) {
+            } elseif (
+                $libitem instanceof PodcastInterface ||
+                $libitem instanceof PodcastEpisodeInterface ||
+                $libitem instanceof Label
+            ) {
                 /**
-                 * @todo special handling for podcasts for now.
+                 * @todo special handling for some object.
                  */
                 $link = $libitem->getLink();
             }

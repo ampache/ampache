@@ -647,10 +647,10 @@ final class JsonOutput implements ApiOutputInterface
 
                 return [
                     'id' => (string) $labelId,
-                    'name' => $label->f_name,
-                    'artists' => $label->artists,
+                    'name' => $label->getNameFormatted(),
+                    'artists' => $label->getArtistCount(),
                     'summary' => $label->summary,
-                    'external_link' => $label->link,
+                    'external_link' => $label->getLink(),
                     'address' => $label->address,
                     'category' => $label->category,
                     'email' => $label->email,

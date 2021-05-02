@@ -551,7 +551,7 @@ class JsonOutputTest extends MockeryTestCase
         $labelId2 = 42;
 
         $name     = 'some-name';
-        $artists  = 'some-artists';
+        $artists  = 33;
         $summary  = 'some-summary';
         $link     = 'some-link';
         $address  = 'some-address';
@@ -571,10 +571,19 @@ class JsonOutputTest extends MockeryTestCase
             ->once()
             ->andReturn($label);
 
-        $label->f_name   = $name;
-        $label->artists  = $artists;
+        $label->shouldReceive('getNameFormatted')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($name);
+        $label->shouldReceive('getArtistCount')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($artists);
+        $label->shouldReceive('getLink')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($link);
         $label->summary  = $summary;
-        $label->link     = $link;
         $label->address  = $address;
         $label->category = $category;
         $label->email    = $email;

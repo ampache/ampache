@@ -73,27 +73,6 @@ class Label extends database_object implements library_item
      */
     public $user;
 
-    /**
-     * @var string $f_name
-     */
-    public $f_name;
-    /**
-     * @var string $link
-     */
-    public $link;
-    /**
-     * @var string $f_link
-     */
-    public $f_link;
-    /**
-     * @var integer $artists
-     */
-    public $artists;
-
-    /**
-     * __construct
-     * @param $label_id
-     */
     public function __construct($label_id)
     {
         $info = $this->get_info($label_id);
@@ -123,7 +102,7 @@ class Label extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'label') || $force) {
-            echo Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->getLink());
         }
     }
 
@@ -132,11 +111,21 @@ class Label extends database_object implements library_item
      */
     public function format($details = true)
     {
-        unset($details);
-        $this->f_name  = scrub_out($this->name);
-        $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
-        $this->artists = count(static::getLabelRepository()->getArtists($this->getId()));
+    }
+
+    public function getArtistCount(): int
+    {
+        return count(static::getLabelRepository()->getArtists($this->getId()));
+    }
+
+    public function getLink(): string
+    {
+        return AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $this->getId();
+    }
+
+    public function getNameFormatted(): string
+    {
+        return scrub_out($this->name);
     }
 
     /**
@@ -186,7 +175,7 @@ class Label extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->getNameFormatted();
     }
 
     /**
@@ -199,7 +188,7 @@ class Label extends database_object implements library_item
         $keywords['label'] = array(
             'important' => true,
             'label' => T_('Label'),
-            'value' => $this->f_name
+            'value' => $this->getNameFormatted()
         );
 
         return $keywords;
