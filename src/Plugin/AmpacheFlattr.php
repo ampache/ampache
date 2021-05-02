@@ -26,8 +26,6 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\Model\Preference;

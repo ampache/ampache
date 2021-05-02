@@ -33,8 +33,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
-use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;

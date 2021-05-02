@@ -39,7 +39,6 @@ use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UseractivityInterface;

@@ -31,7 +31,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

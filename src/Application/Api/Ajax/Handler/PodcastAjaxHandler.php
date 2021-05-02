@@ -29,7 +29,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 

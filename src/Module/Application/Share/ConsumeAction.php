@@ -30,7 +30,6 @@ use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

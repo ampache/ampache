@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast;
 
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Psr\Log\LoggerInterface;

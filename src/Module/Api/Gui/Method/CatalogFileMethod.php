@@ -36,7 +36,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;

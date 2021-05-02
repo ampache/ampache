@@ -21,8 +21,6 @@
 
 namespace Ampache\Module\Podcast\Gui;
 
-use Ampache\Repository\Model\PodcastInterface;
-
 interface PodcastEpisodeViewAdapterInterface
 {
     public function isRealUser(): bool;

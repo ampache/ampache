@@ -25,7 +25,6 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
