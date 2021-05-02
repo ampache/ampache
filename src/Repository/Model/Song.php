@@ -35,7 +35,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Module\Util\ExtensionToMimeTypeMapper;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -706,63 +705,6 @@ class Song extends database_object implements
             } // end foreach
         }
     } // fill_ext_info
-
-    /**
-     * find
-     * @param array $data
-     * @return boolean
-     */
-    public static function find($data)
-    {
-        $sql_base = "SELECT `song`.`id` FROM `song`";
-        if ($data['mb_trackid']) {
-            $sql        = $sql_base . " WHERE `song`.`mbid` = ? LIMIT 1";
-            $db_results = Dba::read($sql, array($data['mb_trackid']));
-            if ($results = Dba::fetch_assoc($db_results)) {
-                return $results['id'];
-            }
-        }
-        if ($data['file']) {
-            $sql        = $sql_base . " WHERE `song`.`file` = ? LIMIT 1";
-            $db_results = Dba::read($sql, array($data['file']));
-            if ($results = Dba::fetch_assoc($db_results)) {
-                return $results['id'];
-            }
-        }
-
-        $where  = "WHERE `song`.`title` = ?";
-        $sql    = $sql_base;
-        $params = array($data['title']);
-        if ($data['track']) {
-            $where .= " AND `song`.`track` = ?";
-            $params[] = $data['track'];
-        }
-        $sql .= " INNER JOIN `artist` ON `artist`.`id` = `song`.`artist`";
-        $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
-
-        if ($data['mb_artistid']) {
-            $where .= " AND `artist`.`mbid` = ?";
-            $params[] = $data['mb_albumid'];
-        } else {
-            $where .= " AND `artist`.`name` = ?";
-            $params[] = $data['artist'];
-        }
-        if ($data['mb_albumid']) {
-            $where .= " AND `album`.`mbid` = ?";
-            $params[] = $data['mb_albumid'];
-        } else {
-            $where .= " AND `album`.`name` = ?";
-            $params[] = $data['album'];
-        }
-
-        $sql .= $where . " LIMIT 1";
-        $db_results = Dba::read($sql, $params);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
-        }
-
-        return false;
-    }
 
     /**
      * get_album_name

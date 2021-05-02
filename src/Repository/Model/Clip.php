@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\SongRepositoryInterface;
 
 class Clip extends Video
 {
@@ -105,7 +106,7 @@ class Clip extends Video
     {
         debug_event(self::class, 'insert ' . print_r($data,true) , 5);
         $artist_id = self::_get_artist_id($data);
-        $song_id   = Song::find($data);
+        $song_id   = static::getSongRepository()->findBy($data);
         if (empty($song_id)) {
             $song_id = null;
         }
@@ -129,7 +130,7 @@ class Clip extends Video
     {
         debug_event(self::class, 'update ' . print_r($data,true) , 5);
         $artist_id = self::_get_artist_id($data);
-        $song_id   = Song::find($data);
+        $song_id   = static::getSongRepository()->findBy($data);
         debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
@@ -195,5 +196,15 @@ class Clip extends Video
         }
 
         return null;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

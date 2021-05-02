@@ -301,4 +301,59 @@ final class SongRepository implements SongRepositoryInterface
         // delete the rest
         Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
     }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function findBy(array $data): ?int
+    {
+        $sql_base = "SELECT `song`.`id` FROM `song`";
+        if ($data['mb_trackid']) {
+            $sql        = $sql_base . " WHERE `song`.`mbid` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($data['mb_trackid']));
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return (int) $results['id'];
+            }
+        }
+        if ($data['file']) {
+            $sql        = $sql_base . " WHERE `song`.`file` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($data['file']));
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return (int) $results['id'];
+            }
+        }
+
+        $where  = "WHERE `song`.`title` = ?";
+        $sql    = $sql_base;
+        $params = array($data['title']);
+        if ($data['track']) {
+            $where .= " AND `song`.`track` = ?";
+            $params[] = $data['track'];
+        }
+        $sql .= " INNER JOIN `artist` ON `artist`.`id` = `song`.`artist`";
+        $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
+
+        if ($data['mb_artistid']) {
+            $where .= " AND `artist`.`mbid` = ?";
+            $params[] = $data['mb_albumid'];
+        } else {
+            $where .= " AND `artist`.`name` = ?";
+            $params[] = $data['artist'];
+        }
+        if ($data['mb_albumid']) {
+            $where .= " AND `album`.`mbid` = ?";
+            $params[] = $data['mb_albumid'];
+        } else {
+            $where .= " AND `album`.`name` = ?";
+            $params[] = $data['album'];
+        }
+
+        $sql .= $where . " LIMIT 1";
+        $db_results = Dba::read($sql, $params);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['id'];
+        }
+
+        return null;
+    }
 }

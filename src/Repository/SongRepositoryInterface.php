@@ -110,4 +110,9 @@ interface SongRepositoryInterface
      * Cleans up the song_data table
      */
     public function collectGarbage();
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function findBy(array $data): ?int;
 }

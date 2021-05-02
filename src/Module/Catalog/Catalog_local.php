@@ -48,6 +48,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 
 /**
@@ -824,7 +825,7 @@ class Catalog_local extends Catalog
 
         if (count($this->get_gather_types('music')) > 0) {
             if (AmpConfig::get('catalog_check_duplicate')) {
-                if (Song::find($results)) {
+                if ($this->getSongRepository()->findBy($results)) {
                     debug_event('local.catalog', 'skipping_duplicate ' . $file, 5);
 
                     return false;
@@ -1130,5 +1131,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }
