@@ -22,23 +22,54 @@
 
 /** @var Share $libitem */
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Share;
 
 ?>
 
 <td class="cel_object"><?php echo $libitem->getObjectUrl(); ?></td>
-<td class="cel_object_type"><?php echo $libitem->object_type; ?></td>
+<td class="cel_object_type"><?php echo $libitem->getObjectType(); ?></td>
 <td class="cel_user"><?php echo $libitem->getUserName(); ?></td>
 <td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
 <td class="cel_lastvisit_date"><?php echo $libitem->getLastVisitDateFormatted(); ?></td>
-<td class="cel_counter"><?php echo $libitem->counter; ?></td>
-<td class="cel_max_counter"><?php echo $libitem->max_counter; ?></td>
-<td class="cel_allow_stream"><?php echo $libitem->allow_stream; ?></td>
-<td class="cel_allow_download"><?php echo $libitem->allow_download; ?></td>
-<td class="cel_expire"><?php echo $libitem->expire_days; ?></td>
-<td class="cel_public_url"><?php echo $libitem->public_url; ?></td>
+<td class="cel_counter"><?php echo $libitem->getCounter(); ?></td>
+<td class="cel_max_counter"><?php echo $libitem->getMaxCounter(); ?></td>
+<td class="cel_allow_stream"><?php echo $libitem->getAllowStream(); ?></td>
+<td class="cel_allow_download"><?php echo $libitem->getAllowDownload(); ?></td>
+<td class="cel_expire"><?php echo $libitem->getExpireDays(); ?></td>
+<td class="cel_public_url"><?php echo $libitem->getPublicUrl(); ?></td>
 <td class="cel_action">
-    <div id="share_action_<?php echo $libitem->id; ?>">
-    <?php $libitem->show_action_buttons(); ?>
+    <div id="share_action_<?php echo $libitem->getId(); ?>">
+    <?php
+
+
+    if ($libitem->getId()) {
+        if (Core::get_global('user')->has_access('75') || $libitem->getUserId() == Core::get_global('user')->getId()) {
+            if ($libitem->getAllowDownload()) {
+                echo sprintf(
+                    '<a class="nohtml" href="%s&action=download">%s</a>',
+                    $libitem->getPublicUrl(),
+                    Ui::get_icon('download', T_('Download'))
+                );
+            }
+            echo sprintf(
+                '<a id="edit_share_ %s" onclick="showEditDialog(\'share_row\', \'%s\', \'edit_share_%s\', \'%s\', \'share_\')">%s</a>',
+                $libitem->getId(),
+                $libitem->getId(),
+                $libitem->getId(),
+                T_('Share Edit'),
+                Ui::get_icon('edit', T_('Edit'))
+            );
+            echo sprintf(
+                '<a href="%s/share.php?action=show_delete&id=%s">%s</a>',
+                AmpConfig::get('web_path'),
+                $libitem->getId(),
+                Ui::get_icon('delete', T_('Delete'))
+            );
+        }
+    }
+    ?>
     </div>
 </td>

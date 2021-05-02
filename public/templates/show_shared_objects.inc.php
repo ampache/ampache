@@ -20,10 +20,18 @@
  *
  */
 
-use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Psr\Container\ContainerInterface;
 
+/** @var Browse $browse */
+/** @var int[] $object_ids */
+/** @var ContainerInterface $dic */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="share">
     <thead>
@@ -45,8 +53,8 @@ use Ampache\Module\Util\Ui;
     <tbody>
     <?php
     foreach ($object_ids as $share_id) {
-        $libitem = new Share($share_id); ?>
-    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        $libitem = $modelFactory->createShare((int) $share_id); ?>
+    <tr id="share_<?php echo $libitem->getId(); ?>" class="<?php echo Ui::flip_class(); ?>">
         <?php require Ui::find_template('show_share_row.inc.php'); ?>
     </tr>
     <?php

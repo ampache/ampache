@@ -97,7 +97,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     }
     if (Access::check('interface', 25)) {
         if (AmpConfig::get('share')) {
-            echo Share::display_ui('playlist', $libitem->id, false);
+            echo Ui::displayShareUi('playlist', $libitem->id, false);
         }
     }
     if ($libitem->has_access()) { ?>

@@ -1031,21 +1031,21 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($this->applyLimit($shareIds, $limit, $offset) as $share_id) {
-            $share                = new Share($share_id);
+            $share                = $this->modelFactory->createShare((int) $share_id);
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
-            $share_allow_stream   = (int) $share->allow_stream;
-            $share_allow_download = (int) $share->allow_download;
+            $share_allow_stream   = $share->getAllowStream();
+            $share_allow_download = $share->getAllowDownload();
             $share_creation_date  = $share->getCreationDateFormatted();
             $share_lastvisit_date = $share->getLastVisitDateFormatted();
-            $share_object_type    = $share->object_type;
-            $share_object_id      = $share->object_id;
-            $share_expire_days    = (int) $share->expire_days;
-            $share_max_counter    = (int) $share->max_counter;
-            $share_counter        = (int) $share->counter;
-            $share_secret         = $share->secret;
-            $share_public_url     = $share->public_url;
-            $share_description    = $share->description;
+            $share_object_type    = $share->getObjectType();
+            $share_object_id      = $share->getObjectId();
+            $share_expire_days    = $share->getExpireDays();
+            $share_max_counter    = $share->getMaxCounter();
+            $share_counter        = $share->getCounter();
+            $share_secret         = $share->getSecret();
+            $share_public_url     = $share->getPublicUrl();
+            $share_description    = $share->getDescription();
 
             // Build this element
             $result[] = [

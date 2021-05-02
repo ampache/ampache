@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Statistics\Stats;
@@ -1354,30 +1355,29 @@ class Subsonic_Xml_Data
     public static function addShare($xml, $share)
     {
         $xshare = $xml->addChild('share');
-        $xshare->addAttribute('id', (string)$share->id);
-        $xshare->addAttribute('url', (string)$share->public_url);
-        $xshare->addAttribute('description', (string)$share->description);
-        $user = new User($share->user);
-        $xshare->addAttribute('username', (string)$user->username);
-        $xshare->addAttribute('created', date("c", (int)$share->creation_date));
-        if ($share->lastvisit_date > 0) {
-            $xshare->addAttribute('lastVisited', date("c", (int)$share->lastvisit_date));
+        $xshare->addAttribute('id', (string)$share->getId());
+        $xshare->addAttribute('url', $share->getPublicUrl());
+        $xshare->addAttribute('description', $share->getDescription());
+        $xshare->addAttribute('username', $share->getUserName());
+        $xshare->addAttribute('created', date("c", $share->getCreationDate()));
+        if ($share->getLastvisitDate() > 0) {
+            $xshare->addAttribute('lastVisited', date("c", $share->getLastvisitDate()));
         }
-        if ($share->expire_days > 0) {
-            $xshare->addAttribute('expires', date("c", (int)$share->creation_date + ($share->expire_days * 86400)));
+        if ($share->getExpireDays() > 0) {
+            $xshare->addAttribute('expires', date("c", $share->getCreationDate() + ($share->getExpireDays() * 86400)));
         }
-        $xshare->addAttribute('visitCount', (string)$share->counter);
+        $xshare->addAttribute('visitCount', (string)$share->getCounter());
 
-        if ($share->object_type == 'song') {
-            self::addSong($xshare, $share->object_id, false, "entry");
-        } elseif ($share->object_type == 'playlist') {
-            $playlist = new Playlist($share->object_id);
+        if ($share->getObjectType() == 'song') {
+            self::addSong($xshare, $share->getObjectId(), false, "entry");
+        } elseif ($share->getObjectType() == 'playlist') {
+            $playlist = new Playlist($share->getObjectId());
             $songs    = $playlist->get_songs();
             foreach ($songs as $songid) {
                 self::addSong($xshare, $songid, false, "entry");
             }
-        } elseif ($share->object_type == 'album') {
-            $songs = static::getSongRepository()->getByAlbum($share->object_id);
+        } elseif ($share->getObjectType() == 'album') {
+            $songs = static::getSongRepository()->getByAlbum($share->getObjectId());
             foreach ($songs as $songid) {
                 self::addSong($xshare, $songid, false, "entry");
             }
@@ -1391,11 +1391,13 @@ class Subsonic_Xml_Data
      */
     public static function addShares($xml, $shares)
     {
+        $modelFactory = static::getModelFactory();
+
         $xshares = $xml->addChild('shares');
         foreach ($shares as $share_id) {
-            $share = new Share($share_id);
+            $share = $modelFactory->createShare((int) $share_id);
             // Don't add share with max counter already reached
-            if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
+            if ($share->getMaxCounter() == 0 || $share->getCounter() < $share->getMaxCounter()) {
                 self::addShare($xshares, $share);
             }
         }
@@ -1675,5 +1677,15 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

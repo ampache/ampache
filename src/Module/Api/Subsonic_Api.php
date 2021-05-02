@@ -54,6 +54,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -1737,9 +1738,9 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $share = new Share(Subsonic_Xml_Data::getAmpacheId($share_id));
-            if ($share->id > 0) {
-                $expires = $share->expire_days;
+            $share = static::getModelFactory()->createShare(Subsonic_Xml_Data::getAmpacheId($share_id));
+            if ($share->getId() > 0) {
+                $expires = $share->getExpireDays();
                 if (isset($input['expires'])) {
                     // Parse as a string to work on 32-bit computers
                     $expires = $input['expires'];
@@ -1747,17 +1748,17 @@ class Subsonic_Api
                         $expires = (int)(substr($expires, 0, -3));
                     }
                     if ($expires > 0) {
-                        $expires = ($expires - $share->creation_date) / 86400;
+                        $expires = ($expires - $share->getCreationDate()) / 86400;
                         $expires = ceil($expires);
                     }
                 }
 
                 $data = array(
-                    'max_counter' => $share->max_counter,
+                    'max_counter' => $share->getMaxCounter(),
                     'expire' => $expires,
-                    'allow_stream' => $share->allow_stream,
-                    'allow_download' => $share->allow_download,
-                    'description' => $description ?: $share->description,
+                    'allow_stream' => $share->getAllowStream(),
+                    'allow_download' => $share->getAllowDownload(),
+                    'description' => $description ?: $share->getDescription(),
                 );
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('updateshare');
@@ -2806,5 +2807,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ExpirationDateCalculatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

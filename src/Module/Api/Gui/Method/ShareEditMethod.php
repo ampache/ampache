@@ -109,18 +109,18 @@ final class ShareEditMethod implements MethodInterface
         if (in_array((int) $shareId, $this->shareRepository->getList($user))) {
             $share = $this->modelFactory->createShare((int) $shareId);
 
-            $description = $input['description'] ?? $share->description;
-            $stream      = $input['stream'] ?? $share->allow_stream;
-            $download    = $input['download'] ?? $share->allow_download;
+            $description = $input['description'] ?? $share->getDescription();
+            $stream      = $input['stream'] ?? $share->getAllowStream();
+            $download    = $input['download'] ?? $share->getAllowDownload();
 
             if (array_key_exists('expires', $input)) {
                 $expires = $this->expirationDateCalculator->calculate((int) $input['expires']);
             } else {
-                $expires = $share->expire_days;
+                $expires = $share->getExpireDays();
             }
 
             $data = [
-                'max_counter' => $share->max_counter,
+                'max_counter' => $share->getMaxCounter(),
                 'expire' => $expires,
                 'allow_stream' => $stream,
                 'allow_download' => $download,

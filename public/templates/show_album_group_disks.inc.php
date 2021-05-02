@@ -176,7 +176,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <?php echo Share::display_ui('album', $c_album->id, false); ?>
+                <?php echo Ui::displayShareUi('album', $c_album->id, false); ?>
             <?php
             } ?>
         <?php

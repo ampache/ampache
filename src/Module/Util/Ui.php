@@ -54,6 +54,28 @@ class Ui implements UiInterface
     }
 
     /**
+     * @param string $object_type
+     * @param integer $object_id
+     * @param boolean $show_text
+     */
+    public static function displayShareUi($object_type, $object_id, $show_text = true)
+    {
+        $result = sprintf(
+            '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
+            $object_type,
+            $object_id,
+            Ui::get_icon('share', T_('Share'))
+        );
+
+        if ($show_text) {
+            $result .= sprintf('&nbsp;%s', T_('Share'));
+        }
+        $result .= '</a>';
+
+        return $result;
+    }
+
+    /**
      * find_template
      *
      * Return the path to the template file wanted. The file can be overwritten

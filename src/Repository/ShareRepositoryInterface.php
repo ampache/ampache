@@ -22,6 +22,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\Model\User;
 
 interface ShareRepositoryInterface
@@ -46,5 +47,15 @@ interface ShareRepositoryInterface
     public function saveAccess(
         Share $share,
         int $lastVisitDate
+    ): void;
+
+    public function update(
+        ShareInterface $share,
+        int $maxCounter,
+        int $expire,
+        int $allowStream,
+        int $allowDownload,
+        string $description,
+        ?int $userId
     ): void;
 }

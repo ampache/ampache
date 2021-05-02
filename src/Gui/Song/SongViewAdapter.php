@@ -202,7 +202,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getShareUi(): string
     {
-        return Share::display_ui('song', $this->song->getId(), false);
+        return Ui::displayShareUi('song', $this->song->getId(), false);
     }
 
     public function canDownload(): bool

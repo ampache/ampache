@@ -146,7 +146,7 @@ interface ModelFactoryInterface
         string $type
     ): Userflag;
 
-    public function createShare(int $shareId): Share;
+    public function createShare(int $shareId): ShareInterface;
 
     /**
      * Maps an object type name like `song` to its corresponding model class

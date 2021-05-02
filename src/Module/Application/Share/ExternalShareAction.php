@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -61,13 +62,16 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private ShareCreatorInterface $shareCreator;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
         FunctionCheckerInterface $functionChecker,
-        ShareCreatorInterface $shareCreator
+        ShareCreatorInterface $shareCreator,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
@@ -75,6 +79,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $this->responseFactory   = $responseFactory;
         $this->functionChecker   = $functionChecker;
         $this->shareCreator      = $shareCreator;
+        $this->modelFactory      = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -108,13 +113,13 @@ final class ExternalShareAction implements ApplicationActionInterface
             $secret,
         );
 
-        $share = new Share($share_id);
+        $share = $this->modelFactory->createShare((int) $share_id);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                $plugin->_plugin->external_share($share->public_url, $share->getObjectName())
+                $plugin->_plugin->external_share($share->getPublicUrl(), $share->getObjectName())
             );
     }
 }

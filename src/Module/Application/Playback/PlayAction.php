@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
@@ -72,13 +73,16 @@ final class PlayAction implements ApplicationActionInterface
 
     private UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         SongRepositoryInterface $songRepository,
         UserRepositoryInterface $userRepository,
-        UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter
+        UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->browser                   = $browser;
         $this->authenticationManager     = $authenticationManager;
@@ -86,6 +90,7 @@ final class PlayAction implements ApplicationActionInterface
         $this->songRepository            = $songRepository;
         $this->userRepository            = $userRepository;
         $this->userMediaPlaySaverAdapter = $userMediaPlaySaverAdapter;
+        $this->modelFactory              = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -308,7 +313,7 @@ final class PlayAction implements ApplicationActionInterface
             $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } else {
             $uid   = 0;
-            $share = new Share($share_id);
+            $share = $this->modelFactory->createShare((int) $share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
@@ -322,7 +327,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $user = $GLOBALS['user'] = new User($share->user);
+            $user = $GLOBALS['user'] = new User($share->getUserId());
             Preference::init();
         }
 
@@ -896,10 +901,10 @@ final class PlayAction implements ApplicationActionInterface
     private function is_shared_media(Share $share, $media_id): bool
     {
         $is_shared = false;
-        switch ($share->object_type) {
+        switch ($share->getObjectType()) {
             case 'album':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
+                $class_name = ObjectTypeToClassNameMapper::map($share->getObjectType());
+                $object     = new $class_name($share->getObjectId());
                 $songs      = $this->songRepository->getByAlbum((int) $object->id);
                 foreach ($songs as $songid) {
                     $is_shared = ($media_id == $songid);
@@ -909,8 +914,8 @@ final class PlayAction implements ApplicationActionInterface
                 }
                 break;
             case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
+                $class_name = ObjectTypeToClassNameMapper::map($share->getObjectType());
+                $object     = new $class_name($share->getObjectId());
                 $songs      = $object->get_songs();
                 foreach ($songs as $songid) {
                     $is_shared = ($media_id == $songid);
@@ -920,7 +925,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
                 break;
             default:
-                $is_shared = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
+                $is_shared = (($share->getObjectType() == 'song' || $share->getObjectType() == 'video') && $share->getObjectId() == $media_id);
                 break;
         }
 

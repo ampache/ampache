@@ -30,6 +30,7 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,9 +58,10 @@ final class RefreshUpdatedAction extends AbstractEditAction
         LoggerInterface $logger,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $logger, $modelFactory);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;

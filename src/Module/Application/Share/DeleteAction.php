@@ -20,17 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -62,19 +60,17 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            throw new AccessDeniedException();
+            return null;
         }
 
+        $shareId = (int) ($request->getQueryParams()['id'] ?? 0);
+
         $this->ui->showHeader();
-
-        $share_id = (int) Core::get_request('id');
-
-        if ($this->shareRepository->delete($share_id, Core::get_global('user'))) {
-            $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
+        if ($this->shareRepository->delete($shareId, $gatekeeper->getUser())) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Share has been deleted'),
-                $next_url
+                sprintf('%s/stats.php?action=share', $this->configContainer->getWebPath())
             );
         }
         $this->ui->showFooter();

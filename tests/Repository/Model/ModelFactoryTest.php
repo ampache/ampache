@@ -45,7 +45,7 @@ class ModelFactoryTest extends MockeryTestCase
         );
     }
 
-    public function testGetLicenseReturnsLicense(): void
+    public function testCreateLicenseReturnsLicense(): void
     {
         $this->dic->shouldReceive('get')
             ->with(LicenseRepositoryInterface::class)

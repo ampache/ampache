@@ -33,6 +33,8 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Share;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -43,12 +45,16 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(
@@ -86,7 +92,11 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $class_name = ObjectTypeToClassNameMapper::map($object_type);
         debug_event(__CLASS__, $class_name, 3);
         debug_event(__CLASS__, $object_id, 3);
-        $libitem    = new $class_name($object_id);
+        if ($class_name === Share::class) {
+            $libitem = $this->modelFactory->createShare($object_id);
+        } else {
+            $libitem = new $class_name($object_id);
+        }
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }

@@ -26,39 +26,30 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\database_object;
-use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
+use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Tag;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'edit_object';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
     private LabelRepositoryInterface $labelRepository;
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
+        ModelFactoryInterface $modelFactory
     ) {
-        parent::__construct($configContainer, $logger);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
+        parent::__construct($configContainer, $logger, $modelFactory);
         $this->labelRepository = $labelRepository;
     }
 
@@ -79,15 +70,10 @@ final class EditObjectAction extends AbstractEditAction
         };
         $entities($_POST);
 
-        if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        } else {
-            $object_type = implode('_', explode('_', $object_type, -1));
-        }
-
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $class_name($_POST['id']);
-        if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if (
+            $libitem->get_user_owner() == Core::get_global('user')->id &&
+            AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)
+        ) {
             // TODO: improve this uniqueless check
             if (filter_has_var(INPUT_POST, 'user')) {
                 unset($_POST['user']);
@@ -125,15 +111,11 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        $libitem->format();
-        $new_id     = $libitem->update($_POST);
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $class_name($new_id);
-        $libitem->format();
+        $new_id = $libitem->update($_POST, Core::get_global('user'));
 
         xoutput_headers();
         $results = array('id' => $new_id);
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
 
         return null;
     }

@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -233,9 +234,13 @@ final class ModelFactory implements ModelFactoryInterface
         );
     }
 
-    public function createShare(int $shareId): Share
+    public function createShare(int $shareId): ShareInterface
     {
-        return new Share($shareId);
+        return new Share(
+            $this->dic->get(ShareRepositoryInterface::class),
+            $this,
+            $shareId
+        );
     }
 
     /**

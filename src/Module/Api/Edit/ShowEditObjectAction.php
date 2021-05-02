@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,9 +47,10 @@ final class ShowEditObjectAction extends AbstractEditAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
     ) {
-        parent::__construct($configContainer, $logger);
+        parent::__construct($configContainer, $logger, $modelFactory);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
     }

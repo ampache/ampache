@@ -116,7 +116,7 @@ if ($video_type != 'video') {
     }
      if (Access::check('interface', 25)) {
          if (AmpConfig::get('share')) {
-             echo Share::display_ui('video', $libitem->id, false);
+             echo Ui::displayShareUi('video', $libitem->id, false);
          }
      }
 if (Access::check_function('download')) { ?>

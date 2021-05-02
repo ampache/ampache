@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
@@ -29,11 +29,9 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowDeleteAction implements ApplicationActionInterface
 {
@@ -43,16 +41,12 @@ final class ShowDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,15 +55,15 @@ final class ShowDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        $this->ui->showHeader();
-
-        $share_id = Core::get_request('id');
+        $shareId = (int) ($request->getQueryParams()['id'] ?? 0);
 
         $next_url = sprintf(
-            '%s/share.php?action=delete&id=%s',
+            '%s/share.php?action=delete&id=%d',
             $this->configContainer->getWebPath(),
-            scrub_out($share_id)
+            $shareId
         );
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Share will be deleted and no longer accessible to others'),
@@ -77,7 +71,6 @@ final class ShowDeleteAction implements ApplicationActionInterface
             1,
             'delete_share'
         );
-
         $this->ui->showFooter();
 
         return null;

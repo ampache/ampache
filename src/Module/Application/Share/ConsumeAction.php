@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -54,16 +55,20 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ContainerInterface $dic;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ShareRepositoryInterface $shareRepository,
-        ContainerInterface $dic
+        ContainerInterface $dic,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->shareRepository = $shareRepository;
         $this->dic             = $dic;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -95,11 +100,11 @@ final class ConsumeAction implements ApplicationActionInterface
         $share_id = Core::get_request('id');
         $secret   = $_REQUEST['secret'];
 
-        $share = new Share($share_id);
-        if (empty($action) && $share->id) {
-            if ($share->allow_stream) {
+        $share = $this->modelFactory->createShare((int) $share_id);
+        if (empty($action) && $share->getId()) {
+            if ($share->getAllowStream()) {
                 $action = 'stream';
-            } elseif ($share->allow_download) {
+            } elseif ($share->getAllowDownload()) {
                 $action = 'download';
             }
         }
@@ -114,15 +119,15 @@ final class ConsumeAction implements ApplicationActionInterface
         );
 
         if ($action == 'download') {
-            if ($share->object_type == 'song' || $share->object_type == 'video') {
-                $_REQUEST['action']                    = 'download';
-                $_REQUEST['type']                      = $share->object_type;
-                $_REQUEST[$share->object_type . '_id'] = $share->object_id;
+            if ($share->getObjectType() == 'song' || $share->getObjectType() == 'video') {
+                $_REQUEST['action']                        = 'download';
+                $_REQUEST['type']                          = $share->getObjectType();
+                $_REQUEST[$share->getObjectType() . '_id'] = $share->getObjectId();
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             } else {
-                $_REQUEST['action'] = $share->object_type;
-                $_REQUEST['id']     = $share->object_id;
+                $_REQUEST['action'] = $share->getObjectType();
+                $_REQUEST['id']     = $share->getObjectId();
 
                 return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }

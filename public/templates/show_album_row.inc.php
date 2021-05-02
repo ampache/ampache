@@ -111,7 +111,7 @@ if (Art::is_enabled()) {
     }
         if (Access::check('interface', 25)) {
             if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
-                echo Share::display_ui('album', $libitem->id, false);
+                echo Ui::displayShareUi('album', $libitem->id, false);
             }
         }
         // @todo remove after refactoring

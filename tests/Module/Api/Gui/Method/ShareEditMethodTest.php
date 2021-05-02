@@ -33,7 +33,7 @@ use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Share\ExpirationDateCalculatorInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Mockery\MockInterface;
@@ -162,7 +162,7 @@ class ShareEditMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $share      = $this->mock(Share::class);
+        $share      = $this->mock(ShareInterface::class);
 
         $objectId      = 666;
         $description   = 'some-description';
@@ -171,14 +171,29 @@ class ShareEditMethodTest extends MockeryTestCase
         $expireDays    = 42;
         $maxCounter    = 33;
 
-        $share->description    = $description;
-        $share->allow_stream   = $allowStream;
-        $share->allow_download = $allowDownload;
-        $share->expire_days    = $expireDays;
-        $share->max_counter    = $maxCounter;
-
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf('Bad Request: %d', $objectId));
+
+        $share->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($description);
+        $share->shouldReceive('getAllowStream')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($allowStream);
+        $share->shouldReceive('getAllowDownload')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($allowDownload);
+        $share->shouldReceive('getExpireDays')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($expireDays);
+        $share->shouldReceive('getMaxCounter')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($maxCounter);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::SHARE)
@@ -228,7 +243,7 @@ class ShareEditMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $share      = $this->mock(Share::class);
+        $share      = $this->mock(ShareInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $objectId      = 666;
@@ -239,11 +254,10 @@ class ShareEditMethodTest extends MockeryTestCase
         $maxCounter    = 33;
         $result        = 'some-result';
 
-        $share->description    = $description;
-        $share->allow_stream   = $allowStream;
-        $share->allow_download = $allowDownload;
-        $share->expire_days    = $expireDays;
-        $share->max_counter    = $maxCounter;
+        $share->shouldReceive('getMaxCounter')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($maxCounter);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::SHARE)

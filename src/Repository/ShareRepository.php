@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\Model\User;
 
 final class ShareRepository implements ShareRepositoryInterface
@@ -64,13 +65,7 @@ final class ShareRepository implements ShareRepositoryInterface
             $params[] = $user->id;
         }
 
-        $result = Dba::write($sql, $params);
-
-        if ($result === false) {
-            return false;
-        }
-
-        return true;
+        return Dba::write($sql, $params);
     }
 
     /**
@@ -99,5 +94,31 @@ final class ShareRepository implements ShareRepositoryInterface
             'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
             [$lastVisitDate, $share->getId()]
         );
+    }
+
+    public function update(
+        ShareInterface $share,
+        int $maxCounter,
+        int $expire,
+        int $allowStream,
+        int $allowDownload,
+        string $description,
+        ?int $userId
+    ): void {
+        $sql    = 'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?';
+        $params = [
+            $maxCounter,
+            $expire,
+            $allowStream,
+            $allowDownload,
+            $description,
+            $share->getId()
+        ];
+        if ($userId) {
+            $sql .= ' AND `user` = ?';
+            $params[] = $userId;
+        }
+
+        Dba::write($sql, $params);
     }
 }

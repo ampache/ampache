@@ -26,63 +26,106 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShareRepositoryInterface;
 
-class Share extends database_object
+final class Share extends database_object implements ShareInterface
 {
     public const ALLOWED_SHARE_TYPES = ['album', 'song', 'playlist', 'video'];
 
     protected const DB_TABLENAME = 'share';
 
-    public $id;
-    public $user;
-    public $object_type;
-    public $object_id;
-    public $allow_stream;
-    public $allow_download;
-    public $creation_date;
-    public $lastvisit_date;
-    public $expire_days;
-    public $max_counter;
-    public $counter;
-    public $secret;
-    public $public_url;
-    public $description;
+    /** @var array<string, mixed> */
+    private array $data;
 
     /** @var Video|Song|Album|Playlist|null  */
     private ?database_object $object = null;
 
-    /**
-     * Constructor
-     * @param $share_id
-     */
-    public function __construct($share_id)
-    {
+    private ShareRepositoryInterface $shareRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ShareRepositoryInterface $shareRepository,
+        ModelFactoryInterface $modelFactory,
+        int $id
+    ) {
         /* Get the information from the db */
-        $info = $this->get_info($share_id);
-
-        // Foreach what we've got
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
-    } // constructor
+        $this->data            = $this->get_info($id);
+        $this->shareRepository = $shareRepository;
+        $this->modelFactory    = $modelFactory;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->data['id'] ?? 0);
     }
 
-    /**
-     * get_url
-     * @param string $secret
-     * @param string|null $share_id
-     * @return string
-     */
-    public static function get_url($share_id, $secret)
+    public function getPublicUrl(): string
+    {
+        return (string) ($this->data['public_url'] ?? '');
+    }
+
+    public function getAllowStream(): int
+    {
+        return (int) $this->data['allow_stream'] ?? 0;
+    }
+
+    public function getAllowDownload(): int
+    {
+        return (int) $this->data['allow_download'] ?? 0;
+    }
+
+    public function getCreationDate(): int
+    {
+        return (int) ($this->data['creation_date'] ?? 0);
+    }
+
+    public function getLastvisitDate(): int
+    {
+        return (int) ($this->data['lastvisit_date'] ?? 0);
+    }
+
+    public function getExpireDays(): int
+    {
+        return (int) ($this->data['expire_days'] ?? 0);
+    }
+
+    public function getMaxCounter(): int
+    {
+        return (int) ($this->data['max_counter'] ?? 0);
+    }
+
+    public function getCounter(): int
+    {
+        return (int) ($this->data['counter'] ?? 0);
+    }
+
+    public function getSecret(): string
+    {
+        return (string) ($this->data['secret'] ?? '');
+    }
+
+    public function getDescription(): string
+    {
+        return (string) ($this->data['description'] ?? '');
+    }
+
+    public function getObjectId(): int
+    {
+        return (int) ($this->data['object_id'] ?? 0);
+    }
+
+    public function getObjectType(): string
+    {
+        return (string) ($this->data['object_type'] ?? '');
+    }
+
+    public function getUserId(): int
+    {
+        return (int) ($this->data['user'] ?? 0);
+    }
+
+    public static function get_url(int $share_id, string $secret): string
     {
         $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
@@ -92,26 +135,10 @@ class Share extends database_object
         return $url;
     }
 
-    public function show_action_buttons()
-    {
-        if ($this->id) {
-            if (Core::get_global('user')->has_access('75') || $this->user == (int)Core::get_global('user')->id) {
-                if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download',
-                            T_('Download')) . "</a>";
-                }
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit',
-                        T_('Edit')) . "</a>";
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
-                        T_('Delete')) . "</a>";
-            }
-        }
-    }
-
     private function getObject()
     {
         if ($this->object === null) {
-            $this->object = $this->getModelFactory()->mapObjectType($this->object_type, $this->object_id);
+            $this->object = $this->modelFactory->mapObjectType($this->getObjectType(), $this->getObjectId());
             $this->object->format();
         }
 
@@ -130,7 +157,7 @@ class Share extends database_object
 
     public function getUserName(): string
     {
-        $user = new User($this->user);
+        $user = new User($this->getUserId());
         $user->format();
 
         return $user->f_name;
@@ -138,54 +165,46 @@ class Share extends database_object
 
     public function getLastVisitDateFormatted(): string
     {
-        return $this->lastvisit_date > 0 ? get_datetime((int) $this->lastvisit_date) : '';
+        return $this->getLastvisitDate() > 0 ? get_datetime($this->getLastvisitDate()) : '';
     }
 
     public function getCreationDateFormatted(): string
     {
-        return get_datetime((int) $this->creation_date);
+        return get_datetime($this->getCreationDate());
     }
 
     /**
-     * update
-     * @param array $data
-     * @param User $user
-     * @return boolean
+     * @param array{max_counter: int, expire: int, allow_stream: int, allow_download: int, description?: string} $data
      */
-    public function update(array $data, $user)
+    public function update(array $data, User $user): int
     {
-        $this->max_counter    = (int)($data['max_counter']);
-        $this->expire_days    = (int)($data['expire']);
-        $this->allow_stream   = ($data['allow_stream'] == '1');
-        $this->allow_download = ($data['allow_download'] == '1');
-        $this->description    = isset($data['description']) ? $data['description'] : $this->description;
+        $this->data['max_counter']    = (int) $data['max_counter'];
+        $this->data['expire_days']    = (int) $data['expire'];
+        $this->data['allow_stream']   = (int) ($data['allow_stream'] == 1);
+        $this->data['allow_download'] = (int) ($data['allow_download'] == 1);
+        $this->data['description']    = $data['description'] ?? $this->getDescription();
 
-        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " . "WHERE `id` = ?";
-        $params = array(
-            $this->max_counter,
-            $this->expire_days,
-            $this->allow_stream ? 1 : 0,
-            $this->allow_download ? 1 : 0,
-            $this->description,
-            $this->id
-        );
+        $userId = null;
         if (!$user->has_access('75')) {
-            $sql .= " AND `user` = ?";
-            $params[] = $user->id;
+            $userId = $user->getId();
         }
 
-        return Dba::write($sql, $params);
+        $this->shareRepository->update(
+            $this,
+            $this->getMaxCounter(),
+            $this->getExpireDays(),
+            $this->getAllowStream() ? 1 : 0,
+            $this->getAllowDownload() ? 1 : 0,
+            $this->getDescription(),
+            $userId
+        );
+
+        return $this->getId();
     }
 
-    /**
-     * is_valid
-     * @param $secret
-     * @param $action
-     * @return boolean
-     */
-    public function is_valid($secret, $action)
+    public function is_valid(string $secret, string $action): bool
     {
-        if (!$this->id) {
+        if (!$this->getId()) {
             debug_event(self::class, 'Access Denied: Invalid share.', 3);
 
             return false;
@@ -197,31 +216,31 @@ class Share extends database_object
             return false;
         }
 
-        if ($this->expire_days > 0 && ($this->creation_date + ($this->expire_days * 86400)) < time()) {
+        if ($this->getExpireDays() > 0 && ($this->getCreationDate() + ($this->getExpireDays() * 86400)) < time()) {
             debug_event(self::class, 'Access Denied: share expired.', 3);
 
             return false;
         }
 
-        if ($this->max_counter > 0 && $this->counter >= $this->max_counter) {
+        if ($this->getMaxCounter() > 0 && $this->getCounter() >= $this->getMaxCounter()) {
             debug_event(self::class, 'Access Denied: max counter reached.', 3);
 
             return false;
         }
 
-        if (!empty($this->secret) && $secret != $this->secret) {
-            debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
+        if (!empty($this->getSecret()) && $secret != $this->getSecret()) {
+            debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->getId() . '.', 3);
 
             return false;
         }
 
-        if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
+        if ($action == 'download' && (!AmpConfig::get('download') || !$this->getAllowDownload())) {
             debug_event(self::class, 'Access Denied: download unauthorized.', 3);
 
             return false;
         }
 
-        if ($action == 'stream' && !$this->allow_stream) {
+        if ($action == 'stream' && !$this->getAllowStream()) {
             debug_event(self::class, 'Access Denied: stream unauthorized.', 3);
 
             return false;
@@ -230,15 +249,12 @@ class Share extends database_object
         return true;
     }
 
-    /**
-     * @return Stream_Playlist
-     */
-    public function create_fake_playlist()
+    public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
         $medias   = array();
 
-        switch ($this->object_type) {
+        switch ($this->getObjectType()) {
             case 'album':
             case 'playlist':
                 $songs  = $this->getObject()->get_medias('song');
@@ -248,54 +264,19 @@ class Share extends database_object
                 break;
             default:
                 $medias[] = array(
-                    'object_type' => $this->object_type,
-                    'object_id' => $this->object_id,
+                    'object_type' => $this->getObjectType(),
+                    'object_id' => $this->getObjectId(),
                 );
                 break;
         }
 
-        $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
+        $playlist->add($medias, '&share_id=' . $this->getId() . '&share_secret=' . $this->getSecret());
 
         return $playlist;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get_user_owner()
+    public function get_user_owner(): int
     {
-        return $this->user;
-    }
-
-    /**
-     * @param string $object_type
-     * @param integer $object_id
-     * @param boolean $show_text
-     */
-    public static function display_ui($object_type, $object_id, $show_text = true)
-    {
-        $result = sprintf(
-            '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
-            $object_type,
-            $object_id,
-            Ui::get_icon('share', T_('Share'))
-        );
-
-        if ($show_text) {
-            $result .= sprintf('&nbsp;%s', T_('Share'));
-        }
-        $result .= '</a>';
-
-        return $result;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private function getModelFactory(): ModelFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ModelFactoryInterface::class);
+        return $this->getUserId();
     }
 }
