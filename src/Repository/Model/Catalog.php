@@ -52,6 +52,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Video\VideoFromTagUpdaterInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
@@ -1432,7 +1433,7 @@ abstract class Catalog extends database_object
             foreach ($values as $object_id) {
                 Recommendation::get_artist_info($object_id);
                 Recommendation::get_artists_like($object_id);
-                Artist::set_last_update($object_id);
+                $this->getArtistRepository()->updateLastUpdate($object_id);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -1729,7 +1730,10 @@ abstract class Catalog extends database_object
         }
         // removing an album means their counts have changed too
         foreach ($artists as $artist_id) {
-            Artist::update_artist_counts($artist_id);
+            if ($artist_id > 0) {
+                $artist = new Artist($artist_id);
+                $artist->update_album_count();
+            }
         }
     }
 
@@ -2338,7 +2342,10 @@ abstract class Catalog extends database_object
                             // update artists who need a recent update
                             $artists = $catalog->get_artist_ids('count');
                             foreach ($artists as $artist_id) {
-                                Artist::update_artist_counts($artist_id);
+                                if ($artist_id > 0) {
+                                    $artist = new Artist($artist_id);
+                                    $artist->update_album_count();
+                                }
                             }
                         }
                     }
@@ -2618,5 +2625,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(VideoFromTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

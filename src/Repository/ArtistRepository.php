@@ -138,4 +138,60 @@ final class ArtistRepository implements ArtistRepositoryInterface
             [$user, $artist->getId()]
         );
     }
+
+    /**
+     * Update artist last_update time.
+     */
+    public function updateLastUpdate(int $artistId): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `last_update` = ? WHERE `id` = ?',
+            [time(), $artistId]
+        );
+    }
+
+    public function updateAlbumCount(Artist $artist, int $count): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `album_count` = ? WHERE `id` = ?',
+            [$count, $artist->getId()]
+        );
+    }
+
+    public function updateAlbumGroupCount(Artist $artist, int $count): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `album_group_count`= ? WHERE `id` = ?',
+            [$count, $artist->getId()]
+        );
+    }
+
+    public function updateSongCount(Artist $artist, int $count): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `song_count` = ? WHERE `id` = ?',
+            [$count, $artist->getId()]
+        );
+    }
+
+    public function updateTime(Artist $artist, int $time): void
+    {
+        Dba::write(
+            'UPDATE `artist` SET `time` = ? WHERE `id` = ?',
+            [$time, $artist->getId()]
+        );
+    }
+
+    public function updateArtistInfo(
+        Artist $artist,
+        string $summary,
+        string $placeformed,
+        int $yearformed,
+        bool $manual = false
+    ): void {
+        Dba::write(
+            'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?',
+            [$summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $artist->getId()]
+        );
+    }
 }

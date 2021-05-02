@@ -132,7 +132,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 // update artists who need a recent update
                 $artists = $catalog->get_artist_ids('count');
                 foreach ($artists as $artist_id) {
-                    Artist::update_artist_counts($artist_id);
+                    if ($artist_id > 0) {
+                        $artist = new Artist($artist_id);
+                        $artist->update_album_count();
+                    }
                 }
 
                 $buffer = ob_get_contents();

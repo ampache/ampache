@@ -59,4 +59,25 @@ interface ArtistRepositoryInterface
      * Update artist associated user.
      */
     public function updateArtistUser(Artist $artist, int $user): void;
+
+    /**
+     * Update artist last_update time.
+     */
+    public function updateLastUpdate(int $artistId): void;
+
+    public function updateAlbumCount(Artist $artist, int $count): void;
+
+    public function updateAlbumGroupCount(Artist $artist, int $count): void;
+
+    public function updateSongCount(Artist $artist, int $count): void;
+
+    public function updateTime(Artist $artist, int $time): void;
+
+    public function updateArtistInfo(
+        Artist $artist,
+        string $summary,
+        string $placeformed,
+        int $yearformed,
+        bool $manual = false
+    ): void;
 }

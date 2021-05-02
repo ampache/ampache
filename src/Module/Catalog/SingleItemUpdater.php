@@ -145,9 +145,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 }
                 $tags = $this->tagRepository->getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
-                $libitem->update_time();
                 $libitem->update_album_count();
-                $libitem->update_song_count();
                 break;
         } // end switch type
 

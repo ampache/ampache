@@ -1371,7 +1371,10 @@ class Song extends database_object implements
         // migrate stats for the old artist
         static::getDataMigrator()->migrate('artist', $old_artist, $new_artist);
 
-        Artist::update_artist_counts($new_artist);
+        if ($new_artist > 0) {
+            $artist = new Artist($new_artist);
+            $artist->update_album_count();
+        }
     } // update_artist
 
     /**

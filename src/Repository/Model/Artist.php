@@ -357,8 +357,6 @@ class Artist extends database_object implements library_item
         }
         if ($this->album_count == 0 && $this->album_group_count == 0 && $this->song_count == 0) {
             $this->update_album_count();
-            $this->update_song_count();
-            $this->update_time();
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
@@ -739,7 +737,10 @@ class Artist extends database_object implements library_item
                     Userflag::garbage_collection();
                     $this->getUseractivityRepository()->collectGarbage();
                 }
-                Artist::update_artist_counts($current_id);
+                if ($current_id > 0) {
+                    $artist = new Artist($current_id);
+                    $artist->update_album_count();
+                }
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -806,9 +807,13 @@ class Artist extends database_object implements library_item
         $placeformed = (empty($placeformed)) ? null : $placeformed;
         $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
-        $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret  = Dba::write($sql,
-            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
+        $this->getArtistRepository()->updateArtistInfo(
+            $this,
+            $summary,
+            $placeformed,
+            $yearformed,
+            $manual
+        );
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
@@ -816,47 +821,22 @@ class Artist extends database_object implements library_item
     }
 
     /**
-     * update_artist_counts
-     *
-     * @param integer $artist_id
-     */
-    public static function update_artist_counts($artist_id)
-    {
-        if ($artist_id > 0) {
-            $artist = new Artist($artist_id);
-            $artist->update_album_count();
-            $artist->update_song_count();
-            $artist->update_time();
-        }
-    }
-
-    /**
-     * Update artist last_update time.
-     * @param integer $object_id
-     */
-    public static function set_last_update($object_id)
-    {
-        $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, array(time(), $object_id));
-    }
-
-    /**
      * update_time
      *
      * Get time for an artist and set it.
-     * @return integer
      */
-    public function update_time()
+    private function update_time()
     {
-        $time = $this->getArtistRepository()->getDuration($this);
-        if ($time > 0 && $time !== $this->time && $this->id) {
-            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->time = $time;
-            self::set_last_update((int) $this->id);
-        }
+        $artistRepository = $this->getArtistRepository();
 
-        return $time;
+        $time = $artistRepository->getDuration($this);
+        if ($time > 0 && $time !== $this->time && $this->id) {
+            $artistRepository->updateTime($this, $time);
+
+            $this->time = $time;
+
+            $artistRepository->updateLastUpdate($this->getId());
+        }
     }
 
     /**
@@ -866,38 +846,37 @@ class Artist extends database_object implements library_item
      */
     public function update_album_count()
     {
-        $albumRepository = $this->getAlbumRepository();
+        $albumRepository  = $this->getAlbumRepository();
+        $artistRepository = $this->getArtistRepository();
 
         $album_count = $albumRepository->getCountByArtist($this);
         if ($album_count > 0 && $album_count !== $this->album_count && $this->id) {
-            $sql = "UPDATE `artist` SET `album_count`=$album_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
+            $artistRepository->updateAlbumCount($this, $album_count);
+
             $this->album_count = $album_count;
-            self::set_last_update((int) $this->id);
+
+            $artistRepository->updateLastUpdate($this->getId());
         }
+
         $group_count = $albumRepository->getGroupedCountByArtist($this);
         if ($group_count > 0 && $group_count !== $this->album_group_count && $this->id) {
-            $sql = "UPDATE `artist` SET `album_group_count`=$group_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->album_group_count = $group_count;
-            self::set_last_update((int) $this->id);
-        }
-    }
+            $artistRepository->updateAlbumGroupCount($this, $group_count);
 
-    /**
-     * update_song_count
-     *
-     * Get song_count for an artist and set it.
-     */
-    public function update_song_count()
-    {
+            $this->album_group_count = $group_count;
+
+            $artistRepository->updateLastUpdate($this->getId());
+        }
+
         $song_count = $this->getSongRepository()->getCountByArtist($this);
         if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
-            $sql = "UPDATE `artist` SET `song_count`=$song_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
+            $artistRepository->updateSongCount($this, $song_count);
+
             $this->song_count = $song_count;
-            self::set_last_update((int) $this->id);
+
+            $artistRepository->updateLastUpdate($this->getId());
         }
+
+        $this->update_time();
     }
 
     /**
