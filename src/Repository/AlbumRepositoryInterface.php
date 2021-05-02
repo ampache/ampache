@@ -123,4 +123,11 @@ interface AlbumRepositoryInterface
         ?int $catalog = null,
         bool $group_release_type = false
     ): array;
+
+    /**
+     * @return int[]
+     */
+    public function getDistinctIdsByArtist(
+        Artist $artist
+    ): array;
 }

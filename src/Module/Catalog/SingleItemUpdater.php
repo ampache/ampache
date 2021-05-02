@@ -134,7 +134,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 break;
             case 'artist':
                 /** @var Artist $libitem */
-                foreach ($libitem->get_child_ids() as $album_id) {
+                foreach ($this->albumRepository->getDistinctIdsByArtist($libitem) as $album_id) {
                     $album_tags = $this->tagRepository->getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
                 }

@@ -382,4 +382,21 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getDistinctIdsByArtist(
+        Artist $artist
+    ): array {
+        $sql       = 'SELECT DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = \'1\'';
+        $dbResults = Dba::read($sql, [$artist->getId()]);
+        $results   = [];
+
+        while ($row = Dba::fetch_assoc($dbResults, false)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
 }
