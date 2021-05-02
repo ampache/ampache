@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistCacheBuilderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -243,7 +244,7 @@ class Browse extends Query
                 break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids, true, $limit_threshold);
+                $this->getArtistCacheBuilder()->build($object_ids, true, (int) $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
             case 'live_stream':
@@ -607,5 +608,15 @@ class Browse extends Query
         global $dic;
 
         return $dic->get(CookieSetterInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getArtistCacheBuilder(): ArtistCacheBuilderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 }

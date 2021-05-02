@@ -17,17 +17,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Artist;
 
-use function DI\autowire;
-
-return [
-    Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
-    Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
-    ArtistCacheBuilderInterface::class => autowire(ArtistCacheBuilder::class),
-];
+interface ArtistCacheBuilderInterface
+{
+    /**
+     * this attempts to build a cache of the data from the passed albums all in one query
+     *
+     * @param int[] $ids
+     */
+    public function build(
+        array $ids,
+        bool $extra = false,
+        int $limitThreshold = 0
+    ): void;
+}

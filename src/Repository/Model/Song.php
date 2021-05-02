@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistCacheBuilderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Playback\Stream;
@@ -606,7 +607,7 @@ class Song extends database_object implements
             }
         }
 
-        Artist::build_cache($artists);
+        static::getArtistCacheBuilder()->build($artists);
         Album::build_cache($albums);
         Tag::build_cache($tags);
         Tag::build_map_cache('song', $song_ids);
@@ -2269,5 +2270,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistCacheBuilder(): ArtistCacheBuilderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 }

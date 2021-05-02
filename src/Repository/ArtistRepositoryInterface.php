@@ -22,6 +22,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Generator;
 
 interface ArtistRepositoryInterface
 {
@@ -80,4 +81,11 @@ interface ArtistRepositoryInterface
         int $yearformed,
         bool $manual = false
     ): void;
+
+    /**
+     * @return Generator<array<string, mixed>>
+     */
+    public function getByIdList(
+        array $idList
+    ): Generator;
 }

@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
+use Generator;
 
 final class ArtistRepository implements ArtistRepositoryInterface
 {
@@ -193,5 +194,24 @@ final class ArtistRepository implements ArtistRepositoryInterface
             'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?',
             [$summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $artist->getId()]
         );
+    }
+
+    /**
+     * @return Generator<array<string, mixed>>
+     */
+    public function getByIdList(
+        array $idList
+    ): Generator {
+        if ($idList === []) {
+            return [];
+        }
+        $db_results = Dba::read(
+            'SELECT * FROM `artist` WHERE `id` IN (?)',
+            [implode(',', $idList)]
+        );
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            yield $row;
+        }
     }
 }

@@ -103,4 +103,6 @@ interface SongRepositoryInterface
      * Get count for an artist's songs.
      */
     public function getCountByArtist(Artist $artist): int;
+
+    public function getByIdList(array $idList): \Generator;
 }

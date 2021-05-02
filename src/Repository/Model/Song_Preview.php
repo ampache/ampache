@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Artist\ArtistCacheBuilderInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
@@ -168,7 +169,7 @@ class Song_Preview extends database_object implements
             }
         }
 
-        Artist::build_cache($artists);
+        static::getArtistCacheBuilder()->build($artists);
 
         return true;
     } // build_cache
@@ -496,5 +497,15 @@ class Song_Preview extends database_object implements
         global $dic;
 
         return $dic->get(MissingArtistLookupInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistCacheBuilder(): ArtistCacheBuilderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 }

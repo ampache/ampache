@@ -278,4 +278,16 @@ final class SongRepository implements SongRepositoryInterface
 
         return (int) $results['song_count'];
     }
+
+    public function getByIdList(array $idList): \Generator
+    {
+        $db_results = Dba::read(
+            'SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IN (?)',
+            [implode(',', $idList)]
+        );
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            yield $row;
+        }
+    }
 }

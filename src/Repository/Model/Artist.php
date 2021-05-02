@@ -251,46 +251,6 @@ class Artist extends database_object implements library_item
     } // construct_from_array
 
     /**
-     * this attempts to build a cache of the data from the passed albums all in one query
-     * @param integer[] $ids
-     * @param boolean $extra
-     * @param string $limit_threshold
-     * @return boolean
-     */
-    public static function build_cache($ids, $extra = false, $limit_threshold = '')
-    {
-        if (empty($ids)) {
-            return false;
-        }
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT * FROM `artist` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('artist', $row['id'], $row);
-        }
-
-        // If we need to also pull the extra information, this is normally only used when we are doing the human display
-        if ($extra && (AmpConfig::get('show_played_times'))) {
-            $sql = "SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IN $idlist";
-
-            //debug_event("artist.class", "build_cache sql: " . $sql, 5);
-            $db_results = Dba::read($sql);
-
-            $cache = static::getDatabaseObjectCache();
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
-                $cache->add('artist_extra', $row['artist'], $row);
-            }
-        } // end if extra
-
-        return true;
-    } // build_cache
-
-    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
