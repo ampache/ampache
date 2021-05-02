@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "139393a7db4387078740ca786f14b083",
+    "content-hash": "92891af0d9937d0807d8b5f3c646a353",
     "packages": [
         {
             "name": "adhocore/cli",
-            "version": "0.8.4",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adhocore/php-cli.git",
-                "reference": "c17fdec05954b3bd2df49adff56284a511dd1083"
+                "reference": "319c7dd0092c0346d9ad03366cc13d3491b57e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/c17fdec05954b3bd2df49adff56284a511dd1083",
-                "reference": "c17fdec05954b3bd2df49adff56284a511dd1083",
+                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/319c7dd0092c0346d9ad03366cc13d3491b57e34",
+                "reference": "319c7dd0092c0346d9ad03366cc13d3491b57e34",
                 "shasum": ""
             },
             "require": {
@@ -62,7 +62,7 @@
             ],
             "support": {
                 "issues": "https://github.com/adhocore/php-cli/issues",
-                "source": "https://github.com/adhocore/php-cli/tree/0.8.4"
+                "source": "https://github.com/adhocore/php-cli/tree/0.9.0"
             },
             "funding": [
                 {
@@ -70,7 +70,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-10-09T00:51:05+00:00"
+            "time": "2021-01-06T00:25:50+00:00"
         },
         {
             "name": "aehlke/tag-it",
