@@ -2958,10 +2958,10 @@ abstract class Catalog extends database_object
                 $catalogs = self::get_catalogs();
                 // Intentional break fall-through
             case 'update_file_tags':
-                $write_id3 = AmpConfig::get('write_id3', false);
-                AmpConfig::set('write_id3', 'true', true);
+                $write_id3     = AmpConfig::get('write_id3', false);
                 $write_id3_art = AmpConfig::get('write_id3_art', false);
-                AmpConfig::set('write_id3_art', 'true', true);
+                AmpConfig::set_by_array(['write_id3' => 'true'], true);
+                AmpConfig::set_by_array(['write_id3_art' => 'true'], true);
 
                 $id3Writer = static::getSongId3TagWriter();
                 set_time_limit(0);
@@ -2977,8 +2977,8 @@ abstract class Catalog extends database_object
                         }
                     }
                 }
-                AmpConfig::set('write_id3', $write_id3, true);
-                AmpConfig::set('write_id3', $write_id3_art, true);
+                AmpConfig::set_by_array(['write_id3' => $write_id3], true);
+                AmpConfig::set_by_array(['write_id3' => $write_id3_art], true);
         }
 
         // Remove any orphaned artists/albums/etc.
