@@ -559,7 +559,7 @@ class Subsonic_Api
         }
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
         $artists  = Artist::get_id_arrays($catalogs);
-        Subsonic_Xml_Data::addArtistsRoot($response, $artists, true);
+        Subsonic_Xml_Data::addArtistsRoot($response, $artists);
         self::apiOutput($input, $response);
     }
 

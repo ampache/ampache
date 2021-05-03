@@ -469,9 +469,8 @@ class Subsonic_Xml_Data
      * addArtistsRoot
      * @param SimpleXMLElement $xml
      * @param array $artists
-     * @param boolean $albumsSet
      */
-    public static function addArtistsRoot($xml, $artists, $albumsSet = false)
+    public static function addArtistsRoot($xml, $artists)
     {
         $xartists = $xml->addChild('artists');
         self::addIgnoredArticles($xartists);
