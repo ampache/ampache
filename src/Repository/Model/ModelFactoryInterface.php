@@ -95,6 +95,10 @@ interface ModelFactoryInterface
         int $tvShowId
     ): TvShow;
 
+    public function createTvShowSeason(
+        int $tvShowSeasonId
+    ): TVShow_Season;
+
     public function createDemocratic(
         int $democraticId
     ): Democratic;

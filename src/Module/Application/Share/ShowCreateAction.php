@@ -73,18 +73,18 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $queryParams = $request->getQueryParams();
 
-        $type      = $queryParams['type'] ?? '';
-        $object_id = $queryParams['id'] ?? null;
+        $type     = $queryParams['type'] ?? '';
+        $objectId = $queryParams['id'] ?? null;
 
         $this->ui->showHeader();
 
-        if (in_array($type, Share::ALLOWED_SHARE_TYPES) && $object_id !== null) {
-            if (is_array($object_id)) {
-                $object_id = $object_id[0];
+        if (in_array($type, Share::ALLOWED_SHARE_TYPES) && $objectId !== null) {
+            if (is_array($objectId)) {
+                $objectId = $objectId[0];
             }
 
-            /** @var ?Song|Album|Playlist|Video $object */
-            $object = $this->modelFactory->mapObjectType($type, (int) $object_id);
+            /** @var null|Song|Album|Playlist|Video $object */
+            $object = $this->modelFactory->mapObjectType($type, (int) $objectId);
             if ($object !== null && !$object->isNew()) {
                 $object->format();
 

@@ -154,6 +154,12 @@ final class ModelFactory implements ModelFactoryInterface
         return new TvShow($tvShowId);
     }
 
+    public function createTvShowSeason(
+        int $tvShowSeasonId
+    ): TVShow_Season {
+        return new TVShow_Season($tvShowSeasonId);
+    }
+
     public function createDemocratic(
         int $democraticId
     ): Democratic {

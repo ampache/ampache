@@ -20,15 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\TvShowSeason;
 
-use Ampache\Repository\Model\TVShow_Season;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,23 +38,37 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
+        $tvShowSeasonId = (int) ($request->getQueryParams()['season'] ?? 0);
 
-        $season = new TVShow_Season($_REQUEST['season']);
+        $season = $this->modelFactory->createTvShowSeason($tvShowSeasonId);
         $season->format();
-        $object_ids  = $season->get_episodes();
-        $object_type = 'tvshow_episode';
 
-        require_once Ui::find_template('show_tvshow_season.inc.php');
-
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_tvshow_season.inc.php',
+            [
+                'season' => $season,
+                'object_ids' => $season->get_episodes(),
+                'object_type' => 'tvshow_episode',
+                'web_path' => $this->configContainer->getWebPath()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

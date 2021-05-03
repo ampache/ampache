@@ -2,7 +2,7 @@
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,40 +17,50 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Module\Application\WebPlayer;
 
-use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Psr\Http\Message\ResponseInterface;
+use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowEmbeddedAction implements ApplicationActionInterface
+class ShowEmbeddedActionTest extends MockeryTestCase
 {
-    private UiInterface $ui;
+    /** @var MockInterface|UiInterface */
+    private MockInterface $ui;
 
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    private ShowEmbeddedAction $subject;
+
+    public function setUp(): void
+    {
+        $this->ui = $this->mock(UiInterface::class);
+
+        $this->subject = new ShowEmbeddedAction(
+            $this->ui
+        );
     }
 
-    public const REQUEST_KEY = 'show';
-
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function testRunRenders(): void
     {
-        $this->ui->show(
-            'show_web_player.inc.php',
-            [
-                'iframed' => true
-            ]
-        );
+        $this->ui->shouldReceive('show')
+            ->with(
+                'show_web_player.inc.php',
+                [
+                    'iframed' => true
+                ]
+            )
+            ->once();
 
-        return null;
+        $this->assertNull(
+            $this->subject->run(
+                $this->mock(ServerRequestInterface::class),
+                $this->mock(GuiGatekeeperInterface::class)
+            )
+        );
     }
 }

@@ -12,6 +12,8 @@ use Ampache\Module\Util\Ui;
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
+/** @var bool $iframed */
+
 $autoplay = true;
 if ($is_share) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');

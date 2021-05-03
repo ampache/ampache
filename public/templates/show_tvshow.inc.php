@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
@@ -32,8 +33,11 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php
+/** @var TvShow $tvshow*/
+/** @var int[] $object_ids */
+/** @var string $object_type */
+/** @var string $web_path */
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
@@ -90,7 +94,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     } ?>
         <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
-            <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
+            <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo $web_path ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
