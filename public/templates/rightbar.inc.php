@@ -135,7 +135,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         $objects   = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
+    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview', 'podcast_episode');
 
     foreach ($objects as $object_data) {
         $uid  = $object_data['track_id'];
@@ -143,13 +143,17 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         if (in_array($type, $normal_array)) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
             $object     = new $class_name(array_shift($object_data));
-            $object->format();
-        } ?>
-    <li class="<?php echo Ui::flip_class(); ?>" >
-      <?php echo $object->f_link; ?>
-        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
-    </li>
-<?php
+            $object->format(); ?>
+            <li class="<?php echo Ui::flip_class(); ?>" >
+                <?php if (property_exists('f_link', $object)) {
+                echo $object->f_link;
+            } else {
+                echo $object->getLinkFormatted();
+            } ?>
+                <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
+            </li>
+            <?php
+        }
     } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php
