@@ -21,15 +21,16 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Util\Ui;
 
 /** @var Share $share */
+/** @var Stream_Playlist $embed */
 
 $embed = $_REQUEST['embed'];
 
 $is_share = true;
-$playlist = $share->create_fake_playlist();
 
 require Ui::find_template('show_web_player.inc.php');
 

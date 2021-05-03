@@ -17,18 +17,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
-use function DI\autowire;
+use Ampache\Repository\Model\ShareInterface;
 
-return [
-    ShareUiLinkRendererInterface::class => autowire(ShareUiLinkRenderer::class),
-    ExpirationDateCalculatorInterface::class => autowire(ExpirationDateCalculator::class),
-    ShareCreatorInterface::class => autowire(ShareCreator::class),
-    ShareValidatorInterface::class => autowire(ShareValidator::class),
-];
+interface ShareValidatorInterface
+{
+    public function isValid(
+        ShareInterface $share,
+        string $secret,
+        string $action
+    ): bool;
+}

@@ -28,6 +28,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Playback\PlaybackFactoryInterface;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Share\ShareValidatorInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,7 +40,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ShareInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -56,18 +60,30 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ShareValidatorInterface $shareValidator;
+
+    private PlaybackFactoryInterface $playbackFactory;
+
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ShareRepositoryInterface $shareRepository,
         ContainerInterface $dic,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShareValidatorInterface $shareValidator,
+        PlaybackFactoryInterface $playbackFactory,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->shareRepository = $shareRepository;
         $this->dic             = $dic;
         $this->modelFactory    = $modelFactory;
+        $this->shareValidator  = $shareValidator;
+        $this->playbackFactory = $playbackFactory;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -108,7 +124,7 @@ final class ConsumeAction implements ApplicationActionInterface
             }
         }
 
-        if (!$share->is_valid($secret, $action)) {
+        if (!$this->shareValidator->isValid($share, $secret, $action)) {
             throw new AccessDeniedException();
         }
 
@@ -131,11 +147,49 @@ final class ConsumeAction implements ApplicationActionInterface
                 return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
         } elseif ($action == 'stream') {
-            require Ui::find_template('show_share.inc.php');
+            $this->ui->show(
+                'show_share.inc.php',
+                [
+                    'share' => $share,
+                    'playlist' => $this->create_fake_playlist($share)
+                ]
+            );
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }
 
         return null;
+    }
+
+    private function create_fake_playlist(ShareInterface $share): Stream_Playlist
+    {
+        $playlist = $this->playbackFactory->createStreamPlaylist('-1');
+        $medias   = [];
+
+        switch ($share->getObjectType()) {
+            case 'album':
+            case 'playlist':
+                $songs  = $share->getObject()->get_medias('song');
+                foreach ($songs as $song) {
+                    $medias[] = $song;
+                }
+                break;
+            default:
+                $medias[] = [
+                    'object_type' => $share->getObjectType(),
+                    'object_id' => $share->getObjectId(),
+                ];
+                break;
+        }
+
+        $playlist->add($medias,
+            sprintf(
+                '&share_id=%d&share_secret=%s',
+                $share->getId(),
+                $share->getSecret()
+            )
+        );
+
+        return $playlist;
     }
 }

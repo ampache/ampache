@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Container\ContainerInterface;
 
@@ -55,6 +57,23 @@ class ModelFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             License::class,
             $this->subject->createLicense()
+        );
+    }
+
+    public function testCreateShareReturnsShare(): void
+    {
+        $this->dic->shouldReceive('get')
+            ->with(ShareRepositoryInterface::class)
+            ->once()
+            ->andReturn($this->mock(ShareRepositoryInterface::class));
+        $this->dic->shouldReceive('get')
+            ->with(PlaybackFactoryInterface::class)
+            ->once()
+            ->andReturn($this->mock(PlaybackFactoryInterface::class));
+
+        $this->assertInstanceOf(
+            Share::class,
+            $this->subject->createShare(666)
         );
     }
 }

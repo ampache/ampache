@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -239,6 +240,7 @@ final class ModelFactory implements ModelFactoryInterface
         return new Share(
             $this->dic->get(ShareRepositoryInterface::class),
             $this,
+            $this->dic->get(PlaybackFactoryInterface::class),
             $shareId
         );
     }

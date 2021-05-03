@@ -41,4 +41,5 @@ return [
     MediaUrlListGenerator\SimpleM3uMediaUrlListGeneratorType::class => autowire(),
     MediaUrlListGenerator\WebPlayerMediaUrlListGeneratorType::class => autowire(),
     MediaUrlListGenerator\XspfMediaUrlListGeneratorType::class => autowire(),
+    PlaybackFactoryInterface::class => autowire(PlaybackFactory::class),
 ];

@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Plugin\Adapter\UserMediaPlaySaverAdapterInterface;
+use Ampache\Module\Share\ShareValidatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -80,6 +81,8 @@ final class PlayAction implements ApplicationActionInterface
 
     private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
+    private ShareValidatorInterface $shareValidator;
+
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
@@ -89,7 +92,8 @@ final class PlayAction implements ApplicationActionInterface
         UserMediaPlaySaverAdapterInterface $userMediaPlaySaverAdapter,
         ModelFactoryInterface $modelFactory,
         ExtensionToMimeTypeMapperInterface $extensionToMimeTypeMapper,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        ShareValidatorInterface $shareValidator
     ) {
         $this->browser                   = $browser;
         $this->authenticationManager     = $authenticationManager;
@@ -100,6 +104,7 @@ final class PlayAction implements ApplicationActionInterface
         $this->modelFactory              = $modelFactory;
         $this->extensionToMimeTypeMapper = $extensionToMimeTypeMapper;
         $this->podcastEpisodeRepository  = $podcastEpisodeRepository;
+        $this->shareValidator            = $shareValidator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -324,7 +329,7 @@ final class PlayAction implements ApplicationActionInterface
             $uid   = 0;
             $share = $this->modelFactory->createShare((int) $share_id);
 
-            if (!$share->is_valid($secret, 'stream')) {
+            if (!$this->shareValidator->isValid($share, $secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;

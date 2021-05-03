@@ -56,6 +56,8 @@ interface ShareInterface
 
     public function getObjectUrl(): string;
 
+    public function getObject(): playable_item;
+
     public function getObjectName(): string;
 
     public function getUserName(): string;
@@ -65,8 +67,6 @@ interface ShareInterface
     public function getCreationDateFormatted(): string;
 
     public function update(array $data, User $user): int;
-
-    public function is_valid(string $secret, string $action): bool;
 
     public function create_fake_playlist(): Stream_Playlist;
 
