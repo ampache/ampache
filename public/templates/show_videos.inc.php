@@ -38,7 +38,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="video">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -86,13 +86,13 @@ if (isset($video_type) && $video_type != 'video') {
                 $libitem = new Video($video_id);
             }
             $libitem->format(); ?>
-        <tr id="video_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="video_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_video_row.inc.php'); ?>
         </tr>
         <?php
         } //end foreach?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="42"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
         </tr>
         <?php

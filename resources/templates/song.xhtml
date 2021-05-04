@@ -1,7 +1,7 @@
 <html>
 <dl class="media_details" tal:define="song_id SONG/getId">
-    <dt class="odd" i18n:translate="">Rating</dt>
-    <dd class="odd">
+    <dt i18n:translate="">Rating</dt>
+    <dd>
         <div id="rating_${song_id}_song" tal:define="average_rating SONG/getAverageRating">
             <div tal:replace="structure SONG/getRating">RATING</div>
             <tal:block tal:condition="average_rating">
@@ -9,20 +9,20 @@
             </tal:block>
         </div>
     </dd>
-    <dt class="even" i18n:translate="">Fav</dt>
-    <dd class="even">
+    <dt i18n:translate="">Fav</dt>
+    <dd>
         <div id="userflag_${song_id}_song" tal:content="structure SONG/getUserFlags">FLAGS</div>
     </dd>
     <tal:block tal:condition="CONFIG/isWaveformEnabled">
-        <dt class="odd" i18n:translate="">Waveform</dt>
-        <dd class="odd">
+        <dt i18n:translate="">Waveform</dt>
+        <dd>
             <div id="waveform_${song_id}">
                 <img tal:attributes="src SONG/getWaveformUrl" />
             </div>
         </dd>
     </tal:block>
-    <dt class="even">Action</dt>
-    <dd class="even">
+    <dt>Action</dt>
+    <dd>
         <tal:block tal:condition="CONFIG/isDirectplayEnabled">
             <tal:block tal:replace="structure SONG/getDirectPlayButton">DIRECTPLAY BUTTON</tal:block>
             <tal:block tal:condition="SONG/canAutoplayNext">
@@ -79,13 +79,9 @@
     </dd>
     <tal:block tal:repeat="prop SONG/getProperties">
         <tal:block tal:condition="prop">
-            <tal:block tal:condition="repeat/prop/even">
-                <dt class="odd" tal:content="repeat/prop/key"></dt>
-                <dd class="odd" tal:content="structure prop"></dd>
-            </tal:block>
-            <tal:block tal:condition="repeat/prop/odd">
-                <dt class="even" tal:content="repeat/prop/key"></dt>
-                <dd class="even" tal:content="structure prop"></dd>
+            <tal:block>
+                <dt tal:content="repeat/prop/key"></dt>
+                <dd tal:content="structure prop"></dd>
             </tal:block>
         </tal:block>
     </tal:block>

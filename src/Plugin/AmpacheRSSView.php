@@ -104,9 +104,9 @@ class AmpacheRSSView
         if ($xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;
-            echo '<div class="home_plugin"><table class="tabledata">';
+            echo '<div class="home_plugin"><table class="tabledata striped-rows">';
             foreach ($xml->channel->item as $item) {
-                echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
+                echo '<tr><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
                 echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short',

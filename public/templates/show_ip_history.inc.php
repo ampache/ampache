@@ -46,7 +46,7 @@ use Ampache\Module\Util\Ui;
 </div>
 <br />
 <br />
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_date" />
   <col id="col_ipaddress" />
@@ -56,7 +56,7 @@ use Ampache\Module\Util\Ui;
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td class="cel_date">
         <?php echo get_datetime((int) $data['date']); ?>
     </td>

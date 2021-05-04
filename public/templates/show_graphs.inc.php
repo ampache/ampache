@@ -51,15 +51,12 @@ if (AmpConfig::get('geolocation')) { ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Start Date'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>"><input type="text" name="start_date" id="start_date" value="<?php echo $f_start_date; ?>" /></dd>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('End Date'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>"><input type="text" name="end_date" id="end_date" value="<?php echo $f_end_date; ?>" /></dd>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Zoom'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
+        <dt><?php echo T_('Start Date'); ?></dt>
+        <dd><input type="text" name="start_date" id="start_date" value="<?php echo $f_start_date; ?>" /></dd>
+        <dt><?php echo T_('End Date'); ?></dt>
+        <dd><input type="text" name="end_date" id="end_date" value="<?php echo $f_end_date; ?>" /></dd>
+        <dt><?php echo T_('Zoom'); ?></dt>
+        <dd>
             <select name="zoom">
             <?php
                 $date_formats = array(
@@ -77,9 +74,8 @@ if (AmpConfig::get('geolocation')) { ?>
                 } ?>
             </select>
         </dd>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"></dt>
-        <dd class="<?php echo $rowparity; ?>">
+        <dt></dt>
+        <dd>
             <input type="submit" value="<?php echo T_('View'); ?>" />
         </dd>
     </dl>

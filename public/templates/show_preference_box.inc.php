@@ -25,7 +25,6 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 
 /** @var UiInterface $ui */
@@ -35,7 +34,7 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
     $is_admin = true;
 } ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
@@ -64,11 +63,11 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
             $lastsubcat = $pref['subcategory'];
             $fsubcat    = $lastsubcat;
             if (!empty($fsubcat)) { ?>
-                <tr class="<?php echo Ui::flip_class() ?>"><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
+                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
                 <?php
             }
         } ?>
-        <tr class="<?php echo Ui::flip_class() ?>">
+        <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
                 <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>

@@ -105,7 +105,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
     if (AmpConfig::get('play_type') == 'localplay') {
         require_once Ui::find_template('show_localplay_control.inc.php');
     } ?>
-<ul id="rb_current_playlist">
+<ul id="rb_current_playlist" class="striped-rows">
 
 <?php
     $objects = array();
@@ -145,7 +145,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
             $object     = new $class_name(array_shift($object_data));
             $object->format();
         } ?>
-    <li class="<?php echo Ui::flip_class(); ?>" >
+    <li>
       <?php echo $object->f_link; ?>
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
@@ -155,7 +155,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 <?php
     } ?>
 <?php if (isset($truncated)) { ?>
-    <li class="<?php echo Ui::flip_class(); ?>">
+    <li>
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
 <?php

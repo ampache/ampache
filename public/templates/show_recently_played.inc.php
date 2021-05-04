@@ -33,7 +33,7 @@ $my_id    = (isset($client)) ? $user_id : $user->id;
 $link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) :  '';
 $is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_play"></th>
@@ -97,7 +97,7 @@ foreach ($data as $row) {
             }
         }
         $song->format(); ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td class="cel_play">
                 <span class="cel_play_content">&nbsp;</span>
                 <div class="cel_play_hover">

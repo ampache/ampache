@@ -32,7 +32,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_action" />
   <col id="col_votes" />
@@ -80,7 +80,7 @@ $democratic = Democratic::get_current_playlist();
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         $media      = new $class_name($item['object_id']);
         $media->format(); ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
     <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']); ?>

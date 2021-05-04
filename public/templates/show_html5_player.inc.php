@@ -45,13 +45,13 @@ var currentAudioElement = undefined;
 
     $(document).ready(function(){
 
-        if (!isNaN($.cookie('jp_volume'))) {
-            var jp_volume = $.cookie('jp_volume');
+        if (!isNaN(Cookies.get('jp_volume'))) {
+            var jp_volume = Cookies.get('jp_volume');
         } else {
             var jp_volume = 0.80;
         }
 
-        var replaygainPersist = $.cookie('replaygain');
+        var replaygainPersist = Cookies.get('replaygain');
 
         jplaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
@@ -258,7 +258,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-        $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/; samesite=strict'});
+        Cookies.set('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/; samesite=strict'});
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {

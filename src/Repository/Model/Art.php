@@ -371,7 +371,7 @@ class Art extends database_object
                 $songs = $this->getSongRepository()->getByAlbum($object->id);
             } elseif ($this->type === 'artist') {
                 /** Use special treatment for artists */
-                $songs = $this->getSongRepository()->getByArtist($object);
+                $songs = $this->getSongRepository()->getByArtist($object->id);
             }
             global $dic;
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
@@ -448,7 +448,8 @@ class Art extends database_object
     public function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
     {
         $idx = null;
-        for ($i=0; $i < count($apics); $i++) {
+        $cnt = count($apics);
+        for ($i=0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
                 $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];

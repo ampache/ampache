@@ -74,7 +74,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $song->file
             );
             
-            $result = $vainfo->read_id3();
+            $result     = $vainfo->read_id3();
             $fileformat = $result['fileformat'];
             if ($fileformat == 'mp3') {
                 $tdata = $result['tags']['id3v2'];

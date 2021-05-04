@@ -1273,8 +1273,8 @@ table.disablegv tr {
     width: 15%;
 }
 
-table.disablegv tr.odd {
-    background-color: rgba(255, 255, 255, 0) !important;
+table.disablegv tr {
+    background-color: transparent !important;
 }
 
 table.disablegv td {
