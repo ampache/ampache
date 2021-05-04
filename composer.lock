@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "139393a7db4387078740ca786f14b083",
+    "content-hash": "ed25f46620b1d5f84aa163dad41be28b",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -170,23 +170,6 @@
                     "files": [
                         "js/jquery.fileupload.js",
                         "js/jquery.iframe-transport.js"
-                    ]
-                }
-            }
-        },
-        {
-            "name": "carhartl/jquery-cookie",
-            "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/carhartl/jquery-cookie.git",
-                "reference": "v1.4.1"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "jquery.cookie.js"
                     ]
                 }
             }
@@ -1321,6 +1304,23 @@
                     "scripts": [
                         "src/jquery.qrcode.js",
                         "src/qrcode.js"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "js-cookie/js-cookie",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/js-cookie/js-cookie.git",
+                "reference": "v2.2.1"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "src/js.cookie.js"
                     ]
                 }
             }

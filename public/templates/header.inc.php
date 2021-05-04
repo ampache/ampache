@@ -85,7 +85,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
@@ -485,7 +485,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     $('#sidebar').show(500);
                 });
 
-                $.cookie('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
+                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
