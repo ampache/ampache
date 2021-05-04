@@ -60,7 +60,7 @@
         "needim/noty": "2.4.*",
         "oomphinc/composer-installers-extender": "^1.1",
         "openid/php-openid": "2.*",
-        "phpmailer/phpmailer": "6.1.*",
+        "phpmailer/phpmailer": "6.4.*",
         "pklauzinski/jscroll": "2.*",
         "rmccue/requests": "1.8.*",
         "sabre/dav": "3.*.*",
