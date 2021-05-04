@@ -365,11 +365,11 @@ final class VaInfo implements VaInfoInterface
     } // write_id3
 
     /**
-    * prepare_metadata_for_writing
-    * Prepares vorbiscomments/id3v2 metadata for writing tag to file
-    * @param array $frames
-    * @return array
-    */
+     * prepare_metadata_for_writing
+     * Prepares vorbiscomments/id3v2 metadata for writing tag to file
+     * @param array $frames
+     * @return array
+     */
     public function prepare_metadata_for_writing($frames)
     {
         $ndata = array();
