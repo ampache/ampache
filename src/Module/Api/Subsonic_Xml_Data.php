@@ -959,7 +959,7 @@ class Subsonic_Xml_Data
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
         $xdir->addAttribute('name', (string)$data['full_name']);
-        $allalbums = static::getAlbumRepository()->getByArtist($artist);
+        $allalbums = static::getAlbumRepository()->getByArtist($artist_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             self::addAlbum($xdir, $album, false, false, "child");

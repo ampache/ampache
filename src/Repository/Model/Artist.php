@@ -1021,7 +1021,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update_time
      *
      * Get time for an artist and set it.
-     * @return integer
      */
     public function update_time()
     {
@@ -1032,8 +1031,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $this->time = $time;
             self::set_last_update((int) $this->id);
         }
-
-        return $time;
     }
 
     /**
