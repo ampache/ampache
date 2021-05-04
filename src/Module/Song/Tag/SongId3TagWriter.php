@@ -75,7 +75,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             );
             
             $result = $vainfo->read_id3();
-            if ($result['fileformat'] == 'mp3') {
+            $fileformat = $result['fileformat'];
+            if ($fileformat == 'mp3') {
                 $tdata = $result['tags']['id3v2'];
                 $apics = $result['id3v2']['APIC'];
                 $meta  = $this->getMetadata($song);
@@ -84,8 +85,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $apics = $result['flac']['PICTURE'];
                 $meta  = $this->getVorbisMetadata($song);
             }
-            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
-            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
+            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
 
             $ndata = $vainfo->prepare_metadata_for_writing($tdata);
 
@@ -122,7 +122,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     }
                 }
             }
-            $file_has_pics = (isset($apics) ? true : false);
+            $file_has_pics = isset($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
                     $ndata['attached_picture'][] = $apic;
@@ -132,8 +132,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
                 $art         = new Art($song->album, 'album');
                 if ($art->has_db_info()) {
-                    $album_image                 = $art->get(true);
-                    $new_pic                     = array('data' => $album_image, 'mime' => $art->raw_mime,
+                    $album_image = $art->get(true);
+                    $new_pic     = array('data' => $album_image, 'mime' => $art->raw_mime,
                         'picturetypeid' => 3, 'description' => $song->f_album);
                     $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                     if (is_null($idx)) {
@@ -142,8 +142,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
                 $art = new Art($song->artist, 'artist');
                 if ($art->has_db_info()) {
-                    $artist_image                = $art->get(true);
-                    $new_pic                     = array('data' => $artist_image, 'mime' => $art->raw_mime,
+                    $artist_image = $art->get(true);
+                    $new_pic      = array('data' => $artist_image, 'mime' => $art->raw_mime,
                         'picturetypeid' => 8, 'description' => $song->f_artist_full);
                     $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                     if (is_null($idx)) {
