@@ -391,7 +391,7 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * read_id3
-     * 
+     *
      * This function runs the various steps to gathering the metadata
      * @return array
      */
