@@ -1707,11 +1707,11 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($libitem->getId());
+                $songs   = static::getSongRepository()->getByAlbum($object_id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
-                $songs   = static::getSongRepository()->getByArtist($libitem);
+                $songs   = static::getSongRepository()->getByArtist($object_id);
                 break;
             case 'song':
                 $songs[] = $object_id;
@@ -1719,7 +1719,7 @@ abstract class Catalog extends database_object
         } // end switch type
 
         if (!$api) {
-            echo '<table class="tabledata">' . "\n";
+            echo '<table class="tabledata striped-rows">' . "\n";
             echo '<thead><tr class="th-top">' . "\n";
             echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
             echo "<tbody>\n";
@@ -1734,14 +1734,14 @@ abstract class Catalog extends database_object
                     $result = (int)$change[1];
                 }
                 $file = scrub_out($song->file);
-                echo '<tr class="' . Ui::flip_class() . '">' . "\n";
+                echo '<tr>' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
                 if (!$api) {
-                    echo '<tr class="' . Ui::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
                 flush();
             }

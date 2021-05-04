@@ -46,7 +46,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -106,13 +106,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     $show_direct_play = $show_playlist_add;
                 }
             } ?>
-        <tr id="artist_<?php echo $libitem->id ?>" class="<?php echo Ui::flip_class() ?> libitem_menu">
+        <tr id="artist_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
         } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>
         <?php

@@ -71,6 +71,12 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <li>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&playnext=true', 'play_next', T_('Play All Next'), 'addnext_podcast_' . $podcast->id); ?>
+            </li>
+            <?php
+        } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>

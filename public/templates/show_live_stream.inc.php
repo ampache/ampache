@@ -35,11 +35,14 @@ use Ampache\Module\Util\Ui;
         Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
 </div>
 <dl class="media_details">
-<?php $rowparity = Ui::flip_class(); ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'), 'play_live_stream_' . $radio->id); ?>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $radio->id); ?>
+                <?php
+            } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
             <?php
@@ -56,8 +59,7 @@ use Ampache\Module\Util\Ui;
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = Ui::flip_class();
-            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
         }
     } ?>
 </dl>

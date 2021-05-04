@@ -44,12 +44,11 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "ext-xml": "*",
-        "adhocore/cli": "^0.8.3",
+        "adhocore/cli": "^0.9.0",
         "aehlke/tag-it": "2.*",
         "ampache/ampacheapi-php": "^1.0",
         "aterrien/jquery-knob": "1.2.*",
         "blueimp/jquery-file-upload": "v10.2.0",
-        "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
         "components/bootstrap": "3.*",
@@ -61,6 +60,7 @@
         "happyworm/jplayer": "2.*",
         "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
+        "js-cookie/js-cookie": "2.*",
         "jwilsson/spotify-web-api-php": "^3.5",
         "krixon/xbmc-php-rpc": "dev-master",
         "kumailht/responsive-elements": "dev-master",
@@ -155,18 +155,18 @@
         {
             "type": "package",
             "package": {
-                "name": "carhartl/jquery-cookie",
+                "name": "js-cookie/js-cookie",
                 "type": "component",
-                "version": "1.4.1",
+                "version": "2.2.1",
                 "source": {
-                    "url": "https://github.com/carhartl/jquery-cookie.git",
+                    "url": "https://github.com/js-cookie/js-cookie.git",
                     "type": "git",
-                    "reference": "v1.4.1"
+                    "reference": "v2.2.1"
                 },
                 "extra": {
                     "component": {
                         "scripts": [
-                            "jquery.cookie.js"
+                            "src/js.cookie.js"
                         ]
                     }
                 }

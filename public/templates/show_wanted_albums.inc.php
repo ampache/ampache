@@ -25,7 +25,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="wanted">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="wanted">
     <thead>
         <tr class="th-top">
             <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=name', T_('Album'), 'sort_wanted_album'); ?></th>
@@ -40,7 +40,7 @@ use Ampache\Module\Util\Ui;
         foreach ($object_ids as $wanted_id) {
             $libitem = new Wanted($wanted_id);
             $libitem->format(); ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="walbum_<?php echo $libitem->mbid; ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php

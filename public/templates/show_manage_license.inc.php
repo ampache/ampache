@@ -32,7 +32,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </li>
     </ul>
 </div>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -48,7 +48,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             require Ui::find_template('show_license_row.inc.php'); ?>
         <?php
         } if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
         <?php

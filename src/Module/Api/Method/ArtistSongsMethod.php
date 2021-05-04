@@ -69,7 +69,7 @@ final class ArtistSongsMethod
         }
         $songs = ($input['top50'])
             ? static::getSongRepository()->getTopSongsByArtist($artist)
-            : static::getSongRepository()->getByArtist($artist);
+            : static::getSongRepository()->getByArtist($object_id);
         $user  = User::get_from_username(Session::username($input['auth']));
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);

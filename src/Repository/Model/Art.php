@@ -371,7 +371,7 @@ class Art extends database_object
                 $songs = $this->getSongRepository()->getByAlbum($object->id);
             } elseif ($this->type === 'artist') {
                 /** Use special treatment for artists */
-                $songs = $this->getSongRepository()->getByArtist($object);
+                $songs = $this->getSongRepository()->getByArtist($object->id);
             }
             global $dic;
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);

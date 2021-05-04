@@ -398,10 +398,10 @@ class Json_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
+                ? self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false)
                 : array();
             $songs = (in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByArtist($artist), $user_id, false)
+                ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false)
                 : array();
 
             array_push($JSON, array(

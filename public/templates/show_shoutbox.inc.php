@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 <?php
   foreach ($shouts as $shout_id) {
       $shout = new Shoutbox($shout_id); ?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo Ui::flip_class(); ?>">
+<div id="shout<?php echo $shout->id; ?>" class="shout">
     <?php echo $shout->get_display(true, true); ?>
 </div>
 <?php

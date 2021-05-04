@@ -31,7 +31,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="user">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
   <col id="col_lastseen" />
@@ -79,7 +79,7 @@ foreach ($object_ids as $user_id) {
     $libitem->format();
     $last_seen      = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
     $create_date    = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
-<tr class="<?php echo Ui::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
+<tr id="admin_user_<?php echo $libitem->id; ?>">
     <?php require Ui::find_template('show_user_row.inc.php'); ?>
 </tr>
 <?php

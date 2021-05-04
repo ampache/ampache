@@ -824,7 +824,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
-                            $album_ids                  = static::getAlbumRepository()->getByArtist($artist);
+                            $album_ids                  = static::getAlbumRepository()->getByArtist($artist->id);
                             [$maxCount, $album_ids]     = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);

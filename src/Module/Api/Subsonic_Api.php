@@ -521,13 +521,9 @@ class Subsonic_Api
         $object_id = self::check_parameter($input, 'id');
         $response  = Subsonic_Xml_Data::createSuccessResponse('getmusicdirectory');
         if (Subsonic_Xml_Data::isArtist($object_id)) {
-            $artist = new Artist(Subsonic_Xml_Data::getAmpacheId($object_id));
-            Subsonic_Xml_Data::addArtistDirectory($response, $artist);
-        } else {
-            if (Subsonic_Xml_Data::isAlbum($object_id)) {
-                $album = new Album(Subsonic_Xml_Data::getAmpacheId($object_id));
-                Subsonic_Xml_Data::addAlbumDirectory($response, $album);
-            }
+            Subsonic_Xml_Data::addArtistDirectory($response, $object_id);
+        } elseif (Subsonic_Xml_Data::isAlbum($object_id)) {
+            Subsonic_Xml_Data::addAlbumDirectory($response, $object_id);
         }
         self::apiOutput($input, $response);
     }
@@ -559,7 +555,7 @@ class Subsonic_Api
         }
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
         $artists  = Artist::get_id_arrays($catalogs);
-        Subsonic_Xml_Data::addArtistsRoot($response, $artists, true);
+        Subsonic_Xml_Data::addArtistsRoot($response, $artists);
         self::apiOutput($input, $response);
     }
 
@@ -623,37 +619,29 @@ class Subsonic_Api
     }
 
     /**
-     * getAlbumList
-     * Get a list of random, newest, highest rated etc. albums.
-     * Takes the list type with optional size and offset in parameters.
+     * _albumList
      * @param array $input
-     * @param string $elementName
+     * @param string $type
+     * @return array|false
      */
-    public static function getalbumlist($input, $elementName = "albumList")
+    private static function _albumList($input, $type)
     {
-        $type     = self::check_parameter($input, 'type');
-        $username = self::check_parameter($input, 'u');
-
-        $size          = $input['size'];
-        $offset        = $input['offset'];
+        $size          = $input['size'] ?: 10;
+        $offset        = $input['offset'] ?: 0;
         $musicFolderId = $input['musicFolderId'] ?: 0;
 
-        // Get albums from all catalogs by default
-        // Catalog filter is not supported for all request type for now.
+        // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
         $catalogs = null;
         if ($musicFolderId > 0) {
             $catalogs   = array();
             $catalogs[] = $musicFolderId;
         }
-
-        $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
-        $errorOccured = false;
-        $albums       = array();
-        $user         = User::get_from_username((string)$username);
-
+        $albums = false;
         switch ($type) {
             case "random":
-                $albums = static::getAlbumRepository()->getRandom(
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = static::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );
@@ -696,14 +684,33 @@ class Subsonic_Api
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
-            default:
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC,
-                    "Invalid list type: " . scrub_out((string)$type), 'getalbumlist');
-                $errorOccured = true;
         }
 
-        if (!$errorOccured) {
-            Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
+        return $albums;
+    }
+
+    /**
+     * getAlbumList
+     * Get a list of random, newest, highest rated etc. albums.
+     * Takes the list type with optional size and offset in parameters.
+     * @param array $input
+     * @param string $elementName
+     */
+    public static function getalbumlist($input, $elementName = "albumList")
+    {
+        $type = self::check_parameter($input, 'type');
+        if ($type) {
+            $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
+            $errorOccured = false;
+            $albums       = self::_albumList($input, $type);
+            if (!$albums) {
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC,
+                    "Invalid list type: " . scrub_out((string)$type), 'getAlbumList');
+                $errorOccured = true;
+            }
+            if (!$errorOccured) {
+                Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
+            }
         }
         self::apiOutput($input, $response);
     }

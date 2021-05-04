@@ -202,17 +202,15 @@ class Random
                 return $results;
             case 'album':
                 $songs = array();
-                foreach ($results as $result) {
-                    $album = new Album($result);
-                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($album->id));
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
                 }
 
                 return $songs;
             case 'artist':
                 $songs = array();
-                foreach ($results as $result) {
-                    $artist = new Artist($result);
-                    $songs  = array_merge($songs, static::getSongRepository()->getByArtist($artist));
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, static::getSongRepository()->getByArtist($object_id));
                 }
 
                 return $songs;
