@@ -251,49 +251,6 @@ class Artist extends database_object implements library_item
     } // construct_from_array
 
     /**
-     * get_id_arrays
-     *
-     * Get each id from the artist table with the minimum detail required for subsonic
-     * @param array $catalogs
-     * @return array
-     */
-    public static function get_id_arrays($catalogs = array())
-    {
-        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-        if (!empty($catalogs)) {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`  FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
-            $db_results = Dba::read($sql, $catalogs);
-        } else {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
-            $db_results = Dba::read($sql);
-        }
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = $row;
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_id_array
-     *
-     * Get info from the artist table with the minimum detail required for subsonic
-     * @param int $artist_id
-     * @return array
-     */
-    public static function get_id_array($artist_id)
-    {
-        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
-        $db_results   = Dba::read($sql, array($artist_id));
-        $row          = Dba::fetch_assoc($db_results, false);
-
-        return $row;
-    }
-
-    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog

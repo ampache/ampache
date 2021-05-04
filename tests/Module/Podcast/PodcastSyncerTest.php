@@ -213,14 +213,14 @@ class PodcastSyncerTest extends MockeryTestCase
         $this->podcastEpisodeRepository->shouldReceive('getDownloadableEpisodes')
             ->with($podcast, $downloadAmount)
             ->once()
-            ->andReturn([$podcastEpisode]);
+            ->andReturn($this->arrayAsGenerator([$podcastEpisode]));
         $this->podcastEpisodeRepository->shouldReceive('changeState')
             ->with($podcastEpisode, PodcastStateEnum::PENDING)
             ->once();
         $this->podcastEpisodeRepository->shouldReceive('getDeletableEpisodes')
             ->with($podcast, $keepAmount)
             ->once()
-            ->andReturn([$podcastEpisode]);
+            ->andReturn($this->arrayAsGenerator([$podcastEpisode]));
 
         $this->podcastEpisodeDownloader->shouldReceive('download')
             ->with($podcastEpisode)

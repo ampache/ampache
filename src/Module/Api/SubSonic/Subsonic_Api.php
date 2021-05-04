@@ -565,7 +565,9 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
-        $artists  = Artist::get_id_arrays(static::getCatalogRepository()->getList());
+        $artists  = static::getArtistRepository()->getSubsonicRelatedDataByCatalogs(
+            static::getCatalogRepository()->getList()
+        );
         Subsonic_Xml_Data::addArtistsRoot($response, $artists);
         self::apiOutput($input, $response);
     }

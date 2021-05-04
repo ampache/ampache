@@ -88,4 +88,18 @@ interface ArtistRepositoryInterface
     public function getByIdList(
         array $idList
     ): Generator;
+
+    /**
+     * Get each id from the artist table with the minimum detail required for subsonic
+     * @param int[] $catalogIds
+     * @return array
+     */
+    public function getSubsonicRelatedDataByCatalogs(array $catalogIds = []): array;
+
+    /**
+     * Get info from the artist table with the minimum detail required for subsonic
+     *
+     * @return array{id: int, full_name: string, name: string, album_count: int, song_count: int}
+     */
+    public function getSubsonicRelatedDataByArtist(int $artistId): array;
 }

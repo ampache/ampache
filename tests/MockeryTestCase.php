@@ -40,4 +40,11 @@ abstract class MockeryTestCase extends TestCase
     {
         return Mockery::mock($className);
     }
+
+    protected function arrayAsGenerator(array $array): \Generator
+    {
+        foreach ($array as $item) {
+            yield $item;
+        }
+    }
 }

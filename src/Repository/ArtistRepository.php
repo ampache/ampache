@@ -24,12 +24,22 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
 use Generator;
 
 final class ArtistRepository implements ArtistRepositoryInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->configContainer = $configContainer;
+    }
+
     /**
      * Deletes the artist entry
      */
@@ -213,5 +223,82 @@ final class ArtistRepository implements ArtistRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             yield $row;
         }
+    }
+
+    /**
+     * Get each id from the artist table with the minimum detail required for subsonic
+     * @param int[] $catalogIds
+     * @return array
+     */
+    public function getSubsonicRelatedDataByCatalogs(array $catalogIds = []): array
+    {
+        $group_column = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        if ($catalogIds !== []) {
+            $sql = <<<SQL
+            SELECT
+                DISTINCT `artist`.`id`,
+                LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
+                `artist`.`name`,
+                %s AS `album_count`,
+                `artist`.`song_count`
+            FROM `song`
+            LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`
+            LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist`
+            WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`
+            SQL;
+
+            $db_results = Dba::read(
+                sprintf($sql, $group_column),
+                $catalogIds
+            );
+        } else {
+            $sql = <<<SQL
+            SELECT DISTINCT
+                `artist`.`id`,
+                LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
+                `artist`.`name`,
+                %s AS `album_count`,
+                `artist`.`song_count`
+                FROM `artist` ORDER BY `artist`.`name`
+            SQL;
+
+            $db_results = Dba::read(
+                sprintf($sql, $group_column)
+            );
+        }
+        $results = [];
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get info from the artist table with the minimum detail required for subsonic
+     *
+     * @return array{id: int, full_name: string, name: string, album_count: int, song_count: int}
+     */
+    public function getSubsonicRelatedDataByArtist(int $artistId): array
+    {
+        $group_column = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+
+        $sql = <<<SQL
+        SELECT
+            DISTINCT `artist`.`id`,
+            LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
+            `artist`.`name`,
+            %s AS `album_count`,
+            `artist`.`song_count`
+        FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`
+        SQL;
+
+        $db_results = Dba::read(
+            sprintf($sql, $group_column),
+            [$artistId]
+        );
+
+        return Dba::fetch_assoc($db_results, false);
     }
 }

@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -963,7 +964,7 @@ class Subsonic_Xml_Data
     public static function addArtistDirectory($xml, $artist_id)
     {
         $amp_id = self::getAmpacheId($artist_id);
-        $data   = Artist::get_id_array($amp_id);
+        $data   = static::getArtistRepository()->getSubsonicRelatedDataByArtist((int) $artist_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
         $xdir->addAttribute('name', (string)$data['full_name']);
@@ -1721,5 +1722,15 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(ExtensionToMimeTypeMapperInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }
