@@ -548,14 +548,18 @@ class Subsonic_Api
     /**
      * getArtists
      * Get all artists.
-     * Takes no parameter.
      * @param array $input
      */
     public static function getartists($input)
     {
+        $musicFolderId = $input['musicFolderId'];
+        $catalogs      = array();
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
+            $catalogs[] = $musicFolderId;
+        }
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
-        $artists  = Catalog::get_artists(Catalog::get_catalogs());
-        Subsonic_Xml_Data::addArtistsRoot($response, $artists, true);
+        $artists  = Artist::get_id_arrays($catalogs);
+        Subsonic_Xml_Data::addArtistsRoot($response, $artists);
         self::apiOutput($input, $response);
     }
 

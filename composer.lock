@@ -175,23 +175,6 @@
             }
         },
         {
-            "name": "carhartl/jquery-cookie",
-            "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/carhartl/jquery-cookie.git",
-                "reference": "v1.4.1"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "jquery.cookie.js"
-                    ]
-                }
-            }
-        },
-        {
             "name": "cboden/ratchet",
             "version": "v0.4.3",
             "source": {
@@ -1321,6 +1304,23 @@
                     "scripts": [
                         "src/jquery.qrcode.js",
                         "src/qrcode.js"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "js-cookie/js-cookie",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/js-cookie/js-cookie.git",
+                "reference": "v2.2.1"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "src/js.cookie.js"
                     ]
                 }
             }

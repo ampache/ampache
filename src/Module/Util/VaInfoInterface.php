@@ -46,18 +46,18 @@ interface VaInfoInterface
      * @throws Exception
      */
     public function write_id3($tagData);
-
+    
     /**
-     * prepare_id3_frames
-     * Prepares id3 frames for writing tag to file
+     * prepare_metadata_for_writing
+     * Prepares vorbiscomments/id3v2 metadata for writing tag to file
      * @param array $frames
      * @return array
      */
-    public function prepare_id3_frames($frames);
+    public function prepare_metadata_for_writing($frames);
 
     /**
      * read_id3
-
+     *
      * This function runs the various steps to gathering the metadata
      * @return array
      */

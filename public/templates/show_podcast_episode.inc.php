@@ -68,7 +68,7 @@ use Ampache\Module\Util\Ui;
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episode->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'addnext_podcast_episode_' . $episode->id); ?>
             <?php
             } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>

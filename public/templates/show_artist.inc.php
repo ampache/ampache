@@ -140,6 +140,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
         </li>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_artist_' . $artist->id); ?>
+        </li>
+            <?php
+        } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>

@@ -137,6 +137,11 @@ class AmpacheCatalogFavorites
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],
                                 'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            if (Stream_Playlist::check_autoplay_next()) {
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&playnext=true',
+                                    'play_next', T_('Play next'),
+                                    'nextplay_' . $userflag['type'] . '_' . $userflag['id']);
+                            }
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true',
                                     'play_add', T_('Play last'),

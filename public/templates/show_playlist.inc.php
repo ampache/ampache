@@ -108,6 +108,12 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php
     } ?>
+    <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_playlist_' . $playlist->id); ?>
+        </li>
+        <?php
+    } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>

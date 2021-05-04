@@ -388,6 +388,32 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * get_id_arrays
+     *
+     * Get each id from the artist table with the minimum detail required for subsonic
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_id_arrays($catalogs = array())
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        if (!empty($catalogs)) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`  FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql, $catalogs);
+        } else {
+            $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql);
+        }
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
      * get_child_ids
      *
      * Get each album id for the artist
