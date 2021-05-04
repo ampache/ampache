@@ -24,34 +24,35 @@ namespace Ampache\Repository;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
+use Generator;
 
 interface PodcastEpisodeRepositoryInterface
 {
     /**
      * This returns an array of ids of latest podcast episodes in this catalog
      *
-     * @return iterable<Podcast_Episode>
+     * @return Generator<PodcastEpisodeInterface>
      */
     public function getNewestPodcastEpisodes(
         int $catalogId,
         int $count
-    ): iterable;
+    ): Generator;
 
     /**
-     * @return iterable<Podcast_Episode>
+     * @return Generator<Podcast_Episode>
      */
     public function getDownloadableEpisodes(
         PodcastInterface $podcast,
         int $limit
-    ): iterable;
+    ): Generator;
 
     /**
-     * @return iterable<Podcast_Episode>
+     * @return Generator<Podcast_Episode>
      */
     public function getDeletableEpisodes(
         PodcastInterface $podcast,
         int $limit
-    ): iterable;
+    ): Generator;
 
     public function create(
         PodcastInterface $podcast,

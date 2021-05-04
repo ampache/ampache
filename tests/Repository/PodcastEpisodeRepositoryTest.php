@@ -104,11 +104,6 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
             ->once()
             ->andReturn($episode);
 
-        $episode->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
         foreach ($this->subject->getNewestPodcastEpisodes($catalogId, $count) as $episodeObj) {
             $this->assertSame(
                 $episode,
@@ -166,11 +161,6 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
             ->once()
             ->andReturn($episode);
 
-        $episode->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
         foreach ($this->subject->getDownloadableEpisodes($podcast, $limit) as $episodeObj) {
             $this->assertSame(
                 $episode,
@@ -224,11 +214,6 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
             ->with($episodeId)
             ->once()
             ->andReturn($episode);
-
-        $episode->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
 
         foreach ($this->subject->getDeletableEpisodes($podcast, $limit) as $episodeObj) {
             $this->assertSame(

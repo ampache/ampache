@@ -24,6 +24,7 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
+use Generator;
 
 interface SongRepositoryInterface
 {
@@ -104,12 +105,16 @@ interface SongRepositoryInterface
      */
     public function getCountByArtist(Artist $artist): int;
 
-    public function getByIdList(array $idList): \Generator;
+    /**
+     * @param int[] $idList
+     * @return Generator<array<string, mixed>>
+     */
+    public function getByIdList(array $idList): Generator;
 
     /**
      * Cleans up the song_data table
      */
-    public function collectGarbage();
+    public function collectGarbage(): void;
 
     /**
      * @param array<string, mixed> $data

@@ -27,10 +27,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Podcast\PodcastStateEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Doctrine\DBAL\Connection;
+use Generator;
 
 final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterface
 {
@@ -53,12 +53,12 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
     /**
      * This returns the latest podcast episodes in this catalog
      *
-     * @return iterable<Podcast_Episode>
+     * @return Generator<PodcastEpisodeInterface>
      */
     public function getNewestPodcastEpisodes(
         int $catalogId,
         int $count
-    ): iterable {
+    ): Generator {
         $sql = <<<SQL
         SELECT
             `podcast_episode`.`id`
@@ -84,17 +84,17 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         );
 
         while ($episodeId = $result->fetchOne()) {
-            yield $this->findById((int) $episodeId);
+            yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
         }
     }
 
     /**
-     * @return iterable<Podcast_Episode>
+     * @return Generator<PodcastEpisodeInterface>
      */
     public function getDownloadableEpisodes(
         PodcastInterface $podcast,
         int $limit
-    ): iterable {
+    ): Generator {
         $sql = <<<SQL
         SELECT
             `podcast_episode`.`id`
@@ -117,17 +117,17 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         );
 
         while ($episodeId = $result->fetchOne()) {
-            yield $this->findById((int) $episodeId);
+            yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
         }
     }
 
     /**
-     * @return iterable<Podcast_Episode>
+     * @return Generator<PodcastEpisodeInterface>
      */
     public function getDeletableEpisodes(
         PodcastInterface $podcast,
         int $limit
-    ): iterable {
+    ): Generator {
         $sql = <<<SQL
         SELECT
             `podcast_episode`.`id`
@@ -147,7 +147,7 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         );
 
         while ($episodeId = $result->fetchOne()) {
-            yield $this->findById((int) $episodeId);
+            yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
         }
     }
 

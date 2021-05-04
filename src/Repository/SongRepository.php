@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
+use Generator;
 
 final class SongRepository implements SongRepositoryInterface
 {
@@ -279,7 +280,11 @@ final class SongRepository implements SongRepositoryInterface
         return (int) $results['song_count'];
     }
 
-    public function getByIdList(array $idList): \Generator
+    /**
+     * @param int[] $idList
+     * @return Generator<array<string, mixed>>
+     */
+    public function getByIdList(array $idList): Generator
     {
         $db_results = Dba::read(
             'SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IN (?)',
@@ -294,7 +299,7 @@ final class SongRepository implements SongRepositoryInterface
     /**
      * Cleans up the song_data table
      */
-    public function collectGarbage()
+    public function collectGarbage(): void
     {
         // clean up missing catalogs
         Dba::write('DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)');
