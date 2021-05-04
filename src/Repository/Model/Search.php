@@ -347,6 +347,11 @@ class Search extends playlist_object
             'sql' => '>'
         );
 
+        $this->basetypes['recent_played'][] = array(
+            'name' => 'ply',
+            'description' => T_('# songs'),
+            'sql' => '`date`'
+        );
         $this->basetypes['recent_added'][] = array(
             'name' => 'add',
             'description' => T_('# songs'),
@@ -601,6 +606,7 @@ class Search extends playlist_object
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added');
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
@@ -2113,6 +2119,11 @@ class Search extends playlist_object
                 case 'updated':
                     $input   = strtotime((string) $input);
                     $where[] = "`song`.`update_time` $sql_match_operator $input";
+                    break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
