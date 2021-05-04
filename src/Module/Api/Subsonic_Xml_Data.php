@@ -954,12 +954,12 @@ class Subsonic_Xml_Data
      */
     public static function addArtistDirectory($xml, $artist_id)
     {
-        $artist = self::getAmpacheId($artist_id);
-        $data   = Artist::get_id_array($artist);
+        $amp_id = self::getAmpacheId($artist_id);
+        $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
         $xdir->addAttribute('name', (string)$data['full_name']);
-        $allalbums = static::getAlbumRepository()->getByArtist($artist_id);
+        $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             self::addAlbum($xdir, $album, false, false, "child");
