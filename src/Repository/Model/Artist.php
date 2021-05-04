@@ -414,6 +414,23 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * get_id_array
+     *
+     * Get info from the artist table with the minimum detail required for subsonic
+     * @param int $artist_id
+     * @return array
+     */
+    public static function get_id_array($artist_id)
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $db_results   = Dba::read($sql, array($artist_id));
+        $row          = Dba::fetch_assoc($db_results, false);
+
+        return $row;
+    }
+
+    /**
      * get_child_ids
      *
      * Get each album id for the artist
@@ -582,7 +599,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function get_childrens()
     {
         $medias = array();
-        $albums = $this->getAlbumRepository()->getByArtist($this);
+        $albums = $this->getAlbumRepository()->getByArtist($this->id);
         foreach ($albums as $album_id) {
             $medias[] = array(
                 'object_type' => 'album',
@@ -630,7 +647,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = $this->getSongRepository()->getByArtist($this);
+            $songs = $this->getSongRepository()->getByArtist($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -854,7 +871,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
-                $songs = $this->getSongRepository()->getByArtist($this);
+                $songs = $this->getSongRepository()->getByArtist($this->id);
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                 }

@@ -1707,11 +1707,11 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($libitem->getId());
+                $songs   = static::getSongRepository()->getByAlbum($object_id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
-                $songs   = static::getSongRepository()->getByArtist($libitem);
+                $songs   = static::getSongRepository()->getByArtist($object_id);
                 break;
             case 'song':
                 $songs[] = $object_id;

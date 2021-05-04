@@ -413,7 +413,7 @@ class Xml_Data
                     } else {
                         $artist = new Artist($object_id);
                         $artist->format();
-                        $albums = static::getAlbumRepository()->getByArtist($artist, null, true);
+                        $albums = static::getAlbumRepository()->getByArtist($object_id, null, true);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
@@ -655,10 +655,10 @@ class Xml_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
+                ? self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false)
                 : '';
             $songs = (in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByArtist($artist), $user_id, false)
+                ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false)
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
