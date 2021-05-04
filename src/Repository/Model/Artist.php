@@ -294,25 +294,6 @@ class Artist extends database_object implements library_item
     }
 
     /**
-     * get_child_ids
-     *
-     * Get each album id for the artist
-     * @return int[]
-     */
-    public function get_child_ids()
-    {
-        $sql        = "SELECT  DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
-        $db_results = Dba::read($sql, array($this->getId()));
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
