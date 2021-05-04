@@ -37,15 +37,15 @@ use Ampache\Module\Playback\WebPlayer;
 
 class Broadcast_Server implements MessageComponentInterface
 {
-    const BROADCAST_SONG               = "SONG";
-    const BROADCAST_SONG_POSITION      = "SONG_POSITION";
-    const BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
-    const BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
-    const BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
-    const BROADCAST_ENDED              = "ENDED";
-    const BROADCAST_INFO               = "INFO";
-    const BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
-    const BROADCAST_AUTH_SID           = "AUTH_SID";
+    public const BROADCAST_SONG               = "SONG";
+    public const BROADCAST_SONG_POSITION      = "SONG_POSITION";
+    public const BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
+    public const BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
+    public const BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
+    public const BROADCAST_ENDED              = "ENDED";
+    public const BROADCAST_INFO               = "INFO";
+    public const BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
+    public const BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public $verbose;
     /**
