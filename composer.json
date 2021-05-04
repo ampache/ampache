@@ -44,7 +44,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "ext-xml": "*",
-        "adhocore/cli": "^0.8.3",
+        "adhocore/cli": "^0.9.0",
         "aehlke/tag-it": "2.*",
         "ampache/ampacheapi-php": "^1.0",
         "aterrien/jquery-knob": "1.2.*",
