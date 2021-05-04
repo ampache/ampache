@@ -308,10 +308,10 @@ class Playlist extends playlist_object
     } // get_media_count
 
     /**
-    * get_total_duration
-    * Get the total duration of all songs.
-    * @return integer
-    */
+     * get_total_duration
+     * Get the total duration of all songs.
+     * @return integer
+     */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
