@@ -564,7 +564,7 @@ class Subsonic_XML_Data
                 if ($letter != $xlastletter) {
                     $xlastletter = $letter;
                     $xlastcat    = $xml->addChild('index');
-                    $xlastcat->addAttribute('full_name', (string)$xlastletter);
+                    $xlastcat->addAttribute('name', (string)$xlastletter);
                 }
             }
 
@@ -576,7 +576,7 @@ class Subsonic_XML_Data
         // Always add # index at the end
         if (count($sharpartists) > 0) {
             $xsharpcat = $xml->addChild('index');
-            $xsharpcat->addAttribute('full_name', '#');
+            $xsharpcat->addAttribute('name', '#');
 
             foreach ($sharpartists as $artist) {
                 self::addArtistArray($xsharpcat, $artist);
