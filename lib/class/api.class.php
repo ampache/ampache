@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '441000';
+    public static $version = '442000';
 
     /**
      *  @var Browse $browse
