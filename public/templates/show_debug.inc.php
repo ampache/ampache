@@ -76,7 +76,7 @@ $environment = $dic->get(EnvironmentInterface::class);
     <?php Ui::show_box_bottom();
 } ?>
     <?php Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
-        <table class="tabledata">
+        <table class="tabledata striped-rows">
             <colgroup>
                 <col id="col_php_setting">
                 <col id="col_php_value">
@@ -88,39 +88,39 @@ $environment = $dic->get(EnvironmentInterface::class);
             </tr>
             </thead>
             <tbody>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Memory Limit'); ?></td>
                 <td><?php echo ini_get('memory_limit'); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Maximum Execution Time'); ?></td>
                 <td><?php echo ini_get('max_execution_time'); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Override Execution Time'); ?></td>
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Zlib Support'); ?></td>
                 <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('GD Support'); ?></td>
                 <td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Iconv Support'); ?></td>
                 <td><?php echo print_bool(function_exists('iconv')); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('Gettext Support'); ?></td>
                 <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><?php echo T_('PHP intl extension'); ?></td>
                 <td><?php echo print_bool($environment->check_php_intl()); ?></td>
             </tr>
@@ -164,7 +164,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 
     // Be sure to print only scalar values
     if ($value === null || is_scalar($value)) { ?>
-            <tr class="<?php echo Ui::flip_class(); ?>">
+            <tr>
                 <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>

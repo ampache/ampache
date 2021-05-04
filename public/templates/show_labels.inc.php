@@ -46,7 +46,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <?php if (Art::is_enabled()) {
@@ -66,13 +66,13 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         foreach ($object_ids as $label_id) {
             $libitem = new Label($label_id);
             $libitem->format(); ?>
-        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="label_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
         <?php

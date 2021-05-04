@@ -24,7 +24,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_album"><?php echo T_('Album'); ?></th>
@@ -38,14 +38,14 @@ use Ampache\Module\Util\Ui;
         <?php
         if ($walbums) {
             foreach ($walbums as $libitem) { ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="walbum_<?php echo $libitem->mbid; ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php
             }
         } ?>
         <?php if (!$walbums || !count($walbums)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>
         <?php

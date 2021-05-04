@@ -47,7 +47,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -63,7 +63,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
             $libitem->format(); ?>
-        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="live_stream_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php

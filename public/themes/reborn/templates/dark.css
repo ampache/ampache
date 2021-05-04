@@ -316,10 +316,6 @@ input[type=submit]:focus:active {
     background-image: linear-gradient(to top, #cc6200, #c24d00);
 }
 
-#rightbar #rb_current_playlist li.odd {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
 #rightbar .submenu {
     background-color: #222;
     border-color: silver;
@@ -416,7 +412,8 @@ table.tabledata .th-bottom:focus {
     background-color: #262626;
 }
 
-table.tabledata tbody .odd {
+table.striped-rows tbody tr:nth-child(odd),
+ul.striped-rows > li:nth-child(odd) {
     background-color: rgba(255, 255, 255, 0.1);
 }
 

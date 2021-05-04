@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 /** @var Shoutbox $libitem */
 /** @var User $client */
 ?>
-<tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+<tr id="flagged_<?php echo $libitem->id; ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
     <td class="cel_sticky"><?php echo $libitem->getStickyFormatted(); ?></td>

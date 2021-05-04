@@ -69,9 +69,8 @@ $subtitles = $video->get_subtitles();
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
+        <dt><?php echo T_('Rating'); ?></dt>
+        <dd>
             <div id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
@@ -79,9 +78,8 @@ $subtitles = $video->get_subtitles();
         } ?>
 
     <?php if (AmpConfig::get('userflags')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
+        <dt><?php echo T_('Fav.'); ?></dt>
+        <dd>
             <div id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?>
             </div>
         </dd>
@@ -89,9 +87,8 @@ $subtitles = $video->get_subtitles();
         } ?>
 <?php
     } ?>
-<?php $rowparity = Ui::flip_class(); ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_video_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
@@ -168,8 +165,7 @@ if (get_class($video) != Video::class) {
 
     foreach ($videoprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = Ui::flip_class();
-            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
         }
     } ?>
 </dl>
