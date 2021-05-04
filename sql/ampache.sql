@@ -21,7 +21,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Mar 26, 2021 at 02:56 PM
+-- Generation Time: May 05, 2021 at 08:52 AM
 -- Server version: 10.5.9-MariaDB-1
 -- PHP Version: 7.4.15
 
@@ -37,7 +37,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache441`
+-- Database: `ampache442`
 --
 
 -- --------------------------------------------------------

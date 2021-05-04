@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 4.4.2-develop
+## Ampache 4.4.2-release
 
 ### Added
 
