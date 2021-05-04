@@ -210,6 +210,11 @@ final class AlbumSearchType extends AbstractSearchType
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;

@@ -350,15 +350,20 @@ class Search extends playlist_object
             'sql' => '>'
         );
 
+        $this->basetypes['recent_played'][] = array(
+            'name' => 'ply',
+            'description' => T_('Limit'),
+            'sql' => '`date`'
+        );
         $this->basetypes['recent_added'][] = array(
             'name' => 'add',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`addition_time`'
         );
 
         $this->basetypes['recent_updated'][] = array(
             'name' => 'upd',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`update_time`'
         );
 
@@ -607,6 +612,7 @@ class Search extends playlist_object
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added');
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
@@ -678,6 +684,8 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
+
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
@@ -726,6 +734,8 @@ class Search extends playlist_object
             $users[$userid] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
+
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
         foreach ($this->getCatalogRepository()->getList() as $catid) {

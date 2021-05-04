@@ -38,7 +38,7 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="tvshow_season">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="tvshow_season">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -78,13 +78,13 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
         foreach ($object_ids as $season_id) {
             $libitem = new TVShow_season($season_id);
             $libitem->format(); ?>
-        <tr id="tvshow_season_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="tvshow_season_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No season found'); ?></span></td>
         </tr>
         <?php

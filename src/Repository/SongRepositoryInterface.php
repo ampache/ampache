@@ -68,7 +68,7 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist
+        int $artistId
     ): array;
 
     /**

@@ -85,7 +85,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
@@ -165,22 +165,26 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         } else {
                             itemhtml += "<a>";
                         }
-                        if (item.image != '') {
-                            itemhtml += "<img src='" + item.image + "' class='searchart' />";
+                        if (item.image !== '') {
+                            itemhtml += "<img src='" + item.image + "' class='searchart' alt='' />";
                         }
-                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span>";
+                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels)  + "</span>";
                         itemhtml += "</a>";
 
                         return $( "<li class='ui-menu-item'>" )
                             .data("ui-autocomplete-item", item)
-                            .append( itemhtml )
+                            .append( itemhtml + "</li>")
                             .appendTo( ul );
                 },
                 _renderMenu: function( ul, items ) {
                     var that = this, currentType = "";
                     $.each( items, function( index, item ) {
-                        if (item.type != currentType) {
-                            ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
+                        if (item.type !== currentType) {
+                            $( "<li class='ui-autocomplete-category'>")
+                                .data("ui-autocomplete-item", item)
+                                .append( item.type + "</li>" )
+                                .appendTo( ul );
+
                             currentType = item.type;
                         }
                         that._renderItem( ul, item );
@@ -189,11 +193,18 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             });
 
             $(function() {
+                var minSearchChars = 2;
                 $( "#searchString" )
-                // don't navigate away from the field on tab when selecting an item
+                    // don't navigate away from the field on tab when selecting an item
                     .bind( "keydown", function( event ) {
-                        if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
+                        if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "custom-catcomplete" ).widget().is(":visible") ) {
                             event.preventDefault();
+                        }
+                    })
+                    // reopen previous search results
+                    .bind( "click", function( event ) {
+                        if ($( this ).val().length >= minSearchChars) {
+                            $( this ).data( "custom-catcomplete" ).search();
                         }
                     })
                     .catcomplete({
@@ -208,7 +219,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         },
                         search: function() {
                             // custom minLength
-                            if (this.value.length < 2) {
+                            if ($( this ).val().length < minSearchChars) {
                                 return false;
                             }
                         },
@@ -217,9 +228,10 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             return false;
                         },
                         select: function( event, ui ) {
-                            if (ui.item != null) {
-                                $(this).val(ui.item.value);
+                            if (event.keyCode === $.ui.keyCode.ENTER) {
+                                NavigateTo(ui.item.link);
                             }
+
                             return false;
                         }
                     });
@@ -485,7 +497,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     $('#sidebar').show(500);
                 });
 
-                $.cookie('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
+                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">

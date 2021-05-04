@@ -91,7 +91,7 @@ final class ArtistAlbumsMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        $albums = $this->albumRepository->getByArtist($artist);
+        $albums = $this->albumRepository->getByArtist((int) $objectId);
         if ($albums === []) {
             $result = $output->emptyResult('album');
         } else {

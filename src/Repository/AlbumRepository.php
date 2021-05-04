@@ -310,7 +310,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist,
+        int $artistId,
         ?int $catalog = null,
         bool $group_release_type = false
     ): array {
@@ -341,8 +341,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
             default:
                 $sql_sort = '`album`.`name`' . $sort_disk . ', `album`.`year`';
         }
-
-        $artistId = $artist->getId();
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 

@@ -1181,6 +1181,22 @@ function toggle_visible($element)
 } // toggle_visible
 
 /**
+<<<<<<< HEAD
+=======
+ * display_notification
+ * Show a javascript notification to the user
+ * @param string $message
+ * @param integer $timeout
+ */
+function display_notification($message, $timeout = 5000)
+{
+    echo "<script>";
+    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
+    echo "</script>\n";
+}
+
+/**
+>>>>>>> develop
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.

@@ -25,7 +25,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
         <?php
         if ($wartists) {
             foreach ($wartists as $libitem) { ?>
-        <tr id="wartist_<?php echo $libitem['mbid']; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="wartist_<?php echo $libitem['mbid']; ?>">
             <td class="cel_artist">
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
             </td>
@@ -44,7 +44,7 @@ use Ampache\Module\Util\Ui;
             }
         } ?>
         <?php if (!$wartists || !count($wartists)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
         <?php

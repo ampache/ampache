@@ -21,9 +21,9 @@
 
 namespace Ampache\Module\Song\Tag;
 
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
@@ -72,17 +72,19 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     $meta[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-
-            $id3    = $this->utilityFactory->createVaInfo($song->file);
-            $result = $id3->read_id3();
+            $vainfo = $this->utilityFactory->createVaInfo($song->file);
+            
+            $result = $vainfo->read_id3();
             if ($result['fileformat'] == 'mp3') {
                 $tdata = $result['tags']['id3v2'];
+                $apics = $result['id3v2']['APIC'];
                 $meta  = $this->getMetadata($song);
             } else {
                 $tdata = $result['tags']['vorbiscomment'];
+                $apics = $result['flac']['PICTURE'];
                 $meta  = $this->getVorbisMetadata($song);
             }
-            $ndata = $id3->prepare_id3_frames($tdata);
+            $ndata = $vainfo->prepare_metadata_for_writing($tdata);
 
             if (isset($changed)) {
                 foreach ($changed as $key => $value) {
@@ -109,20 +111,6 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                             break;
                     }
                 }
-                $pics = array();
-                if (isset($data['id3v2']['APIC'])) {
-                    $pics = [];
-                    $i    = 0;
-                    foreach ($data['id3v2']['APIC'] as $pic) {
-                        $pics['attached_picture'][$i]['description']   = $pic['description'];
-                        $pics['attached_picture'][$i]['data']          = $pic['data'];
-                        $pics['attached_picture'][$i]['picturetypeid'] = $pic['picturetypeid'];
-                        $pics['attached_picture'][$i]['mime']          = $pic['mime'];
-
-                        $i++;
-                    }
-                }
-                $ndata = array_merge($pics, $ndata);
             } else {
                 // Fill in existing tag frames
                 foreach ($meta as $key => $value) {
@@ -130,26 +118,28 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                         $ndata[$key][0] = $meta[$key] ?:'';
                     }
                 }
-
-                $art = new Art($song->album, 'album');
-                if ($art->has_db_info()) {
-                    $album_image                                   = $art->get(true);
-                    $ndata['attached_picture'][0]['description']   = $song->f_album;
-                    $ndata['attached_picture'][0]['data']          = $album_image;
-                    $ndata['attached_picture'][0]['picturetypeid'] = '3';
-                    $ndata['attached_picture'][0]['mime']          = $art->raw_mime;
+            }
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
+                $art         = new Art($song->album, 'album');
+                $album_image = $art->get(true);
+                if ($album_image != '') {
+                    $ndata['attached_picture'][] = array('data' => $album_image, 'mime' => $art->raw_mime,
+                        'picturetypeid' => 3, 'description' => $song->f_album);
                 }
                 $art = new Art($song->artist, 'artist');
                 if ($art->has_db_info()) {
-                    $artist_image                                   = $art->get(true);
-                    $i                                              = (!empty($album_image)) ? 1 : 0;
-                    $ndata['attached_picture'][$i]['description']   = $song->f_artist;
-                    $ndata['attached_picture'][$i]['data']          = $artist_image;
-                    $ndata['attached_picture'][$i]['picturetypeid'] = '8';
-                    $ndata['attached_picture'][$i]['mime']          = $art->raw_mime;
+                    $artist_image                = $art->get(true);
+                    $ndata['attached_picture'][] = array('data' => $artist_image, 'mime' => $art->raw_mime,
+                        'picturetypeid' => 8, 'description' => $song->f_artist);
+                }
+            } else {    // rewrite original images
+                if (!is_null($apics)) {
+                    foreach ($apics as $apic) {
+                        $ndata['attached_picture'][] = $apic;
+                    }
                 }
             }
-            $id3->write_id3($ndata);
+            $vainfo->write_id3($ndata);
         }
     }
 

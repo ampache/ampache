@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -47,7 +46,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="podcast_episode">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="podcast_episode">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -88,13 +87,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
         foreach ($object_ids as $episode_id) {
             $libitem = $podcastEpisodeRepository->findById((int) $episode_id); ?>
-        <tr id="podcast_episode_<?php echo $libitem->getId(); ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="podcast_episode_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
         </tr>
         <?php

@@ -95,7 +95,7 @@ final class ArtistSongsMethod implements MethodInterface
 
         $songs = array_key_exists('top50', $input)
             ? $this->songRepository->getTopSongsByArtist($artist)
-            : $this->songRepository->getByArtist($artist);
+            : $this->songRepository->getByArtist((int) $objectId);
 
         if ($songs === []) {
             $result = $output->emptyResult('song');

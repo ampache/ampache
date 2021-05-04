@@ -160,20 +160,31 @@ class Ui implements UiInterface
     }
 
     /**
-     * flip_class
+     * clean_utf8
      *
-     * First initialized with an array of two class names. Subsequent calls
-     * reverse the array then return the first element.
-     * @return mixed
+     * Removes characters that aren't valid in XML (which is a subset of valid
+     * UTF-8, but close enough for our purposes.)
+     * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
+     * @param string $string
+     * @return string
      */
-    public static function flip_class()
+    public static function clean_utf8($string)
     {
-        if (self::$_classes === null) {
-            self::$_classes = ['odd', 'even'];
-        }
-        self::$_classes = array_reverse(self::$_classes);
+        if ($string) {
+            $clean = preg_replace(
+                '/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u',
+                '',
+                $string
+            );
 
-        return self::$_classes[0];
+            if ($clean) {
+                return rtrim((string)$clean);
+            }
+
+            debug_event(self::class, 'Charset cleanup failed, something might break', 1);
+        }
+
+        return '';
     }
 
     /**

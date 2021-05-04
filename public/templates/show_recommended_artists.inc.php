@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 $thcount  = 8; ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_play"></th>
@@ -73,7 +73,7 @@ $thcount  = 8; ?>
         foreach ($object_ids as $artist_id) {
             $libitem = new Artist($artist_id);
             $libitem->format(); ?>
-        <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="artist_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
@@ -81,14 +81,14 @@ $thcount  = 8; ?>
         <?php
         /* Foreach through every missing artist that has been passed to us */
         foreach ($missing_objects as $missing) { ?>
-        <tr id="missing_artist_<?php echo $missing['mbid']; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
             <td></td>
             <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
         </tr>
         <?php
         } ?>
         <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No similar artist found'); ?></span></td>
         </tr>
         <?php

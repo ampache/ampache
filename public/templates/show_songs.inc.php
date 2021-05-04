@@ -47,7 +47,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -102,7 +102,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             foreach ($object_ids as $song_id) {
                 $libitem = new Song($song_id, $limit_threshold);
                 $libitem->format(); ?>
-            <tr class="<?php echo Ui::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
+            <tr id="song_<?php echo $libitem->id; ?>">
                 <?php
                 if ($libitem->isEnabled() || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
@@ -121,7 +121,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
 
     <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
         </tr>
     <?php

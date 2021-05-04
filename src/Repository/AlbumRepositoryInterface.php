@@ -119,7 +119,7 @@ interface AlbumRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist,
+        int $artistId,
         ?int $catalog = null,
         bool $group_release_type = false
     ): array;

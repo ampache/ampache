@@ -147,7 +147,7 @@ class Wanted extends database_object
         $owngroups = array();
         $wartist   = array();
         if ($artist) {
-            $albums = static::getAlbumRepository()->getByArtist($artist);
+            $albums = static::getAlbumRepository()->getByArtist($artist->id);
             foreach ($albums as $albumid) {
                 $album = new Album($albumid);
                 if (trim((string)$album->mbid_group)) {

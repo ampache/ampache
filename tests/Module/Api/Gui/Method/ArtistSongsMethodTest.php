@@ -131,7 +131,7 @@ class ArtistSongsMethodTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->songRepository->shouldReceive('getByArtist')
-            ->with($artist)
+            ->with($objectId)
             ->once()
             ->andReturn([]);
 
@@ -185,7 +185,7 @@ class ArtistSongsMethodTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->songRepository->shouldReceive('getByArtist')
-            ->with($artist)
+            ->with($objectId)
             ->once()
             ->andReturn([$songId]);
 

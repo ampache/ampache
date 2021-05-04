@@ -43,6 +43,9 @@ if ($libitem->isEnabled() || Access::check('interface', 50)) { ?>
     <?php
     if (AmpConfig::get('directplay')) {
         echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $object_type . '_' . $libitem->id);
+        if (Stream_Playlist::check_autoplay_next()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_' . $object_type . '_' . $libitem->id);
+        }
         if (Stream_Playlist::check_autoplay_append()) {
             echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_' . $object_type . '_' . $libitem->id);
         }

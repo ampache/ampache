@@ -208,6 +208,11 @@ final class ArtistSearchType extends AbstractSearchType
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;

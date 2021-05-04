@@ -244,10 +244,10 @@ final class JsonOutput implements ApiOutputInterface
 
             // Handle includes
             $albums = (in_array('albums', $include))
-                ? $this->albums($this->albumRepository->getByArtist($artist), array(), $userId, false)
+                ? $this->albums($this->albumRepository->getByArtist((int) $artist_id), array(), $userId, false)
                 : array();
             $songs = (in_array('songs', $include))
-                ? $this->songs($this->songRepository->getByArtist($artist), $userId, false)
+                ? $this->songs($this->songRepository->getByArtist((int) $artist_id), $userId, false)
                 : array();
 
             $result[] = [

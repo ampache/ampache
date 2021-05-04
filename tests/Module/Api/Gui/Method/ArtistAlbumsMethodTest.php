@@ -122,7 +122,7 @@ class ArtistAlbumsMethodTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->albumRepository->shouldReceive('getByArtist')
-            ->with($artist)
+            ->with($objectId)
             ->once()
             ->andReturn([]);
 
@@ -171,7 +171,7 @@ class ArtistAlbumsMethodTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->albumRepository->shouldReceive('getByArtist')
-            ->with($artist)
+            ->with($objectId)
             ->once()
             ->andReturn($albums);
 

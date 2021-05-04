@@ -27,7 +27,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Manage'));  ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>
         <th class="cel_base_playlist"><?php echo T_('Base Playlist'); ?></th>
@@ -43,7 +43,7 @@ Ui::show_box_top(T_('Manage'));  ?>
             $democratic->format();
             $playlist = new Playlist($democratic->base_playlist);
             $playlist->format(); ?>
-    <tr class="<?php echo Ui::flip_class(); ?>">
+    <tr>
         <td><?php echo scrub_out($democratic->name); ?></td>
         <td><?php echo $playlist->f_link; ?></td>
         <td><?php echo $democratic->f_cooldown; ?></td>

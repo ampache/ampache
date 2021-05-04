@@ -229,10 +229,10 @@ final class XmlOutput implements ApiOutputInterface
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? $this->albums($this->albumRepository->getByArtist($artist), array(), $userId, false)
+                ? $this->albums($this->albumRepository->getByArtist((int) $artistId), array(), $userId, false)
                 : '';
             $songs = (in_array("songs", $include))
-                ? $this->songs($this->songRepository->getByArtist($artist), $userId, false)
+                ? $this->songs($this->songRepository->getByArtist((int) $artistId), $userId, false)
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
@@ -981,7 +981,7 @@ final class XmlOutput implements ApiOutputInterface
                     } else {
                         $artist = new Artist($objectId);
                         $artist->format();
-                        $albums = $this->albumRepository->getByArtist($artist, null, true);
+                        $albums = $this->albumRepository->getByArtist((int) $objectId, null, true);
                         $string .= "<$type id=\"" . $objectId . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {

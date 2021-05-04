@@ -255,7 +255,7 @@ final class PodcastEpisodeViewAdapter implements PodcastEpisodeViewAdapterInterf
 
     public function getShareButton(): string
     {
-        return Share::display_ui('podcast_episode', $this->podcastEpisode->getId(), false);
+        return Ui::displayShareUi('podcast_episode', $this->podcastEpisode->getId(), false);
     }
 
     public function canDownload(): bool

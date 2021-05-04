@@ -114,7 +114,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
             // get the folders from songs as well
-            $songs = $this->songRepository->getByArtist($media);
+            $songs = $this->songRepository->getByArtist((int) $media->id);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)

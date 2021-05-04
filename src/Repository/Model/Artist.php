@@ -251,6 +251,68 @@ class Artist extends database_object implements library_item
     } // construct_from_array
 
     /**
+     * get_id_arrays
+     *
+     * Get each id from the artist table with the minimum detail required for subsonic
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_id_arrays($catalogs = array())
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        if (!empty($catalogs)) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`  FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql, $catalogs);
+        } else {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql);
+        }
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_id_array
+     *
+     * Get info from the artist table with the minimum detail required for subsonic
+     * @param int $artist_id
+     * @return array
+     */
+    public static function get_id_array($artist_id)
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $db_results   = Dba::read($sql, array($artist_id));
+        $row          = Dba::fetch_assoc($db_results, false);
+
+        return $row;
+    }
+
+    /**
+     * get_child_ids
+     *
+     * Get each album id for the artist
+     * @return int[]
+     */
+    public function get_child_ids()
+    {
+        $sql        = "SELECT  DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $db_results = Dba::read($sql, array($this->getId()));
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
@@ -401,7 +463,7 @@ class Artist extends database_object implements library_item
     public function get_childrens()
     {
         $medias = array();
-        $albums = $this->getAlbumRepository()->getByArtist($this);
+        $albums = $this->getAlbumRepository()->getByArtist($this->id);
         foreach ($albums as $album_id) {
             $medias[] = array(
                 'object_type' => 'album',
@@ -449,7 +511,7 @@ class Artist extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = $this->getSongRepository()->getByArtist($this);
+            $songs = $this->getSongRepository()->getByArtist($this->getId());
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -673,7 +735,7 @@ class Artist extends database_object implements library_item
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
-                $songs = $this->getSongRepository()->getByArtist($this);
+                $songs = $this->getSongRepository()->getByArtist($this->getId());
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                 }
@@ -794,7 +856,6 @@ class Artist extends database_object implements library_item
             $artistRepository->updateTime($this, $time);
 
             $this->time = $time;
-
             $artistRepository->updateLastUpdate($this->getId());
         }
     }

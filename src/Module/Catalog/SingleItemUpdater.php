@@ -25,7 +25,6 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -91,7 +90,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 break;
             case 'artist':
                 $libitem = new Artist($objectId);
-                $songs   = $this->songRepository->getByArtist($libitem);
+                $songs   = $this->songRepository->getByArtist($libitem->getId());
                 break;
             case 'song':
                 $songs[] = $objectId;
@@ -114,14 +113,14 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                     $result = (int)$change[1];
                 }
                 $file = scrub_out($song->file);
-                echo '<tr class="' . Ui::flip_class() . '">' . "\n";
+                echo '<tr>' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
                 if (!$api) {
-                    echo '<tr class="' . Ui::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
                 flush();
             }

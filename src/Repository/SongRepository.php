@@ -164,7 +164,7 @@ final class SongRepository implements SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist
+        int $artistId
     ): array {
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
@@ -175,7 +175,7 @@ final class SongRepository implements SongRepositoryInterface
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
-        $db_results = Dba::read($sql, array($artist->getId()));
+        $db_results = Dba::read($sql, array($artistId));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

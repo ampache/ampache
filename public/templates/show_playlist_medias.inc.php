@@ -41,7 +41,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
-    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start() ?>">
+    <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start() ?>">
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
@@ -78,7 +78,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
             $libitem    = new $class_name($object['object_id']);
             $libitem->format();
             $playlist_track = $object['track']; ?>
-        <tr class="<?php echo Ui::flip_class() ?>" id="track_<?php echo $object['track_id'] ?>">
+        <tr id="track_<?php echo $object['track_id'] ?>">
             <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
         </tr>
         <?php

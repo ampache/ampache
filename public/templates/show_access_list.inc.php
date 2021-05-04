@@ -50,7 +50,7 @@ $addlocal   = T_('Add Local Network Definition'); ?>
 <?php Ui::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if ($list !== []) { ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <thead>
     <tr class="th-top">
         <th><?php echo T_('Name'); ?></th>
@@ -68,7 +68,7 @@ $addlocal   = T_('Add Local Network Definition'); ?>
     /** @var AccessListItemInterface $access $access */
     foreach ($list as $access) {
         ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td><?php echo scrub_out($access->getName()); ?></td>
     <td><?php echo $access->getStartIp(); ?></td>
     <td><?php echo $access->getEndIp(); ?></td>

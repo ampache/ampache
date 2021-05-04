@@ -23,7 +23,7 @@ if (!$iframed) {
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/js-cookie/js-cookie-built.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js"></script>
@@ -153,7 +153,8 @@ function NotifyBrowser(title, artist, icon)
     var notyTimeout = <?php echo AmpConfig::get('browser_notify_timeout'); ?>;
     var notification = new Notification(title, {
         body: artist,
-        icon: icon
+        icon: icon,
+        silent: true
     });
 
     if (notyTimeout > 0) {
