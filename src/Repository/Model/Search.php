@@ -349,18 +349,18 @@ class Search extends playlist_object
 
         $this->basetypes['recent_played'][] = array(
             'name' => 'ply',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`date`'
         );
         $this->basetypes['recent_added'][] = array(
             'name' => 'add',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`addition_time`'
         );
 
         $this->basetypes['recent_updated'][] = array(
             'name' => 'upd',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`update_time`'
         );
 
@@ -678,6 +678,8 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
+
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
@@ -726,6 +728,8 @@ class Search extends playlist_object
             $users[$userid] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
+
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
@@ -1443,6 +1447,11 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1707,6 +1716,11 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
+                    break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
