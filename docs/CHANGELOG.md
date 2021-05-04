@@ -10,36 +10,39 @@
 
 ### Changed
 
-* SubSonic - When calling createPlaylist, assume that the list needs to be empty first
 * Simplify flagging/rating multi-disk albums
-* SubSonic - just send getmusicfolders music folders
-
+* SubSonic
+  * just send getmusicfolders music folders
+  * When calling createPlaylist, assume that the list needs to be empty first
+  
 ### Fixed
 
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
-* SubSonic - Clients might send you a file path of Artist art instead of the id
-* SubSonic - Strings don't need json conversion checks
-* SubSonic - Send the cover art id for playlists
-* SubSonic - Check for artist and podcast prefixes on art id's
+* SubSonic
+  * Clients might send you a file path of Artist art instead of the id
+  * Strings don't need json conversion checks
+  * Send the cover art id for playlists
+  * Check for artist and podcast prefixes on art id's
+  * Bugs when converting between SubSonic id and Ampache id
+  * Assign roles based on preferences (fixes jukebox, podcast and share roles)
+  * CreateUser could overwrite admin access level
+  * UpdateUser didn't write the access level
+  * don't return null Genre counts
+  * fix getting artist indexes for large libraries
 * Don't get null playlist objects from the DB
-* SubSonic - Bugs when converting between SubSonic id and Ampache id
 * Using 'Save Track Order' would not apply the offset 
 * Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
 * Automated Label creation when updating from tags
 * Grouped album downloads and rightbar actions
-* SubSonic - Assign roles based on preferences (fixes jukebox, podcast and share roles)
 * Preference::get_by_user was caching into a single value
 * A user who owned a playlist was unable to reorder (but could still save the order)
 * When creating shares, don't allow secret to be longer than database limit (20)
 * Album full name wasn't being used in some places
-* SubSonic - CreateUser could overwrite admin access level
-* SubSonic - UpdateUser didn't write the access level
 * Tag::get_tag_objects was not grouping albums
 * Return integers for tag counts
-* SubSonic - don't return null Genre counts
 * rmccue/requests CVE: CVE-2021-29476
-* SubSonic - fix getting artist indexes for large libraries
+* PHPMailer/PHPMailer CVE: CVE-2020-36326
 
 ### API 4.4.2
 
