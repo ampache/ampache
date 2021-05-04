@@ -468,14 +468,14 @@ class Subsonic_Xml_Data
     /**
      * addArtistsRoot
      * @param SimpleXMLElement $xml
-     * @param Artist[] $artists
+     * @param array $artists
      * @param boolean $albumsSet
      */
     public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
         $xartists = $xml->addChild('artists');
         self::addIgnoredArticles($xartists);
-        self::addArtists($xartists, $artists, true, $albumsSet);
+        self::addArtistArrays($xartists, $artists);
     }
 
     /**
@@ -564,8 +564,6 @@ class Subsonic_Xml_Data
      * addArtistArrays
      * @param SimpleXMLElement $xml
      * @param array $artists
-     * @param boolean $extra
-     * @param boolean $albumsSet
      */
     public static function addArtistArrays($xml, $artists)
     {
@@ -610,16 +608,19 @@ class Subsonic_Xml_Data
     /**
      * addArtistArray
      * @param SimpleXMLElement $xml
-     * @param Artist $artist
-     * @param boolean $extra
-     * @param boolean $albums
-     * @param boolean $albumsSet
+     * @param array $artist
      */
     public static function addArtistArray($xml, $artist)
     {
+        $sub_id  = (string)self::getArtistId($artist['id']);
         $xartist = $xml->addChild('artist');
-        $xartist->addAttribute('id', (string)self::getArtistId($artist['id']));
+        $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', (string)self::checkName($artist['full_name']));
+
+        if (isset($artist['album_count'])) {
+            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+            $xartist->addAttribute('albumCount', (string)$artist['album_count']);
+        }
     }
 
     /**

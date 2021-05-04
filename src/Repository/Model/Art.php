@@ -423,7 +423,6 @@ class Art extends database_object
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
                             }
-                            
                             break;
                     }
                 }
@@ -448,7 +447,8 @@ class Art extends database_object
     public function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
     {
         $idx = null;
-        for ($i=0; $i < count($apics); $i++) {
+        $cnt = count($apics);
+        for ($i=0; $i < $cnt; $i++) {
             if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
                 $ndata['attached_picture'][$i]['description']       = $new_pic['description'];
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
