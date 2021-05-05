@@ -70,4 +70,19 @@ interface PrivateMessageRepositoryInterface
     public function getById(
         int $privateMessageId
     ): PrivateMessageInterface;
+
+    /**
+     * @return array{
+     *  id: int,
+     *  subject: string,
+     *  message: string,
+     *  from_user: int,
+     *  to_user: int,
+     *  is_read: int,
+     *  creation_date: int
+     * }
+     */
+    public function getDataById(
+        int $id
+    ): array;
 }

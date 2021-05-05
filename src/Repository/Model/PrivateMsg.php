@@ -25,67 +25,42 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 /**
  * This is the class responsible for handling the PrivateMsg object
  * it is related to the user_pvmsg table in the database.
  */
-class PrivateMsg extends database_object implements PrivateMessageInterface
+final class PrivateMsg implements PrivateMessageInterface
 {
     protected const DB_TABLENAME = 'user_pvmsg';
 
-    /* Variables from DB */
-    /**
-     * @var integer $id
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string $subject
-     */
-    private $subject;
+    private PrivateMessageRepositoryInterface $privateMessageRepository;
 
-    /**
-     * @var string $message
-     */
-    private $message;
+    public function __construct(
+        PrivateMessageRepositoryInterface $privateMessageRepository,
+        int $id
+    ) {
+        $this->privateMessageRepository = $privateMessageRepository;
+        $this->id                       = $id;
+    }
 
-    /**
-     * @var integer $from_user
-     */
-    private $from_user;
+    private ?array $dbData = null;
 
-    /**
-     * @var integer $to_user
-     */
-    private $to_user;
-
-    /**
-     * @var integer $creation_date
-     */
-    private $creation_date;
-
-    /**
-     * @var boolean $is_read
-     */
-    private $is_read;
-
-    /**
-     * @param integer $pm_id
-     */
-    public function __construct($pm_id)
+    private function getDbData(): array
     {
-        $info = $this->get_info($pm_id, 'user_pvmsg');
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($this->dbData === null) {
+            $this->dbData = $this->privateMessageRepository->getDataById($this->id);
         }
 
-        return true;
+        return $this->dbData;
     }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->getDbData()['id'] ?? 0);
     }
 
     public function isNew(): bool
@@ -95,7 +70,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getSenderUserLink(): string
     {
-        $from_user = new User((int) $this->from_user);
+        $from_user = new User($this->getSenderUserId());
         $from_user->format();
 
         return $from_user->f_link;
@@ -103,7 +78,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getRecipientUserLink(): string
     {
-        $to_user = new User((int) $this->to_user);
+        $to_user = new User($this->getRecipientUserId());
         $to_user->format();
 
         return $to_user->f_link;
@@ -111,12 +86,12 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getCreationDate(): int
     {
-        return (int) $this->creation_date;
+        return (int) ($this->getDbData()['creation_date'] ?? 0);
     }
 
     public function getCreationDateFormatted(): string
     {
-        return get_datetime((int) $this->creation_date);
+        return get_datetime($this->getCreationDate());
     }
 
     public function getLinkFormatted(): string
@@ -131,31 +106,31 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getSubjectFormatted(): string
     {
-        return scrub_out((string) $this->subject);
+        return scrub_out($this->getSubject());
     }
 
     public function isRead(): bool
     {
-        return (int) $this->is_read === 1;
+        return (int) ($this->getDbData()['is_read'] ?? 0);
     }
 
     public function getRecipientUserId(): int
     {
-        return (int) $this->to_user;
+        return (int) ($this->getDbData()['to_user'] ?? 0);
     }
 
     public function getSenderUserId(): int
     {
-        return (int) $this->from_user;
+        return (int) ($this->getDbData()['from_user'] ?? 0);
     }
 
     public function getMessage(): string
     {
-        return (string) $this->message;
+        return $this->getDbData()['message'] ?? '';
     }
 
     public function getSubject(): string
     {
-        return (string) $this->subject;
+        return $this->getDbData()['subject'] ?? '';
     }
 }

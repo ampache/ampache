@@ -21,9 +21,16 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+global $dic;
+/** @var int[] $option_ids */
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $thcount = 5; ?>
 <script>
@@ -62,7 +69,7 @@ $thcount = 5; ?>
         <?php
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $pvmg_id) {
-            $libitem = new PrivateMsg($pvmg_id); ?>
+            $libitem = $modelFactory->createPrivateMsg($pvmg_id); ?>
         <tr id="label_<?php echo $libitem->getId(); ?>" class="<?php echo (!$libitem->isRead()) ? "unread" : "" ?>">
             <?php require Ui::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>

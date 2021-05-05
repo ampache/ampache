@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
@@ -146,7 +147,10 @@ final class ModelFactory implements ModelFactoryInterface
     public function createPrivateMsg(
         int $privateMessageId
     ): PrivateMsg {
-        return new PrivateMsg($privateMessageId);
+        return new PrivateMsg(
+            $this->dic->get(PrivateMessageRepositoryInterface::class),
+            $privateMessageId
+        );
     }
 
     public function createTvShow(

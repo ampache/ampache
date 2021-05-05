@@ -1651,7 +1651,7 @@ class Subsonic_Xml_Data
             return;
         }
         foreach ($messages as $message) {
-            $chat = new PrivateMsg($message);
+            $chat = static::getModelFactory()->createPrivateMsg((int) $message);
             self::addMessage($xmessages, $chat);
         }
     }

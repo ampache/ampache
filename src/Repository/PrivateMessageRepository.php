@@ -152,4 +152,29 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
 
         return $item;
     }
+
+    /**
+     * @return array{
+     *  id: int,
+     *  subject: string,
+     *  message: string,
+     *  from_user: int,
+     *  to_user: int,
+     *  is_read: int,
+     *  creation_date: int
+     * }
+     */
+    public function getDataById(
+        int $id
+    ): array {
+        $params     = [$id];
+        $sql        = 'SELECT * FROM `user_pvmsg` WHERE `id` = ?';
+        $db_results = Dba::read($sql, $params);
+
+        if (!$db_results) {
+            return array();
+        }
+
+        return Dba::fetch_assoc($db_results);
+    }
 }
