@@ -202,11 +202,15 @@ final class ShoutRepository implements ShoutRepositoryInterface
     public function getDataById(
         int $shoutId
     ): array {
-        $db_results = Dba::read(
+        $dbResults = $this->connection->fetchAssociative(
             'SELECT * FROM `user_shout` WHERE `id` = ?',
             [$shoutId]
         );
 
-        return Dba::fetch_assoc($db_results);
+        if ($dbResults === false) {
+            return [];
+        }
+
+        return $dbResults;
     }
 }

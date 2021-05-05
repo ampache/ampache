@@ -159,4 +159,42 @@ class ShoutRepositoryTest extends MockeryTestCase
             $isSticky
         );
     }
+
+    public function testGetDataByIdReturnsEmptyArrayIfNotFound(): void
+    {
+        $shoutId = 666;
+
+        $this->connection->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `user_shout` WHERE `id` = ?',
+                [$shoutId]
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertSame(
+            [],
+            $this->subject->getDataById($shoutId)
+        );
+    }
+
+    public function testGetDataByIdReturnsResult(): void
+    {
+        $shoutId = 666;
+
+        $result = ['some' => 'result'];
+
+        $this->connection->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `user_shout` WHERE `id` = ?',
+                [$shoutId]
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->assertSame(
+            $result,
+            $this->subject->getDataById($shoutId)
+        );
+    }
 }
