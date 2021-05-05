@@ -79,7 +79,7 @@
         "php-di/php-di": "^6.0",
         "php-http/guzzle6-adapter": "^2.0",
         "php-tmdb/api": "^4",
-        "phpmailer/phpmailer": "6.1.*",
+        "phpmailer/phpmailer": "6.4.*",
         "phpstan/phpstan": "^0.12.75",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",

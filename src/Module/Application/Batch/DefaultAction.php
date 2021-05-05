@@ -134,7 +134,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $albumList  = explode(',', $_REQUEST['id']);
                     $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
                     $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name($albumList[0]);
+                    $libitem    = new $class_name((int)$albumList[0]);
                     if ($libitem->id) {
                         $libitem->format();
                         $name = $libitem->get_fullname();

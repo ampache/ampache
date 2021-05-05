@@ -87,6 +87,89 @@ All API code that used 'Tag' now references 'Genre' instead
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * Plugins: Use only https for building gravatar urls
 
+## Ampache 4.4.2-release
+
+### Added
+
+* Larger artist images when you don't have a text summary available
+* Expanded artist, album and podcast thumbnails to reduce blank space
+* Update album tags first when you update artist tags
+
+### Changed
+
+* Simplify flagging/rating multi-disk albums
+* SubSonic
+  * just send getmusicfolders music folders
+  * When calling createPlaylist, assume that the list needs to be empty first
+  
+### Fixed
+
+* Require a valid database hostname instead of assuming localhost
+* A valid transcode_cmd is required to transcode media
+* SubSonic
+  * Clients might send you a file path of Artist art instead of the id
+  * Strings don't need json conversion checks
+  * Send the cover art id for playlists
+  * Check for artist and podcast prefixes on art id's
+  * Bugs when converting between SubSonic id and Ampache id
+  * Assign roles based on preferences (fixes jukebox, podcast and share roles)
+  * CreateUser could overwrite admin access level
+  * UpdateUser didn't write the access level
+  * don't return null Genre counts
+  * fix getting artist indexes for large libraries
+* Don't get null playlist objects from the DB
+* Using 'Save Track Order' would not apply the offset 
+* Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
+* Automated Label creation when updating from tags
+* Grouped album downloads and rightbar actions
+* Preference::get_by_user was caching into a single value
+* A user who owned a playlist was unable to reorder (but could still save the order)
+* When creating shares, don't allow secret to be longer than database limit (20)
+* Album full name wasn't being used in some places
+* Tag::get_tag_objects was not grouping albums
+* Return integers for tag counts
+* rmccue/requests CVE: CVE-2021-29476
+* PHPMailer/PHPMailer CVE: CVE-2020-36326
+
+### API 4.4.2
+
+### Fixed
+
+* API::indexes Artist albums were being added incorrectly for XML
+* Send back the full album name in responses
+
+## Ampache 4.4.1-release
+
+### Added
+
+* If you have an MBID in your artist, use that for last.fm queries
+
+### Changed
+
+* Updated composer dependencies
+* Default podcast_keep and podcast_new_download preferences are set to 0 (unlimited)
+
+### Removed
+
+* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.
+
+### Fixed
+
+* Grid View shouldn't change the artist image
+* Catalog Update -u (gather last.fm info) wasn't getting an ID list correctly
+* Album::get_random_songs not returning id's
+* Bookmark::get_bookmarks typo for get_bookmark_ids
+* Sorting album browses by artist name could fail with mysql
+* SubSonic: getPlaylists should always send a user
+* Album browsing SQL didn't include Artist name in grouping
+* CVE-2021-21399: Unauthenticated SubSonic backend access in Ampache
+
+### API 4.4.1
+
+### Fixed
+
+* API::stats would not offset recent calls
+
 ## Ampache 4.4.0-release
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
