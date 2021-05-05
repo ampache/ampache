@@ -72,4 +72,20 @@ interface ShoutRepositoryInterface
      * This updates a shoutbox entry
      */
     public function update(int $shoutId, string $comment, bool $isSticky): void;
+
+    /**
+     * @return array{
+     *  id: int,
+     *  user: int,
+     *  text: string,
+     *  date: int,
+     *  sticky:int,
+     *  object_id: int,
+     *  object_type: string,
+     *  data: string
+     * }
+     */
+    public function getDataById(
+        int $shoutId
+    ): array;
 }

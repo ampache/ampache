@@ -29,6 +29,7 @@ use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -182,8 +183,11 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createShoutbox(
         int $shoutboxId
-    ): Shoutbox {
-        return new Shoutbox($shoutboxId);
+    ): ShoutboxInterface {
+        return new Shoutbox(
+            $this->dic->get(ShoutRepositoryInterface::class),
+            $shoutboxId
+        );
     }
 
     public function createLicense(

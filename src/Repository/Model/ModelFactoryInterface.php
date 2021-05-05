@@ -115,7 +115,7 @@ interface ModelFactoryInterface
 
     public function createShoutbox(
         int $shoutboxId
-    ): Shoutbox;
+    ): ShoutboxInterface;
 
     public function createLicense(
         int $licenseId = 0

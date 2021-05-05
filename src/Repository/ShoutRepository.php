@@ -186,4 +186,27 @@ final class ShoutRepository implements ShoutRepositoryInterface
             [$comment, (int) $isSticky, $shoutId]
         );
     }
+
+    /**
+     * @return array{
+     *  id: int,
+     *  user: int,
+     *  text: string,
+     *  date: int,
+     *  sticky:int,
+     *  object_id: int,
+     *  object_type: string,
+     *  data: string
+     * }
+     */
+    public function getDataById(
+        int $shoutId
+    ): array {
+        $db_results = Dba::read(
+            'SELECT * FROM `user_shout` WHERE `id` = ?',
+            [$shoutId]
+        );
+
+        return Dba::fetch_assoc($db_results);
+    }
 }

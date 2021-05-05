@@ -21,9 +21,16 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
+
+/** @var int[] $object_ids */
+/** @var string $web_path */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path'); ?>
 <table class="tabledata striped-rows">
@@ -40,11 +47,11 @@ $web_path = AmpConfig::get('web_path'); ?>
     <tbody>
         <?php
         foreach ($object_ids as $shout_id) {
-            $libitem = new Shoutbox($shout_id);
+            $libitem = $modelFactory->createShoutbox($shout_id);
 
-            $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
+            $object = Shoutbox::get_object($libitem->getObjectType(), $libitem->getObjectId());
             $object->format();
-            $client = new User($libitem->user);
+            $client = new User($libitem->getUserId());
             $client->format();
 
             require Ui::find_template('show_shout_row.inc.php'); ?>

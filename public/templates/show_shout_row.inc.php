@@ -27,17 +27,17 @@ use Ampache\Module\Util\Ui;
 /** @var Shoutbox $libitem */
 /** @var User $client */
 ?>
-<tr id="flagged_<?php echo $libitem->id; ?>">
+<tr id="flagged_<?php echo $libitem->getId(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
     <td class="cel_sticky"><?php echo $libitem->getStickyFormatted(); ?></td>
-    <td class="cel_comment"><?php echo scrub_out($libitem->text); ?></td>
+    <td class="cel_comment"><?php echo scrub_out($libitem->getText()); ?></td>
     <td class="cel_date"><?php echo $libitem->getDateFormatted(); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>

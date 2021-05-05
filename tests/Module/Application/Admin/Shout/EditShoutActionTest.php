@@ -25,12 +25,12 @@ namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ShoutboxInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -85,7 +85,7 @@ class EditShoutActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $shoutbox   = $this->mock(Shoutbox::class);
+        $shoutbox   = $this->mock(ShoutboxInterface::class);
 
         $shoutId = 666;
         $webPath = 'some-path';

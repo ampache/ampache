@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -17,26 +17,33 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Util\Ui;
+namespace Ampache\Repository\Model;
 
-global $dic;
-$modelFactory = $dic->get(ModelFactoryInterface::class);
+interface ShoutboxInterface
+{
+    public function getId(): int;
 
-/** @var int[] $shouts */
-?>
-<?php Ui::show_box_top(T_('Shoutbox')); ?>
-<div id="shoutbox">
-<?php
-  foreach ($shouts as $shout_id) {
-      $shout = $modelFactory->createShoutbox($shout_id); ?>
-<div id="shout<?php echo $shout->getDate(); ?>" class="shout">
-    <?php echo Ui::getShoutboxDisplay($shout, true, true); ?>
-</div>
-<?php
-  } ?>
-</div>
-<?php Ui::show_box_bottom(); ?>
+    public function isNew(): bool;
+
+    public function getObjectType(): string;
+
+    public function getObjectId(): int;
+
+    public function getUserId(): int;
+
+    public function getSticky(): int;
+
+    public function getText(): string;
+
+    public function getData(): string;
+
+    public function getDate(): int;
+
+    public function getStickyFormatted(): string;
+
+    public function getTextFormatted(): string;
+
+    public function getDateFormatted(): string;
+}

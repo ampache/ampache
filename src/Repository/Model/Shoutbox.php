@@ -24,42 +24,62 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShoutRepositoryInterface;
 
-class Shoutbox
+final class Shoutbox implements ShoutboxInterface
 {
-    public $id;
-    public $object_type;
-    public $object_id;
-    public $user;
-    public $sticky;
-    public $text;
-    public $data;
-    public $date;
+    private int $id;
 
     /**
-     * Constructor
-     * This pulls the shoutbox information from the database and returns
-     * a constructed object, uses user_shout table
-     * @param integer $shout_id
+     * @var null|array{
+     *  id: int,
+     *  user: int,
+     *  text: string,
+     *  date: int,
+     *  sticky:int,
+     *  object_id: int,
+     *  object_type: string,
+     *  data: string
+     * }
      */
-    public function __construct($shout_id)
-    {
-        // Load the data from the database
-        $this->has_info($shout_id);
+    private ?array $dbData = null;
 
-        return true;
-    } // Constructor
+    private ShoutRepositoryInterface $shoutRepository;
+
+    public function __construct(
+        ShoutRepositoryInterface $shoutRepository,
+        int $id
+    ) {
+        $this->shoutRepository = $shoutRepository;
+        $this->id              = $id;
+    }
+
+    /**
+     * @var array{
+     *  id: int,
+     *  user: int,
+     *  text: string,
+     *  date: int,
+     *  sticky:int,
+     *  object_id: int,
+     *  object_type: string,
+     *  data: string
+     * }
+     */
+    private function getDbData(): array
+    {
+        if ($this->dbData === null) {
+            $this->dbData = $this->shoutRepository->getDataById($this->id);
+        }
+
+        return $this->dbData;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->getDbData()['id'] ?? 0);
     }
 
     public function isNew(): bool
@@ -67,25 +87,40 @@ class Shoutbox
         return $this->getId() === 0;
     }
 
-    /**
-     * has_info
-     * does the db call, reads from the user_shout table
-     * @param integer $shout_id
-     * @return boolean
-     */
-    private function has_info($shout_id)
+    public function getObjectType(): string
     {
-        $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($shout_id));
+        return $this->getDbData()['object_type'] ?? '';
+    }
 
-        $data = Dba::fetch_assoc($db_results);
+    public function getObjectId(): int
+    {
+        return (int) ($this->getDbData()['object_id'] ?? '');
+    }
 
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+    public function getUserId(): int
+    {
+        return (int) ($this->getDbData()['user'] ?? 0);
+    }
 
-        return true;
-    } // has_info
+    public function getSticky(): int
+    {
+        return (int) ($this->getDbData()['sticky'] ?? 0);
+    }
+
+    public function getText(): string
+    {
+        return $this->getDbData()['text'] ?? '';
+    }
+
+    public function getData(): string
+    {
+        return $this->getDbData()['data'] ?? '';
+    }
+
+    public function getDate(): int
+    {
+        return (int) ($this->getDbData()['date'] ?? 0);
+    }
 
     /**
      * get_object
@@ -115,93 +150,20 @@ class Shoutbox
         }
 
         return $object;
-    } // get_object
-
-    /**
-     * get_image
-     * This returns an image tag if the type of object we're currently rolling with
-     * has an image associated with it
-     */
-    public function get_image()
-    {
-        $image_string = '';
-        if (Art::has_db($this->object_id, $this->object_type)) {
-            $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $this->object_id . "&object_type=" . $this->object_type . "&thumb=1\" />";
-        }
-
-        return $image_string;
-    } // get_image
+    }
 
     public function getStickyFormatted(): string
     {
-        return $this->sticky == '0' ? 'No' : 'Yes';
+        return $this->getSticky() == 0 ? 'No' : 'Yes';
     }
 
     public function getTextFormatted(): string
     {
-        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->getText());
     }
 
     public function getDateFormatted(): string
     {
-        return get_datetime((int)$this->date);
-    }
-
-    /**
-     * @param boolean $details
-     * @param boolean $jsbuttons
-     * @return string
-     */
-    public function get_display($details = true, $jsbuttons = false)
-    {
-        $object = Shoutbox::get_object($this->object_type, $this->object_id);
-        $object->format();
-        $img  = $this->get_image();
-        $html = "<div class='shoutbox-item'>";
-        $html .= "<div class='shoutbox-data'>";
-        if ($details && $img) {
-            $html .= "<div class='shoutbox-img'>" . $img . "</div>";
-        }
-        $html .= "<div class='shoutbox-info'>";
-        if ($details) {
-            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . get_datetime((int)$this->date) . "</div>";
-        }
-        $html .= "<div class='shoutbox-text'>" . $this->getTextFormatted() . "</div>";
-        $html .= "</div>";
-        $html .= "</div>";
-        $html .= "<div class='shoutbox-footer'>";
-        if ($details) {
-            $html .= "<div class='shoutbox-actions'>";
-            if ($jsbuttons) {
-                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id,
-                    'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
-                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add',
-                    T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
-            }
-            if (Access::check('interface', 25)) {
-                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . Ui::get_icon('comment',
-                        T_('Post Shout')) . "</a>";
-            }
-            $html .= "</div>";
-        }
-        $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
-
-        if ($this->user > 0) {
-            $user = new User($this->user);
-            $user->format();
-            if ($details) {
-                $html .= $user->f_link;
-            } else {
-                $html .= $user->username;
-            }
-        } else {
-            $html .= T_('Guest');
-        }
-        $html .= "</div>";
-        $html .= "</div>";
-        $html .= "</div>";
-
-        return $html;
+        return get_datetime($this->getDate());
     }
 }

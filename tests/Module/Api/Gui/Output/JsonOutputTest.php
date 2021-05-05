@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\ShoutboxInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UseractivityInterface;
@@ -78,8 +78,8 @@ class JsonOutputTest extends MockeryTestCase
     public function testShoutsReturnsResult(): void
     {
         $shoutId  = 666;
-        $userId   = '42';
-        $date     = 'some-date';
+        $userId   = 42;
+        $date     = 33;
         $text     = 'some-text';
         $username = 'some-username';
         $result   = [
@@ -88,18 +88,28 @@ class JsonOutputTest extends MockeryTestCase
                 'date' => $date,
                 'text' => $text,
                 'user' => [
-                    'id' => $userId,
+                    'id' => (string) $userId,
                     'username' => $username
                 ]
             ]]
         ];
 
-        $shout = $this->mock(Shoutbox::class);
+        $shout = $this->mock(ShoutboxInterface::class);
         $user  = $this->mock(User::class);
 
-        $shout->date    = $date;
-        $shout->text    = $text;
-        $shout->user    = $userId;
+        $shout->shouldReceive('getDate')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($date);
+        $shout->shouldReceive('getText')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($text);
+        $shout->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
         $user->username = $username;
 
         $this->modelFactory->shouldReceive('createShoutbox')

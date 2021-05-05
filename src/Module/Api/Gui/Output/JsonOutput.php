@@ -439,14 +439,17 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
         foreach ($shoutIds as $shoutId) {
             $shout = $this->modelFactory->createShoutbox($shoutId);
-            $user  = $this->modelFactory->createUser((int) $shout->user);
+
+            $userId = $shout->getUserId();
+
+            $user  = $this->modelFactory->createUser($userId);
 
             $result[] = [
                 'id' => (string) $shoutId,
-                'date' => $shout->date,
-                'text' => $shout->text,
+                'date' => $shout->getDate(),
+                'text' => $shout->getText(),
                 'user' => [
-                    'id' => (string) $shout->user,
+                    'id' => (string) $userId,
                     'username' => $user->username
                 ]
             ];

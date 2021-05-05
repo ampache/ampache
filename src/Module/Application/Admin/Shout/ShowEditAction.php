@@ -65,12 +65,12 @@ final class ShowEditAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $shout = $this->modelFactory->createShoutbox(
-            (int) $request->getQueryParams()['shout_id'] ?? 0
+            (int) ($request->getQueryParams()['shout_id'] ?? 0)
         );
-        $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
+        $object = Shoutbox::get_object($shout->getObjectType(), $shout->getObjectId());
         $object->format();
 
-        $client = $this->modelFactory->createUser($shout->user);
+        $client = $this->modelFactory->createUser($shout->getUserId());
         $client->format();
 
         require_once Ui::find_template('show_edit_shout.inc.php');

@@ -392,9 +392,9 @@ final class XmlOutput implements ApiOutputInterface
         $result = '';
         foreach ($shoutIds as $shoutId) {
             $shout = $this->modelFactory->createShoutbox($shoutId);
-            $user  = $this->modelFactory->createUser((int) $shout->user);
+            $user  = $this->modelFactory->createUser($shout->getUserId());
 
-            $result .= "\t<shout id=\"" . $shoutId . "\">\n" . "\t\t<date>" . $shout->date . "</date>\n" . "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
+            $result .= "\t<shout id=\"" . $shoutId . "\">\n" . "\t\t<date>" . $shout->getDate() . "</date>\n" . "\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
             if ($user->id) {
                 $result .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
             }

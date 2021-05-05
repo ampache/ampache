@@ -25,8 +25,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -34,6 +37,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
 
 /**
  * A collection of methods related to the user interface
@@ -1105,5 +1110,73 @@ class Ui implements UiInterface
         $result .= "</select>\n";
 
         return $result;
+    }
+
+    public static function getShoutboxDisplay(
+        Shoutbox $shoutbox,
+        bool $details = true,
+        bool $jsbuttons = false
+    ): string {
+        $object = Shoutbox::get_object($shoutbox->getObjectType(), $shoutbox->getObjectId());
+        $object->format();
+
+        $img = '';
+        if (Art::has_db($shoutbox->getObjectId(), $shoutbox->getObjectType())) {
+            $img = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $shoutbox->getObjectId() . "&object_type=" . $shoutbox->getObjectType() . "&thumb=1\" />";
+        }
+
+        $html = "<div class='shoutbox-item'>";
+        $html .= "<div class='shoutbox-data'>";
+        if ($details && $img) {
+            $html .= "<div class='shoutbox-img'>" . $img . "</div>";
+        }
+        $html .= "<div class='shoutbox-info'>";
+        if ($details) {
+            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
+            $html .= "<div class='shoutbox-date'>" . $shoutbox->getDateFormatted() . "</div>";
+        }
+        $html .= "<div class='shoutbox-text'>" . $shoutbox->getTextFormatted() . "</div>";
+        $html .= "</div>";
+        $html .= "</div>";
+        $html .= "<div class='shoutbox-footer'>";
+        if ($details) {
+            $html .= "<div class='shoutbox-actions'>";
+            if ($jsbuttons) {
+                $html .= Ajax::button(
+                    '?page=stream&action=directplay&playtype=' . $shoutbox->getObjectType() . '&' . $shoutbox->getObjectType() . '_id=' . $shoutbox->getObjectId(),
+                    'play',
+                    T_('Play'),
+                    'play_' . $shoutbox->getObjectType() . '_' . $shoutbox->getObjectId()
+                );
+                $html .= Ajax::button(
+                    '?action=basket&type=' . $shoutbox->getObjectType() . '&id=' . $shoutbox->getObjectId(), 'add',
+                    T_('Add'),
+                    'add_' . $shoutbox->getObjectType() . '_' . $shoutbox->getObjectId()
+                );
+            }
+            if (Access::check('interface', 25)) {
+                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $shoutbox->getObjectType() . "&id=" . $shoutbox->getObjectId() . "\">" . Ui::get_icon('comment',
+                        T_('Post Shout')) . "</a>";
+            }
+            $html .= "</div>";
+        }
+        $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
+
+        if ($shoutbox->getUserId() > 0) {
+            $user = new User($shoutbox->getUserId());
+            $user->format();
+            if ($details) {
+                $html .= $user->f_link;
+            } else {
+                $html .= $user->username;
+            }
+        } else {
+            $html .= T_('Guest');
+        }
+        $html .= "</div>";
+        $html .= "</div>";
+        $html .= "</div>";
+
+        return $html;
     }
 }

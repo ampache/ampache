@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
@@ -374,20 +375,20 @@ class AmpacheRss
         $results = array();
 
         foreach ($ids as $shoutid) {
-            $shout  = new Shoutbox($shoutid);
-            $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
+            $shout  = static::getModelFactory()->createShoutbox($shoutid);
+            $object = Shoutbox::get_object($shout->getObjectType(), $shout->getObjectId());
             if ($object !== null) {
                 $object->format();
-                $user = new User($shout->user);
+                $user = new User($shout->getUserId());
                 $user->format();
 
                 $xml_array = array(
                     'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->link,
-                    'description' => $shout->text,
-                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
+                    'description' => $shout->getText(),
+                    'image' => Art::url($shout->getObjectId(), $shout->getObjectType(), null, 2),
                     'comments' => '',
-                    'pubDate' => date("c", (int)$shout->date)
+                    'pubDate' => date("c", $shout->getDate())
                 );
                 $results[] = $xml_array;
             }
@@ -560,5 +561,15 @@ class AmpacheRss
         global $dic;
 
         return $dic->get(XmlWriterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

@@ -28,6 +28,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -36,10 +38,14 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 {
     private ShoutRepositoryInterface $shoutRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->shoutRepository = $shoutRepository;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function handle(): void
@@ -80,11 +86,11 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     echo "<script>\r\n";
                     echo "shouts = {};\r\n";
                     foreach ($shouts as $shoutsid) {
-                        $shout = new Shoutbox($shoutsid);
-                        $key   = (int) ($shout->data);
+                        $shout = $this->modelFactory->createShoutbox($shoutsid);
+                        $key   = (int) ($shout->getData());
                         echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
-                        echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
-                        echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
+                        echo "shouts['" . $key . "'].push('" . addslashes(Ui::getShoutboxDisplay($shout, false)) . "');\r\n";
+                        echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->getData() / $media->time) * 400) - 1) . "px;\' />');\r\n";
                     }
                     echo "</script>\r\n";
                 }
