@@ -1086,9 +1086,8 @@ final class XmlOutput implements ApiOutputInterface
                     break;
                 case 'live_stream':
                     $live_stream = new Live_Stream($objectId);
-                    $live_stream->format();
                     $string .= "<$type id=\"" . $objectId . "\">\n" .
-                        "\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n" .
+                        "\t<name><![CDATA[" . scrub_out($live_stream->getName()) . "]]></name>\n" .
                         "\t<url><![CDATA[" . $live_stream->url . "]]></url>\n" .
                         "\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n" .
                         "</$type>\n";

@@ -20,18 +20,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -60,12 +59,18 @@ final class ShowAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false) {
             throw new AccessDeniedException();
         }
+
+        $radio = $this->modelFactory->createLiveStream(
+            (int) ($request->getQueryParams()['radio'] ?? 0)
+        );
+
         $this->ui->showHeader();
-
-        $radio = $this->modelFactory->createLiveStream((int) $_REQUEST['radio']);
-        $radio->format();
-        require Ui::find_template('show_live_stream.inc.php');
-
+        $this->ui->show(
+            'show_live_stream.inc.php',
+            [
+                'radio' => $radio
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -725,7 +725,6 @@ class Upnp_Api
                     case 2:
                         $radio = new Live_Stream($pathreq[1]);
                         if ($radio->id) {
-                            $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
                         break;
@@ -940,8 +939,7 @@ class Upnp_Api
                         $radios                  = static::getLiveStreamRepository()->getAll();
                         [$maxCount, $radios]     = self::_slice($radios, $start, $count);
                         foreach ($radios as $radio_id) {
-                            $radio = new Live_Stream($radio_id);
-                            $radio->format();
+                            $radio        = new Live_Stream($radio_id);
                             $mediaItems[] = self::_itemLiveStream($radio, $parent);
                         }
                         break;

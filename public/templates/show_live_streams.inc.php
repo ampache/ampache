@@ -61,8 +61,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
     <tbody>
         <?php
         foreach ($object_ids as $radio_id) {
-            $libitem = new Live_Stream($radio_id);
-            $libitem->format(); ?>
+            $libitem = new Live_Stream($radio_id); ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>

@@ -42,8 +42,19 @@ use Ampache\Module\Util\Ui;
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb); ?>
 </td>
-<td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
-<td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
+<td class="cel_streamname"><?php
+    echo sprintf(
+        '<a href="%s">%s</a>',
+        $libitem->getLink(),
+        scrub_out($libitem->getName())
+    ); ?>
+</td>
+<td class="cel_streamurl"><?php
+    echo sprintf(
+        '<a target="_blank" href="%s">%s</a>',
+        $libitem->getUrl(),
+        $libitem->getUrl()
+    ); ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php

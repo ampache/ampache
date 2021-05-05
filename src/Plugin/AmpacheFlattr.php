@@ -26,6 +26,7 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\Model\Preference;
@@ -110,7 +111,8 @@ class AmpacheFlattr
             } elseif (
                 $libitem instanceof PodcastInterface ||
                 $libitem instanceof PodcastEpisodeInterface ||
-                $libitem instanceof Label
+                $libitem instanceof Label ||
+                $libitem instanceof Live_Stream
             ) {
                 /**
                  * @todo special handling for some object.

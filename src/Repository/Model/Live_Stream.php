@@ -77,10 +77,6 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public $f_link;
     /**
-     * @var string $f_name_link
-     */
-    public $f_name_link;
-    /**
      * @var string $f_url_link
      */
     public $f_url_link;
@@ -111,24 +107,35 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * format
-     * This takes the normal data from the database and makes it pretty
-     * for the users, the new variables are put in f_??? and f_???_link
-     * @param boolean $details
-     * @return true
+     * Not in use
      */
     public function format($details = true)
     {
-        unset($details); // dead code but called from other format calls
-        // Default link used on the rightbar
-        $this->f_name      = scrub_out($this->name);
-        $this->link        = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
-        $this->f_link      = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
-        $this->f_name_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
-        $this->f_url_link  = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
+    }
 
-        return true;
-    } // format
+    public function getLink(): string
+    {
+        return sprintf(
+            '%s/radio.php?action=show&radio=%d',
+            AmpConfig::get('web_path'),
+            $this->getId()
+        );
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function getSiteUrl(): string
+    {
+        return $this->site_url;
+    }
 
     /**
      * @return array
