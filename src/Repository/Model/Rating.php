@@ -366,12 +366,12 @@ class Rating extends database_object
     /**
      * show
      * This takes an id and a type and displays the rating if ratings are
-     * enabled.  If $global_rating is true, the is the average from all users.
+     * enabled.  If $show_global_rating is true, also show the average from all users.
      * @param integer $object_id
      * @param string $type
-     * @param boolean $global_rating
+     * @param boolean $show_global_rating
      */
-    public static function show($object_id, $type, $global_rating = false): string
+    public static function show($object_id, $type, $show_global_rating = false): string
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {
@@ -383,10 +383,20 @@ class Rating extends database_object
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
         $rate     = ($rating->get_user_rating() ?: 0);
 
-        $globalStarRatingCss = '';
-        if ($global_rating) {
-            $rate                = $rating->get_average_rating();
-            $globalStarRatingCss = ' global-star-rating';
+        $global_rating = '';
+
+        if ($show_global_rating) {
+            $global_rating_value = $rating->get_average_rating();
+
+            if ($global_rating_value > 0) {
+                $global_rating = sprintf(
+                    '<span class="global-rating" title="%s">
+                        (%s)
+                    </span>',
+                    T_('Average from all users'),
+                    $global_rating_value
+                );
+            }
         }
 
         // decide width of rating (5 stars -> 20% per star)
@@ -412,18 +422,19 @@ class Rating extends database_object
         }
 
         return sprintf(
-            '<div class="star-rating dynamic-star-rating%s">
+            '<span class="star-rating dynamic-star-rating">
                 <ul>
                     <li class="current-rating" style="width: %d%%">%s: %s</li>
                     %s
                 </ul>
                 %s
-            </div>',
-            $globalStarRatingCss,
+                %s
+            </span>',
             $width,
             T_('Current rating'),
             $ratedText,
             $ratings,
+            $global_rating,
             Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
         );
     } // show

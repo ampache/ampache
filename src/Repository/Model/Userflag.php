@@ -386,7 +386,7 @@ class Userflag extends database_object
             );
         }
 
-        return sprintf('<div class="userflag">%s</div>', $text);
+        return sprintf('<span class="userflag">%s</span>', $text);
     } // show
 
     /**

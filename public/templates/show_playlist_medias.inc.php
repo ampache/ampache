@@ -28,13 +28,13 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
-$seconds  = $browse->duration;
-$duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
-$is_table = $browse->is_grid_view();
+$web_path     = AmpConfig::get('web_path');
+$seconds      = $browse->duration;
+$duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag';
 $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
@@ -52,17 +52,10 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) { ?>
-                    <?php if (AmpConfig::get('ratings')) { ?>
-                        <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php if ($show_ratings) { ?>
+                    <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                     <?php
-} ?>
-                    <?php if (AmpConfig::get('userflags')) { ?>
-                <?php
-        } ?>
-                <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-            <?php
-    } ?>
+                } ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag essential"></th>
             </tr>
@@ -91,21 +84,14 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
                 <?php if (Art::is_enabled()) { ?>
                 <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
                 <?php
-    } ?>
+                } ?>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
                 <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) { ?>
-                    <?php if (AmpConfig::get('ratings')) { ?>
-                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                    <?php
-        } ?>
-                    <?php if (AmpConfig::get('userflags')) { ?>
-                        <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
-                    <?php
-        } ?>
+                <?php if ($show_ratings) { ?>
+                    <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-    } ?>
+                } ?>
                 <th class="cel_action"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag"></th>
             </tr>

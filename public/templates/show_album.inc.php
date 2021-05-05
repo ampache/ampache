@@ -84,22 +84,16 @@ if ($directplay_limit > 0) {
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) {
-            $rating = new Rating($album->id, 'album'); ?>
-    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php echo Rating::show($album->id, 'album');
-            $average = $rating->get_average_rating();
-            if ($average > 0) {
-                /* HINT: Average rating. e.g. (average 3.7) */
-                echo '(' . T_('average') . ' ' . $average . ')';
-            } ?>
-    </div></p>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <span id="rating_<?php echo $album->id; ?>_album">
+        <?php echo Rating::show($album->id, 'album', true); ?>
+    </span>
     <?php
-        } ?>
+    } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-            <?php echo Userflag::show($album->id, 'album'); ?>
-    </div>
+    <span id="userflag_<?php echo $album->id; ?>_album">
+        <?php echo Userflag::show($album->id, 'album'); ?>
+    </span>
     <?php
         } ?>
 <?php

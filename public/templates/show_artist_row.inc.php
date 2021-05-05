@@ -25,7 +25,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -86,15 +85,23 @@ if (Art::is_enabled()) {
         } ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-            <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist"><?php echo Rating::show($libitem->id, 'artist'); ?></td>
-        <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_artist"><?php echo Userflag::show($libitem->id, 'artist'); ?></td>
-        <?php
-        }
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
+                    <?php echo Rating::show($libitem->id, 'artist'); ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
+                    <?php echo Userflag::show($libitem->id, 'artist'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
+    <?php
     } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
