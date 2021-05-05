@@ -302,9 +302,10 @@ class Dba
         }
 
         // @todo move to config at some point in future
-        $params['driver']  = 'pdo_mysql';
-        $params['charset'] = $charsetConfiguration['charset'];
-        $params['dbname']  = AmpConfig::get('database_name');
+        $params['driver']        = 'pdo_mysql';
+        $params['charset']       = $charsetConfiguration['charset'];
+        $params['dbname']        = AmpConfig::get('database_name');
+        $params['driverOptions'] = [1002 => 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'];
 
         debug_event(__CLASS__, 'Database connection...', 5);
 
