@@ -34,7 +34,8 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastEpisodeInterface;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -81,9 +82,12 @@ class AmpacheRss
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name($object_id);
-                    if ($libitem->id) {
+                    /** @var PodcastInterface $libitem */
+                    $libitem = static::getModelFactory()->mapObjectType(
+                        $object_type,
+                        (int) $object_id
+                    );
+                    if (!$libitem->isNew()) {
                         $libitem->format();
 
                         return $this->podcast($libitem);
@@ -492,11 +496,15 @@ class AmpacheRss
             $xowner->addChild("xmlns:itunes:name", $user_owner->f_name);
         }
 
+        $modelFactory = static::getModelFactory();
+
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
-            $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
-            /** @var Podcast_Episode $media */
-            $media = new $class_name($media_info['object_id']);
+            /** @var PodcastEpisodeInterface $media */
+            $media = $modelFactory->mapObjectType(
+                $media_info['object_type'],
+                (int) $media_info['object_id']
+            );
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));
             if ($media->f_artist) {

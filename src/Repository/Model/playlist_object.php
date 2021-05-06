@@ -24,7 +24,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -232,12 +231,17 @@ abstract class playlist_object extends database_object implements library_item
             $medias     = $this->get_medias();
             $media_arts = array();
             shuffle($medias);
+
+            $modelFactory = $this->getModelFactory();
+
             foreach ($medias as $media) {
                 if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
                     if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                        $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
-                        $libitem    = new $class_name($media['object_id']);
-                        $parent     = $libitem->get_parent();
+                        $libitem = $modelFactory->mapObjectType(
+                            $media['object_type'],
+                            (int) $media['object_id']
+                        );
+                        $parent  = $libitem->get_parent();
                         if ($parent !== null) {
                             $media = $parent;
                         } elseif (!$force) {
@@ -271,5 +275,15 @@ abstract class playlist_object extends database_object implements library_item
     public function get_catalogs()
     {
         return array();
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 } // end playlist_object.class

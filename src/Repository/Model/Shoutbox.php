@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\ShoutRepositoryInterface;
 
 final class Shoutbox implements ShoutboxInterface
@@ -135,8 +134,7 @@ final class Shoutbox implements ShoutboxInterface
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($type);
-        $object     = new $class_name($object_id);
+        $object = static::getModelFactory()->mapObjectType($type, (int) $object_id);
 
         if ($object->id > 0) {
             if (strtolower((string)$type) === 'song') {
@@ -165,5 +163,15 @@ final class Shoutbox implements ShoutboxInterface
     public function getDateFormatted(): string
     {
         return get_datetime($this->getDate());
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

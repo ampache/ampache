@@ -29,7 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -40,12 +40,16 @@ final class PlayItemAction extends AbstractStreamAction
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         parent::__construct($logger, $configContainer);
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,8 +64,10 @@ final class PlayItemAction extends AbstractStreamAction
 
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
-                $class_name = ObjectTypeToClassNameMapper::map($objectType);
-                $item       = new $class_name($object_id);
+                $item = $this->modelFactory->mapObjectType(
+                    $objectType,
+                    (int) $object_id
+                );
                 $mediaIds   = array_merge($mediaIds, $item->get_medias());
 
                 if ($_REQUEST['custom_play_action']) {

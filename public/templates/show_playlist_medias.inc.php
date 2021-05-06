@@ -23,10 +23,22 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+/** @var string $web_path */
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+/** @var int[] $object_ids */
+/** @var Playlist $playlist */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $seconds  = $browse->duration;
@@ -74,8 +86,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
         }
         $object_type = $object['object_type'];
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object['object_id']);
+            $libitem = $modelFactory->mapObjectType($object_type, (int) $object['object_id']);
             $libitem->format();
             $playlist_track = $object['track']; ?>
         <tr id="track_<?php echo $object['track_id'] ?>">

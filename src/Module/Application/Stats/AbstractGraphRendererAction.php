@@ -22,6 +22,7 @@
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -30,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 abstract class AbstractGraphRendererAction implements ApplicationActionInterface
@@ -40,7 +40,8 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
      * @throws ApplicationException
      */
     protected function renderGraph(
-        GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper,
+        ModelFactoryInterface $modelFactory
     ): void {
         $object_type = Core::get_request('object_type');
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -48,9 +49,11 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         $libitem  = null;
         $owner_id = 0;
         if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
-            $owner_id   = $libitem->get_user_owner();
+            $libitem = $modelFactory->mapObjectType(
+                $object_type,
+                (int) $object_id
+            );
+            $owner_id = $libitem->get_user_owner();
         }
 
         if (

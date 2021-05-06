@@ -29,6 +29,12 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 ?>
 <script>
@@ -141,9 +147,10 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type, $normal_array)) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(array_shift($object_data));
-            $object->format(); ?>
+            $object = $modelFactory->mapObjectType($type, (int) array_shift($object_data));
+            if (property_exists($object, 'format')) {
+                $object->format();
+            } ?>
             <li>
                 <?php if (property_exists('f_link', $object)) {
                 echo $object->f_link;

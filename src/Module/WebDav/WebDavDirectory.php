@@ -27,7 +27,7 @@ namespace Ampache\Module\WebDav;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Sabre\DAV;
 
 /**
@@ -101,8 +101,10 @@ class WebDavDirectory extends DAV\Collection
      */
     public static function getChildFromArray($array)
     {
-        $class_name = ObjectTypeToClassNameMapper::map($array['object_type']);
-        $libitem    = new $class_name($array['object_id']);
+        $libitem = static::getModelFactory()->mapObjectType(
+            $array['object_type'],
+            (int) $array['object_id']
+        );
         if (!$libitem->id) {
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }
@@ -133,5 +135,15 @@ class WebDavDirectory extends DAV\Collection
     public function getName()
     {
         return (string)$this->libitem->get_fullname();
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

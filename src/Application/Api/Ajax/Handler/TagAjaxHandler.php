@@ -30,19 +30,23 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;
 
 final class TagAjaxHandler implements AjaxHandlerInterface
 {
     private LabelRepositoryInterface $labelRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->labelRepository = $labelRepository;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function handle(): void
@@ -63,7 +67,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 $results['labels'] = $labels;
                 break;
             case 'add_tag':
-                if (!static::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+                if (!$this->can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
 
                     return;
@@ -93,7 +97,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
 
                 return;
             case 'remove_tag_map':
-                if (!static::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+                if (!$this->can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete unauthorized tag map', 1);
 
                     return;
@@ -133,7 +137,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
      * @param string|boolean $user
      * @return boolean
      */
-    private static function can_edit_tag_map($object_type, $object_id, $user = true)
+    private function can_edit_tag_map($object_type, $object_id, $user = true)
     {
         if ($user === true) {
             $uid = (int)(Core::get_global('user')->id);
@@ -150,8 +154,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         }
 
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
+            $libitem    = $this->modelFactory->mapObjectType($object_type, (int) $object_id);
             $owner      = $libitem->get_user_owner();
 
             return ($owner !== null && $owner == $uid);

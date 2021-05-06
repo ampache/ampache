@@ -29,10 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\PlaylistRepositoryInterface;
 
@@ -42,12 +42,16 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         PlaylistRepositoryInterface $playlistRepository,
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->playlistRepository = $playlistRepository;
         $this->ui                 = $ui;
+        $this->modelFactory       = $modelFactory;
     }
 
     public function handle(): void
@@ -116,9 +120,8 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', $item_id);
                     foreach ($item_ids as $iid) {
-                        $class_name = ObjectTypeToClassNameMapper::map($item_type);
-                        $libitem    = new $class_name($iid);
-                        $medias     = array_merge($medias, $libitem->get_medias());
+                        $libitem = $this->modelFactory->mapObjectType($item_type, (int) $iid);
+                        $medias  = array_merge($medias, $libitem->get_medias());
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);

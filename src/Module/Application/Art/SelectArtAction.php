@@ -23,12 +23,12 @@
 namespace Ampache\Module\Application\Art;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +50,8 @@ final class SelectArtAction extends AbstractArtAction
         ResponseFactoryInterface $responseFactory,
         UiInterface $ui
     ) {
+        parent::__construct($modelFactory);
+
         $this->modelFactory    = $modelFactory;
         $this->responseFactory = $responseFactory;
         $this->ui              = $ui;
@@ -98,8 +100,11 @@ final class SelectArtAction extends AbstractArtAction
 
         // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
         if ($object_type == 'album') {
-            $class_name   = ObjectTypeToClassNameMapper::map($object_type);
-            $album        = new $class_name($object_id);
+            /** @var Album $album */
+            $album = $this->modelFactory->mapObjectType(
+                $object_type,
+                (int) $object_id
+            );
             $album_groups = $album->get_group_disks_ids();
             foreach ($album_groups as $a_id) {
                 $art = $this->modelFactory->createArt($a_id, $object_type);

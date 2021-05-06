@@ -27,7 +27,7 @@ namespace Ampache\Module\User\Activity;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UseractivityInterface;
@@ -78,7 +78,7 @@ class UserActivityRendererTest extends MockeryTestCase
     ): void {
         $activity = $this->mock(UseractivityInterface::class);
         $user     = $this->mock(User::class);
-        $libItem  = $this->mock(database_object::class);
+        $libItem  = $this->mock(library_item::class);
 
         $userId     = 666;
         $date       = 123545;

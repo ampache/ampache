@@ -31,7 +31,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -363,8 +362,10 @@ class Art extends database_object
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
         
         if (AmpConfig::get('write_id3_art', false)) {
-            $class_name = ObjectTypeToClassNameMapper::map($this->type);
-            $object     = new $class_name($this->uid);
+            $object = static::getModelFactory()->mapObjectType(
+                $this->type,
+                $this->id
+            );
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
@@ -1322,8 +1323,7 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
+            $libitem = static::getModelFactory()->mapObjectType($object_type, (int) $object_id);
             $out .= "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 $out .= "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
@@ -1363,10 +1363,23 @@ class Art extends database_object
         return $dic->get(ExternalResourceLoaderInterface::class);
     }
 
+    /**
+     * @deprecated Inject by constructor
+     */
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

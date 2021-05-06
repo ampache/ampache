@@ -21,14 +21,25 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+/** @var string $web_path */
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+/** @var int[] $object_ids */
+/** @var Democratic $democratic */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
@@ -79,10 +90,14 @@ $democratic = Democratic::get_current_playlist();
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         /** @var Media&PlayableMediaInterface $media */
-        $media      = new $class_name($item['object_id']);
-        $media->format(); ?>
+        $media = $modelFactory->mapObjectType(
+            $item['object_type'],
+            (int) $item['object_id']
+        );
+        if (property_exists($media, 'format')) {
+            $media->format();
+        } ?>
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>

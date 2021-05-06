@@ -34,9 +34,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -60,13 +60,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
         ConfigContainerInterface $configContainer,
         Horde_Browser $horde_browser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->configContainer       = $configContainer;
@@ -74,6 +77,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->responseFactory       = $responseFactory;
         $this->streamFactory         = $streamFactory;
         $this->logger                = $logger;
+        $this->modelFactory          = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -155,9 +159,8 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
         if (!$typeManaged) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-
-            $item     = new $class_name(
+            $item = $this->modelFactory->mapObjectType(
+                $type,
                 filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
             );
             /**

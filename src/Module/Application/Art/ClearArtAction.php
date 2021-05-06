@@ -44,6 +44,8 @@ final class ClearArtAction extends AbstractArtAction
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
+        parent::__construct($modelFactory);
+
         $this->modelFactory = $modelFactory;
         $this->ui           = $ui;
     }

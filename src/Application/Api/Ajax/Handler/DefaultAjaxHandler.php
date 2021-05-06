@@ -26,10 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Module\Util\Ui;
@@ -44,12 +45,16 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function handle(): void
@@ -80,9 +85,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         $object_id = array($object_id);
                     }
                     foreach ($object_id as $item) {
-                        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                        $object     = new $class_name($item);
-                        $medias     = $object->get_medias();
+                        $object = $this->modelFactory->mapObjectType(
+                            $object_type,
+                            (int) $item
+                        );
+                        $medias = $object->get_medias();
                         Core::get_global('user')->playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
                     }
                 } else {
@@ -110,9 +117,12 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'tag_random':
                             $data       = explode('_', $_REQUEST['type']);
                             $type       = $data['0'];
-                            $class_name = ObjectTypeToClassNameMapper::map($type);
-                            $object     = new $class_name($_REQUEST['id']);
-                            $songs      = $this->songRepository->getRandomByArtist($object);
+                            /** @var Artist $object */
+                            $object     = $this->modelFactory->mapObjectType(
+                                $type,
+                                (int) $_REQUEST['id']
+                            );
+                            $songs  = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }

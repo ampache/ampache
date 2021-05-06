@@ -22,11 +22,21 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+/** @var string $web_path */
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+/** @var int[] $object_ids */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $is_table = $browse->is_grid_view();
@@ -80,10 +90,9 @@ if (isset($video_type) && $video_type != 'video') {
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
-                $className = ObjectTypeToClassNameMapper::map($video_type);
-                $libitem   = new $className($video_id);
+                $libitem = $modelFactory->mapObjectType($video_type, (int) $video_id);
             } else {
-                $libitem = new Video($video_id);
+                $libitem = $modelFactory->createVideo((int) $video_id);
             }
             $libitem->format(); ?>
         <tr id="video_<?php echo $libitem->id; ?>">

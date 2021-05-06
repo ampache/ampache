@@ -235,18 +235,21 @@ class Video extends database_object implements
     /**
      * Create a video strongly typed object from its id.
      * @param integer $video_id
-     * @return Video
+     * @return Video&library_item
      */
     public static function create_from_id($video_id)
     {
+        $modelFactory = static::getModelFactory();
+
         foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if ($results['id']) {
-                $class_name = ObjectTypeToClassNameMapper::map(strtolower($dtype));
-
-                return new $class_name($video_id);
+                return $modelFactory->mapObjectType(
+                    $dtype,
+                    (int) $video_id
+                );
             }
         }
 
@@ -1125,5 +1128,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

@@ -25,12 +25,12 @@ namespace Ampache\Module\Playback\Localplay\Mpd;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * AmpacheMpd Class
@@ -486,13 +486,16 @@ class AmpacheMpd extends localplay_controller
                     $data['link'] = '';
                     break;
                 default:
-                    /* If we don't know it, look up by filename */ $filename = Dba::escape($entry['file']);
-                    $sql                                                     = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " . "UNION ALL " . "SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    /** If we don't know it, look up by filename */
+                    $filename = Dba::escape($entry['file']);
+                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " . "UNION ALL " . "SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $class_name = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media      = new $class_name($row['id']);
+                        $media = static::getModelFactory()->mapObjectType(
+                            $row['type'],
+                            (int) $row['id']
+                        );
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
@@ -594,4 +597,14 @@ class AmpacheMpd extends localplay_controller
 
         return false;
     } // connect
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
+    }
 }

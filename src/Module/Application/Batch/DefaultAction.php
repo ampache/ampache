@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Batch;
 
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -34,7 +35,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -115,8 +115,10 @@ final class DefaultAction implements ApplicationActionInterface
                     'Requested item ' . $item,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                $libitem    = new $class_name($item);
+                $libitem = $this->modelFactory->mapObjectType(
+                    $object_type,
+                    (int) $item
+                );
                 if ($libitem->id) {
                     $libitem->format();
                     $name      = $libitem->get_fullname();
@@ -133,8 +135,11 @@ final class DefaultAction implements ApplicationActionInterface
                 case 'album':
                     $albumList  = explode(',', $_REQUEST['id']);
                     $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name((int)$albumList[0]);
+                    /** @var Album $libitem */
+                    $libitem    = $this->modelFactory->mapObjectType(
+                        $object_type,
+                        (int) $albumList[0]
+                    );
                     if ($libitem->id) {
                         $libitem->format();
                         $name = $libitem->get_fullname();
@@ -207,8 +212,10 @@ final class DefaultAction implements ApplicationActionInterface
                     $type      = array_shift($element);
                     $mediaid   = array_shift($element);
                 }
-                $class_name = ObjectTypeToClassNameMapper::map($type);
-                $media      = new $class_name($mediaid);
+                $media = $this->modelFactory->mapObjectType(
+                    $type,
+                    (int) $mediaid
+                );
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
@@ -218,9 +225,13 @@ final class DefaultAction implements ApplicationActionInterface
                 $dirname = '';
                 $parent  = $media->get_parent();
                 if ($parent != null) {
-                    $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
-                    $pobj       = new $class_name($parent['object_id']);
-                    $pobj->format();
+                    $pobj = $this->modelFactory->mapObjectType(
+                        $parent['object_type'],
+                        (int) $parent['object_id']
+                    );
+                    if (property_exists($pobj, 'format')) {
+                        $pobj->format();
+                    }
                     $dirname = $pobj->get_fullname();
                 }
                 if (!array_key_exists($dirname, $media_files)) {

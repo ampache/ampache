@@ -25,12 +25,12 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * AmpacheHttpq Class
@@ -462,6 +462,8 @@ class AmpacheHttpq extends localplay_controller
         $songs   = explode("::", $list);
         $results = array();
 
+        $modelFactory = static::getModelFactory();
+
         foreach ($songs as $key => $entry) {
             $data = array();
 
@@ -493,8 +495,10 @@ class AmpacheHttpq extends localplay_controller
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $class_name = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media      = new $class_name($row['id']);
+                        $media = $modelFactory->mapObjectType(
+                            $row['type'],
+                            (int) $row['id']
+                        );
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
@@ -571,4 +575,14 @@ class AmpacheHttpq extends localplay_controller
 
         return false;
     } // connect
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
+    }
 }

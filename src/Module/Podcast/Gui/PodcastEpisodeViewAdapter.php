@@ -33,7 +33,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 

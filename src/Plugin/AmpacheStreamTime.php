@@ -24,10 +24,10 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 class AmpacheStreamTime
 {
@@ -112,11 +112,15 @@ class AmpacheStreamTime
             return true;
         }
 
+        $modelFactory = $this->getModelFactory();
+
         // Calculate all media time
         $next_total = 0;
         foreach ($media_ids as $media_id) {
-            $class_name = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-            $media      = new $class_name($media_id['object_id']);
+            $media = $modelFactory->mapObjectType(
+                $media_id['object_type'],
+                (int) $media_id['object_id']
+            );
             $next_total += $media->time;
         }
 
@@ -158,4 +162,14 @@ class AmpacheStreamTime
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
+    }
 }

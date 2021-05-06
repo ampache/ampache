@@ -1250,8 +1250,7 @@ abstract class Catalog extends database_object
         if ($type == 'video') {
             $libitem = Video::create_from_id($object_id);
         } else {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $libitem    = new $class_name($object_id);
+            $libitem = static::getModelFactory()->mapObjectType($type, (int) $object_id);
         }
         $inserted = false;
         $options  = array();
@@ -2635,5 +2634,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

@@ -32,6 +32,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -188,8 +189,11 @@ class Stream_Playlist
     {
         $type       = $media['object_type'];
         $object_id  = $media['object_id'];
-        $class_name = ObjectTypeToClassNameMapper::map($type);
-        $object     = new $class_name($object_id);
+
+        $object = static::getModelFactory()->mapObjectType(
+            $type,
+            (int) $object_id
+        );
         $object->format();
 
         if ($media['custom_play_action']) {
@@ -378,5 +382,15 @@ class Stream_Playlist
         global $dic;
 
         return $dic->get(MediaUrlListGeneratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

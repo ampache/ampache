@@ -155,5 +155,5 @@ interface ModelFactoryInterface
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
-    public function mapObjectType(string $objectType, int $objectId): ?database_object;
+    public function mapObjectType(string $objectType, int $objectId): ?library_item;
 }

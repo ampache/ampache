@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Artist\ArtistCacheBuilderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\CookieSetterInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /**
@@ -179,9 +178,10 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
+        $modelFactory = $this->getModelFactory();
+
         foreach ($extra_objects as $type => $id) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            ${$type}    = new $class_name($id);
+            ${$type} = $modelFactory->mapObjectType($type, (int) $id);
         }
 
         $match = '';
@@ -618,5 +618,15 @@ class Browse extends Query
         global $dic;
 
         return $dic->get(ArtistCacheBuilderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

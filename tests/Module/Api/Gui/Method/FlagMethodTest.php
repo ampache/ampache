@@ -31,7 +31,7 @@ use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
-use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
 use Mockery\MockInterface;
@@ -156,7 +156,7 @@ class FlagMethodTest extends MockeryTestCase
         $gatekeeper      = $this->mock(GatekeeperInterface::class);
         $response        = $this->mock(ResponseInterface::class);
         $output          = $this->mock(ApiOutputInterface::class);
-        $database_object = $this->mock(database_object::class);
+        $database_object = $this->mock(library_item::class);
 
         $type     = 'song';
         $objectId = 666;
@@ -173,7 +173,11 @@ class FlagMethodTest extends MockeryTestCase
             ->with($type, $objectId)
             ->once()
             ->andReturn($database_object);
-        $database_object->id = 0;
+
+        $database_object->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
 
         $this->subject->handle(
             $gatekeeper,
@@ -192,7 +196,7 @@ class FlagMethodTest extends MockeryTestCase
         $gatekeeper      = $this->mock(GatekeeperInterface::class);
         $response        = $this->mock(ResponseInterface::class);
         $output          = $this->mock(ApiOutputInterface::class);
-        $database_object = $this->mock(database_object::class);
+        $database_object = $this->mock(library_item::class);
         $userflag        = $this->mock(Userflag::class);
 
         $type     = 'song';
@@ -215,7 +219,11 @@ class FlagMethodTest extends MockeryTestCase
             ->with($objectId, $type)
             ->once()
             ->andReturn($userflag);
-        $database_object->id = $objectId;
+
+        $database_object->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
 
         $userflag->shouldReceive('set_flag')
             ->with(true, $userId)
@@ -244,7 +252,7 @@ class FlagMethodTest extends MockeryTestCase
         $gatekeeper      = $this->mock(GatekeeperInterface::class);
         $response        = $this->mock(ResponseInterface::class);
         $output          = $this->mock(ApiOutputInterface::class);
-        $database_object = $this->mock(database_object::class);
+        $database_object = $this->mock(library_item::class);
         $userflag        = $this->mock(Userflag::class);
         $stream          = $this->mock(StreamInterface::class);
 
@@ -266,7 +274,11 @@ class FlagMethodTest extends MockeryTestCase
             ->with($objectId, $type)
             ->once()
             ->andReturn($userflag);
-        $database_object->id = $objectId;
+
+        $database_object->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
 
         $userflag->shouldReceive('set_flag')
             ->with(true, $userId)

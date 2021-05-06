@@ -55,7 +55,7 @@ final class GraphAction extends AbstractGraphRendererAction
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $this->renderGraph($gatekeeper);
+        $this->renderGraph($gatekeeper, $this->modelFactory);
 
         show_table_render(false, true);
 

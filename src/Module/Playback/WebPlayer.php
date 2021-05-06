@@ -27,9 +27,9 @@ namespace Ampache\Module\Playback;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 
@@ -111,8 +111,10 @@ class WebPlayer
     {
         $media = null;
         if ($urlinfo['id'] && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
-            $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
-            $media      = new $class_name($urlinfo['id']);
+            $media = static::getModelFactory()->mapObjectType(
+                $urlinfo['type'],
+                (int) $urlinfo['id']
+            );
         } else {
             if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
                 $media = new Song_Preview($urlinfo['id']);
@@ -351,5 +353,15 @@ class WebPlayer
         global $dic;
 
         return $dic->get(StreamUrlParserInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

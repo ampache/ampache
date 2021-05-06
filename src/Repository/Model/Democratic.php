@@ -28,7 +28,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\DemocraticRepository;
@@ -373,9 +372,11 @@ class Democratic extends Tmp_Playlist
             return false;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $media      = new $class_name($object_id);
-        $track      = isset($media->track) ? (int)($media->track) : null;
+        $media = $this->getModelFactory()->mapObjectType(
+            $object_type,
+            (int) $object_id
+        );
+        $track = isset($media->track) ? (int)($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql        = "SELECT `id` FROM `tmp_playlist_data` " . "WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";
@@ -624,5 +625,15 @@ class Democratic extends Tmp_Playlist
         global $dic;
 
         return $dic->get(PreferenceRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

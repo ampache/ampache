@@ -46,6 +46,9 @@ final class ModelFactory implements ModelFactoryInterface
         $this->dic = $dic;
     }
 
+    /** @var array<class-string, callable(int): library_item>|null */
+    private ?array $map = null;
+
     public function createPlaylist(
         int $id
     ): Playlist {
@@ -262,14 +265,33 @@ final class ModelFactory implements ModelFactoryInterface
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
-    public function mapObjectType(string $objectType, int $objectId): ?database_object
+    public function mapObjectType(string $objectType, int $objectId): ?library_item
     {
         $className = ObjectTypeToClassNameMapper::map($objectType);
 
         if ($className === $objectType) {
             return null;
         }
+        $mapper = $this->getMap()[$className] ?? null;
+        if ($mapper !== null) {
+            return $mapper($objectId);
+        }
 
         return new $className($objectId);
+    }
+
+    /**
+     * @return array<class-string, callable(int): library_item>
+     */
+    private function getMap(): array
+    {
+        if ($this->map === null) {
+            $this->map = [
+                Live_Stream::class => fn (int $objectId): Live_Stream => $this->createLiveStream($objectId),
+                Share::class => fn (int $objectId): ShareInterface => $this->createShare($objectId),
+            ];
+        }
+
+        return $this->map;
     }
 }

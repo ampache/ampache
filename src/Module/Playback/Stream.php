@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -417,9 +417,13 @@ class Stream
 
         $results = array();
 
+        $modelFactory = static::getModelFactory();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
-            $media      = new $class_name($row['object_id']);
+            $media = $modelFactory->mapObjectType(
+                $row['object_type'],
+                (int) $row['object_id']
+            );
             $media->format();
             $client = new User($row['user']);
             $client->format();
@@ -537,5 +541,15 @@ class Stream
         global $dic;
 
         return $dic->get(PreferenceRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

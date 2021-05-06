@@ -30,9 +30,9 @@ use Ampache\Repository\Model\Channel;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +44,16 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,8 +66,10 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $type = Channel::format_type(Core::get_request('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(Core::get_request('id'));
+            $object = $this->modelFactory->mapObjectType(
+                $type,
+                (int) Core::get_request('id')
+            );
             if ($object->id) {
                 $object->format();
                 require_once Ui::find_template('show_add_channel.inc.php');

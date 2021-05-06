@@ -24,13 +24,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
@@ -439,8 +439,10 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $className = ObjectTypeToClassNameMapper::map($type);
-                    $media     = new $className($object_id);
+                    $media = static::getModelFactory()->mapObjectType(
+                        $type,
+                        $object_id
+                    );
                     $url       = $media->play_url($params, 'api', true);
                     self::follow_stream($url);
 
@@ -987,5 +989,15 @@ class Daap_Api
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

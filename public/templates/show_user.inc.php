@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -42,6 +43,10 @@ use Ampache\Repository\PlaylistRepositoryInterface;
 /** @var User $client */
 /** @var PlaylistRepositoryInterface $playlistRepository */
 /** @var UseractivityInterface[] $activities */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
@@ -155,8 +160,7 @@ if ($client->f_avatar) {
                     <?php
                         foreach ($object_ids as $object_data) {
                             $type       = array_shift($object_data);
-                            $class_name = ObjectTypeToClassNameMapper::map($type);
-                            $object     = new $class_name(array_shift($object_data));
+                            $object     = $modelFactory->mapObjectType($type, (int) array_shift($object_data));
                             $object->format();
                             echo $object->f_link; ?>
                         <br />

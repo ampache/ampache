@@ -24,13 +24,13 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 class AmpacheCatalogFavorites
@@ -122,9 +122,11 @@ class AmpacheCatalogFavorites
                 echo " disablegv";
             }
             echo '">';
+
+            $modelFactory = $this->getModelFactory();
+
             foreach ($userflags as $userflag) {
-                $class_name = ObjectTypeToClassNameMapper::map($userflag['type']);
-                $item       = new $class_name($userflag['id']);
+                $item = $modelFactory->mapObjectType($userflag['type'], (int) $userflag['id']);
                 $item->format();
                 $user = new User($userflag['user']);
                 $user->format();
@@ -196,5 +198,15 @@ class AmpacheCatalogFavorites
         $this->gridview = ($data['catalogfav_gridview'] == '1');
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

@@ -50,6 +50,8 @@ final class FindArtAction extends AbstractArtAction
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
+        parent::__construct($modelFactory);
+
         $this->artCollector = $artCollector;
         $this->modelFactory = $modelFactory;
         $this->ui           = $ui;

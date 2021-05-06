@@ -28,21 +28,27 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 abstract class AbstractArtAction implements ApplicationActionInterface
 {
-    protected function getItem(
-        GuiGatekeeperInterface $gatekeeper
-    ): ?database_object {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
+    protected function getItem(GuiGatekeeperInterface $gatekeeper): ?database_object
+    {
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $item       = new $class_name($object_id);
+        $item = $this->modelFactory->mapObjectType($object_type, (int) $object_id);
 
         // If not a content manager user then kick em out
         if (

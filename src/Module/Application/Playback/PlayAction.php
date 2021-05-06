@@ -46,6 +46,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Share;
@@ -921,9 +922,12 @@ final class PlayAction implements ApplicationActionInterface
         $is_shared = false;
         switch ($share->getObjectType()) {
             case 'album':
-                $class_name = ObjectTypeToClassNameMapper::map($share->getObjectType());
-                $object     = new $class_name($share->getObjectId());
-                $songs      = $this->songRepository->getByAlbum((int) $object->id);
+                $object = $this->modelFactory->mapObjectType(
+                    $share->getObjectType(),
+                    $share->getObjectId()
+                );
+                $songs = $this->songRepository->getByAlbum((int) $object->id);
+
                 foreach ($songs as $songid) {
                     $is_shared = ($media_id == $songid);
                     if ($is_shared) {
@@ -932,10 +936,13 @@ final class PlayAction implements ApplicationActionInterface
                 }
                 break;
             case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($share->getObjectType());
-                $object     = new $class_name($share->getObjectId());
-                $songs      = $object->get_songs();
-                foreach ($songs as $songid) {
+                /** @var Playlist $object */
+                $object = $this->modelFactory->mapObjectType(
+                    $share->getObjectType(),
+                    $share->getObjectId()
+                );
+
+                foreach ($object->get_songs() as $songid) {
                     $is_shared = ($media_id == $songid);
                     if ($is_shared) {
                         break;

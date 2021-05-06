@@ -106,7 +106,7 @@ final class FlagMethod implements MethodInterface
 
         $item = $this->modelFactory->mapObjectType($type, $objectId);
 
-        if (!$item->id) {
+        if ($item->isNew()) {
             throw new ResultEmptyException(
                 sprintf(T_('Not Found: %d'), $objectId)
             );
