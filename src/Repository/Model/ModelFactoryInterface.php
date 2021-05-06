@@ -73,7 +73,7 @@ interface ModelFactoryInterface
 
     public function createLiveStream(
         int $liveStreamId
-    ): Live_Stream;
+    ): LiveStreamInterface;
 
     public function createChannel(
         int $channelId

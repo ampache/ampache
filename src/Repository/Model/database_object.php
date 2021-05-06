@@ -35,6 +35,8 @@ abstract class database_object
 {
     protected const DB_TABLENAME = null;
 
+    abstract public function getId(): int;
+
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache

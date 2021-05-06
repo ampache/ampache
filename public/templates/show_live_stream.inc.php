@@ -36,24 +36,24 @@ $formattedName = scrub_out($radio->getName());
 <div class="item_right_info">
     <?php
         $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
-        echo Art::display('live_stream', $radio->id, $formattedName, $thumb); ?>
+        echo Art::display('live_stream', $radio->getId(), $formattedName, $thumb); ?>
 </div>
 <dl class="media_details">
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'), 'play_live_stream_' . $radio->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->getId(), 'play', T_('Play'), 'play_live_stream_' . $radio->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $radio->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->getId() . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $radio->id); ?>
                 <?php
             } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->getId() . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
             <?php
         } ?>
         <?php
     } ?>
-        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->getId(), 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
 <?php
     $itemprops[T_('Name')]     = $formattedName;
@@ -63,7 +63,7 @@ $formattedName = scrub_out($radio->getName());
         $radio->getUrl(),
         $radio->getUrl()
     );
-    $itemprops[T_('Codec')]    = scrub_out($radio->codec);
+    $itemprops[T_('Codec')]    = scrub_out($radio->getCodec());
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {

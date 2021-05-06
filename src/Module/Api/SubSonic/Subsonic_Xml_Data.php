@@ -1336,10 +1336,10 @@ class Subsonic_Xml_Data
     public static function addRadio($xml, $radio)
     {
         $xradio = $xml->addChild('internetRadioStation ');
-        $xradio->addAttribute('id', (string)$radio->id);
-        $xradio->addAttribute('name', (string)self::checkName($radio->name));
-        $xradio->addAttribute('streamUrl', (string)$radio->url);
-        $xradio->addAttribute('homePageUrl', (string)$radio->site_url);
+        $xradio->addAttribute('id', (string)$radio->getId());
+        $xradio->addAttribute('name', (string)self::checkName($radio->getName()));
+        $xradio->addAttribute('streamUrl', $radio->getUrl());
+        $xradio->addAttribute('homePageUrl', $radio->getSiteUrl());
     }
 
     /**
@@ -1349,9 +1349,11 @@ class Subsonic_Xml_Data
      */
     public static function addRadios($xml, $radios)
     {
-        $xradios = $xml->addChild('internetRadioStations');
+        $xradios      = $xml->addChild('internetRadioStations');
+        $modelFactory = static::getModelFactory();
+
         foreach ($radios as $radioid) {
-            $radio = new Live_Stream($radioid);
+            $radio = $modelFactory->createLiveStream((int) $radioid);
             self::addRadio($xradios, $radio);
         }
     }

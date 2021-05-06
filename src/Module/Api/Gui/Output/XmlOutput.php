@@ -1080,11 +1080,11 @@ final class XmlOutput implements ApiOutputInterface
                     $string .= self::videos($objectIds, $userId);
                     break;
                 case 'live_stream':
-                    $live_stream = new Live_Stream($objectId);
+                    $live_stream = $this->modelFactory->createLiveStream($objectId);
                     $string .= "<$type id=\"" . $objectId . "\">\n" .
                         "\t<name><![CDATA[" . scrub_out($live_stream->getName()) . "]]></name>\n" .
-                        "\t<url><![CDATA[" . $live_stream->url . "]]></url>\n" .
-                        "\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n" .
+                        "\t<url><![CDATA[" . $live_stream->getUrl() . "]]></url>\n" .
+                        "\t<codec><![CDATA[" . $live_stream->getCodec() . "]]></codec>\n" .
                         "</$type>\n";
             }
         }

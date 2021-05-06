@@ -29,6 +29,7 @@ use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -135,8 +136,11 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createLiveStream(
         int $liveStreamId
-    ): Live_Stream {
-        return new Live_Stream($liveStreamId);
+    ): LiveStreamInterface {
+        return new Live_Stream(
+            $this->dic->get(LiveStreamRepositoryInterface::class),
+            $liveStreamId
+        );
     }
 
     public function createChannel(

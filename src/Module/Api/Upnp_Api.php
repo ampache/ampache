@@ -724,8 +724,8 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $radio = new Live_Stream($pathreq[1]);
-                        if ($radio->id) {
+                        $radio = static::getModelFactory()->createLiveStream((int) $pathreq[1]);
+                        if ($radio->getId()) {
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
                         break;
@@ -811,6 +811,8 @@ class Upnp_Api
             array_shift($pathreq);
         }
         debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
+
+        $modelFactory = static::getModelFactory();
 
         switch ($pathreq[0]) {
             case 'artists':
@@ -940,7 +942,7 @@ class Upnp_Api
                         $radios                  = static::getLiveStreamRepository()->getAll();
                         [$maxCount, $radios]     = self::_slice($radios, $start, $count);
                         foreach ($radios as $radio_id) {
-                            $radio        = new Live_Stream($radio_id);
+                            $radio        = $modelFactory->createLiveStream($radio_id);
                             $mediaItems[] = self::_itemLiveStream($radio, $parent);
                         }
                         break;
@@ -1737,20 +1739,20 @@ class Upnp_Api
     public static function _itemLiveStream($radio, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
-        $art_url     = Art::url($radio->id, 'live_stream', $api_session);
+        $art_url     = Art::url($radio->getId(), 'live_stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$radio->codec];
+        $arrFileType    = $fileTypesByExt[$radio->getCodec()];
 
         return array(
-            'id' => 'amp://music/live_streams/' . $radio->id,
+            'id' => 'amp://music/live_streams/' . $radio->getId(),
             'parentID' => $parent,
             'restricted' => 'false',
-            'dc:title' => self::_replaceSpecialSymbols($radio->name),
+            'dc:title' => self::_replaceSpecialSymbols($radio->getName()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
 
-            'res' => $radio->url,
+            'res' => $radio->getUrl(),
             'protocolInfo' => $arrFileType['mime']
         );
     }

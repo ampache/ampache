@@ -25,26 +25,26 @@ use Ampache\Repository\Model\Live_Stream;
 
 ?>
 <div>
-    <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_live_stream_<?php echo $libitem->getId(); ?>" class="edit_dialog_content">
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->getName()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream URL') ?></td>
-                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
+                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->getUrl()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Homepage') ?></td>
-                <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->site_url); ?>" /></td>
+                <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->getSiteUrl()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Codec') ?></td>
-                <td><input type="text" name="codec" value="<?php echo scrub_out($libitem->codec); ?>" /></td>
+                <td><input type="text" name="codec" value="<?php echo scrub_out($libitem->getCodec()); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->getId(); ?>" />
         <input type="hidden" name="type" value="live_stream_row" />
     </form>
 </div>

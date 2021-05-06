@@ -759,4 +759,9 @@ class Preference extends database_object
 
         return $dic->get(PreferenceRepositoryInterface::class);
     }
+
+    public function getId(): int
+    {
+        throw new \Exception('Not implemented');
+    }
 }

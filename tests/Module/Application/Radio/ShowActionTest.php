@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\LiveStreamInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -79,7 +80,7 @@ class ShowActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $radio      = $this->mock(Live_Stream::class);
+        $radio      = $this->mock(LiveStreamInterface::class);
         
         $radioId = 666;
 

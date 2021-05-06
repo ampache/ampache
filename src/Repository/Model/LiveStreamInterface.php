@@ -19,48 +19,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Repository\Model;
 
-interface LiveStreamRepositoryInterface
+interface LiveStreamInterface extends
+    Media,
+    library_item
 {
-    /**
-     * @return int[]
-     */
-    public function getAll(): array;
+    public function getLink(): string;
 
-    /**
-     * This deletes the object with the given id from the database
-     */
-    public function delete(int $liveStreamId): void;
+    public function getName(): string;
 
-    /**
-     * @return array{
-     *  id: int,
-     *  name: string,
-     *  site_url: string,
-     *  url: string,
-     *  genre: int,
-     *  catalog: int,
-     *  codec: string
-     * }
-     */
-    public function getDataById(
-        int $id
-    ): array;
+    public function getUrl(): string;
 
-    public function create(
-        string $name,
-        string $siteUrl,
-        string $url,
-        int $catalogId,
-        string $codec
-    ): int;
+    public function getSiteUrl(): string;
 
-    public function update(
-        string $name,
-        string $siteUrl,
-        string $url,
-        string $codec,
-        int $liveStreamId
-    ): void;
+    public function getCodec(): string;
 }

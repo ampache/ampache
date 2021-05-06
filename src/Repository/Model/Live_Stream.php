@@ -24,86 +24,69 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 
 /**
- * Radio Class
- *
  * This handles the internet radio stuff, that is inserted into live_stream
  * this can include podcasts or what-have-you
- *
  */
-class Live_Stream extends database_object implements Media, library_item
+final class Live_Stream extends database_object implements LiveStreamInterface
 {
-    protected const DB_TABLENAME = 'live_stream';
+    private LiveStreamRepositoryInterface $liveStreamRepository;
 
-    /* DB based variables */
+    public int $id;
 
-    /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $site_url
-     */
-    public $site_url;
-    /**
-     * @var string $url
-     */
-    public $url;
-    /**
-     * @var string $f_link
-     */
-    public $link;
+    public function __construct(
+        LiveStreamRepositoryInterface $liveStreamRepository,
+        int $id
+    ) {
+        $this->liveStreamRepository = $liveStreamRepository;
+        $this->id                   = $id;
+    }
 
     /**
-     * @var string $codec
+     * @var null|array{
+     *  id: int,
+     *  name: string,
+     *  site_url: string,
+     *  url: string,
+     *  genre: int,
+     *  catalog: int,
+     *  codec: string
+     * }
      */
-    public $codec;
+    private ?array $dbData = null;
 
     /**
-     * @var string $f_name
+     * @return array{
+     *  id: int,
+     *  name: string,
+     *  site_url: string,
+     *  url: string,
+     *  genre: int,
+     *  catalog: int,
+     *  codec: string
+     * }
      */
-    public $f_name;
-
-    /**
-     * @var string $f_link
-     */
-    public $f_link;
-    /**
-     * @var string $f_url_link
-     */
-    public $f_url_link;
-
-    /**
-     * Constructor
-     * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param integer $stream_id
-     */
-    public function __construct($stream_id)
+    private function getDbData(): array
     {
-        $info = $this->get_info($stream_id, 'live_stream');
-
-        // Set the vars
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($this->dbData === null) {
+            $this->dbData = $this->liveStreamRepository->getDataById($this->getId());
         }
-    } // constructor
+
+        return $this->dbData;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
     /**
@@ -124,17 +107,22 @@ class Live_Stream extends database_object implements Media, library_item
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->getDbData()['name'] ?? '';
     }
 
     public function getUrl(): string
     {
-        return $this->url;
+        return $this->getDbData()['url'] ?? '';
     }
 
     public function getSiteUrl(): string
     {
-        return $this->site_url;
+        return $this->getDbData()['site_url'] ?? '';
+    }
+
+    public function getCodec(): string
+    {
+        return $this->getDbData()['codec'] ?? '';
     }
 
     /**
@@ -142,7 +130,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_keywords()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -150,7 +138,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_fullname()
     {
-        return $this->name;
+        return $this->getName();
     }
 
     /**
@@ -166,7 +154,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_childrens()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -177,7 +165,7 @@ class Live_Stream extends database_object implements Media, library_item
     {
         debug_event(self::class, 'search_childrens ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -186,12 +174,12 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_medias($filter_type = null)
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type == 'live_stream') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'live_stream',
-                'object_id' => $this->id
-            );
+                'object_id' => $this->getId()
+            ];
         }
 
         return $medias;
@@ -205,7 +193,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_catalogs()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -239,8 +227,8 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'live_stream') || $force) {
-            echo Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+        if (Art::has_db($this->getId(), 'live_stream') || $force) {
+            echo Art::display('live_stream', $this->getId(), $this->get_fullname(), $thumb, $this->getLink());
         }
     }
 
@@ -277,11 +265,15 @@ class Live_Stream extends database_object implements Media, library_item
             return false;
         }
 
-        $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql,
-            array($data['name'], $data['site_url'], $data['url'], strtolower((string)$data['codec']), $this->id));
+        $this->liveStreamRepository->update(
+            $data['name'],
+            $data['site_url'],
+            $data['ulr'],
+            strtolower((string)$data['codec']),
+            $this->getId()
+        );
 
-        return $this->id;
+        return $this->getId();
     } // update
 
     /**
@@ -325,11 +317,13 @@ class Live_Stream extends database_object implements Media, library_item
             return false;
         }
 
-        // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " . "VALUES (?, ?, ?, ?, ?)";
-
-        return Dba::write($sql,
-            array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
+        return static::getLiveStreamRepository()->create(
+            $data['name'],
+            $data['site_url'],
+            $data['url'],
+            $catalog->getId(),
+            strtolower((string)$data['codec'])
+        );
     } // create
 
     /**
@@ -355,7 +349,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
-        return $this->url . $additional_params;
+        return $this->getUrl() . $additional_params;
     } // play_url
 
     /**
@@ -416,5 +410,12 @@ class Live_Stream extends database_object implements Media, library_item
     public function isEnabled(): bool
     {
         return true;
+    }
+
+    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LiveStreamRepositoryInterface::class);
     }
 }

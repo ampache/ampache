@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play live stream'), 'play_live_stream_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->getId(), 'play', T_('Play live stream'), 'play_live_stream_' . $libitem->id);
         } ?>
     </div>
 </td>
@@ -55,16 +55,16 @@ use Ampache\Module\Util\Ui;
         $libitem->getUrl(),
         $libitem->getUrl()
     ); ?></td>
-<td class="cel_codec"><?php echo $libitem->codec; ?></td>
+<td class="cel_codec"><?php echo $libitem->getCodec(); ?></td>
 <td class="cel_action">
     <?php
         if (Access::check('interface', 50)) { ?>
-        <a id="<?php echo 'edit_live_stream_' . $libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo T_('Live Stream Edit') ?>', 'live_stream_')">
+        <a id="<?php echo 'edit_live_stream_' . $libitem->getId() ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo T_('Live Stream Edit') ?>', 'live_stream_')">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
         }
         if (Access::check('interface', 75)) {
-            echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
+            echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->getId(), 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
         } ?>
 </td>

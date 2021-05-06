@@ -23,27 +23,39 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Doctrine\DBAL\Connection;
 
 final class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
+    private Connection $database;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        Connection $database,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->database        = $database;
+        $this->configContainer = $configContainer;
+    }
+
     /**
      * @return int[]
      */
     public function getAll(): array
     {
-        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "WHERE `catalog`.`enabled` = '1' ";
+        $sql = 'SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ';
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
+            $sql .= 'WHERE `catalog`.`enabled` = \'1\' ';
         }
-        $params = [];
 
-        $db_results = Dba::read($sql, $params);
+        $dbResults = $this->database->executeQuery($sql);
+
         $radios     = [];
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $radios[] = (int) $results['id'];
+        while ($rowId = $dbResults->fetchOne()) {
+            $radios[] = (int) $rowId;
         }
 
         return $radios;
@@ -54,9 +66,63 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
      */
     public function delete(int $liveStreamId): void
     {
-        Dba::write(
+        $this->database->executeQuery(
             'DELETE FROM `live_stream` WHERE `id` = ?',
             [$liveStreamId]
+        );
+    }
+
+    /**
+     * @return array{
+     *  id: int,
+     *  name: string,
+     *  site_url: string,
+     *  url: string,
+     *  genre: int,
+     *  catalog: int,
+     *  codec: string
+     * }
+     */
+    public function getDataById(
+        int $id
+    ): array {
+        $dbResults = $this->database->fetchAssociative(
+            'SELECT * FROM `live_stream` WHERE `id` = ?',
+            [$id]
+        );
+
+        if ($dbResults === false) {
+            return [];
+        }
+
+        return $dbResults;
+    }
+
+    public function create(
+        string $name,
+        string $siteUrl,
+        string $url,
+        int $catalogId,
+        string $codec
+    ): int {
+        $this->database->executeQuery(
+            'INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)',
+            [$name, $siteUrl, $url, $catalogId, $codec]
+        );
+
+        return (int) $this->database->lastInsertId();
+    }
+
+    public function update(
+        string $name,
+        string $siteUrl,
+        string $url,
+        string $codec,
+        int $liveStreamId
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?',
+            [$name, $siteUrl, $url, $codec, $liveStreamId]
         );
     }
 }

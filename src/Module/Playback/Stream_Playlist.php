@@ -31,6 +31,8 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -269,12 +271,13 @@ class Stream_Playlist
                     $url['codec']      = $object->type;
                     break;
                 case 'live_stream':
-                    $url['title'] = 'Radio - ' . $object->name;
-                    if (!empty($object->site_url)) {
-                        $url['title'] .= ' (' . $object->site_url . ')';
+                    /** @var Live_Stream $object */
+                    $url['title'] = 'Radio - ' . $object->getName();
+                    if (!empty($object->getSiteUrl())) {
+                        $url['title'] .= ' (' . $object->getSiteUrl() . ')';
                     }
-                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['codec']     = $object->codec;
+                    $url['image_url'] = Art::url($object->getId(), 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->getCodec();
                     break;
                 case 'song_preview':
                     /** @var Song_Preview $object */
@@ -283,6 +286,7 @@ class Stream_Playlist
                     $url['codec']  = $object->type;
                     break;
                 case 'channel':
+                    /** @var Channel $object */
                     $url['title'] = $object->name;
                     $url['codec'] = $object->stream_type;
                     break;
