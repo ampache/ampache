@@ -454,7 +454,7 @@ class Subsonic_Xml_Data
     /**
      * addArtistsIndexes
      * @param SimpleXMLElement $xml
-     * @param Artist[] $artists
+     * @param array $artists
      * @param $lastModified
      */
     public static function addArtistsIndexes($xml, $artists, $lastModified)

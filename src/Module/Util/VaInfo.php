@@ -1093,6 +1093,21 @@ final class VaInfo implements VaInfoInterface
                     break;
             }
         }
+        // Replaygain stored by getID3
+        if (isset($this->_raw['replay_gain'])) {
+            if (isset($this->_raw['replay_gain']['track']['adjustment'])) {
+                $parsed['replaygain_track_gain'] = (float) $this->_raw['replay_gain']['track']['adjustment'];
+            }
+            if (isset($this->_raw['replay_gain']['track']['peak'])) {
+                $parsed['replaygain_track_peak'] = (float) $this->_raw['replay_gain']['track']['peak'];
+            }
+            if (isset($this->_raw['replay_gain']['album']['adjustment'])) {
+                $parsed['replaygain_album_gain'] = (float) $this->_raw['replay_gain']['album']['adjustment'];
+            }
+            if (isset($this->_raw['replay_gain']['album']['peak'])) {
+                $parsed['replaygain_album_peak'] = (float) $this->_raw['replay_gain']['album']['peak'];
+            }
+        }
 
         return $parsed;
     }
