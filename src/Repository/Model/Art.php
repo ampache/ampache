@@ -454,6 +454,7 @@ class Art extends database_object
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
                 $ndata['attached_picture'][$i]['mime']              = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid']     = $new_pic['picturetypeid'];
+                $ndata['attached_picture'][$i]['encodingid']        = $new_pic['encodingid'];
                 $idx                                                = $i;
                 break;
             }
