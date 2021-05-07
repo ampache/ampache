@@ -692,6 +692,7 @@ class Search extends playlist_object
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
+        $this->type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true');
     } // artisttypes
 
     /**
