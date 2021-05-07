@@ -967,8 +967,6 @@ class Album extends database_object implements library_item
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
-
-                    //           $this->getSongId3TagWriter()->write(new Song($song_id));
                 }
                 $ndata['year']   = $year;
                 $changed['year'] = 'year';
@@ -976,7 +974,7 @@ class Album extends database_object implements library_item
             if (!empty($disk) && $disk != $this->disk) {
                 self::update_field('disk', $disk, $this->id);
                 $ndata['disk']   = $disk;
-                $changed['disk'] = 'disk';  // musicbrainz_releasetrackid in id3v2
+                $changed['disk'] = 'disk';
             }
             if (!empty($mbid) && $mbid != $this->mbid) {
                 self::update_field('mbid', $mbid, $this->id);
