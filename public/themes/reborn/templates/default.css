@@ -1776,7 +1776,6 @@ span.fatalerror {
 
 .star-rating .global-rating {
     font-size: 0.8em;
-    color: #999; /* TODO move to dark.css and light.css */ 
     position: relative;
     bottom: 2px;
 }
