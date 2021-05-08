@@ -271,7 +271,6 @@ return [
     Admin\System\WriteConfigAction::class => autowire(),
     Admin\System\ResetDbCharsetAction::class => autowire(),
     Admin\System\ShowDebugAction::class => autowire(),
-    Admin\System\ClearCacheAction::class => autowire(),
     Admin\User\ShowAction::class => autowire(),
     Admin\User\ShowPreferencesAction::class => autowire(),
     Admin\User\ShowAddUserAction::class => autowire(),

@@ -42,15 +42,6 @@ $environment = $dic->get(EnvironmentInterface::class);
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
             </li>
-            <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
-            </li>
-            <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
-            </li>
-            <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
-            </li>
         </ul>
     </div>
 

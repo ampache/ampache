@@ -23,10 +23,8 @@
 
 declare(strict_types=1);
 
-use Ampache\Module\Application\Admin\System\ClearCacheAction;
 use Ampache\Module\Application\Admin\System\GenerateConfigAction;
 use Ampache\Module\Application\Admin\System\ResetDbCharsetAction;
-use Ampache\Module\Application\Admin\System\ShowAction;
 use Ampache\Module\Application\Admin\System\ShowDebugAction;
 use Ampache\Module\Application\Admin\System\WriteConfigAction;
 use Ampache\Module\Application\ApplicationRunner;
@@ -43,7 +41,6 @@ $dic->get(ApplicationRunner::class)->run(
         WriteConfigAction::REQUEST_KEY => WriteConfigAction::class,
         ResetDbCharsetAction::REQUEST_KEY => ResetDbCharsetAction::class,
         ShowDebugAction::REQUEST_KEY => ShowDebugAction::class,
-        ClearCacheAction::REQUEST_KEY => ClearCacheAction::class,
     ],
     ShowDebugAction::REQUEST_KEY
 );
