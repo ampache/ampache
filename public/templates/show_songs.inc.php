@@ -71,14 +71,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     } ?>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
-        ++$thcount;
-        Rating::build_cache('song', $object_ids); ?>
+        ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
     } ?>
                 <?php if (AmpConfig::get('userflags')) {
-        ++$thcount;
-        Userflag::build_cache('song', $object_ids); ?>
+        ++$thcount; ?>
                 <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
             <?php
     } ?>

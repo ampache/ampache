@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\MockeryTestCase;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Wanted;
 use Doctrine\DBAL\Connection;
@@ -33,9 +32,6 @@ use Mockery\MockInterface;
 
 class WantedRepositoryTest extends MockeryTestCase
 {
-    /** @var MockInterface|DatabaseObjectCacheInterface */
-    private MockInterface $databaseObjectCache;
-
     /** @var MockInterface|ModelFactoryInterface */
     private MockInterface $modelFactory;
 
@@ -46,12 +42,10 @@ class WantedRepositoryTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->databaseObjectCache = $this->mock(DatabaseObjectCacheInterface::class);
-        $this->modelFactory        = $this->mock(ModelFactoryInterface::class);
-        $this->database            = $this->mock(Connection::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->database     = $this->mock(Connection::class);
 
         $this->subject = new WantedRepository(
-            $this->databaseObjectCache,
             $this->modelFactory,
             $this->database
         );
@@ -182,32 +176,11 @@ class WantedRepositoryTest extends MockeryTestCase
         );
     }
 
-    public function testGetByIdReturnsDataFromCache(): void
-    {
-        $wantedId = 666;
-        $data     = ['some' => 'data'];
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('wanted', $wantedId)
-            ->once()
-            ->andReturn($data);
-
-        $this->assertSame(
-            $data,
-            $this->subject->getById($wantedId)
-        );
-    }
-
     public function testGetByIdReturnsEmptyErrorIfNothingWasFound(): void
     {
         $wantedId = 666;
 
         $result = $this->mock(Result::class);
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('wanted', $wantedId)
-            ->once()
-            ->andReturn([]);
 
         $this->database->shouldReceive('executeQuery')
             ->with(
@@ -234,14 +207,6 @@ class WantedRepositoryTest extends MockeryTestCase
         $data     = ['some' => 'data'];
 
         $result = $this->mock(Result::class);
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('wanted', $wantedId)
-            ->once()
-            ->andReturn([]);
-        $this->databaseObjectCache->shouldReceive('add')
-            ->with('wanted', $wantedId, $data)
-            ->once();
 
         $this->database->shouldReceive('executeQuery')
             ->with(
@@ -292,10 +257,6 @@ class WantedRepositoryTest extends MockeryTestCase
 
         $wanted->shouldReceive('accept')
             ->withNoArgs()
-            ->once();
-
-        $this->databaseObjectCache->shouldReceive('remove')
-            ->with('wanted', $wantedId)
             ->once();
 
         $this->subject->add(

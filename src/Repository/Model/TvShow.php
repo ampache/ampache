@@ -143,24 +143,14 @@ class TvShow extends database_object implements library_item
      */
     private function _get_extra_info()
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('tvshow_extra', $this->id);
+        $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
 
-        // Try to find it in the cache and save ourselves the trouble
-        if ($cacheItem !== []) {
-            $row = $cacheItem;
-        } else {
-            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
-            $db_results = Dba::read($sql, array($this->id));
-            $row        = Dba::fetch_assoc($db_results);
-
-            $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " . "WHERE `tvshow_season`.`tvshow` = ?";
-            $db_results          = Dba::read($sql, array($this->id));
-            $row2                = Dba::fetch_assoc($db_results);
-            $row['season_count'] = $row2['season_count'];
-
-            $cache->add('tvshow_extra', $this->id, $row);
-        }
+        $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " . "WHERE `tvshow_season`.`tvshow` = ?";
+        $db_results          = Dba::read($sql, array($this->id));
+        $row2                = Dba::fetch_assoc($db_results);
+        $row['season_count'] = $row2['season_count'];
 
         /* Set Object Vars */
         $this->episodes   = $row['episode_count'];

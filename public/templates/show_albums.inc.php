@@ -82,13 +82,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     </thead>
     <tbody>
         <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('album', $object_ids);
-        }
-
         $show_direct_play_cfg = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');
 

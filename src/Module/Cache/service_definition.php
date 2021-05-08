@@ -24,20 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cache;
 
-use Ampache\Config\ConfigContainerInterface;
-use Psr\Container\ContainerInterface;
 use function DI\autowire;
-use function DI\factory;
 
 return [
     ObjectCacheInterface::class => autowire(ObjectCache::class),
-    DatabaseObjectCacheInterface::class => factory(static function (ContainerInterface $c): DatabaseObjectCache {
-        return new DatabaseObjectCache(
-            $c->get(ConfigContainerInterface::class),
-            [
-                '0' => $c->get(ObjectCacheAdapter\NoopCacheAdapter::class),
-                '1' => $c->get(ObjectCacheAdapter\SimpleArrayCacheAdapter::class),
-                'simple' => $c->get(ObjectCacheAdapter\SimpleArrayCacheAdapter::class),
-            ]);
-    }),
 ];

@@ -25,7 +25,6 @@ namespace Ampache\Module\Wanted;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Mockery\MockInterface;
 use MusicBrainz\MusicBrainz;
 
@@ -34,9 +33,6 @@ class MissingArtistLookupTest extends MockeryTestCase
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
-    /** @var DatabaseObjectCacheInterface|MockInterface|null */
-    private MockInterface $databaseObjectCache;
-
     /** @var MusicBrainz|MockInterface|null */
     private MockInterface $musicBrainz;
 
@@ -44,61 +40,18 @@ class MissingArtistLookupTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->configContainer     = $this->mock(ConfigContainerInterface::class);
-        $this->databaseObjectCache = $this->mock(DatabaseObjectCacheInterface::class);
-        $this->musicBrainz         = $this->mock(MusicBrainz::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->musicBrainz     = $this->mock(MusicBrainz::class);
 
         $this->subject = new MissingArtistLookup(
             $this->configContainer,
-            $this->databaseObjectCache,
             $this->musicBrainz
-        );
-    }
-
-    public function testLookupUsesDataFromCache(): void
-    {
-        $musicbrainzId = 'some-id';
-        $name          = 'some-name';
-        $webPath       = 'some-webpath';
-        $link          = sprintf(
-            '<a href="%s/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
-            $webPath,
-            $musicbrainzId,
-            $name,
-            $name
-        );
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('missing_artist', $musicbrainzId)
-            ->once()
-            ->andReturn([
-                'mbid' => $musicbrainzId,
-                'name' => $name
-            ]);
-
-        $this->assertSame(
-            [
-                'mbid' => $musicbrainzId,
-                'name' => $name,
-                'link' => $link,
-            ],
-            $this->subject->lookup($musicbrainzId)
         );
     }
 
     public function testLookupPerformsLookupAndReturnEmptyData(): void
     {
         $musicbrainzId = 'some-id';
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('missing_artist', $musicbrainzId)
-            ->once()
-            ->andReturn([]);
 
         $this->musicBrainz->shouldReceive('lookup')
             ->with('artist', $musicbrainzId)
@@ -131,14 +84,6 @@ class MissingArtistLookupTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($webPath);
-
-        $this->databaseObjectCache->shouldReceive('retrieve')
-            ->with('missing_artist', $musicbrainzId)
-            ->once()
-            ->andReturn([]);
-        $this->databaseObjectCache->shouldReceive('add')
-            ->with('missing_artist', $musicbrainzId, ['mbid' => $musicbrainzId, 'name' => $name])
-            ->once();
 
         $this->musicBrainz->shouldReceive('lookup')
             ->with('artist', $musicbrainzId)

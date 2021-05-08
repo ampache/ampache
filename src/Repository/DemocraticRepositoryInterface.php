@@ -30,11 +30,4 @@ interface DemocraticRepositoryInterface
      * this current playlist of the user
      */
     public function getCurrent(int $accessLevel): Democratic;
-
-    /**
-     * This builds a vote cache of the objects we've got in the playlist
-     *
-     * @param int[] $objectIds
-     */
-    public function buildVoteCache(array $objectIds): void;
 }

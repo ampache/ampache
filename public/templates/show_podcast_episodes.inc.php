@@ -78,13 +78,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     </thead>
     <tbody>
         <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast_episode', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast_episode', $object_ids);
-        }
-
         foreach ($object_ids as $episode_id) {
             $libitem = $podcastEpisodeRepository->findById((int) $episode_id); ?>
         <tr id="podcast_episode_<?php echo $libitem->getId(); ?>">

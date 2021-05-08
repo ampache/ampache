@@ -86,7 +86,6 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         require_once Ui::find_template('show_democratic.inc.php');
 
         $objects = $democratic->get_items();
-        Song::build_cache($democratic->object_ids);
         $this->democraticRepository->buildVoteCache($democratic->vote_ids);
 
         $browse = $this->modelFactory->createBrowse();

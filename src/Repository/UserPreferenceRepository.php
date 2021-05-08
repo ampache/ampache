@@ -23,19 +23,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
 final class UserPreferenceRepository implements UserPreferenceRepositoryInterface
 {
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
-    public function __construct(
-        DatabaseObjectCacheInterface $databaseObjectCache
-    ) {
-        $this->databaseObjectCache = $databaseObjectCache;
-    }
-
     /**
      * @return mixed
      */
@@ -60,8 +51,6 @@ final class UserPreferenceRepository implements UserPreferenceRepositoryInterfac
             );
         }
         $data = Dba::fetch_assoc($db_results);
-
-        $this->databaseObjectCache->add('get_by_user', $userId, $data);
 
         return $data['value'];
     }

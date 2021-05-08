@@ -80,26 +80,6 @@ class Playlist extends playlist_object
     }
 
     /**
-     * build_cache
-     * This is what builds the cache from the objects
-     * @param array $ids
-     */
-    public static function build_cache($ids)
-    {
-        if (!empty($ids)) {
-            $idlist     = '(' . implode(',', $ids) . ')';
-            $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
-            $db_results = Dba::read($sql);
-
-            $cache = static::getDatabaseObjectCache();
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $cache->add('playlist', $row['id'], $row);
-            }
-        }
-    } // build_cache
-
-    /**
      * get_details
      * Returns a keyed array of playlist id and name accessible by the user.
      * @param string $type

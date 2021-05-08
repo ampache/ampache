@@ -601,18 +601,10 @@ class Democratic extends Tmp_Playlist
      */
     public function get_vote($id)
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('democratic_vote', (int) $id);
-        if ($cacheItem !== []) {
-            return (int) $cacheItem[0];
-        }
-
         $sql        = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' . "WHERE `object_id` = ?";
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
-
-        $cache->add('democratic_vote', (int) $id, $results);
 
         return (int)$results['count'];
     } // get_vote

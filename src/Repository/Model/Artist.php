@@ -259,30 +259,21 @@ class Artist extends database_object implements library_item
      */
     private function _get_extra_info($catalog = 0, $limit_threshold = '')
     {
-        $cache = static::getDatabaseObjectCache();
+        $params = array($this->id);
+        // Get associated information from first song only
+        $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $sqlw = "WHERE `song`.`artist` = ? ";
+        if ($catalog) {
+            $params[] = $catalog;
+            $sqlw .= "AND (`song`.`catalog` = ?) ";
+        }
+        $sql .= $sqlw . "LIMIT 1";
 
-        // Try to find it in the cache and save ourselves the trouble
-        $cacheItem = $cache->retrieve('artist_extra', $this->getId());
-        if ($cacheItem !== []) {
-            $row = $cacheItem;
-        } else {
-            $params = array($this->id);
-            // Get associated information from first song only
-            $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            $sqlw = "WHERE `song`.`artist` = ? ";
-            if ($catalog) {
-                $params[] = $catalog;
-                $sqlw .= "AND (`song`.`catalog` = ?) ";
-            }
-            $sql .= $sqlw . "LIMIT 1";
+        $db_results = Dba::read($sql, $params);
+        $row        = Dba::fetch_assoc($db_results);
 
-            $db_results = Dba::read($sql, $params);
-            $row        = Dba::fetch_assoc($db_results);
-
-            if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
-            }
-            $cache->add('artist_extra', (int) $row['artist'], $row);
+        if (AmpConfig::get('show_played_times')) {
+            $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
         }
 
         /* Set Object Vars */

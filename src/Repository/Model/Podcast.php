@@ -92,22 +92,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function getEpisodeCount(): int
     {
-        $cache = static::getDatabaseObjectCache();
-        // Try to find it in the cache and save ourselves the trouble
-        $amount = $cache->retrieve('podcast_extra', $this->getId())['amount'] ?? null;
-        if ($amount !== null) {
-            return (int) $amount;
-        } else {
-            $amount = static::getPodcastEpisodeRepository()->getEpisodeCount($this);
-
-            $cache->add(
-                'podcast_extra',
-                $this->getId(),
-                ['amount' => $amount]
-            );
-
-            return $amount;
-        }
+        return static::getPodcastEpisodeRepository()->getEpisodeCount($this);
     }
 
     public function getFeed(): string

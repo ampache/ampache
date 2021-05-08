@@ -129,8 +129,6 @@ final class XmlOutput implements ApiOutputInterface
         }
         $string = ($encode) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
 
-        Rating::build_cache('album', $albumIds);
-
         foreach ($albumIds as $albumId) {
             $album = new Album($albumId);
             $album->format();
@@ -214,8 +212,6 @@ final class XmlOutput implements ApiOutputInterface
 
         $string = '';
 
-        Rating::build_cache('artist', $artistIds);
-
         foreach ($artistIds as $artistId) {
             $artist = new Artist($artistId);
             $artist->format();
@@ -285,7 +281,6 @@ final class XmlOutput implements ApiOutputInterface
         }
         $string = ($fullXml) ? "<total_count>" . Catalog::get_count('song') . "</total_count>\n" : '';
 
-        Song::build_cache($songIds);
         Stream::set_session(Core::get_request('auth'));
 
         $playlist_track = 0;

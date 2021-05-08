@@ -29,5 +29,4 @@ use function DI\autowire;
 return [
     Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
     Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
-    ArtistCacheBuilderInterface::class => autowire(ArtistCacheBuilder::class),
 ];

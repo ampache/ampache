@@ -30,13 +30,11 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @todo Check if those `clear cache` calls are really necessary
  * Those caches exist just for the lifetime of a request (or a cli process).
  * It makes no sense to explicitly clear them within a gui request
  */
@@ -48,16 +46,12 @@ final class ClearCacheAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        DatabaseObjectCacheInterface $databaseObjectCache
+        UiInterface $ui
     ) {
-        $this->configContainer     = $configContainer;
-        $this->ui                  = $ui;
-        $this->databaseObjectCache = $databaseObjectCache;
+        $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,8 +62,6 @@ final class ClearCacheAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
-
-        $this->databaseObjectCache->clear();
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

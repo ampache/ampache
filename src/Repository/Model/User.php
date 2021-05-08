@@ -225,13 +225,6 @@ class User extends database_object
     {
         $user_id = $this->getId();
 
-        $cache      = static::getDatabaseObjectCache();
-        $cacheValue = $cache->retrieve('user', $user_id);
-
-        if ($cacheValue !== []) {
-            return $cacheValue;
-        }
-
         $data = array();
         // If the ID is -1 then
         if ($user_id == '-1') {
@@ -245,11 +238,7 @@ class User extends database_object
         $sql        = "SELECT * FROM `user` WHERE `id`='$user_id'";
         $db_results = Dba::read($sql);
 
-        $data = Dba::fetch_assoc($db_results);
-
-        $cache->add('user', $user_id, $data);
-
-        return $data;
+        return Dba::fetch_assoc($db_results);
     } // has_info
 
     /**
@@ -288,13 +277,6 @@ class User extends database_object
      */
     public function get_catalogs()
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('user_catalog', $this->id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
-
         $sql        = "SELECT * FROM `user_catalog` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -302,8 +284,6 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalogs[] = (int)$row['catalog'];
         }
-
-        $cache->add('user_catalog', $this->id, $catalogs);
 
         return $catalogs;
     } // get_catalogs

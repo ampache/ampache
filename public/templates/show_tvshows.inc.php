@@ -72,14 +72,6 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
     </thead>
     <tbody>
         <?php
-        // Cache the ratings we are going to use
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('tvshow', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('tvshow', $object_ids);
-        }
-
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
             $libitem = new TVShow($tvshow_id);

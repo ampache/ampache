@@ -257,31 +257,6 @@ class Video extends database_object implements
     }
 
     /**
-     * build_cache
-     * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param integer[] $ids
-     * @return boolean
-     */
-    public static function build_cache($ids)
-    {
-        if (empty($ids)) {
-            return false;
-        }
-
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('video', $row['id'], $row);
-        }
-
-        return true;
-    } // build_cache
-
-    /**
      * format
      * This formats a video object so that it is human readable
      * @param boolean $details

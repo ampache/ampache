@@ -23,26 +23,21 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Doctrine\DBAL\Connection;
 
 final class WantedRepository implements WantedRepositoryInterface
 {
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
     private ModelFactoryInterface $modelFactory;
 
     private Connection $database;
 
     public function __construct(
-        DatabaseObjectCacheInterface $databaseObjectCache,
         ModelFactoryInterface $modelFactory,
         Connection $database
     ) {
-        $this->databaseObjectCache = $databaseObjectCache;
-        $this->modelFactory        = $modelFactory;
-        $this->database            = $database;
+        $this->modelFactory = $modelFactory;
+        $this->database     = $database;
     }
 
     /**
@@ -136,12 +131,6 @@ final class WantedRepository implements WantedRepositoryInterface
             return [];
         }
 
-        $cacheItem = $this->databaseObjectCache->retrieve('wanted', $wantedId);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
-
         $db_results = $this->database->executeQuery(
             'SELECT * FROM `wanted` WHERE `id`= ?',
             [$wantedId]
@@ -151,8 +140,6 @@ final class WantedRepository implements WantedRepositoryInterface
         if ($row === false) {
             return [];
         }
-
-        $this->databaseObjectCache->add('wanted', $wantedId, $row);
 
         return $row;
     }
@@ -178,8 +165,6 @@ final class WantedRepository implements WantedRepositoryInterface
             $wantedId = (int) $this->database->lastInsertId();
             $wanted   = $this->modelFactory->createWanted($wantedId);
             $wanted->accept();
-
-            $this->databaseObjectCache->remove('wanted', $wantedId);
         }
     }
 

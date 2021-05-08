@@ -68,12 +68,6 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
     </thead>
     <tbody>
         <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('album', $object_ids);
-        }
 
         foreach ($object_ids as $season_id) {
             $libitem = new TVShow_season($season_id);

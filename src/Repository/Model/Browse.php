@@ -24,9 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Artist\ArtistCacheBuilderInterface;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\CookieSetterInterface;
 use Ampache\Module\Util\Ui;
@@ -220,11 +219,9 @@ class Browse extends Query
         switch ($type) {
             case 'song':
                 $box_title = T_('Songs') . $match;
-                Song::build_cache($object_ids, $limit_threshold);
-                $box_req = Ui::find_template('show_songs.inc.php');
+                $box_req   = Ui::find_template('show_songs.inc.php');
                 break;
             case 'album':
-                Album::build_cache($object_ids);
                 $box_title         = T_('Albums') . $match;
                 $allow_group_disks = false;
                 if (is_array($argument)) {
@@ -244,15 +241,13 @@ class Browse extends Query
                 break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                $this->getArtistCacheBuilder()->build($object_ids, true, (int) $limit_threshold);
-                $box_req = Ui::find_template('show_artists.inc.php');
+                $box_req   = Ui::find_template('show_artists.inc.php');
                 break;
             case 'live_stream':
                 $box_title = T_('Radio Stations') . $match;
                 $box_req   = Ui::find_template('show_live_streams.inc.php');
                 break;
             case 'playlist':
-                Playlist::build_cache($object_ids);
                 $box_title = T_('Playlists') . $match;
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
@@ -278,12 +273,10 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
-                Tag::build_cache($object_ids);
                 $box_title = T_('Genres');
                 $box_req   = Ui::find_template('show_tagcloud.inc.php');
                 break;
             case 'video':
-                Video::build_cache($object_ids);
                 $video_type = 'video';
                 $box_title  = T_('Videos');
                 $box_req    = Ui::find_template('show_videos.inc.php');
@@ -608,16 +601,6 @@ class Browse extends Query
         global $dic;
 
         return $dic->get(CookieSetterInterface::class);
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private function getArtistCacheBuilder(): ArtistCacheBuilderInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 
     /**

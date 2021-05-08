@@ -101,63 +101,6 @@ class Rating extends database_object
     }
 
     /**
-     * build_cache
-     * This attempts to get everything we'll need for this page load in a
-     * single query, saving on connection overhead
-     * @param string $type
-     * @param array $ids
-     * @param integer $user_id
-     * @return boolean
-     */
-    public static function build_cache($type, $ids, $user_id = null)
-    {
-        if (empty($ids)) {
-            return false;
-        }
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
-        $ratings      = array();
-        $user_ratings = array();
-        $idlist       = '(' . implode(',', $ids) . ')';
-        $sql          = "SELECT `rating`, `object_id` FROM `rating` " . "WHERE `user` = ? AND `object_id` IN $idlist " . "AND `object_type` = ?";
-        $db_results   = Dba::read($sql, array($user_id, $type));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $user_ratings[$row['object_id']] = $row['rating'];
-        }
-
-        $sql        = "SELECT AVG(`rating`) as `rating`, `object_id` FROM " . "`rating` WHERE `object_id` IN $idlist AND " . "`object_type` = ? GROUP BY `object_id`";
-        $db_results = Dba::read($sql, array($type));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $ratings[$row['object_id']] = $row['rating'];
-        }
-
-        $cache = static::getDatabaseObjectCache();
-
-        foreach ($ids as $object_id) {
-            // First store the user-specific rating
-            if (!isset($user_ratings[$object_id])) {
-                $rating = 0;
-            } else {
-                $rating = (int)$user_ratings[$object_id];
-            }
-            $cache->add('rating_' . $type . '_user' . $user_id, $object_id, array((int)$rating));
-
-            // Then store the average
-            if (!isset($ratings[$object_id])) {
-                $rating = 0;
-            } else {
-                $rating = round($ratings[$object_id], 1);
-            }
-            $cache->add('rating_' . $type . '_all', $object_id, array((int)$rating));
-        }
-
-        return true;
-    } // build_cache
-
-    /**
      * get_user_rating
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.
@@ -170,15 +113,6 @@ class Rating extends database_object
             $user_id = Core::get_global('user')->id;
         }
 
-        $key = 'rating_' . $this->type . '_user' . $user_id;
-
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve($key, $this->id);
-
-        if ($cacheItem !== []) {
-            return (double) $cacheItem[0];
-        }
-
         $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
@@ -186,8 +120,6 @@ class Rating extends database_object
         if ($results = Dba::fetch_assoc($db_results)) {
             $rating = $results['rating'];
         }
-
-        $cache->add($key, $this->id, array((int)$rating));
 
         return (double)$rating;
     } // get_user_rating
@@ -200,19 +132,10 @@ class Rating extends database_object
      */
     public function get_average_rating()
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('rating_' . $this->type . '_all', $this->id);
-
-        if ($cacheItem !== []) {
-            return (double) $cacheItem[0];
-        }
-
         $sql        = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " . "`object_id` = ? AND `object_type` = ? " . "HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
-
-        $cache->add('rating_' . $this->type . '_all', $this->id, $results);
 
         return (double)$results['rating'];
     } // get_average_rating
@@ -307,8 +230,6 @@ class Rating extends database_object
         }
         Dba::write($sql, $params);
 
-        static::getDatabaseObjectCache()->add('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
-
         self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
 
         return true;
@@ -335,8 +256,6 @@ class Rating extends database_object
                 $sql    = "REPLACE INTO `rating` " . "(`object_id`, `object_type`, `rating`, `user`) " . "VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $rating, $user_id);
                 Dba::write($sql, $params);
-
-                static::getDatabaseObjectCache()->add('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
             }
             self::save_rating($album_id, 'album', (int)$rating, (int)$user_id);
         }

@@ -24,7 +24,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Artist\ArtistCacheBuilderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Playback\Stream;
@@ -541,83 +540,6 @@ class Song extends database_object implements
     }
 
     /**
-     * build_cache
-     *
-     * This attempts to reduce queries by asking for everything in the
-     * browse all at once and storing it in the cache, this can help if the
-     * db connection is the slow point.
-     * @param integer[] $song_ids
-     * @param string $limit_threshold
-     * @return boolean
-     */
-    public static function build_cache($song_ids, $limit_threshold = '')
-    {
-        if (empty($song_ids)) {
-            return false;
-        }
-        $idlist = '(' . implode(',', $song_ids) . ')';
-        if ($idlist == '()') {
-            return false;
-        }
-
-        // Song data cache
-        $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' . '`year`, `artist`, `title`, `bitrate`, `rate`, ' . '`mode`, `size`, `time`, `track`, `played`, ' . '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, ' . '`mbid`, `addition_time`, `license`, `composer`, `user_upload` ' . 'FROM `song` LEFT JOIN `tag_map` ' . 'ON `tag_map`.`object_id`=`song`.`id` ' . "AND `tag_map`.`object_type`='song' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`id` IN $idlist ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $db_results = Dba::read($sql);
-
-        $artists = array();
-        $albums  = array();
-        $tags    = array();
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
-            }
-            if (AmpConfig::get('show_skipped_times')) {
-                $row['skip_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
-            }
-            $cache->add('song', $row['id'], $row);
-            $artists[$row['artist']] = $row['artist'];
-            $albums[$row['album']]   = $row['album'];
-            if ($row['tag_id']) {
-                $tags[$row['tag_id']] = $row['tag_id'];
-            }
-        }
-
-        static::getArtistCacheBuilder()->build($artists);
-        Album::build_cache($albums);
-        Tag::build_cache($tags);
-        Tag::build_map_cache('song', $song_ids);
-        Art::build_cache($albums);
-
-        // If we're rating this then cache them as well
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('song', $song_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('song', $song_ids);
-        }
-
-        // Build a cache for the song's extended table
-        $sql        = "SELECT * FROM `song_data` WHERE `song_id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('song_data', $row['song_id'], $row);
-        }
-
-        return true;
-    } // build_cache
-
-    /**
      * has_info
      * @param string $limit_threshold
      * @return array|boolean
@@ -625,13 +547,6 @@ class Song extends database_object implements
     private function has_info($limit_threshold = '')
     {
         $song_id = $this->id;
-
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('song', $song_id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
 
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
@@ -651,8 +566,6 @@ class Song extends database_object implements
                 $results['skip_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
             }
 
-            $cache->add('song', $song_id, $results);
-
             return $results;
         }
 
@@ -671,21 +584,10 @@ class Song extends database_object implements
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
 
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('song_data', $song_id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
-
         $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
 
-        $results = Dba::fetch_assoc($db_results);
-
-        $cache->add('song_data', $song_id, $results);
-
-        return $results;
+        return Dba::fetch_assoc($db_results);
     } // _get_ext_info
 
     /**
@@ -2135,15 +2037,5 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistCacheBuilder(): ArtistCacheBuilderInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 }

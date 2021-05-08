@@ -173,8 +173,7 @@ if ($client->f_avatar) {
         <?php
         } ?>
         <?php
-            $data = Song::get_recently_played($client->id);
-            Song::build_cache(array_keys($data));
+            $data    = Song::get_recently_played($client->id);
             $user_id = $client->id;
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>

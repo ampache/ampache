@@ -113,36 +113,6 @@ class Art extends database_object
     }
 
     /**
-     * build_cache
-     * This attempts to reduce # of queries by asking for everything in the
-     * browse all at once and storing it in the cache, this can help if the
-     * db connection is the slow point
-     * @param integer[] $object_ids
-     * @param string $type
-     * @return boolean
-     */
-    public static function build_cache($object_ids, $type = null)
-    {
-        if (empty($object_ids)) {
-            return false;
-        }
-        $idlist = '(' . implode(',', $object_ids) . ')';
-        $sql    = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $idlist";
-        if ($type !== null) {
-            $sql .= " AND `object_type` = '$type'";
-        }
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
-        }
-
-        return true;
-    } // build_cache
-
-    /**
      * @deprecated There was no way to explicitly deactivate the art - so I assume, it's not needed in the first place
      *
      * is_enabled
@@ -950,27 +920,11 @@ class Art extends database_object
             }
         }
 
-        $key = $type . $uid;
-
-        $objectCache = static::getDatabaseObjectCache();
-
-        if (
-            $objectCache->exists('art', $key . '275x275') &&
-            AmpConfig::get('resize_images')
-        ) {
-            $row  = $objectCache->retrieve('art', $key . '275x275');
-            $mime = $row['mime'];
-        }
-        if ($objectCache->exists('art', $key . 'original')) {
-            $row        = $objectCache->retrieve('art', $key . 'original');
-            $thumb_mime = $row['mime'];
-        }
         if (!isset($mime) && !isset($thumb_mime)) {
             $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($type, $uid));
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $objectCache->add('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
                 } else {

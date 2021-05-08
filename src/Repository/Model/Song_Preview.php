@@ -24,12 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Artist\ArtistCacheBuilderInterface;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Dba;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 
@@ -138,57 +137,12 @@ class Song_Preview extends database_object implements
     }
 
     /**
-     * build_cache
-     *
-     * This attempts to reduce queries by asking for everything in the
-     * browse all at once and storing it in the cache, this can help if the
-     * db connection is the slow point.
-     * @param array $song_ids
-     * @return boolean
-     */
-    public static function build_cache($song_ids)
-    {
-        if (empty($song_ids)) {
-            return false;
-        }
-        $idlist = '(' . implode(',', $song_ids) . ')';
-        if ($idlist == '()') {
-            return false;
-        }
-
-        // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` ' . "WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        $artists = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('song_preview', $row['id'], $row);
-            if ($row['artist']) {
-                $artists[$row['artist']] = $row['artist'];
-            }
-        }
-
-        static::getArtistCacheBuilder()->build($artists);
-
-        return true;
-    } // build_cache
-
-    /**
      * has_info
      * @return array
      */
     private function has_info()
     {
         $preview_id = $this->id;
-
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('song_preview', $preview_id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
 
         $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($preview_id));
@@ -202,7 +156,6 @@ class Song_Preview extends database_object implements
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            $cache->add('song_preview', $preview_id, $results);
 
             return $results;
         }
@@ -498,16 +451,6 @@ class Song_Preview extends database_object implements
         global $dic;
 
         return $dic->get(MissingArtistLookupInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistCacheBuilder(): ArtistCacheBuilderInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistCacheBuilderInterface::class);
     }
 
     /**

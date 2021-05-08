@@ -86,13 +86,6 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
     </thead>
     <tbody>
         <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast', $object_ids);
-        }
-
         foreach ($object_ids as $podcast_id) {
             $libitem = $podcastRepository->findById((int) $podcast_id); ?>
         <tr id="podcast_<?php echo $libitem->id; ?>">

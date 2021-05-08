@@ -168,13 +168,6 @@ class Preference extends database_object
         $pref_name = Dba::escape($pref_name);
         $pref_id   = static::getPreferenceRepository()->getIdByName($pref_name);
 
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('get_by_user-' . $pref_name, (int) $user_id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem[0];
-        }
-
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
         $db_results = Dba::read($sql);
         if (Dba::num_rows($db_results) < 1) {
@@ -182,8 +175,6 @@ class Preference extends database_object
             $db_results = Dba::read($sql);
         }
         $data = Dba::fetch_assoc($db_results);
-
-        $cache->add('get_by_user-' . $pref_name, (int) $user_id, $data);
 
         return $data['value'];
     } // get_by_user
@@ -230,8 +221,6 @@ class Preference extends database_object
             $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'$user_check";
             Dba::write($sql);
             self::clear_from_session();
-
-            static::getDatabaseObjectCache()->remove('get_by_user', $user_id);
 
             return true;
         } else {
@@ -280,8 +269,6 @@ class Preference extends database_object
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         Dba::write($sql);
-
-        static::getDatabaseObjectCache()->clear();
 
         return true;
     } // update_all

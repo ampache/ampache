@@ -24,24 +24,19 @@ declare(strict_types=1);
 namespace Ampache\Module\Wanted;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use MusicBrainz\MusicBrainz;
 
 final class MissingArtistLookup implements MissingArtistLookupInterface
 {
     private ConfigContainerInterface $configContainer;
 
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
     private MusicBrainz $musicBrainz;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        DatabaseObjectCacheInterface $databaseObjectCache,
         MusicBrainz $musicBrainz
     ) {
         $this->configContainer     = $configContainer;
-        $this->databaseObjectCache = $databaseObjectCache;
         $this->musicBrainz         = $musicBrainz;
     }
 
@@ -52,27 +47,18 @@ final class MissingArtistLookup implements MissingArtistLookupInterface
     {
         $wartist = [];
 
-        $cacheItem = $this->databaseObjectCache->retrieve('missing_artist', $musicbrainzId);
+        $wartist['mbid'] = $musicbrainzId;
+        $wartist['name'] = T_('Unknown Artist');
 
-        if ($cacheItem !== []) {
-            $wartist = $cacheItem;
-        } else {
-            $wartist['mbid'] = $musicbrainzId;
-            $wartist['name'] = T_('Unknown Artist');
+        set_time_limit(600);
 
-            set_time_limit(600);
-
-            try {
-                $martist = $this->musicBrainz->lookup('artist', $musicbrainzId);
-            } catch (\Exception $error) {
-                return $wartist;
-            }
-
-            $wartist['name'] = $martist->name;
-
-            $this->databaseObjectCache->add('missing_artist', $musicbrainzId, $wartist);
+        try {
+            $martist = $this->musicBrainz->lookup('artist', $musicbrainzId);
+        } catch (\Exception $error) {
+            return $wartist;
         }
 
+        $wartist['name'] = $martist->name;
         $wartist['link'] = sprintf(
             '<a href="%s/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
             $this->configContainer->getWebPath(),

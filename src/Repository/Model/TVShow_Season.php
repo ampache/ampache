@@ -121,20 +121,10 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     private function _get_extra_info()
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('tvshow_extra', $this->id);
+        $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_episode`.`season` = ?" . "GROUP BY `catalog_id`";
 
-        // Try to find it in the cache and save ourselves the trouble
-        if ($cacheItem !== []) {
-            $row = $cacheItem;
-        } else {
-            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_episode`.`season` = ?" . "GROUP BY `catalog_id`";
-
-            $db_results = Dba::read($sql, array($this->id));
-            $row        = Dba::fetch_assoc($db_results);
-
-            $cache->add('tvshow_extra', $this->id, $row);
-        }
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
 
         /* Set Object Vars */
         $this->episodes   = $row['episode_count'];

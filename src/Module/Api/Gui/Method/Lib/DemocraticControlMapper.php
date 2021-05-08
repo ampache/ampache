@@ -104,8 +104,6 @@ final class DemocraticControlMapper implements DemocraticControlMapperInterface
                 int $objectId
             ): string {
                 $objects = $democratic->get_items();
-                Song::build_cache($democratic->object_ids);
-                $this->democraticRepository->buildVoteCache($democratic->vote_ids);
 
                 return $output->democratic($objects, $user->getId());
             },

@@ -23,19 +23,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
 final class PreferenceRepository implements PreferenceRepositoryInterface
 {
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
-    public function __construct(
-        DatabaseObjectCacheInterface $databaseObjectCache
-    ) {
-        $this->databaseObjectCache = $databaseObjectCache;
-    }
-
     /**
      * This takes a name and returns the id
      */
@@ -43,19 +34,11 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
     {
         $name = Dba::escape($name);
 
-        $cacheItem = $this->databaseObjectCache->retrieve('id_from_name', $name);
-
-        if ($cacheItem !== []) {
-            return (int) $cacheItem['id'];
-        }
-
         $db_results = Dba::read(
             'SELECT `id` FROM `preference` WHERE `name` = ?',
             [$name]
         );
         $row = Dba::fetch_assoc($db_results);
-
-        $this->databaseObjectCache->add('id_from_name', $name, $row);
 
         return (int) $row['id'];
     }

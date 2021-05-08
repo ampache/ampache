@@ -118,8 +118,6 @@ final class JsonOutput implements ApiOutputInterface
     ) {
         $albumIds = $this->applyLimit($albumIds, $limit, $offset);
 
-        Rating::build_cache('album', $albumIds);
-
         $result = [];
         foreach ($albumIds as $album_id) {
             $album = new Album($album_id);
@@ -230,8 +228,6 @@ final class JsonOutput implements ApiOutputInterface
 
         $result = [];
 
-        Rating::build_cache('artist', $artistIds);
-
         foreach ($artistIds as $artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
@@ -305,7 +301,6 @@ final class JsonOutput implements ApiOutputInterface
     ) {
         $songIds = $this->applyLimit($songIds, $limit, $offset);
 
-        Song::build_cache($songIds);
         Stream::set_session($_REQUEST['auth']);
 
         $result         = [];

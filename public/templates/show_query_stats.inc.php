@@ -21,18 +21,13 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
-global $dic;
-
-$object_cache = $dic->get(DatabaseObjectCacheInterface::class);
 ?>
 <?php if (AmpConfig::get('show_footer_statistics')) { ?>
     <br />
     <span class="query-count">
-    <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query']; ?>
-    | <?php echo T_('Cache Hits: '); ?><?php echo $object_cache->getCacheHitAmount();
+    <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query'];
     $load_time_end = microtime(true);
     $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
     | <?php echo T_('Load Time: '); ?><?php echo $load_time; ?>

@@ -92,88 +92,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     } // construct_from_name
 
     /**
-     * build_cache
-     * This takes an array of object ids and caches all of their information
-     * in a single query, cuts down on the connections
-     * @param array $ids
-     * @return boolean
-     */
-    public static function build_cache($ids)
-    {
-        if (empty($ids)) {
-            return false;
-        }
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('tag', $row['id'], $row);
-        }
-
-        return true;
-    } // build_cache
-
-    /**
-     * build_map_cache
-     * This builds a cache of the mappings for the specified object, no limit is given
-     * @param string $type
-     * @param $ids
-     * @return boolean
-     * @params array $ids
-     */
-    public static function build_map_cache($type, $ids)
-    {
-        if (!is_array($ids) || !count($ids)) {
-            return false;
-        }
-
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
-        }
-
-        $idlist = '(' . implode(',', $ids) . ')';
-
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
-
-        $db_results = Dba::read($sql);
-
-        $tags    = array();
-        $tag_map = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $tags[$row['object_id']][$row['tag_id']] = array(
-                'user' => $row['user'],
-                'id' => $row['tag_id'],
-                'name' => $row['name']
-            );
-            $tag_map[$row['object_id']] = array(
-                'id' => $row['id'],
-                'tag_id' => $row['tag_id'],
-                'user' => $row['user'],
-                'object_type' => $type,
-                'object_id' => $row['object_id']
-            );
-        }
-
-        $cache = static::getDatabaseObjectCache();
-
-        // Run through our original ids as we also want to cache NULL
-        // results
-        foreach ($ids as $tagid) {
-            if (!isset($tags[$tagid])) {
-                $tags[$tagid]    = null;
-                $tag_map[$tagid] = null;
-            }
-            $cache->add('tag_top_' . $type, $tagid, array($tags[$tagid]));
-            $cache->add('tag_map_' . $type, $tagid, array($tag_map[$tagid]));
-        }
-
-        return true;
-    } // build_map_cache
-
-    /**
      * add
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
@@ -240,8 +158,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = "REPLACE INTO `tag` SET `name` = ?";
         Dba::write($sql, array($value));
         $insert_id = (int)Dba::insert_id();
-
-        static::getDatabaseObjectCache()->add('tag_name', $value, array($insert_id));
 
         return $insert_id;
     } // add_tag
@@ -370,12 +286,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
         }
-        $insert_id = (int)Dba::insert_id();
 
-        static::getDatabaseObjectCache()->add('tag_map_' . $type, $insert_id,
-            array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
-
-        return $insert_id;
+        return (int) Dba::insert_id();
     } // add_tag_map
 
     /**
@@ -422,8 +334,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         // Call the garbage collector to clean everything
         self::garbage_collection();
-
-        static::getDatabaseObjectCache()->clear();
     }
 
     /**
@@ -434,19 +344,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function tag_exists($value)
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('tag_name', $value);
-
-        if ($cacheItem !== []) {
-            return (int) $cacheItem[0];
-        }
-
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($value));
 
         $results = Dba::fetch_assoc($db_results);
-
-        $cache->add('tag_name', $results['name'], $results);
 
         return (int)$results['id'];
     } // tag_exists
@@ -547,15 +448,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('tags_list', 'no_name');
-
-        //debug_event('tag.class', 'Get tags list called...', 5);
-        if ($cacheItem !== []) {
-            //debug_event('tag.class', 'Tags list found into cache memory!', 5);
-            return $cacheItem;
-        }
-
         $results = array();
 
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " . "FROM `tag_map` " . "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag`.`is_hidden` = false " . "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
@@ -581,8 +473,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 'count' => $row['count']
             );
         }
-
-        $cache->add('tags_list', 'no_name', $results);
 
         return $results;
     } // get_tags

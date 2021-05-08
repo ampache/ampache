@@ -504,15 +504,6 @@ sociable = "true"
 ; DEFAULT: "false"
 ;simple_user_mode = "true"
 
-; Caching
-; This turns the caching mechanisms on or off, due to a large number of
-; problems with people with very large catalogs and low memory settings
-; this is off by default as it does significantly increase the memory
-; requirements on larger catalogs. If you have the memory this can create
-; a 2-3x speed improvement.
-; DEFAULT: "false"
-;memory_cache = "true"
-
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
 ; has a lower value set Ampache will set it up to this. If you

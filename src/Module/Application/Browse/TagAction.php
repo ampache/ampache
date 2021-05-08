@@ -70,7 +70,6 @@ final class TagAction implements ApplicationActionInterface
         $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys       = array_keys($object_ids);
-        Tag::build_cache($keys);
 
         $this->ui->showBoxTop(T_('Genres'), 'box box_tag_cloud');
 

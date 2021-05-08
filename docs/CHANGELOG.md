@@ -34,6 +34,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
 * 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
+* Legacy memory-cache implementation has been removed
 
 ### API develop
 

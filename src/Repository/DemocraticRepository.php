@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -35,16 +34,12 @@ final class DemocraticRepository implements DemocraticRepositoryInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private DatabaseObjectCacheInterface $databaseObjectCache;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        DatabaseObjectCacheInterface $databaseObjectCache
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->configContainer     = $configContainer;
-        $this->modelFactory        = $modelFactory;
-        $this->databaseObjectCache = $databaseObjectCache;
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     /**
@@ -66,26 +61,5 @@ final class DemocraticRepository implements DemocraticRepositoryInterface
         }
 
         return $this->modelFactory->createDemocratic($democraticId);
-    }
-
-    /**
-     * This builds a vote cache of the objects we've got in the playlist
-     *
-     * @param int[] $objectIds
-     */
-    public function buildVoteCache(array $objectIds): void
-    {
-        if ($objectIds === []) {
-            return;
-        }
-
-        $idlist = '(' . implode(',', $objectIds) . ')';
-        $sql    = "SELECT `object_id`, COUNT(`user`) AS `count` " . "FROM `user_vote` " . "WHERE `object_id` IN $idlist GROUP BY `object_id`";
-
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $this->databaseObjectCache->add('democratic_vote', $row['object_id'], [$row['count']]);
-        }
     }
 }

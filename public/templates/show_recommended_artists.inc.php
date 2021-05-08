@@ -60,15 +60,6 @@ $thcount  = 8; ?>
     </thead>
     <tbody>
         <?php
-        // Cache the ratings we are going to use
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist', $object_ids);
-        }
-        // Cache the userflags we are going to use
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('artist', $object_ids);
-        }
-
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
             $libitem = new Artist($artist_id);

@@ -299,31 +299,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * build_cache
-     * This takes an array of object ids and caches all of their information
-     * with a single query
-     * @param array $ids
-     * @return boolean
-     */
-    public static function build_cache(array $ids)
-    {
-        if (empty($ids)) {
-            return false;
-        }
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT * FROM `album` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
-
-        $cache = static::getDatabaseObjectCache();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $cache->add('album', $row['id'], $row);
-        }
-
-        return true;
-    } // build_cache
-
-    /**
      * _get_extra_info
      * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
      * do it
@@ -334,13 +309,6 @@ class Album extends database_object implements library_item
     {
         if (!$this->id) {
             return array();
-        }
-
-        $cache = static::getDatabaseObjectCache();
-
-        $cacheItem = $cache->retrieve('album_extra', $this->getId());
-        if ($cacheItem !== []) {
-            return $cacheItem;
         }
 
         $full_name    = Dba::escape($this->full_name);
@@ -419,8 +387,6 @@ class Album extends database_object implements library_item
         if (AmpConfig::get('show_played_times')) {
             $results['object_cnt'] = Stats::get_object_count('album', $this->id, $limit_threshold);
         }
-
-        $cache->add('album_extra', $this->id, $results);
 
         return $results;
     } // _get_extra_info

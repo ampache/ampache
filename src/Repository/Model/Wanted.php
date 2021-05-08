@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
@@ -167,7 +166,6 @@ class Wanted extends database_object
             $wartist['mbid'] = $mbid;
             $wartist['name'] = $martist->name;
 
-            static::getDatabaseObjectCache()->add('missing_artist', $mbid, $wartist);
             $wartist = static::getMissingArtistLookup()->lookup($mbid);
         }
 
@@ -395,13 +393,6 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
-    }
-
-    protected static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
-    {
-        global $dic;
-
-        return $dic->get(DatabaseObjectCacheInterface::class);
     }
 
     /**

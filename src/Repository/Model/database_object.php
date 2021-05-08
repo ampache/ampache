@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
 /**
@@ -53,13 +52,6 @@ abstract class database_object
             return array();
         }
 
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve($table, $object_id);
-
-        if ($cacheItem !== []) {
-            return $cacheItem;
-        }
-
         $params     = array($object_id);
         $sql        = "SELECT * FROM `$table` WHERE `id`= ?";
         $db_results = Dba::read($sql, $params);
@@ -68,11 +60,7 @@ abstract class database_object
             return array();
         }
 
-        $row = Dba::fetch_assoc($db_results);
-
-        $cache->add($table, $object_id, $row);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_info
 
     private function getTableName($table_name): string
@@ -86,12 +74,5 @@ abstract class database_object
         }
 
         return Dba::escape($table_name);
-    }
-
-    protected static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
-    {
-        global $dic;
-
-        return $dic->get(DatabaseObjectCacheInterface::class);
     }
 }

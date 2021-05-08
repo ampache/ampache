@@ -575,10 +575,6 @@ class Catalog_local extends Catalog
             }
             $chunks = floor($total / 10000);
             foreach (range(0, $chunks) as $chunk) {
-                // Try to be nice about memory usage
-                if ($chunk > 0) {
-                    static::getDatabaseObjectCache()->clear();
-                }
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
@@ -608,14 +604,6 @@ class Catalog_local extends Catalog
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
 
-        if (AmpConfig::get('memory_cache')) {
-            $media_ids = array();
-            while ($row = Dba::fetch_assoc($db_results, false)) {
-                $media_ids[] = $row['id'];
-            }
-            $class_name::build_cache($media_ids);
-            $db_results = Dba::read($sql);
-        }
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
