@@ -34,12 +34,6 @@ final class UserPreferenceRepository implements UserPreferenceRepositoryInterfac
         int $userId,
         int $preferenceId
     ) {
-        $cacheItem = $this->databaseObjectCache->retrieve('get_by_user', $userId);
-
-        if ($cacheItem !== []) {
-            return $cacheItem[0];
-        }
-
         $db_results = Dba::read(
             'SELECT `value` FROM `user_preference` WHERE `preference`= ? AND `user` = ?',
             [$preferenceId, $userId]
