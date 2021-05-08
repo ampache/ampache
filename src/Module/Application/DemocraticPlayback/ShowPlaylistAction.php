@@ -26,15 +26,13 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\DemocraticRepositoryInterface;
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,18 +46,14 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private DemocraticRepositoryInterface $democraticRepository;
-
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        DemocraticRepositoryInterface $democraticRepository
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui                   = $ui;
-        $this->configContainer      = $configContainer;
-        $this->modelFactory         = $modelFactory;
-        $this->democraticRepository = $democraticRepository;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -86,7 +80,6 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         require_once Ui::find_template('show_democratic.inc.php');
 
         $objects = $democratic->get_items();
-        $this->democraticRepository->buildVoteCache($democratic->vote_ids);
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('democratic');
