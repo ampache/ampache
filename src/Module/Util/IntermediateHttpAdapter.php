@@ -59,10 +59,14 @@ final class IntermediateHttpAdapter extends AbstractHttpAdapter
         $requestOptions = [];
 
         $url = sprintf(
+            '%s/%s',
             $this->endpoint,
-            $path,
-            '%s/%s{?data*}'
+            $path
         );
+        foreach ($params as $name => $value) {
+            $url .= ($i++ == 0) ? '?' : '&';
+            $url .= urlencode($name) . '=' . urlencode($value);
+        }
 
         $request = $this->requestFactory
             ->createRequest(

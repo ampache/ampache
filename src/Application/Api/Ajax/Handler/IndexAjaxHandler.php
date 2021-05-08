@@ -234,18 +234,17 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     if (!$this->wantedRepository->find($mbid, $user->id)) {
                         $this->wantedRepository->add(
-                            (int) $mbid,
+                            $mbid,
                             $artist,
                             $artist_mbid,
                             $name,
                             (int) $year,
                             $user->id,
-                            $user->has_access('75') ?
-                                true :
-                                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WANTED_AUTO_ACCEPT)
+                            $user->has_access('75') || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WANTED_AUTO_ACCEPT)
                         );
                         ob_start();
                         $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
+                        $walbum->format();
                         $walbum->show_action_buttons();
                         $results['wanted_action_' . $mbid] = ob_get_clean();
                     } else {
