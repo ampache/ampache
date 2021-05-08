@@ -1040,7 +1040,7 @@ class Subsonic_Xml_Data
     {
         $xvideo = $xml->addChild(htmlspecialchars($elementName));
         $xvideo->addAttribute('id', (string)self::getVideoId($video->id));
-        $xvideo->addAttribute('title', (string)$video->f_full_title);
+        $xvideo->addAttribute('title', (string)$video->getFullTitle());
         $xvideo->addAttribute('isDir', 'false');
         $xvideo->addAttribute('coverArt', (string)self::getVideoId($video->id));
         $xvideo->addAttribute('isVideo', 'true');

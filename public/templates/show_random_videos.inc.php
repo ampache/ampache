@@ -42,11 +42,11 @@ if ($videos) {
             <?php if (Art::is_enabled()) {
             $art_showed = null;
             if ($video->get_default_art_kind() == 'preview') {
-                $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
+                $art_showed = Art::display('video', $video->id, $video->getFullTitle(), 9, $video->link, false, 'preview');
             }
             if ($art_showed === null) {
                 $thumb = Ui::is_grid_view('video') ? 7 : 6;
-                echo Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
+                echo Art::display('video', $video->id, $video->getFullTitle(), $thumb, $video->link);
             } else {
                 echo $art_showed;
             }

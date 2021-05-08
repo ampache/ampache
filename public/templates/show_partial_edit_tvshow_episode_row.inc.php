@@ -18,20 +18,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Repository\Model\TVShow_Episode;
+
+/** @var TVShow_Episode $libitem */
+?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('TV Show Season') ?></td>
-                <td><?php show_tvshow_season_select('tvshow_season', $libitem->season); ?></td>
+                <td><?php show_tvshow_season_select('tvshow_season', $libitem->getSeasonId()); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Original Name') ?></td>
-                <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->original_name); ?>" /></td>
+                <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->getOriginalName()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
+                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->getSummary()); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Episode Number') ?></td>
-                <td><input type="number" name="tvshow_episode" value="<?php echo scrub_out($libitem->episode_number); ?>" /></td>
+                <td><input type="number" name="tvshow_episode" value="<?php echo $libitem->getEpisodeNumber(); ?>" /></td>
             </tr>

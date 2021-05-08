@@ -55,10 +55,10 @@ $media->format(); ?>
                 <?php
             $art_showed = null;
         if ($media->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->link, false, 'preview');
+            $art_showed = Art::display('video', $media->id, $media->getFullTitle(), 9, $media->link, false, 'preview');
         }
         if ($art_showed === null) {
-            echo Art::display('video', $media->id, $media->f_full_title, 6, $media->link);
+            echo Art::display('video', $media->id, $media->getFullTitle(), 6, $media->link);
         } else {
             echo $art_showed;
         }?>

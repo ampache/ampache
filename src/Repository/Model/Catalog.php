@@ -1573,6 +1573,9 @@ abstract class Catalog extends database_object
             'video' => static function ($results, $media) {
                 return static::getVideoFromTagUpdater()->update($results, $media);
             },
+            'tvshow' => static function ($results, $media) {
+                return static::getVideoFromTagUpdater()->update($results, $media);
+            },
         ];
 
         $callable = $functions[$name];

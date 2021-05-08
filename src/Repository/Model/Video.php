@@ -148,10 +148,6 @@ class Video extends database_object implements
      */
     public $f_title;
     /**
-     * @var string $f_full_title
-     */
-    public $f_full_title;
-    /**
      * @var string $link
      */
     public $link;
@@ -264,7 +260,6 @@ class Video extends database_object implements
     public function format($details = true)
     {
         $this->f_title      = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->f_full_title = $this->f_title;
         $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
         $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_title . "\"> " . $this->f_title . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
@@ -1083,6 +1078,11 @@ class Video extends database_object implements
     public function getCatalogId(): int
     {
         return (int) $this->catalog;
+    }
+
+    public function getFullTitle(): string
+    {
+        return $this->f_title;
     }
 
     /**

@@ -26,44 +26,51 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
 
-class TVShow_Episode extends Video
+final class TVShow_Episode extends Video implements TvShowEpisodeInterface
 {
     protected const DB_TABLENAME = 'tvshow_episode';
 
-    public $original_name;
-    public $season;
-    public $episode_number;
-    public $summary;
-
-    public $f_link;
-    public $f_season;
-    public $f_season_link;
-    public $f_tvshow;
-    public $f_tvshow_link;
-
     private ?string $filename = null;
 
-    /**
-     * Constructor
-     * This pulls the tv show episode information from the database and returns
-     * a constructed object
-     * @param $episode_id
-     */
-    public function __construct($episode_id)
-    {
-        parent::__construct($episode_id);
+    private ?TVShow_Season $tvShowSeason = null;
 
-        $info = $this->get_info($episode_id);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
+
+    public function __construct(int $id)
+    {
+        parent::__construct($id);
+
+        $this->id = $id;
+    }
+
+    private function getDbData(): array
+    {
+        if ($this->dbData === null) {
+            $this->dbData = $this->get_info($this->id);
         }
 
-        return true;
+        return $this->dbData;
     }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
+    }
+
+    public function getSummary(): string
+    {
+        return $this->getDbData()['summary'] ?? '';
+    }
+
+    public function getEpisodeNumber(): int
+    {
+        return (int) ($this->getDbData()['episode_number'] ?? 0);
+    }
+
+    public function getOriginalName(): string
+    {
+        return $this->getDbData()['original_name'] ?? '';
     }
 
     /**
@@ -152,18 +159,14 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
-        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
-        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
-        $summary        = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->getOriginalName();
+        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->getSeasonId();
+        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->getEpisodeNumber();
+        $summary        = isset($data['summary']) ? $data['summary'] : $this->getSummary();
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
-        $this->original_name  = $original_name;
-        $this->season         = $tvshow_season;
-        $this->episode_number = $tvshow_episode;
-        $this->summary        = $summary;
 
         return $this->id;
     }
@@ -178,24 +181,34 @@ class TVShow_Episode extends Video
     {
         parent::format($details);
 
-        $season = new TVShow_Season($this->season);
-        $season->format($details);
-
-        $this->f_title       = ($this->original_name ?: $this->f_title);
-        $this->f_link        = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
-        $this->f_season      = $season->f_name;
-        $this->f_season_link = $season->f_link;
-        $this->f_tvshow      = $season->f_tvshow;
-        $this->f_tvshow_link = $season->f_tvshow_link;
-
-        $this->f_full_title = $this->getFilename();
+        $this->f_title       = ($this->getOriginalName()?: $this->f_title);
 
         return true;
     }
 
+    public function getFullTitle(): string
+    {
+        return $this->getFilename();
+    }
+
+    public function getSeasonId(): int
+    {
+        return (int) ($this->getDbData()['season'] ?? 0);
+    }
+
+    public function getLinkFormatted(): string
+    {
+        return '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+    }
+
     public function getTVShowSeason(): TVShow_Season
     {
-        return new TVShow_Season($this->season);
+        if ($this->tvShowSeason === null) {
+            $this->tvShowSeason =  new TVShow_Season($this->getSeasonId());
+            $this->tvShowSeason->format();
+        }
+
+        return $this->tvShowSeason;
     }
 
     /**
@@ -208,18 +221,18 @@ class TVShow_Episode extends Video
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_tvshow
+            'value' => $this->getTVShowSeason()->f_tvshow
         );
         $keywords['tvshow_season'] = array(
             'important' => false,
             'label' => T_('Season'),
-            'value' => $this->f_season
+            'value' => $this->getTVShowSeason()->f_name
         );
-        if ($this->episode_number) {
+        if ($this->getEpisodeNumber()) {
             $keywords['tvshow_episode'] = array(
                 'important' => false,
                 'label' => T_('Episode'),
-                'value' => $this->episode_number
+                'value' => $this->getEpisodeNumber()
             );
         }
         $keywords['type'] = array(
@@ -237,7 +250,7 @@ class TVShow_Episode extends Video
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
+        return array('object_type' => 'tvshow_season', 'object_id' => $this->getSeasonId());
     }
 
     /**
@@ -248,7 +261,7 @@ class TVShow_Episode extends Video
     {
         return array(
             'object_type' => 'tvshow_season',
-            'object_id' => $this->season
+            'object_id' => $this->getSeasonId()
         );
     }
 
@@ -257,13 +270,12 @@ class TVShow_Episode extends Video
      */
     public function get_description()
     {
-        if (!empty($this->summary)) {
-            return $this->summary;
+        $summary = $this->getSummary();
+        if (!empty($summary)) {
+            return $summary;
         }
 
-        $season = new TVShow_Season($this->season);
-
-        return $season->get_description();
+        return $this->getTVShowSeason()->get_description();
     }
 
     /**
@@ -280,11 +292,11 @@ class TVShow_Episode extends Video
             $episode_id = $this->id;
             $type       = 'video';
         } else {
-            if (Art::has_db($this->season, 'tvshow_season')) {
-                $episode_id = $this->season;
+            if (Art::has_db($this->getSeasonId(), 'tvshow_season')) {
+                $episode_id = $this->getSeasonId();
                 $type       = 'tvshow_season';
             } else {
-                $season = new TVShow_Season($this->season);
+                $season = $this->getTVShowSeason();
                 if (Art::has_db($season->tvshow, 'tvshow') || $force) {
                     $episode_id = $season->tvshow;
                     $type       = 'tvshow';
@@ -314,9 +326,9 @@ class TVShow_Episode extends Video
     public function getFilename(): string
     {
         if ($this->filename === null) {
-            $this->filename = $this->f_tvshow;
-            if ($this->episode_number) {
-                $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->season_number) . 'E' . sprintf('%02d', $this->episode_number);
+            $this->filename = $this->getTVShowSeason()->f_tvshow;
+            if ($this->getEpisodeNumber()) {
+                $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->season_number) . 'E' . sprintf('%02d', $this->getEpisodeNumber());
             }
             $this->filename .= ' - ' . $this->f_title;
         }

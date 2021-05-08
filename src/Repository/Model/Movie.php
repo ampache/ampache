@@ -137,11 +137,15 @@ class Movie extends Video
 
         $this->f_original_name = trim((string)$this->prefix . " " . $this->f_title);
         $this->f_title         = ($this->f_original_name ?: $this->f_title);
-        $this->f_full_title    = $this->f_title;
         $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
     } // format
+
+    public function getFullTitle(): string
+    {
+        return $this->f_title;
+    }
 
     /**
      * get_keywords
