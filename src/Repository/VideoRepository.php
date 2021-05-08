@@ -23,38 +23,53 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Doctrine\DBAL\Connection;
 
 final class VideoRepository implements VideoRepositoryInterface
 {
+    private Connection $database;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        Connection $database,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->database        = $database;
+        $this->configContainer = $configContainer;
+    }
+
     /**
      * This returns a number of random videos.
      *
      * @return int[]
      */
-    public function getRandom(int $count = 1): array
+    public function getRandom(int $limit = 1): array
     {
         $results = [];
 
-        if (!$count) {
-            $count = 1;
+        if (!$limit) {
+            $limit = 1;
         }
 
-        $sql   = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ";
-        $where = "WHERE `video`.`enabled` = '1' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-            $where .= "AND `catalog`.`enabled` = '1' ";
+        $sql   = 'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ';
+        $where = 'WHERE `video`.`enabled` = \'1\' ';
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ';
+            $where .= 'AND `catalog`.`enabled` = \'1\' ';
         }
 
         $sql .= $where;
-        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
-        $db_results = Dba::read($sql);
+        $sql .= sprintf('ORDER BY RAND() LIMIT %d', $limit);
+        $db_results = $this->database->executeQuery(
+            $sql
+        );
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+        while ($rowId = $db_results->fetchOne()) {
+            $results[] = (int) $rowId;
         }
 
         return $results;
@@ -62,23 +77,14 @@ final class VideoRepository implements VideoRepositoryInterface
 
     /**
      * Return the number of entries in the database...
-     *
-     * @param string $type
-     *
-     * @return int
      */
     public function getItemCount(string $type): int
     {
-        $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
-
-        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
-        $db_results = Dba::read($sql,array());
-        if ($results = Dba::fetch_assoc($db_results)) {
-            if ($results['count']) {
-                return (int) $results['count'];
-            }
-        }
-
-        return 0;
-    } // get_item_count
+        return (int) $this->database->fetchOne(
+            sprintf(
+                'SELECT COUNT(*) as count from `%s`',
+                strtolower(ObjectTypeToClassNameMapper::VIDEO_TYPES[$type])
+            )
+        );
+    }
 }
