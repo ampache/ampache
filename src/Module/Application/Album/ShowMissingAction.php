@@ -60,45 +60,42 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
+        $this->ui->showHeader();
 
         set_time_limit(600);
         $mbid   = $_REQUEST['mbid'];
         $walbum = $this->modelFactory->createWanted($this->wantedRepository->getByMusicbrainzId($mbid));
 
         if (!$walbum->id) {
-            $walbum->mbid = $mbid;
+            $walbum->setMusicBrainzId($mbid);
             if (isset($_REQUEST['artist'])) {
                 $artist              = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
-                $walbum->artist      = $artist->id;
-                $walbum->artist_mbid = $artist->mbid;
+                $walbum->setArtistId($artist->id);
+                $walbum->setArtistMusicBrainzId($artist->mbid);
             } elseif (isset($_REQUEST['artist_mbid'])) {
-                $walbum->artist_mbid = $_REQUEST['artist_mbid'];
+                $walbum->setArtistMusicBrainzId($_REQUEST['artist_mbid']);
             }
         }
-        $walbum->load_all();
-        $walbum->format();
-
         // Title for this album
         $this->ui->showBoxTop(
             sprintf(
                 '%s&nbsp;(%d)&nbsp;-&nbsp;%s',
-                scrub_out($walbum->name),
-                $walbum->year,
-                $walbum->f_artist_link
+                scrub_out($walbum->getName()),
+                $walbum->getYear(),
+                $walbum->getArtistLink()
             ),
             'info-box missing'
         );
 
         // Attempt to find the art.
-        $art = $this->modelFactory->createArt((int) $walbum->mbid);
+        $art = $this->modelFactory->createArt($walbum->id);
 
         $images = $this->artCollector->collect(
             $art,
             [
                 'artist' => $artist->name,
-                'album_name' => $walbum->name,
-                'keyword' => $artist->name . " " . $walbum->name,
+                'album_name' => $walbum->getName(),
+                'keyword' => $artist->name . " " . $walbum->getName(),
             ],
             1
         );
@@ -106,7 +103,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $imageList = '';
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
-            $name = '[' . $artist->name . '] ' . scrub_out($walbum->name);
+            $name = '[' . $artist->name . '] ' . scrub_out($walbum->getName());
 
             $image = $images[0]['url'];
 
@@ -124,7 +121,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         printf('<div id="information_actions"><h3>%1$s:</h3><ul><li>%1$s:<div id="wanted_action_%2$d">',
             T_('Actions'),
-            $walbum->mbid
+            $walbum->getMusicBrainzId()
         );
 
         $walbum->show_action_buttons();
@@ -138,7 +135,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('song_preview');
         $browse->set_static_content(true);
-        $browse->show_objects($walbum->songs);
+        $browse->show_objects($walbum->getSongs());
 
         print('</div>');
 

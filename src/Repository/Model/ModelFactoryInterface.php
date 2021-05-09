@@ -59,7 +59,7 @@ interface ModelFactoryInterface
 
     public function createWanted(
         ?int $wantedId = null
-    ): Wanted;
+    ): WantedInterface;
 
     public function createArt(
         ?int $artId = null,

@@ -105,18 +105,18 @@ class AmpacheHeadphones
         set_time_limit(0);
 
         $headartist = json_decode($this->headphones_call('getArtist', array(
-            'id' => $wanted->artist_mbid
+            'id' => $wanted->getArtistMusicBrainzId()
         )));
 
         // No artist info, need to add artist to Headphones first. Can be long!
         if (!$headartist->artist) {
             $this->headphones_call('addArtist', array(
-                'id' => $wanted->artist_mbid
+                'id' => $wanted->getArtistMusicBrainzId()
             ));
         }
 
         return ($this->headphones_call('queueAlbum', array(
-                'id' => $wanted->mbid
+                'id' => $wanted->getMusicBrainzId()
             )) == 'OK');
     } // process_wanted
 

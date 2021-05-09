@@ -27,10 +27,13 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
+use MusicBrainz\MusicBrainz;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -105,8 +108,13 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createWanted(
         ?int $wantedId = null
-    ): Wanted {
-        return new Wanted($wantedId);
+    ): WantedInterface {
+        return new Wanted(
+            $this->dic->get(WantedRepositoryInterface::class),
+            $this->dic->get(MusicBrainz::class),
+            $this->dic->get(MissingArtistLookupInterface::class),
+            $wantedId
+        );
     }
 
     public function createArt(

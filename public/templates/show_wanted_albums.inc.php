@@ -20,9 +20,21 @@
  *
  */
 
-use Ampache\Repository\Model\Wanted;
+use Ampache\Module\System\Core;
+use Ampache\Module\Wanted\Gui\WantedUiItem;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\WantedRepositoryInterface;
+
+/** @var ModelFactoryInterface $modelFactory */
+/** @var Browse $browse */
+/** @var int[] $object_ids */
+
+global $dic;
+$modelFactory     = $dic->get(ModelFactoryInterface::class);
+$wantedRepository = $dic->get(WantedRepositoryInterface::class);
 
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="wanted">
@@ -38,9 +50,12 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         foreach ($object_ids as $wanted_id) {
-            $libitem = new Wanted($wanted_id);
-            $libitem->format(); ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>">
+            $libitem = new WantedUiItem(
+                $wantedRepository,
+                Core::get_global('user'),
+                $modelFactory->createWanted($wanted_id)
+            ); ?>
+        <tr id="walbum_<?php echo $libitem->getMusicBrainzId(); ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php

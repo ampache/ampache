@@ -33,6 +33,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Wanted;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -104,7 +105,8 @@ final class EditObjectAction extends AbstractEditAction
             }
             // Check mbid and *_mbid match as it is used as identifier
             if (filter_has_var(INPUT_POST, 'mbid')) {
-                $_POST['mbid'] = $libitem->mbid;
+                /** @var Wanted $libitem */
+                $_POST['mbid'] = $libitem->getMusicBrainzId();
             }
             if (filter_has_var(INPUT_POST, 'mbid_group')) {
                 $_POST['mbid_group'] = $libitem->mbid_group;

@@ -28,97 +28,185 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Wanted\Gui\MusicBrainzResultWantedGuiItem;
+use Ampache\Module\Wanted\Gui\WantedUiItem;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 
-class Wanted extends database_object
+final class Wanted extends database_object implements WantedInterface
 {
     protected const DB_TABLENAME = 'wanted';
 
-    /* Variables from DB */
+    private WantedRepositoryInterface $wantedRepository;
 
-    /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var string $mbid
-     */
-    public $mbid;
-    /**
-     * @var integer $artist
-     */
-    public $artist;
-    /**
-     * @var string $artist_mbid
-     */
-    public $artist_mbid;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $year
-     */
-    public $year;
-    /**
-     * @var boolean $accepted
-     */
-    public $accepted;
-    /**
-     * @var string $release_mbid
-     */
-    public $release_mbid;
-    /**
-     * @var integer $user
-     */
-    public $user;
+    private MusicBrainz $musicBrainz;
 
-    /**
-     * @var string $link
-     */
-    public $link;
+    private MissingArtistLookupInterface $missingArtistLookup;
 
-    /**
-     * @var string $f_link
-     */
-    public $f_link;
-    /**
-     * @var string $f_artist_link
-     */
-    public $f_artist_link;
-    /**
-     * @var string $f_user
-     */
-    public $f_user;
-    /**
-     * @var array $songs
-     */
-    public $songs;
+    public int $id;
 
-    /**
-     * Constructor
-     * @param integer $wanted_id
-     */
-    public function __construct($wanted_id)
+    /** @var array<Song_Preview>|null */
+    private ?array $songs = null;
+
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
+
+    public function __construct(
+        WantedRepositoryInterface $wantedRepository,
+        MusicBrainz $musicBrainz,
+        MissingArtistLookupInterface $missingArtistLookup,
+        int $id
+    ) {
+        $this->wantedRepository    = $wantedRepository;
+        $this->musicBrainz         = $musicBrainz;
+        $this->id                  = $id;
+        $this->missingArtistLookup = $missingArtistLookup;
+    }
+
+    private function getDbData(): array
     {
-        /* Get the information from the db */
-        $info = static::getWantedRepository()->getById((int) $wanted_id);
-
-        // Foreach what we've got
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($this->dbData === null) {
+            $this->dbData = $this->wantedRepository->getById($this->id);
         }
 
-        return true;
-    } // constructor
+        return $this->dbData;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
+    }
+
+    public function IsNew(): bool
+    {
+        return $this->getDbData() === [];
+    }
+
+    public function getUserId(): int
+    {
+        return (int) ($this->getDbData()['user'] ?? 0);
+    }
+
+    public function getReleaseMusicBrainzId(): string
+    {
+        return $this->getDbData()['release_mbid'] ?? '';
+    }
+
+    public function getAccepted(): bool
+    {
+        return (bool) ($this->getDbData()['accepted'] ?? 0);
+    }
+
+    public function setAccepted(bool $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['accepted'] = (int) $value;
+
+        return $this;
+    }
+
+    public function getYear(): int
+    {
+        return (int) ($this->getDbData()['year'] ?? 0);
+    }
+
+    public function setYear(int $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['year'] = $value;
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->getDbData()['name'] ?? '';
+    }
+
+    public function setName(string $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['name'] = $value;
+
+        return $this;
+    }
+
+    public function getArtistMusicBrainzId(): string
+    {
+        return $this->getDbData()['artist_mbid'] ?? '';
+    }
+
+    public function setArtistMusicBrainzId(string $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['artist_mbid'] = $value;
+
+        return $this;
+    }
+
+    public function getArtistId(): int
+    {
+        return (int) ($this->getDbData()['artist'] ?? 0);
+    }
+
+    public function setArtistId(int $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['artist'] = $value;
+
+        return $this;
+    }
+
+    public function getMusicBrainzId(): string
+    {
+        return $this->getDbData()['mbid'] ?? '';
+    }
+
+    public function setMusicBrainzId(string $value): WantedInterface
+    {
+        $this->getDbData();
+
+        $this->dbData['mbid'] = $value;
+
+        return $this;
+    }
+
+    public function getSongs(): array
+    {
+        if ($this->songs === null) {
+            $this->load_all();
+        }
+
+        return $this->songs;
+    }
+
+    public function getArtistLink(): string
+    {
+        if ($this->getArtistId()) {
+            $artist = new Artist($this->getArtistId());
+            $artist->format();
+
+            return $artist->f_link;
+        } else {
+            return $this->missingArtistLookup->lookup($this->getArtistMusicBrainzId())['link'];
+        }
+    }
+
+    public function getLinkFormatted(): string
+    {
+        return sprintf(
+            "<a href=\"%s\">%s</a>",
+            AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->getMusicBrainzId() . "&artist=" . $this->getArtistId() . "&artist_mbid=" . $this->getArtistMusicBrainzId() . "\" title=\"" . $this->getName(),
+            $this->getName()
+        );
     }
 
     /**
@@ -169,6 +257,8 @@ class Wanted extends database_object
             $wartist = static::getMissingArtistLookup()->lookup($mbid);
         }
 
+        $modelFactory = static::getModelFactory();
+
         $results = array();
         foreach ($martist->{'release-groups'} as $group) {
             if (in_array(strtolower((string)$group->{'primary-type'}), $types)) {
@@ -183,36 +273,21 @@ class Wanted extends database_object
                     debug_event(self::class, 'get_missing_albums ADDING: ' . $group->title, 5);
                     if (!in_array($group->id, $owngroups)) {
                         $wantedid = static::getWantedRepository()->getByMusicbrainzId($group->id);
-                        $wanted   = new Wanted($wantedid);
+                        $wanted   = $modelFactory->createWanted($wantedid);
                         if ($wanted->id) {
-                            $wanted->format();
+                            $results[] = new WantedUiItem(
+                                static::getWantedRepository(),
+                                Core::get_global('user'),
+                                $wanted
+                            );
                         } else {
-                            $wanted->mbid = $group->id;
-                            if ($artist) {
-                                $wanted->artist = $artist->id;
-                            } else {
-                                $wanted->artist_mbid = $mbid;
-                            }
-                            $wanted->name = $group->title;
-                            if (!empty($group->{'first-release-date'})) {
-                                if (strlen((string)$group->{'first-release-date'}) == 4) {
-                                    $wanted->year = $group->{'first-release-date'};
-                                } else {
-                                    $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
-                                }
-                            }
-                            $wanted->accepted = false;
-                            $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
-                            if ($artist) {
-                                $wanted->link .= "&artist=" . $wanted->artist;
-                            } else {
-                                $wanted->link .= "&artist_mbid=" . $mbid;
-                            }
-                            $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                            $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
-                            $wanted->f_user        = Core::get_global('user')->f_name;
+                            $results[] = new MusicBrainzResultWantedGuiItem(
+                                $artist,
+                                $group,
+                                $mbid,
+                                $wartist['link']
+                            );
                         }
-                        $results[] = $wanted;
                     }
                 }
             }
@@ -248,8 +323,9 @@ class Wanted extends database_object
     {
         if (Core::get_global('user')->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, array($this->mbid));
-            $this->accepted = true;
+            Dba::write($sql, array($this->getMusicBrainzId()));
+
+            $this->setAccepted(true);
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
@@ -267,49 +343,46 @@ class Wanted extends database_object
     public function show_action_buttons()
     {
         if ($this->id) {
-            if (!$this->accepted) {
+            if (!$this->getAccepted()) {
                 if (Core::get_global('user')->has_access('75')) {
-                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'),
-                        'wanted_accept_' . $this->mbid);
+                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->getMusicBrainzId(), 'enable', T_('Accept'),
+                        'wanted_accept_' . $this->getMusicBrainzId());
                 }
             }
             if (
                 Core::get_global('user')->has_access('75') ||
                 (
-                    static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
-                    $this->accepted != '1'
+                    static::getWantedRepository()->find($this->getMusicBrainzId(), Core::get_global('user')->id) &&
+                    $this->getAccepted() != '1'
                 )
             ) {
-                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'),
-                        'wanted_remove_' . $this->mbid);
+                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->getMusicBrainzId(), 'disable', T_('Remove'),
+                        'wanted_remove_' . $this->getMusicBrainzId());
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->getMusicBrainzId() . ($this->getArtistId() ? '&artist=' . $this->getArtistId() : '&artist_mbid=' . $this->getArtistMusicBrainzId()) . '&name=' . urlencode($this->getName()) . '&year=' . $this->getYear(), 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->getMusicBrainzId());
         }
     }
 
     /**
      * Load wanted release data.
-     * @param boolean $track_details
      */
-    public function load_all($track_details = true)
+    private function load_all()
     {
-        $mbrainz     = static::getMusicBrainz();
         $this->songs = array();
 
         try {
-            $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
+            $group = $this->musicBrainz->lookup('release-group', $this->getMusicBrainzId(), array('releases'));
             // Set fresh data
-            $this->name = $group->title;
-            $this->year = date("Y", strtotime($group->{'first-release-date'}));
+            $this->setName($group->title);
+            $this->setYear((int) date("Y", strtotime($group->{'first-release-date'})));
 
             // Load from database if already cached
-            $this->songs = Song_Preview::get_song_previews($this->mbid);
+            $this->songs = Song_Preview::get_song_previews($this->getMusicBrainzId());
             if (count($group->releases) > 0) {
-                $this->release_mbid = $group->releases[0]->id;
-                if ($track_details && count($this->songs) == 0) {
+                if (count($this->songs) == 0) {
                     // Use the first release as reference for track content
-                    $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
+                    $release = $this->musicBrainz->lookup('release', $group->releases[0]->id, array('recordings'));
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song          = array();
@@ -317,18 +390,18 @@ class Wanted extends database_object
                             $song['track'] = $track->number;
                             $song['title'] = $track->title;
                             $song['mbid']  = $track->id;
-                            if ($this->artist) {
-                                $song['artist'] = $this->artist;
+                            if ($this->getArtistId()) {
+                                $song['artist'] = $this->getArtistId();
                             }
-                            $song['artist_mbid'] = $this->artist_mbid;
+                            $song['artist_mbid'] = $this->getArtistMusicBrainzId();
                             $song['session']     = session_id();
-                            $song['album_mbid']  = $this->mbid;
+                            $song['album_mbid']  = $this->getMusicBrainzId();
 
-                            if ($this->artist) {
-                                $artist      = new Artist($this->artist);
+                            if ($this->getArtistId()) {
+                                $artist      = new Artist($this->getArtistId());
                                 $artist_name = $artist->name;
                             } else {
-                                $wartist     = static::getMissingArtistLookup()->lookup($this->artist_mbid);
+                                $wartist     = static::getMissingArtistLookup()->lookup($this->getArtistMusicBrainzId());
                                 $artist_name = $wartist['name'];
                             }
 
@@ -356,29 +429,17 @@ class Wanted extends database_object
         }
 
         foreach ($this->songs as $song) {
-            $song->f_album = $this->name;
+            $song->f_album = $this->getName();
             $song->format();
         }
     }
 
-    /**
-     * Format data.
-     */
-    public function format()
+    public function getUser(): User
     {
-        if ($this->artist) {
-            $artist = new Artist($this->artist);
-            $artist->format();
-            $this->f_artist_link = $artist->f_link;
-        } else {
-            $wartist             = static::getMissingArtistLookup()->lookup($this->artist_mbid);
-            $this->f_artist_link = $wartist['link'];
-        }
-        $this->link   = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
-        $this->f_link = "<a href=\"" . $this->link . "\">" . $this->name . "</a>";
-        $user         = new User($this->user);
+        $user = new User($this->getUserId());
         $user->format();
-        $this->f_user = $user->f_name;
+
+        return $user;
     }
 
     private static function getAlbumRepository(): AlbumRepositoryInterface
@@ -393,6 +454,13 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 
     /**

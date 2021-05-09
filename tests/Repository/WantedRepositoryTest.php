@@ -25,7 +25,7 @@ namespace Ampache\Repository;
 
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Wanted;
+use Ampache\Repository\Model\WantedInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Mockery\MockInterface;
@@ -237,7 +237,7 @@ class WantedRepositoryTest extends MockeryTestCase
         $userId     = 33;
         $wantedId   = 12345;
 
-        $wanted = $this->mock(Wanted::class);
+        $wanted = $this->mock(WantedInterface::class);
 
         $this->database->shouldReceive('executeQuery')
             ->with(

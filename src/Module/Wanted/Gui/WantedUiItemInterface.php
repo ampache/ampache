@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -19,17 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-use Ampache\Module\Wanted\Gui\WantedUiItemInterface;
 
-/** @var WantedUiItemInterface $libitem */
-?>
+namespace Ampache\Module\Wanted\Gui;
 
-<td class="cel_album"><?php echo $libitem->getLink(); ?></td>
-<td class="cel_artist"><?php echo $libitem->getArtistLink(); ?></td>
-<td class="cel_year"><?php echo $libitem->getYear(); ?></td>
-<td class="cel_user"><?php echo $libitem->getUserName(); ?></td>
-<td class="cel_action">
-    <div id="wanted_action_<?php echo $libitem->getMusicBrainzId(); ?>">
-    <?php echo $libitem->getActionButtons(); ?>
-    </div>
-</td>
+interface WantedUiItemInterface
+{
+    public function isAccepted(): bool;
+
+    public function getName(): string;
+
+    public function getYear(): int;
+
+    public function getArtistId(): ?int;
+
+    public function getArtistMusicBrainzId(): ?string;
+
+    public function getLink(): string;
+
+    public function getArtistLink(): string;
+
+    public function getUserName(): string;
+
+    public function getMusicBrainzId(): string;
+}

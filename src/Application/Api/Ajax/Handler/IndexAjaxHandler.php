@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\SongRepositoryInterface;
@@ -68,6 +69,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private NowPlayingRendererInterface $nowPlayingRenderer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
@@ -77,7 +80,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         VideoRepositoryInterface $videoRepository,
         CatalogRepositoryInterface $catalogRepository,
         ConfigContainerInterface $configContainer,
-        NowPlayingRendererInterface $nowPlayingRenderer
+        NowPlayingRendererInterface $nowPlayingRenderer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->slideshow          = $slideshow;
         $this->albumRepository    = $albumRepository;
@@ -88,6 +92,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->catalogRepository  = $catalogRepository;
         $this->configContainer    = $configContainer;
         $this->nowPlayingRenderer = $nowPlayingRenderer;
+        $this->modelFactory       = $modelFactory;
     }
 
     public function handle(): void
@@ -243,8 +248,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                             $user->has_access('75') || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WANTED_AUTO_ACCEPT)
                         );
                         ob_start();
-                        $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
-                        $walbum->format();
+                        $walbum = $this->modelFactory->createWanted($this->wantedRepository->getByMusicbrainzId($mbid));
                         $walbum->show_action_buttons();
                         $results['wanted_action_' . $mbid] = ob_get_clean();
                     } else {
@@ -257,7 +261,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $mbid = $_REQUEST['mbid'];
 
                     $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
-                    $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
+                    $walbum = $this->modelFactory->createWanted($this->wantedRepository->getByMusicbrainzId($mbid));
 
                     $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
                     ob_start();
@@ -271,7 +275,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
                     $mbid = $_REQUEST['mbid'];
 
-                    $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
+                    $walbum = $this->modelFactory->createWanted($this->wantedRepository->getByMusicbrainzId($mbid));
                     $walbum->accept();
                     ob_start();
                     $walbum->show_action_buttons();
