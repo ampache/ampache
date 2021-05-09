@@ -152,7 +152,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
                 $object->format();
             } ?>
             <li>
-                <?php if (property_exists('f_link', $object)) {
+                <?php if (property_exists($object, 'f_link')) {
                 echo $object->f_link;
             } else {
                 echo $object->getLinkFormatted();
