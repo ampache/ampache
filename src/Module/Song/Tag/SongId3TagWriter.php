@@ -55,6 +55,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
             return;
         }
+        
         global $dic;
         $utilityFactory = $dic->get(UtilityFactoryInterface::class);
  
@@ -74,8 +75,9 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $song->file
             );
             
-            $result = $vainfo->read_id3();
-            if ($result['fileformat'] == 'mp3') {
+            $result     = $vainfo->read_id3();
+            $fileformat = $result['fileformat'];
+            if ($fileformat == 'mp3') {
                 $tdata = $result['tags']['id3v2'];
                 $apics = $result['id3v2']['APIC'];
                 $meta  = $this->getMetadata($song);
@@ -84,6 +86,10 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 $apics = $result['flac']['PICTURE'];
                 $meta  = $this->getVorbisMetadata($song);
             }
+
+            $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
+            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
+
             $ndata = $vainfo->prepare_metadata_for_writing($tdata);
 
             if (isset($changed)) {
@@ -106,6 +112,31 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                         case 'edit_tags':
                             $ndata['genre'][0] = $data['edit_tags'];
                             break;
+                        case 'mbid':  // UFID
+                            $ndata['unique_file_identifier'][] = array('data' => $data['mbid'], 'ownerid' => 'http://musicbrainz.org', 'encodingid' => 0);
+                            break;
+                        case 'mb_albumid':
+                            $idx = $this->search_txxx('MusicBrainz Album Id', $ndata['text']);
+                            if (is_null($idx)) {
+                                $ndata['text'][] = array('data' => $data['mb_albumid'], 'description' => 'MusicBrainz Album Id', 'encodingid' => 0);
+                            } else {
+                                $ndata['text'][$idx] = array('data' => $data['mb_albumid'], 'description' => 'MusicBrainz Album Id', 'encodingid' => 0);
+                            }
+                            break;
+                        case 'mb_groupid':
+                            $idx = $this->search_txxx('MusicBrainz Release Group Id', $ndata['text']);
+                            if (is_null($idx)) {
+                                $ndata['text'][] = array('data' => $data['mb_groupid'], 'description' => 'MusicBrainz Release Group Id', 'encodingid' => 0);
+                            } else {
+                                $ndata['text'][$idx] = array('data' => $data['mb_albumid'], 'description' => 'MusicBrainz Release Group Id', 'encodingid' => 0);
+                            }
+                            break;
+                        case 'original_year':
+                            if ($fileformat == 'mp3') {
+                                $ndata['original_year'][0] = $data['original_year'];
+                            } else {
+                                $ndata['ORIGINALYEAR'][0] = $data['original_year'];
+                            }
                         default:
                             $ndata[$value][0] = $data[$value];
                             break;
@@ -119,28 +150,51 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     }
                 }
             }
+            $file_has_pics = isset($apics);
+            if ($file_has_pics) {
+                foreach ($apics as $apic) {
+                    $ndata['attached_picture'][] = array('data' => $apic['data'], 'mime' => $apic['mime'],
+                        'picturetypeid' => $apic['picturetypeid'], 'description' => $apic['description'], 'encodingid' => $apic['encodingid']);
+                }
+            }
+            $song->format();
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
                 $art         = new Art($song->album, 'album');
-                $album_image = $art->get(true);
-                if ($album_image != '') {
-                    $ndata['attached_picture'][] = array('data' => $album_image, 'mime' => $art->raw_mime,
-                        'picturetypeid' => 3, 'description' => $song->f_album);
+                if ($art->has_db_info()) {
+                    $album_image = $art->get(true);
+                    $new_pic     = array('data' => $album_image, 'mime' => $art->raw_mime,
+                        'picturetypeid' => 3, 'description' => $song->f_album, 'encodingid' => 0);
+                    $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                    if (is_null($idx)) {
+                        $ndata['attached_picture'][] = $new_pic;
+                    }
                 }
                 $art = new Art($song->artist, 'artist');
                 if ($art->has_db_info()) {
-                    $artist_image                = $art->get(true);
-                    $ndata['attached_picture'][] = array('data' => $artist_image, 'mime' => $art->raw_mime,
-                        'picturetypeid' => 8, 'description' => $song->f_artist);
-                }
-            } else {    // rewrite original images
-                if (!is_null($apics)) {
-                    foreach ($apics as $apic) {
-                        $ndata['attached_picture'][] = $apic;
+                    $artist_image = $art->get(true);
+                    $new_pic      = array('data' => $artist_image, 'mime' => $art->raw_mime,
+                        'picturetypeid' => 8, 'description' => $song->f_artist_full, 'encodingid' => 0);
+                    $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                    if (is_null($idx)) {
+                        $ndata['attached_picture'][$ndata] = $new_pic;
                     }
                 }
             }
             $vainfo->write_id3($ndata);
         }
+    } //write
+    
+    private function search_txxx($description, $ndata)
+    {
+        $i   = 0;
+        $cnt = count($ndata);
+        for ($i=0; $i < $cnt; $i++) {
+            if ($ndata[$i]['description'] == $description) {
+                return $i;//Return index
+            }
+        }
+
+        return null;
     }
 
     private function getVorbisMetadata(

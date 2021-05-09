@@ -1,0 +1,15 @@
+The logic in `SongId3TagWriter::class` wasn't designed to function outside the Song model from which it was relocated.
+The Album model also wasn't designed to use the `SongId3TagWriter::class`. The class probably be renamed as it als writes flac pictures and vorbiscomments.
+
+The Album model wasn't parsing/splitting album name.
+
+Images from flac files can now be imported from file tags.  Maybe a false memory, but Ithought it could already do it.
+
+Here are the mbidsand other data that can be written.
+
+Song->mbid (UFID?) 
+Album->mbid (MusicBrainz Album Id?)
+ MusicBrainz Release Group Id, 
+Original release year
+
+When the artist's name is changed, the connection to the related song is lost.

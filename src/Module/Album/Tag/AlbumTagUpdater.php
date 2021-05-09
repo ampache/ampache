@@ -48,10 +48,10 @@ final class AlbumTagUpdater implements AlbumTagUpdaterInterface
         bool $forceUpdate = false
     ): void {
         // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tagsComma, 'album', $album->id, $forceUpdate ? true : $overrideChilds);
+        Tag::update_tag_list($tagsComma, 'album', $album->getId(), $forceUpdate ? true : $overrideChilds);
 
         if ($overrideChilds || $addToChilds) {
-            $songs = $this->songRepository->getByAlbum($album->id);
+            $songs = $this->songRepository->getByAlbum($album->getId());
             foreach ($songs as $song_id) {
                 Tag::update_tag_list($tagsComma, 'song', $song_id, $overrideChilds);
             }

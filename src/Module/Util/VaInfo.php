@@ -1036,6 +1036,10 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
+                case 'musicbrainz_recordingid':
+                    $parsed['mb_recordingid'] = $data[0];
+                    break;
+
                 case 'musicbrainz_albumid':
                     $parsed['mb_albumid'] = $data[0];
                     break;
@@ -1045,7 +1049,7 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_releasegroupid':
                     $parsed['mb_albumid_group'] = $data[0];
                     break;
-                case 'musicbrainz_trackid':
+                case 'musicbrainz_releasetrackid':
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':

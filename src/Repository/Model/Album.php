@@ -894,8 +894,7 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $name           = (isset($data['name'])) ? $data['name'] : $this->name;
-        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $name           = (isset($data['name'])) ? $data['name'] : $this->full_name;
         $album_artist   = (isset($data['album_artist'])) ? (int) $data['album_artist'] : $this->album_artist;
         $year           = (isset($data['year'])) ? $data['year'] : $this->year;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
@@ -911,7 +910,7 @@ class Album extends database_object implements library_item
             $album_artist = Artist::check($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
         }
-
+        $ndata      = array();
         $current_id = $this->id;
         $updated    = false;
         $songs      = $this->getSongRepository()->getByAlbum($this->getId());
@@ -920,13 +919,6 @@ class Album extends database_object implements library_item
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
             debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
-
-            foreach ($songs as $song_id) {
-                Song::update_album($album_id, $song_id, $this->id);
-                Song::update_year($year, $song_id);
-
-                $this->getSongId3TagWriter()->write(new Song($song_id));
-            }
             $current_id = $album_id;
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
@@ -941,10 +933,32 @@ class Album extends database_object implements library_item
             if (!$cron_cache) {
                 $this->getAlbumRepository()->collectGarbage();
             }
+            if (!empty($songs)) {
+                $ndata['year'] = $year;
+                foreach ($songs as $song_id) {
+                    Song::update_album($album_id, $song_id, $this->id);
+                    Song::update_year($year, $song_id);
+                    Song::update_utime($song_id);
+                    $this->getSongId3TagWriter()->write(new Song($song_id), $ndata['year'], $ndata['year']);
+                } // foreach song of album
+                if (!$cron_cache) {
+                    Stats::garbage_collection();
+                    Rating::garbage_collection();
+                    Userflag::garbage_collection();
+                    $this->getUseractivityRepository()->collectGarbage();
+                }
+            } // if !empty
         } else {
             // run updates on the single fields
-            if (!empty($name) && $name != $this->name) {
-                self::update_field('name', $name, $this->id);
+            if (!empty($name) && $name != $this->full_name) {
+                $trimmed          = Catalog::trim_prefix(trim((string) $name));
+                $new_name         = $trimmed['string'];
+                $prefix           = $trimmed['prefix'];
+                $ndata['album']   = $name;
+                $changed['album'] = 'album';
+
+                self::update_field('name', $new_name, $this->id);
+                self::update_field('prefix', $prefix, $this->id);
             }
             if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
@@ -953,18 +967,24 @@ class Album extends database_object implements library_item
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
-
-                    $this->getSongId3TagWriter()->write(new Song($song_id));
                 }
+                $ndata['year']   = $year;
+                $changed['year'] = 'year';
             }
             if (!empty($disk) && $disk != $this->disk) {
                 self::update_field('disk', $disk, $this->id);
+                $ndata['disk']   = $disk;
+                $changed['disk'] = 'disk';
             }
             if (!empty($mbid) && $mbid != $this->mbid) {
                 self::update_field('mbid', $mbid, $this->id);
+                $ndata['mb_albumid']   = $mbid;
+                $changed['mb_albumid'] = 'mb_albumid';
             }
             if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
                 self::update_field('mbid_group', $mbid_group, $this->id);
+                $ndata['mb_groupid']   = $mbid_group;
+                $changed['mb_groupid'] = 'mb_groupid';
             }
             if (!empty($release_type) && $release_type != $this->release_type) {
                 self::update_field('release_type', $release_type, $this->id);
@@ -977,6 +997,8 @@ class Album extends database_object implements library_item
             }
             if (!empty($original_year) && $original_year != $this->original_year) {
                 self::update_field('original_year', $original_year, $this->id);
+                $ndata['original_year']   = $original_year;
+                $changed['original_year'] = 'original_year';
             }
         }
 
@@ -990,18 +1012,6 @@ class Album extends database_object implements library_item
         $this->original_year  = $original_year;
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
-
-        if ($updated && is_array($songs)) {
-            foreach ($songs as $song_id) {
-                Song::update_utime($song_id);
-            } // foreach song of album
-            if (!$cron_cache) {
-                Stats::garbage_collection();
-                Rating::garbage_collection();
-                Userflag::garbage_collection();
-                $this->getUseractivityRepository()->collectGarbage();
-            }
-        } // if updated
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {
@@ -1021,8 +1031,12 @@ class Album extends database_object implements library_item
                 $add_to_childs,
                 true
             );
+            $ndata['edit_tags'] = $data['edit_tags'];
         }
-
+        foreach ($songs as $song_id) {
+            $this->getSongId3TagWriter()->write(new Song($song_id), $ndata, $changed);
+        }
+        
         return $current_id;
     } // update
 
