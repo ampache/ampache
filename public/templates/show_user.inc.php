@@ -164,10 +164,9 @@ if ($client->f_avatar) {
                             $object->format();
                             if (property_exists($object, 'f_link')) {
                                 echo $object->f_link;
-                            } else{
-                                echo $object->getLinkFormatted():
-                            }
-                            ?>
+                            } else {
+                                echo $object->getLinkFormatted();
+                            } ?>
                         <br />
                     <?php
                         } ?>
