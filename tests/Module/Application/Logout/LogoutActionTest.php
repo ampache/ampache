@@ -74,7 +74,10 @@ class LogoutActionTest extends MockeryTestCase
             ->with(
                 sprintf('%s_remember', $sessionName),
                 '',
-                ['expires' => -1]
+                [
+                    'expires' => -1,
+                    'samesite' => 'Strict',
+                ]
             )
             ->once();
 

@@ -185,7 +185,8 @@ final class Session implements SessionInterface
             'expires' => -1,
             'path' => AmpConfig::get('cookie_path'),
             'domain' => '',
-            'secure' => make_bool(AmpConfig::get('cookie_secure'))
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
         ];
 
         $cookieSetter = static::getCookieSetter();
@@ -353,10 +354,17 @@ final class Session implements SessionInterface
             return false;
         }
 
+        $cookie_options = [
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
+
         // Set up the cookie params before we start the session.
         // This is vital
-        session_set_cookie_params((int)AmpConfig::get('cookie_life'), (string)AmpConfig::get('cookie_path'),
-            (string)AmpConfig::get('cookie_domain'), make_bool(AmpConfig::get('cookie_secure')));
+        session_set_cookie_params($cookie_options);
         session_write_close();
 
         // Set name
@@ -544,7 +552,8 @@ final class Session implements SessionInterface
                     'expires' => $cookie_life,
                     'path' => $cookie_path,
                     'domain' => '',
-                    'secure' => $cookie_secure
+                    'secure' => $cookie_secure,
+                    'samesite' => 'Strict'
                 ]
             );
         } else {
@@ -575,6 +584,7 @@ final class Session implements SessionInterface
             'path' => AmpConfig::get('cookie_path'),
             'domain' => '',
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict',
         ];
 
         $cookieSetter = static::getCookieSetter();
@@ -598,8 +608,8 @@ final class Session implements SessionInterface
      */
     public static function create_remember_cookie($username)
     {
-        $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
+        $remember_length = time() + AmpConfig::get('remember_length');
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -615,6 +625,7 @@ final class Session implements SessionInterface
                 'path' => AmpConfig::get('cookie_path'),
                 'domain' => '',
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
             ]
         );
     }

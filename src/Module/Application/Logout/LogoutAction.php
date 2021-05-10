@@ -58,7 +58,8 @@ final class LogoutAction implements ApplicationActionInterface
             sprintf('%s_remember', $this->configContainer->getSessionName()),
             '',
             [
-                'expires' => -1
+                'expires' => -1,
+                'samesite' => 'Strict',
             ]
         );
 

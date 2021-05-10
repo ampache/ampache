@@ -260,7 +260,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-        Cookies.set('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/; samesite=strict'});
+        Cookies.set('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/', samesite: 'Strict'});
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {

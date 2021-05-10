@@ -446,6 +446,7 @@ class Browse extends Query
                 [
                     'expires' => time() + 31536000,
                     'path' => '/',
+                    'samesite' => 'Strict',
                 ]
             );
         }

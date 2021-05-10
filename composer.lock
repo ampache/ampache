@@ -1720,12 +1720,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "422485c471958a56b4197854303a8aaa3004cce0"
+                "reference": "a5f31b38c865ec6b0fc07041214e9d111a02775f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/422485c471958a56b4197854303a8aaa3004cce0",
-                "reference": "422485c471958a56b4197854303a8aaa3004cce0",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/a5f31b38c865ec6b0fc07041214e9d111a02775f",
+                "reference": "a5f31b38c865ec6b0fc07041214e9d111a02775f",
                 "shasum": ""
             },
             "require": {
@@ -1780,7 +1780,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-04-16T16:46:20+00:00"
+            "time": "2021-05-09T20:39:34+00:00"
         },
         {
             "name": "js-cookie/js-cookie",

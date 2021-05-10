@@ -581,6 +581,7 @@ final class InstallationHelper implements InstallationHelperInterface
                 $cookieOptions = [
                     'expires' => time() + (30 * 24 * 60 * 60),
                     'path' => '/',
+                    'samesite' => 'Strict'
                 ];
 
                 // Default local UI preferences to have a better 'minimalist first look'.

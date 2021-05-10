@@ -52,7 +52,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     public function grant()
     {
         if (!headers_sent()) {
-            setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
+            setcookie($this->cookie(), $this->validity_token(), ['expires' => time() + 175 * CAPTCHA_TIMEOUT, 'samesite' => 'Strict']);
             //} else {
             //    // $this->log("::grant", "COOKIES", "too late for cookies");
         }
