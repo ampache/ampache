@@ -445,7 +445,7 @@ class Browse extends Query
     public function save_cookie_params($option, $value)
     {
         if ($this->get_type()) {
-            setcookie('browse_' . $this->get_type() . '_' . $option, $value, time() + 31536000, "/");
+            setcookie('browse_' . $this->get_type() . '_' . $option, $value, ['expires' => time() + 31536000, 'path' => "/", 'samesite' => 'Strict']);
         }
     }
 

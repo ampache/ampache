@@ -497,7 +497,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     $('#sidebar').show(500);
                 });
 
-                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
+                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/', samesite: 'Strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">

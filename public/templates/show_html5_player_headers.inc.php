@@ -304,7 +304,7 @@ function ToggleReplayGain()
 
     if (replaygainNode != null) {
         replaygainEnabled = !replaygainEnabled;
-        document.cookie = 'replaygain=' + replaygainEnabled + ';samesite=lax';
+        Cookies.set('replaygain', replaygainEnabled, {path: '/', samesite: 'Strict'});
         ApplyReplayGain();
 
         if (replaygainEnabled) {
