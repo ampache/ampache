@@ -559,7 +559,6 @@ final class Session implements SessionInterface
      */
     public static function create_cookie()
     {
-
         if (isset($_SESSION)) {
             $cookie_options = [
                 'expires' => (int)AmpConfig::get('cookie_life'),

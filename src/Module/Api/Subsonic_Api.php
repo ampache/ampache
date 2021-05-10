@@ -2564,18 +2564,16 @@ class Subsonic_Api
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_Xml_Data::getAmpacheObject($current);
-        $time     = time();
         if ($media->id) {
+            $time     = time();
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
-            // track has just started
-            if ($position < 1) {
-                Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
-                // repeated plays aren't called by scrobble so make sure we call this too
-                if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                    $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
-                }
+            // long pauses might cause your now_playing to hide
+            Stream::garbage_collection();
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type);
+            // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+            if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {
