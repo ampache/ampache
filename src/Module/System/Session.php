@@ -180,7 +180,7 @@ final class Session implements SessionInterface
 
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
-            'expires' => -1,
+            'lifetime' => -1,
             'path' => AmpConfig::get('cookie_path'),
             'domain' => AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
@@ -371,7 +371,7 @@ final class Session implements SessionInterface
         }
 
         $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
+            'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
