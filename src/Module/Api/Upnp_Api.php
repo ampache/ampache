@@ -36,6 +36,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
@@ -1027,9 +1028,8 @@ class Upnp_Api
                         }
                         break;
                     case 3:
-                        $season = new TVShow_Season($pathreq[2]);
+                        $season = static::getModelFactory()->createTvShowSeason((int) $pathreq[2]);
                         if ($season->id) {
-                            $season->format();
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
                         break;
@@ -1145,6 +1145,8 @@ class Upnp_Api
             array_shift($pathreq);
         }
 
+        $modelFactory = static::getModelFactory();
+
         switch ($pathreq[0]) {
             case 'tvshows':
                 switch (count($pathreq)) {
@@ -1162,16 +1164,15 @@ class Upnp_Api
                             $season_ids                  = $tvshow->get_seasons();
                             [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
                             foreach ($season_ids as $season_id) {
-                                $season = new TVShow_Season($season_id);
-                                $season->format();
+                                $season       = $modelFactory->createTvShowSeason((int) $season_id);
                                 $mediaItems[] = self::_itemTVShowSeason($season, $parent);
                             }
                         }
                         break;
                     case 3: // Get episode list
-                        $season = new TVShow_Season($pathreq[2]);
+                        $season = $modelFactory->createTvShowSeason((int) $pathreq[2]);
                         if ($season->id) {
-                            $episode_ids                  = $season->get_episodes();
+                            $episode_ids                  = $season->getEpisodeIds();
                             [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
                             foreach ($episode_ids as $episode_id) {
                                 $video = new Video($episode_id);
@@ -1779,11 +1780,11 @@ class Upnp_Api
     private static function _itemTVShowSeason($season, $parent)
     {
         return array(
-            'id' => 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
+            'id' => 'amp://video/tvshows/' . $season->getTvShowId() . '/' . $season->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'childCount' => count($season->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($season->f_name),
+            'childCount' => count($season->getEpisodeIds()),
+            'dc:title' => self::_replaceSpecialSymbols($season->getNameFormatted()),
             'upnp:class' => 'object.container',
         );
     }
@@ -2007,5 +2008,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

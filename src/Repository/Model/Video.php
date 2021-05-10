@@ -33,6 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Video extends database_object implements
@@ -421,7 +422,7 @@ class Video extends database_object implements
         // clean up sub-tables of videos
         Movie::garbage_collection();
         TVShow_Episode::garbage_collection();
-        TVShow_Season::garbage_collection();
+        static::getTvShowSeasonRepository()->collectGarbage();
         TvShow::garbage_collection();
         Personal_Video::garbage_collection();
         Clip::garbage_collection();
@@ -1113,5 +1114,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTvShowSeasonRepository(): TvShowSeasonRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TvShowSeasonRepositoryInterface::class);
     }
 }

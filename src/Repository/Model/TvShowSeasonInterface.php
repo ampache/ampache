@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -17,12 +17,38 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-/** @var \Ampache\Repository\Model\TVShow_Episode $video */
+namespace Ampache\Repository\Model;
 
-$videoprops[T_('TV Show')]   = $video->getTVShowSeason()->getTvShow()->f_link;
-$videoprops[T_('Season')]    = $video->getTVShowSeason()->getLinkFormatted();
-$videoprops[T_('Episode')]   = $video->getEpisodeNumber();
-$videoprops[T_('Summary')]   = $video->getSummary();
+interface TvShowSeasonInterface extends library_item
+{
+    public function getTvShowId(): int;
+
+    public function getSeasonNumber(): int;
+
+    /**
+     * gets all episodes for this tv show season
+     * @return int[]
+     */
+    public function getEpisodeIds(): array;
+
+    /**
+     * @return array{episode_count?: int, catalog_id?: int}
+     */
+    public function getExtraInfo(): array;
+
+    public function getEpisodeCount(): int;
+
+    public function getCatalogId(): int;
+
+    public function getLink(): string;
+
+    public function getLinkFormatted(): string;
+
+    public function getNameFormatted(): string;
+
+    public function getTvShow(): TvShow;
+
+    public function remove(): bool;
+}

@@ -32,6 +32,8 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowSeasonRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use MusicBrainz\MusicBrainz;
 use Psr\Container\ContainerInterface;
@@ -172,8 +174,13 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createTvShowSeason(
         int $tvShowSeasonId
-    ): TVShow_Season {
-        return new TVShow_Season($tvShowSeasonId);
+    ): TvShowSeasonInterface {
+        return new TVShow_Season(
+            $this->dic->get(ShoutRepositoryInterface::class),
+            $this->dic->get(UserActivityRepositoryInterface::class),
+            $this->dic->get(TvShowSeasonRepositoryInterface::class),
+            $tvShowSeasonId
+        );
     }
 
     public function createDemocratic(

@@ -24,138 +24,148 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
+final class TVShow_Season extends database_object implements TvShowSeasonInterface
 {
     protected const DB_TABLENAME = 'tvshow_season';
 
-    /* Variables from DB */
-    public $id;
-    public $season_number;
-    public $tvshow;
+    public int $id;
 
-    public $catalog_id;
-    public $episodes;
-    public $f_name;
-    public $f_tvshow;
-    public $f_tvshow_link;
-    public $link;
-    public $f_link;
+    private ShoutRepositoryInterface $shoutRepository;
 
-    // Constructed vars
-    private static $_mapcache = array();
+    private UserActivityRepositoryInterface $userActivityRepository;
+
+    private TvShowSeasonRepositoryInterface $tvShowSeasonRepository;
+
+    private ?TvShow $tvShow = null;
+
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
+
+    /** @var null|array{episode_count?: int, catalog_id?: int} */
+    private ?array $extra_info = null;
+
+    public function __construct(
+        ShoutRepositoryInterface $shoutRepository,
+        UserActivityRepositoryInterface $userActivityRepository,
+        TvShowSeasonRepositoryInterface $tvShowRepository,
+        int $id
+    ) {
+        $this->shoutRepository        = $shoutRepository;
+        $this->userActivityRepository = $userActivityRepository;
+        $this->tvShowSeasonRepository = $tvShowRepository;
+        $this->id                     = $id;
+    }
 
     /**
-     * TV Show
-     * Takes the ID of the tv show season and pulls the info from the db
-     * @param $show_id
+     * @return array<string, mixed>
      */
-    public function __construct($show_id)
+    private function getDbData(): array
     {
-        /* Get the information from the db */
-        $info = $this->get_info($show_id);
+        if ($this->dbData === null) {
+            $this->dbData = $this->get_info($this->getId());
+        }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        } // foreach info
-
-        return true;
-    } // constructor
+        return $this->dbData;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
-    /**
-     * garbage_collection
-     *
-     * This cleans out unused tv shows seasons
-     */
-    public static function garbage_collection()
+    public function getTvShowId(): int
     {
-        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "WHERE `tvshow_episode`.`id` IS NULL";
-        Dba::write($sql);
+        return (int) ($this->getDbData()['tvshow'] ?? 0);
+    }
+
+    public function getSeasonNumber(): int
+    {
+        return (int) ($this->getDbData()['season_number'] ?? 0);
     }
 
     /**
-     * get_songs
      * gets all episodes for this tv show season
-     * @return array
+     * @return int[]
      */
-    public function get_episodes()
+    public function getEpisodeIds(): array
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_episodes
-
-    /**
-     * _get_extra info
-     * This returns the extra information for the tv show season, this means totals etc
-     * @return array
-     */
-    private function _get_extra_info()
-    {
-        $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_episode`.`season` = ?" . "GROUP BY `catalog_id`";
-
-        $db_results = Dba::read($sql, array($this->id));
-        $row        = Dba::fetch_assoc($db_results);
-
-        /* Set Object Vars */
-        $this->episodes   = $row['episode_count'];
-        $this->catalog_id = $row['catalog_id'];
-
-        return $row;
-    } // _get_extra_info
+        return $this->tvShowSeasonRepository->getEpisodeIds($this->getId());
+    }
 
     /**
      * format
      * this function takes the object and formats some values
      * @param boolean $details
-     * @return boolean
      */
     public function format($details = true)
     {
-        $this->f_name = T_('Season') . ' ' . $this->season_number;
+    }
 
-        $tvshow = new TvShow($this->tvshow);
-        $tvshow->format($details);
-        $this->f_tvshow      = $tvshow->f_name;
-        $this->f_tvshow_link = $tvshow->f_link;
-
-        $this->link   = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . $this->f_name . '">' . $this->f_name . '</a>';
-
-        if ($details) {
-            $this->_get_extra_info();
+    /**
+     * @return array{episode_count?: int, catalog_id?: int}
+     */
+    public function getExtraInfo(): array
+    {
+        if ($this->extra_info === null) {
+            $this->extra_info = $this->tvShowSeasonRepository->getExtraInfo($this->getId());
         }
 
-        return true;
+        return $this->extra_info;
+    }
+
+    public function getEpisodeCount(): int
+    {
+        return (int) ($this->getExtraInfo()['episode_count'] ?? 0);
+    }
+
+    public function getCatalogId(): int
+    {
+        return (int) ($this->getExtraInfo()['catalog_id'] ?? 0);
+    }
+
+    public function getLink(): string
+    {
+        return AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->getId();
+    }
+
+    public function getLinkFormatted(): string
+    {
+        return sprintf(
+            '<a href="%s" title="%s - %s">%s</a>',
+            $this->getLink(),
+            $this->getTvShow()->f_name,
+            $this->getNameFormatted(),
+            $this->getNameFormatted()
+        );
+    }
+
+    public function getNameFormatted(): string
+    {
+        return sprintf(
+            '%s %d',
+            T_('Season'),
+            $this->getSeasonNumber()
+        );
+    }
+
+    public function getTvShow(): TvShow
+    {
+        if ($this->tvShow === null) {
+            $this->tvShow = new TvShow($this->getTvShowId());
+            $this->tvShow->format();
+        }
+
+        return $this->tvShow;
     }
 
     /**
@@ -168,12 +178,12 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_tvshow
+            'value' => $this->getTvShow()->f_name
         );
         $keywords['tvshow_season'] = array(
             'important' => false,
             'label' => T_('Season'),
-            'value' => $this->season_number
+            'value' => $this->getSeasonNumber()
         );
         $keywords['type'] = array(
             'important' => false,
@@ -189,7 +199,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->getNameFormatted();
     }
 
     /**
@@ -197,7 +207,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow', 'object_id' => $this->tvshow);
+        return ['object_type' => 'tvshow', 'object_id' => $this->getTvShowId()];
     }
 
     /**
@@ -205,7 +215,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_childrens()
     {
-        return array('tvshow_episode' => $this->get_episodes());
+        return ['tvshow_episode' => $this->getEpisodeIds()];
     }
 
     /**
@@ -228,7 +238,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'video') {
-            $episodes = $this->get_episodes();
+            $episodes = $this->getEpisodeIds();
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
                     'object_type' => 'video',
@@ -248,7 +258,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_catalogs()
     {
-        return array($this->catalog_id);
+        return [$this->getCatalogId()];
     }
 
     /**
@@ -272,10 +282,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_description()
     {
-        // No season description for now, always return tvshow description
-        $tvshow = new TvShow($this->tvshow);
-
-        return $tvshow->get_description();
+        return $this->getTvShow()->get_description();
     }
 
     /**
@@ -292,14 +299,14 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
             $tvshow_id = $this->id;
             $type      = 'tvshow_season';
         } else {
-            if (Art::has_db($this->tvshow, 'tvshow') || $force) {
-                $tvshow_id = $this->tvshow;
+            if (Art::has_db($this->getTvShowId(), 'tvshow') || $force) {
+                $tvshow_id = $this->getTvShowId();
                 $type      = 'tvshow';
             }
         }
 
         if ($tvshow_id !== null && $type !== null) {
-            echo Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->getLink());
         }
     }
 
@@ -307,75 +314,45 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      * check
      *
      * Checks for an existing tv show season; if none exists, insert one.
-     * @param $tvshow
-     * @param $season_number
-     * @param boolean $readonly
-     * @return string|null
      */
-    public static function check($tvshow, $season_number, $readonly = false)
+    public static function check(int $tvshow, int $season_number): ?int
     {
-        $name = $tvshow . '_' . $season_number;
-        // null because we don't have any unique id like mbid for now
-        if (isset(self::$_mapcache[$name]['null'])) {
-            return self::$_mapcache[$name]['null'];
+        $tvShowSeasonRepository = static::getTvShowSeasonRepository();
+
+        $seasonId = $tvShowSeasonRepository->findByTvShowAndSeasonNumber(
+            $tvshow, $season_number
+        );
+
+        if ($seasonId !== null) {
+            return $seasonId;
         }
 
-        $object_id  = 0;
-        $exists     = false;
-        $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
-        $db_results = Dba::read($sql, array($tvshow, $season_number));
-        $id_array   = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $key            = 'null';
-            $id_array[$key] = $row['id'];
-        }
-
-        if (count($id_array)) {
-            $object_id = array_shift($id_array);
-            $exists    = true;
-        }
-
-        if ($exists && (int)$object_id > 0) {
-            self::$_mapcache[$name]['null'] = $object_id;
-
-            return $object_id;
-        }
-
-        if ($readonly) {
-            return null;
-        }
-
-        $sql = 'INSERT INTO `tvshow_season` (`tvshow`, `season_number`) ' . 'VALUES(?, ?)';
-
-        $db_results = Dba::write($sql, array($tvshow, $season_number));
-        if (!$db_results) {
-            return null;
-        }
-        $object_id = Dba::insert_id();
-
-        self::$_mapcache[$name]['null'] = $object_id;
-
-        return $object_id;
+        return $tvShowSeasonRepository->addSeason(
+            $tvshow,
+            $season_number
+        );
     }
 
     /**
-     * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
      * @return mixed
      */
     public function update(array $data)
     {
-        $sql = 'UPDATE `tvshow_season` SET `season_number` = ?, `tvshow` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));
+        $this->tvShowSeasonRepository->update(
+            (int) $data['tvshow'],
+            (int) $data['season_number'],
+            $this->getId()
+        );
 
         return $this->id;
-    } // update
+    }
 
     public function remove(): bool
     {
         $deleted = true;
-        $videos  = $this->get_episodes();
+        $videos  = $this->getEpisodeIds();
         foreach ($videos as $video_id) {
             $video   = Video::create_from_id($video_id);
             $deleted = $video->remove();
@@ -386,48 +363,23 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         if ($deleted) {
-            $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-            if ($deleted) {
-                Art::garbage_collection('tvshow_season', $this->id);
-                Userflag::garbage_collection('tvshow_season', $this->id);
-                Rating::garbage_collection('tvshow_season', $this->id);
-                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->getId());
-                $this->getUseractivityRepository()->collectGarbage('tvshow_season', $this->getId());
-            }
+            $this->tvShowSeasonRepository->delete(
+                $this->getId()
+            );
+            Art::garbage_collection('tvshow_season', $this->id);
+            Userflag::garbage_collection('tvshow_season', $this->id);
+            Rating::garbage_collection('tvshow_season', $this->id);
+            $this->shoutRepository->collectGarbage('tvshow_season', $this->getId());
+            $this->userActivityRepository->collectGarbage('tvshow_season', $this->getId());
         }
 
         return $deleted;
     }
 
-    /**
-     * @param $tvshow_id
-     * @param $season_id
-     */
-    public static function update_tvshow($tvshow_id, $season_id): void
-    {
-        $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
-
-        Dba::write($sql, array($tvshow_id, $season_id));
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getShoutRepository(): ShoutRepositoryInterface
+    private static function getTvShowSeasonRepository(): TvShowSeasonRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(ShoutRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $dic->get(TvShowSeasonRepositoryInterface::class);
     }
 }

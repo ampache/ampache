@@ -58,6 +58,11 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         return $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getDbData() === [];
+    }
+
     public function getSummary(): string
     {
         return $this->getDbData()['summary'] ?? '';
@@ -204,8 +209,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     public function getTVShowSeason(): TVShow_Season
     {
         if ($this->tvShowSeason === null) {
-            $this->tvShowSeason =  new TVShow_Season($this->getSeasonId());
-            $this->tvShowSeason->format();
+            $this->tvShowSeason = static::getModelFactory()->createTvShowSeason($this->getSeasonId());
         }
 
         return $this->tvShowSeason;
@@ -221,12 +225,12 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->getTVShowSeason()->f_tvshow
+            'value' => $this->getTVShowSeason()->getTvShow()->f_name
         );
         $keywords['tvshow_season'] = array(
             'important' => false,
             'label' => T_('Season'),
-            'value' => $this->getTVShowSeason()->f_name
+            'value' => $this->getTVShowSeason()->getNameFormatted()
         );
         if ($this->getEpisodeNumber()) {
             $keywords['tvshow_episode'] = array(
@@ -297,8 +301,8 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
                 $type       = 'tvshow_season';
             } else {
                 $season = $this->getTVShowSeason();
-                if (Art::has_db($season->tvshow, 'tvshow') || $force) {
-                    $episode_id = $season->tvshow;
+                if (Art::has_db($season->getTvShowId(), 'tvshow') || $force) {
+                    $episode_id = $season->getTvShowId();
                     $type       = 'tvshow';
                 }
             }
@@ -326,9 +330,9 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     public function getFilename(): string
     {
         if ($this->filename === null) {
-            $this->filename = $this->getTVShowSeason()->f_tvshow;
+            $this->filename = $this->getTVShowSeason()->getTvShow()->f_name;
             if ($this->getEpisodeNumber()) {
-                $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->season_number) . 'E' . sprintf('%02d', $this->getEpisodeNumber());
+                $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->getSeasonNumber()) . 'E' . sprintf('%02d', $this->getEpisodeNumber());
             }
             $this->filename .= ' - ' . $this->f_title;
         }
@@ -339,5 +343,15 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     public function setFilename(string $filename): void
     {
         $this->filename = $filename;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

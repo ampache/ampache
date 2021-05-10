@@ -162,7 +162,12 @@ if ($client->f_avatar) {
                             $type       = array_shift($object_data);
                             $object     = $modelFactory->mapObjectType($type, (int) array_shift($object_data));
                             $object->format();
-                            echo $object->f_link; ?>
+                            if (property_exists($object, 'f_link')) {
+                                echo $object->f_link;
+                            } else{
+                                echo $object->getLinkFormatted():
+                            }
+                            ?>
                         <br />
                     <?php
                         } ?>

@@ -64,7 +64,7 @@ final class ShowAction implements ApplicationActionInterface
             'show_tvshow_season.inc.php',
             [
                 'season' => $season,
-                'object_ids' => $season->get_episodes(),
+                'object_ids' => $season->getEpisodeIds(),
                 'object_type' => 'tvshow_episode',
                 'web_path' => $this->configContainer->getWebPath()
             ]

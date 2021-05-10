@@ -85,11 +85,17 @@ final class UserActivityRenderer implements UserActivityRendererInterface
                 break;
         }
 
+        if (property_exists($libitem, 'f_link')) {
+            $link = $libitem->f_link;
+        } else {
+            $link = $libitem->getLinkFormatted();
+        }
+
         return sprintf(
             '<div>%s %s %s</div>',
             get_datetime($useractivity->getActivityDate()),
             $descr,
-            $libitem->f_link
+            $link
         );
     }
 }

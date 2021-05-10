@@ -22,12 +22,22 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+
+/** @var string $web_path */
+/** @var int[] $object_ids */
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $thcount  = 6;
@@ -70,9 +80,8 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
         <?php
 
         foreach ($object_ids as $season_id) {
-            $libitem = new TVShow_season($season_id);
-            $libitem->format(); ?>
-        <tr id="tvshow_season_<?php echo $libitem->id; ?>">
+            $libitem = $modelFactory->createTvShowSeason($season_id); ?>
+        <tr id="tvshow_season_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>
         </tr>
         <?php

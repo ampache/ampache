@@ -62,4 +62,5 @@ return [
     ArtRepositoryInterface::class => autowire(ArtRepository::class),
     SessionRepositoryInterface::class => autowire(SessionRepository::class),
     NowPlayingRepositoryInterface::class => autowire(NowPlayingRepository::class),
+    TvShowSeasonRepositoryInterface::class => autowire(TvShowSeasonSeasonRepository::class),
 ];

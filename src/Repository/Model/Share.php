@@ -153,7 +153,13 @@ final class Share extends database_object implements ShareInterface
 
     public function getObjectUrl(): string
     {
-        return $this->getObject()->f_link;
+        $object = $this->getObject();
+
+        if (property_exists($object, 'f_link')) {
+            return $object->f_link;
+        } else {
+            return $this->getObject()->getLinkFormatted();
+        }
     }
 
     public function getObjectName(): string

@@ -30,6 +30,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TVShow_Season;
 use Gettext\Translator;
 use Psr\Log\LoggerInterface;
@@ -1018,7 +1019,9 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
     if (!$season_id) {
         return false;
     }
-    $season = new TVShow_Season($season_id);
+    global $dic;
+
+    $season = $dic->get(ModelFactoryInterface::class)->createTvShowSeason((int) $season_id);
 
     static $season_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -1035,7 +1038,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
     }
 
     $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-    $db_results = Dba::read($sql, array($season->tvshow));
+    $db_results = Dba::read($sql, array($season->getTvShowId()));
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';

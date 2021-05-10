@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\TvShowSeason;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -43,12 +44,16 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,7 +62,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
+        $tvshow_season = $this->modelFactory->createTvShowSeason((int) $_REQUEST['tvshow_season_id']);
         if (!Catalog::can_remove($tvshow_season)) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the tvshow `%s`', $tvshow_season->id),

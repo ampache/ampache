@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class TvShow extends database_object implements library_item
@@ -379,11 +380,13 @@ class TvShow extends database_object implements library_item
         if ($this->name != $name || $this->year != $year) {
             $tvshow_id = self::check($name, $year, true);
 
+            $tvShowSeasonRepository = $this->getTvShowSeasonRepository();
+
             // If it's changed we need to update
             if ($tvshow_id != $this->id && $tvshow_id != null) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
-                    TVShow_Season::update_tvshow($tvshow_id, $season_id);
+                    $tvShowSeasonRepository->setTvShow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
 
@@ -449,8 +452,11 @@ class TvShow extends database_object implements library_item
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();
+
+        $modelFactory = $this->getModelFactory();
+
         foreach ($season_ids as $season_object) {
-            $season  = new TVShow_Season($season_object);
+            $season  = $modelFactory->createTvShowSeason($season_object);
             $deleted = $season->remove();
             if (!$deleted) {
                 debug_event(self::class, 'Error when deleting the season `' . (string) $season_object . '`.', 1);
@@ -501,5 +507,25 @@ class TvShow extends database_object implements library_item
         global $dic;
 
         return $dic->get(DataMigratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTvShowSeasonRepository(): TvShowSeasonRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TvShowSeasonRepositoryInterface::class);
     }
 }

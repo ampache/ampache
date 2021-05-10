@@ -132,9 +132,15 @@ class AmpacheCatalogFavorites
                 $user->format();
 
                 if ($item->id) {
+                    if (property_exists($item, 'f_link')) {
+                        $link = $item->f_link;
+                    } else {
+                        $link = $item->getLinkFormatted();
+                    }
+
                     echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],
@@ -159,7 +165,7 @@ class AmpacheCatalogFavorites
                     echo '</td>';
 
                     if (!$this->gridview) {
-                        echo '<td>' . $item->f_link . '</td>';
+                        echo '<td>' . $link . '</td>';
                     }
 
                     echo '<td class="optional">';
