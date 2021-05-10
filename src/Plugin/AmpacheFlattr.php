@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
@@ -116,7 +117,8 @@ class AmpacheFlattr
                 $libitem instanceof Label ||
                 $libitem instanceof Live_Stream ||
                 $libitem instanceof TVShow_Season ||
-                $libitem instanceof TVShow_Episode
+                $libitem instanceof TVShow_Episode ||
+                $libitem instanceof TvShow
             ) {
                 /**
                  * @todo special handling for some objects

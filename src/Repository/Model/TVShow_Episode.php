@@ -225,7 +225,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->getTVShowSeason()->getTvShow()->f_name
+            'value' => $this->getTVShowSeason()->getTvShow()->getNameFormatted()
         );
         $keywords['tvshow_season'] = array(
             'important' => false,
@@ -330,7 +330,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     public function getFilename(): string
     {
         if ($this->filename === null) {
-            $this->filename = $this->getTVShowSeason()->getTvShow()->f_name;
+            $this->filename = $this->getTVShowSeason()->getTvShow()->getNameFormatted();
             if ($this->getEpisodeNumber()) {
                 $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->getSeasonNumber()) . 'E' . sprintf('%02d', $this->getEpisodeNumber());
             }

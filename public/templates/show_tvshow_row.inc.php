@@ -53,14 +53,14 @@ use Ampache\Module\Util\Ui;
 <?php
     if (Art::is_enabled()) { ?>
         <td class="<?php echo $cel_cover; ?>">
-            <?php echo Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
+            <?php echo Art::display('tvshow', $libitem->id, $libitem->getNameFormatted(), 6, $libitem->getLink()); ?>
         </td>
     <?php
     } ?>
-<td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
-<td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
-<td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
-<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->getLinkFormatted(); ?></td>
+<td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
+<td class="cel_seasons"><?php echo count($libitem->get_seasons()); ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->getTagsFormatted(); ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>

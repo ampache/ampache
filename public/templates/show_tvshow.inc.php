@@ -41,13 +41,13 @@ use Ampache\Module\Util\Ui;
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
+Ui::show_box_top($tvshow->getNameFormatted(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    echo Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6); ?>
-    <?php if ($tvshow->summary) { ?>
+    echo Art::display('tvshow', $tvshow->id, $tvshow->getNameFormatted(), 6); ?>
+    <?php if ($tvshow->getSummary()) { ?>
     <div id="item_summary">
-        <?php echo $tvshow->summary; ?>
+        <?php echo $tvshow->getSummary(); ?>
     </div>
     <?php
     } ?>

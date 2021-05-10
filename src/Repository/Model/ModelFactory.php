@@ -168,7 +168,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createTvShow(
         int $tvShowId
-    ): TvShow {
+    ): TvShowInterface {
         return new TvShow($tvShowId);
     }
 
@@ -179,6 +179,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(ShoutRepositoryInterface::class),
             $this->dic->get(UserActivityRepositoryInterface::class),
             $this->dic->get(TvShowSeasonRepositoryInterface::class),
+            $this,
             $tvShowSeasonId
         );
     }

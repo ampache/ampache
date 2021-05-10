@@ -31,55 +31,72 @@ use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class TvShow extends database_object implements library_item
+final class TvShow extends database_object implements TvShowInterface
 {
     protected const DB_TABLENAME = 'tvshow';
 
-    /* Variables from DB */
-    public $id;
-    public $name;
-    public $prefix;
-    public $summary;
-    public $year;
+    public int $id;
 
-    public $catalog_id;
-    public $tags;
-    public $f_tags;
-    public $episodes;
-    public $seasons;
-    public $f_name;
-    public $link;
-    public $f_link;
+    /** @var int[]|null */
+    private ?array $seasonIds = null;
 
+    /** @var null|array{episode_count?: int, catalog_id?: int} */
+    private ?array $extra_info = null;
 
-    // Constructed vars
-    private static $_mapcache = array();
+    private ?array $dbData = null;
 
-    /**
-     * TV Show
-     * Takes the ID of the tv show and pulls the info from the db
-     * @param $show_id
-     */
-    public function __construct($show_id)
+    public function __construct(int $id)
     {
-        /* Get the information from the db */
-        $info = $this->get_info($show_id);
+        $this->id = $id;
+    }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        } // foreach info
+    private function getDbData(): array
+    {
+        if ($this->dbData === null) {
+            $this->dbData = $this->get_info($this->getId());
+        }
 
-        return true;
-    } // constructor
+        return $this->dbData;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
+    }
+
+    public function getYear(): int
+    {
+        return (int) ($this->getDbData()['year'] ?? 0);
+    }
+
+    public function getSummary(): string
+    {
+        return $this->getDbData()['summary'] ?? '';
+    }
+
+    public function getPrefix(): string
+    {
+        return $this->getDbData()['prefix'] ?? '';
+    }
+
+    public function getName(): string
+    {
+        return $this->getDbData()['name'] ?? '';
+    }
+
+    public function getLinkFormatted(): string
+    {
+        return sprintf(
+            '<a href="%s" title="%s">%s</a>',
+            $this->getLink(),
+            $this->getNameFormatted(),
+            $this->getNameFormatted()
+        );
     }
 
     /**
@@ -94,21 +111,22 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * get_seasons
-     * gets the tv show seasons
-     * of
+     * gets the tv show seasons id list
      */
-    public function get_seasons()
+    public function get_seasons(): array
     {
-        $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+        if ($this->seasonIds === null) {
+            $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
+            $db_results = Dba::read($sql, array($this->id));
+
+            $this->seasonIds = [];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $this->seasonIds[] = $row['id'];
+            }
         }
 
-        return $results;
-    } // get_seasons
+        return $this->seasonIds;
+    }
 
     /**
      * get_episodes
@@ -142,44 +160,54 @@ class TvShow extends database_object implements library_item
      * This returns the extra information for the tv show, this means totals etc
      * @return array
      */
-    private function _get_extra_info()
+    private function getExtraInfo()
     {
-        $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
-        $db_results = Dba::read($sql, array($this->id));
-        $row        = Dba::fetch_assoc($db_results);
+        if ($this->extra_info === null) {
+            $sql              = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
+            $db_results       = Dba::read($sql, array($this->id));
+            $this->extra_info = Dba::fetch_assoc($db_results);
+        }
 
-        $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " . "WHERE `tvshow_season`.`tvshow` = ?";
-        $db_results          = Dba::read($sql, array($this->id));
-        $row2                = Dba::fetch_assoc($db_results);
-        $row['season_count'] = $row2['season_count'];
+        return $this->extra_info;
+    }
 
-        /* Set Object Vars */
-        $this->episodes   = $row['episode_count'];
-        $this->seasons    = $row['season_count'];
-        $this->catalog_id = $row['catalog_id'];
+    public function getCatalogId(): int
+    {
+        return (int) ($this->getExtraInfo()['catalog_id'] ?? 0);
+    }
 
-        return $row;
-    } // _get_extra_info
+    public function getEpisodeCount(): int
+    {
+        return (int) ($this->getExtraInfo()['episode_count'] ?? 0);
+    }
+
+    public function getNameFormatted(): string
+    {
+        return trim($this->getPrefix() . " " . $this->getName());
+    }
 
     /**
      * format
      * this function takes the object and formats some values
      * @param boolean $details
-     * @return boolean
      */
     public function format($details = true)
     {
-        $this->f_name = trim((string)$this->prefix . " " . $this->name);
-        $this->link   = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
+    }
 
-        if ($details) {
-            $this->_get_extra_info();
-            $this->tags   = Tag::get_top_tags('tvshow', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
-        }
+    public function getLink(): string
+    {
+        return AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->getId();
+    }
 
-        return true;
+    public function getTags(): array
+    {
+        return Tag::get_top_tags('tvshow', $this->id);
+    }
+
+    public function getTagsFormatted(): string
+    {
+        return Tag::get_display($this->getTags(), true, 'tvshow');
     }
 
     /**
@@ -192,7 +220,7 @@ class TvShow extends database_object implements library_item
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_name
+            'value' => $this->getNameFormatted()
         );
         $keywords['type'] = array(
             'important' => false,
@@ -208,7 +236,7 @@ class TvShow extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->getNameFormatted();
     }
 
     /**
@@ -266,7 +294,7 @@ class TvShow extends database_object implements library_item
      */
     public function get_catalogs()
     {
-        return array($this->catalog_id);
+        return [$this->getCatalogId()];
     }
 
     /**
@@ -290,7 +318,7 @@ class TvShow extends database_object implements library_item
      */
     public function get_description()
     {
-        return $this->summary;
+        return $this->getSummary();
     }
 
     /**
@@ -301,7 +329,7 @@ class TvShow extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tvshow') || $force) {
-            echo Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
+            echo Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->getLink());
         }
     }
 
@@ -317,11 +345,6 @@ class TvShow extends database_object implements library_item
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
-        // null because we don't have any unique id like mbid for now
-        if (isset(self::$_mapcache[$name]['null'])) {
-            return self::$_mapcache[$name]['null'];
-        }
-
         $tvshow_id  = 0;
         $exists     = false;
         $trimmed    = Catalog::trim_prefix(trim((string)$name));
@@ -341,8 +364,6 @@ class TvShow extends database_object implements library_item
         }
 
         if ($exists && (int)$tvshow_id > 0) {
-            self::$_mapcache[$name]['null'] = $tvshow_id;
-
             return $tvshow_id;
         }
 
@@ -355,11 +376,8 @@ class TvShow extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $tvshow_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $tvshow_id;
-
-        return $tvshow_id;
+        return Dba::insert_id();
     }
 
     /**
@@ -372,12 +390,12 @@ class TvShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
-        $name       = isset($data['name']) ? $data['name'] : $this->name;
-        $year       = isset($data['year']) ? $data['year'] : $this->year;
-        $summary    = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $name       = isset($data['name']) ? $data['name'] : $this->getName();
+        $year       = isset($data['year']) ? $data['year'] : $this->getYear();
+        $summary    = isset($data['summary']) ? $data['summary'] : $this->getSummary();
 
         // Check if name is different than current name
-        if ($this->name != $name || $this->year != $year) {
+        if ($this->getName() != $name || $this->getYear() != $year) {
             $tvshow_id = self::check($name, $year, true);
 
             $tvShowSeasonRepository = $this->getTvShowSeasonRepository();
@@ -404,11 +422,6 @@ class TvShow extends database_object implements library_item
 
         $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
         Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
-
-        $this->name    = $name;
-        $this->prefix  = $prefix;
-        $this->year    = $year;
-        $this->summary = $summary;
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {

@@ -49,15 +49,19 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
     /** @var null|array{episode_count?: int, catalog_id?: int} */
     private ?array $extra_info = null;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $userActivityRepository,
         TvShowSeasonRepositoryInterface $tvShowRepository,
+        ModelFactoryInterface $modelFactory,
         int $id
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->userActivityRepository = $userActivityRepository;
         $this->tvShowSeasonRepository = $tvShowRepository;
+        $this->modelFactory           = $modelFactory;
         $this->id                     = $id;
     }
 
@@ -143,7 +147,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         return sprintf(
             '<a href="%s" title="%s - %s">%s</a>',
             $this->getLink(),
-            $this->getTvShow()->f_name,
+            $this->getTvShow()->getNameFormatted(),
             $this->getNameFormatted(),
             $this->getNameFormatted()
         );
@@ -161,8 +165,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
     public function getTvShow(): TvShow
     {
         if ($this->tvShow === null) {
-            $this->tvShow = new TvShow($this->getTvShowId());
-            $this->tvShow->format();
+            $this->tvShow = $this->modelFactory->createTvShow($this->getTvShowId());
         }
 
         return $this->tvShow;
@@ -178,7 +181,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->getTvShow()->f_name
+            'value' => $this->getTvShow()->getNameFormatted()
         );
         $keywords['tvshow_season'] = array(
             'important' => false,

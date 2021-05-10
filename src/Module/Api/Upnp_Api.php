@@ -1021,7 +1021,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $tvshow = new TvShow($pathreq[1]);
+                        $tvshow = static::getModelFactory()->createTvShow((int) $pathreq[1]);
                         if ($tvshow->id) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
@@ -1159,7 +1159,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get season list
-                        $tvshow = new TvShow($pathreq[1]);
+                        $tvshow = $modelFactory->createTvShow((int) $pathreq[1]);
                         if ($tvshow->id) {
                             $season_ids                  = $tvshow->get_seasons();
                             [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);

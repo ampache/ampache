@@ -31,19 +31,19 @@ use Ampache\Repository\Model\TvShow;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_name); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->getNameFormatted()); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
+                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->getSummary()); ?></textarea></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+                <td><input type="number" name="year" value="<?php echo $libitem->getYear(); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->getTags()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

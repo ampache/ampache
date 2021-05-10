@@ -26,4 +26,4 @@ use Ampache\Repository\Model\TVShow_Episode;
 ?>
 <td class="cel_episode"><?php echo $libitem->getEpisodeNumber(); ?></td>
 <td class="cel_season"><?php echo $libitem->getTVShowSeason()->getLinkFormatted(); ?></td>
-<td class="cel_tvshow"><?php echo $libitem->getTVShowSeason()->getTvShow()->f_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->getTVShowSeason()->getTvShow()->getLinkFormatted(); ?></td>

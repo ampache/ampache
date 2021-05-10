@@ -93,7 +93,7 @@ interface ModelFactoryInterface
 
     public function createTvShow(
         int $tvShowId
-    ): TvShow;
+    ): TvShowInterface;
 
     public function createTvShowSeason(
         int $tvShowSeasonId

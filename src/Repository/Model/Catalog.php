@@ -987,12 +987,13 @@ abstract class Catalog extends database_object
             $catalogs = static::getCatalogRepository()->getList();
         }
 
-        $results = array();
+        $modelFactory = static::getModelFactory();
+        $results      = array();
         foreach ($catalogs as $catalog_id) {
             $catalog    = self::create_from_id($catalog_id);
             $tvshow_ids = $catalog->get_tvshow_ids();
             foreach ($tvshow_ids as $tvshow_id) {
-                $results[] = new TvShow($tvshow_id);
+                $results[] = $modelFactory->createTvShow($tvshow_id);
             }
         }
 

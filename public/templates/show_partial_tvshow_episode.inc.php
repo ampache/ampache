@@ -22,7 +22,7 @@
 
 /** @var \Ampache\Repository\Model\TVShow_Episode $video */
 
-$videoprops[T_('TV Show')]   = $video->getTVShowSeason()->getTvShow()->f_link;
+$videoprops[T_('TV Show')]   = $video->getTVShowSeason()->getTvShow()->getLinkFormatted();
 $videoprops[T_('Season')]    = $video->getTVShowSeason()->getLinkFormatted();
 $videoprops[T_('Episode')]   = $video->getEpisodeNumber();
 $videoprops[T_('Summary')]   = $video->getSummary();

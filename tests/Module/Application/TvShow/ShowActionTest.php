@@ -29,6 +29,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TvShow;
+use Ampache\Repository\Model\TvShowInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -62,7 +63,7 @@ class ShowActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $tvShow     = $this->mock(TvShow::class);
+        $tvShow     = $this->mock(TvShowInterface::class);
 
         $tvShowId = 666;
         $seasons  = [111, 222];

@@ -57,7 +57,7 @@ use Ampache\Module\Util\Ui;
 <?php
     } ?>
 <td class="cel_season"><?php echo $libitem->getLinkFormatted(); ?></td>
-<td class="cel_tvshow"><?php echo $libitem->getTvShow()->f_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->getTvShow()->getLinkFormatted(); ?></td>
 <td class="cel_episodes"><?php echo $libitem->getEpisodeCount(); ?></td>
 <?php
     if (User::is_registered()) {

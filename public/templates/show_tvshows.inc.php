@@ -22,6 +22,8 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\User;
@@ -30,6 +32,14 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 session_start();
+
+/** @var string $web_path */
+/** @var Browse $browse */
+/** @var int[] $object_ids */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
@@ -74,8 +84,7 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
         <?php
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
-            $libitem = new TVShow($tvshow_id);
-            $libitem->format(); ?>
+            $libitem = $modelFactory->createTvShow($tvshow_id); ?>
         <tr id="tvshow_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_row.inc.php'); ?>
         </tr>
