@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
-$title = scrub_out($album->name);
+$title = scrub_out($album->full_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
@@ -131,10 +131,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <ul>
         <?php if ($show_direct_play) {
         $play       = T_('Play');
+        $playnext   = T_('Play next');
         $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
+        </li>
+            <?php
+        } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>

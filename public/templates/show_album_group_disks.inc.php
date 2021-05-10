@@ -40,7 +40,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
+$title = scrub_out($album->full_name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
@@ -101,6 +101,12 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_'); ?>
         </li>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_'); ?>
+        </li>
+            <?php
+        } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
@@ -162,6 +168,9 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <?php
             if ($show_direct_play) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
+                if (Stream_Playlist::check_autoplay_next()) {
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $c_album->id);
+                }
                 if (Stream_Playlist::check_autoplay_append()) {
                     echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
                 }

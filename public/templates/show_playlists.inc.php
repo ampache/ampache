@@ -35,7 +35,7 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="playlist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -71,14 +71,14 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
 
             // Don't show empty playlist if not admin or the owner
             if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
+        <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_playlist_row.inc.php'); ?>
         </tr>
         <?php
             }
         } // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="7"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
         </tr>
         <?php

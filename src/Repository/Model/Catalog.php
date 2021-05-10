@@ -1038,7 +1038,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_tvshows
      * @param integer[]|null $catalogs
      * @return TvShow[]
      */
@@ -1061,10 +1061,31 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_artist_arrays
+     *
+     * Get each array of [id, full_name, name] for artists in an array of catalog id's
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_artist_arrays($catalogs)
+    {
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql, array($catalog_id));
+
+            while ($row = Dba::fetch_assoc($db_results, false)) {
+                $results[] = $row;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist_ids
      *
-     * This returns an array of ids of artist that have songs in this
-     * catalog
+     * This returns an array of ids of artist that have songs in this catalog
      * @param string $filter
      * @return integer[]
      */
@@ -1198,10 +1219,10 @@ abstract class Catalog extends database_object
      */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
-        $sql_where = "";
+        $sql = "SELECT `album`.`id` FROM `album` ";
         if (is_array($catalogs) && count($catalogs)) {
-            $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $catlist = '(' . implode(',', $catalogs) . ')';
+            $sql     = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN $catlist ";
         }
 
         $sql_limit = "";
@@ -1215,12 +1236,12 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
+        $sql .= "GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1238,10 +1259,14 @@ abstract class Catalog extends database_object
      */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
+        $sql       = "SELECT `album`.`id` FROM `album` ";
         $sql_where = "";
+        $sql_group = "GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid`";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
+            $sql       = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $sql_group = "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid`";
         }
 
         $sql_limit = "";
@@ -1255,12 +1280,12 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " . "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " . "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql .= "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where $sql_group ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1682,11 +1707,11 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($libitem->getId());
+                $songs   = static::getSongRepository()->getByAlbum($object_id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
-                $songs   = static::getSongRepository()->getByArtist($libitem);
+                $songs   = static::getSongRepository()->getByArtist($object_id);
                 break;
             case 'song':
                 $songs[] = $object_id;
@@ -1694,7 +1719,7 @@ abstract class Catalog extends database_object
         } // end switch type
 
         if (!$api) {
-            echo '<table class="tabledata">' . "\n";
+            echo '<table class="tabledata striped-rows">' . "\n";
             echo '<thead><tr class="th-top">' . "\n";
             echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
             echo "<tbody>\n";
@@ -1709,14 +1734,14 @@ abstract class Catalog extends database_object
                     $result = (int)$change[1];
                 }
                 $file = scrub_out($song->file);
-                echo '<tr class="' . Ui::flip_class() . '">' . "\n";
+                echo '<tr>' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
                 if (!$api) {
-                    echo '<tr class="' . Ui::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
                 flush();
             }
@@ -1732,6 +1757,10 @@ abstract class Catalog extends database_object
                 static::getAlbumRepository()->updateTime($libitem);
                 break;
             case 'artist':
+                foreach ($libitem->get_child_ids() as $album_id) {
+                    $album_tags = self::getSongTags('album', $album_id);
+                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
+                }
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
                 $libitem->update_album_count();
@@ -2929,10 +2958,10 @@ abstract class Catalog extends database_object
                 $catalogs = self::get_catalogs();
                 // Intentional break fall-through
             case 'update_file_tags':
-                $write_id3 = AmpConfig::get('write_id3', false);
-                AmpConfig::set('write_id3', 'true', true);
+                $write_id3     = AmpConfig::get('write_id3', false);
                 $write_id3_art = AmpConfig::get('write_id3_art', false);
-                AmpConfig::set('write_id3_art', 'true', true);
+                AmpConfig::set_by_array(['write_id3' => 'true'], true);
+                AmpConfig::set_by_array(['write_id3_art' => 'true'], true);
 
                 $id3Writer = static::getSongId3TagWriter();
                 set_time_limit(0);
@@ -2948,8 +2977,8 @@ abstract class Catalog extends database_object
                         }
                     }
                 }
-                AmpConfig::set('write_id3', $write_id3, true);
-                AmpConfig::set('write_id3', $write_id3_art, true);
+                AmpConfig::set_by_array(['write_id3' => $write_id3], true);
+                AmpConfig::set_by_array(['write_id3' => $write_id3_art], true);
         }
 
         // Remove any orphaned artists/albums/etc.

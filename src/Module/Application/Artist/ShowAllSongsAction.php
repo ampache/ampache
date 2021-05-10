@@ -65,7 +65,7 @@ final class ShowAllSongsAction implements ApplicationActionInterface
             [
                 'artist' => $artist,
                 'object_type' => 'song',
-                'object_ids' => $this->songRepository->getByArtist($artist),
+                'object_ids' => $this->songRepository->getByArtist($artistId),
                 'gatekeeper' => $gatekeeper
             ]
         );

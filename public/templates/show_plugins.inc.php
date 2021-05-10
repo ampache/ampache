@@ -22,11 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -53,7 +52,7 @@ $web_path = AmpConfig::get('web_path'); ?>
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
             <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
             <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
@@ -62,7 +61,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </tr>
         <?php
         } if (!count($plugins)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="5"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php

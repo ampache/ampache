@@ -211,6 +211,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $this->$key = $value;
         } // foreach info
 
+        // make sure the int values are cast to integers
+        $this->time              = (int)$this->time;
+        $this->album_count       = (int)$this->album_count;
+        $this->album_group_count = (int)$this->album_group_count;
+        $this->song_count        = (int)$this->song_count;
+
         return true;
     } // constructor
 
@@ -362,6 +368,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return (int) $results['album_count'];
     }
+
     /**
      * get_album_group_count
      *
@@ -378,6 +385,68 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $results    = Dba::fetch_assoc($db_results);
 
         return (int) $results['album_count'];
+    }
+
+    /**
+     * get_id_arrays
+     *
+     * Get each id from the artist table with the minimum detail required for subsonic
+     * @param array $catalogs
+     * @return array
+     */
+    public static function get_id_arrays($catalogs = array())
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        if (!empty($catalogs)) {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`  FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql, $catalogs);
+        } else {
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $db_results = Dba::read($sql);
+        }
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_id_array
+     *
+     * Get info from the artist table with the minimum detail required for subsonic
+     * @param int $artist_id
+     * @return array
+     */
+    public static function get_id_array($artist_id)
+    {
+        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $db_results   = Dba::read($sql, array($artist_id));
+        $row          = Dba::fetch_assoc($db_results, false);
+
+        return $row;
+    }
+
+    /**
+     * get_child_ids
+     *
+     * Get each album id for the artist
+     * @return int[]
+     */
+    public function get_child_ids()
+    {
+        $sql        = "SELECT  DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $db_results = Dba::read($sql, array($this->id));
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
     }
 
     /**
@@ -439,16 +508,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if (!$this->id) {
             return true;
         }
-        // update artists older than 1 month just in case
-        $is_stale = $this->last_update < (time() - 2629800);
-        if ((int) $this->time == 0 || $is_stale) {
-            $this->time = $this->update_time();
+        if ($this->time == 0) {
+            $this->update_time();
         }
-        if (($this->album_count == 0 || $this->album_group_count == 0) || $is_stale) {
+        if ($this->album_count == 0 && $this->album_group_count == 0 && $this->song_count == 0) {
             $this->update_album_count();
-        }
-        if ($this->song_count == 0 || $is_stale) {
-            $this->song_count = $this->update_song_count();
+            $this->update_song_count();
+            $this->update_time();
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
@@ -533,7 +599,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function get_childrens()
     {
         $medias = array();
-        $albums = $this->getAlbumRepository()->getByArtist($this);
+        $albums = $this->getAlbumRepository()->getByArtist($this->id);
         foreach ($albums as $album_id) {
             $medias[] = array(
                 'object_type' => 'album',
@@ -581,7 +647,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = $this->getSongRepository()->getByArtist($this);
+            $songs = $this->getSongRepository()->getByArtist($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -805,7 +871,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
-                $songs = $this->getSongRepository()->getByArtist($this);
+                $songs = $this->getSongRepository()->getByArtist($this->id);
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                 }
@@ -955,18 +1021,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update_time
      *
      * Get time for an artist and set it.
-     * @return integer
      */
     public function update_time()
     {
         $time = self::get_time((int) $this->id);
-        if ($time !== $this->time && $this->id) {
+        if ($time > 0 && $time !== $this->time && $this->id) {
             $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
+            $this->time = $time;
             self::set_last_update((int) $this->id);
         }
-
-        return $time;
     }
 
     /**
@@ -977,14 +1041,14 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function update_album_count()
     {
         $album_count = self::get_album_count((int) $this->id);
-        if ($album_count !== $this->album_count && $this->id) {
+        if ($album_count > 0 && $album_count !== $this->album_count && $this->id) {
             $sql = "UPDATE `artist` SET `album_count`=$album_count WHERE `id`=" . $this->id;
             Dba::write($sql);
             $this->album_count = $album_count;
             self::set_last_update((int) $this->id);
         }
         $group_count = self::get_album_group_count((int) $this->id);
-        if ($group_count !== $this->album_group_count && $this->id) {
+        if ($group_count > 0 && $group_count !== $this->album_group_count && $this->id) {
             $sql = "UPDATE `artist` SET `album_group_count`=$group_count WHERE `id`=" . $this->id;
             Dba::write($sql);
             $this->album_group_count = $group_count;
@@ -996,18 +1060,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update_song_count
      *
      * Get song_count for an artist and set it.
-     * @return integer
      */
     public function update_song_count()
     {
         $song_count = self::get_song_count((int) $this->id);
-        if ($song_count !== $this->song_count && $this->id) {
+        if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
             $sql = "UPDATE `artist` SET `song_count`=$song_count WHERE `id`=" . $this->id;
             Dba::write($sql);
+            $this->song_count = $song_count;
             self::set_last_update((int) $this->id);
         }
-
-        return $song_count;
     }
 
     /**

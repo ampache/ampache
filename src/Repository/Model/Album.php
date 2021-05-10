@@ -803,6 +803,51 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * get_id_array
+     *
+     * Get info from the album table with the minimum detail required for subsonic
+     * @param int $album_id
+     * @return array
+     */
+    public static function get_id_array($album_id)
+    {
+        $sql          = "SELECT DISTINCT `album`.`id`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `full_name`, `album`.`name`, `album`.`album_artist` FROM `album` WHERE `album`.`id` = ? ORDER BY `album`.`name`";
+        $db_results   = Dba::read($sql, array($album_id));
+        $results      = array();
+
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_child_ids
+     *
+     * Get each song id for the album
+     * @return int[]
+     */
+    public function get_child_ids()
+    {
+        $results    = array();
+        $album_list = $this->album_suite;
+        if (empty($album_list)) {
+            $album_list = array($this->id);
+        }
+        foreach ($album_list as $album_id) {
+            $sql        = "SELECT  DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1'";
+            $db_results = Dba::read($sql, array($album_id));
+
+            while ($row = Dba::fetch_assoc($db_results, false)) {
+                $results[] = (int)$row['id'];
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * get_description
      * @return string
      */

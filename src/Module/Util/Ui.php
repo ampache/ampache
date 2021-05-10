@@ -166,23 +166,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * flip_class
-     *
-     * First initialized with an array of two class names. Subsequent calls
-     * reverse the array then return the first element.
-     * @return mixed
-     */
-    public static function flip_class()
-    {
-        if (self::$_classes === null) {
-            self::$_classes = ['odd', 'even'];
-        }
-        self::$_classes = array_reverse(self::$_classes);
-
-        return self::$_classes[0];
-    }
-
-    /**
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value

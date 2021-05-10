@@ -24,7 +24,7 @@ Use operator ('and', 'or') to choose whether to join or separate each rule when 
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
-| rule_1             | Title                   | Type              |           Valid Items            |
+| rule_1             | Title                   | Operator Type     |           Valid Items            |
 |--------------------|-------------------------|-------------------|:--------------------------------:|
 | anywhere           | Any searchable text     | text              |               song               |
 | title              | Title / Name            | text              | song,album,artist,playlist,label |
@@ -68,8 +68,9 @@ Select the type of search based on the type of data you are searching for. (song
 | bitrate            | Bitrate                 | numeric           |               song               |
 | added              | Added                   | date              |               song               |
 | updated            | Updated                 | date              |               song               |
-| recent_added       | Recently Added          | date              |               song               |
-| recent_updated     | Recently Updated        | date              |               song               |
+| recent_played      | Recently Played         | numeric_limit     |        song,album,artist         |
+| recent_added       | Recently Added          | numeric_limit     |               song               |
+| recent_updated     | Recently Updated        | numeric_limit     |               song               |
 | catalog            | Catalog                 | boolean_numeric   |            song,album            |
 | mbid               | MusicBrainz ID          | text              |        song,album,artist         |
 | mbid_album         | MusicBrainz ID (Album)  | text              |               song               |
@@ -82,11 +83,11 @@ Select the type of search based on the type of data you are searching for. (song
 | username           | Username                | text              |               user               |
 | category           | Category                | text              |              label               |
 
-### Available search operators
+### Available operator values
 
 Select your operator (integer only!) based on the type or your selected search
 
-**note** with the new is_true search your operator is ignored, but still required
+**NOTE** with the numeric_limit and is_true operators the operator is ignored, but still required
 
 | rule_1_operator | Text / Tags / Metadata            | Numeric / user_numeric                       | Date   | Boolean, Numeric, Subsearch / Days |
 |:---------------:|-----------------------------------|----------------------------------------------|--------|------------------------------------|

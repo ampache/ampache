@@ -77,7 +77,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
     public function remove(
         Artist $artist
     ): void {
-        $album_ids = $this->albumRepository->getByArtist($artist);
+        $album_ids = $this->albumRepository->getByArtist($artist->id);
 
         foreach ($album_ids as $albumId) {
             $album = $this->modelFactory->createAlbum($albumId);

@@ -66,6 +66,7 @@ final class DownloadAction extends AbstractStreamAction
             );
         }
 
+
         return $this->stream(
             $mediaIds,
             [],

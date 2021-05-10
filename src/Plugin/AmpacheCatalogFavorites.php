@@ -117,7 +117,7 @@ class AmpacheCatalogFavorites
             $count     = 0;
             echo '<div class="home_plugin">';
             Ui::show_box_top(T_('Highlight'));
-            echo '<table class="tabledata';
+            echo '<table class="tabledata striped-rows';
             if (!$this->gridview) {
                 echo " disablegv";
             }
@@ -130,13 +130,18 @@ class AmpacheCatalogFavorites
                 $user->format();
 
                 if ($item->id) {
-                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
+                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="libitem_menu">';
                     if ($this->gridview) {
                         echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],
                                 'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            if (Stream_Playlist::check_autoplay_next()) {
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&playnext=true',
+                                    'play_next', T_('Play next'),
+                                    'nextplay_' . $userflag['type'] . '_' . $userflag['id']);
+                            }
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true',
                                     'play_add', T_('Play last'),

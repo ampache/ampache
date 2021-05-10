@@ -62,7 +62,7 @@ final class ArtistAlbumsMethod
 
             return false;
         }
-        $albums = static::getAlbumRepository()->getByArtist($artist);
+        $albums = static::getAlbumRepository()->getByArtist($object_id);
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($albums)) {
             Api::empty('album', $input['api_format']);

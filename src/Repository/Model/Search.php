@@ -347,15 +347,20 @@ class Search extends playlist_object
             'sql' => '>'
         );
 
+        $this->basetypes['recent_played'][] = array(
+            'name' => 'ply',
+            'description' => T_('Limit'),
+            'sql' => '`date`'
+        );
         $this->basetypes['recent_added'][] = array(
             'name' => 'add',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`addition_time`'
         );
 
         $this->basetypes['recent_updated'][] = array(
             'name' => 'upd',
-            'description' => T_('# songs'),
+            'description' => T_('Limit'),
             'sql' => '`update_time`'
         );
 
@@ -601,6 +606,7 @@ class Search extends playlist_object
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added');
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
@@ -672,12 +678,15 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
+
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true');
+        $this->type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true');
     } // artisttypes
 
     /**
@@ -720,6 +729,8 @@ class Search extends playlist_object
             $users[$userid] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
+
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
@@ -1437,6 +1448,11 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1470,8 +1486,8 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate':
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
-                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
-                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 default:
                     break;
@@ -1702,6 +1718,11 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;
@@ -1709,6 +1730,11 @@ class Search extends playlist_object
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
                     $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`))) AS `Counting` FROM `artist` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `artist`.`id` = `dupe_search1`.`dupe_id1`";
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`))) AS `Counting` FROM `artist` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `artist`.`id` = `dupe_search2`.`dupe_id2`";
+                    break;
+                case 'possible_duplicate_album':
+                    $where[]                     = "(`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL)";
+                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
+                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
                     break;
                 default:
                     break;
@@ -2113,6 +2139,11 @@ class Search extends playlist_object
                 case 'updated':
                     $input   = strtotime((string) $input);
                     $where[] = "`song`.`update_time` $sql_match_operator $input";
+                    break;
+                case 'recent_played':
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
