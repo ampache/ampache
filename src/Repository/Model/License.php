@@ -47,12 +47,12 @@ final class License implements LicenseInterface
 
     public function getId(): int
     {
-        return (int) ($this->getData()['id'] ?? 0);
+        return (int) ($this->getDbData()['id'] ?? 0);
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
     public function getLinkFormatted(): string
@@ -73,20 +73,20 @@ final class License implements LicenseInterface
 
     public function getName(): string
     {
-        return (string) ($this->getData()['name'] ?? '');
+        return (string) ($this->getDbData()['name'] ?? '');
     }
 
     public function getLink(): string
     {
-        return (string) ($this->getData()['external_link'] ?? '');
+        return (string) ($this->getDbData()['external_link'] ?? '');
     }
 
     public function getDescription(): string
     {
-        return (string) ($this->getData()['description'] ?? '');
+        return (string) ($this->getDbData()['description'] ?? '');
     }
 
-    private function getData(): array
+    private function getDbData(): array
     {
         if ($this->data === null) {
             $this->data = $this->licenseRepository->getDataById($this->id);

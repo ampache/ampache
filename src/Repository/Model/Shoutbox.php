@@ -83,7 +83,7 @@ final class Shoutbox implements ShoutboxInterface
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
     public function getObjectType(): string

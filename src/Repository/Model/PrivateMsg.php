@@ -65,7 +65,7 @@ final class PrivateMsg implements PrivateMessageInterface
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
     public function getSenderUserLink(): string
