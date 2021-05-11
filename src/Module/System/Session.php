@@ -355,7 +355,7 @@ final class Session implements SessionInterface
         }
 
         $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
+            'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
@@ -543,6 +543,7 @@ final class Session implements SessionInterface
         $cookie_life   = (int)AmpConfig::get('cookie_life');
         $cookie_path   = (string)AmpConfig::get('cookie_path');
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
+        $cookie_domain = (string) AmpConfig::get('cookie_domain');
 
         if (isset($_SESSION)) {
             static::getCookieSetter()->set(
@@ -551,13 +552,19 @@ final class Session implements SessionInterface
                 [
                     'expires' => $cookie_life,
                     'path' => $cookie_path,
-                    'domain' => '',
+                    'domain' => $cookie_domain,
                     'secure' => $cookie_secure,
                     'samesite' => 'Strict'
                 ]
             );
         } else {
-            session_set_cookie_params($cookie_life, $cookie_path, '', $cookie_secure);
+            session_set_cookie_params([
+                'lifetime' => $cookie_life,
+                'path' => $cookie_path,
+                'domain' => $cookie_domain,
+                'secure' => $cookie_secure,
+                'samesite' => 'Strict'
+            ]);
         }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
@@ -625,7 +632,7 @@ final class Session implements SessionInterface
                 'path' => AmpConfig::get('cookie_path'),
                 'domain' => '',
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+                'samesite' => 'Strict'
             ]
         );
     }
