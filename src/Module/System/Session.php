@@ -443,7 +443,7 @@ final class Session implements SessionInterface
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
-        if ($db_results = Dba::write($sql, array($expire, $sid))) {
+        if (Dba::write($sql, array($expire, $sid))) {
             debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
     }
@@ -657,7 +657,7 @@ final class Session implements SessionInterface
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        Dba::write($sql, array($username, $token, time() + $remember_length));
+        Dba::write($sql, array($username, $token, $remember_length));
     }
 
     /**
