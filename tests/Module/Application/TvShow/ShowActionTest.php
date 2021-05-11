@@ -28,7 +28,6 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\TvShowInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;

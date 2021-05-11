@@ -44,4 +44,9 @@ interface TvShowSeasonRepositoryInterface
         int $seasonNumber,
         int $seasonId
     ): void;
+
+    /**
+     * @return int[]
+     */
+    public function getSeasonIdsByTvShowId(int $tvShowId): array;
 }

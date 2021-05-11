@@ -27,7 +27,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Doctrine\DBAL\Connection;
 
-final class TvShowSeasonSeasonRepository implements TvShowSeasonRepositoryInterface
+final class TvShowSeasonRepository implements TvShowSeasonRepositoryInterface
 {
     private Connection $database;
 
@@ -49,7 +49,7 @@ final class TvShowSeasonSeasonRepository implements TvShowSeasonRepositoryInterf
     }
 
     /**
-     * gets all episodes for this tv show season
+     * gets all episodes for a tv show season
      * @return int[]
      */
     public function getEpisodeIds(
@@ -154,5 +154,23 @@ final class TvShowSeasonSeasonRepository implements TvShowSeasonRepositoryInterf
                 $seasonId
             ]
         );
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getSeasonIdsByTvShowId(int $tvShowId): array
+    {
+        $dbResults = $this->database->executeQuery(
+            'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`',
+            [$tvShowId]
+        );
+
+        $result = [];
+        while ($rowId = $dbResults->fetchOne()) {
+            $result[] = (int) $rowId;
+        }
+
+        return $result;
     }
 }

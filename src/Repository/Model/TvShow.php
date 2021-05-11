@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -116,44 +117,19 @@ final class TvShow extends database_object implements TvShowInterface
     public function get_seasons(): array
     {
         if ($this->seasonIds === null) {
-            $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-            $db_results = Dba::read($sql, array($this->id));
-
-            $this->seasonIds = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $this->seasonIds[] = $row['id'];
-            }
+            $this->seasonIds = $this->getTvShowSeasonRepository()->getSeasonIdsByTvShowId($this->getId());
         }
 
         return $this->seasonIds;
     }
 
     /**
-     * get_episodes
      * gets all episodes for this tv show
      */
     public function get_episodes()
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` ";
-        $sql .= "WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `tvshow_season`.`season_number`, `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_episodes
+        return $this->getTvShowEpisodeRepository()->getEpisodeIdsByTvShow($this->getId());
+    }
 
     /**
      * _get_extra info
@@ -252,7 +228,7 @@ final class TvShow extends database_object implements TvShowInterface
      */
     public function get_childrens()
     {
-        return array('tvshow_season' => $this->get_seasons());
+        return ['tvshow_season' => $this->get_seasons()];
     }
 
     /**
@@ -263,7 +239,7 @@ final class TvShow extends database_object implements TvShowInterface
     {
         debug_event(self::class, 'search_childrens ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -272,7 +248,7 @@ final class TvShow extends database_object implements TvShowInterface
      */
     public function get_medias($filter_type = null)
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type == 'video') {
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
@@ -540,5 +516,15 @@ final class TvShow extends database_object implements TvShowInterface
         global $dic;
 
         return $dic->get(TvShowSeasonRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTvShowEpisodeRepository(): TvShowEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TvShowEpisodeRepositoryInterface::class);
     }
 }

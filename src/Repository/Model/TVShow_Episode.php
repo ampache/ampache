@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
+use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 
 final class TVShow_Episode extends Video implements TvShowEpisodeInterface
 {
@@ -79,17 +79,6 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused tv shows episodes
-     */
-    public static function garbage_collection()
-    {
-        $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
-        Dba::write($sql);
-    }
-
-    /**
      * insert
      * Insert a new tv show episode and related entities.
      * @param array $data
@@ -128,34 +117,31 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
 
         $sdata = $data;
         // Replace relation name with db ids
-        $sdata['tvshow']                      = $tvshow;
-        $sdata['tvshow_season']               = $tvshow_season;
+        $sdata['tvshow']        = $tvshow;
+        $sdata['tvshow_season'] = $tvshow_season;
 
         return self::create($sdata);
     }
 
     /**
-     * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
      * @param array $data
      * @return integer
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " . "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array(
+        static::getTvShowEpisodeRepository()->create(
             $data['id'],
             $data['original_name'],
             $data['tvshow_season'],
             $data['tvshow_episode'],
             $data['summary']
-        ));
+        );
 
         return $data['id'];
     }
 
     /**
-     * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      * @param array $data
      * @return integer
@@ -164,31 +150,20 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     {
         parent::update($data);
 
-        $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->getOriginalName();
-        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->getSeasonId();
-        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->getEpisodeNumber();
-        $summary        = isset($data['summary']) ? $data['summary'] : $this->getSummary();
-
-        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
-
+        static::getTvShowEpisodeRepository()->update(
+            $data['original_name'] ?? $this->getOriginalName(),
+            $data['tvshow_season'] ?? $this->getSeasonId(),
+            $data['tvshow_episode'] ?? $this->getEpisodeNumber(),
+            $data['summary'] ?? $this->getSummary(),
+            $this->getId()
+        );
 
         return $this->id;
     }
 
-    /**
-     * format
-     * this function takes the object and formats some values
-     * @param boolean $details
-     * @return boolean
-     */
-    public function format($details = true)
+    public function getTitleFormatted(): string
     {
-        parent::format($details);
-
-        $this->f_title       = ($this->getOriginalName()?: $this->f_title);
-
-        return true;
+        return $this->getOriginalName()?: $this->f_title;
     }
 
     public function getFullTitle(): string
@@ -203,7 +178,11 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
 
     public function getLinkFormatted(): string
     {
-        return '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        return sprintf(
+            '<a href="%s">%s</a>',
+            $this->link,
+            $this->getTitleFormatted()
+        );
     }
 
     public function getTVShowSeason(): TVShow_Season
@@ -222,28 +201,28 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     public function get_keywords()
     {
         $keywords           = parent::get_keywords();
-        $keywords['tvshow'] = array(
+        $keywords['tvshow'] = [
             'important' => true,
             'label' => T_('TV Show'),
             'value' => $this->getTVShowSeason()->getTvShow()->getNameFormatted()
-        );
-        $keywords['tvshow_season'] = array(
+        ];
+        $keywords['tvshow_season'] = [
             'important' => false,
             'label' => T_('Season'),
             'value' => $this->getTVShowSeason()->getNameFormatted()
-        );
+        ];
         if ($this->getEpisodeNumber()) {
-            $keywords['tvshow_episode'] = array(
+            $keywords['tvshow_episode'] = [
                 'important' => false,
                 'label' => T_('Episode'),
                 'value' => $this->getEpisodeNumber()
-            );
+            ];
         }
-        $keywords['type'] = array(
+        $keywords['type'] = [
             'important' => false,
             'label' => null,
             'value' => 'tvshow'
-        );
+        ];
 
         return $keywords;
     }
@@ -254,7 +233,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow_season', 'object_id' => $this->getSeasonId());
+        return ['object_type' => 'tvshow_season', 'object_id' => $this->getSeasonId()];
     }
 
     /**
@@ -263,10 +242,10 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
      */
     public function get_release_item_art()
     {
-        return array(
+        return [
             'object_type' => 'tvshow_season',
             'object_id' => $this->getSeasonId()
-        );
+        ];
     }
 
     /**
@@ -320,8 +299,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     {
         $deleted = parent::remove();
         if ($deleted) {
-            $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            static::getTvShowEpisodeRepository()->delete($this);
         }
 
         return $deleted;
@@ -334,7 +312,7 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
             if ($this->getEpisodeNumber()) {
                 $this->filename .= ' - S' . sprintf('%02d', $this->getTVShowSeason()->getSeasonNumber()) . 'E' . sprintf('%02d', $this->getEpisodeNumber());
             }
-            $this->filename .= ' - ' . $this->f_title;
+            $this->filename .= ' - ' . $this->getTitleFormatted();
         }
 
         return $this->filename;
@@ -353,5 +331,15 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTvShowEpisodeRepository(): TvShowEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TvShowEpisodeRepositoryInterface::class);
     }
 }

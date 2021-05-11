@@ -33,6 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -421,7 +422,7 @@ class Video extends database_object implements
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
         // clean up sub-tables of videos
         Movie::garbage_collection();
-        TVShow_Episode::garbage_collection();
+        static::getTvShowEpisodeRepository()->collectGarbage();
         static::getTvShowSeasonRepository()->collectGarbage();
         TvShow::garbage_collection();
         Personal_Video::garbage_collection();
@@ -1124,5 +1125,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(TvShowSeasonRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTvShowEpisodeRepository(): TvShowEpisodeRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TvShowEpisodeRepositoryInterface::class);
     }
 }

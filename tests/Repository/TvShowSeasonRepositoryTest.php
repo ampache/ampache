@@ -30,20 +30,20 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Mockery\MockInterface;
 
-class TvShowSeasonSeasonRepositoryTest extends MockeryTestCase
+class TvShowSeasonRepositoryTest extends MockeryTestCase
 {
     private MockInterface $database;
 
     private MockInterface $configContainer;
 
-    private TvShowSeasonSeasonRepository $subject;
+    private TvShowSeasonRepository $subject;
 
     public function setUp(): void
     {
         $this->database        = $this->mock(Connection::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
-        $this->subject = new TvShowSeasonSeasonRepository(
+        $this->subject = new TvShowSeasonRepository(
             $this->database,
             $this->configContainer
         );
@@ -236,5 +236,31 @@ class TvShowSeasonSeasonRepositoryTest extends MockeryTestCase
             ->once();
 
         $this->subject->update($tvShowId, $seasonNumber, $seasonId);
+    }
+
+    public function testGetSeasonIdsByTvShowIdReturnsList(): void
+    {
+        $tvShowId = 666;
+        $seasonId = 42;
+
+        $result = $this->mock(Result::class);
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`',
+                [$tvShowId]
+            )
+            ->once()
+            ->andReturn($result);
+
+        $result->shouldReceive('fetchOne')
+            ->withNoArgs()
+            ->times(2)
+            ->andReturn((string) $seasonId, false);
+
+        $this->assertSame(
+            [$seasonId],
+            $this->subject->getSeasonIdsByTvShowId($tvShowId)
+        );
     }
 }
