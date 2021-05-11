@@ -658,7 +658,7 @@ final class Session implements SessionInterface
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        return Dba::write($sql, array($username, $token, time() + $remember_length));
+        return Dba::write($sql, array($username, $token, $remember_length));
     }
 
     /**
