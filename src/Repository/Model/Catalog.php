@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Album\AlbumArtistUpdaterInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\ArtItemGatherer;
@@ -2352,7 +2353,7 @@ abstract class Catalog extends database_object
                     if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
                     }
-                    Album::update_album_artist();
+                    static::getAlbumArtistUpdater()->update();
                 }
                 break;
             case 'update_all_catalogs':
@@ -2382,7 +2383,7 @@ abstract class Catalog extends database_object
                         $catalog->add_to_catalog();
                     }
                 }
-                Album::update_album_artist();
+                static::getAlbumArtistUpdater()->update();
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
@@ -2407,7 +2408,7 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
-                            Album::update_album_artist();
+                            static::getAlbumArtistUpdater()->update();
                         }
                     }
                 } // end if add
@@ -2644,5 +2645,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumArtistUpdater(): AlbumArtistUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumArtistUpdaterInterface::class);
     }
 }

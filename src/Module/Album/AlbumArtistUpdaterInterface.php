@@ -17,22 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Album;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
-    AlbumArtistUpdaterInterface::class => autowire(AlbumArtistUpdater::class),
-];
+interface AlbumArtistUpdaterInterface
+{
+    /**
+     * find albums that are missing an album_artist and generate one.
+     *
+     * @param int[] $albumIds
+     */
+    public function update(array $albumIds = []): void;
+}

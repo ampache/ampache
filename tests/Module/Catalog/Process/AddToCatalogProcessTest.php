@@ -23,26 +23,41 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\Process;
 
+use Ampache\MockeryTestCase;
 use Ampache\Module\Album\AlbumArtistUpdaterInterface;
 use Ampache\Repository\Model\Catalog;
+use Mockery\MockInterface;
 
-final class AddToCatalogProcess implements CatalogProcessInterface
+class AddToCatalogProcessTest extends MockeryTestCase
 {
-    private AlbumArtistUpdaterInterface $albumArtistUpdater;
+    private MockInterface $albumArtistUpdater;
 
-    public function __construct(
-        AlbumArtistUpdaterInterface $albumArtistUpdater
-    ) {
-        $this->albumArtistUpdater = $albumArtistUpdater;
+    private AddToCatalogProcess $subject;
+
+    public function setUp(): void
+    {
+        $this->albumArtistUpdater = $this->mock(AlbumArtistUpdaterInterface::class);
+
+        $this->subject = new AddToCatalogProcess(
+            $this->albumArtistUpdater
+        );
     }
 
-    public function process(Catalog $catalog): void
+    public function testProcessProcesses(): void
     {
-        $options = [
-            'gather_art' => false,
-            'parse_playlist' => false
-        ];
-        $catalog->add_to_catalog($options);
-        $this->albumArtistUpdater->update();
+        $catalog = $this->mock(Catalog::class);
+
+        $catalog->shouldReceive('add_to_catalog')
+            ->with([
+                'gather_art' => false,
+                'parse_playlist' => false
+            ])
+            ->once();
+
+        $this->albumArtistUpdater->shouldReceive('update')
+            ->withNoArgs()
+            ->once();
+
+        $this->subject->process($catalog);
     }
 }

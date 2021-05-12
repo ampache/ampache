@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Module\Album\AlbumArtistUpdaterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -36,10 +37,14 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 {
     private CatalogGarbageCollectorInterface $catalogGarbageCollector;
 
+    private AlbumArtistUpdaterInterface $albumArtistUpdater;
+
     public function __construct(
-        CatalogGarbageCollectorInterface $catalogGarbageCollector
+        CatalogGarbageCollectorInterface $catalogGarbageCollector,
+        AlbumArtistUpdaterInterface $albumArtistUpdater
     ) {
         $this->catalogGarbageCollector = $catalogGarbageCollector;
+        $this->albumArtistUpdater      = $albumArtistUpdater;
     }
 
     public function update(
@@ -128,7 +133,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $catalog->add_to_catalog($options);
-                Album::update_album_artist();
+
+                $this->albumArtistUpdater->update();
+
                 // update artists who need a recent update
                 $artists = $catalog->get_artist_ids('count');
                 foreach ($artists as $artist_id) {
