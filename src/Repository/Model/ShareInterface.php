@@ -26,8 +26,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 
 interface ShareInterface
 {
-    public function getId(): int;
-
     public function getPublicUrl(): string;
 
     public function getAllowStream(): int;
@@ -66,9 +64,5 @@ interface ShareInterface
 
     public function getCreationDateFormatted(): string;
 
-    public function update(array $data, User $user): int;
-
     public function create_fake_playlist(): Stream_Playlist;
-
-    public function get_user_owner(): int;
 }

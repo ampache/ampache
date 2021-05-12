@@ -281,7 +281,7 @@ final class ModelFactory implements ModelFactoryInterface
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
-    public function mapObjectType(string $objectType, int $objectId): ?library_item
+    public function mapObjectType(string $objectType, int $objectId): ?database_object
     {
         $className = ObjectTypeToClassNameMapper::map($objectType);
 
@@ -297,7 +297,7 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     /**
-     * @return array<class-string, callable(int): library_item>
+     * @return array<class-string, callable(int): database_object>
      */
     private function getMap(): array
     {

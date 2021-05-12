@@ -31,12 +31,11 @@ use Ampache\Repository\ShareRepositoryInterface;
 
 final class Share extends database_object implements ShareInterface
 {
+    /** @var string[] */
     public const ALLOWED_SHARE_TYPES = ['album', 'song', 'playlist', 'video'];
 
-    protected const DB_TABLENAME = 'share';
-
     /** @var null|array<string, mixed> */
-    private ?array $data = null;
+    private ?array $dbData = null;
 
     /** @var Video|Song|Album|Playlist|null  */
     private ?database_object $object = null;
@@ -63,72 +62,72 @@ final class Share extends database_object implements ShareInterface
 
     public function getId(): int
     {
-        return (int) ($this->getData()['id'] ?? 0);
+        return $this->id;
     }
 
     public function getPublicUrl(): string
     {
-        return (string) ($this->getData()['public_url'] ?? '');
+        return (string) ($this->getDbData()['public_url'] ?? '');
     }
 
     public function getAllowStream(): int
     {
-        return (int) ($this->getData()['allow_stream'] ?? 0);
+        return (int) ($this->getDbData()['allow_stream'] ?? 0);
     }
 
     public function getAllowDownload(): int
     {
-        return (int) ($this->getData()['allow_download'] ?? 0);
+        return (int) ($this->getDbData()['allow_download'] ?? 0);
     }
 
     public function getCreationDate(): int
     {
-        return (int) ($this->getData()['creation_date'] ?? 0);
+        return (int) ($this->getDbData()['creation_date'] ?? 0);
     }
 
     public function getLastvisitDate(): int
     {
-        return (int) ($this->getData()['lastvisit_date'] ?? 0);
+        return (int) ($this->getDbData()['lastvisit_date'] ?? 0);
     }
 
     public function getExpireDays(): int
     {
-        return (int) ($this->getData()['expire_days'] ?? 0);
+        return (int) ($this->getDbData()['expire_days'] ?? 0);
     }
 
     public function getMaxCounter(): int
     {
-        return (int) ($this->getData()['max_counter'] ?? 0);
+        return (int) ($this->getDbData()['max_counter'] ?? 0);
     }
 
     public function getCounter(): int
     {
-        return (int) ($this->getData()['counter'] ?? 0);
+        return (int) ($this->getDbData()['counter'] ?? 0);
     }
 
     public function getSecret(): string
     {
-        return (string) ($this->getData()['secret'] ?? '');
+        return (string) ($this->getDbData()['secret'] ?? '');
     }
 
     public function getDescription(): string
     {
-        return (string) ($this->getData()['description'] ?? '');
+        return (string) ($this->getDbData()['description'] ?? '');
     }
 
     public function getObjectId(): int
     {
-        return (int) ($this->getData()['object_id'] ?? 0);
+        return (int) ($this->getDbData()['object_id'] ?? 0);
     }
 
     public function getObjectType(): string
     {
-        return (string) ($this->getData()['object_type'] ?? '');
+        return (string) ($this->getDbData()['object_type'] ?? '');
     }
 
     public function getUserId(): int
     {
-        return (int) ($this->getData()['user'] ?? 0);
+        return (int) ($this->getDbData()['user'] ?? 0);
     }
 
     public static function get_url(int $share_id, string $secret): string
@@ -186,15 +185,17 @@ final class Share extends database_object implements ShareInterface
     }
 
     /**
-     * @param array{max_counter: int, expire: int, allow_stream: int, allow_download: int, description?: string} $data
+     * @param array{
+     *  max_counter: int,
+     *  expire: int,
+     *  allow_stream: int,
+     *  allow_download: int,
+     *  description?: string,
+     *  user_id?: int
+     * } $data
      */
-    public function update(array $data, User $user): int
+    public function update(array $data): int
     {
-        $userId = null;
-        if (!$user->has_access('75')) {
-            $userId = $user->getId();
-        }
-
         $this->shareRepository->update(
             $this,
             (int) $data['max_counter'],
@@ -202,7 +203,7 @@ final class Share extends database_object implements ShareInterface
             $data['allow_stream'] ? 1 : 0,
             $data['allow_download'] ? 1 : 0,
             $data['description'] ?? $this->getDescription(),
-            $userId
+            $data['user_id'] ?? null
         );
 
         return $this->getId();
@@ -245,12 +246,15 @@ final class Share extends database_object implements ShareInterface
         return $this->getUserId();
     }
 
-    private function getData(): array
+    /**
+     * @return array<string, int|string>
+     */
+    private function getDbData(): array
     {
-        if ($this->data === null) {
-            $this->data = $this->get_info($this->id);
+        if ($this->dbData === null) {
+            $this->dbData = $this->shareRepository->getDbData($this->getId());
         }
 
-        return $this->data;
+        return $this->dbData;
     }
 }

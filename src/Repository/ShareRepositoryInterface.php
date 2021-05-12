@@ -57,4 +57,9 @@ interface ShareRepositoryInterface
         string $description,
         ?int $userId
     ): void;
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getDbData(int $shareId): array;
 }

@@ -27,11 +27,13 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Wanted;
 use Psr\Http\Message\ResponseInterface;
@@ -111,9 +113,17 @@ final class EditObjectAction extends AbstractEditAction
             if (filter_has_var(INPUT_POST, 'mbid_group')) {
                 $_POST['mbid_group'] = $libitem->mbid_group;
             }
+            /**
+             * This whole update process needs a refactoring. Remove this special handling when done
+             */
+            if ($libitem instanceof Share) {
+                $user = $gatekeeper->getUser();
+
+                $_POST['user_id'] = !$user->has_access(AccessLevelEnum::LEVEL_MANAGER) ? $user->getId() : null;
+            }
         }
 
-        $new_id = $libitem->update($_POST, Core::get_global('user'));
+        $new_id = $libitem->update($_POST);
 
         xoutput_headers();
         $results = array('id' => $new_id);

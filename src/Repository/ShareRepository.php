@@ -144,4 +144,21 @@ final class ShareRepository implements ShareRepositoryInterface
             $params
         );
     }
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getDbData(int $shareId): array
+    {
+        $dbResults = $this->database->fetchAssociative(
+            'SELECT * FROM `share` WHERE `id` = ?',
+            [$shareId]
+        );
+
+        if ($dbResults === false) {
+            return [];
+        }
+
+        return $dbResults;
+    }
 }
