@@ -23,14 +23,23 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 session_start();
+
+/** @var string $web_path */
+/** @var Browse $browse $web_path */
+/** @var int[] $object_ids */
+/** @var int $limit_threshold */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
@@ -88,7 +97,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id, $_SESSION['catalog']);
+            $libitem = $modelFactory->createArtist($artist_id, (int) $_SESSION['catalog']);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);

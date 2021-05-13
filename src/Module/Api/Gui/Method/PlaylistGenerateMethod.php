@@ -147,7 +147,7 @@ final class PlaylistGenerateMethod implements MethodInterface
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new Artist((int) $input['artist']);
+        $artist = $this->modelFactory->createArtist((int) $input['artist']);
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';

@@ -1726,10 +1726,13 @@ abstract class Catalog extends database_object
             Dba::write($sql, array($object_id));
             $artists[]  = (int) $album['album_artist'];
         }
+
+        $modelFactory = static::getModelFactory();
+
         // removing an album means their counts have changed too
         foreach ($artists as $artist_id) {
             if ($artist_id > 0) {
-                $artist = new Artist($artist_id);
+                $artist = $modelFactory->createArtist($artist_id);
                 $artist->update_album_count();
             }
         }
@@ -2341,7 +2344,7 @@ abstract class Catalog extends database_object
                             $artists = $catalog->get_artist_ids('count');
                             foreach ($artists as $artist_id) {
                                 if ($artist_id > 0) {
-                                    $artist = new Artist($artist_id);
+                                    $artist = static::getModelFactory()->createArtist((int) $artist_id);
                                     $artist->update_album_count();
                                 }
                             }

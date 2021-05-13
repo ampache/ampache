@@ -213,7 +213,7 @@ final class XmlOutput implements ApiOutputInterface
         $string = '';
 
         foreach ($artistIds as $artistId) {
-            $artist = new Artist($artistId);
+            $artist = $this->modelFactory->createArtist($artist_id);
             $artist->format();
 
             $rating     = new Rating($artistId, 'artist');
@@ -974,7 +974,7 @@ final class XmlOutput implements ApiOutputInterface
                     if ($include) {
                         $string .= $this->artists(array($objectId), array('songs', 'albums'), $userId, false);
                     } else {
-                        $artist = new Artist($objectId);
+                        $artist = $this->modelFactory->createArtist($objectId);
                         $artist->format();
                         $albums = $this->albumRepository->getByArtist((int) $objectId, null, true);
                         $string .= "<$type id=\"" . $objectId . "\">\n" .

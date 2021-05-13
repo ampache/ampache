@@ -104,9 +104,10 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createArtist(
-        ?int $artistId = null
+        ?int $artistId = null,
+        int $catalogId = 0
     ): Artist {
-        return new Artist($artistId);
+        return new Artist($artistId, $catalogId);
     }
 
     public function createWanted(
@@ -116,6 +117,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(WantedRepositoryInterface::class),
             $this->dic->get(MusicBrainz::class),
             $this->dic->get(MissingArtistLookupInterface::class),
+            $this->dic->get(ModelFactoryInterface::class),
             $wantedId
         );
     }

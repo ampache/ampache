@@ -33,6 +33,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use RuntimeException;
 
 class Upload
@@ -79,7 +80,7 @@ class Upload
                     if (!$artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id)) {
                         return self::rerror($targetfile);
                     }
-                    $artist = new Artist($artist_id);
+                    $artist = static::getModelFactory()->createArtist($artist_id);
                     if (!Access::check('interface', 25) && $artist->get_user_owner() != $options['user_upload']) {
                         debug_event(self::class, "Artist owner doesn't match the current user.", 3);
 
@@ -212,7 +213,7 @@ class Upload
 
                 return false;
             }
-            $artist = new Artist($artist_id);
+            $artist = static::getModelFactory()->createArtist($artist_id);
             if (!$artist->get_user_owner()) {
                 static::getArtistRepository()->updateArtistUser($artist, $user_id);
             }
@@ -346,5 +347,15 @@ class Upload
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

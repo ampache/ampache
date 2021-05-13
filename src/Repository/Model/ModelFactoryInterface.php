@@ -54,7 +54,8 @@ interface ModelFactoryInterface
     ): Album;
 
     public function createArtist(
-        ?int $artistId = null
+        ?int $artistId = null,
+        int $catalogId = 0
     ): Artist;
 
     public function createWanted(

@@ -632,7 +632,7 @@ class Song extends database_object implements
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
-        $artist = new Artist($artist_id);
+        $artist = static::getModelFactory()->createArtist((int) $artist_id);
         if ($artist->prefix) {
             return $artist->prefix . " " . $artist->name;
         } else {
@@ -651,7 +651,7 @@ class Song extends database_object implements
         if (!$album_artist_id) {
             $album_artist_id = $this->albumartist;
         }
-        $album_artist = new Artist($album_artist_id);
+        $album_artist = static::getModelFactory()->createArtist((int) $album_artist_id);
         if ($album_artist->prefix) {
             return $album_artist->prefix . " " . $album_artist->name;
         } else {
@@ -1139,7 +1139,7 @@ class Song extends database_object implements
         static::getDataMigrator()->migrate('artist', $old_artist, $new_artist);
 
         if ($new_artist > 0) {
-            $artist = new Artist($new_artist);
+            $artist = static::getModelFactory()->createArtist((int) $new_artist);
             $artist->update_album_count();
         }
     } // update_artist
@@ -1324,7 +1324,7 @@ class Song extends database_object implements
         $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
 
         if (AmpConfig::get('licensing') && $this->license !== null) {
-            $license = $this->getModelFactory()->createLicense((int) $this->license);
+            $license = static::getModelFactory()->createLicense((int) $this->license);
 
             $this->f_license = $license->getLinkFormatted();
         }
@@ -2031,7 +2031,7 @@ class Song extends database_object implements
     /**
      * @deprecated Inject by constructor
      */
-    private function getModelFactory(): ModelFactoryInterface
+    private static function getModelFactory(): ModelFactoryInterface
     {
         global $dic;
 

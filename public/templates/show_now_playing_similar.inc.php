@@ -22,7 +22,12 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
+
+/** @var ModelFactoryInterface $modelFactory */
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 ?>
 
@@ -40,7 +45,7 @@ use Ampache\Repository\Model\Song;
                         echo scrub_out($a['name']);
                     }
                 } else {
-                    $artist = new Artist($a['id']);
+                    $artist = $modelFactory->createArtist((int) $a['id']);
                     $artist->format();
                     echo $artist->f_link;
                 } ?>

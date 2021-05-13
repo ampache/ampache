@@ -23,9 +23,15 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var int[] $object_ids */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $thcount  = 8; ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
@@ -62,7 +68,7 @@ $thcount  = 8; ?>
         <?php
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id);
+            $libitem = $modelFactory->createArtist($artist_id);
             $libitem->format(); ?>
         <tr id="artist_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>

@@ -28,16 +28,21 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Generator;
 
 final class ArtistRepository implements ArtistRepositoryInterface
 {
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     /**
@@ -128,7 +133,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
 
         $row = Dba::fetch_assoc($dbResults);
 
-        return new Artist($row['id'] ?? 0);
+        return $this->modelFactory->createArtist((int) ($row['id'] ?? 0));
     }
 
     /**

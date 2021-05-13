@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
@@ -39,12 +40,16 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
     private AlbumArtistUpdaterInterface $albumArtistUpdater;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
-        AlbumArtistUpdaterInterface $albumArtistUpdater
+        AlbumArtistUpdaterInterface $albumArtistUpdater,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->albumArtistUpdater      = $albumArtistUpdater;
+        $this->modelFactory            = $modelFactory;
     }
 
     public function update(
@@ -140,7 +145,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $artists = $catalog->get_artist_ids('count');
                 foreach ($artists as $artist_id) {
                     if ($artist_id > 0) {
-                        $artist = new Artist($artist_id);
+                        $artist = $this->modelFactory->createArtist($artist_id);
                         $artist->update_album_count();
                     }
                 }

@@ -174,7 +174,7 @@ class Song_Preview extends database_object implements
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
-        $artist = new Artist($artist_id);
+        $artist = $this->getModelFactory()->createArtist((int) $artist_id);
         if ($artist->prefix) {
             return $artist->prefix . " " . $artist->name;
         } else {
@@ -461,5 +461,15 @@ class Song_Preview extends database_object implements
         global $dic;
 
         return $dic->get(ExtensionToMimeTypeMapperInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

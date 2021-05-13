@@ -614,7 +614,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $artist = new Artist($pathreq[1]);
+                        $artist = static::getModelFactory()->createArtist((int) $pathreq[1]);
                         if ($artist->id) {
                             $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
@@ -827,7 +827,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get artist's albums list
-                        $artist = new Artist($pathreq[1]);
+                        $artist = $modelFactory->createArtist((int) $pathreq[1]);
                         if ($artist->id) {
                             $album_ids                  = static::getAlbumRepository()->getByArtist($artist->id);
                             [$maxCount, $album_ids]     = self::_slice($album_ids, $start, $count);
@@ -1518,11 +1518,13 @@ class Upnp_Api
         //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ) , 5);
         debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $search_terms['type'], 5);
 
+        $modelFactory = static::getModelFactory();
+
         switch ($search_terms['type']) {
             case 'artist':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
-                    $artist = new Artist($artist_id);
+                    $artist = $modelFactory->createArtist($artist_id);
                     $artist->format();
                     $mediaItems[] = self::_itemArtist($artist, "amp://music/artists");
                 }

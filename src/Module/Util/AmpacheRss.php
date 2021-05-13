@@ -349,8 +349,10 @@ class AmpacheRss
 
         $results = array();
 
+        $modelFactory = static::getModelFactory();
+
         foreach ($ids as $artistid) {
-            $artist = new Artist($artistid);
+            $artist = $modelFactory->createArtist((int) $artistid);
             $artist->format();
 
             $xml_array = array(

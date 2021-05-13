@@ -379,7 +379,6 @@ class User extends database_object
                 $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
                 $data->format();
-                $data->f_link;
                 $items[] = $data;
             } elseif ($type == 'album') {
                 // If its an album
@@ -388,7 +387,7 @@ class User extends database_object
                 $items[] = $data;
             } elseif ($type == 'artist') {
                 // If its an artist
-                $data = new Artist($row['object_id']);
+                $data = $this->getModelFactory()->createArtist((int) $row['object_id']);
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
@@ -1194,5 +1193,15 @@ class User extends database_object
         global $dic;
 
         return $dic->get(IpHistoryRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

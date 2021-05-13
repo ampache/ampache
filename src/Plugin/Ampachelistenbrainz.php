@@ -25,6 +25,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -122,7 +123,7 @@ class Ampachelistenbrainz
         }
 
         $album  = new Album($song->album);
-        $artist = new Artist($song->artist);
+        $artist = $this->getModelFactory()->createArtist($song->artist);
 
         $additional_info = array();
         if ($song->mbid) {
@@ -228,4 +229,14 @@ class Ampachelistenbrainz
 
         return true;
     } // load
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
+    }
 }

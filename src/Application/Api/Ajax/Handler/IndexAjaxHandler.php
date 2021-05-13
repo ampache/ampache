@@ -142,7 +142,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (isset($_REQUEST['artist']) || isset($_REQUEST['fullname']))) {
                     if ($_REQUEST['artist']) {
-                        $artist = new Artist($_REQUEST['artist']);
+                        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                         $artist->format();
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
@@ -155,7 +155,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && isset($_REQUEST['artist'])) {
-                    $artist = new Artist($_REQUEST['artist']);
+                    $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                     $artist->format();
                     $object_ids      = array();
                     $missing_objects = array();
@@ -205,7 +205,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
                     if (isset($_REQUEST['artist'])) {
-                        $artist = new Artist($_REQUEST['artist']);
+                        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                         $artist->format();
                         if ($artist->mbid) {
                             $walbums = Wanted::get_missing_albums($artist);
@@ -229,7 +229,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         $artist      = null;
                     } else {
                         $artist      = $_REQUEST['artist'];
-                        $aobj        = new Artist($artist);
+                        $aobj        = $this->modelFactory->createArtist((int) $artist);
                         $artist_mbid = $aobj->mbid;
                     }
                     $name = $_REQUEST['name'];

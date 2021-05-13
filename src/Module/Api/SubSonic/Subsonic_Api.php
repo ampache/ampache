@@ -582,8 +582,8 @@ class Subsonic_Api
     {
         $artistid = self::check_parameter($input, 'id');
 
-        $artist = new Artist(Subsonic_Xml_Data::getAmpacheId($artistid));
-        if (empty($artist->name)) {
+        $artist = static::getModelFactory()->createArtist($artistid);
+        if ($artist->isNew()) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Artist not found.",
                 'getartist');
         } else {
@@ -782,7 +782,7 @@ class Subsonic_Api
         }
         if ($musicFolderId) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
-                $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
+                $artist   = static::getModelFactory()->createArtist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
                 $finput   = $artist->name;
                 $operator = 4;
                 $ftype    = "artist";
@@ -2216,8 +2216,9 @@ class Subsonic_Api
             return;
         }
 
-        $id    = self::check_parameter($input, 'id');
-        $count = $input['count'] ?: 50;
+        $id           = self::check_parameter($input, 'id');
+        $count        = $input['count'] ?: 50;
+        $modelFactory = static::getModelFactory();
 
         $songs = array();
         if (Subsonic_Xml_Data::isArtist($id)) {
@@ -2227,7 +2228,7 @@ class Subsonic_Api
                 foreach ($similars as $similar) {
                     debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
-                        $artist = new Artist($similar['id']);
+                        $artist = $modelFactory->createArtist((int) $similar['id']);
                         // get the songs in a random order for even more chaos
                         $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {

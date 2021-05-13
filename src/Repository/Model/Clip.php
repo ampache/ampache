@@ -153,7 +153,7 @@ class Clip extends Video
 
         if ($details) {
             if ($this->artist) {
-                $artist = new Artist($this->artist);
+                $artist = $this->getModelFactory()->createArtist($this->artist);
                 $artist->format();
                 $this->f_artist     = $artist->f_link;
             }
@@ -171,7 +171,7 @@ class Clip extends Video
     public function getFullTitle(): string
     {
         if ($this->artist) {
-            $artist = new Artist($this->artist);
+            $artist = $this->getModelFactory()->createArtist($this->artist);
             $artist->format();
 
             return '[' . scrub_out($artist->f_name) . '] ' . $this->getFullTitle();
@@ -228,5 +228,15 @@ class Clip extends Video
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

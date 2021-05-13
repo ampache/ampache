@@ -31,6 +31,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\RecommendationRepositoryInterface;
 use SimpleXMLElement;
@@ -156,7 +157,7 @@ class Recommendation implements RecommendationInterface
         }
 
         $song     = new Song($song_id);
-        $artist   = new Artist($song->artist);
+        $artist   = static::getModelFactory()->createArtist($song->artist);
         $fullname = trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name));
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
@@ -260,7 +261,7 @@ class Recommendation implements RecommendationInterface
             return array();
         }
 
-        $artist = new Artist($artist_id);
+        $artist = static::getModelFactory()->createArtist((int) $artist_id);
 
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
         if (!$cache['id']) {
@@ -398,7 +399,7 @@ class Recommendation implements RecommendationInterface
      */
     public static function get_artist_info($artist_id)
     {
-        $artist = new Artist($artist_id);
+        $artist = static::getModelFactory()->createArtist((int) $artist_id);
         $query  = ($artist->mbid)
             ? 'mbid=' . rawurlencode($artist->mbid)
             : 'artist=' . rawurlencode(trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name)));
@@ -453,5 +454,15 @@ class Recommendation implements RecommendationInterface
         global $dic;
 
         return $dic->get(RecommendationRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

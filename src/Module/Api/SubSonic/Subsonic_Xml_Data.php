@@ -1232,7 +1232,7 @@ class Subsonic_Xml_Data
     {
         $xresult = $xml->addChild(htmlspecialchars($elementName));
         foreach ($artists as $artistid) {
-            $artist = new Artist($artistid);
+            $artist = static::getModelFactory()->createArtist((int) $artistid);
             self::addArtist($xresult, $artist);
         }
         foreach ($albums as $albumid) {
@@ -1275,7 +1275,7 @@ class Subsonic_Xml_Data
         $xstarred = $xml->addChild(htmlspecialchars($elementName));
 
         foreach ($artists as $artistid) {
-            $artist = new Artist($artistid);
+            $artist = static::getModelFactory()->createArtist((int) $artistid);
             self::addArtist($xstarred, $artist);
         }
 
@@ -1484,7 +1484,7 @@ class Subsonic_Xml_Data
      */
     public static function addArtistInfo($xml, $info, $similars, $child)
     {
-        $artist = new Artist($info['id']);
+        $artist = static::getModelFactory()->createArtist((int) $info['id']);
 
         $xartist = $xml->addChild(htmlspecialchars($child));
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));

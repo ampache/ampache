@@ -530,7 +530,7 @@ class Artist extends database_object implements library_item
                     $this->getUseractivityRepository()->collectGarbage();
                 }
                 if ($current_id > 0) {
-                    $artist = new Artist($current_id);
+                    $artist = $this->getModelFactory()->createArtist((int) $current_id);
                     $artist->update_album_count();
                 }
             } // if updated
@@ -758,5 +758,15 @@ class Artist extends database_object implements library_item
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

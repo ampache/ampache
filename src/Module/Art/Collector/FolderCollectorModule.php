@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
@@ -45,14 +46,18 @@ final class FolderCollectorModule implements CollectorModuleInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
         $this->songRepository  = $songRepository;
+        $this->modelFactory    = $modelFactory;
     }
 
     /**
@@ -107,7 +112,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $media  = new Video($art->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
-            $media = new Artist($art->uid);
+            $media = $this->modelFactory->createArtist($art->uid);
             $media->format();
             $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_full_name);
             if ($artist_art_folder) {

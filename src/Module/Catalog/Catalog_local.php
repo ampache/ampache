@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -797,7 +798,7 @@ class Catalog_local extends Catalog
         if ((int)$options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
-            $artist                    = new Artist($results['artist_id']);
+            $artist                    = static::getModelFactory()->createArtist((int) $results['artist_id']);
             if ($artist->id) {
                 $results['artist'] = $artist->name;
             }
@@ -1129,5 +1130,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

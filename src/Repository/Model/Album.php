@@ -577,7 +577,7 @@ class Album extends database_object implements library_item
             }
 
             if ($this->album_artist) {
-                $album_artist = new Artist($this->album_artist);
+                $album_artist = $this->getModelFactory()->createArtist($this->album_artist);
                 $album_artist->format();
                 $this->album_artist_name   = $album_artist->name;
                 $this->f_album_artist_name = $album_artist->f_name;
@@ -760,9 +760,7 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $artist = new Artist($this->album_artist);
-
-        return $artist->get_user_owner();
+        return $this->getModelFactory()->createArtist($this->album_artist)->get_user_owner();
     }
 
     /**
@@ -781,9 +779,7 @@ class Album extends database_object implements library_item
     public function get_description()
     {
         // Album description is not supported yet, always return artist description
-        $artist = new Artist($this->artist_id);
-
-        return $artist->get_description();
+        return $this->getModelFactory()->createArtist($this->artist_id)->get_description();
     }
 
     /**
@@ -1045,5 +1041,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

@@ -54,15 +54,19 @@ final class Wanted extends database_object implements WantedInterface
     /** @var array<string, mixed>|null */
     private ?array $dbData = null;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         WantedRepositoryInterface $wantedRepository,
         MusicBrainz $musicBrainz,
         MissingArtistLookupInterface $missingArtistLookup,
+        ModelFactoryInterface $modelFactory,
         int $id
     ) {
         $this->wantedRepository    = $wantedRepository;
         $this->musicBrainz         = $musicBrainz;
         $this->id                  = $id;
+        $this->modelFactory        = $modelFactory;
         $this->missingArtistLookup = $missingArtistLookup;
     }
 
@@ -191,7 +195,7 @@ final class Wanted extends database_object implements WantedInterface
     public function getArtistLink(): string
     {
         if ($this->getArtistId()) {
-            $artist = new Artist($this->getArtistId());
+            $artist = $this->modelFactory->createArtist($this->getArtistId());
             $artist->format();
 
             return $artist->f_link;
@@ -398,7 +402,7 @@ final class Wanted extends database_object implements WantedInterface
                             $song['album_mbid']  = $this->getMusicBrainzId();
 
                             if ($this->getArtistId()) {
-                                $artist      = new Artist($this->getArtistId());
+                                $artist      = $this->modelFactory->createArtist($this->getArtistId());
                                 $artist_name = $artist->name;
                             } else {
                                 $wartist     = static::getMissingArtistLookup()->lookup($this->getArtistMusicBrainzId());

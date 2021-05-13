@@ -30,6 +30,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
@@ -43,12 +44,16 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
 
     private MissingArtistFinderInterface $missingArtistFinder;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
-        MissingArtistFinderInterface $missingArtistFinder
+        MissingArtistFinderInterface $missingArtistFinder,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->albumRepository     = $albumRepository;
         $this->missingArtistFinder = $missingArtistFinder;
+        $this->modelFactory        = $modelFactory;
     }
 
     public function handle(): void
@@ -78,7 +83,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $artistid) {
-                        $artist = new Artist($artistid);
+                        $artist = $this->modelFactory->createArtist($artistid);
                         $artist->format(false);
                         $results[] = array(
                             'type' => T_('Artists'),

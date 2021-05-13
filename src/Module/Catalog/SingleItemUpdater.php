@@ -30,6 +30,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\SongRepositoryInterface;
@@ -47,18 +48,22 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private ArtistRepositoryInterface $artistRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
         TagRepositoryInterface $tagRepository,
         ConfigContainerInterface $configContainer,
-        ArtistRepositoryInterface $artistRepository
+        ArtistRepositoryInterface $artistRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->songRepository   = $songRepository;
         $this->albumRepository  = $albumRepository;
         $this->tagRepository    = $tagRepository;
         $this->configContainer  = $configContainer;
         $this->artistRepository = $artistRepository;
+        $this->modelFactory     = $modelFactory;
     }
 
     /**
@@ -89,7 +94,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 $songs   = $this->songRepository->getByAlbum($libitem->getId());
                 break;
             case 'artist':
-                $libitem = new Artist($objectId);
+                $libitem = $this->modelFactory->createArtist($objectId);
                 $songs   = $this->songRepository->getByArtist($libitem->getId());
                 break;
             case 'song':

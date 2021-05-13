@@ -229,7 +229,7 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($artistIds as $artist_id) {
-            $artist = new Artist($artist_id);
+            $artist = $this->modelFactory->createArtist($artist_id);
             $artist->format();
 
             $rating = new Rating($artist_id, 'artist');
