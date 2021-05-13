@@ -996,24 +996,17 @@ final class JsonOutput implements ApiOutputInterface
 
         $result = [];
         foreach ($bookmarkIds as $bookmarkId) {
-            $bookmark               = $this->modelFactory->createBookmark($bookmarkId);
-            $bookmark_user          = $bookmark->getUserName();
-            $bookmark_object_type   = $bookmark->object_type;
-            $bookmark_object_id     = $bookmark->object_id;
-            $bookmark_position      = $bookmark->position;
-            $bookmark_comment       = $bookmark->comment;
-            $bookmark_creation_date = $bookmark->creation_date;
-            $bookmark_update_date   = $bookmark->update_date;
+            $bookmark = $this->modelFactory->createBookmark($bookmarkId);
 
             $result[] = [
                 'id' => (string) $bookmarkId,
-                'owner' => $bookmark_user,
-                'object_type' => $bookmark_object_type,
-                'object_id' => $bookmark_object_id,
-                'position' => $bookmark_position,
-                'client' => $bookmark_comment,
-                'creation_date' => $bookmark_creation_date,
-                'update_date' => $bookmark_update_date
+                'owner' => $bookmark->getUserName(),
+                'object_type' => $bookmark->getObjectType(),
+                'object_id' => $bookmark->getObjectId(),
+                'position' => $bookmark->getPosition(),
+                'client' => $bookmark->getComment(),
+                'creation_date' => $bookmark->getCreationDate(),
+                'update_date' => $bookmark->getUpdateDate()
             ];
         }
 

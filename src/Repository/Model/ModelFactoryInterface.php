@@ -139,8 +139,10 @@ interface ModelFactoryInterface
     ): Video;
 
     public function createBookmark(
-        int $bookmarkId
-    ): Bookmark;
+        int $bookmarkId,
+        ?string $objectType = null,
+        ?int $userId = null
+    ): BookmarkInterface;
 
     public function createUseractivity(
         int $useractivityId

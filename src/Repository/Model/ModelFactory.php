@@ -253,9 +253,16 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createBookmark(
-        int $bookmarkId
-    ): Bookmark {
-        return new Bookmark($bookmarkId);
+        int $bookmarkId,
+        ?string $objectType = null,
+        ?int $userId = null
+    ): BookmarkInterface {
+        return new Bookmark(
+            $this,
+            $bookmarkId,
+            $objectType,
+            $userId
+        );
     }
 
     public function createUseractivity(

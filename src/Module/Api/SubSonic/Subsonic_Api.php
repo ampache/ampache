@@ -2279,8 +2279,10 @@ class Subsonic_Api
         $response  = Subsonic_Xml_Data::createSuccessResponse('getbookmarks');
         $bookmarks = [];
 
+        $modelFactory = static::getModelFactory();
+
         foreach (static::getBookmarkRepository()->getBookmarks($user_id) as $bookmarkId) {
-            $bookmarks[] = new Bookmark($bookmarkId);
+            $bookmarks[] = $modelFactory->createBookmark($bookmarkId);
         }
 
         Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
@@ -2302,9 +2304,12 @@ class Subsonic_Api
         $type      = Subsonic_Xml_Data::getAmpacheType($object_id);
 
         if (!empty($type)) {
-            $bookmark = new Bookmark(Subsonic_Xml_Data::getAmpacheId($object_id), $type);
+            $bookmark = static::getModelFactory()->createBookmark((int) $object_id, $type, Core::get_global('user')->getId());
             if ($bookmark->id) {
-                static::getBookmarkRepository()->update($bookmark->getId(), (int) $position);
+                static::getBookmarkRepository()->update(
+                    $bookmark->getId(),
+                    (int) $position,
+                    time());
             } else {
                 static::getBookmarkRepository()->create(
                     (int) $position,
@@ -2334,8 +2339,8 @@ class Subsonic_Api
         $id   = self::check_parameter($input, 'id');
         $type = Subsonic_Xml_Data::getAmpacheType($id);
 
-        $bookmark = new Bookmark(Subsonic_Xml_Data::getAmpacheId($id), $type);
-        if ($bookmark->id) {
+        $bookmark = static::getModelFactory()->createBookmark((int) $id, $type, Core::get_global('user')->getId());
+        if ($bookmark->isNew() === false) {
             static::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::createSuccessResponse('deletebookmark');
         } else {

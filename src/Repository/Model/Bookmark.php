@@ -24,74 +24,116 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
  * This manage bookmark on playable items
  */
-class Bookmark extends database_object
+final class Bookmark extends database_object implements BookmarkInterface
 {
-    protected const DB_TABLENAME = 'bookmark';
+    private ModelFactoryInterface $modelFactory;
 
-    // Public variables
-    public $id;
-    public $user;
-    public $object_id;
-    public $object_type;
-    public $position;
-    public $comment;
-    public $creation_date;
-    public $update_date;
+    private int $object_id;
 
-    /**
-     * Constructor
-     * This is run every time a new object is created, and requires
-     * the id and type of object that we need to pull for
-     * @param integer $object_id
-     * @param string $object_type
-     * @param integer $user_id
-     */
-    public function __construct($object_id, $object_type = null, $user_id = null)
-    {
-        if (!$object_id) {
-            return false;
-        }
+    private ?string $object_type;
 
-        if ($object_type === null) {
-            $info = $this->get_info($object_id);
-        } else {
-            if ($user_id === null) {
-                $user_id = Core::get_global('user')->id;
-            }
+    private ?int $user_id;
 
-            $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
-            $db_results = Dba::read($sql, array($object_type, $object_id, $user_id));
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
 
-            if (!$db_results) {
-                return false;
-            }
-
-            $info = Dba::fetch_assoc($db_results);
-        }
-
-        // Foreach what we've got
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        int $objectId,
+        ?string $objectType = null,
+        ?int $userId = null
+    ) {
+        $this->modelFactory = $modelFactory;
+        $this->object_id    = $objectId;
+        $this->object_type  = $objectType;
+        $this->user_id      = $userId;
     }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int) ($this->getDbData()['id'] ?? 0);
+    }
+
+    public function getUserId(): int
+    {
+        return (int) ($this->getDbData()['user'] ?? 0);
+    }
+
+    public function getObjectId(): int
+    {
+        return (int) ($this->getDbData()['object_id'] ?? 0);
+    }
+
+    public function getUpdateDate(): int
+    {
+        return (int) ($this->getDbData()['update_date'] ?? 0);
+    }
+
+    public function getCreationDate(): int
+    {
+        return (int) ($this->getDbData()['creation_date'] ?? 0);
+    }
+
+    public function getComment(): string
+    {
+        return $this->getDbData()['comment'] ?? '';
+    }
+
+    public function getPosition(): int
+    {
+        return (int) ($this->getDbData()['position'] ?? 0);
+    }
+
+    public function getObjectType(): string
+    {
+        return $this->getDbData()['object_type'] ?? '';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getDbData(): array
+    {
+        if ($this->dbData === null) {
+            if ($this->object_type === null) {
+                $this->dbData = $this->getBookmarkRepository()->getDataById($this->object_id);
+            } else {
+                $bookmarkIds = $this->getBookmarkRepository()->lookup(
+                    $this->object_type,
+                    $this->object_id,
+                    $this->user_id
+                );
+
+                if ($bookmarkIds === []) {
+                    $this->dbData = [];
+                } else {
+                    $this->dbData = $this->getBookmarkRepository()->getDataById(current($bookmarkIds));
+                }
+            }
+        }
+
+        return $this->dbData;
+    }
+
+    private function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getDbData() === [];
     }
 
     public function getUserName(): string
     {
-        $user = new User($this->user);
-
-        return $user->username;
+        return $this->modelFactory->createUser($this->getUserId())->username;
     }
 }

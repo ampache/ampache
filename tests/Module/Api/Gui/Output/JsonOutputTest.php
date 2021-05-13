@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Gui\Output;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\BookmarkInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -426,13 +427,13 @@ class JsonOutputTest extends MockeryTestCase
         $bookmarkId   = 666;
         $userName     = 'some-user-name';
         $objectType   = 'some-object-type';
-        $objectId     = 'some-object-id';
-        $position     = 'some-position';
+        $objectId     = 42;
+        $position     = 33;
         $comment      = 'some-comment';
         $creationDate = 12345;
         $updateDate   = 67890;
 
-        $bookmark = $this->mock(Bookmark::class);
+        $bookmark = $this->mock(BookmarkInterface::class);
 
         $this->modelFactory->shouldReceive('createBookmark')
             ->with($bookmarkId)
@@ -443,12 +444,30 @@ class JsonOutputTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($userName);
-        $bookmark->object_type   = $objectType;
-        $bookmark->object_id     = $objectId;
-        $bookmark->position      = $position;
-        $bookmark->comment       = $comment;
-        $bookmark->creation_date = $creationDate;
-        $bookmark->update_date   = $updateDate;
+        $bookmark->shouldReceive('getObjectId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+        $bookmark->shouldReceive('getObjectType')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectType);
+        $bookmark->shouldReceive('getPosition')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($position);
+        $bookmark->shouldReceive('getComment')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($comment);
+        $bookmark->shouldReceive('getCreationDate')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($creationDate);
+        $bookmark->shouldReceive('getUpdateDate')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($updateDate);
 
         $this->assertSame(
             json_encode(['bookmark' => [[

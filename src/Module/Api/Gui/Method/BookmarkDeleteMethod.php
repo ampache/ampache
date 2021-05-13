@@ -145,12 +145,7 @@ final class BookmarkDeleteMethod implements MethodInterface
             );
         }
 
-        $bookmark = $this->bookmarkRepository->delete(current($find));
-        if (!$bookmark) {
-            throw new RequestParamMissingException(
-                T_('Bad Request')
-            );
-        }
+        $this->bookmarkRepository->delete(current($find));
 
         return $response->withBody(
             $this->streamFactory->createStream(

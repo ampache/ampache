@@ -28,14 +28,18 @@ interface BookmarkRepositoryInterface
      */
     public function getBookmarks(int $userId): array;
 
-    public function delete(int $bookmarkId): bool;
+    public function delete(int $bookmarkId): void;
 
     /**
      * Remove bookmark for items that no longer exist.
      */
     public function collectGarbage(): void;
 
-    public function update(int $userId, int $position): void;
+    public function update(
+        int $userId,
+        int $position,
+        int $time
+    ): void;
 
     /**
      * Creates a new bookmark entry and returns the id of the new dataset
@@ -72,4 +76,9 @@ interface BookmarkRepositoryInterface
         int $userId,
         int $updateDate
     ): void;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataById(int $bookmarkId): array;
 }

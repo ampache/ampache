@@ -1622,20 +1622,23 @@ class Subsonic_Xml_Data
     private static function addBookmark($xml, $bookmark)
     {
         $xbookmark = $xml->addChild('bookmark');
-        $xbookmark->addAttribute('position', (string)$bookmark->position);
+        $xbookmark->addAttribute('position', (string)$bookmark->getPosition());
         $xbookmark->addAttribute('username', (string)$bookmark->getUserName());
-        $xbookmark->addAttribute('comment', (string)$bookmark->comment);
-        $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
-        $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
-        if ($bookmark->object_type == "song") {
-            $song = new Song($bookmark->object_id);
+        $xbookmark->addAttribute('comment', $bookmark->getComment());
+        $xbookmark->addAttribute('created', date("c", $bookmark->getCreationDate()));
+        $xbookmark->addAttribute('changed', date("c", $bookmark->getUpdateDate()));
+
+        $objectType = $bookmark->getObjectType();
+
+        if ($objectType == "song") {
+            $song = new Song($bookmark->getObjectId());
             self::addSong($xbookmark, $song->id, false, 'entry');
-        } elseif ($bookmark->object_type == "video") {
-            self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
-        } elseif ($bookmark->object_type == "podcast_episode") {
+        } elseif ($objectType == "video") {
+            self::addVideo($xbookmark, new Video($bookmark->getObjectId()), 'entry');
+        } elseif ($objectType == "podcast_episode") {
             self::addPodcastEpisode(
                 $xbookmark,
-                static::getPodcastEpisodeRepository()->findById((int) $bookmark->object_id),
+                static::getPodcastEpisodeRepository()->findById($bookmark->getObjectId()),
                 'entry'
             );
         }

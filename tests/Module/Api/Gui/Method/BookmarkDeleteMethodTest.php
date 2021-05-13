@@ -242,60 +242,6 @@ class BookmarkDeleteMethodTest extends MockeryTestCase
         );
     }
 
-    public function testHandleThrowsExceptionIfBookmarkIsNotDeletable(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $song       = $this->mock(Song::class);
-
-        $objectId   = 666;
-        $type       = 'song';
-        $song->id   = $objectId;
-        $comment    = 'some-comment';
-        $userId     = 42;
-        $bookmarkId = 33;
-
-        $this->expectException(RequestParamMissingException::class);
-        $this->expectExceptionMessage('Bad Request');
-
-        $this->modelFactory->shouldReceive('mapObjectType')
-            ->with($type, $objectId)
-            ->once()
-            ->andReturn($song);
-
-        $gatekeeper->shouldReceive('getUser->getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $this->ui->shouldReceive('scrubIn')
-            ->with('AmpacheAPI')
-            ->once()
-            ->andReturn($comment);
-
-        $this->bookmarkRepository->shouldReceive('lookup')
-            ->with(
-                $type,
-                $objectId,
-                $userId,
-                $comment
-            )
-            ->once()
-            ->andReturn([$bookmarkId]);
-        $this->bookmarkRepository->shouldReceive('delete')
-            ->with($bookmarkId)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            ['filter' => (string) $objectId, 'type' => $type]
-        );
-    }
-
     public function testHandleDeletes(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
