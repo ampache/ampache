@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -47,16 +48,20 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
     private TagRepositoryInterface $tagRepository;
 
+    private ArtistFinderInterface $artistFinder;
+
     public function __construct(
         DataMigratorInterface $dataMigrator,
         LabelRepositoryInterface $labelRepository,
         LicenseRepositoryInterface $licenseRepository,
-        TagRepositoryInterface $tagRepository
+        TagRepositoryInterface $tagRepository,
+        ArtistFinderInterface $artistFinder
     ) {
         $this->dataMigrator      = $dataMigrator;
         $this->labelRepository   = $labelRepository;
         $this->licenseRepository = $licenseRepository;
         $this->tagRepository     = $tagRepository;
+        $this->artistFinder      = $artistFinder;
     }
 
     /**
@@ -149,9 +154,9 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         $catalog_number   = Catalog::check_length($results['catalog_number'], 64);
 
         // check whether this artist exists (and the album_artist)
-        $new_song->artist = Artist::check($artist, $artist_mbid);
+        $new_song->artist = $this->artistFinder->find($artist, $artist_mbid);
         if ($albumartist) {
-            $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            $new_song->albumartist = $this->artistFinder->find($albumartist, $albumartist_mbid);
             if (!$new_song->albumartist) {
                 $new_song->albumartist = $song->albumartist;
             }

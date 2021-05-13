@@ -25,6 +25,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
@@ -834,7 +835,7 @@ class Album extends database_object implements library_item
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (!empty($data['album_artist_name'])) {
-            $album_artist = Artist::check($data['album_artist_name']);
+            $album_artist = static::getArtistFinder()->find($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
         }
 
@@ -1034,5 +1035,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(DataMigratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistFinder(): ArtistFinderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistFinderInterface::class);
     }
 }

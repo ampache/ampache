@@ -20,14 +20,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Artist;
 
-use function DI\autowire;
-
-return [
-    Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
-    Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
-    ArtistFinderInterface::class => autowire(ArtistFinder::class),
-];
+interface ArtistFinderInterface
+{
+    /**
+     * Looks for an existing artist; if none exists, insert one.
+     */
+    public function find(string $name, ?string $mbid = '', bool $readonly = false): ?int;
+}

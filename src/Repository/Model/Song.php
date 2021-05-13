@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Playback\Stream;
@@ -460,7 +461,7 @@ class Song extends database_object implements
             if ($albumartist) {
                 // Multiple artist per songs not supported for now
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-                $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
+                $albumartist_id   = static::getArtistFinder()->find($albumartist, $albumartist_mbid);
             }
         } else {
             $albumartist_id = (int)($results['albumartist_id']);
@@ -468,7 +469,7 @@ class Song extends database_object implements
         if (!isset($results['artist_id'])) {
             // Multiple artist per songs not supported for now
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = Artist::check($artist, $artist_mbid);
+            $artist_id   = static::getArtistFinder()->find($artist, $artist_mbid);
         } else {
             $artist_id = (int)($results['artist_id']);
         }
@@ -838,6 +839,8 @@ class Song extends database_object implements
      */
     public function update(array $data)
     {
+        $artistFinder = static::getArtistFinder();
+
         $changed = array();
         foreach ($data as $key => $value) {
             debug_event(self::class, $key . '=' . $value, 5);
@@ -846,7 +849,7 @@ class Song extends database_object implements
                 case 'artist_name':
                     // Create new artist name and id
                     $old_artist_id = $this->artist;
-                    $new_artist_id = Artist::check($value);
+                    $new_artist_id = $artistFinder->find($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
                     $changed[] = (string) $key;
@@ -2037,5 +2040,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistFinder(): ArtistFinderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistFinderInterface::class);
     }
 }

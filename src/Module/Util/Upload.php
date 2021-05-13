@@ -25,25 +25,18 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistFinderInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\Core;
 use RuntimeException;
 
 class Upload
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
-    }
 
     /**
      * process
@@ -208,7 +201,7 @@ class Upload
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            $artist_id = Artist::check($artist_name, null, true);
+            $artist_id = static::getArtistFinder()->find($artist_name, null, true);
             if ($artist_id !== null && !Access::check('interface', 50)) {
                 debug_event(self::class, 'An artist with the same name already exists, uploaded song skipped.', 3);
 
@@ -343,5 +336,15 @@ class Upload
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistFinder(): ArtistFinderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistFinderInterface::class);
     }
 }

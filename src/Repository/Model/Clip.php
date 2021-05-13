@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -91,7 +92,7 @@ class Clip extends Video
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }
 
-        return Artist::check($data['artist'], $artist_mbid);
+        return static::getArtistFinder()->find($data['artist'], $artist_mbid);
     } // _get_artist_id
 
     /**
@@ -217,5 +218,15 @@ class Clip extends Video
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistFinder(): ArtistFinderInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistFinderInterface::class);
     }
 }
