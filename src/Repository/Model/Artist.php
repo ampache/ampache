@@ -163,12 +163,6 @@ class Artist extends database_object implements library_item
      */
     public $f_time;
 
-    // Constructed vars
-    /**
-     * @var boolean $_fake
-     */
-    public $_fake = false; // Set if construct_from_array() used
-
     /**
      * @var integer $album_count
      */
@@ -183,11 +177,6 @@ class Artist extends database_object implements library_item
      * @var integer $song_count
      */
     private $song_count;
-
-    /**
-     * @var array $_mapcache
-     */
-    private static $_mapcache = array();
 
     /**
      * Artist
@@ -229,26 +218,6 @@ class Artist extends database_object implements library_item
     {
         return $this->getId() === 0;
     }
-
-    /**
-     * construct_from_array
-     * This is used by the metadata class specifically but fills out a Artist object
-     * based on a key'd array, it sets $_fake to true
-     * @param array $data
-     * @return Artist
-     */
-    public static function construct_from_array($data)
-    {
-        $artist = new Artist(0);
-        foreach ($data as $key => $value) {
-            $artist->$key = $value;
-        }
-
-        // Ack that this is not a real object from the DB
-        $artist->_fake = true;
-
-        return $artist;
-    } // construct_from_array
 
     /**
      * _get_extra info

@@ -1085,17 +1085,15 @@ abstract class Catalog extends database_object
             // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
-        $album_type = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-
-        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, $album_type AS `albums` " .
-            "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where .
-            "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, $album_type ORDER BY `artist`.`name` " . $sql_limit;
+        $sql = "SELECT `artist`.`id` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where . " GROUP BY `artist`.`id` ORDER BY `artist`.`name` " . $sql_limit;
 
         $results    = array();
         $db_results = Dba::read($sql);
 
+        $modelFactory = static::getModelFactory();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = Artist::construct_from_array($row);
+            $results[] = $modelFactory->createArtist($row['id']);
         }
 
         return $results;

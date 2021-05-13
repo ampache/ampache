@@ -318,10 +318,6 @@ class Song extends database_object implements
     public $object_cnt;
 
     /* Setting Variables */
-    /**
-     * @var boolean $_fake
-     */
-    public $_fake = false; // If this is a 'construct_from_array' object
 
     private ?string $filename = null;
 
