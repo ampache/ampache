@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Label;
+use Ampache\Module\Label\LabelCreatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -45,12 +45,16 @@ final class AddLabelAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private LabelCreatorInterface $labelCreator;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        LabelCreatorInterface $labelCreator
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->labelCreator    = $labelCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,8 +78,8 @@ final class AddLabelAction implements ApplicationActionInterface
             unset($_POST['creation_date']);
         }
 
-        $label_id = Label::create($_POST);
-        if (!$label_id) {
+        $label_id = $this->labelCreator->create($_POST);
+        if ($label_id === null) {
             require_once Ui::find_template('show_add_label.inc.php');
         } else {
             $this->ui->showConfirmation(

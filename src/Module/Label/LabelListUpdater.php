@@ -55,13 +55,13 @@ final class LabelListUpdater implements LabelListUpdaterInterface
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
-                $clabel = new Label($clid);
-                debug_event(__CLASS__, 'Processing label {' . $clabel->name . '}...', 5);
+                $clabel = $this->modelFactory->createLabel($clid);
+                debug_event(__CLASS__, 'Processing label {' . $clabel->getName() . '}...', 5);
                 $found   = false;
                 $lstring = '';
 
                 foreach ($editedLabels as $key => $value) {
-                    if ($clabel->name == $value) {
+                    if ($clabel->getName() == $value) {
                         $found   = true;
                         $lstring = $key;
                         break;
@@ -87,7 +87,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
                     debug_event(__CLASS__, 'Creating a label directly from artist editing is not allowed.', 3);
                 }
                 if ($label_id > 0) {
-                    $clabel = new Label($label_id);
+                    $clabel = $this->modelFactory->createLabel($label_id);
                     $this->labelRepository->addArtistAssoc($clabel->getId(), $artistId);
                 }
             }

@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,15 +20,15 @@
  *
  */
 
-use Ampache\Repository\Model\Personal_Video;
+namespace Ampache\Module\Label;
 
-/** @var Personal_Video $libitem */
-?>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Location') ?></td>
-                <td><input type="text" name="location" value="<?php echo scrub_out($libitem->location); ?>" /></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
-            </tr>
+interface LabelCreatorInterface
+{
+    /**
+     * Creates a label and returns the id of the created dataset
+     *
+     * @param array $data
+     * @return int
+     */
+    public function create(array $data): ?int;
+}

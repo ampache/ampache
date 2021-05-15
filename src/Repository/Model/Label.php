@@ -24,9 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -38,60 +36,77 @@ class Label extends database_object implements library_item
 {
     protected const DB_TABLENAME = 'label';
 
-    /* Variables from DB */
+    public int $id;
 
-    /**
-     * @var integer $id
-     */
-    public $id;
-    /**
-     * @var string $name
-     */
-    public $name;
-    /**
-     * @var string $category
-     */
-    public $category;
-    /**
-     * @var string $address
-     */
-    public $address;
-    /**
-     * @var string $email
-     */
-    public $email;
-    /**
-     * @var string $website
-     */
-    public $website;
-    /**
-     * @var string $summary
-     */
-    public $summary;
-    /**
-     * @var integer $user
-     */
-    public $user;
+    private LabelRepositoryInterface $labelRepository;
 
-    public function __construct($label_id)
+    private SongRepositoryInterface $songRepository;
+
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
+
+    public function __construct(
+        LabelRepositoryInterface $labelRepository,
+        SongRepositoryInterface $songRepository,
+        int $id
+    ) {
+        $this->labelRepository = $labelRepository;
+        $this->songRepository  = $songRepository;
+        $this->id              = $id;
+    }
+
+    private function getDbData(): array
     {
-        $info = $this->get_info($label_id);
-
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($this->dbData === null) {
+            $this->dbData = $this->labelRepository->getDataById($this->getId());
         }
 
-        return true;
+        return $this->dbData;
     }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
+    }
+
+    public function getUserId(): int
+    {
+        return (int) ($this->getDbData()['user'] ?? 0);
+    }
+
+    public function getSummary(): string
+    {
+        return $this->getDbData()['summary'] ?? '';
+    }
+
+    public function getWebsite(): string
+    {
+        return $this->getDbData()['website'] ?? '';
+    }
+
+    public function getEmail(): string
+    {
+        return $this->getDbData()['email'] ?? '';
+    }
+
+    public function getAddress(): string
+    {
+        return $this->getDbData()['address'] ?? '';
+    }
+
+    public function getCategory(): string
+    {
+        return $this->getDbData()['category'] ?? '';
+    }
+
+    public function getName(): string
+    {
+        return $this->getDbData()['name'] ?? '';
     }
 
     /**
@@ -101,8 +116,8 @@ class Label extends database_object implements library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'label') || $force) {
-            echo Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->getLink());
+        if (Art::has_db($this->getId(), 'label') || $force) {
+            echo Art::display('label', $this->getId(), $this->get_fullname(), $thumb, $this->getLink());
         }
     }
 
@@ -115,7 +130,7 @@ class Label extends database_object implements library_item
 
     public function getArtistCount(): int
     {
-        return count(static::getLabelRepository()->getArtists($this->getId()));
+        return count($this->labelRepository->getArtists($this->getId()));
     }
 
     public function getLink(): string
@@ -125,7 +140,7 @@ class Label extends database_object implements library_item
 
     public function getNameFormatted(): string
     {
-        return scrub_out($this->name);
+        return scrub_out($this->getName());
     }
 
     /**
@@ -149,7 +164,7 @@ class Label extends database_object implements library_item
                         'object_id' => $artistId
                     ];
                 },
-                static::getLabelRepository()->getArtists($this->getId())
+                $this->labelRepository->getArtists($this->getId())
             )
         ];
     }
@@ -167,7 +182,7 @@ class Label extends database_object implements library_item
      */
     public function get_description()
     {
-        return $this->summary;
+        return $this->getSummary();
     }
 
     /**
@@ -202,7 +217,7 @@ class Label extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = static::getSongRepository()->getByLabel($this->name);
+            $songs = $this->songRepository->getByLabel($this->getName());
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -227,7 +242,7 @@ class Label extends database_object implements library_item
      */
     public function get_user_owner()
     {
-        return $this->user;
+        return $this->getUserId();
     }
 
     /**
@@ -256,124 +271,25 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * update
-     * @param array $data
-     * @return integer
+     * @param array<string, mixed> $data
+     * @return int
      */
     public function update(array $data)
     {
-        if (static::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
+        if ($this->labelRepository->lookup($data['name'], $this->getId()) !== 0) {
             return false;
         }
 
-        $name     = isset($data['name']) ? $data['name'] : $this->name;
-        $category = isset($data['category']) ? $data['category'] : $this->category;
-        $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $address  = isset($data['address']) ? $data['address'] : $this->address;
-        $email    = isset($data['email']) ? $data['email'] : $this->email;
-        $website  = isset($data['website']) ? $data['website'] : $this->website;
-
-        $sql = "UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $this->id));
-
-        $this->name     = $name;
-        $this->category = $category;
-        $this->summary  = $summary;
-        $this->address  = $address;
-        $this->email    = $email;
-        $this->website  = $website;
-
-        return $this->id;
-    }
-
-    /**
-     * helper
-     * @param string $name
-     * @return string
-     */
-    public static function helper(string $name)
-    {
-        $label_data = array(
-            'name' => $name,
-            'category' => 'tag_generated',
-            'summary' => null,
-            'address' => null,
-            'email' => null,
-            'website' => null,
-            'user' => 0,
-            'creation_date' => time()
+        $this->labelRepository->update(
+            $this->getId(),
+            $data['name'] ?? $this->getName(),
+            $data['category'] ?? $this->getCategory(),
+            $data['summary'] ?? $this->getSummary(),
+            $data['address'] ?? $this->getAddress(),
+            $data['email'] ?? $this->getEmail(),
+            $data['website'] ?? $this->getWebsite()
         );
 
-        return self::create($label_data);
-    }
-
-    /**
-     * create
-     * @param array $data
-     * @return string
-     */
-    public static function create(array $data)
-    {
-        if (static::getLabelRepository()->lookup($data['name']) !== 0) {
-            return false;
-        }
-
-        $name          = $data['name'];
-        $category      = $data['category'];
-        $summary       = $data['summary'];
-        $address       = $data['address'];
-        $email         = $data['email'];
-        $website       = $data['website'];
-        $user          = $data['user'] ?: Core::get_global('user')->id;
-        $creation_date = $data['creation_date'] ?: time();
-
-        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
-
-        return Dba::insert_id();
-    }
-
-    /**
-     * get_display
-     * This returns a csv formatted version of the labels that we are given
-     * @param $labels
-     * @param boolean $link
-     * @return string
-     */
-    public static function get_display($labels, $link = false)
-    {
-        if (!is_array($labels)) {
-            return '';
-        }
-
-        $results = '';
-
-        // Iterate through the labels, format them according to type and element id
-        foreach ($labels as $label_id => $value) {
-            if ($link) {
-                $results .= '<a href="' . AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
-            }
-            $results .= $value;
-            if ($link) {
-                $results .= '</a>';
-            }
-            $results .= ', ';
-        }
-
-        return rtrim((string)$results, ', ');
-    } // get_display
-
-    private static function getLabelRepository(): LabelRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LabelRepositoryInterface::class);
-    }
-
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
+        return $this->getId();
     }
 }

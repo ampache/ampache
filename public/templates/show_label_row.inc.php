@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 if (Art::is_enabled()) {
     $name = $libitem->getNameFormatted(); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php echo Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
+        <?php echo Art::display('label', $libitem->getId(), $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->getId()); ?>
     </td>
     <?php
 } ?>
@@ -45,18 +45,18 @@ if (Art::is_enabled()) {
         $name,
         $name
     ); ?></td>
-<td class="cel_category"><?php echo $libitem->category; ?></td>
+<td class="cel_category"><?php echo $libitem->getCategory(); ?></td>
 <td class="cel_artists"><?php echo $libitem->getArtistCount(); ?></td>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>
-    <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->id ?>">
+    <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->getId() ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')) ?>
     </a>
     <?php
     }
         if (Catalog::can_remove($libitem)) { ?>
-        <a id="<?php echo 'delete_label_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->id ?>">
+        <a id="<?php echo 'delete_label_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->getId() ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>
     <?php

@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\DataMigratorInterface;
+use Ampache\Module\Label\LabelCreatorInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -418,9 +419,20 @@ class Song extends database_object implements
         $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
         $label                 = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
+            $labelCreator = static::getLabelCreator();
+
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
-                Label::helper($label_name);
+                $labelCreator->create([
+                    'name' => $label_name,
+                    'category' => 'tag_generated',
+                    'summary' => null,
+                    'address' => null,
+                    'email' => null,
+                    'website' => null,
+                    'user' => 0,
+                    'creation_date' => time()
+                ]);
             }
         }
 
@@ -2046,5 +2058,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLabelCreator(): LabelCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelCreatorInterface::class);
     }
 }

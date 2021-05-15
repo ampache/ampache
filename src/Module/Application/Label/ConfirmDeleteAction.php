@@ -33,6 +33,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,14 +47,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private LabelDeleterInterface $labelDeleter;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LabelDeleterInterface $labelDeleter
+        LabelDeleterInterface $labelDeleter,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->labelDeleter    = $labelDeleter;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,10 +72,10 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $label = new Label($_REQUEST['label_id']);
+        $label = $this->modelFactory->createLabel((int) ($request->getQueryParams()['label_id'] ?? 0));
         if (!Catalog::can_remove($label)) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the label `%s`', $label->id)
+                sprintf('Unauthorized to remove the label `%s`', $label->getId())
             );
         }
 

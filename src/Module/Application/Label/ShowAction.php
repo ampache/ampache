@@ -78,7 +78,6 @@ final class ShowAction implements ApplicationActionInterface
         }
         if ($label_id > 0) {
             $label = $this->modelFactory->createLabel($label_id);
-            $label->format();
 
             $this->ui->show(
                 'show_label.inc.php',
@@ -120,7 +119,7 @@ final class ShowAction implements ApplicationActionInterface
         Label $label
     ): bool {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true) {
-            if ($label->user !== null && $userId == $label->user) {
+            if ($label->getUserId() !== null && $userId == $label->getUserId()) {
                 return true;
             }
         }

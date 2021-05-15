@@ -30,6 +30,7 @@ use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -306,7 +307,7 @@ class Artist extends database_object implements library_item
 
             if (AmpConfig::get('label')) {
                 $this->labels   = $this->getLabelRepository()->getByArtist((int) $this->id);
-                $this->f_labels = Label::get_display($this->labels, true);
+                $this->f_labels = Ui::renderLabels($this->labels, true);
             }
 
             $this->object_cnt = $extra_info['object_cnt'];

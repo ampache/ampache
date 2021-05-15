@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
@@ -65,7 +66,7 @@ use Ampache\Module\Authorization\Access;
             <?php if (AmpConfig::get('label')) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels') ?></td>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels); ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Ui::renderLabels($libitem->labels); ?>" /></td>
             </tr>
             <?php
     } ?>

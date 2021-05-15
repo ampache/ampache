@@ -207,15 +207,14 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $labelid) {
-                        $label = new Label($labelid);
-                        $label->format(false);
+                        $label     = $this->modelFactory->createLabel($labelid);
                         $results[] = array(
                             'type' => T_('Labels'),
                             'link' => $label->getLink(),
-                            'label' => $label->name,
-                            'value' => $label->name,
+                            'label' => $label->getName(),
+                            'value' => $label->getName(),
                             'rels' => '',
-                            'image' => Art::url($label->id, 'label', null, 10),
+                            'image' => Art::url($label->getId(), 'label', null, 10),
                         );
                     }
                 }

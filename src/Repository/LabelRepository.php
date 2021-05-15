@@ -27,12 +27,12 @@ use Doctrine\DBAL\Connection;
 
 final class LabelRepository implements LabelRepositoryInterface
 {
-    private Connection $connection;
+    private Connection $database;
 
     public function __construct(
         Connection $connection
     ) {
-        $this->connection = $connection;
+        $this->database = $connection;
     }
 
     /**
@@ -40,7 +40,7 @@ final class LabelRepository implements LabelRepositoryInterface
      */
     public function getByArtist(int $artistId): array
     {
-        $dbResults = $this->connection->executeQuery(
+        $dbResults = $this->database->executeQuery(
             'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?',
             [$artistId]
         );
@@ -61,7 +61,7 @@ final class LabelRepository implements LabelRepositoryInterface
      */
     public function getAll(): array
     {
-        $db_results = $this->connection->executeQuery('SELECT `id`, `name` FROM `label`');
+        $db_results = $this->database->executeQuery('SELECT `id`, `name` FROM `label`');
 
         $results = [];
 
@@ -84,7 +84,7 @@ final class LabelRepository implements LabelRepositoryInterface
                 $sql .= ' AND `id` != ?';
                 $params[] = $labelId;
             }
-            $dbResult = $this->connection->fetchOne($sql, $params);
+            $dbResult = $this->database->fetchOne($sql, $params);
             if ($dbResult !== false) {
                 $ret = (int) $dbResult;
             }
@@ -95,7 +95,7 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function removeArtistAssoc(int $labelId, int $artistId): void
     {
-        $this->connection->executeQuery(
+        $this->database->executeQuery(
             'DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?',
             [$labelId, $artistId]
         );
@@ -103,7 +103,7 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function addArtistAssoc(int $labelId, int $artistId): void
     {
-        $this->connection->executeQuery(
+        $this->database->executeQuery(
             'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
             [$labelId, $artistId, time()]
         );
@@ -111,7 +111,7 @@ final class LabelRepository implements LabelRepositoryInterface
 
     public function delete(int $labelId): bool
     {
-        $result = $this->connection->executeQuery(
+        $result = $this->database->executeQuery(
             'DELETE FROM `label` WHERE `id` = ?',
             [$labelId]
         );
@@ -126,17 +126,49 @@ final class LabelRepository implements LabelRepositoryInterface
      */
     public function getArtists(int $labelId): array
     {
-        $db_results = $this->connection->executeQuery(
+        $dbResults = $this->database->executeQuery(
             'SELECT `artist` FROM `label_asso` WHERE `label` = ?',
             [$labelId]
         );
 
         $results = [];
 
-        while ($artistId = $db_results->fetchOne()) {
+        while ($artistId = $dbResults->fetchOne()) {
             $results[] = (int) $artistId;
         }
 
         return $results;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataById(int $labelId): array
+    {
+        $result = $this->database->fetchAssociative(
+            'SELECT * FROM `label` WHERE `id`= ?',
+            [$labelId]
+        );
+
+        if ($result === false) {
+            return [];
+        }
+
+        return $result;
+    }
+
+    public function update(
+        int $labelId,
+        string $name,
+        string $category,
+        string $summary,
+        string $address,
+        string $email,
+        string $website
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?',
+            [$name, $category, $summary, $address, $email, $website, $labelId]
+        );
     }
 }

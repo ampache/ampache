@@ -36,6 +36,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -161,13 +162,15 @@ final class ShowAction implements ApplicationActionInterface
         if (!$typeManaged) {
             $item = $this->modelFactory->mapObjectType(
                 $type,
-                filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
             );
             /**
              * @todo special handling for podcasts
              */
             if ($item instanceof PodcastInterface) {
                 $filename = $item->getTitle();
+            } elseif ($item instanceof Label) {
+                $filename = $item->getName();
             } else {
                 $filename = $item->name ?: $item->title;
             }

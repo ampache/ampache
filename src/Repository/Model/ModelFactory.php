@@ -28,11 +28,13 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -237,7 +239,11 @@ final class ModelFactory implements ModelFactoryInterface
     public function createLabel(
         int $labelId
     ): Label {
-        return new Label($labelId);
+        return new Label(
+            $this->dic->get(LabelRepositoryInterface::class),
+            $this->dic->get(SongRepositoryInterface::class),
+            $labelId
+        );
     }
 
     public function createTag(
@@ -316,8 +322,9 @@ final class ModelFactory implements ModelFactoryInterface
     {
         if ($this->map === null) {
             $this->map = [
-                Live_Stream::class => fn (int $objectId): Live_Stream => $this->createLiveStream($objectId),
+                Live_Stream::class => fn (int $objectId): LiveStreamInterface => $this->createLiveStream($objectId),
                 Share::class => fn (int $objectId): ShareInterface => $this->createShare($objectId),
+                Label::class => fn (int $objectId): Label => $this->createLabel($objectId),
             ];
         }
 

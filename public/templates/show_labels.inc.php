@@ -22,10 +22,19 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var Browse $browse */
+/** @var int[] $object_ids */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 $thcount = 6;
 //mashup and grid view need different css
@@ -64,9 +73,8 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         <?php
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $label_id) {
-            $libitem = new Label($label_id);
-            $libitem->format(); ?>
-        <tr id="label_<?php echo $libitem->id; ?>">
+            $libitem = $modelFactory->createLabel($label_id); ?>
+        <tr id="label_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php

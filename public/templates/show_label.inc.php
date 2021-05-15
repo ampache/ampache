@@ -28,31 +28,36 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php
+/** @var \Ampache\Repository\Model\Label $label */
+/** @var string $object_type */
+/** @var int[] $object_ids */
+/** @var bool $isLabelEditable */
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($label->f_name, 'info-box');
+$nameFormatted = $label->getNameFormatted();
+
+Ui::show_box_top($nameFormatted, 'info-box');
 if ($label->website) {
-    echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
+    echo "<a href=\"" . scrub_out($label->getWebsite()) . "\">" . scrub_out($label->getWebsite()) . "</a><br />";
 } ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($label->f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($label->f_name); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($nameFormatted); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($nameFormatted); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($nameFormatted); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($nameFormatted); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <div id="artist_biography">
         <div class="item_info">
-            <?php echo Art::display('label', $label->id, $label->f_name, 2); ?>
+            <?php echo Art::display('label', $label->getId(), $nameFormatted, 2); ?>
             <div class="item_properties">
-                <?php echo scrub_out($label->address); ?>
+                <?php echo scrub_out($label->getAddress()); ?>
             </div>
         </div>
         <div id="item_summary">
-            <?php echo nl2br(scrub_out($label->summary)); ?>
+            <?php echo nl2br(scrub_out($label->getSummary())); ?>
         </div>
     </div>
 </div>
@@ -63,7 +68,7 @@ if ($label->website) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->getId(); ?>">
                     <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                     <?php echo T_('Post Shout'); ?>
                 </a>
@@ -72,9 +77,9 @@ if ($label->website) {
     } ?>
         <?php
 } ?>
-        <?php if ($label->email) { ?>
+        <?php if ($label->getEmail()) { ?>
         <li>
-            <a href="mailto:<?php echo scrub_out($label->email); ?>">
+            <a href="mailto:<?php echo scrub_out($label->getEmail()); ?>">
                 <?php echo Ui::get_icon('mail', T_('Send E-mail')); ?>
                 <?php echo T_('Send E-mail'); ?>
             </a>
@@ -83,7 +88,7 @@ if ($label->website) {
     } ?>
         <?php if ($isLabelEditable) { ?>
         <li>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->getId() ?>" onclick="showEditDialog('label_row', '<?php echo $label->getId() ?>', '<?php echo 'edit_label_' . $label->getId() ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Label'); ?>
             </a>
@@ -92,7 +97,7 @@ if ($label->website) {
     } ?>
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
-            <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
+            <a id="<?php echo 'delete_label_' . $label->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->getId(); ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
@@ -117,7 +122,7 @@ if ($label->website) {
     $browse->store(); ?>
         </div>
 <?php
-    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
+    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->getId(), 'songs')); ?>
         <div id="songs" class="tab_content">
         <?php Ui::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); Ui::show_box_bottom(); ?>
         </div>

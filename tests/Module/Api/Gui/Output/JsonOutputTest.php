@@ -26,7 +26,6 @@ namespace Ampache\Module\Api\Gui\Output;
 
 use Ampache\MockeryTestCase;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\BookmarkInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LicenseInterface;
@@ -587,7 +586,7 @@ class JsonOutputTest extends MockeryTestCase
         $category = 'some-category';
         $email    = 'some-email';
         $website  = 'some-website';
-        $user     = 'some-user';
+        $user     = 21;
 
         $label = $this->mock(Label::class);
 
@@ -612,12 +611,30 @@ class JsonOutputTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($link);
-        $label->summary  = $summary;
-        $label->address  = $address;
-        $label->category = $category;
-        $label->email    = $email;
-        $label->website  = $website;
-        $label->user     = $user;
+        $label->shouldReceive('getSummary')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($summary);
+        $label->shouldReceive('getAddress')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($address);
+        $label->shouldReceive('getCategory')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($category);
+        $label->shouldReceive('getEmail')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($email);
+        $label->shouldReceive('getWebsite')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($website);
+        $label->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->assertJsonOutput(
             ['label' => [[

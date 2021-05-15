@@ -26,6 +26,7 @@ namespace Ampache\Module\Song\Tag;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
+use Ampache\Module\Label\LabelCreatorInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -33,6 +34,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -50,18 +52,26 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
     private ArtistFinderInterface $artistFinder;
 
+    private ModelFactoryInterface $modelFactory;
+
+    private LabelCreatorInterface $labelCreator;
+
     public function __construct(
         DataMigratorInterface $dataMigrator,
         LabelRepositoryInterface $labelRepository,
         LicenseRepositoryInterface $licenseRepository,
         TagRepositoryInterface $tagRepository,
-        ArtistFinderInterface $artistFinder
+        ArtistFinderInterface $artistFinder,
+        ModelFactoryInterface $modelFactory,
+        LabelCreatorInterface $labelCreator
     ) {
         $this->dataMigrator      = $dataMigrator;
         $this->labelRepository   = $labelRepository;
         $this->licenseRepository = $licenseRepository;
         $this->tagRepository     = $tagRepository;
         $this->artistFinder      = $artistFinder;
+        $this->modelFactory      = $modelFactory;
+        $this->labelCreator      = $labelCreator;
     }
 
     /**
@@ -117,7 +127,16 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $new_song->label)) as $label_name) {
-                Label::helper($label_name);
+                $this->labelCreator->create([
+                    'name' => $label_name,
+                    'category' => 'tag_generated',
+                    'summary' => null,
+                    'address' => null,
+                    'email' => null,
+                    'website' => null,
+                    'user' => 0,
+                    'creation_date' => time()
+                ]);
             }
         }
         $new_song->language              = Catalog::check_length($results['language'], 128);
@@ -222,14 +241,25 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         }
         if ($song->label && AmpConfig::get('label')) {
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = Label::helper($label_name)
-                    ?: $this->labelRepository->lookup($label_name);
+                $label_id = $this->labelCreator->create([
+                    'name' => $label_name,
+                    'category' => 'tag_generated',
+                    'summary' => null,
+                    'address' => null,
+                    'email' => null,
+                    'website' => null,
+                    'user' => 0,
+                    'creation_date' => time()
+                ]);
+                if ($label_id === null) {
+                    $label_id = $this->labelRepository->lookup($label_name);
+                }
                 if ($label_id > 0) {
-                    $label   = new Label($label_id);
+                    $label   = $this->modelFactory->createLabel($label_id);
                     $artists = $this->labelRepository->getArtists($label->getId());
                     if (!in_array($song->artist, $artists)) {
-                        debug_event(__CLASS__, "$song->artist: adding association to $label->name", 4);
-                        $this->labelRepository->addArtistAssoc($label->id, $song->artist);
+                        debug_event(__CLASS__, "$song->artist: adding association to " . $label->getName(), 4);
+                        $this->labelRepository->addArtistAssoc($label->getId(), $song->artist);
                     }
                 }
             }

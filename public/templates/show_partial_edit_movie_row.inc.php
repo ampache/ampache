@@ -18,7 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Repository\Model\Movie;
+
+/** @var Movie $libitem */
+
+?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Original Name') ?></td>
                 <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->f_original_name); ?>" /></td>

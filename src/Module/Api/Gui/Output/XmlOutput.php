@@ -578,13 +578,13 @@ final class XmlOutput implements ApiOutputInterface
             $string .= "<license id=\"$labelId\">\n" .
                 "\t<name><![CDATA[" . scrub_out($label->getNameFormatted()) . "]]></name>\n" .
                 "\t<artists><![CDATA[" . $label->getArtistCount() . "]]></artists>\n" .
-                "\t<summary><![CDATA[$label->summary]]></summary>\n" .
+                "\t<summary><![CDATA[" . $label->getSummary() . "]]></summary>\n" .
                 "\t<external_link><![CDATA[" . $label->getLink() . "]]></external_link>\n" .
-                "\t<address><![CDATA[$label->address]]></address>\n" .
-                "\t<category><![CDATA[$label->category]]></category>\n" .
-                "\t<email><![CDATA[$label->email]]></email>\n" .
-                "\t<website><![CDATA[$label->website]]></website>\n" .
-                "\t<user><![CDATA[$label->user]]></user>\n" .
+                "\t<address><![CDATA[" . $label->getAddress() . "]]></address>\n" .
+                "\t<category><![CDATA[" . $label->getCategory() . "]]></category>\n" .
+                "\t<email><![CDATA[" . $label->getEmail() . "]]></email>\n" .
+                "\t<website><![CDATA[" . $label->getWebsite() . "]]></website>\n" .
+                "\t<user><![CDATA[" . $label->getUserId() . "]]></user>\n" .
                 "</license>\n";
         }
 

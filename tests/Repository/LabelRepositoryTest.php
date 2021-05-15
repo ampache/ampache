@@ -32,16 +32,16 @@ use Mockery\MockInterface;
 class LabelRepositoryTest extends MockeryTestCase
 {
     /** @var MockInterface|Connection */
-    private MockInterface $connection;
+    private MockInterface $database;
 
     private LabelRepository $subject;
 
     public function setUp(): void
     {
-        $this->connection = $this->mock(Connection::class);
+        $this->database = $this->mock(Connection::class);
 
         $this->subject = new LabelRepository(
-            $this->connection
+            $this->database
         );
     }
 
@@ -53,7 +53,7 @@ class LabelRepositoryTest extends MockeryTestCase
 
         $result = $this->mock(Result::class);
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?',
                 [$artistId]
@@ -79,7 +79,7 @@ class LabelRepositoryTest extends MockeryTestCase
 
         $result = $this->mock(Result::class);
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'SELECT `id`, `name` FROM `label`'
             )
@@ -111,7 +111,7 @@ class LabelRepositoryTest extends MockeryTestCase
         $labelId   = 666;
         $foundId   = 42;
 
-        $this->connection->shouldReceive('fetchOne')
+        $this->database->shouldReceive('fetchOne')
             ->with(
                 'SELECT `id` FROM `label` WHERE `name` = ? AND `id` != ?',
                 [$labelName, $labelId]
@@ -130,7 +130,7 @@ class LabelRepositoryTest extends MockeryTestCase
         $labelId  = 666;
         $artistId = 42;
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?',
                 [$labelId, $artistId]
@@ -145,7 +145,7 @@ class LabelRepositoryTest extends MockeryTestCase
         $labelId  = 666;
         $artistId = 42;
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
                 Mockery::type('array')
@@ -161,7 +161,7 @@ class LabelRepositoryTest extends MockeryTestCase
 
         $result = $this->mock(Result::class);
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'DELETE FROM `label` WHERE `id` = ?',
                 [$labelId]
@@ -186,7 +186,7 @@ class LabelRepositoryTest extends MockeryTestCase
 
         $result = $this->mock(Result::class);
 
-        $this->connection->shouldReceive('executeQuery')
+        $this->database->shouldReceive('executeQuery')
             ->with(
                 'SELECT `artist` FROM `label_asso` WHERE `label` = ?',
                 [$labelId]
@@ -202,6 +202,34 @@ class LabelRepositoryTest extends MockeryTestCase
         $this->assertSame(
             [$artistId],
             $this->subject->getArtists($labelId)
+        );
+    }
+
+    public function testUpdateUpdates(): void
+    {
+        $labelId  = 666;
+        $name     = 'some-name';
+        $category = 'some-category';
+        $summary  = 'some-summary';
+        $address  = 'some-address';
+        $email    = 'some-email';
+        $website  = 'some-website';
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?',
+                [$name, $category, $summary, $address, $email, $website, $labelId]
+            )
+            ->once();
+
+        $this->subject->update(
+            $labelId,
+            $name,
+            $category,
+            $summary,
+            $address,
+            $email,
+            $website
         );
     }
 }

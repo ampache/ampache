@@ -81,6 +81,35 @@ class Ui implements UiInterface
     }
 
     /**
+     * This returns a csv formatted version of the labels that we are given
+     *
+     * @param array<int, string> $labels
+     * @return string
+     */
+    public static function renderLabels(array $labels, bool $link = false)
+    {
+        if (!is_array($labels)) {
+            return '';
+        }
+
+        $results = '';
+
+        // Iterate through the labels, format them according to type and element id
+        foreach ($labels as $label_id => $value) {
+            if ($link) {
+                $results .= '<a href="' . AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
+            }
+            $results .= $value;
+            if ($link) {
+                $results .= '</a>';
+            }
+            $results .= ', ';
+        }
+
+        return rtrim((string)$results, ', ');
+    }
+
+    /**
      * find_template
      *
      * Return the path to the template file wanted. The file can be overwritten

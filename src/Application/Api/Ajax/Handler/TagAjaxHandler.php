@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
@@ -63,7 +64,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 $results['tags'] = $tags;
                 break;
             case 'get_labels':
-                $labels            = Label::get_display($this->labelRepository->getAll());
+                $labels            = Ui::renderLabels($this->labelRepository->getAll());
                 $results['labels'] = $labels;
                 break;
             case 'add_tag':

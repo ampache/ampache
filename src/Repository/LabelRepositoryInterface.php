@@ -49,4 +49,19 @@ interface LabelRepositoryInterface
      * @return int[]
      */
     public function getArtists(int $labelId): array;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataById(int $labelId): array;
+
+    public function update(
+        int $labelId,
+        string $name,
+        string $category,
+        string $summary,
+        string $address,
+        string $email,
+        string $website
+    ): void;
 }

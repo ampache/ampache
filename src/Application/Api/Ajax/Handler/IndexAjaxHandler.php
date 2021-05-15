@@ -376,8 +376,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 if ($label_id > 0) {
-                    $label      = new Label($label_id);
-                    $object_ids = $this->songRepository->getByLabel($label->name);
+                    $label      = $this->modelFactory->createLabel($label_id);
+                    $object_ids = $this->songRepository->getByLabel($label->getName());
 
                     $browse = new Browse();
                     $browse->set_type('song');
