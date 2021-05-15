@@ -527,9 +527,6 @@ final class Session implements SessionInterface
             static function (): bool {
                 return true;
             },
-            static function (): bool {
-                return true;
-            },
             static function ($key) {
                 return self::_read($key, 'value');
             },
