@@ -111,7 +111,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 
             // Variables needed for Auth class
             $results['cookie_path']   = $results['raw_web_path'];
-            $results['cookie_domain'] = $results['http_port'];
+            $results['cookie_domain'] = $results['http_host'];
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }

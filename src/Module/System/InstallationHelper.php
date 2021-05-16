@@ -556,10 +556,16 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['download']    = '0';
                 $dbconfig['allow_video'] = '0';
 
+                $cookie_options = [
+                    'expires' => time() + (30 * 24 * 60 * 60),
+                    'path' => '/',
+                    'samesite' => 'Strict'
+                ];
+
                 // Default local UI preferences to have a better 'minimalist first look'.
-                setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_album_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
+                setcookie('sidebar_state', 'collapsed', $cookie_options);
+                setcookie('browse_album_grid_view', 'false', $cookie_options);
+                setcookie('browse_artist_grid_view', 'false', $cookie_options);
                 break;
             case 'community':
                 $trconfig['use_auth']                                = 'false';
