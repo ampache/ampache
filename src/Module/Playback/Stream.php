@@ -414,7 +414,12 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
-     * @return array
+     * @return array<array{
+     *  media: \Ampache\Repository\Model\library_item,
+     *  client: \Ampache\Repository\Model\User,
+     *  agent: string,
+     *  expire: int
+     * }>
      */
     public static function get_now_playing()
     {

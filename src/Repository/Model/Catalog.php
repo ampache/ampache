@@ -1103,7 +1103,7 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist`" . "WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `song`.`catalog` = ? AND `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
         }
         $db_results = Dba::read($sql, array($this->id));
 

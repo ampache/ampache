@@ -371,7 +371,7 @@ final class Session implements SessionInterface
         }
 
         $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
+            'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
@@ -559,18 +559,23 @@ final class Session implements SessionInterface
      */
     public static function create_cookie()
     {
-        // Set up the cookie prefs before we throw down, this is very important
-        $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
-        ];
-
         if (isset($_SESSION)) {
+            $cookie_options = [
+                'expires' => (int)AmpConfig::get('cookie_life'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Strict'
+            ];
             setcookie(session_name(), session_id(), $cookie_options);
         } else {
+            $cookie_options = [
+                'lifetime' => (int)AmpConfig::get('cookie_life'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Strict'
+            ];
             session_set_cookie_params($cookie_options);
         }
         session_write_close();
@@ -653,7 +658,7 @@ final class Session implements SessionInterface
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        return Dba::write($sql, array($username, $token, time() + $remember_length));
+        return Dba::write($sql, array($username, $token, $remember_length));
     }
 
     /**
