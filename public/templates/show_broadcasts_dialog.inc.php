@@ -20,20 +20,27 @@
  *
  */
 
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var ModelFactoryInterface $modelFactory */
+/** @var BroadcastRepositoryInteface $broadcastRepository */
+global $dic;
+$broadcastRepository = $dic->get(BroadcastRepositoryInteface::class);
+$modelFactory        = $dic->get(ModelFactoryInterface::class);
 
 ?>
 
 <ul>
 <?php
-    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
+    $broadcasts = $broadcastRepository->getByUser(Core::get_global('user')->getId());
     foreach ($broadcasts as $broadcast_id) {
-        $broadcast = new Broadcast((int) $broadcast_id);
-        $broadcast->format(); ?>
+        $broadcast = $modelFactory->createBroadcast((int) $broadcast_id); ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
-            <?php echo $broadcast->f_name; ?>
+            <?php echo $broadcast->getName(); ?>
         </a>
     </li>
 <?php

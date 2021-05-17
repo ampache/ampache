@@ -70,7 +70,7 @@ interface ModelFactoryInterface
 
     public function createBroadcast(
         int $broadcastId
-    ): Broadcast;
+    ): BroadcastInterface;
 
     public function createLiveStream(
         int $liveStreamId

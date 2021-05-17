@@ -1,16 +1,23 @@
 <?php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var BroadcastRepositoryInteface $broadcastRepository */
+/** @var ModelFactoryInterface $modelFactory */
 
 // TODO remove me
 global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
+$environment         = $dic->get(EnvironmentInterface::class);
+$broadcastRepository = $dic->get(BroadcastRepositoryInteface::class);
+$modelFactory        = $dic->get(ModelFactoryInterface::class);
 
 /** @var bool $iframed */
 
@@ -466,14 +473,17 @@ if ($isVideo) { ?>
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
-            $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
+            $broadcasts = $broadcastRepository->getByUser(Core::get_global('user')->getId());
             if (count($broadcasts) < 1) {
-                $broadcast_id = Broadcast::create(T_('My Broadcast'));
+                $broadcast_id = $broadcastRepository->create(
+                    Core::get_global('user')->getId(),
+                    T_('My Broadcast')
+                );
             } else {
                 $broadcast_id = $broadcasts[0];
             }
 
-            $broadcast = new Broadcast((int) $broadcast_id);
+            $broadcast = $modelFactory->createBroadcast((int) $broadcast_id);
             $key       = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
             echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';

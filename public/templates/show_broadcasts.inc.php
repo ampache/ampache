@@ -20,9 +20,16 @@
  *
  */
 
-use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
+
+/** @var Browse $browse */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 ?>
 <?php if ($browse->is_show_header()) {
@@ -42,8 +49,7 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         foreach ($object_ids as $broadcast_id) {
-            $libitem = new Broadcast($broadcast_id);
-            $libitem->format(); ?>
+            $libitem = $modelFactory->createBroadcast($broadcast_id); ?>
         <tr id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_broadcast_row.inc.php'); ?>
         </tr>

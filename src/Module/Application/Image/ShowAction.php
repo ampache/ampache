@@ -36,6 +36,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastInterface;
@@ -169,7 +170,7 @@ final class ShowAction implements ApplicationActionInterface
              */
             if ($item instanceof PodcastInterface) {
                 $filename = $item->getTitle();
-            } elseif ($item instanceof Label) {
+            } elseif ($item instanceof Label || $item instanceof Broadcast) {
                 $filename = $item->getName();
             } else {
                 $filename = $item->name ?: $item->title;

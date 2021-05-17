@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
@@ -134,8 +135,11 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createBroadcast(
         int $broadcastId
-    ): Broadcast {
-        return new Broadcast($broadcastId);
+    ): BroadcastInterface {
+        return new Broadcast(
+            $this->dic->get(BroadcastRepositoryInteface::class),
+            $broadcastId
+        );
     }
 
     public function createLiveStream(
@@ -325,6 +329,7 @@ final class ModelFactory implements ModelFactoryInterface
                 Live_Stream::class => fn (int $objectId): LiveStreamInterface => $this->createLiveStream($objectId),
                 Share::class => fn (int $objectId): ShareInterface => $this->createShare($objectId),
                 Label::class => fn (int $objectId): Label => $this->createLabel($objectId),
+                Broadcast::class => fn (int $objectId): BroadcastInterface => $this->createBroadcast($objectId),
             ];
         }
 

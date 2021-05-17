@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Exception;
@@ -182,12 +183,12 @@ class Broadcast_Server implements MessageComponentInterface
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
-            $seekdiff  = $broadcast->song_position - $song_position;
+            $seekdiff  = $broadcast->getSongPosition() - $song_position;
             if ($seekdiff > 2 || $seekdiff < -2) {
                 $clients = $this->getListeners($broadcast);
                 $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, $song_position);
             }
-            $broadcast->song_position = $song_position;
+            $broadcast->setSongPosition($song_position);
 
             self::echo_message($this->verbose,
                 "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n");
@@ -240,7 +241,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function registerBroadcast(ConnectionInterface $from, $broadcast_key)
     {
-        $broadcast = Broadcast::get_broadcast($broadcast_key);
+        $broadcast = $this->getBroadcastRepository()->findByKey($broadcast_key);
         if ($broadcast) {
             $this->broadcasters[$from->resourceId] = $broadcast;
             $this->listeners[$broadcast->id]       = array();
@@ -294,14 +295,14 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream',
+        if (!$broadcast->getIsPrivate() || !AmpConfig::get('require_session') || Session::exists('stream',
                 $this->sids[$from->resourceId])) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to
             $this->broadcastMessage(array($from), self::BROADCAST_SONG,
-                base64_encode($this->getSongJS($broadcast->song)));
-            $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, $broadcast->song_position);
+                base64_encode($this->getSongJS($broadcast->getSongId())));
+            $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, $broadcast->getSongPosition());
             $this->notifyNbListeners($broadcast);
 
             self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
@@ -453,5 +454,15 @@ class Broadcast_Server implements MessageComponentInterface
         if ($verbose) {
             echo $message;
         }
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getBroadcastRepository(): BroadcastRepositoryInteface
+    {
+        global $dic;
+
+        return $dic->get(BroadcastRepositoryInteface::class);
     }
 }

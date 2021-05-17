@@ -21,6 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Api\Ajax;
 
@@ -30,12 +33,38 @@ use Ampache\Module\Api\Ajax;
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
-    echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id, 'play', T_('Play'), 'play_broadcast_' . $libitem->id);
+    echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->getId(), 'play', T_('Play'), 'play_broadcast_' . $libitem->getId());
 } ?>
     </div>
 </td>
-<td class="cel_name"><?php echo $libitem->name; ?></td>
-<td class="cel_genre"><?php echo $libitem->f_tags; ?></td>
-<td class="cel_started"><?php echo($libitem->started ? T_('Yes') : T_('No')); ?></td>
-<td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
-<td class="cel_action"><?php $libitem->show_action_buttons(); ?></td>
+<td class="cel_name"><?php echo $libitem->getName(); ?></td>
+<td class="cel_genre"><?php echo $libitem->getTagsFormatted(); ?></td>
+<td class="cel_started"><?php echo($libitem->getStarted() ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_listeners"><?php echo $libitem->getListeners(); ?></td>
+<td class="cel_action"><?php
+
+    if ($libitem->isNew() === false) {
+        if (Core::get_global('user')->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
+            echo sprintf(
+                '<a id="edit_broadcast_ %s" onclick="showEditDialog(\'broadcast_row\', \'%s\', \'edit_broadcast_%s\', \'%s\', \'broadcast_row_\')">%s</a>',
+                $libitem->getId(),
+                $libitem->getId(),
+                $libitem->getId(),
+                T_('Broadcast Edit'),
+                Ui::get_icon(
+                    'edit',
+                    T_('Edit')
+                )
+            );
+            echo sprintf(
+                ' <a href="%s/broadcast.php?action=show_delete&id=%s">%s</a>',
+                AmpConfig::get('web_path'),
+                $libitem->getId(),
+                Ui::get_icon(
+                    'delete',
+                    T_('Delete')
+                )
+            );
+        }
+    }
+    ?></td>

@@ -216,7 +216,7 @@ class Stream_Playlist
      * @param string $urltype
      * @return Stream_Url
      */
-    private static function media_object_to_url(Media $object, $additional_params = '', $urltype = 'web')
+    private static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
     {
         $surl = null;
         $url  = array();

@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Broadcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,14 +46,18 @@ final class DeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private BroadcastRepositoryInteface $broadcastRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        BroadcastRepositoryInteface $broadcastRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer     = $configContainer;
+        $this->ui                  = $ui;
+        $this->modelFactory        = $modelFactory;
+        $this->broadcastRepository = $broadcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,17 +73,17 @@ final class DeleteAction implements ApplicationActionInterface
 
         $object_id = Core::get_request('id');
         $broadcast = $this->modelFactory->createBroadcast((int) $object_id);
-        if ($broadcast->delete()) {
-            $next_url = sprintf(
+
+        $this->broadcastRepository->delete($broadcast);
+
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Broadcast has been deleted'),
+            sprintf(
                 '%s/browse.php?action=broadcast',
                 $this->configContainer->getWebPath()
-            );
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                T_('Broadcast has been deleted'),
-                $next_url
-            );
-        }
+            )
+        );
 
         $this->ui->showFooter();
 

@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
@@ -71,6 +72,7 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'label' => Label::class,
         'podcast' => Podcast::class,
+        'broadcast' => Broadcast::class,
     ];
 
     public const VIDEO_TYPES = [

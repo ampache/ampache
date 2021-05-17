@@ -25,19 +25,29 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface
 {
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
+    private BroadcastRepositoryInteface $broadcastRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        AjaxUriRetrieverInterface $ajaxUriRetriever
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        BroadcastRepositoryInteface $broadcastRepository,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
+        $this->ajaxUriRetriever    = $ajaxUriRetriever;
+        $this->broadcastRepository = $broadcastRepository;
+        $this->modelFactory        = $modelFactory;
     }
 
     public function handle(): void
@@ -58,11 +68,14 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'broadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
                 if (empty($broadcast_id)) {
-                    $broadcast_id = Broadcast::create(T_('My Broadcast'));
+                    $broadcast_id = $this->broadcastRepository->create(
+                        Core::get_global('user')->getId(),
+                        T_('My Broadcast')
+                    );
                 }
 
-                $broadcast = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
+                $broadcast = $this->modelFactory->createBroadcast((int) $broadcast_id);
+                if ($broadcast->isNew() === false) {
                     $key  = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
@@ -71,8 +84,8 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
-                $broadcast    = new Broadcast((int) $broadcast_id);
-                if ($broadcast->id) {
+                $broadcast    = $this->modelFactory->createBroadcast((int) $broadcast_id);
+                if ($broadcast->isNew() === false) {
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
                         '<script>stopBroadcast();</script>';
