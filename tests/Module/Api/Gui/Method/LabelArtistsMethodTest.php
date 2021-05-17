@@ -31,7 +31,7 @@ use Ampache\Module\Api\Gui\Method\Exception\FunctionDisabledException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LabelInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -119,7 +119,7 @@ class LabelArtistsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $stream     = $this->mock(StreamInterface::class);
-        $label      = $this->mock(Label::class);
+        $label      = $this->mock(LabelInterface::class);
 
         $objectId = 666;
         $result   = 'some-result';
@@ -176,7 +176,7 @@ class LabelArtistsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $stream     = $this->mock(StreamInterface::class);
-        $label      = $this->mock(Label::class);
+        $label      = $this->mock(LabelInterface::class);
 
         $objectId  = 666;
         $result    = 'some-result';

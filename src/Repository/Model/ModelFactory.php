@@ -242,7 +242,7 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createLabel(
         int $labelId
-    ): Label {
+    ): LabelInterface {
         return new Label(
             $this->dic->get(LabelRepositoryInterface::class),
             $this->dic->get(SongRepositoryInterface::class),

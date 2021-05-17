@@ -32,7 +32,7 @@ use Ampache\Repository\SongRepositoryInterface;
  * This is the class responsible for handling the Label object
  * it is related to the label table in the database.
  */
-class Label extends database_object implements library_item
+final class Label extends database_object implements LabelInterface
 {
     protected const DB_TABLENAME = 'label';
 

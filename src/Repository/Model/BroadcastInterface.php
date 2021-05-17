@@ -24,10 +24,6 @@ namespace Ampache\Repository\Model;
 interface BroadcastInterface extends
     library_item
 {
-    public function getId(): int;
-
-    public function isNew(): bool;
-
     public function getName(): string;
 
     public function getUserId(): int;
@@ -77,91 +73,6 @@ interface BroadcastInterface extends
      * @param integer $song_id
      */
     public function update_song($song_id);
-
-    /**
-     * Update a broadcast from data array.
-     * @param array $data
-     * @return integer
-     */
-    public function update(array $data);
-
-    /**
-     * @param boolean $details
-     */
-    public function format($details = true);
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array
-     */
-    public function get_keywords();
-
-    /**
-     * Get item fullname.
-     * @return string
-     */
-    public function get_fullname();
-
-    /**
-     * Get parent item description.
-     * @return array|null
-     */
-    public function get_parent();
-
-    /**
-     * Get item childrens.
-     * @return array
-     */
-    public function get_childrens();
-
-    /**
-     * Search for item childrens.
-     * @param string $name
-     * @return array
-     */
-    public function search_childrens($name);
-
-    /**
-     * Get all childrens and sub-childrens medias.
-     * @param string $filter_type
-     * @return array
-     */
-    public function get_medias($filter_type = null);
-
-    /**
-     * get_catalogs
-     *
-     * Get all catalog ids related to this item.
-     * @return integer[]
-     */
-    public function get_catalogs();
-
-    /**
-     * Get item's owner.
-     * @return integer|null
-     */
-    public function get_user_owner();
-
-    /**
-     * Get default art kind for this item.
-     * @return string
-     */
-    public function get_default_art_kind();
-
-    /**
-     * @return mixed|null
-     */
-    public function get_description();
-
-    /**
-     * display_art
-     * @param integer $thumb
-     * @param boolean $force
-     */
-    public function display_art(
-        $thumb = 2,
-        $force = false
-    );
 
     /**
      * Get play url.

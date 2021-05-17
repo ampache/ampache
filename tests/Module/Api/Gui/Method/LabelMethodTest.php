@@ -32,6 +32,7 @@ use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LabelInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -113,7 +114,7 @@ class LabelMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $label      = $this->mock(Label::class);
+        $label      = $this->mock(LabelInterface::class);
 
         $objectId = 666;
 
@@ -148,7 +149,7 @@ class LabelMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $label      = $this->mock(Label::class);
+        $label      = $this->mock(LabelInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $objectId = 666;

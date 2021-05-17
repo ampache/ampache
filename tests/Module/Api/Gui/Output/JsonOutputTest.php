@@ -28,6 +28,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\BookmarkInterface;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LabelInterface;
 use Ampache\Repository\Model\LicenseInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\ShoutboxInterface;
@@ -588,7 +589,7 @@ class JsonOutputTest extends MockeryTestCase
         $website  = 'some-website';
         $user     = 21;
 
-        $label = $this->mock(Label::class);
+        $label = $this->mock(LabelInterface::class);
 
         $label->shouldReceive('format')
             ->withNoArgs()
