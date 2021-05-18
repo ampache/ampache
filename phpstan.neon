@@ -4,3 +4,6 @@ parameters:
 	- src
 	excludePaths:
 	- tests
+	- src/Module/Playback/Scrobble/ScrobblerAsync.php
+includes:
+	- phpstan-baseline.neon

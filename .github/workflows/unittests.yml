@@ -40,3 +40,6 @@ jobs:
 
       - name: Run test suite
         run: composer run-script tests
+
+      - name: Run static analysis
+        run: composer run-script stan
