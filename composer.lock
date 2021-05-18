@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2efecb77e72f55c2245817cd7415d839",
+    "content-hash": "1a55748702cf508bd02cafa69af22413",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -5102,16 +5102,16 @@
         },
         {
             "name": "scn/phptal",
-            "version": "dev-master",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SC-Networks/PHPTAL.git",
-                "reference": "bb06d4ede78aeba21744ac3ec5d77f74a57c8cc6"
+                "reference": "6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SC-Networks/PHPTAL/zipball/bb06d4ede78aeba21744ac3ec5d77f74a57c8cc6",
-                "reference": "bb06d4ede78aeba21744ac3ec5d77f74a57c8cc6",
+                "url": "https://api.github.com/repos/SC-Networks/PHPTAL/zipball/6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec",
+                "reference": "6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec",
                 "shasum": ""
             },
             "require": {
@@ -5130,7 +5130,6 @@
                 "ext-mbstring": "Multibyte support is important for any non-english strings",
                 "scn/phptal-lint": "Linter for phptal template files"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -5173,9 +5172,9 @@
             ],
             "support": {
                 "issues": "https://github.com/SC-Networks/PHPTAL/issues",
-                "source": "https://github.com/SC-Networks/PHPTAL/tree/master"
+                "source": "https://github.com/SC-Networks/PHPTAL/tree/v3.1.0"
             },
-            "time": "2021-02-23T17:39:58+00:00"
+            "time": "2021-05-18T10:15:39+00:00"
         },
         {
             "name": "shrikeh/teapot",
@@ -9823,8 +9822,7 @@
         "james-heinrich/getid3": 20,
         "krixon/xbmc-php-rpc": 20,
         "kumailht/responsive-elements": 20,
-        "mikealmond/musicbrainz": 20,
-        "scn/phptal": 20
+        "mikealmond/musicbrainz": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
