@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
@@ -36,6 +37,8 @@ final class TvShow extends database_object implements TvShowInterface
 {
     protected const DB_TABLENAME = 'tvshow';
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public int $id;
 
     /** @var int[]|null */
@@ -44,11 +47,15 @@ final class TvShow extends database_object implements TvShowInterface
     /** @var null|array{episode_count?: int, catalog_id?: int} */
     private ?array $extra_info = null;
 
+    /** @var array<string, mixed>|null */
     private ?array $dbData = null;
 
-    public function __construct(int $id)
-    {
-        $this->id = $id;
+    public function __construct(
+        TagListUpdaterInterface $tagListUpdater,
+        int $id
+    ) {
+        $this->tagListUpdater = $tagListUpdater;
+        $this->id             = $id;
     }
 
     private function getDbData(): array
@@ -427,12 +434,12 @@ final class TvShow extends database_object implements TvShowInterface
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        Tag::update_tag_list($tags_comma, 'tvshow', $this->id, $force_update ? true : $override_childs);
+        $this->tagListUpdater->update($tags_comma, 'tvshow', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $episodes = $this->get_episodes();
             foreach ($episodes as $ep_id) {
-                Tag::update_tag_list($tags_comma, 'episode', $ep_id, $override_childs);
+                $this->tagListUpdater->update($tags_comma, 'episode', $ep_id, $override_childs);
             }
         }
     }

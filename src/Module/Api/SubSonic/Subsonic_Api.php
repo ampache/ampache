@@ -692,7 +692,7 @@ class Subsonic_Api
             case "byGenre":
                 $genre = self::check_parameter($input, 'genre');
 
-                $tag_id = (int) Tag::tag_exists($genre);
+                $tag_id = static::getTagRepository()->findByName($genre);
                 if ($tag_id > 0) {
                     $albums = static::getTagRepository()->getTagObjectIds('album', $tag_id, $size, $offset);
                 }

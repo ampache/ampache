@@ -35,6 +35,9 @@ use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Tag\TagCreatorInteface;
+use Ampache\Module\Tag\TagListCleanerInterface;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
@@ -527,16 +530,18 @@ class Song extends database_object implements
         // Allow scripts to populate new tags when injecting user uploads
         if (!defined('NO_SESSION')) {
             if ($user_upload && !Access::check('interface', 50, $user_upload)) {
-                $tags = Tag::clean_to_existing($tags);
+                $tags = static::getTagListCleaner()->clean($tags);
             }
         }
         if (is_array($tags)) {
+            $tagCreator = static::getTagCreator();
+
             foreach ($tags as $tag) {
                 $tag = trim((string)$tag);
                 if (!empty($tag)) {
-                    Tag::add('song', $song_id, $tag, false);
-                    Tag::add('album', $album_id, $tag, false);
-                    Tag::add('artist', $artist_id, $tag, false);
+                    $tagCreator->add('song', $song_id, $tag);
+                    $tagCreator->add('album', $album_id, $tag);
+                    $tagCreator->add('artist', $artist_id, $tag);
                 }
             }
         }
@@ -906,7 +911,7 @@ class Song extends database_object implements
                     }
                     break;
                 case 'edit_tags':
-                    Tag::update_tag_list($value, 'song', $this->id, true);
+                    $this->getTagListUpdater()->update($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     $changed[]  = (string) $key;
                     break;
@@ -2068,5 +2073,35 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(LabelCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTagCreator(): TagCreatorInteface
+    {
+        global $dic;
+
+        return $dic->get(TagCreatorInteface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagListUpdater(): TagListUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(TagListUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTagListCleaner(): TagListCleanerInterface
+    {
+        global $dic;
+
+        return $dic->get(TagListCleanerInterface::class);
     }
 }

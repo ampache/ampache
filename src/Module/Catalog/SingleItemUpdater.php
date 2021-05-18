@@ -25,6 +25,7 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -50,13 +51,16 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
         TagRepositoryInterface $tagRepository,
         ConfigContainerInterface $configContainer,
         ArtistRepositoryInterface $artistRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        TagListUpdaterInterface $tagListUpdater
     ) {
         $this->songRepository   = $songRepository;
         $this->albumRepository  = $albumRepository;
@@ -64,6 +68,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         $this->configContainer  = $configContainer;
         $this->artistRepository = $artistRepository;
         $this->modelFactory     = $modelFactory;
+        $this->tagListUpdater   = $tagListUpdater;
     }
 
     /**
@@ -138,17 +143,17 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
             case 'album':
                 /** @var Album $libitem*/
                 $tags = $this->tagRepository->getSongTags('album', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
+                $this->tagListUpdater->update(implode(',', $tags), 'album', $libitem->id, false);
                 $this->albumRepository->updateTime($libitem);
                 break;
             case 'artist':
                 /** @var Artist $libitem */
                 foreach ($this->albumRepository->getDistinctIdsByArtist($libitem) as $album_id) {
                     $album_tags = $this->tagRepository->getSongTags('album', $album_id);
-                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
+                    $this->tagListUpdater->update(implode(',', $album_tags), 'album', $album_id, false);
                 }
                 $tags = $this->tagRepository->getSongTags('artist', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                $this->tagListUpdater->update(implode(',', $tags), 'artist', $libitem->id, false);
                 $libitem->update_album_count();
                 break;
         } // end switch type

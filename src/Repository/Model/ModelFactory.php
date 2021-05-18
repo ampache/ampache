@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BroadcastRepositoryInteface;
@@ -181,7 +182,10 @@ final class ModelFactory implements ModelFactoryInterface
     public function createTvShow(
         int $tvShowId
     ): TvShowInterface {
-        return new TvShow($tvShowId);
+        return new TvShow(
+            $this->dic->get(TagListUpdaterInterface::class),
+            $tvShowId
+        );
     }
 
     public function createTvShowSeason(

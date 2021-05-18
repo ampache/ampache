@@ -23,9 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Artist\Tag;
 
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Tag;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 
@@ -37,14 +37,18 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         AlbumTagUpdaterInterface $albumTagUpdater,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        TagListUpdaterInterface $tagListUpdater
     ) {
         $this->albumRepository = $albumRepository;
         $this->albumTagUpdater = $albumTagUpdater;
         $this->modelFactory    = $modelFactory;
+        $this->tagListUpdater  = $tagListUpdater;
     }
 
     /**
@@ -57,7 +61,7 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
         ?int $add_to_childs,
         bool $force_update = false
     ): void {
-        Tag::update_tag_list($tags_comma, 'artist', $artist->getId(), $force_update ? true : $override_childs);
+        $this->tagListUpdater->update($tags_comma, 'artist', $artist->getId(), $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $albums = $this->albumRepository->getByArtist($artist->id);

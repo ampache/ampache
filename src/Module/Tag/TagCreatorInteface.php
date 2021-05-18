@@ -17,39 +17,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Tag;
 
-interface TagRepositoryInterface
+interface TagCreatorInteface
 {
     /**
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     *
-     * @return int[]
+     * This is a wrapper function, it figures out what we need to add, be it a tag
+     * and map, or just the mapping
      */
-    public function getTagObjectIds(
+    public function add(
         string $type,
-        int $tagId,
-        ?int $limit = null,
-        int $offset = 0
-    ): array;
+        int $object_id,
+        string $value
+    ): ?int;
 
     /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     *
-     * @return string[]
+     * add_tag_map
+     * This adds a specific tag to the map for specified object
+     * @param string $type
+     * @param integer|string $object_id
+     * @param integer|string $tag_id
+     * @param boolean $user
+     * @return boolean|string|null
      */
-    public function getSongTags(string $type, int $objectId): array;
-
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
-
-    /**
-     * This checks to see if a tag exists, this has nothing to do with objects or maps
-     */
-    public function findByName(string $value): ?int;
+    public function add_tag_map($type, $object_id, $tag_id, $user = true);
 }

@@ -23,18 +23,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Tag;
 
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Tag;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class AlbumTagUpdater implements AlbumTagUpdaterInterface
 {
     private SongRepositoryInterface $songRepository;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public function __construct(
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        TagListUpdaterInterface $tagListUpdater
     ) {
         $this->songRepository = $songRepository;
+        $this->tagListUpdater = $tagListUpdater;
     }
 
     /**
@@ -48,12 +52,12 @@ final class AlbumTagUpdater implements AlbumTagUpdaterInterface
         bool $forceUpdate = false
     ): void {
         // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tagsComma, 'album', $album->id, $forceUpdate ? true : $overrideChilds);
+        $this->tagListUpdater->update($tagsComma, 'album', $album->id, $forceUpdate ? true : $overrideChilds);
 
         if ($overrideChilds || $addToChilds) {
             $songs = $this->songRepository->getByAlbum($album->id);
             foreach ($songs as $song_id) {
-                Tag::update_tag_list($tagsComma, 'song', $song_id, $overrideChilds);
+                $this->tagListUpdater->update($tagsComma, 'song', $song_id, $overrideChilds);
             }
         }
     }

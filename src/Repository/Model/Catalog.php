@@ -2641,7 +2641,7 @@ abstract class Catalog extends database_object
     /**
      * @deprecated Inject by constructor
      */
-    private static function getModelFactory(): ModelFactoryInterface
+    protected static function getModelFactory(): ModelFactoryInterface
     {
         global $dic;
 

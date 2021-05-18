@@ -17,39 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Tag;
 
-interface TagRepositoryInterface
+interface TagListCleanerInterface
 {
     /**
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     *
-     * @return int[]
+     * Clean tag list to existing tag list only
+     * @param array|string $tags
+     * @return array|string
      */
-    public function getTagObjectIds(
-        string $type,
-        int $tagId,
-        ?int $limit = null,
-        int $offset = 0
-    ): array;
-
-    /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     *
-     * @return string[]
-     */
-    public function getSongTags(string $type, int $objectId): array;
-
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
-
-    /**
-     * This checks to see if a tag exists, this has nothing to do with objects or maps
-     */
-    public function findByName(string $value): ?int;
+    public function clean($tags);
 }

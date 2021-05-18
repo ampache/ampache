@@ -1135,7 +1135,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated Inject by constructor
      */
-    private static function getModelFactory(): ModelFactoryInterface
+    protected static function getModelFactory(): ModelFactoryInterface
     {
         global $dic;
 

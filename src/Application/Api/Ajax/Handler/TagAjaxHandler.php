@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
@@ -42,12 +43,16 @@ final class TagAjaxHandler implements AjaxHandlerInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private TagCreatorInteface $tagCreator;
+
     public function __construct(
         LabelRepositoryInterface $labelRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        TagCreatorInteface $tagCreator
     ) {
         $this->labelRepository = $labelRepository;
         $this->modelFactory    = $modelFactory;
+        $this->tagCreator      = $tagCreator;
     }
 
     public function handle(): void
@@ -74,7 +79,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
                 debug_event('tag.ajax', 'Adding new tag...', 5);
-                Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
+                $this->tagCreator->add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
                 break;
             case 'add_tag_by_name':
                 if (!Access::check('interface', 75)) {
@@ -83,7 +88,11 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
                 debug_event('tag.ajax', 'Adding new tag by name...', 5);
-                Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
+                $this->tagCreator->add(
+                    filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES),
+                    filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT),
+                    $_GET['tag_name']
+                );
                 break;
             case 'delete':
                 if (!Access::check('interface', 75)) {

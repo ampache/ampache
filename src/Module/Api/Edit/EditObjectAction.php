@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Tag\TagListCleanerInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -46,14 +47,18 @@ final class EditObjectAction extends AbstractEditAction
 
     private LabelRepositoryInterface $labelRepository;
 
+    private TagListCleanerInterface $tagListCleaner;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
         LabelRepositoryInterface $labelRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        TagListCleanerInterface $tagListCleaner
     ) {
         parent::__construct($configContainer, $logger, $modelFactory);
         $this->labelRepository = $labelRepository;
+        $this->tagListCleaner  = $tagListCleaner;
     }
 
     protected function handle(
@@ -100,7 +105,7 @@ final class EditObjectAction extends AbstractEditAction
                 unset($_POST['album_artist_name']);
             }
             if (filter_has_var(INPUT_POST, 'edit_tags')) {
-                $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
+                $_POST['edit_tags'] = $this->tagListCleaner->clean($_POST['edit_tags']);
             }
             if (filter_has_var(INPUT_POST, 'edit_labels')) {
                 $_POST['edit_labels'] = $this->clean_to_existing($_POST['edit_labels']);

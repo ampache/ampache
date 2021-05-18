@@ -124,4 +124,21 @@ final class TagRepository implements TagRepositoryInterface
             [$newObjectId, $objectType, $oldObjectId]
         );
     }
+
+    /**
+     * This checks to see if a tag exists, this has nothing to do with objects or maps
+     */
+    public function findByName(string $value): ?int
+    {
+        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($value));
+
+        $results = Dba::fetch_assoc($db_results);
+
+        if ($results === []) {
+            return null;
+        }
+
+        return (int)$results['id'];
+    }
 }

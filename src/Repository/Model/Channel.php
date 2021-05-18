@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
@@ -254,7 +255,7 @@ class Channel extends database_object implements Media, library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
+            $this->getTagListUpdater()->update($data['edit_tags'], 'channel', $this->id, true);
         }
 
         $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " . "WHERE `id` = ?";
@@ -820,5 +821,15 @@ class Channel extends database_object implements Media, library_item
     public function isEnabled(): bool
     {
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagListUpdater(): TagListUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(TagListUpdaterInterface::class);
     }
 }

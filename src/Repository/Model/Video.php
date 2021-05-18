@@ -29,6 +29,8 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Tag\TagCreatorInteface;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -533,10 +535,12 @@ class Video extends database_object implements
         $vid = (int) Dba::insert_id();
 
         if (is_array($tags)) {
+            $tagCreator = static::getTagCreator();
+
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
-                    Tag::add('video', $vid, $tag, false);
+                    $tagCreator->add('video', $vid, $tag);
                 }
             }
         }
@@ -600,7 +604,7 @@ class Video extends database_object implements
         Dba::write($sql, array($title, $release_date, $this->id));
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
+            $this->getTagListUpdater()->update($data['edit_tags'], 'video', $this->id, true);
         }
 
         $this->title        = $title;
@@ -1135,5 +1139,25 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(TvShowEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTagCreator(): TagCreatorInteface
+    {
+        global $dic;
+
+        return $dic->get(TagCreatorInteface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagListUpdater(): TagListUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(TagListUpdaterInterface::class);
     }
 }

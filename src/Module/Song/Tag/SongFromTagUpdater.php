@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Label\LabelCreatorInterface;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -56,6 +57,8 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
     private LabelCreatorInterface $labelCreator;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public function __construct(
         DataMigratorInterface $dataMigrator,
         LabelRepositoryInterface $labelRepository,
@@ -63,7 +66,8 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         TagRepositoryInterface $tagRepository,
         ArtistFinderInterface $artistFinder,
         ModelFactoryInterface $modelFactory,
-        LabelCreatorInterface $labelCreator
+        LabelCreatorInterface $labelCreator,
+        TagListUpdaterInterface $tagListUpdater
     ) {
         $this->dataMigrator      = $dataMigrator;
         $this->labelRepository   = $labelRepository;
@@ -72,6 +76,7 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         $this->artistFinder      = $artistFinder;
         $this->modelFactory      = $modelFactory;
         $this->labelCreator      = $labelCreator;
+        $this->tagListUpdater    = $tagListUpdater;
     }
 
     /**
@@ -273,11 +278,11 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
             Song::update_song($song->id, $new_song);
 
             if (!empty($new_song->tags) && $song->tags != $new_song->tags) {
-                Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
+                $this->tagListUpdater->update(implode(',', $new_song->tags), 'song', $song->id, true);
                 $tags = $this->tagRepository->getSongTags('album', $song->album);
-                Tag::update_tag_list(implode(',', $tags), 'album', $song->album, true);
+                $this->tagListUpdater->update(implode(',', $tags), 'album', $song->album, true);
                 $tags = $this->tagRepository->getSongTags('artist', $song->artist);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
+                $this->tagListUpdater->update(implode(',', $tags), 'artist', $song->artist, true);
             }
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);

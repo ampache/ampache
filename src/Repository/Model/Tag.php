@@ -86,62 +86,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function construct_from_name($name)
     {
-        $tag_id = self::tag_exists($name);
+        $tag_id = static::getTagRepository()->findByName($name);
 
         return new Tag($tag_id);
     } // construct_from_name
-
-    /**
-     * add
-     * This is a wrapper function, it figures out what we need to add, be it a tag
-     * and map, or just the mapping
-     * @param string $type
-     * @param integer $object_id
-     * @param string $value
-     * @param boolean $user
-     * @return boolean|mixed|string|null
-     */
-    public static function add($type, $object_id, $value, $user = true)
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
-        }
-
-        if (!is_numeric($object_id)) {
-            return false;
-        }
-
-        $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
-
-        if (!strlen((string)$cleaned_value)) {
-            return false;
-        }
-
-        if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
-        } else {
-            $uid = (int)($user);
-        }
-
-        // Check and see if the tag exists, if not create it, we need the tag id from this
-        if (!$tag_id = self::tag_exists($cleaned_value)) {
-            debug_event(self::class, 'Adding new tag {' . $cleaned_value . '}', 5);
-            $tag_id = self::add_tag($cleaned_value);
-        }
-
-        if (!$tag_id) {
-            debug_event(self::class, 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
-
-            return false;
-        }
-
-        // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type, $object_id, (int)$tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $object_id, (int)$tag_id, $user);
-        }
-
-        return (int)$map_id;
-    } // add
 
     /**
      * add_tag
@@ -248,49 +196,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * add_tag_map
-     * This adds a specific tag to the map for specified object
-     * @param string $type
-     * @param integer|string $object_id
-     * @param integer|string $tag_id
-     * @param boolean $user
-     * @return boolean|string|null
-     */
-    public static function add_tag_map($type, $object_id, $tag_id, $user = true)
-    {
-        if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
-        } else {
-            $uid = (int)($user);
-        }
-
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(__CLASS__, $type . " is not a library item.", 3);
-
-            return false;
-        }
-        $tag_id  = (int)($tag_id);
-        $item_id = (int)($object_id);
-
-        if (!$tag_id || !$item_id) {
-            return false;
-        }
-
-        // If tag merged to another one, add reference to the merge destination
-        $parent = new Tag($tag_id);
-        $merges = $parent->get_merged_tags();
-        if (!$parent->is_hidden) {
-            $merges[] = array('id' => $parent->id, 'name' => $parent->name);
-        }
-        foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "VALUES (?, ?, ?, ?)";
-            Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
-        }
-
-        return (int) Dba::insert_id();
-    } // add_tag_map
-
-    /**
      * garbage_collection
      *
      * This cleans out tag_maps that are obsolete and then removes tags that
@@ -335,48 +240,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Call the garbage collector to clean everything
         self::garbage_collection();
     }
-
-    /**
-     * tag_exists
-     * This checks to see if a tag exists, this has nothing to do with objects or maps
-     * @param string $value
-     * @return integer
-     */
-    public static function tag_exists($value)
-    {
-        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
-        $db_results = Dba::read($sql, array($value));
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int)$results['id'];
-    } // tag_exists
-
-    /**
-     * tag_map_exists
-     * This looks to see if the current mapping of the current object of the current tag of the current
-     * user exists, lots of currents... taste good in scones.
-     * @param string $type
-     * @param integer $object_id
-     * @param integer $tag_id
-     * @param integer $user
-     * @return boolean|mixed
-     */
-    private static function tag_map_exists($type, $object_id, $tag_id, $user)
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(__CLASS__, 'Requested type is not a library item.', 3);
-
-            return false;
-        }
-
-        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " . "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
-        $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results['id'];
-    } // tag_map_exists
 
     /**
      * get_top_tags
@@ -508,97 +371,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $results .= ', ';
         }
 
-        $results = rtrim((string)$results, ', ');
-
-        return $results;
+        return rtrim((string)$results, ', ');
     } // get_display
-
-    /**
-     * update_tag_list
-     * Update the tags list based on a comma-separated list
-     *  (ex. tag1,tag2,tag3,..)
-     * @param string $tags_comma
-     * @param string $type
-     * @param integer $object_id
-     * @param boolean $overwrite
-     * @return boolean
-     */
-    public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
-    {
-        if (!strlen((string) $tags_comma) > 0) {
-            return false;
-        }
-        debug_event(self::class, 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
-
-        $ctags       = self::get_top_tags($type, $object_id);
-        $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
-        $filterunder = str_replace('_', ', ', $filterfolk);
-        $filter      = str_replace(';', ', ', $filterunder);
-        $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
-        $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
-
-        foreach ($ctags as $ctid => $ctv) {
-            if ($ctv['id'] != '') {
-                $ctag  = new Tag($ctv['id']);
-                $found = false;
-
-                foreach ($editedTags as $tk => $tv) {
-                    if ($ctag->name == $tv) {
-                        $found = true;
-                        break;
-                    }
-                }
-
-                if ($found) {
-                    unset($editedTags[$ctag->name]);
-                } else {
-                    if ($overwrite && $ctv['user'] == 0) {
-                        debug_event(self::class, 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
-                        $ctag->remove_map($type, $object_id, false);
-                    }
-                }
-            }
-        }
-        // Look if we need to add some new tags
-        foreach ($editedTags as $tk => $tv) {
-            if ($tv != '') {
-                self::add($type, $object_id, $tv, false);
-            }
-        }
-
-        return true;
-    } // update_tag_list
-
-    /**
-     * clean_to_existing
-     * Clean tag list to existing tag list only
-     * @param array|string $tags
-     * @return array|string
-     */
-    public static function clean_to_existing($tags)
-    {
-        if (is_array($tags)) {
-            $taglist = $tags;
-        } else {
-            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder = str_replace('_', ', ', $filterfolk);
-            $filter      = str_replace(';', ', ', $filterunder);
-            $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
-            $taglist     = (is_array($filter_list)) ? array_unique($filter_list) : array();
-        }
-
-        $ret = array();
-        foreach ($taglist as $tag) {
-            $tag = trim((string)$tag);
-            if (!empty($tag)) {
-                if (self::tag_exists($tag)) {
-                    $ret[] = $tag;
-                }
-            }
-        }
-
-        return (is_array($tags) ? $ret : implode(",", $ret));
-    }
 
     /**
      * count
@@ -730,7 +504,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     {
         $medias = array();
         if ($filter_type) {
-            $ids = $this->getTagRepository()->getTagObjectIds($filter_type, $this->getId());
+            $ids = static::getTagRepository()->getTagObjectIds($filter_type, $this->getId());
             foreach ($ids as $object_id) {
                 $medias[] = array(
                     'object_type' => $filter_type,
@@ -794,7 +568,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * @deprecated Inject by constructor
      */
-    private function getTagRepository(): TagRepositoryInterface
+    private static function getTagRepository(): TagRepositoryInterface
     {
         global $dic;
 

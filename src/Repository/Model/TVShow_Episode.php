@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 
 final class TVShow_Episode extends Video implements TvShowEpisodeInterface
@@ -106,11 +107,13 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         }
 
         if (is_array($tags)) {
+            $tagCreator = static::getTagCreator();
+
             foreach ($tags as $tag) {
                 $tag = trim((string)$tag);
                 if (!empty($tag)) {
-                    Tag::add('tvshow_season', (int) $tvshow_season, $tag, false);
-                    Tag::add('tvshow', (int) $tvshow, $tag, false);
+                    $tagCreator->add('tvshow_season', (int) $tvshow_season, $tag);
+                    $tagCreator->add('tvshow', (int) $tvshow, $tag);
                 }
             }
         }
@@ -341,5 +344,15 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
         global $dic;
 
         return $dic->get(TvShowEpisodeRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTagCreator(): TagCreatorInteface
+    {
+        global $dic;
+
+        return $dic->get(TagCreatorInteface::class);
     }
 }

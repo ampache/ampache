@@ -23,12 +23,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Video;
 
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
 
 final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
 {
+    private TagListUpdaterInterface $tagListUpdater;
+
+    public function __construct(
+        TagListUpdaterInterface $tagListUpdater
+    ) {
+        $this->tagListUpdater = $tagListUpdater;
+    }
+
     public function update(
         array $results,
         Video $video
@@ -66,7 +75,7 @@ final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
             Video::update_video($video->id, $new_video);
 
             if ($video->tags != $new_video->tags) {
-                Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
+                $this->tagListUpdater->update(implode(',', $new_video->tags), 'video', $video->id, true);
             }
         } else {
             debug_event(self::class, $video->file . " : no differences found", 5);

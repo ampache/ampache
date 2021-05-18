@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInteface;
 
@@ -35,15 +36,19 @@ final class Broadcast extends database_object implements BroadcastInterface
 
     private BroadcastRepositoryInteface $broadcastRepository;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
     public int $id;
 
     private ?array $dbData = null;
 
     public function __construct(
         BroadcastRepositoryInteface $broadcastRepository,
+        TagListUpdaterInterface $tagListUpdater,
         int $id
     ) {
         $this->broadcastRepository = $broadcastRepository;
+        $this->tagListUpdater      = $tagListUpdater;
         $this->id                  = $id;
     }
 
@@ -190,7 +195,7 @@ final class Broadcast extends database_object implements BroadcastInterface
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
+            $this->tagListUpdater->update($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
         $this->broadcastRepository->update(
