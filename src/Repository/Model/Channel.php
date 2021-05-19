@@ -33,24 +33,24 @@ class Channel extends database_object implements Media, library_item
     protected const DB_TABLENAME = 'channel';
 
     public $id;
-    public $is_private;
-    public $interface;
-    public $port;
-    public $start_date;
-    public $pid;
-    public $listeners;
-    public $max_listeners;
-    public $peak_listeners;
-    public $object_type;
-    public $object_id;
-    public $stream_type;
-    public $random;
-    public $loop;
-    public $bitrate;
-    public $name;
-    public $description;
-    public $fixed_endpoint;
-    public $url;
+    private $is_private;
+    private $interface;
+    private $port;
+    private $start_date;
+    private $pid;
+    private $listeners;
+    private $max_listeners;
+    private $peak_listeners;
+    private $object_type;
+    private $object_id;
+    private $stream_type;
+    private $random;
+    private $loop;
+    private $bitrate;
+    private $name;
+    private $description;
+    private $fixed_endpoint;
+    private $url;
 
     /**
      * Constructor
@@ -72,6 +72,96 @@ class Channel extends database_object implements Media, library_item
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    public function getFixedEndpoint(): int
+    {
+        return $this->fixed_endpoint;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getBitrate(): int
+    {
+        return $this->bitrate;
+    }
+
+    public function getLoop(): int
+    {
+        return $this->loop;
+    }
+
+    public function getRandom(): int
+    {
+        return $this->random;
+    }
+
+    public function getStreamType(): string
+    {
+        return $this->stream_type;
+    }
+
+    public function getObjectId(): int
+    {
+        return $this->object_id;
+    }
+
+    public function getObjectType(): string
+    {
+        return $this->object_type;
+    }
+
+    public function getPeakListeners(): int
+    {
+        return $this->peak_listeners;
+    }
+
+    public function getMaxListeners(): int
+    {
+        return $this->max_listeners;
+    }
+
+    public function getListeners(): int
+    {
+        return $this->listeners;
+    }
+
+    public function getPid(): int
+    {
+        return $this->pid;
+    }
+
+    public function getStartDate(): int
+    {
+        return $this->start_date;
+    }
+
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    public function getInterface(): string
+    {
+        return $this->interface;
+    }
+
+    public function getIsPrivate(): int
+    {
+        return $this->is_private;
     }
 
     public function isNew(): bool
@@ -107,7 +197,7 @@ class Channel extends database_object implements Media, library_item
         $sql             = "UPDATE `channel` SET `listeners` = ? ";
         $params          = array($listeners);
         $this->listeners = $listeners;
-        if ($listeners > $this->peak_listeners) {
+        if ($listeners > $this->getPeakListeners()) {
             $this->peak_listeners = $listeners;
             $sql .= ", `peak_listeners` = ? ";
             $params[] = $listeners;
@@ -314,7 +404,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function get_fullname()
     {
-        return $this->name;
+        return $this->getName();
     }
 
     /**
@@ -389,7 +479,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function get_description()
     {
-        return $this->description;
+        return $this->getDescription();
     }
 
     /**
@@ -411,8 +501,8 @@ class Channel extends database_object implements Media, library_item
     public function get_target_object()
     {
         $object = null;
-        if ($this->object_type == 'playlist') {
-            $object = new Playlist($this->object_id);
+        if ($this->getObjectType() == 'playlist') {
+            $object = new Playlist($this->getObjectId());
             $object->format();
         }
 
@@ -428,7 +518,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function get_stream_url()
     {
-        return "http://" . $this->interface . ":" . (string)$this->port . "/stream." . $this->stream_type;
+        return "http://" . $this->getInterface() . ":" . $this->getPort() . "/stream." . $this->getStreamType();
     }
 
     /**
@@ -440,7 +530,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function get_stream_proxy_url()
     {
-        return AmpConfig::get('web_path') . '/channel/' . $this->id . '/stream.' . $this->stream_type;
+        return AmpConfig::get('web_path') . '/channel/' . $this->getId() . '/stream.' . $this->getStreamType();
     }
 
     /**
@@ -474,11 +564,11 @@ class Channel extends database_object implements Media, library_item
      */
     public function stop_channel()
     {
-        if ($this->pid) {
+        if ($this->getPid()) {
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                exec("taskkill /F /PID " . $this->pid);
+                exec("taskkill /F /PID " . $this->getPid());
             } else {
-                exec("kill -9 " . $this->pid);
+                exec("kill -9 " . $this->getPid());
             }
 
             $sql = "UPDATE `channel` SET `start_date` = '0', `listeners` = '0', `pid` = '0' WHERE `id` = ?";
@@ -495,8 +585,8 @@ class Channel extends database_object implements Media, library_item
     public function check_channel()
     {
         $check = false;
-        if ($this->interface && $this->port) {
-            $connection = @fsockopen($this->interface, (int)$this->port);
+        if ($this->getInterface() && $this->getPort()) {
+            $connection = @fsockopen($this->getInterface(), $this->getPort());
             if (is_resource($connection)) {
                 $check = true;
                 fclose($connection);
@@ -541,7 +631,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function play_url($additional_params = '', $player = null, $local = false)
     {
-        return $this->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($this->name) . '.' . $this->stream_type . $additional_params;
+        return $this->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($this->getName()) . '.' . $this->getStreamType() . $additional_params;
     }
 
     /**

@@ -37,19 +37,19 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="cel_id"><?php echo $libitem->id; ?></td>
-<td class="cel_name"><?php echo $libitem->name; ?></td>
-<td class="cel_interface"><?php echo $libitem->interface; ?></td>
-<td class="cel_port"><?php echo $libitem->port; ?></td>
+<td class="cel_name"><?php echo $libitem->getName(); ?></td>
+<td class="cel_interface"><?php echo $libitem->getInterface(); ?></td>
+<td class="cel_port"><?php echo $libitem->getPort(); ?></td>
 <td class="cel_data"><?php echo $libitem->get_target_object()->f_link; ?></td>
-<!--<td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
-<td class="cel_loop"><?php echo($libitem->loop ? T_('Yes') : T_('No')); ?></td>-->
-<td class="cel_streamtype"><?php echo $libitem->stream_type; ?></td>
-<td class="cel_bitrate"><?php echo $libitem->bitrate; ?></td>
-<td class="cel_startdate"><?php echo date("c", $libitem->start_date); ?></td>
-<td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
+<!--<td class="cel_random"><?php echo($libitem->getRandom() ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_loop"><?php echo($libitem->getLoop() ? T_('Yes') : T_('No')); ?></td>-->
+<td class="cel_streamtype"><?php echo $libitem->getStreamType(); ?></td>
+<td class="cel_bitrate"><?php echo $libitem->getBitrate(); ?></td>
+<td class="cel_startdate"><?php echo date("c", $libitem->getStartDate()); ?></td>
+<td class="cel_listeners"><?php echo $libitem->getListeners(); ?></td>
 <td class="cel_streamurl">
     <?php echo $libitem->get_stream_url(); ?><br />
-    <?php if ($libitem->is_private) {
+    <?php if ($libitem->getIsPrivate()) {
     echo Ui::get_icon('lock', T_('Authentication Required'));
 } ?>
     <?php echo $libitem->get_stream_proxy_url(); ?>

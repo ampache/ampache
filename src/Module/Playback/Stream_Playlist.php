@@ -287,8 +287,8 @@ class Stream_Playlist
                     break;
                 case 'channel':
                     /** @var Channel $object */
-                    $url['title'] = $object->name;
-                    $url['codec'] = $object->stream_type;
+                    $url['title'] = $object->getName();
+                    $url['codec'] = $object->getStreamType();
                     break;
                 case 'podcast_episode':
                     /** @var Podcast_Episode $object */

@@ -75,7 +75,7 @@ final class ChannelAction implements ApplicationActionInterface
         }
 
         // Authenticate the user here
-        if ($channel->is_private) {
+        if ($channel->getIsPrivate()) {
             $is_auth = false;
             if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
                 $htusername = Core::get_server('PHP_AUTH_USER');
@@ -117,10 +117,10 @@ final class ChannelAction implements ApplicationActionInterface
             }
         }
 
-        $url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
+        $url = 'http://' . $channel->getInterface() . ':' . $channel->getPort() . '/' . $_REQUEST['target'];
         // Redirect request to the real channel server
         $headers         = getallheaders();
-        $headers['Host'] = $channel->interface;
+        $headers['Host'] = $channel->getInterface();
         $reqheaders      = array();
         foreach ($headers as $key => $value) {
             $reqheaders[] = $key . ': ' . $value;

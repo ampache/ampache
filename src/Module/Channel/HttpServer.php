@@ -66,10 +66,10 @@ final class HttpServer implements HttpServerInterface
         if ($h_count > 0) {
             $cmd = explode(" ", $headers[0]);
             if ($cmd['0'] == 'GET') {
-                $mimeType = $this->extensionToMimeTypeMapper->mapAudio($channel->stream_type);
+                $mimeType = $this->extensionToMimeTypeMapper->mapAudio($channel->getStreamType());
 
                 switch ($cmd['1']) {
-                    case '/stream.' . $channel->stream_type:
+                    case '/stream.' . $channel->getStreamType():
                         $options = array(
                             'socket' => $sock,
                             'length' => 0,
@@ -105,28 +105,28 @@ final class HttpServer implements HttpServerInterface
                         // Send Shoutcast metadata on demand
                         //if ($options['metadata']) {
                         $http .= "icy-notice1: " . $this->configContainer->get('site_title') . "\r\n";
-                        $http .= "icy-name: " . $channel->name . "\r\n";
+                        $http .= "icy-name: " . $channel->getName() . "\r\n";
                         if (!empty($genre)) {
                             $http .= "icy-genre: " . $genre . "\r\n";
                         }
-                        $http .= "icy-url: " . $channel->url . "\r\n";
-                        $http .= "icy-pub: " . (($channel->is_private) ? "0" : "1") . "\r\n";
-                        if ($channel->bitrate) {
-                            $http .= "icy-br: " . strval($channel->bitrate) . "\r\n";
+                        $http .= "icy-url: " . $channel->getUrl() . "\r\n";
+                        $http .= "icy-pub: " . (($channel->getIsPrivate()) ? "0" : "1") . "\r\n";
+                        if ($channel->getBitrate()) {
+                            $http .= "icy-br: " . strval($channel->getBitrate()) . "\r\n";
                         }
                         global $metadata_interval;
                         $http .= "icy-metaint: " . strval($metadata_interval) . "\r\n";
                         //}
                         // Send additional Icecast metadata
-                        $http .= "x-audiocast-server-url: " . $channel->url . "\r\n";
-                        $http .= "x-audiocast-name: " . $channel->name . "\r\n";
-                        $http .= "x-audiocast-description: " . $channel->description . "\r\n";
-                        $http .= "x-audiocast-url: " . $channel->url . "\r\n";
+                        $http .= "x-audiocast-server-url: " . $channel->getUrl() . "\r\n";
+                        $http .= "x-audiocast-name: " . $channel->getName() . "\r\n";
+                        $http .= "x-audiocast-description: " . $channel->getDescription() . "\r\n";
+                        $http .= "x-audiocast-url: " . $channel->getUrl() . "\r\n";
                         if (!empty($genre)) {
                             $http .= "x-audiocast-genre: " . $genre . "\r\n";
                         }
-                        $http .= "x-audiocast-bitrate: " . strval($channel->bitrate) . "\r\n";
-                        $http .= "x-audiocast-public: " . (($channel->is_private) ? "0" : "1") . "\r\n";
+                        $http .= "x-audiocast-bitrate: " . strval($channel->getBitrate()) . "\r\n";
+                        $http .= "x-audiocast-public: " . (($channel->getIsPrivate()) ? "0" : "1") . "\r\n";
 
                         $http .= "\r\n";
 
@@ -172,9 +172,9 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                         $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                         $xsl .= "<tr>" . "\n";
-                        $xsl .= "<td><h3>Mount Point: <a href=\"stream." . $channel->stream_type . "\">stream." . $channel->stream_type . "</a></h3></td>" . "\n";
+                        $xsl .= "<td><h3>Mount Point: <a href=\"stream." . $channel->getStreamType() . "\">stream." . $channel->getStreamType() . "</a></h3></td>" . "\n";
                         $xsl .= "<td align=\"right\">" . "\n";
-                        $xsl .= "<a href=\"stream." . $channel->stream_type . ".m3u\">M3U</a>" . "\n";
+                        $xsl .= "<a href=\"stream." . $channel->getStreamType() . ".m3u\">M3U</a>" . "\n";
                         $xsl .= "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "</table>" . "\n";
@@ -182,11 +182,11 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "<table>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Stream Title:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . $channel->name . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $channel->getName() . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Stream Description:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . $channel->description . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $channel->getDescription() . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Content Type:</td>" . "\n";
@@ -194,19 +194,19 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Mount Start:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . get_datetime($channel->start_date) . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . get_datetime($channel->getStartDate()) . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Bitrate:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . $channel->bitrate . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $channel->getBitrate() . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Current Listeners:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . $channel->listeners . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $channel->getListeners() . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Peak Listeners:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\">" . $channel->peak_listeners . "</td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\">" . $channel->getPeakListeners() . "</td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $genre = $channel->get_genre();
                         $xsl .= "<tr>" . "\n";
@@ -215,7 +215,7 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "</tr>" . "\n";
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Stream URL:</td>" . "\n";
-                        $xsl .= "<td class=\"streamdata\"><a href=\"" . $channel->url . "\" target=\"_blank\">" . $channel->url . "</a></td>" . "\n";
+                        $xsl .= "<td class=\"streamdata\"><a href=\"" . $channel->getUrl() . "\" target=\"_blank\">" . $channel->getUrl() . "</a></td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $currentsong = "";
                         $media       = $channelStreamer->getMedia();
@@ -285,10 +285,10 @@ final class HttpServer implements HttpServerInterface
                         fclose($sock);
                         unset($client_socks[array_search($sock, $client_socks)]);
                         break;
-                    case '/stream.' . $channel->stream_type . '.m3u':
+                    case '/stream.' . $channel->getStreamType() . '.m3u':
                         fwrite($sock, "HTTP/1.0 200 OK\r\n");
                         fwrite($sock, "Cache-control: public\r\n");
-                        fwrite($sock, "Content-Disposition: filename=stream." . $channel->stream_type . ".m3u\r\n");
+                        fwrite($sock, "Content-Disposition: filename=stream." . $channel->getStreamType() . ".m3u\r\n");
                         fwrite($sock, "Content-Type: audio/x-mpegurl\r\n");
                         fwrite($sock, "\r\n");
 

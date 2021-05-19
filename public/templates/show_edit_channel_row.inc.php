@@ -42,7 +42,7 @@ $playlistRepository = $dic->get(PlaylistRepositoryInterface::class);
                             $playlist = new Playlist($playlist_id);
                             $playlist->format();
                             echo "<option value='" . $playlist->id . "'";
-                            if ($playlist->id == $libitem->object_id) {
+                            if ($playlist->id == $libitem->getObjectId()) {
                                 echo " selected";
                             }
                             echo ">" . $playlist->f_name . "</option>";
@@ -51,47 +51,47 @@ $playlistRepository = $dic->get(PlaylistRepositoryInterface::class);
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->getName()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
+                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->getDescription()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('URL') ?></td>
-                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
+                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->getUrl()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Interface') ?></td>
-                <td><input type="text" name="interface" value="<?php echo scrub_out($libitem->interface); ?>" /></td>
+                <td><input type="text" name="interface" value="<?php echo scrub_out($libitem->getInterface()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Port') ?></td>
-                <td><input type="text" name="port" value="<?php echo scrub_out($libitem->port); ?>" /></td>
+                <td><input type="text" name="port" value="<?php echo $libitem->getPort(); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="private" value="1" <?php echo ($libitem->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
+                <td><input type="checkbox" name="private" value="1" <?php echo ($libitem->getIsPrivate()) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="random" value="1" <?php echo ($libitem->random) ? 'checked' : ''; ?> /> <?php echo T_('Random') ?></td>
+                <td><input type="checkbox" name="random" value="1" <?php echo ($libitem->getRandom()) ? 'checked' : ''; ?> /> <?php echo T_('Random') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="loop" value="1" <?php echo ($libitem->loop) ? 'checked' : ''; ?> /> <?php echo T_('Loop') ?></td>
+                <td><input type="checkbox" name="loop" value="1" <?php echo ($libitem->getLoop()) ? 'checked' : ''; ?> /> <?php echo T_('Loop') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Max Listeners') ?></td>
-                <td><input type="text" name="max_listeners" value="<?php echo scrub_out($libitem->max_listeners); ?>" /></td>
+                <td><input type="text" name="max_listeners" value="<?php echo $libitem->getMaxListeners(); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Type') ?></td>
-                <td><input type="text" name="stream_type" value="<?php echo scrub_out($libitem->stream_type); ?>" /></td>
+                <td><input type="text" name="stream_type" value="<?php echo scrub_out($libitem->getStreamType()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Bitrate') ?></td>
-                <td><input type="text" name="bitrate" value="<?php echo scrub_out($libitem->bitrate); ?>" /></td>
+                <td><input type="text" name="bitrate" value="<?php echo scrub_out($libitem->getBitrate()); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>

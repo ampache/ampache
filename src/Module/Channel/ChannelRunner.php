@@ -66,9 +66,9 @@ final class ChannelRunner implements ChannelRunnerInterface
         );
 
         if ($portNumber === null) {
-            if ($channel->fixed_endpoint) {
-                $address       = $channel->interface;
-                $portNumber    = (int) $channel->port;
+            if ($channel->getFixedEndpoint()) {
+                $address       = $channel->getInterface();
+                $portNumber    = $channel->getPort();
             } else {
                 $address = '127.0.0.1';
                 // Try to find an available port
@@ -123,7 +123,7 @@ final class ChannelRunner implements ChannelRunnerInterface
         while (stream_get_meta_data($server)['timed_out'] == null) {
             //prepare readable sockets
             $read_socks = $client_socks;
-            if (count($client_socks) < $channel->max_listeners) {
+            if (count($client_socks) < $channel->getMaxListeners()) {
                 $read_socks[] = $server;
             }
             //start reading and use a large timeout
@@ -162,7 +162,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                 }
             }
 
-            if ($channel->bitrate) {
+            if ($channel->getBitrate()) {
                 $time_offset = microtime(true) - $last_stream;
 
                 //debug_event('channel_run', 'time_offset : '. $time_offset, 5);
@@ -174,11 +174,11 @@ final class ChannelRunner implements ChannelRunnerInterface
 
                 $last_stream = microtime(true);
                 $mtime       = ($time_offset > 1) ? $time_offset : 1;
-                $nb_chunks   = ceil(($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8) / $chunkSize); // channel->bitrate+1% ... leave some headroom for metadata / headers
+                $nb_chunks   = ceil(($mtime * ($channel->getBitrate() + 1 / 100 * $channel->getBitrate()) * 1000 / 8) / $chunkSize); // channel->bitrate+1% ... leave some headroom for metadata / headers
 
                 // we only send full blocks, save remainder and apply when appropriate: allows more granular/arbitrary average bitrates
-                if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $chunkSize) > 0) {
-                    $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $chunkSize);
+                if ($nb_chunks - ($mtime * ($channel->getBitrate() + 1 / 100 * $channel->getBitrate()) * 1000 / 8 / $chunkSize) > 0) {
+                    $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->getBitrate() * 1000 / 8 / $chunkSize);
                 }
                 if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1) {
                     $nb_chunks -= 1;
@@ -200,7 +200,7 @@ final class ChannelRunner implements ChannelRunnerInterface
 
                 //buffer maintenance
                 while (strlen($chunk_buffer) > (15 * $nb_chunks * $chunkSize)) { // buffer 15 seconds
-                    if (strtolower($channel->stream_type) == "ogg" && $this->strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
+                    if (strtolower($channel->getStreamType()) == "ogg" && $this->strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
                         // read OggS segment length
                         $hex                = $this->strtohex(substr($chunk_buffer, 0, 27));
                         $ogg_nr_of_segments = (int) hexdec(substr($hex, 26 * 2, 2));
@@ -213,7 +213,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                         //remove 1 whole OggS chunk
                         $chunk_buffer = substr($chunk_buffer, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
                     //debug_event('channel_run', '$new chunk buffer : '.substr($chunk_buffer,0,300) . ' $hex: '.strtohex(substr($chunk_buffer,0,600)) . ' $ogg_nr_of_segments: ' .$ogg_nr_of_segments . ' bytes cut off: '.(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces) . ' naive: ' .$naive, 5);
-                    } elseif (strtolower($channel->stream_type) == "ogg") {
+                    } elseif (strtolower($channel->getStreamType()) == "ogg") {
                         debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
                         $manual_search = strpos($chunk_buffer, 'OggS');
                         $chunk_buffer  = substr($chunk_buffer, $manual_search);

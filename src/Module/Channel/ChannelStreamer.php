@@ -83,7 +83,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
     {
         $this->playlist = $this->channel->get_target_object();
         if ($this->playlist) {
-            if (!$this->channel->random) {
+            if (!$this->channel->getRandom()) {
                 $this->songs = $this->playlist->get_songs();
             }
         }
@@ -100,8 +100,8 @@ final class ChannelStreamer implements ChannelStreamerInterface
 
         if ($this->is_init) {
             // Move to next song
-            while ($this->media == null && ($this->channel->random || $this->song_pos < count($this->songs))) {
-                if ($this->channel->random) {
+            while ($this->media == null && ($this->channel->getRandom() || $this->song_pos < count($this->songs))) {
+                if ($this->channel->getRandom()) {
                     $randsongs   = $this->playlist->get_random_items(1);
                     $this->media = new Song($randsongs[0]['object_id']);
                 } else {
@@ -160,7 +160,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
                 $this->song_pos++;
                 // Restart from beginning for next song if the channel is 'loop' enabled
                 // and load fresh data from database
-                if ($this->media != null && $this->song_pos == count($this->songs) && $this->channel->loop) {
+                if ($this->media != null && $this->song_pos == count($this->songs) && $this->channel->getLoop()) {
                     $this->init_channel_songs();
                 }
             }
@@ -169,9 +169,9 @@ final class ChannelStreamer implements ChannelStreamerInterface
                 // Stream not yet initialized for this media, start it
                 if (!$this->transcoder) {
                     $options = array(
-                        'bitrate' => $this->channel->bitrate
+                        'bitrate' => $this->channel->getBitrate()
                     );
-                    $this->transcoder           = Stream::start_transcode($this->media, $this->channel->stream_type, null, $options);
+                    $this->transcoder           = Stream::start_transcode($this->media, $this->channel->getStreamType(), null, $options);
                     $this->media_bytes_streamed = 0;
                 }
 
@@ -182,7 +182,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
                     $chunk = (string) fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen((string)$chunk);
 
-                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->channel->stream_type) == "ogg") || $this->header_chunk_remainder) {
+                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->channel->getStreamType()) == "ogg") || $this->header_chunk_remainder) {
                         // debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
