@@ -1210,7 +1210,7 @@ class Subsonic_Xml_Data
     {
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $d) {
-            $track = self::addSong($xplaynow, $d['media'], false, "entry");
+            $track = self::addSong($xplaynow, $d['media']->getId(), false, "entry");
             if ($track !== null) {
                 $track->addAttribute('username', (string)$d['client']->username);
                 $track->addAttribute('minutesAgo',

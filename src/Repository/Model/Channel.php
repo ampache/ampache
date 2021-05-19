@@ -494,7 +494,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function start_channel()
     {
-        $path = __DIR__ . '/../../bin/cli';
+        $path = __DIR__ . '/../../../bin/cli';
         $cmd  = sprintf(
             'env php %s run:channel %d > /dev/null &',
             $path,
