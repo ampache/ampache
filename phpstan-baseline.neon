@@ -22680,11 +22680,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:show_action_buttons\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:start_channel\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
@@ -22811,11 +22806,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$stream_type has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$tags has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 

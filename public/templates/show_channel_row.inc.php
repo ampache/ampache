@@ -55,4 +55,4 @@ use Ampache\Module\Util\Ui;
     <?php echo $libitem->get_stream_proxy_url(); ?>
 </td>
 <td class="cel_state"><div id="channel_state_<?php echo $libitem->id; ?>"><?php echo $libitem->get_channel_state(); ?></div></td>
-<td class="cel_action"><?php $libitem->show_action_buttons(); ?></td>
+<td class="cel_action"><?php echo Ui::getChannelActionButtons($libitem); ?></td>

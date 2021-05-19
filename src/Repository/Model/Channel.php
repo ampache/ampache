@@ -25,11 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
-use Ampache\Module\Util\Ui;
 
 class Channel extends database_object implements Media, library_item
 {
@@ -280,27 +277,6 @@ class Channel extends database_object implements Media, library_item
         }
 
         return $ftype;
-    }
-
-    /**
-     * show_action_buttons
-     */
-    public function show_action_buttons()
-    {
-        if ($this->id) {
-            if (Core::get_global('user')->has_access('75')) {
-                echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'),
-                    'channel_start_' . $this->id);
-                echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'),
-                        'channel_stop_' . $this->id);
-                echo " <a href=\"" . $this->get_stream_proxy_url_status() . "\" target=\"_blank\">" . Ui::get_icon('view',
-                        T_('Status')) . "</a>";
-                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel Edit') . "', 'channel_row_', 'refresh_channel')\">" . Ui::get_icon('edit',
-                        T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
-                        T_('Delete')) . "</a>";
-            }
-        }
     }
 
     /**

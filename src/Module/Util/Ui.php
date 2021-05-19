@@ -27,9 +27,11 @@ namespace Ampache\Module\Util;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -1207,5 +1209,56 @@ class Ui implements UiInterface
         $html .= "</div>";
 
         return $html;
+    }
+
+    public static function getChannelActionButtons(
+        Channel $item
+    ): string {
+        $result = '';
+
+        if ($item->isNew() === false && Core::get_global('user')->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
+            $result .= Ajax::button(
+                '?page=index&action=start_channel&id=' . $item->getId(),
+                'run',
+                T_('Start Channel'),
+                'channel_start_' . $item->getId()
+            );
+            $result .= " " . Ajax::button(
+                '?page=index&action=stop_channel&id=' . $item->getId(),
+                'stop',
+                T_('Stop Channel'),
+                'channel_stop_' . $item->getId()
+            );
+            $result .= sprintf(
+                ' <a href="%s" target="_blank">%s</a>',
+                $item->get_stream_proxy_url_status(),
+                Ui::get_icon(
+                    'view',
+                    T_('Status')
+                )
+            );
+            $result .= sprintf(
+                " <a id=\"edit_channel_ %s\" onclick=\"showEditDialog('channel_row', '%s', 'edit_channel_%s', '%s', 'channel_row_', 'refresh_channel')\">%s</a>",
+                $item->getId(),
+                $item->getId(),
+                $item->getId(),
+                T_('Channel Edit'),
+                Ui::get_icon(
+                    'edit',
+                    T_('Edit')
+                )
+            );
+            $result .= sprintf(
+                ' <a href="%s/channel.php?action=show_delete&id=%s">%s</a>',
+                AmpConfig::get('web_path'),
+                $item->getId(),
+                Ui::get_icon(
+                    'delete',
+                    T_('Delete')
+                )
+            );
+        }
+
+        return $result;
     }
 }
