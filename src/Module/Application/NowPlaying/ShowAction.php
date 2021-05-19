@@ -148,7 +148,7 @@ final class ShowAction implements ApplicationActionInterface
             }
             // If the URL specifies a specific user, filter the results on that user
             $results = array_filter($results, function ($item) {
-                return ($item['client']->id === Core::get_request('user_id'));
+                return ($item['client']->id === (int) Core::get_request('user_id'));
             });
         }
 

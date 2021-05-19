@@ -218,8 +218,9 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "<td class=\"streamdata\"><a href=\"" . $channel->url . "\" target=\"_blank\">" . $channel->url . "</a></td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $currentsong = "";
-                        if ($channelStreamer->getMedia()) {
-                            $currentsong = $channelStreamer->getMedia()->f_artist . " - " . $channelStreamer->getMedia()->f_title;
+                        $media       = $channelStreamer->getMedia();
+                        if ($media !== null) {
+                            $currentsong = $media->f_artist . " - " . $media->f_title;
                         }
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Current Song:</td>" . "\n";

@@ -47,14 +47,21 @@ final class ChannelStreamer implements ChannelStreamerInterface
 
     private int $song_pos = 0;
 
+    /** @var array<Song> */
     private array $songs = [];
 
     private ?Playlist $playlist = null;
 
     private ?Song $media = null;
 
-    /** @var null|array<resource>|false */
-    private $transcoder = null;
+    /**
+     * @var null|array{
+     *  handle: ?resource,
+     *  stderr: ?resource,
+     *  process: ?resource
+     * }
+     */
+    private ?array $transcoder = null;
 
     private int $media_bytes_streamed = 0;
 
@@ -72,10 +79,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
         $this->channel       = $channel;
     }
 
-    /**
-     * init_channel_songs
-     */
-    protected function init_channel_songs()
+    protected function init_channel_songs(): void
     {
         $this->playlist = $this->channel->get_target_object();
         if ($this->playlist) {
@@ -175,7 +179,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
                     if (ftell($this->transcoder['handle']) == 0) {
                         $this->header_chunk = '';
                     }
-                    $chunk = fread($this->transcoder['handle'], $this->chunk_size);
+                    $chunk = (string) fread($this->transcoder['handle'], $this->chunk_size);
                     $this->media_bytes_streamed += strlen((string)$chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->channel->stream_type) == "ogg") || $this->header_chunk_remainder) {

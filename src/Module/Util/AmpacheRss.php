@@ -31,7 +31,6 @@ use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
@@ -228,8 +227,9 @@ class AmpacheRss
             '%A' => 'album'
         );
         foreach ($data as $element) {
+            /** @var Song $song */
             $song        = $element['media'];
-            $client      = $element['user'];
+            $client      = $element['client'];
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
@@ -262,6 +262,7 @@ class AmpacheRss
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
         $data = Stream::get_now_playing();
 
+        /** @var array{expire: int} $element */
         $element = array_shift($data);
 
         return $element['expire'];

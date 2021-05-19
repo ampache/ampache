@@ -428,7 +428,7 @@ class Channel extends database_object implements Media, library_item
 
     /**
      * get_target_object
-     * @return Playlist
+     * @return ?Playlist
      */
     public function get_target_object()
     {

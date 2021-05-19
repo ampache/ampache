@@ -5605,16 +5605,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Cannot access offset 'format' on array\\|false\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Cannot access offset 'handle' on array\\|false\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
@@ -8595,21 +8585,6 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
 		-
-			message: "#^Cannot access property \\$f_artist on Ampache\\\\Repository\\\\Model\\\\Song\\|null\\.$#"
-			count: 1
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
-			message: "#^Cannot access property \\$f_title on Ampache\\\\Repository\\\\Model\\\\Song\\|null\\.$#"
-			count: 1
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Song\\|null\\.$#"
-			count: 2
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
 			message: "#^Parameter \\#1 \\$ascii of function chr expects int, float given\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelRunner.php
@@ -8625,6 +8600,16 @@ parameters:
 			path: src/Module/Channel/ChannelRunner.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Module/Channel/ChannelRunner.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Module/Channel/ChannelRunner.php
+
+		-
 			message: "#^Parameter \\#2 \\$pad_length of function str_pad expects int, float given\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelRunner.php
@@ -8636,6 +8621,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$start of function substr expects int, int\\|false given\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelRunner.php
+
+		-
+			message: "#^Parameter \\#2 \\$str of function fwrite expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelRunner.php
 
@@ -8668,6 +8658,56 @@ parameters:
 			message: "#^Variable \\$nb_chunks_remainder might not be defined\\.$#"
 			count: 2
 			path: src/Module/Channel/ChannelRunner.php
+
+		-
+			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			count: 4
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Cannot call method get_random_items\\(\\) on Ampache\\\\Repository\\\\Model\\\\Playlist\\|null\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Cannot call method get_stream_types\\(\\) on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Offset 'handle' does not exist on array\\('handle' \\=\\> resource\\|null, 'stderr' \\=\\> resource\\|null, 'process' \\=\\> resource\\|null, \\?'format' \\=\\> string\\)\\|null\\.$#"
+			count: 6
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Offset 'stderr' does not exist on array\\('handle' \\=\\> resource\\|null, 'stderr' \\=\\> resource\\|null, 'process' \\=\\> resource\\|null, \\?'format' \\=\\> string\\)\\|null\\.$#"
+			count: 2
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Parameter \\#1 \\$fp of function fclose expects resource, resource\\|null given\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Parameter \\#1 \\$fp of function fread expects resource, resource\\|null given\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Parameter \\#1 \\$songid of class Ampache\\\\Repository\\\\Model\\\\Song constructor expects int\\|null, Ampache\\\\Repository\\\\Model\\\\Song given\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
+
+		-
+			message: "#^Property Ampache\\\\Module\\\\Channel\\\\ChannelStreamer\\:\\:\\$media \\(Ampache\\\\Repository\\\\Model\\\\Song\\|null\\) does not accept Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			count: 1
+			path: src/Module/Channel/ChannelStreamer.php
 
 		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
@@ -12040,17 +12080,7 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_image_preview\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_now_playing\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12090,17 +12120,12 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_process\\(\\) should return array\\('handle' \\=\\> resource\\|null, 'stderr' \\=\\> resource\\|null, 'process' \\=\\> resource\\|null, \\?'format' \\=\\> string\\) but returns array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:start_transcode\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -18145,11 +18170,6 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Cannot access offset 'handle' on array\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -22600,31 +22620,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 4
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Cannot call method get_stream_types\\(\\) on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Cannot call method prepare_media\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
@@ -22655,11 +22650,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:get_chunk\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
@@ -22670,17 +22660,7 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:get_target_object\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Playlist but returns Ampache\\\\Repository\\\\Model\\\\Playlist\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:get_transcode_settings\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:init_channel_songs\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22745,17 +22725,7 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 9
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$bitrate has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$chunk_size has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22775,27 +22745,12 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$header_chunk has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$header_chunk_remainder has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$id has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$interface has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$is_init has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22816,16 +22771,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$max_listeners has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$media \\(Ampache\\\\Repository\\\\Model\\\\Song\\|null\\) does not accept Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$media_bytes_streamed has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22855,27 +22800,12 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$playlist has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$port has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$random has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$song_pos has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$songs has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22891,11 +22821,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$tags has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$transcoder has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 

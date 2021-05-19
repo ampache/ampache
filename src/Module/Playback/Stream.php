@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
@@ -157,7 +158,12 @@ class Stream
      * @param string $type
      * @param string $player
      * @param array $options
-     * @return array|false
+     * @return null|array{
+     *  handle: ?resource,
+     *  stderr: ?resource,
+     *  process: ?resource,
+     *  format?: string
+     * }
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
@@ -166,7 +172,7 @@ class Stream
         if ($transcode_settings === false) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
-            return false;
+            return null;
         }
 
         // don't ignore user bitrates
@@ -293,7 +299,12 @@ class Stream
      * start_process
      * @param $command
      * @param array $settings
-     * @return array
+     * @return array{
+     *  handle: ?resource,
+     *  stderr: ?resource,
+     *  process: ?resource,
+     *  format?: string
+     * }
      */
     private static function start_process($command, $settings = array())
     {
@@ -314,7 +325,9 @@ class Stream
         if ($process === false) {
             debug_event(self::class, 'Transcode command failed to open.', 1);
             $parray = array(
-                'handle' => null
+                'handle' => null,
+                'stderr' => null,
+                'process' => null
             );
         } else {
             $parray  = array(
@@ -425,6 +438,7 @@ class Stream
         $modelFactory = static::getModelFactory();
 
         while ($row = Dba::fetch_assoc($db_results)) {
+            /** @var library_item $media */
             $media = $modelFactory->mapObjectType(
                 $row['object_type'],
                 (int) $row['object_id']
@@ -435,8 +449,8 @@ class Stream
             $results[] = array(
                 'media' => $media,
                 'client' => $client,
-                'agent' => $row['agent'],
-                'expire' => $row['expire']
+                'agent' => (string) $row['agent'],
+                'expire' => (int) $row['expire']
             );
         } // end while
 

@@ -708,12 +708,12 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
-            $filepointer = $transcoder['handle'];
-            $media_name  = $media->getFullArtistNameFormatted() . " - " . $media->title . "." . $transcoder['format'];
+            $filepointer = $transcoder['handle'] ?? null;
+            $media_name  = $media->getFullArtistNameFormatted() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
             if ($cpaction) {
                 $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
-                $filepointer = $transcoder['handle'];
+                $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;
             } else {
                 $filepointer = fopen(Core::conv_lc_file($media->file), 'rb');
