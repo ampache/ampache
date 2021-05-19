@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\BroadcastInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Doctrine\DBAL\Connection;
 
@@ -62,7 +62,7 @@ final class BroadcastRepository implements BroadcastRepositoryInteface
     /**
      * Get broadcast from its key.
      */
-    public function findByKey(string $key): ?Broadcast
+    public function findByKey(string $key): ?BroadcastInterface
     {
         $rowId = $this->database->fetchOne(
             'SELECT `id` FROM `broadcast` WHERE `key` = ?',
@@ -76,7 +76,7 @@ final class BroadcastRepository implements BroadcastRepositoryInteface
         return $this->modelFactory->createBroadcast((int) $rowId);
     }
 
-    public function delete(Broadcast $broadcast): void
+    public function delete(BroadcastInterface $broadcast): void
     {
         $this->database->executeQuery(
             'DELETE FROM `broadcast` WHERE `id` = ?',
@@ -153,5 +153,22 @@ final class BroadcastRepository implements BroadcastRepositoryInteface
             'UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?',
             [$name, $description, $isPrivate, $broadcastId]
         );
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getDataById(int $broadcastId): array
+    {
+        $dbResults = $this->database->fetchAssociative(
+            'SELECT * FROM `broadcast` WHERE `id`= ?',
+            [$broadcastId]
+        );
+
+        if ($dbResults === false) {
+            return [];
+        }
+
+        return $dbResults;
     }
 }

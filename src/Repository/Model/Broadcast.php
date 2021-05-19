@@ -40,6 +40,7 @@ final class Broadcast extends database_object implements BroadcastInterface
 
     public int $id;
 
+    /** @var array<string, int|string>|null */
     private ?array $dbData = null;
 
     public function __construct(
@@ -55,7 +56,7 @@ final class Broadcast extends database_object implements BroadcastInterface
     private function getDbData(): array
     {
         if ($this->dbData === null) {
-            $this->dbData = $this->get_info($this->id);
+            $this->dbData = $this->broadcastRepository->getDataById($this->id);
         }
 
         return $this->dbData;

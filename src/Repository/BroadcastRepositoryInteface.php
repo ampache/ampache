@@ -22,6 +22,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\BroadcastInterface;
 
 interface BroadcastRepositoryInteface
 {
@@ -33,9 +34,9 @@ interface BroadcastRepositoryInteface
     /**
      * Get broadcast from its key.
      */
-    public function findByKey(string $key): ?Broadcast;
+    public function findByKey(string $key): ?BroadcastInterface;
 
-    public function delete(Broadcast $broadcast): void;
+    public function delete(BroadcastInterface $broadcast): void;
 
     /**
      * Create a broadcast
@@ -82,4 +83,9 @@ interface BroadcastRepositoryInteface
         string $description,
         int $isPrivate
     ): void;
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getDataById(int $broadcastId): array;
 }
