@@ -55,12 +55,6 @@ class Channel extends database_object implements Media, library_item
     public $fixed_endpoint;
     public $url;
 
-    public $tags;
-    public $f_tags;
-
-    /** @var Song|null */
-    public $media;
-
     /**
      * Constructor
      * @param integer $channel_id
@@ -315,10 +309,18 @@ class Channel extends database_object implements Media, library_item
      */
     public function format($details = true)
     {
-        if ($details) {
-            $this->tags   = Tag::get_top_tags('channel', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'channel');
-        }
+    }
+
+    /**
+     * @return array<int, array{
+     *  user: int,
+     *  id: int,
+     *  name: string
+     * }>
+     */
+    public function getTags(): array
+    {
+        return Tag::get_top_tags('channel', $this->id);
     }
 
     /**

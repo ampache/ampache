@@ -22735,11 +22735,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$f_tags has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$fixed_endpoint has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
@@ -25581,11 +25576,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_top_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 

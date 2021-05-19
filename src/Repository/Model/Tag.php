@@ -247,12 +247,16 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param integer $object_id
      * @param integer $limit
-     * @return array
+     * @return array<int, array{
+     *  user: int,
+     *  id: int,
+     *  name: string
+     * }>
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return array();
+            return [];
         }
 
         $object_id = (int)($object_id);
@@ -265,7 +269,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
+            $results[(int) $row['id']] = array('user' => (int) $row['user'], 'id' => (int) $row['tag_id'], 'name' => (string) $row['name']);
         }
 
         return $results;

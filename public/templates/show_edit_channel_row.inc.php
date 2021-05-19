@@ -95,7 +95,7 @@ $playlistRepository = $dic->get(PlaylistRepositoryInterface::class);
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->getTags()); ?>" /></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
