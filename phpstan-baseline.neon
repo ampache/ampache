@@ -5430,11 +5430,6 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$broadcast of method Ampache\\\\Repository\\\\BroadcastRepositoryInteface\\:\\:delete\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Broadcast, Ampache\\\\Repository\\\\Model\\\\BroadcastInterface given\\.$#"
-			count: 1
-			path: src/Module/Application/Broadcast/DeleteAction.php
-
-		-
 			message: "#^Parameter \\#9 \\$private of static method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Channel/CreateAction.php
@@ -6946,11 +6941,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:getListeners\\(\\) should return array\\<Ratchet\\\\ConnectionInterface\\> but returns Ratchet\\\\ConnectionInterface\\.$#"
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Broadcast\\\\Broadcast_Server\\:\\:getRunningBroadcast\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Broadcast but returns Ampache\\\\Repository\\\\Model\\\\Broadcast\\|null\\.$#"
 			count: 1
 			path: src/Module/Broadcast/Broadcast_Server.php
 
@@ -21440,11 +21430,6 @@ parameters:
 			path: src/Repository/ArtistRepositoryInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\BroadcastRepository\\:\\:findByKey\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Broadcast\\|null but returns Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\.$#"
-			count: 1
-			path: src/Repository/BroadcastRepository.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\LicenseRepository\\:\\:getDataById\\(\\) should return array\\('id' \\=\\> int, 'name' \\=\\> string\\|null, 'description' \\=\\> string\\|null, 'external_link' \\=\\> string\\|null\\) but returns array\\<string, mixed\\>\\.$#"
 			count: 1
 			path: src/Repository/LicenseRepository.php
@@ -22051,11 +22036,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$started of method Ampache\\\\Repository\\\\BroadcastRepositoryInteface\\:\\:updateState\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:\\$dbData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 

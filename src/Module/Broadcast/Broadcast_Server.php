@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\BroadcastInterface;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
@@ -62,7 +63,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected $listeners;
     /**
-     * @var Broadcast[] $broadcasters
+     * @var BroadcastInterface[] $broadcasters
      */
     protected $broadcasters;
 
@@ -168,7 +169,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
 
             self::echo_message($this->verbose,
-                "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n");
+                "[" . time() . "][info]Broadcast " . $broadcast->getId() . " now playing song " . $song_id . "." . "\r\n");
         } else {
             debug_event(self::class, 'Action unauthorized.', 3);
         }
@@ -191,7 +192,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast->setSongPosition($song_position);
 
             self::echo_message($this->verbose,
-                "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n");
+                "[" . time() . "][info]Broadcast " . $broadcast->getId() . " has song position to " . $song_position . "." . "\r\n");
         } else {
             debug_event(self::class, 'Action unauthorized.', 3);
         }
@@ -210,7 +211,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
             self::echo_message($this->verbose,
-                "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
+                "[" . time() . "][info]Broadcast " . $broadcast->getId() . " player state: " . $play . "." . "\r\n");
         } else {
             debug_event(self::class, 'Action unauthorized.', 3);
         }
@@ -228,7 +229,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage($clients, self::BROADCAST_ENDED);
 
             self::echo_message($this->verbose,
-                "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
+                "[" . time() . "][info]Broadcast " . $broadcast->getId() . " ended." . "\r\n");
         } else {
             debug_event(self::class, 'Action unauthorized.', 3);
         }
@@ -244,9 +245,9 @@ class Broadcast_Server implements MessageComponentInterface
         $broadcast = $this->getBroadcastRepository()->findByKey($broadcast_key);
         if ($broadcast) {
             $this->broadcasters[$from->resourceId] = $broadcast;
-            $this->listeners[$broadcast->id]       = array();
+            $this->listeners[$broadcast->getId()]  = array();
 
-            self::echo_message($this->verbose, "[info]Broadcast " . $broadcast->id . " registered." . "\r\n");
+            self::echo_message($this->verbose, "[info]Broadcast " . $broadcast->getId() . " registered." . "\r\n");
         }
     }
 
@@ -261,23 +262,22 @@ class Broadcast_Server implements MessageComponentInterface
         $this->broadcastMessage($clients, self::BROADCAST_ENDED);
         $broadcast->update_state(false);
 
-        unset($this->listeners[$broadcast->id]);
+        unset($this->listeners[$broadcast->getId()]);
         unset($this->broadcasters[$conn->resourceId]);
 
         self::echo_message($this->verbose,
-            "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n");
+            "[" . time() . "][info]Broadcast " . $broadcast->getId() . " unregistered." . "\r\n");
     }
 
     /**
      * getRunningBroadcast
      * @param integer $broadcast_id
-     * @return Broadcast
      */
-    protected function getRunningBroadcast($broadcast_id)
+    protected function getRunningBroadcast($broadcast_id): ?BroadcastInterface
     {
         $result = null;
         foreach ($this->broadcasters as $broadcast) {
-            if ($broadcast->id == $broadcast_id) {
+            if ($broadcast->getId() == $broadcast_id) {
                 $result = $broadcast;
                 break;
             }
@@ -295,9 +295,14 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if (!$broadcast->getIsPrivate() || !AmpConfig::get('require_session') || Session::exists('stream',
-                $this->sids[$from->resourceId])) {
-            $this->listeners[$broadcast->id][] = $from;
+        if (
+            $broadcast !== null && (
+                !$broadcast->getIsPrivate() ||
+                !AmpConfig::get('require_session') ||
+                Session::exists('stream', $this->sids[$from->resourceId])
+            )
+        ) {
+            $this->listeners[$broadcast->getId()][] = $from;
 
             // Send current song and song position to
             $this->broadcastMessage(array($from), self::BROADCAST_SONG,
@@ -305,7 +310,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, $broadcast->getSongPosition());
             $this->notifyNbListeners($broadcast);
 
-            self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
+            self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->getId() . "." . "\r\n");
         } else {
             debug_event(self::class, 'Listener unauthorized.', 3);
         }
@@ -338,7 +343,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[info]Listener left broadcast " . $broadcast_id . "." . "\r\n";
 
                 foreach ($this->broadcasters as $broadcast) {
-                    if ($broadcast->id == $broadcast_id) {
+                    if ($broadcast->getId() == $broadcast_id) {
                         $this->notifyNbListeners($broadcast);
                         break;
                     }
@@ -349,30 +354,24 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    /**
-     *
-     * @param Broadcast $broadcast
-     */
-    protected function notifyNbListeners(Broadcast $broadcast)
+    protected function notifyNbListeners(BroadcastInterface $broadcast)
     {
         $broadcaster_id = array_search($broadcast, $this->broadcasters);
         if ($broadcaster_id) {
-            $clients      = $this->listeners[$broadcast->id];
+            $clients      = $this->listeners[$broadcast->getId()];
             $clients[]    = $this->clients[$broadcaster_id];
-            $nb_listeners = count($this->listeners[$broadcast->id]);
+            $nb_listeners = count($this->listeners[$broadcast->getId()]);
             $broadcast->update_listeners($nb_listeners);
             $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, $nb_listeners);
         }
     }
 
     /**
-     *
-     * @param Broadcast $broadcast
      * @return ConnectionInterface[]
      */
-    protected function getListeners(Broadcast $broadcast)
+    protected function getListeners(BroadcastInterface $broadcast)
     {
-        return $this->listeners[$broadcast->id];
+        return $this->listeners[$broadcast->getId()];
     }
 
     /**
