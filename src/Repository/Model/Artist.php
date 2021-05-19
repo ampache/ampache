@@ -864,10 +864,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         // Check if name is different than current name
         if ($this->name != $name) {
-            $updated    = false;
-            $songs      = array();
-            $artist_id  = self::check($name, $mbid, true);
-            $cron_cache = AmpConfig::get('cron_cache');
+            $updated   = false;
+            $artist_id = self::check($name, $mbid, true);
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {

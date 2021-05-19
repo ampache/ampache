@@ -1585,7 +1585,7 @@ abstract class Catalog extends database_object
         $search_count = 0;
         debug_event(self::class, 'gather_artist_info found ' . (string) count($artist_list) . ' items to check', 4);
         // Run through items and refresh info
-        foreach ($artist_list as  $object_id) {
+        foreach ($artist_list as $object_id) {
             Recommendation::get_artist_info($object_id);
             Recommendation::get_artists_like($object_id);
             Artist::set_last_update($object_id);
