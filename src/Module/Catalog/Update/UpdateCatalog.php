@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -183,6 +184,23 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     $this->cleanBuffer($buffer),
                     true
                 );
+                if (AmpConfig::get('label')) {
+                    $interactor->info(
+                        T_('Update Label information and fetch details using the MusicBrainz plugin'),
+                        true
+                    );
+                    $labels = $catalog->get_label_ids('tag_generated');
+                    $catalog->gather_label_info($labels);
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                }
                 $interactor->info('------------------', true);
             }
         }

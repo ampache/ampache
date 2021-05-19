@@ -23,8 +23,10 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\User;
 use Exception;
+use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
@@ -127,5 +129,53 @@ class AmpacheMusicBrainz
         }
 
         return $results;
+    } // get_metadata
+
+    /**
+     * update_label_metadata
+     * Update a label from musicbrainz
+     * @param Label $label
+     * @return bool
+     */
+    public function update_label_metadata(Label $label)
+    {
+        $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+        if ($label->mbid) {
+            try {
+                $results = $mbrainz->lookup('label', $label->mbid);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return false;
+            }
+        } else {
+            try {
+                $results = $mbrainz->search(new LabelFilter(array("label" => $label->name)), 1);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return false;
+            }
+        }
+        if (is_array($results) && !empty($results)) {
+            $results = $results[0];
+        }
+        if (!empty($results)) {
+            debug_event('MusicBrainz.plugin', "Updating Label: " . $label->name, 3);
+            $data = array(
+                'name' => $label->name,
+                'mbid' => $results->{'id'} ?: $label->mbid,
+                'category' => $results->{'type'} ?: $label->category,
+                'summary' => $results->{'disambiguation'} ?: $label->summary,
+                'address' => $label->address,
+                'country' => $results->{'country'} ?: $label->country,
+                'email' => $label->email,
+                'website' => $label->website,
+                'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
+            );
+            $label->update($data);
+        }
+
+        return true;
     } // get_metadata
 }

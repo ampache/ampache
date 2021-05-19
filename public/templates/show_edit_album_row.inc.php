@@ -99,6 +99,10 @@ use Ampache\Module\Api\Ajax;
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Status') ?></td>
+                <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
                 <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
             </tr>

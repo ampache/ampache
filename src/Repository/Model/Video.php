@@ -133,6 +133,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $tags;
     /**
+     * @var integer $object_cnt
+     */
+    public $object_cnt;
+    /**
      * @var integer $f_release_date
      */
     public $update_time;

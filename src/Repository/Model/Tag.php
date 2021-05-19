@@ -558,7 +558,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
         if ($type == 'album') {
             if (AmpConfig::get('album_group')) {
-                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`";
+                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`";
             } else {
                 $sql .= "GROUP BY `album`.`id`, `album`.`disk`";
             }

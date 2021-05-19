@@ -518,6 +518,9 @@ final class VaInfo implements VaInfoInterface
             if (trim((string)$tags['release_type']) !== '') {
                 $info['release_type'] = $info['release_type'] ?: trim((string)$tags['release_type']);
             }
+            if (trim((string)$tags['release_status']) !== '') {
+                $info['release_status'] = $info['release_status'] ?: trim((string)$tags['release_status']);
+            }
             // artists is an array treat it as one
             $info['artists'] = self::clean_array_tag('artists', $info, $tags);
 
@@ -972,6 +975,10 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
+                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
                 default:
                     $parsed[$tagname] = $data[0];
                     break;
@@ -1050,6 +1057,10 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
+                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
@@ -1240,6 +1251,9 @@ final class VaInfo implements VaInfoInterface
                             array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]),
                                 array('')));
                         break;
+                    case 'musicbrainz album status':
+                        $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
                     // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
                     // all replaygain values aren't always correctly retrieved
                     case 'replaygain_track_gain':
@@ -1365,6 +1379,9 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz album type':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz album status':
+                    $parsed['release_status'] = $data[0];
                     break;
                 case 'track_number':
                     $parsed['track'] = $data[0];

@@ -257,7 +257,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' . 'LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' . 'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' . 'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' . 'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
+        Dba::write('DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song`) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album`) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted`) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip`)');
     }
 
     /**
@@ -362,7 +362,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_album_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT  COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -380,7 +380,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $params = array($artist_id);
         $sql    = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` " .
-            "FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ?  AND `catalog`.`enabled` = '1'";
+            "FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ?  AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -398,7 +398,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
         if (!empty($catalogs)) {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`  FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql, $catalogs);
         } else {
             $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
@@ -438,7 +438,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_child_ids()
     {
-        $sql        = "SELECT  DISTINCT `album`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
 
@@ -871,9 +871,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
+                $time  = time();
                 $songs = $this->getSongRepository()->getByArtist($this->id);
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
+                    Song::update_utime($song_id, $time);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
@@ -886,21 +888,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
-                if (!$cron_cache) {
-                    self::garbage_collection();
-                }
             } // end if it changed
 
+            // clear out the old data
             if ($updated) {
-                foreach ($songs as $song_id) {
-                    Song::update_utime($song_id);
-                }
-                if (!$cron_cache) {
-                    Stats::garbage_collection();
-                    Rating::garbage_collection();
-                    Userflag::garbage_collection();
-                    $this->getUseractivityRepository()->collectGarbage();
-                }
+                self::garbage_collection();
+                Stats::garbage_collection();
+                Rating::garbage_collection();
+                Userflag::garbage_collection();
+                $this->getUseractivityRepository()->collectGarbage();
                 Artist::update_artist_counts($current_id);
             } // if updated
         } else {

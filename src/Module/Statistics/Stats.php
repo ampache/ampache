@@ -78,7 +78,7 @@ class Stats
     public static function garbage_collection()
     {
         foreach (array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
-            Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
+            Dba::write("DELETE FROM `object_count` WHERE `object_type` = '$object_type' AND `object_count`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");
         }
     }
 
@@ -508,7 +508,7 @@ class Stats
             }
             $sql .= " AND `count_type` = '" . $count_type . "'";
             if ($allow_group_disks && $type == 'album') {
-                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";
             } else {
                 $sql .= " GROUP BY `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`count_type`";
             }
@@ -732,7 +732,7 @@ class Stats
             }
         }
         if ($allow_group_disks && $type == 'album') {
-            $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+            $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
         } elseif ($type === 'song' || $base_type === 'video') {
             $sql .= "GROUP BY `$sql_type`, `real_atime` ORDER BY `real_atime` DESC ";
         } else {

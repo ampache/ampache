@@ -37,13 +37,6 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * Get the add date of first added song
-     */
-    public function getFirstSongAddTime(
-        int $albumId
-    ): int;
-
-    /**
      * gets songs from this album
      *
      * @return int[] Album ids

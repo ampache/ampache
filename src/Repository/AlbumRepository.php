@@ -84,25 +84,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * Get the add date of first added song
-     */
-    public function getFirstSongAddTime(
-        int $albumId
-    ): int {
-        $time = 0;
-
-        $db_results = Dba::read(
-            'SELECT MIN(`addition_time`) AS `addition_time` FROM `song` WHERE `album` = ?',
-            [$albumId]
-        );
-        if ($data = Dba::fetch_row($db_results)) {
-            $time = (int) $data[0];
-        }
-
-        return $time;
-    }
-
-    /**
      * gets songs from this album
      *
      * @return int[] Album ids
@@ -265,7 +246,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
+        Dba::write('DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);');
     }
 
     /**
@@ -345,7 +326,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 
         if (AmpConfig::get('album_group')) {
-            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
+            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
 
         $db_results = Dba::read($sql);

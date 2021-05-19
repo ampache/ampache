@@ -49,6 +49,10 @@ class Label extends database_object implements library_item
      */
     public $name;
     /**
+     * @var string $mbid
+     */
+    public $mbid; // MusicBrainz ID
+    /**
      * @var string $category
      */
     public $category;
@@ -68,6 +72,14 @@ class Label extends database_object implements library_item
      * @var string $summary
      */
     public $summary;
+    /**
+     * @var string $country
+     */
+    public $country;
+    /**
+     * @var integer $active
+     */
+    public $active;
     /**
      * @var integer $user
      */
@@ -101,6 +113,7 @@ class Label extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+        $this->active = (int)$this->active;
 
         return true;
     }
@@ -272,21 +285,27 @@ class Label extends database_object implements library_item
         }
 
         $name     = isset($data['name']) ? $data['name'] : $this->name;
+        $mbid     = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $category = isset($data['category']) ? $data['category'] : $this->category;
         $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
         $address  = isset($data['address']) ? $data['address'] : $this->address;
+        $country  = isset($data['country']) ? $data['country'] : $this->country;
         $email    = isset($data['email']) ? $data['email'] : $this->email;
         $website  = isset($data['website']) ? $data['website'] : $this->website;
+        $active   = isset($data['active']) ? (int)$data['active'] : $this->active;
 
-        $sql = "UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $this->id));
+        $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
+        Dba::write($sql, array($name, $mbid, strtolower($category), $summary, $address, $country, $email, $website, $active, $this->id));
 
         $this->name     = $name;
+        $this->mbid     = $mbid;
         $this->category = $category;
         $this->summary  = $summary;
         $this->address  = $address;
+        $this->country  = $country;
         $this->email    = $email;
         $this->website  = $website;
+        $this->active   = $active;
 
         return $this->id;
     }
@@ -300,11 +319,14 @@ class Label extends database_object implements library_item
     {
         $label_data = array(
             'name' => $name,
+            'mbid' => null,
             'category' => 'tag_generated',
             'summary' => null,
             'address' => null,
+            'country' => null,
             'email' => null,
             'website' => null,
+            'active' => 1,
             'user' => 0,
             'creation_date' => time()
         );
@@ -324,16 +346,19 @@ class Label extends database_object implements library_item
         }
 
         $name          = $data['name'];
+        $mbid          = $data['mbid'];
         $category      = $data['category'];
         $summary       = $data['summary'];
         $address       = $data['address'];
+        $country       = $data['country'];
         $email         = $data['email'];
         $website       = $data['website'];
         $user          = $data['user'] ?: Core::get_global('user')->id;
+        $active        = $data['active'];
         $creation_date = $data['creation_date'] ?: time();
 
-        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
+        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));
 
         return Dba::insert_id();
     }

@@ -597,7 +597,7 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` " . "WHERE `catalog`='$this->id' ORDER BY `$tableName`.`update_time` ASC, `$tableName`.`file` LIMIT $count, $chunk_size";
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog`='$this->id' ORDER BY `$tableName`.`update_time` ASC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
@@ -710,7 +710,7 @@ class Catalog_local extends Catalog
 
         $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` " . "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {

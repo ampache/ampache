@@ -1255,7 +1255,7 @@ class Query
         // filter albums when you have grouped disks!
         if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
             $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
-            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
@@ -1318,7 +1318,7 @@ class Query
                         $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
                         break;
@@ -1388,7 +1388,7 @@ class Query
                         $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
                         break;
@@ -1457,7 +1457,7 @@ class Query
                         $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
                         break;
@@ -1465,7 +1465,7 @@ class Query
                         if ($value != 0) {
                             $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                             $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
-                            $filter_sql = "  (`catalog`.`id` = '$value') AND ";
+                            $filter_sql = " (`catalog`.`id` = '$value') AND ";
                         }
                         break;
                     case 'exact_match':
@@ -1628,7 +1628,7 @@ class Query
                         $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
                         break;

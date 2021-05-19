@@ -449,6 +449,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
+        $release_status        = isset($results['release_status']) ? $results['release_status'] : null;
         $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
@@ -480,7 +481,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $artist_id = (int)($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $original_year, $barcode, $catalog_number);
+            $album_id = Album::check($catalog, $album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number);
         } else {
             $album_id = (int)($results['album_id']);
         }
@@ -556,7 +557,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // clean up missing catalogs
         Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
         // delete the rest
-        Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
+        Dba::write('DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`)');
     }
 
     /**
@@ -1244,7 +1245,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 case 'album_name':
                     // Create new album name and id
                     $old_album_id = $this->album;
-                    $new_album_id = Album::check($value);
+                    $new_album_id = Album::check($this->catalog, $value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
                     $changed[] = (string) $key;
