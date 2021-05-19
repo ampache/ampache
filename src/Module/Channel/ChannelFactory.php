@@ -17,17 +17,37 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Module\Channel;
 
-use function DI\autowire;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Repository\Model\Channel;
+use Psr\Log\LoggerInterface;
 
-return [
-    ChannelRunnerInterface::class => autowire(ChannelRunner::class),
-    HttpServerInterface::class => autowire(HttpServer::class),
-    ChannelFactoryInterface::class => autowire(ChannelFactory::class),
-];
+final class ChannelFactory implements ChannelFactoryInterface
+{
+    private LoggerInterface $logger;
+
+    private CatalogLoaderInterface $catalogLoader;
+
+    public function __construct(
+        LoggerInterface $logger,
+        CatalogLoaderInterface $catalogLoader
+    ) {
+        $this->logger        = $logger;
+        $this->catalogLoader = $catalogLoader;
+    }
+
+    public function createChannelStreamer(
+        Channel $channel
+    ): ChannelStreamerInterface {
+        return new ChannelStreamer(
+            $this->logger,
+            $this->catalogLoader,
+            $channel
+        );
+    }
+}

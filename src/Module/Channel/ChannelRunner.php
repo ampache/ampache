@@ -31,10 +31,14 @@ final class ChannelRunner implements ChannelRunnerInterface
 {
     private HttpServerInterface $httpServer;
 
+    private ChannelFactoryInterface $channelFactory;
+
     public function __construct(
-        HttpServerInterface $httpServer
+        HttpServerInterface $httpServer,
+        ChannelFactoryInterface $channelFactory
     ) {
-        $this->httpServer = $httpServer;
+        $this->httpServer     = $httpServer;
+        $this->channelFactory = $channelFactory;
     }
 
     public function run(
@@ -111,6 +115,10 @@ final class ChannelRunner implements ChannelRunnerInterface
         $last_stream    = microtime(true);
         $chunk_buffer   = '';
 
+        $channelStreamer = $this->channelFactory->createChannelStreamer($channel);
+
+        $chunkSize = $channelStreamer->getChunkSize();
+
         stream_set_blocking($server , false);
         while (stream_get_meta_data($server)['timed_out'] == null) {
             //prepare readable sockets
@@ -142,7 +150,15 @@ final class ChannelRunner implements ChannelRunnerInterface
                 // Get new message from existing client
                 foreach ($read_socks as $sock) {
                     // Handle data parse
-                    $this->httpServer->serve($interactor, $channel, $client_socks, $stream_clients, $read_socks, $sock);
+                    $this->httpServer->serve(
+                        $channelStreamer,
+                        $interactor,
+                        $channel,
+                        $client_socks,
+                        $stream_clients,
+                        $read_socks,
+                        $sock
+                    );
                 }
             }
 
@@ -158,11 +174,11 @@ final class ChannelRunner implements ChannelRunnerInterface
 
                 $last_stream = microtime(true);
                 $mtime       = ($time_offset > 1) ? $time_offset : 1;
-                $nb_chunks   = ceil(($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8) / $channel->chunk_size); // channel->bitrate+1% ... leave some headroom for metadata / headers
+                $nb_chunks   = ceil(($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8) / $chunkSize); // channel->bitrate+1% ... leave some headroom for metadata / headers
 
                 // we only send full blocks, save remainder and apply when appropriate: allows more granular/arbitrary average bitrates
-                if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0) {
-                    $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $channel->chunk_size);
+                if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $chunkSize) > 0) {
+                    $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $chunkSize);
                 }
                 if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1) {
                     $nb_chunks -= 1;
@@ -177,12 +193,13 @@ final class ChannelRunner implements ChannelRunnerInterface
 
             // Get multiple chunks according to bitrate to return enough data per second (because sleep with socket select)
             for ($count = 0; $count < $nb_chunks; $count++) {
-                $chunk    = $channel->get_chunk();
+                $chunk    = $channelStreamer->retrieveChunk();
+
                 $chunklen = strlen((string) $chunk);
                 $chunk_buffer .= $chunk;
 
                 //buffer maintenance
-                while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) { // buffer 15 seconds
+                while (strlen($chunk_buffer) > (15 * $nb_chunks * $chunkSize)) { // buffer 15 seconds
                     if (strtolower($channel->stream_type) == "ogg" && $this->strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
                         // read OggS segment length
                         $hex                = $this->strtohex(substr($chunk_buffer, 0, 27));
@@ -220,7 +237,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                             $client['isnew'] = 0;
                             //fwrite($sock, $channel->header_chunk);
                             //debug_event('channel_run', 'IS NEW' . $channel->header_chunk, 5);
-                            $clchunk_buffer = $channel->header_chunk . $chunk_buffer;
+                            $clchunk_buffer = $channelStreamer->getHeaderChunk() . $chunk_buffer;
                             if ($client['metadata']) { //stub
                                 //if (strtolower($channel->stream_type) == "ogg")
                                 while (strlen($clchunk_buffer) > $metadata_interval) {
@@ -251,14 +268,17 @@ final class ChannelRunner implements ChannelRunnerInterface
                                 $subpos = ($client['metadata_lastsent'] + $metadata_interval) - $client['length'];
                                 fwrite($sock, substr($clchunk, 0, $subpos));
                                 $client['length'] += $subpos;
-                                if ($channel->media->id != $client['metadata_lastsong']) {
-                                    $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_title . "';";
+
+                                $media = $channelStreamer->getMedia();
+
+                                if ($media !== null && $media->getId() != $client['metadata_lastsong']) {
+                                    $metadata = "StreamTitle='" . str_replace('-', ' ', $media->f_artist) . "-" . $media->f_title . "';";
                                     $metadata .= chr(0x00);
                                     $metadatalen = ceil(strlen($metadata) / 16);
                                     $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
                                     //debug_event('channel_run', 'Sending metadata to client...', 5);
                                     fwrite($sock, chr($metadatalen) . $metadata);
-                                    $client['metadata_lastsong'] = $channel->media->id;
+                                    $client['metadata_lastsong'] = $media->getId();
                                 } else {
                                     fwrite($sock, chr(0x00));
                                 }

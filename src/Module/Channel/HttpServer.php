@@ -45,6 +45,7 @@ final class HttpServer implements HttpServerInterface
     }
 
     public function serve(
+        ChannelStreamerInterface $channelStreamer,
         Interactor $interactor,
         Channel $channel,
         array &$client_socks,
@@ -217,8 +218,8 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "<td class=\"streamdata\"><a href=\"" . $channel->url . "\" target=\"_blank\">" . $channel->url . "</a></td>" . "\n";
                         $xsl .= "</tr>" . "\n";
                         $currentsong = "";
-                        if ($channel->media) {
-                            $currentsong = $channel->media->f_artist . " - " . $channel->media->f_title;
+                        if ($channelStreamer->getMedia()) {
+                            $currentsong = $channelStreamer->getMedia()->f_artist . " - " . $channelStreamer->getMedia()->f_title;
                         }
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Current Song:</td>" . "\n";

@@ -17,17 +17,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Channel;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Channel;
 
-return [
-    ChannelRunnerInterface::class => autowire(ChannelRunner::class),
-    HttpServerInterface::class => autowire(HttpServer::class),
-    ChannelFactoryInterface::class => autowire(ChannelFactory::class),
-];
+interface ChannelFactoryInterface
+{
+    public function createChannelStreamer(Channel $channel): ChannelStreamerInterface;
+}

@@ -17,31 +17,44 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Ampache\Module\Channel;
 
-use Ahc\Cli\IO\Interactor;
+use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Repository\Model\Channel;
+use Mockery\MockInterface;
+use Psr\Log\LoggerInterface;
 
-interface HttpServerInterface
+class ChannelFactoryTest extends MockeryTestCase
 {
-    public function serve(
-        ChannelStreamerInterface $channelStreamer,
-        Interactor $interactor,
-        Channel $channel,
-        array &$client_socks,
-        array &$stream_clients,
-        array &$read_socks,
-        $sock
-    ): void;
+    private MockInterface $logger;
 
-    public function disconnect(
-        Interactor $interactor,
-        Channel $channel,
-        array &$client_socks,
-        array &$stream_clients,
-        $sock
-    ): void;
+    private MockInterface $catalogLoader;
+
+    private ChannelFactory $subject;
+
+    public function setUp(): void
+    {
+        $this->logger        = $this->mock(LoggerInterface::class);
+        $this->catalogLoader = $this->mock(CatalogLoaderInterface::class);
+
+        $this->subject = new ChannelFactory(
+            $this->logger,
+            $this->catalogLoader
+        );
+    }
+
+    public function testCreateChannelStreamerReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            ChannelStreamerInterface::class,
+            $this->subject->createChannelStreamer(
+                $this->mock(Channel::class)
+            )
+        );
+    }
 }

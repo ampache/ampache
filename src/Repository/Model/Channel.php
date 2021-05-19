@@ -24,13 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Tag\TagListUpdaterInterface;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Tag\TagListUpdaterInterface;
+use Ampache\Module\Util\Ui;
 
 class Channel extends database_object implements Media, library_item
 {
@@ -56,22 +55,11 @@ class Channel extends database_object implements Media, library_item
     public $fixed_endpoint;
     public $url;
 
-    public $header_chunk;
-    public $chunk_size              = 4096;
-    private $header_chunk_remainder = 0;
-
     public $tags;
     public $f_tags;
 
-    private $is_init;
-    private $playlist;
-    private $song_pos;
-    private $songs;
-
     /** @var Song|null */
     public $media;
-    private $media_bytes_streamed;
-    private $transcoder;
 
     /**
      * Constructor
@@ -267,9 +255,9 @@ class Channel extends database_object implements Media, library_item
             $data['port'],
             (!empty($data['interface']) && !empty($data['port'])),
             $data['admin_password'],
-            !empty($data['private']),
+            (int) $data['private'],
             $data['max_listeners'],
-            $data['random'],
+            (int) $data['random'],
             $data['loop'],
             $data['stream_type'],
             $data['bitrate'],
@@ -556,167 +544,6 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * init_channel_songs
-     */
-    protected function init_channel_songs()
-    {
-        $this->song_pos = 0;
-        $this->songs    = array();
-        $this->playlist = $this->get_target_object();
-        if ($this->playlist) {
-            if (!$this->random) {
-                $this->songs = $this->playlist->get_songs();
-            }
-        }
-        $this->is_init = true;
-    }
-
-    /**
-     * get_chunk
-     */
-    public function get_chunk()
-    {
-        $chunk = null;
-
-        if (!$this->is_init) {
-            $this->init_channel_songs();
-        }
-
-        if ($this->is_init) {
-            // Move to next song
-            while ($this->media == null && ($this->random || $this->song_pos < count($this->songs))) {
-                if ($this->random) {
-                    $randsongs   = $this->playlist->get_random_items(1);
-                    $this->media = new Song($randsongs[0]['object_id']);
-                } else {
-                    $this->media = new Song($this->songs[$this->song_pos]);
-                }
-                $this->media->format();
-
-                $mediaCatalogId = $this->media->getCatalogId();
-                if ($mediaCatalogId) {
-                    $catalog = Catalog::create_from_id($mediaCatalogId);
-                    if ($this->media->isEnabled()) {
-                        if (AmpConfig::get('lock_songs')) {
-                            if (!Stream::check_lock_media($this->media->id, 'song')) {
-                                debug_event(self::class, 'Media ' . $this->media->id . ' locked, skipped.', 3);
-                                $this->media = null;
-                            }
-                        }
-                    }
-
-                    if ($this->media != null) {
-                        $this->media = $catalog->prepare_media($this->media);
-
-                        if (!$this->media->file || !Core::is_readable(Core::conv_lc_file($this->media->file))) {
-                            debug_event(self::class, 'Cannot read media ' . $this->media->id . ' file, skipped.', 3);
-                            $this->media = null;
-                        } else {
-                            $valid_types = $this->media->get_stream_types();
-                            if (!in_array('transcode', $valid_types)) {
-                                debug_event(self::class, 'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
-                                $this->media = null;
-                            } else {
-                                debug_event(self::class, 'Now listening to ' . $this->media->file . '.', 4);
-                            }
-                        }
-                    }
-                } else {
-                    debug_event(self::class, 'Media ' . $this->media->id . ' doesn\'t have catalog, skipped.', 3);
-                    $this->media = null;
-                }
-
-                $this->song_pos++;
-                // Restart from beginning for next song if the channel is 'loop' enabled
-                // and load fresh data from database
-                if ($this->media != null && $this->song_pos == count($this->songs) && $this->loop) {
-                    $this->init_channel_songs();
-                }
-            }
-
-            if ($this->media != null) {
-                // Stream not yet initialized for this media, start it
-                if (!$this->transcoder) {
-                    $options = array(
-                        'bitrate' => $this->bitrate
-                    );
-                    $this->transcoder           = Stream::start_transcode($this->media, $this->stream_type, null, $options);
-                    $this->media_bytes_streamed = 0;
-                }
-
-                if (is_resource($this->transcoder['handle'])) {
-                    if (ftell($this->transcoder['handle']) == 0) {
-                        $this->header_chunk = '';
-                    }
-                    $chunk = fread($this->transcoder['handle'], $this->chunk_size);
-                    $this->media_bytes_streamed += strlen((string)$chunk);
-
-                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        // debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
-                        $clchunk = $chunk;
-
-                        if ($this->header_chunk_remainder) {
-                            $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
-                            if (strlen((string)$clchunk) >= $this->header_chunk_remainder) {
-                                $clchunk                      = substr($clchunk, $this->header_chunk_remainder);
-                                $this->header_chunk_remainder = 0;
-                            } else {
-                                $this->header_chunk_remainder = $this->header_chunk_remainder - strlen((string)$clchunk);
-                                $clchunk                      = '';
-                            }
-                        }
-                        // see ChannelRunner for explanation what's happening here
-                        while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
-                            $hex                = $this->strtohex(substr($clchunk, 0, 27));
-                            $ogg_nr_of_segments = hexdec(substr($hex, 26 * 2, 2));
-                            if ((substr($clchunk, (int)(27 + $ogg_nr_of_segments + 1),
-                                        6) == "vorbis") || (substr($clchunk, (int)(27 + $ogg_nr_of_segments),
-                                        4) == "Opus")) {
-                                $hex .= $this->strtohex(substr($clchunk, 27, (int)$ogg_nr_of_segments));
-                                $ogg_sum_segm_laces = 0;
-                                for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
-                                    $ogg_sum_segm_laces += hexdec(substr($hex, 27 * 2 + $segm * 2, 2));
-                                }
-                                $this->header_chunk .= substr($clchunk, 0,
-                                    (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
-                                if (strlen((string)$clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
-                                    $this->header_chunk_remainder = (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen((string)$clchunk));
-                                }
-                                $clchunk = substr($clchunk, (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
-                            } else {
-                                // no more interesting headers
-                                $clchunk = '';
-                            }
-                        }
-                    }
-
-                    // End of file, prepare to move on for next call
-                    if (feof($this->transcoder['handle'])) {
-                        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-                            fread($this->transcoder['stderr'], 4096);
-                            fclose($this->transcoder['stderr']);
-                        }
-                        fclose($this->transcoder['handle']);
-                        Stream::kill_process($this->transcoder);
-
-                        $this->media      = null;
-                        $this->transcoder = null;
-                    }
-                } else {
-                    $this->media      = null;
-                    $this->transcoder = null;
-                }
-
-                if (!strlen((string)$chunk)) {
-                    $chunk = $this->get_chunk();
-                }
-            }
-        }
-
-        return $chunk;
-    }
-
-    /**
      * get_catalogs
      *
      * Get all catalog ids related to this item.
@@ -797,21 +624,6 @@ class Channel extends database_object implements Media, library_item
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
-    }
-
-    /**
-     * strtohex
-     * @param string $source
-     * @return string
-     */
-    private function strtohex($source)
-    {
-        $string = '';
-        foreach (str_split($source) as $char) {
-            $string .= sprintf("%02X", ord($char));
-        }
-
-        return ($string);
     }
 
     public function remove()

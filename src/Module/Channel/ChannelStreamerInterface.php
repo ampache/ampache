@@ -17,17 +17,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Channel;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Song;
 
-return [
-    ChannelRunnerInterface::class => autowire(ChannelRunner::class),
-    HttpServerInterface::class => autowire(HttpServer::class),
-    ChannelFactoryInterface::class => autowire(ChannelFactory::class),
-];
+interface ChannelStreamerInterface
+{
+    public function retrieveChunk(): ?string;
+
+    public function getHeaderChunk(): ?string;
+
+    public function getMedia(): ?Song;
+
+    public function getChunkSize(): int;
+}
