@@ -2570,7 +2570,7 @@ class Subsonic_Api
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // long pauses might cause your now_playing to hide
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type);
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
             // track has just started. repeated plays aren't called by scrobble so make sure we call this too
             if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
                 $media->set_played((int) $user_id, (string) $input['c'], array(), $time);

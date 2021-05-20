@@ -1202,7 +1202,7 @@ class Subsonic_Xml_Data
             if ($track !== null) {
                 $track->addAttribute('username', (string)$d['client']->username);
                 $track->addAttribute('minutesAgo',
-                    (string)(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
+                    (string)(abs((time() - ($d['expire'] - $d['media']->time)) / 60)));
                 $track->addAttribute('playerId', (string)$d['agent']);
             }
         }
