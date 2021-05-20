@@ -384,14 +384,18 @@ class Stream
      * @param integer $length
      * @param string $sid
      * @param string $type
+     * @param integer $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
     {
+        if (!$previous) {
+            $previous = time();
+        }
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
     /**

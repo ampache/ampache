@@ -322,7 +322,7 @@ class Random
         $sql = "";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id`, `size`, `time` " . "FROM `song` ";
+                $sql = "SELECT `song`.`id`, `song`.`size`, `song`.`time` " . "FROM `song` ";
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }

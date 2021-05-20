@@ -2417,9 +2417,9 @@ class Subsonic_Api
             $time     = time();
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
-            // track has just started
+            // long pauses might cause your now_playing to hide
             static::getNowPlayingRepository()->collectGarbage();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
             // track has just started. repeated plays aren't called by scrobble so make sure we call this too
             if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
                 $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
