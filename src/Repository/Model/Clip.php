@@ -26,51 +26,63 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
-class Clip extends Video
+final class Clip extends Video
 {
-    protected const DB_TABLENAME = 'clip';
+    /** @var array<string, mixed>|null  */
+    private ?array $dbData = null;
 
-    public $artist;
-    public $song;
-    public $video;
+    private ClipRepositoryInterface $clipRepository;
 
-    public $f_artist;
-    public $f_song;
+    private ModelFactoryInterface $modelFactory;
+
+    private SongRepositoryInterface $songRepository;
 
     /**
-     * Constructor
      * This pulls the clip information from the database and returns
      * a constructed object
-     * @param $clip_id
      */
-    public function __construct($clip_id)
-    {
-        parent::__construct($clip_id);
+    public function __construct(
+        ClipRepositoryInterface $clipRepository,
+        ModelFactoryInterface $modelFactory,
+        SongRepositoryInterface $songRepository,
+        int $id
+    ) {
+        parent::__construct($id);
 
-        $info = $this->get_info($clip_id);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
-    } // Constructor
+        $this->clipRepository = $clipRepository;
+        $this->id             = $id;
+        $this->modelFactory   = $modelFactory;
+        $this->songRepository = $songRepository;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
+    }
+
+    public function getSongId(): int
+    {
+        return (int) ($this->getDbData()['song'] ?? 0);
+    }
+
+    public function getArtistId(): int
+    {
+        return (int) ($this->getDbData()['artist'] ?? 0);
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused clips
+     * @return array<string, mixed>
      */
-    public static function garbage_collection()
+    private function getDbData(): array
     {
-        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " . "WHERE `video`.`id` IS NULL";
-        Dba::write($sql);
+        if ($this->dbData === null) {
+            $this->dbData = $this->clipRepository->getDataById($this->id);
+        }
+
+        return $this->dbData;
     }
 
     /**
@@ -131,7 +143,7 @@ class Clip extends Video
     {
         debug_event(self::class, 'update ' . print_r($data,true) , 5);
         $artist_id = self::_get_artist_id($data);
-        $song_id   = static::getSongRepository()->findBy($data);
+        $song_id   = $this->songRepository->findBy($data);
         debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
@@ -144,36 +156,50 @@ class Clip extends Video
      * format
      * this function takes the object and formats some values
      * @param boolean $details
-     * @return boolean
      */
-
     public function format($details = true)
     {
         parent::format($details);
+    }
 
-        if ($details) {
-            if ($this->artist) {
-                $artist = static::getModelFactory()->createArtist($this->artist);
-                $artist->format();
-                $this->f_artist     = $artist->f_link;
-            }
+    public function getSongLinkFormatted(): string
+    {
+        if ($this->getSongId()) {
+            $song = new Song($this->getSongId());
+            $song->format();
 
-            if ($this->song) {
-                $song = new Song($this->song);
-                $song->format();
-                $this->f_song = $song->f_link;
-            }
+            return $song->f_link;
         }
 
-        return true;
-    } // format
+        return '';
+    }
+
+    public function getArtistLinkFormatted(): string
+    {
+        $artist = $this->getArtist();
+        if ($artist !== null) {
+            return $artist->f_link;
+        }
+
+        return '';
+    }
+
+    private function getArtist(): ?Artist
+    {
+        if ($this->getArtist()) {
+            $artist = $this->modelFactory->createArtist($this->getArtistId());
+            $artist->format();
+
+            return $artist;
+        }
+
+        return null;
+    }
 
     public function getFullTitle(): string
     {
-        if ($this->artist) {
-            $artist = static::getModelFactory()->createArtist($this->artist);
-            $artist->format();
-
+        $artist = $this->getArtist();
+        if ($artist !== null) {
             return '[' . scrub_out($artist->f_name) . '] ' . $this->getFullTitle();
         }
 
@@ -187,11 +213,11 @@ class Clip extends Video
     public function get_keywords()
     {
         $keywords = parent::get_keywords();
-        if ($this->artist) {
+        if ($this->getArtistId()) {
             $keywords['artist'] = array(
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->f_artist
+                'value' => $this->getArtistLinkFormatted()
             );
         }
 
@@ -203,8 +229,8 @@ class Clip extends Video
      */
     public function get_parent(): ?array
     {
-        if ($this->artist) {
-            return ['object_type' => 'artist', 'object_id' => $this->artist];
+        if ($this->getArtistId()) {
+            return ['object_type' => 'artist', 'object_id' => $this->getArtistId()];
         }
 
         return null;
@@ -228,15 +254,5 @@ class Clip extends Video
         global $dic;
 
         return $dic->get(ArtistFinderInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getModelFactory(): ModelFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ModelFactoryInterface::class);
     }
 }

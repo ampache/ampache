@@ -34,6 +34,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
@@ -427,7 +428,7 @@ class Video extends database_object implements
         static::getTvShowSeasonRepository()->collectGarbage();
         TvShow::garbage_collection();
         Personal_Video::garbage_collection();
-        Clip::garbage_collection();
+        static::getClipRepository()->collectGarbage();
     }
 
     /**
@@ -1158,5 +1159,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(TagListUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getClipRepository(): ClipRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ClipRepositoryInterface::class);
     }
 }

@@ -22800,22 +22800,12 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:__construct\\(\\) has parameter \\$clip_id with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:_get_artist_id\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:format\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
@@ -22845,37 +22835,7 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$clip_id\\)\\: Unexpected token \"\\$clip_id\", expected type at offset 134$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Parameter \\#2 \\$mbid of method Ampache\\\\Module\\\\Artist\\\\ArtistFinderInterface\\:\\:find\\(\\) expects string\\|null, array\\|float\\|int\\|string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$artist has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$f_artist has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$f_song has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$song has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$video has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
@@ -23340,12 +23300,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Class Ampache\\\\Repository\\\\Model\\\\Broadcast constructor invoked with 2 parameters, 3 required\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\library_item\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
@@ -23375,17 +23330,12 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Parameter \\#2 \\$tagListUpdater of class Ampache\\\\Repository\\\\Model\\\\Broadcast constructor expects Ampache\\\\Module\\\\Tag\\\\TagListUpdaterInterface, int given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
 			message: "#^Parameter \\#5 \\$id of class Ampache\\\\Repository\\\\Model\\\\Wanted constructor expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\library_item\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\.$#"
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 

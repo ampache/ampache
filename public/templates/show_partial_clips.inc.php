@@ -21,6 +21,9 @@
  */
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\Browse;
+
+/** @var Browse $browse */
 
 ?>
 <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=clip&sort=artist', T_('Artist'), 'sort_video_artist'); ?></th>

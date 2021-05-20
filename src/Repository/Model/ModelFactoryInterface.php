@@ -155,6 +155,8 @@ interface ModelFactoryInterface
 
     public function createShare(int $shareId): ShareInterface;
 
+    public function createClip(int $clipId): Clip;
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */

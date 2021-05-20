@@ -30,6 +30,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
@@ -56,7 +57,7 @@ final class ModelFactory implements ModelFactoryInterface
         $this->dic = $dic;
     }
 
-    /** @var array<class-string, callable(int): library_item>|null */
+    /** @var array<class-string, callable(int): database_object>|null */
     private ?array $map = null;
 
     public function createPlaylist(
@@ -139,6 +140,7 @@ final class ModelFactory implements ModelFactoryInterface
     ): BroadcastInterface {
         return new Broadcast(
             $this->dic->get(BroadcastRepositoryInteface::class),
+            $this->dic->get(TagListUpdaterInterface::class),
             $broadcastId
         );
     }
@@ -305,6 +307,16 @@ final class ModelFactory implements ModelFactoryInterface
         );
     }
 
+    public function createClip(int $clipId): Clip
+    {
+        return new Clip(
+            $this->dic->get(ClipRepositoryInterface::class),
+            $this,
+            $this->dic->get(SongRepositoryInterface::class),
+            $clipId
+        );
+    }
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
@@ -334,6 +346,7 @@ final class ModelFactory implements ModelFactoryInterface
                 Share::class => fn (int $objectId): ShareInterface => $this->createShare($objectId),
                 Label::class => fn (int $objectId): Label => $this->createLabel($objectId),
                 Broadcast::class => fn (int $objectId): BroadcastInterface => $this->createBroadcast($objectId),
+                Clip::class => fn (int $objectId): Clip => $this->createClip($objectId),
             ];
         }
 

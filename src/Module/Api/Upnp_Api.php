@@ -1058,7 +1058,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $video = new Clip($pathreq[1]);
+                        $video = static::getModelFactory()->createClip((int) $pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
