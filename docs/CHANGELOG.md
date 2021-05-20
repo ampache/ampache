@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Ampache 4.4.3-develop
+
+### Fixed
+
+* NowPlaying stats would be overwritten when they didn't need to be
+* SubSonic:
+  * getNowPlaying was unable to return playing media or the correct time
+
 ## Ampache 4.4.2-release
 
 ### Added

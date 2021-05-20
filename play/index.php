@@ -661,9 +661,6 @@ if (!is_resource($filepointer)) {
 if (!$transcode) {
     header('ETag: ' . $media->id);
 }
-if (($action != 'download') && $record_stats) {
-    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, get_class($media));
-}
 // Handle Content-Range
 
 $start        = 0;
@@ -706,6 +703,9 @@ if (!isset($_REQUEST['segment'])) {
     if ($start > 0) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
+        if (($action != 'download') && $record_stats) {
+            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, get_class($media));
+        }
         $sessionkey = $session_id ?: Stream::get_session();
         $agent      = Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);

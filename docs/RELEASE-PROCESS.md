@@ -109,15 +109,14 @@ docker login -u USER -p PASSWORD
 
 To update master and nosql; add the latest zip file to the docker images
 ```Dockerfile
-    &&  wget -q -O /tmp/master.zip https://github.com/ampache/ampache/releases/download/4.x.4/ampache-4.x.4_all.zip \
+    &&  wget -q -O /tmp/master.zip https://github.com/ampache/ampache/releases/download/4.x.x/ampache-4.x.x_all.zip \
 ```
 Build latest (master) images and push to docker hub.
 
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
 cd ampache-docker
-nano Dockerfile
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:latest --push .
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --build-arg VERSION=4.x.x -t ampache/ampache:4 -t ampache/ampache:4.x.x -t ampache/ampache:latest --push .
 ```
 
 Build develop images and push to docker hub.
@@ -125,7 +124,7 @@ Build develop images and push to docker hub.
 ```bash
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
 cd ampache-docker-develop
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop -t ampache/ampache:preview --push .
 ```
 
 Build nosql images and push to docker hub.
@@ -133,8 +132,7 @@ Build nosql images and push to docker hub.
 ```bash
 git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
 cd ampache-docker-nosql
-nano Dockerfile
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
+docker buildx build --no-cache --platform linux/amd64,linux/arm64,linux/arm/v7 --build-arg VERSION=4.x.x -t ampache/ampache:nosql4 -t ampache/ampache:nosql4.x.x -t ampache/ampache:nosql --push .
 ```
 
 ## Additional info
@@ -148,5 +146,5 @@ git tag -f 5.0.0-pre-release 250237272
 Then pushing it to github
 
 ```shell
-git push –force origin 5.0.0-pre-release
+git push --force origin 5.0.0-pre-release
 ```
