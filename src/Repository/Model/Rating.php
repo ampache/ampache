@@ -40,8 +40,8 @@ class Rating extends database_object
     protected const DB_TABLENAME = 'rating';
 
     // Public variables
-    public $id;        // The ID of the object rated
-    public $type;        // The type of object we want
+    public $id; // The ID of the object rated
+    public $type; // The type of object we want
 
     /**
      * Constructor
@@ -230,7 +230,7 @@ class Rating extends database_object
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC";
         } else {
-            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
+            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC ";
         }
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 

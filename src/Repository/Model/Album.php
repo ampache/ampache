@@ -231,7 +231,7 @@ class Album extends database_object implements library_item
     public $f_year;
 
     /**
-     * @var string f_year_link
+     * @var string $f_year_link
      */
     public $f_year_link;
 

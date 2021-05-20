@@ -384,7 +384,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $params = array($artist_id);
         $sql    = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` " .
-            "FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ?  AND `catalog`.`enabled` = '1'";
+            "FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 

@@ -1604,7 +1604,7 @@ class Search extends playlist_object
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " . "`avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS " . "`average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input'  OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
                     // flag once per user
                     $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .

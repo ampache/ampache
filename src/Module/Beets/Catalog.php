@@ -59,8 +59,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected $songs = array();
 
     /**
-     *
-     * @var string command which provides the list of all songs
+     * command which provides the list of all songs
+     * @var string $listCommand
      */
     protected $listCommand;
 

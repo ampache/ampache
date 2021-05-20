@@ -1424,10 +1424,10 @@ class Subsonic_Xml_Data
     {
         $xjbox  = $xml->addChild(htmlspecialchars($elementName));
         $status = $localplay->status();
-        $xjbox->addAttribute('currentIndex', 0);    // Not supported
+        $xjbox->addAttribute('currentIndex', 0); // Not supported
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
-        $xjbox->addAttribute('position', 0);    // Not supported
+        $xjbox->addAttribute('position', 0); // Not supported
 
         return $xjbox;
     }

@@ -168,7 +168,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         if (item.image !== '') {
                             itemhtml += "<img src='" + item.image + "' class='searchart' alt='' />";
                         }
-                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels)  + "</span>";
+                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels) + "</span>";
                         itemhtml += "</a>";
 
                         return $( "<li class='ui-menu-item'>" )

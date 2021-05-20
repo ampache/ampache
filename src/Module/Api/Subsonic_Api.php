@@ -298,7 +298,7 @@ class Subsonic_Api
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
             'keyReplace' => false, // replace values for above search values (as passed to str_replace())
-            'boolean' => true           // replace true and false string with boolean values
+            'boolean' => true // replace true and false string with boolean values
         );
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();

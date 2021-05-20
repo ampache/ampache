@@ -837,7 +837,7 @@ final class PlayAction implements ApplicationActionInterface
         // Actually do the streaming
         $buf_all = '';
         $r_arr   = array($filepointer);
-        $w_arr   = $e_arr   = array();
+        $w_arr   = $e_arr = array();
         $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             debug_event('play/index', 'stream_select failed.', 1);

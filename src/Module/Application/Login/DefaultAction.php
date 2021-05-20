@@ -226,11 +226,11 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && ! $user->username) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
-                $fullname = array_key_exists('name', $auth) ? $auth['name']    : '';
-                $email    = array_key_exists('email', $auth) ? $auth['email']   : '';
+                $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
+                $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
-                $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
-                $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
+                $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
+                $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
 
                 // Attempt to create the user
                 if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {

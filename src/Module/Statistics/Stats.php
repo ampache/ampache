@@ -405,7 +405,7 @@ class Stats
         }
 
         // To remove associated album and artist entries
-        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast')  AND `date` = ? " . "AND `agent` = ? AND `user` = ? ";
+        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? " . "AND `agent` = ? AND `user` = ? ";
 
         return Dba::write($sql, array($date, $agent, $user_id));
     } // skip_last_play
