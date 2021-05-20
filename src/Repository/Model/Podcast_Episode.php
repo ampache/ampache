@@ -266,11 +266,11 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     }
 
     /**
-     * @return array
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
-        return array('object_type' => 'podcast', 'object_id' => $this->podcast);
+        return ['object_type' => 'podcast', 'object_id' => $this->podcast];
     }
 
     /**

@@ -230,9 +230,9 @@ final class Label extends database_object implements LabelInterface
     }
 
     /**
-     * @return null
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }

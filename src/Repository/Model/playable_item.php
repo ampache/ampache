@@ -48,11 +48,11 @@ interface playable_item
     public function get_fullname();
 
     /**
-     * get_parent
-     *
      * Get parent. Return parent `object_type`, `object_id` ; null otherwise.
+     *
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent();
+    public function get_parent(): ?array;
 
     /**
      * get_childrens

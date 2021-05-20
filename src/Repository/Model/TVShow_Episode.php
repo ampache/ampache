@@ -231,10 +231,9 @@ final class TVShow_Episode extends Video implements TvShowEpisodeInterface
     }
 
     /**
-     * get_parent
-     * @return array
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return ['object_type' => 'tvshow_season', 'object_id' => $this->getSeasonId()];
     }

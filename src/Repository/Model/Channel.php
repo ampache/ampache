@@ -408,10 +408,9 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * get_parent
-     * @return boolean|null
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }

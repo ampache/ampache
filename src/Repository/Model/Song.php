@@ -1384,11 +1384,12 @@ class Song extends database_object implements
 
     /**
      * Get parent item description.
-     * @return array|null
+     *
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
-        return array('object_type' => 'album', 'object_id' => $this->album);
+        return ['object_type' => 'album', 'object_id' => $this->album];
     }
 
     /**

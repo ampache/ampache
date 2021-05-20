@@ -142,9 +142,9 @@ final class Live_Stream extends database_object implements LiveStreamInterface
     }
 
     /**
-     * @return null
+     * @return array{object_type: string, object_id: int}|null
      */
-    public function get_parent()
+    public function get_parent(): ?array
     {
         return null;
     }
