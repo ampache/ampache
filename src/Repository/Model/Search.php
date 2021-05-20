@@ -1780,7 +1780,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`',
+            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`",
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

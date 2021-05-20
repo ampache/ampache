@@ -161,11 +161,6 @@ class Album extends database_object implements library_item
     public $tags;
 
     /**
-     * @var string $full_name
-     */
-    public $full_name; // Prefix + Name, generated
-
-    /**
      * @var integer $artist_count
      */
     public $artist_count;
@@ -211,7 +206,7 @@ class Album extends database_object implements library_item
     public $f_album_artist_link;
 
     /**
-     * @var string $f_name
+     * @var string $f_name // Prefix + Name, generated
      */
     public $f_name;
 
@@ -296,7 +291,7 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->full_name      = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
+        $this->f_name         = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         $this->total_duration = (int)$this->time;
         $this->object_cnt     = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
@@ -365,17 +360,17 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
 
-        $full_name      = Dba::escape($this->full_name);
+        $f_name         = Dba::escape($this->f_name);
         $release_type   = "is null";
         $release_status = "is null";
         $mbid           = "is null";
         $artist         = "is null";
         // for all the artists who love using bad strings for album titles!
-        if (strpos($this->full_name, '>') || strpos($this->full_name, '<') || strpos($this->full_name, '\\')) {
-            $full_name = Dba::escape(str_replace(array('<', '>', '\\'), '_', $this->full_name));
-            $name_sql  = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$full_name' AND ";
+        if (strpos($this->f_name, '>') || strpos($this->f_name, '<') || strpos($this->f_name, '\\')) {
+            $f_name    = Dba::escape(str_replace(array('<', '>', '\\'), '_', $this->f_name));
+            $name_sql  = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '%$f_name%' AND ";
         } else {
-            $name_sql = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND ";
+            $name_sql = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name' AND ";
         }
         if ($this->release_type) {
             $release_type = "= '" . ucwords((string)$this->release_type) . "'";
@@ -659,12 +654,8 @@ class Album extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-
-        /* Truncate the string if it's to long */
-        $this->f_name = $this->full_name;
-
         $this->link   = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
         if ($this->disk && !$this->allow_group_disks && count($this->getAlbumRepository()->getAlbumSuite($this)) > 1) {
@@ -673,7 +664,7 @@ class Album extends database_object implements library_item
 
         $this->f_link .= "</a>";
 
-        $this->f_title = $this->full_name;
+        $this->f_title = $this->f_name;
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
             $this->f_artist_name = $artist;
@@ -855,7 +846,7 @@ class Album extends database_object implements library_item
      */
     public static function get_id_array($album_id)
     {
-        $sql          = "SELECT DISTINCT `album`.`id`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `full_name`, `album`.`name`, `album`.`album_artist` FROM `album` WHERE `album`.`id` = ? ORDER BY `album`.`name`";
+        $sql          = "SELECT DISTINCT `album`.`id`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `f_name`, `album`.`name`, `album`.`album_artist` FROM `album` WHERE `album`.`id` = ? ORDER BY `album`.`name`";
         $db_results   = Dba::read($sql, array($album_id));
         $results      = array();
 

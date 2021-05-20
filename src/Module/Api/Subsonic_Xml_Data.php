@@ -537,7 +537,7 @@ class Subsonic_Xml_Data
         $artist->format();
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', (string)self::getArtistId($artist->id));
-        $xartist->addAttribute('name', (string)self::checkName($artist->f_full_name));
+        $xartist->addAttribute('name', (string)self::checkName($artist->f_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
             $allalbums = static::getAlbumRepository()->getByArtist($artist->id);
@@ -614,7 +614,7 @@ class Subsonic_Xml_Data
         $sub_id  = (string)self::getArtistId($artist['id']);
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', $sub_id);
-        $xartist->addAttribute('name', (string)self::checkName($artist['full_name']));
+        $xartist->addAttribute('name', (string)self::checkName($artist['f_name']));
 
         if (isset($artist['album_count'])) {
             $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
@@ -649,9 +649,9 @@ class Subsonic_Xml_Data
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', (string)self::getAlbumId($album->id));
-        $xalbum->addAttribute('album', (string)self::checkName($album->full_name));
+        $xalbum->addAttribute('album', (string)self::checkName($album->f_name));
         $xalbum->addAttribute('title', (string)self::formatAlbum($album));
-        $xalbum->addAttribute('name', (string)self::checkName($album->full_name));
+        $xalbum->addAttribute('name', (string)self::checkName($album->f_name));
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', (string)$album->disk);
 
@@ -750,8 +750,10 @@ class Subsonic_Xml_Data
         if (!$db_results) {
             return array();
         }
+        $row           = Dba::fetch_assoc($db_results);
+        $row['f_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
 
-        return Dba::fetch_assoc($db_results);
+        return $row;
     }
 
     /**
@@ -768,10 +770,8 @@ class Subsonic_Xml_Data
             return array();
         }
 
-        $row = Dba::fetch_assoc($db_results);
-
-        $row['f_name']      = trim((string)$row['prefix'] . ' ' . $row['name']);
-        $row['f_full_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
+        $row           = Dba::fetch_assoc($db_results);
+        $row['f_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
 
         return $row;
     }
@@ -834,13 +834,11 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('type', 'music');
         // $album = new Album(songData->album);
         $xsong->addAttribute('albumId', (string)self::getAlbumId($albumData['id']));
-        $albumData['full_name'] = trim(trim((string)$albumData['prefix']) . ' ' . trim((string)$albumData['name']));
-
-        $xsong->addAttribute('album', (string)self::checkName($albumData['full_name']));
+        $xsong->addAttribute('album', (string)self::checkName($albumData['f_name']));
         // $artist = new Artist($song->artist);
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
-        $xsong->addAttribute('artist', (string) self::checkName($artistData['f_full_name']));
+        $xsong->addAttribute('artist', (string) self::checkName($artistData['f_name']));
         $art_object = (AmpConfig::get('show_song_art')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
         $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
@@ -897,7 +895,7 @@ class Subsonic_Xml_Data
      */
     private static function formatAlbum($album)
     {
-        $name = $album->full_name;
+        $name = $album->f_name;
         if ($album->disk && !$album->allow_group_disks && count(static::getAlbumRepository()->getAlbumSuite($album)) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
@@ -958,7 +956,7 @@ class Subsonic_Xml_Data
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
-        $xdir->addAttribute('name', (string)$data['full_name']);
+        $xdir->addAttribute('name', (string)$data['f_name']);
         $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);

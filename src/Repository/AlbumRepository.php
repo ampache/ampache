@@ -193,8 +193,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
         Album $album,
         int $catalogId = 0
     ): array {
-        $full_name = Dba::escape($album->full_name);
-        if ($full_name == '') {
+        $f_name = Dba::escape($album->f_name);
+        if ($f_name == '') {
             return array();
         }
         $album_artist = "is null";
@@ -213,7 +213,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         }
         $results       = array();
         $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
-            "(`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') " .
+            "(`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') " .
             "AND `album`.`year` = $year ";
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";

@@ -112,7 +112,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public $manual_update;
 
-
     /**
      * @var array $tags
      */
@@ -144,14 +143,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
     private $total_count;
 
     /**
-     * @var string $f_name
+     * @var string $f_name // Prefix + Name, generated
      */
     public $f_name;
-
-    /**
-     * @var string $f_full_name
-     */
-    public $f_full_name;
 
     /**
      * @var string $link
@@ -216,6 +210,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $this->$key = $value;
         } // foreach info
 
+        // set the full name
+        $this->f_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         // make sure the int values are cast to integers
         $this->object_cnt        = (int)$this->total_count;
         $this->time              = (int)$this->time;
@@ -406,10 +402,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
         if (!empty($catalogs)) {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql, $catalogs);
         } else {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql);
         }
         $results = array();
@@ -431,7 +427,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_id_array($artist_id)
     {
         $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results   = Dba::read($sql, array($artist_id));
         $row          = Dba::fetch_assoc($db_results, false);
 
@@ -509,11 +505,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function format($details = true, $limit_threshold = '')
     {
-        /* Combine prefix and name, trim then add ... if needed */
-        $name              = trim((string)$this->prefix . " " . $this->name);
-        $this->f_name      = $name;
-        $this->f_full_name = trim(trim((string)$this->prefix) . ' ' . trim((string)$this->name));
-
         // If this is a memory-only object, we're done here
         if (!$this->id) {
             return true;
@@ -531,10 +522,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         if ($this->catalog_id) {
             $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
         } else {
             $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
         }
 
         if ($details) {
@@ -578,7 +569,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => $this->f_full_name
+            'value' => $this->f_name
         );
 
         return $keywords;
@@ -590,7 +581,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_fullname()
     {
-        return $this->f_full_name;
+        return $this->f_name;
     }
 
     /**

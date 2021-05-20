@@ -415,12 +415,12 @@ class Xml_Data
                         $artist->format();
                         $albums = static::getAlbumRepository()->getByArtist($object_id, null, true);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
+                            "\t<name><![CDATA[" . $artist->f_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
                                 $string .= "\t<album id=\"" . $album_id .
-                                    '"><![CDATA[' . $album->full_name .
+                                    '"><![CDATA[' . $album->f_name .
                                     "]]></album>\n";
                             }
                         }
@@ -434,7 +434,7 @@ class Xml_Data
                         $album = new Album($object_id);
                         $album->format();
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $album->full_name . "]]></name>\n" .
+                            "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
                             "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                             "</$object_type>\n";
                     }
@@ -662,7 +662,7 @@ class Xml_Data
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
-                    "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
+                    "\t<name><![CDATA[" . $artist->f_name . "]]></name>\n" .
                     $tag_string .
                     "\t<albums>" . $albums . "</albums>\n" .
                     "\t<albumcount>" . ($artist->albums ?: 0) . "</albumcount>\n" .
@@ -719,7 +719,7 @@ class Xml_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
 
-            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->full_name . "]]></name>\n";
+            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->f_name . "]]></name>\n";
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {

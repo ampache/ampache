@@ -55,7 +55,7 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 </td>
 <?php
 if (Art::is_enabled()) {
-            $name = scrub_out($libitem->full_name); ?>
+            $name = scrub_out($libitem->f_name); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;

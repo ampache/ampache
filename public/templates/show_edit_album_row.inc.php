@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->full_name); ?>" autofocus /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_name); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>

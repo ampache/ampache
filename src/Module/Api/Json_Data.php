@@ -406,7 +406,7 @@ class Json_Data
 
             array_push($JSON, array(
                 "id" => (string)$artist->id,
-                "name" => $artist->f_full_name,
+                "name" => $artist->f_name,
                 "albums" => $albums,
                 "albumcount" => (int) $artist->albums,
                 "songs" => $songs,
@@ -469,7 +469,7 @@ class Json_Data
             $theArray = [];
 
             $theArray["id"]   = (string)$album->id;
-            $theArray["name"] = $album->full_name;
+            $theArray["name"] = $album->f_name;
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {

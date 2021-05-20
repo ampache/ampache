@@ -112,19 +112,19 @@ class Stats
     public static function insert(
         $input_type,
         $object_id,
-        $user,
+        $user_id,
         $agent = '',
         $location = [],
         $count_type = 'stream',
         $date = null
     ) {
-        if (AmpConfig::get('use_auth') && $user < 0) {
-            debug_event(self::class, 'Invalid user given ' . $user, 3);
+        if (AmpConfig::get('use_auth') && $user_id < 0) {
+            debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
             return false;
         }
         $type = self::validate_type($input_type);
-        if (self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
+        if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {
             return false;
         }
 
@@ -147,22 +147,18 @@ class Stats
 
         $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
+        $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname));
 
         // the count was inserted
         if ($db_results) {
-            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast_episode')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
+            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
                 $sql = "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
                 Dba::write($sql, array($object_id));
-                static::getUserActivityPoster()->post((int) $user, 'play', $type, (int) $object_id, (int) $date);
-            }
-            if (in_array($type, array('song', 'video', 'podcast_episode')) && $count_type === 'skip' && $user > 0 && $agent !== 'debug') {
-                $sql = "UPDATE `$type` SET `total_skip` = `total_skip` + 1 WHERE `id` = ?";
-                Dba::write($sql, array($object_id));
+                static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
             }
         }
         if (!$db_results) {
-            debug_event(self::class, 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
+            debug_event(self::class, 'Unable to insert statistics for ' . $user_id . ':' . $object_id, 3);
 
             return false;
         }
@@ -388,12 +384,25 @@ class Stats
      * @param integer $date
      * @param string $agent
      * @param integer $user_id
+     * @param integer $object_id
      * @return PDOStatement|boolean
      */
-    public static function skip_last_play($date, $agent, $user_id)
+    public static function skip_last_play($date, $agent, $user_id, $object_id)
     {
+        // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND " . "`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') " . "ORDER BY `object_count`.`date` DESC";
         Dba::write($sql, array($date, $agent, $user_id));
+
+        // update the total counts as well
+        if ($user_id > 0 && $agent !== 'debug') {
+            $song = new Song($object_id);
+            $sql  = "UPDATE `song` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            Dba::write($sql, array($song->id));
+            $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            Dba::write($sql, array($song->album));
+            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            Dba::write($sql, array($song->artist));
+        }
 
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast')  AND `date` = ? " . "AND `agent` = ? AND `user` = ? ";
@@ -436,7 +445,7 @@ class Stats
         // when the difference between recordings is too short, the previous object has been skipped, so note that
         if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
             debug_event(self::class, 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
+            self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
             static::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
         }

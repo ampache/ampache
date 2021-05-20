@@ -162,6 +162,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $interactor->info('------------------', true);
             }
             if ($updateInfo === true) {
+                Catalog::update_counts();
                 ob_start();
 
                 // Look for updated artist information. (missing or < 6 months since last update)

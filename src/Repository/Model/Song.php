@@ -287,7 +287,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public $f_albumartist_link;
 
     /**
-     * @var string f_year_link
+     * @var string $f_year_link
      */
     public $f_year_link;
 
@@ -975,7 +975,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $album = new Album($album_id);
 
-        return $album->full_name;
+        return $album->f_name;
     } // get_album_name
 
     /**
@@ -1038,10 +1038,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $artist_id = $this->artist;
         }
         $artist = new Artist($artist_id);
-        if ($artist->prefix) {
-            return $artist->prefix . " " . $artist->name;
-        } else {
-            return $artist->name;
+        if ($artist->id) {
+            return $artist->f_name;
         }
     } // get_artist_name
 
@@ -1057,10 +1055,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = $this->albumartist;
         }
         $album_artist = new Artist($album_artist_id);
-        if ($album_artist->prefix) {
-            return $album_artist->prefix . " " . $album_artist->name;
-        } else {
-            return (string)$album_artist->name;
+        if ($album_artist->id) {
+            return (string)$album_artist->f_name;
         }
     } // get_album_artist_name
 
