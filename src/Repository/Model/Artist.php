@@ -139,6 +139,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $object_cnt;
 
     /**
+     * @var integer $total_count
+     */
+    private $total_count;
+
+    /**
      * @var string $f_name
      */
     public $f_name;
@@ -212,6 +217,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // foreach info
 
         // make sure the int values are cast to integers
+        $this->object_cnt        = (int)$this->total_count;
         $this->time              = (int)$this->time;
         $this->album_count       = (int)$this->album_count;
         $this->album_group_count = (int)$this->album_group_count;
@@ -288,7 +294,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
+                $row['object_cnt'] = (!empty($limit_threshold))
+                    ? Stats::get_object_count('artist', $row['artist'], $limit_threshold)
+                    : $row['total_count'];
                 parent::add_to_cache('artist_extra', $row['artist'], $row);
             }
         } // end if extra
@@ -464,7 +472,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } else {
             $params = array($this->id);
             // Get associated information from first song only
-            $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id`, `artist`.`total_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ";
             $sqlw = "WHERE `song`.`artist` = ? ";
             if ($catalog) {
                 $params[] = $catalog;
@@ -476,7 +484,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $row        = Dba::fetch_assoc($db_results);
 
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
+                $row['object_cnt'] = (!empty($limit_threshold))
+                    ? Stats::get_object_count('artist', $row['artist'], $limit_threshold)
+                    : $row['total_count'];
             }
             parent::add_to_cache('artist_extra', $row['artist'], $row);
         }

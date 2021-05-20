@@ -129,12 +129,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $catalog->add_to_catalog($options);
-                Album::update_album_artist();
-                // update artists who need a recent update
-                $artists = $catalog->get_artist_ids('count');
-                foreach ($artists as $artist_id) {
-                    Artist::update_artist_counts($artist_id);
-                }
 
                 $buffer = ob_get_contents();
 
@@ -145,6 +139,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info('------------------', true);
+                Album::update_album_artist();
+                Catalog::update_counts();
             } elseif ($addArt === true) {
                 ob_start();
 
@@ -206,6 +202,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
+            Catalog::update_counts();
         }
         if ($optimizeDatabase === true) {
             ob_start();

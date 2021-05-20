@@ -2142,6 +2142,7 @@ abstract class Catalog extends database_object
      */
     public static function update_counts()
     {
+        debug_event(self::class, 'Updating Artist and album counts after catalog changes', 5);
         // artist.album_count
         $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
         Dba::write($sql);
@@ -2151,11 +2152,20 @@ abstract class Catalog extends database_object
         // artist.song_count
         $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
         Dba::write($sql);
+        // artist.total_count
+        $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
+        // artist.time
+        $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
+        Dba::write($sql);
         // album.time
         $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
         Dba::write($sql);
         // album.addition_time
         $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+        Dba::write($sql);
+        // album.total_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
     }
 
@@ -2275,10 +2285,7 @@ abstract class Catalog extends database_object
             $db_results = Dba::write($sql, array($object_id));
             $artists[]  = (int) $album['album_artist'];
         }
-        // removing an album means their counts have changed too
-        foreach ($artists as $artist_id) {
-            Artist::update_artist_counts($artist_id);
-        }
+        self::update_counts();
     }
 
     /**
@@ -2922,18 +2929,14 @@ abstract class Catalog extends database_object
                         if ($catalog !== null) {
                             $catalog->add_to_catalog($options);
 
-                            // update artists who need a recent update
-                            $artists = $catalog->get_artist_ids('count');
-                            foreach ($artists as $artist_id) {
-                                Artist::update_artist_counts($artist_id);
-                            }
                         }
                     }
+                    Album::update_album_artist();
+                    self::update_counts();
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
                     }
-                    Album::update_album_artist();
                 }
                 break;
             case 'update_all_catalogs':
@@ -2947,6 +2950,7 @@ abstract class Catalog extends database_object
                             $catalog->verify_catalog();
                         }
                     }
+                    self::update_counts();
                 }
                 break;
             case 'full_service':
@@ -2964,6 +2968,7 @@ abstract class Catalog extends database_object
                     }
                 }
                 Album::update_album_artist();
+                self::update_counts();
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
@@ -2977,6 +2982,7 @@ abstract class Catalog extends database_object
                             $catalog->clean_catalog();
                         }
                     } // end foreach catalogs
+                    self::update_counts();
                     Dba::optimize_tables();
                 }
                 break;
@@ -2989,6 +2995,7 @@ abstract class Catalog extends database_object
                         if ($catalog !== null) {
                             $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
                             Album::update_album_artist();
+                            self::update_counts();
                         }
                     }
                 } // end if add
@@ -3051,10 +3058,8 @@ abstract class Catalog extends database_object
         }
 
         // Remove any orphaned artists/albums/etc.
+        debug_event(self::class, 'Run Garbage collection', 5);
         static::getCatalogGarbageCollector()->collect();
-
-        // Update counts after processing catalogs/cleaning
-        self::update_counts();
     }
 
     /**

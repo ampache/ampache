@@ -137,6 +137,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $object_cnt;
     /**
+     * @var integer $total_count
+     */
+    private $total_count;
+    /**
      * @var integer $f_release_date
      */
     public $update_time;
@@ -231,8 +235,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $this->$key = $value;
         }
 
-        $data       = pathinfo($this->file);
-        $this->type = strtolower((string) $data['extension']);
+        $data             = pathinfo($this->file);
+        $this->type       = strtolower((string) $data['extension']);
+        $this->object_cnt = (int)$this->total_count;
 
         return true;
     } // Constructor

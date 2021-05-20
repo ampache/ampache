@@ -330,6 +330,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /** @var int */
     public $object_cnt;
 
+    /** @var int */
+    private $total_count;
+
     /* Setting Variables */
     /**
      * @var boolean $_fake
@@ -374,9 +377,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-            $data       = pathinfo($this->file);
-            $this->type = strtolower((string)$data['extension']);
-            $this->mime = self::type_to_mime($this->type);
+            $data             = pathinfo($this->file);
+            $this->type       = strtolower((string)$data['extension']);
+            $this->mime       = self::type_to_mime($this->type);
+            $this->object_cnt = (int)$this->total_count;
         } else {
             $this->id = null;
 
@@ -581,7 +585,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         // Song data cache
-        $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' . '`year`, `artist`, `title`, `bitrate`, `rate`, ' . '`mode`, `size`, `time`, `track`, `played`, ' . '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, ' . '`mbid`, `addition_time`, `license`, `composer`, `user_upload` ' . 'FROM `song` LEFT JOIN `tag_map` ' . 'ON `tag_map`.`object_id`=`song`.`id` ' . "AND `tag_map`.`object_type`='song' ";
+        $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' . '`year`, `artist`, `title`, `bitrate`, `rate`, ' . '`mode`, `size`, `time`, `track`, `played`, ' . '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, ' . '`mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` ' . 'FROM `song` LEFT JOIN `tag_map` ' . 'ON `tag_map`.`object_id`=`song`.`id` ' . "AND `tag_map`.`object_type`='song' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
@@ -597,10 +601,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
+                $row['object_cnt'] = (!empty($limit_threshold))
+                    ? Stats::get_object_count('song', $row['id'], $limit_threshold)
+                    : $row['total_count'];
             }
             if (AmpConfig::get('show_skipped_times')) {
-                $row['skip_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
+                $row['skip_cnt'] = (!empty($limit_threshold))
+                    ? Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip')
+                    : $row['total_skip'];
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
@@ -648,7 +656,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
+        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
             '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
             '`song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
@@ -660,10 +668,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
+                $results['object_cnt'] = $results['total_count'];
             }
             if (AmpConfig::get('show_skipped_times')) {
-                $results['skip_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
+                $results['skip_cnt'] = $results['total_skip'];
             }
 
             parent::add_to_cache('song', $song_id, $results);

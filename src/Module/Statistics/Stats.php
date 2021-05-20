@@ -149,12 +149,22 @@ class Stats
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
-            static::getUserActivityPoster()->post((int) $user, 'play', $type, (int) $object_id, (int) $date);
+        // the count was inserted
+        if ($db_results) {
+            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast_episode')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
+                $sql = "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
+                Dba::write($sql, array($object_id));
+                static::getUserActivityPoster()->post((int) $user, 'play', $type, (int) $object_id, (int) $date);
+            }
+            if (in_array($type, array('song', 'video', 'podcast_episode')) && $count_type === 'skip' && $user > 0 && $agent !== 'debug') {
+                $sql = "UPDATE `$type` SET `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+                Dba::write($sql, array($object_id));
+            }
         }
-
         if (!$db_results) {
             debug_event(self::class, 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
+
+            return false;
         }
 
         return true;
@@ -224,6 +234,37 @@ class Stats
 
         if (AmpConfig::get('cron_cache')) {
             $sql = "SELECT `count` AS `object_cnt` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
+        } else {
+            $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+            if ($threshold > 0) {
+                $date = time() - (86400 * (int)$threshold);
+                $sql .= "AND `date` >= '" . $date . "'";
+            }
+        }
+
+        $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int)$results['object_cnt'];
+    } // get_object_count
+
+    /**
+     * get_object_total
+     * Get count for an object
+     * @param string $object_type
+     * @param integer $object_id
+     * @param string $threshold
+     * @param string $count_type
+     * @return integer
+     */
+    public static function get_object_total($object_type, $object_id, $threshold = null, $count_type = 'stream')
+    {
+        if ($threshold === null || $threshold === '') {
+            $threshold = 0;
+        }
+
+        if (AmpConfig::get('cron_cache')) {
+            $sql = "SELECT `count_total` AS `object_cnt` FROM `object_total` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
         } else {
             $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
             if ($threshold > 0) {

@@ -149,13 +149,13 @@ class Update
         $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
         $version[]     = array('version' => '380012', 'description' => $update_string);
 
-        $update_string = "* Enable better podcast defaults<br /> * Increase copyright column size to fix issue #1861<br /> * Add name_track, name_artist, name_album to user_activity<br /> * Add mbid_track, mbid_artist, mbid_album to user_activity<br /> * Insert some decent SmartLists for a better default experience<br /> * Delete plex preferences from the server<br />";
+        $update_string = "* Enable better podcast defaults<br />* Increase copyright column size to fix issue #1861<br />* Add name_track, name_artist, name_album to user_activity<br />* Add mbid_track, mbid_artist, mbid_album to user_activity<br />* Insert some decent SmartLists for a better default experience<br />* Delete plex preferences from the server<br />";
         $version[]     = array('version' => '400000', 'description' => $update_string);
 
         $update_string = "* Update preferences for older users to match current subcategory items<br /> (~3.6 introduced subcategories but didn't include updates for existing users.<br /> This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates.<br /><br /> * Update album disk support to allow 1 instead of 0 by default.<br /> * Add barcode catalog_number and original_year to albums.<br /> * Drop catalog_number from song_data and use album instead.<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates.<br /><br />* Update album disk support to allow 1 instead of 0 by default.<br />* Add barcode catalog_number and original_year to albums.<br />* Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
 
         $update_string = "* Make sure preference names are updated to current strings<br />";
@@ -167,10 +167,10 @@ class Update
         $update_string = "* Add a last_count to search table to speed up access requests<br />";
         $version[]     = array('version' => '400005', 'description' => $update_string);
 
-        $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br /> * Drop localplay_shoutcast table if present.<br />";
+        $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />* Drop localplay_shoutcast table if present.<br />";
         $version[]     = array('version' => '400006', 'description' => $update_string);
 
-        $update_string = "* Add ui option for skip_count display.<br /> * Add ui option for displaying dates in a custom format.<br />";
+        $update_string = "* Add ui option for skip_count display.<br />* Add ui option for displaying dates in a custom format.<br />";
         $version[]     = array('version' => '400007', 'description' => $update_string);
 
         $update_string = "* Add system option for cron based cache and create related tables.<br />";
@@ -182,7 +182,7 @@ class Update
         $update_string = "* Add a last_duration to search table to speed up access requests<br />";
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> To allow negatives the maximum value of `song`.`track` has been reduced. This shouldn't affect anyone due to the large size allowed.<br /><br /> * Allow negative track numbers for albums. (-32,767 -> 32,767)<br /> * Truncate database tracks to 0 when greater than 32,767<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> To allow negatives the maximum value of `song`.`track` has been reduced. This shouldn't affect anyone due to the large size allowed.<br /><br />* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
         $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
@@ -221,7 +221,7 @@ class Update
         $update_string = "* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.<br/ > ";
         $version[]     = array('version' => '400023', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /> These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br /> * Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /> These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
 
         $update_string = "* Delete duplicate files in the song table<br />* Require `file` to be unique in song table<br />";
@@ -229,6 +229,9 @@ class Update
 
         $update_string = "* Add `release_status`, `addition_time`, `catalog` to album table<br />* Add `mbid`, `country` and `active` to label table<br />* Fill the album `catalog` value using the song table<br />* Fill the artist `album_count`, `album_group_count` and `song_count` values";
         $version[]     = array('version' => '500001', 'description' => $update_string);
+
+        $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
+        $version[]     = array('version' => '500002', 'description' => $update_string);
 
         return $version;
     }
@@ -1243,6 +1246,34 @@ class Update
         $retval &= Dba::write($sql);
         $sql    = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_500002
+     *
+     * Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
+     * Fill counts into the columns
+     */
+    public static function update_500002()
+    {
+        $retval = true;
+        // tables which usually calculate a count
+        $tables = ['album', 'artist', 'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "ALTER TABLE `$type` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+            $retval &= Dba::write($sql);
+            $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_count` = `object_count`.`total_count` WHERE `$type`.`total_count` != `object_count`.`total_count` AND `$type`.`id` = `object_count`.`object_id`;";
+            $retval &= Dba::write($sql);
+        }
+        // tables that also have a skip count
+        $tables = ['song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "ALTER TABLE `$type` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+            $retval &= Dba::write($sql);
+            $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;";
+            $retval &= Dba::write($sql);
+        }
 
         return $retval;
     }

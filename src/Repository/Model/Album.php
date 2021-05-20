@@ -171,6 +171,16 @@ class Album extends database_object implements library_item
     public $artist_count;
 
     /**
+     * @var integer $object_cnt
+     */
+    public $object_cnt;
+
+    /**
+     * @var integer $total_count
+     */
+    private $total_count;
+
+    /**
      * @var string $f_artist_name
      */
     public $f_artist_name;
@@ -287,7 +297,8 @@ class Album extends database_object implements library_item
 
         // Little bit of formatting here
         $this->full_name      = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
-        $this->total_duration = $this->time;
+        $this->total_duration = (int)$this->time;
+        $this->object_cnt     = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
 
         // Looking for other albums with same mbid, ordering by disk ascending
@@ -431,7 +442,9 @@ class Album extends database_object implements library_item
         $results['has_thumb'] = make_bool($art->thumb);
 
         if (AmpConfig::get('show_played_times')) {
-            $results['object_cnt'] = Stats::get_object_count('album', $this->id, $limit_threshold);
+            $results['object_cnt'] = (!empty($limit_threshold))
+                ? Stats::get_object_count('album', $this->id, $limit_threshold)
+                : $this->total_count;
         }
 
         parent::add_to_cache('album_extra', $this->id, $results);
