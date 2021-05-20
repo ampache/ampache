@@ -34,6 +34,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Video\ClipCreatorInterface;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
@@ -572,7 +573,7 @@ class Video extends database_object implements
                 case 'movie':
                     return Movie::insert($data, $gtypes, $options);
                 case 'clip':
-                    return Clip::insert($data, $gtypes, $options);
+                    return static::getClipCreator()->create($data);
                 case 'personal_video':
                     return Personal_Video::insert($data, $gtypes, $options);
                 default:
@@ -1169,5 +1170,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(ClipRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getClipCreator(): ClipCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(ClipCreatorInterface::class);
     }
 }

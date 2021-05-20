@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Artist\ArtistFinderInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -40,6 +39,8 @@ final class Clip extends Video
 
     private SongRepositoryInterface $songRepository;
 
+    private ArtistFinderInterface $artistFinder;
+
     /**
      * This pulls the clip information from the database and returns
      * a constructed object
@@ -48,14 +49,16 @@ final class Clip extends Video
         ClipRepositoryInterface $clipRepository,
         ModelFactoryInterface $modelFactory,
         SongRepositoryInterface $songRepository,
+        ArtistFinderInterface $artistFinder,
         int $id
     ) {
         parent::__construct($id);
 
         $this->clipRepository = $clipRepository;
-        $this->id             = $id;
         $this->modelFactory   = $modelFactory;
         $this->songRepository = $songRepository;
+        $this->artistFinder   = $artistFinder;
+        $this->id             = $id;
     }
 
     public function getId(): int
@@ -86,12 +89,33 @@ final class Clip extends Video
     }
 
     /**
-     * _get_artist_id
-     * Look-up an artist id from artist tag data... creates one if it doesn't exist already
+     * update
+     * This takes a key'd array of data as input and updates a clip entry
      * @param array $data
-     * @return integer|null
+     * @return integer
      */
-    private static function _get_artist_id($data)
+    public function update(array $data)
+    {
+        debug_event(self::class, 'update ' . print_r($data,true) , 5);
+        $artist_id = $this->findArtistId($data);
+        $song_id   = $this->songRepository->findBy($data);
+        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
+
+        $this->clipRepository->update(
+            $this->getId(),
+            $artist_id,
+            $song_id
+        );
+
+        return $this->id;
+    }
+
+    /**
+     * Look-up an artist id from artist tag data... creates one if it doesn't exist already
+     *
+     * @param array<string, mixed> $data
+     */
+    private function findArtistId(array $data): ?int
     {
         if (isset($data['artist_id']) && !empty($data['artist_id'])) {
             return $data['artist_id'];
@@ -104,53 +128,8 @@ final class Clip extends Video
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }
 
-        return static::getArtistFinder()->find($data['artist'], $artist_mbid);
-    } // _get_artist_id
-
-    /**
-     * create
-     * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return mixed
-     */
-    public static function insert(array $data, $gtypes = array(), $options = array())
-    {
-        debug_event(self::class, 'insert ' . print_r($data,true) , 5);
-        $artist_id = self::_get_artist_id($data);
-        $song_id   = static::getSongRepository()->findBy($data);
-        if (empty($song_id)) {
-            $song_id = null;
-        }
-        if ($artist_id || $song_id) {
-            debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
-            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " . "VALUES (?, ?, ?)";
-
-            Dba::write($sql, array($data['id'], $artist_id, $song_id));
-        }
-
-        return $data['id'];
-    } // create
-
-    /**
-     * update
-     * This takes a key'd array of data as input and updates a clip entry
-     * @param array $data
-     * @return integer
-     */
-    public function update(array $data)
-    {
-        debug_event(self::class, 'update ' . print_r($data,true) , 5);
-        $artist_id = self::_get_artist_id($data);
-        $song_id   = $this->songRepository->findBy($data);
-        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
-
-        $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($artist_id, $song_id, $this->id));
-
-        return $this->id;
-    } // update
+        return $this->artistFinder->find($data['artist'], $artist_mbid);
+    }
 
     /**
      * format
@@ -186,7 +165,7 @@ final class Clip extends Video
 
     private function getArtist(): ?Artist
     {
-        if ($this->getArtist()) {
+        if ($this->getArtistId()) {
             $artist = $this->modelFactory->createArtist($this->getArtistId());
             $artist->format();
 
@@ -234,25 +213,5 @@ final class Clip extends Video
         }
 
         return null;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getArtistFinder(): ArtistFinderInterface
-    {
-        global $dic;
-
-        return $dic->get(ArtistFinderInterface::class);
     }
 }

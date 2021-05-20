@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Video\ClipCreatorInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BroadcastRepositoryInteface;
 use Ampache\Repository\ClipRepositoryInterface;
@@ -313,6 +314,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(ClipRepositoryInterface::class),
             $this,
             $this->dic->get(SongRepositoryInterface::class),
+            $this->dic->get(ClipCreatorInterface::class),
             $clipId
         );
     }

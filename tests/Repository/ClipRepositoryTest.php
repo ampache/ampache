@@ -89,4 +89,20 @@ class ClipRepositoryTest extends MockeryTestCase
             $this->subject->getDataById($clipId)
         );
     }
+
+    public function testUpdateUpdates(): void
+    {
+        $clipId   = 666;
+        $artistId = 42;
+        $songId   = 33;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?',
+                [$artistId, $songId, $clipId]
+            )
+            ->once();
+
+        $this->subject->update($clipId, $artistId, $songId);
+    }
 }

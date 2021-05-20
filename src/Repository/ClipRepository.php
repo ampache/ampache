@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Dba;
 use Doctrine\DBAL\Connection;
 
 final class ClipRepository implements ClipRepositoryInterface
@@ -57,5 +58,16 @@ final class ClipRepository implements ClipRepositoryInterface
         }
 
         return $result;
+    }
+
+    public function update(
+        int $clipId,
+        ?int $artistId,
+        ?int $songId
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?',
+            [$artistId, $songId, $clipId]
+        );
     }
 }

@@ -19,20 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Video;
 
-interface ClipRepositoryInterface
+interface ClipCreatorInterface
 {
-    public function collectGarbage(): void;
-
     /**
-     * @return array<string, mixed>
+     * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
+     *
+     * @param array<string, mixed> $data
      */
-    public function getDataById(int $clipId): array;
-
-    public function update(
-        int $clipId,
-        ?int $artistId,
-        ?int $songId
-    ): void;
+    public function create(array $data): int;
 }

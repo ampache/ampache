@@ -28,4 +28,5 @@ use function DI\autowire;
 
 return [
     VideoFromTagUpdaterInterface::class => autowire(VideoFromTagUpdater::class),
+    ClipCreatorInterface::class => autowire(ClipCreator::class),
 ];

@@ -22800,32 +22800,12 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:_get_artist_id\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:format\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
