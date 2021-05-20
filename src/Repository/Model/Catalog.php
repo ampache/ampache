@@ -2928,7 +2928,6 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog($options);
-
                         }
                     }
                     Album::update_album_artist();
