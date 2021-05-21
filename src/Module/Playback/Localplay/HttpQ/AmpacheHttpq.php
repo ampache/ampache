@@ -104,8 +104,8 @@ class AmpacheHttpq extends localplay_controller
      */
     public function uninstall()
     {
-        $sql        = "DROP TABLE `localplay_httpq`";
-        $db_results = Dba::write($sql);
+        $sql = "DROP TABLE `localplay_httpq`";
+        Dba::write($sql);
 
         // Remove the pref we added for this
         Preference::delete('httpq_active');
@@ -141,9 +141,8 @@ class AmpacheHttpq extends localplay_controller
     public function delete_instance($uid)
     {
         $uid = Dba::escape($uid);
-
-        $sql        = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
+        Dba::write($sql);
 
         return true;
     } // delete_instance
@@ -182,8 +181,8 @@ class AmpacheHttpq extends localplay_controller
         $name = Dba::escape($data['name']);
         $pass = Dba::escape($data['password']);
 
-        $sql        = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
+        Dba::write($sql);
 
         return true;
     } // update_instance

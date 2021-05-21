@@ -576,6 +576,7 @@ class Catalog_local extends Catalog
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
+        Catalog::update_counts();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
 
@@ -633,7 +634,6 @@ class Catalog_local extends Catalog
             }
             unset($info);
         }
-        Catalog::update_counts();
 
         Ui::update_text('verify_count_' . $this->id, $count);
 
@@ -648,8 +648,7 @@ class Catalog_local extends Catalog
     public function clean_catalog_proc()
     {
         if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable
-            // catalog root.
+            // First sanity check; no point in proceeding with an unreadable catalog root.
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
             echo AmpError::display('general');
@@ -672,7 +671,6 @@ class Catalog_local extends Catalog
             }
 
             $dead_count = count($dead);
-            // The AlmightyOatmeal sanity check
             // Check for unmounted path
             if (!file_exists($this->path)) {
                 if ($dead_count >= $total) {
@@ -683,8 +681,8 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql        = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
-                $db_results = Dba::write($sql);
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
+                Dba::write($sql);
             }
         }
 

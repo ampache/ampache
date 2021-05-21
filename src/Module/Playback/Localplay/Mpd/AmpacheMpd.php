@@ -105,8 +105,8 @@ class AmpacheMpd extends localplay_controller
      */
     public function uninstall()
     {
-        $sql        = "DROP TABLE `localplay_mpd`";
-        $db_results = Dba::write($sql);
+        $sql = "DROP TABLE `localplay_mpd`";
+        Dba::write($sql);
 
         Preference::delete('mpd_active');
 
@@ -206,9 +206,8 @@ class AmpacheMpd extends localplay_controller
         $port = $data['port'] ? Dba::escape($data['port']) : '6600';
         $name = Dba::escape($data['name']);
         $pass = Dba::escape($data['password']);
-
-        $sql        = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-        $db_results = Dba::write($sql);
+        $sql  = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
+        Dba::write($sql);
 
         return true;
     } // update_instance
