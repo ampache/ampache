@@ -63,7 +63,7 @@
         "james-heinrich/getid3": "dev-master",
         "js-cookie/js-cookie": "2.*",
         "jwilsson/spotify-web-api-php": "^4.2",
-        "krixon/xbmc-php-rpc": "dev-master",
+        "usox/xbmc-php-rpc": "dev-master",
         "kumailht/responsive-elements": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "laminas/laminas-httphandlerrunner": "^1.3",
@@ -71,7 +71,7 @@
         "maennchen/zipstream-php": "0.4.*",
         "mikealmond/musicbrainz": "dev-master",
         "moinax/tvdb": "1.*",
-        "mptre/php-soundcloud": "2.*",
+        "symphonic/soundcloud": "dev-master",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
         "oomphinc/composer-installers-extender": "^2.0",
@@ -103,33 +103,6 @@
     },
     "repositories":
     [
-        {
-            "type": "package",
-            "package": {
-                "name": "mptre/php-soundcloud",
-                "version": "2.3.2",
-                "source": {
-                    "url": "https://github.com/mptre/php-soundcloud.git",
-                    "type": "git",
-                    "reference": "v2.3.2"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "krixon/xbmc-php-rpc",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/krixon/xbmc-php-rpc.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "autoload": {
-                    "classmap": ["."]
-                }
-            }
-        },
         {
             "type": "package",
             "package": {
