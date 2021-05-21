@@ -55,8 +55,6 @@ class Democratic extends Tmp_Playlist
     // Build local, buy local
     public $tmp_playlist;
     public $object_ids = array();
-    public $vote_ids   = array();
-    public $user_votes = array();
 
     /**
      * constructor
