@@ -11475,31 +11475,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Call to method getMessage\\(\\) on an unknown class XBMC_RPC_ConnectionException\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Call to method getMessage\\(\\) on an unknown class XBMC_RPC_Exception\\.$#"
-			count: 17
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Caught class XBMC_RPC_ConnectionException not found\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Caught class XBMC_RPC_Exception not found\\.$#"
-			count: 17
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: "#^Instantiated class XBMC_RPC_HTTPClient not found\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:add_instance\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
