@@ -26,6 +26,10 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 
 /** @var UiInterface $ui */
+/** @var string $feedUrl */
+/** @var int $catalogId */
+/** @var string $verificationSnippet */
+
 ?>
 <?php Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">

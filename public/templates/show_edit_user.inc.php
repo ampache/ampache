@@ -28,6 +28,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var User $client */
+/** @var string $apiKeyQrCode */
 
 ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>

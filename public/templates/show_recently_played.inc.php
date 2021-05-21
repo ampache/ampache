@@ -29,6 +29,9 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var User $user */
+/** @var int $user_id */
+
 $my_id    = (isset($client)) ? $user_id : $user->id;
 $link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) :  '';
 $is_admin = Access::check('interface', 100);

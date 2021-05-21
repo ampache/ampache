@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 
 /** @var CatalogLoaderInterface $catalogLoader */
+/** @var string[] $catalogs */
 
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->

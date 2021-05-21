@@ -24,11 +24,9 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
-use Psr\Container\ContainerInterface;
 
 /** @var Browse $browse */
 /** @var int[] $object_ids */
-/** @var ContainerInterface $dic */
 
 global $dic;
 $modelFactory = $dic->get(ModelFactoryInterface::class);

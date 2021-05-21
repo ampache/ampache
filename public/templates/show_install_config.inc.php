@@ -38,6 +38,8 @@ if (empty($local_pass)) {
     $local_pass = scrub_out($_REQUEST['local_pass']);
 }
 
+/** @var string $web_path */
+
 require __DIR__ . '/install_header.inc.php'; ?>
         <div class="jumbotron" style="margin-top: 70px">
             <h1><?php echo T_('Install Progress'); ?></h1>

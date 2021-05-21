@@ -25,6 +25,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Browse;
+
+/** @var Browse $browse */
 
 ?>
 <?php Ui::show_box_top(T_('Options'), 'info-box'); ?>

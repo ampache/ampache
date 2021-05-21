@@ -30,6 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var User $client */
+/** @var string $apiKeyQrCode */
 
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>

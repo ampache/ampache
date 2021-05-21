@@ -21,6 +21,9 @@
  */
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\Browse;
+
+/** @var Browse $browse */
 
 ?>
 <th class="cel_episode optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow_episode&sort=episode', T_('Episode'), 'sort_video_episode'); ?></th>

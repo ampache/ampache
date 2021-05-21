@@ -24,6 +24,13 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ShoutboxInterface;
+
+/** @var null|string $data */
+/** @var ShoutboxInterface[] $shouts */
+/** @var int $object_id */
+/** @var string $object_type */
+/** @var string $object_title */
 
 ?>
 <div>
@@ -52,7 +59,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
-        <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
+        <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" /></td>
@@ -65,7 +72,7 @@ $boxtitle = T_('Post to Shoutbox');
 } ?>
 <div style="display: inline;">
 <?php
-$boxtitle = $object->f_title . ' ' . T_('Shoutbox');
+$boxtitle = $object_title . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 if (count($shouts)) {

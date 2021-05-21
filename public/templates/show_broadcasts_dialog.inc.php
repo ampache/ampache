@@ -21,7 +21,6 @@
  */
 
 use Ampache\Repository\BroadcastRepositoryInteface;
-use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 

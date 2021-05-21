@@ -20,4 +20,8 @@
  *
  */
 
+/** @var Playlist $playlist */
+
+use Ampache\Repository\Model\Playlist;
+
 echo $playlist->f_type . ' ' . $playlist->name . ' (' . T_('Playlist') . ')';

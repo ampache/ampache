@@ -22,6 +22,9 @@
 
 use Ampache\Module\Api\Ajax;
 
+/** @var string $refresh_limit */
+/** @var string $ajax_url */
+
 ?>
 
 <script>

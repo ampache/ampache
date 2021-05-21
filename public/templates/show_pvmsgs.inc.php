@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 
 global $dic;
-/** @var int[] $option_ids */
+/** @var int[] $object_ids */
 /** @var Browse $browse */
 /** @var ModelFactoryInterface $modelFactory */
 $modelFactory = $dic->get(ModelFactoryInterface::class);

@@ -21,15 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
 
 /** @var string $web_path */
 /** @var int[] $object_ids */

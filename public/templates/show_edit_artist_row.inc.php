@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 

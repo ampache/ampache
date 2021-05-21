@@ -21,6 +21,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\WantedInterface;
+
+/** @var WantedInterface[] $walbums */
 
 ?>
 <?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
@@ -38,7 +41,7 @@ use Ampache\Module\Util\Ui;
         <?php
         if ($walbums) {
             foreach ($walbums as $libitem) { ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>">
+        <tr id="walbum_<?php echo $libitem->getMusicBrainzId(); ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php

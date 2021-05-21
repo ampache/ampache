@@ -20,12 +20,15 @@
  *
  */
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $libitem */
 /** @var User $client */
+/** @var library_item $object */
+/** @var string $web_path */
 ?>
 <tr id="flagged_<?php echo $libitem->getId(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>

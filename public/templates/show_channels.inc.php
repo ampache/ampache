@@ -24,6 +24,9 @@ use Ampache\Repository\Model\Channel;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var \Ampache\Repository\Model\Browse $browse */
+/** @var int[] $object_ids */
+
 ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

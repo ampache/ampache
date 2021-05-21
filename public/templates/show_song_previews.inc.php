@@ -21,6 +21,9 @@
  */
 
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song_Preview;
+
+/** @var Song_Preview[] $object_ids */
 
 ?>
 <table class="tabledata striped-rows">

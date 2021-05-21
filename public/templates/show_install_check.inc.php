@@ -19,7 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-require __DIR__ . '/install_header.inc.php'; ?>
+require __DIR__ . '/install_header.inc.php';
+
+/** @var string $web_path */
+
+?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>

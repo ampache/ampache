@@ -22,6 +22,9 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Video;
+
+/** @var Video $working_user */
 
 ?>
 <?php /* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>

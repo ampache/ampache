@@ -24,6 +24,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
+/** @var \Ampache\Module\Playback\Localplay\LocalPlay $localplay */
+
 $status      = $localplay->status();
 $now_playing = $status['track_title'];
 if (!empty($status['track_album'])) {

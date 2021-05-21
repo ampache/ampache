@@ -25,6 +25,10 @@ use Ampache\Repository\Model\Channel;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
+
+/** @var database_object&library_item $object */
 
 ?>
 <?php Ui::show_box_top(T_('Create Channel'), 'box box_add_channel'); ?>
@@ -34,7 +38,13 @@ use Ampache\Module\Util\Ui;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Stream Source'); ?></td>
-    <td><?php echo $object->f_link; ?></td>
+    <td><?php
+        if (property_exists($object, 'f_link')) {
+            echo $object->f_link;
+        } else {
+            echo $object->getLinkFormatted();
+        }
+        ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Name'); ?></td>

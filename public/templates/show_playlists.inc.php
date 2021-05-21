@@ -21,12 +21,16 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var Browse $browse */
+/** @var int[] $object_ids */
 
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css

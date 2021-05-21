@@ -21,10 +21,13 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+
+/** @var Browse $browse */
 
 ?>
 <div id="information_actions">

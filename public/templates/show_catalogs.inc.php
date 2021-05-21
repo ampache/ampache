@@ -20,8 +20,12 @@
  *
  */
 
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
+
+/** @var Browse $browse */
+/** @var int[] $object_ids */
 
 ?>
 <?php if ($browse->is_show_header()) {

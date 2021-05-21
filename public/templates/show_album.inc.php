@@ -25,7 +25,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
@@ -43,6 +42,7 @@ $web_path = AmpConfig::get('web_path');
 
 /** @var Album $album */
 /** @var AlbumRepositoryInterface $albumRepository */
+/** @var bool $isAlbumEditable */
 
 // Title for this album
 $title = scrub_out($album->full_name);

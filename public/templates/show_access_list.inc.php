@@ -26,6 +26,8 @@ use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
+/** @var AccessListItemInterface[] $list */
+
 ?>
 <?php Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
@@ -65,7 +67,6 @@ $addlocal   = T_('Add Local Network Definition'); ?>
 <tbody>
 <?php
     /* Start foreach List Item */
-    /** @var AccessListItemInterface $access $access */
     foreach ($list as $access) {
         ?>
 <tr>

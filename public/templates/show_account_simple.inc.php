@@ -26,8 +26,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-/** @var \Ampache\Repository\Model\User $client */
+/** @var User $client */
+/** @var string $apiKeyQrCode $display_fields */
+
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">

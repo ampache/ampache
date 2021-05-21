@@ -30,6 +30,8 @@ $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
 $limit     = AmpConfig::get('popular_threshold', 10);
 
+/** @var string $object_type */
+
 require_once Ui::find_template('show_mashup_browse_form.inc.php');
 Ui::show_box_top(T_('Trending'));
 $object_ids = Stats::get_top($object_type, $limit, $threshold);

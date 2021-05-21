@@ -21,10 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 
+/** @var int[] $artists */
 /** @var ModelFactoryInterface $modelFactory */
 global $dic;
 $modelFactory = $dic->get(ModelFactoryInterface::class);

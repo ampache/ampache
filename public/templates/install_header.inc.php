@@ -19,6 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+/** @var string $htmllang */
+/** @var string $charset */
  ?>
 <?php if (!defined('INSTALL')) {
      return false;

@@ -23,6 +23,9 @@
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
+/** @var string $htmllang */
+/** @var string $dir */
+/** @var string $redirect_url */
 ?>
 <?php
 $t_ampache = T_('Ampache'); ?>

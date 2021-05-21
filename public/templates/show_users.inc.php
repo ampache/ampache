@@ -21,11 +21,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
+
+/** @var Browse $browse */
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {

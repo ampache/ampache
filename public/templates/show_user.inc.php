@@ -21,6 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
@@ -28,13 +34,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\User\Activity\UserActivityRendererInterface;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\UseractivityInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 

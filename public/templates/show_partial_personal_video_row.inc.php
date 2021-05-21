@@ -18,5 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+/** @var Personal_Video $libitem */
+
+use Ampache\Repository\Model\Personal_Video;
+
+?>
 <td class="cel_location"><?php echo $libitem->f_location; ?></td>

@@ -26,6 +26,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
 
+/** @var Browse $browse */
+
 if (!Core::is_session_started()) {
     session_start();
 } ?>
@@ -68,7 +70,7 @@ if (!Core::is_session_started()) {
     <?php if (in_array('object_type', $allowed_filters)) { ?>
         <?php $string     = 'otype_' . $browse->get_filter('object_type');
         ${$string}        = 'selected="selected"'; ?>
-        <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
+        <input id="typeSongRadio" type="radio" name="object_type" value="1" />
         <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
         <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
         <input id="typeAlbumRadio" type="radio" name="object_type" value="1" />

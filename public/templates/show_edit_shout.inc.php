@@ -21,12 +21,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $shout */
 /** @var User $client */
+/** @var library_item $object */
 
 ?>
 <?php Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>

@@ -27,8 +27,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Label;
 
-/** @var \Ampache\Repository\Model\Label $label */
+/** @var Label $label */
 /** @var string $object_type */
 /** @var int[] $object_ids */
 /** @var bool $isLabelEditable */

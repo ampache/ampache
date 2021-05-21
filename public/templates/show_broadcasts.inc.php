@@ -27,6 +27,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 
 /** @var Browse $browse */
 /** @var ModelFactoryInterface $modelFactory */
+/** @var int[] $object_ids */
 
 global $dic;
 $modelFactory = $dic->get(ModelFactoryInterface::class);

@@ -26,7 +26,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
