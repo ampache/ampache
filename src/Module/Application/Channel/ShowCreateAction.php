@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Channel;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\Model\Channel;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -46,14 +47,18 @@ final class ShowCreateAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ChannelRepositoryInterface $channelRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ChannelRepositoryInterface $channelRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->channelRepository = $channelRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,6 +77,9 @@ final class ShowCreateAction implements ApplicationActionInterface
             );
             if ($object->id) {
                 $object->format();
+
+                $newPort = $this->channelRepository->getNextPort(Channel::DEFAULT_PORT);
+
                 require_once Ui::find_template('show_add_channel.inc.php');
             }
         }

@@ -27,7 +27,7 @@ namespace Ampache\Module\Application\Channel;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -102,7 +102,7 @@ class DeleteActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $channel    = $this->mock(Channel::class);
+        $channel    = $this->mock(ChannelInterface::class);
 
         $channelId = 666;
         $webPath   = 'some-web-path';

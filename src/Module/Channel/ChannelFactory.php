@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Channel;
 
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\ChannelRepositoryInterface;
+use Ampache\Repository\Model\ChannelInterface;
 use Psr\Log\LoggerInterface;
 
 final class ChannelFactory implements ChannelFactoryInterface
@@ -33,20 +34,33 @@ final class ChannelFactory implements ChannelFactoryInterface
 
     private CatalogLoaderInterface $catalogLoader;
 
+    private ChannelRepositoryInterface $channelRepository;
+
     public function __construct(
         LoggerInterface $logger,
-        CatalogLoaderInterface $catalogLoader
+        CatalogLoaderInterface $catalogLoader,
+        ChannelRepositoryInterface $channelRepository
     ) {
-        $this->logger        = $logger;
-        $this->catalogLoader = $catalogLoader;
+        $this->logger            = $logger;
+        $this->catalogLoader     = $catalogLoader;
+        $this->channelRepository = $channelRepository;
     }
 
     public function createChannelStreamer(
-        Channel $channel
+        ChannelInterface $channel
     ): ChannelStreamerInterface {
         return new ChannelStreamer(
             $this->logger,
             $this->catalogLoader,
+            $channel
+        );
+    }
+
+    public function createChannelManager(
+        ChannelInterface $channel
+    ): ChannelManagerInterface {
+        return new ChannelManager(
+            $this->channelRepository,
             $channel
         );
     }

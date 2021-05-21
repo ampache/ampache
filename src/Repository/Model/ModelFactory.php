@@ -25,12 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Video\ClipCreatorInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -157,8 +159,13 @@ final class ModelFactory implements ModelFactoryInterface
 
     public function createChannel(
         int $channelId
-    ): Channel {
-        return new Channel($channelId);
+    ): ChannelInterface {
+        return new Channel(
+            $this->dic->get(ChannelFactoryInterface::class),
+            $this->dic->get(TagListUpdaterInterface::class),
+            $this->dic->get(ChannelRepositoryInterface::class),
+            $channelId
+        );
     }
 
     public function createPodcast(
@@ -349,6 +356,7 @@ final class ModelFactory implements ModelFactoryInterface
                 Label::class => fn (int $objectId): Label => $this->createLabel($objectId),
                 Broadcast::class => fn (int $objectId): BroadcastInterface => $this->createBroadcast($objectId),
                 Clip::class => fn (int $objectId): Clip => $this->createClip($objectId),
+                Channel::class => fn (int $objectId): ChannelInterface => $this->createChannel($objectId),
             ];
         }
 

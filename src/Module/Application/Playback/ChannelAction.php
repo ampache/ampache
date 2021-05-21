@@ -26,16 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playback;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Channel;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,12 +47,16 @@ final class ChannelAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
+        $this->modelFactory          = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,8 +65,8 @@ final class ChannelAction implements ApplicationActionInterface
 
         set_time_limit(0);
 
-        $channel = new Channel((int) Core::get_request('channel'));
-        if (!$channel->id) {
+        $channel = $this->modelFactory->createChannel((int) Core::get_request('channel'));
+        if ($channel->isNew()) {
             debug_event('channel/index', 'Unknown channel.', 1);
 
             return null;

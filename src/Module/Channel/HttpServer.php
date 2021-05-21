@@ -28,6 +28,7 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 use RuntimeException;
 
 final class HttpServer implements HttpServerInterface
@@ -45,9 +46,10 @@ final class HttpServer implements HttpServerInterface
     }
 
     public function serve(
+        ChannelManagerInterface $channelManager,
         ChannelStreamerInterface $channelStreamer,
         Interactor $interactor,
-        Channel $channel,
+        ChannelInterface $channel,
         array &$client_socks,
         array &$stream_clients,
         array &$read_socks,
@@ -55,7 +57,7 @@ final class HttpServer implements HttpServerInterface
     ): void {
         $data = fread($sock, 1024);
         if (!$data) {
-            $this->disconnect($interactor, $channel, $client_socks, $stream_clients, $sock);
+            $this->disconnect($channelManager, $interactor, $channel, $client_socks, $stream_clients, $sock);
 
             return;
         }
@@ -308,8 +310,9 @@ final class HttpServer implements HttpServerInterface
     }
 
     public function disconnect(
+        ChannelManagerInterface $channelManager,
         Interactor $interactor,
-        Channel $channel,
+        ChannelInterface $channel,
         array &$client_socks,
         array &$stream_clients,
         $sock
@@ -320,7 +323,8 @@ final class HttpServer implements HttpServerInterface
         if (fclose($sock) === false) {
             throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
         }
-        $channel->update_listeners(count($client_socks));
+
+        $channelManager->updateListeners(count($client_socks));
         debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);
 
         $interactor->info('Client disconnected', true);

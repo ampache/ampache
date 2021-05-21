@@ -22,10 +22,16 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\ChannelInterface;
+
 interface ChannelRepositoryInterface
 {
     /**
      * @return array<string, mixed>
      */
     public function getDataById(int $channelId): array;
+
+    public function getNextPort(int $defaultPort): int;
+
+    public function delete(ChannelInterface $channel): void;
 }

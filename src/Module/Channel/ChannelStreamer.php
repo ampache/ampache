@@ -28,7 +28,7 @@ use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Psr\Log\LoggerInterface;
@@ -39,7 +39,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
 
     private CatalogLoaderInterface $catalogLoader;
 
-    private Channel $channel;
+    private ChannelInterface $channel;
 
     private int $chunk_size = 4096;
 
@@ -72,7 +72,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
     public function __construct(
         LoggerInterface $logger,
         CatalogLoaderInterface $catalogLoader,
-        Channel $channel
+        ChannelInterface $channel
     ) {
         $this->logger        = $logger;
         $this->catalogLoader = $catalogLoader;

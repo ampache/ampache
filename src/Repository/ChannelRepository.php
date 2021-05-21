@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ChannelInterface;
 use Doctrine\DBAL\Connection;
 
 final class ChannelRepository implements ChannelRepositoryInterface
@@ -52,5 +54,25 @@ final class ChannelRepository implements ChannelRepositoryInterface
 
         return $dbResults;
     }
-}
 
+    public function getNextPort(int $defaultPort): int
+    {
+        $maxPort = $this->database->fetchOne(
+            'SELECT MAX(`port`) AS `max_port` FROM `channel`',
+        );
+
+        if ($maxPort !== false) {
+            return ((int) $maxPort + 1);
+        }
+
+        return $defaultPort;
+    }
+
+    public function delete(ChannelInterface $channel): void
+    {
+        $this->database->executeQuery(
+            'DELETE FROM `channel` WHERE `id` = ?',
+            [$channel->getId()]
+        );
+    }
+}

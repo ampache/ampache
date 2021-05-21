@@ -8605,11 +8605,6 @@ parameters:
 			path: src/Module/Channel/ChannelRunner.php
 
 		-
-			message: "#^Parameter \\#1 \\$start_date of method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update_start\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|null given\\.$#"
 			count: 2
 			path: src/Module/Channel/ChannelRunner.php
@@ -8636,16 +8631,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$str of function fwrite expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
-			message: "#^Parameter \\#3 \\$port of method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update_start\\(\\) expects string, int\\|null given\\.$#"
-			count: 1
-			path: src/Module/Channel/ChannelRunner.php
-
-		-
-			message: "#^Parameter \\#4 \\$pid of method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update_start\\(\\) expects string, int\\|false given\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelRunner.php
 
@@ -22590,11 +22575,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) has parameter \\$interface with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
@@ -22650,27 +22630,7 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:start_channel\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:stop_channel\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update_listeners\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:update_start\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
@@ -22690,99 +22650,64 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$bitrate has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:display_art\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$description has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:format\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$fixed_endpoint has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$id has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$interface has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_medias\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$is_private has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_transcode_settings\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$listeners has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:search_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$loop has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:set_played\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$max_listeners has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$name has no typehint specified\\.$#"
+			message: "#^PHPDoc tag @param has invalid value \\(\\$player\\)\\: Unexpected token \"\\$player\", expected type at offset 40$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$object_id has no typehint specified\\.$#"
+			message: "#^PHPDoc tag @param has invalid value \\(\\$target\\)\\: Unexpected token \"\\$target\", expected type at offset 18$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$object_type has no typehint specified\\.$#"
+			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
 			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$peak_listeners has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$pid has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$port has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$random has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$start_date has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$stream_type has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:\\$url has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
+			path: src/Repository/Model/ChannelInterface.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:format\\(\\) has no return typehint specified\\.$#"
@@ -23255,7 +23180,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
@@ -23290,7 +23215,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip\\)\\.$#"
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Channel' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 

@@ -24,20 +24,20 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
@@ -1212,7 +1212,7 @@ class Ui implements UiInterface
     }
 
     public static function getChannelActionButtons(
-        Channel $item
+        ChannelInterface $item
     ): string {
         $result = '';
 

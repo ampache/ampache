@@ -20,12 +20,18 @@
  *
  */
 
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Channel;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
-/** @var \Ampache\Repository\Model\Browse $browse */
+/** @var Browse $browse */
 /** @var int[] $object_ids */
+/** @var ModelFactoryInterface $modelFactory */
+
+global $dic;
+$modelFactory = $dic->get(ModelFactoryInterface::class);
 
 ?>
 <?php if ($browse->is_show_header()) {
@@ -54,9 +60,8 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         foreach ($object_ids as $channel_id) {
-            $libitem = new Channel($channel_id);
-            $libitem->format(); ?>
-        <tr id="channel_row_<?php echo $libitem->id; ?>">
+            $libitem = $modelFactory->createChannel($channel_id); ?>
+        <tr id="channel_row_<?php echo $libitem->getId(); ?>">
             <?php require Ui::find_template('show_channel_row.inc.php'); ?>
         </tr>
         <?php

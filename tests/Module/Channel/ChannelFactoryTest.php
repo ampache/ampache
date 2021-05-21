@@ -25,7 +25,8 @@ namespace Ampache\Module\Channel;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\ChannelRepositoryInterface;
+use Ampache\Repository\Model\ChannelInterface;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 
@@ -35,16 +36,20 @@ class ChannelFactoryTest extends MockeryTestCase
 
     private MockInterface $catalogLoader;
 
+    private MockInterface $channelRepository;
+
     private ChannelFactory $subject;
 
     public function setUp(): void
     {
-        $this->logger        = $this->mock(LoggerInterface::class);
-        $this->catalogLoader = $this->mock(CatalogLoaderInterface::class);
+        $this->logger            = $this->mock(LoggerInterface::class);
+        $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
+        $this->channelRepository = $this->mock(ChannelRepositoryInterface::class);
 
         $this->subject = new ChannelFactory(
             $this->logger,
-            $this->catalogLoader
+            $this->catalogLoader,
+            $this->channelRepository
         );
     }
 
@@ -53,7 +58,17 @@ class ChannelFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             ChannelStreamerInterface::class,
             $this->subject->createChannelStreamer(
-                $this->mock(Channel::class)
+                $this->mock(ChannelInterface::class)
+            )
+        );
+    }
+
+    public function testCreateChannelManagerReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            ChannelManagerInterface::class,
+            $this->subject->createChannelManager(
+                $this->mock(ChannelInterface::class)
             )
         );
     }

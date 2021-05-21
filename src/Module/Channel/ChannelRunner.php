@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Channel;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 final class ChannelRunner implements ChannelRunnerInterface
 {
@@ -33,12 +33,16 @@ final class ChannelRunner implements ChannelRunnerInterface
 
     private ChannelFactoryInterface $channelFactory;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         HttpServerInterface $httpServer,
-        ChannelFactoryInterface $channelFactory
+        ChannelFactoryInterface $channelFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->httpServer     = $httpServer;
         $this->channelFactory = $channelFactory;
+        $this->modelFactory   = $modelFactory;
     }
 
     public function run(
@@ -50,8 +54,8 @@ final class ChannelRunner implements ChannelRunnerInterface
 
         $start_date = time();
 
-        $channel = new Channel($channelId);
-        if (!$channel->id) {
+        $channel = $this->modelFactory->createChannel($channelId);
+        if ($channel->isNew()) {
             $interactor->error(
                 sprintf('Unknown channel id `%d`', $channelId),
                 true
@@ -91,6 +95,8 @@ final class ChannelRunner implements ChannelRunnerInterface
             }
         }
 
+        $channelManager = $this->channelFactory->createChannelManager($channel);
+
         ob_start();
 
         $server_uri = 'tcp://' . $address . ':' . $portNumber;
@@ -103,7 +109,7 @@ final class ChannelRunner implements ChannelRunnerInterface
 
             return;
         }
-        $channel->update_start($start_date, $address, $portNumber, getmypid());
+        $channelManager->updateStart($start_date, $address, (int) $portNumber, (int) getmypid());
 
         $interactor->info(
             sprintf('Listening on `%s:%d`', $address, $portNumber),
@@ -135,7 +141,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                     if ($new_client) {
                         debug_event('channel_run', 'Connection accepted from ' . stream_socket_get_name($new_client, true) . '.', 5);
                         $client_socks[] = $new_client;
-                        $channel->update_listeners(count($client_socks), true);
+                        $channelManager->updateListeners(count($client_socks), true);
                         debug_event('channel_run', 'Now there are total ' . count($client_socks) . ' clients.', 4);
 
                         $interactor->info('Client connected', true);
@@ -151,6 +157,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                 foreach ($read_socks as $sock) {
                     // Handle data parse
                     $this->httpServer->serve(
+                        $channelManager,
                         $channelStreamer,
                         $interactor,
                         $channel,
@@ -229,7 +236,14 @@ final class ChannelRunner implements ChannelRunnerInterface
                         $clchunk = $chunk;
 
                         if (!is_resource($sock)) {
-                            $this->httpServer->disconnect($interactor, $channel, $client_socks, $stream_clients, $sock);
+                            $this->httpServer->disconnect(
+                                $channelManager,
+                                $interactor,
+                                $channel,
+                                $client_socks,
+                                $stream_clients,
+                                $sock
+                            );
                             continue;
                         }
 
@@ -295,7 +309,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                         //debug_event('channel_run', 'Client stream current length: ' . $client['length'], 5);
                     }
                 } else {
-                    $channel->update_listeners(0);
+                    $channelManager->updateListeners(0);
                     debug_event('channel_run', 'No more data, stream ended.', 4);
                     die('No more data, stream ended');
                 }

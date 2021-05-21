@@ -17,33 +17,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Channel;
 
-use Ahc\Cli\IO\Interactor;
-use Ampache\Repository\Model\ChannelInterface;
-
-interface HttpServerInterface
+interface ChannelManagerInterface
 {
-    public function serve(
-        ChannelManagerInterface $channelManager,
-        ChannelStreamerInterface $channelStreamer,
-        Interactor $interactor,
-        ChannelInterface $channel,
-        array &$client_socks,
-        array &$stream_clients,
-        array &$read_socks,
-        $sock
+    public function updateListeners(
+        int $listeners,
+        bool $addition = false
     ): void;
 
-    public function disconnect(
-        ChannelManagerInterface $channelManager,
-        Interactor $interactor,
-        ChannelInterface $channel,
-        array &$client_socks,
-        array &$stream_clients,
-        $sock
+    public function updateStart(
+        int $start_date,
+        string $address,
+        int $port,
+        int $pid
     ): void;
+
+    public function startChannel(): void;
+
+    public function stopChannel(): void;
+
+    public function checkChannel(): bool;
 }

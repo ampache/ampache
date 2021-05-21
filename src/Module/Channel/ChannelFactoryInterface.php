@@ -21,9 +21,15 @@
 
 namespace Ampache\Module\Channel;
 
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 
 interface ChannelFactoryInterface
 {
-    public function createChannelStreamer(Channel $channel): ChannelStreamerInterface;
+    public function createChannelStreamer(
+        ChannelInterface $channel
+    ): ChannelStreamerInterface;
+
+    public function createChannelManager(
+        ChannelInterface $channel
+    ): ChannelManagerInterface;
 }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\ChannelInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\playable_item;
@@ -56,7 +56,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsLibraryItemReturnsTrueIfImplemented(): void
     {
-        $instance = Mockery::mock(Channel::class, library_item::class);
+        $instance = Mockery::mock(ChannelInterface::class, library_item::class);
 
         static::assertTrue(
             InterfaceImplementationChecker::is_library_item(get_class($instance))
@@ -74,7 +74,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsMediaReturnsTrueIfImplemented(): void
     {
-        $instance = Mockery::mock(Channel::class, Media::class);
+        $instance = Mockery::mock(ChannelInterface::class, Media::class);
 
         static::assertTrue(
             InterfaceImplementationChecker::is_media(get_class($instance))

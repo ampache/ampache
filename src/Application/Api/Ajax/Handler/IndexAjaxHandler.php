@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\NowPlayingRendererInterface;
 use Ampache\Module\Util\Recommendation;
@@ -38,10 +39,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Channel;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Wanted;
@@ -71,6 +69,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ChannelFactoryInterface $channelFactory;
+
     public function __construct(
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
@@ -81,7 +81,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         CatalogRepositoryInterface $catalogRepository,
         ConfigContainerInterface $configContainer,
         NowPlayingRendererInterface $nowPlayingRenderer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ChannelFactoryInterface $channelFactory
     ) {
         $this->slideshow          = $slideshow;
         $this->albumRepository    = $albumRepository;
@@ -93,6 +94,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->configContainer    = $configContainer;
         $this->nowPlayingRenderer = $nowPlayingRenderer;
         $this->modelFactory       = $modelFactory;
+        $this->channelFactory     = $channelFactory;
     }
 
     public function handle(): void
@@ -320,12 +322,13 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'start_channel':
                 if (Access::check('interface', 75)) {
                     ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        if ($channel->check_channel()) {
-                            $channel->stop_channel();
+                    $channel = $this->modelFactory->createChannel((int) Core::get_request('id'));
+                    if ($channel->isNew() === false) {
+                        $channelManager = $this->channelFactory->createChannelManager($channel);
+                        if ($channelManager->checkChannel()) {
+                            $channelManager->stopChannel();
                         }
-                        $channel->start_channel();
+                        $channelManager->startChannel();
                         sleep(1);
                         echo $channel->get_channel_state();
                     }
@@ -335,9 +338,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'stop_channel':
                 if (Access::check('interface', 75)) {
                     ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        $channel->stop_channel();
+                    $channel = $this->modelFactory->createChannel((int) Core::get_request('id'));
+                    if ($channel->isNew() === false) {
+                        $channelManager = $this->channelFactory->createChannelManager($channel);
+
+                        $channelManager->stopChannel();
                         sleep(1);
                         echo $channel->get_channel_state();
                     }

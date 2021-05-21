@@ -78,7 +78,7 @@ interface ModelFactoryInterface
 
     public function createChannel(
         int $channelId
-    ): Channel;
+    ): ChannelInterface;
 
     public function createPodcast(
         int $podcastId

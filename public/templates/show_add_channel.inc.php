@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -29,6 +28,7 @@ use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\library_item;
 
 /** @var database_object&library_item $object */
+/** @var int $newPort */
 
 ?>
 <?php Ui::show_box_top(T_('Create Channel'), 'box box_add_channel'); ?>
@@ -72,7 +72,7 @@ use Ampache\Repository\Model\library_item;
 </tr>
 <tr>
     <td><?php echo T_('Port'); ?></td>
-    <td><input type="text" name="port" value="<?php echo scrub_out($_REQUEST['port'] ?: Channel::get_next_port()); ?>" />
+    <td><input type="text" name="port" value="<?php echo scrub_out($_REQUEST['port'] ?: $newPort); ?>" />
         <?php echo AmpError::display('port'); ?>
     </td>
 </tr>

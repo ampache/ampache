@@ -25,29 +25,36 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
 
-class Channel extends database_object implements Media, library_item
+final class Channel extends database_object implements ChannelInterface
 {
-    protected const DB_TABLENAME = 'channel';
+    public const DEFAULT_PORT = 8200;
 
-    public $id;
-    private $interface;
-    private $port;
-    private $start_date;
-    private $pid;
-    private $listeners;
-    private $peak_listeners;
+    private ChannelFactoryInterface $channelFactory;
 
+    private TagListUpdaterInterface $tagListUpdater;
+
+    private ChannelRepositoryInterface $channelRepository;
+
+    public int $id;
 
     /** @var array<string, mixed>|null */
     private ?array $dbData = null;
 
-    public function __construct(int $id)
-    {
-        $this->id = $id;
+    public function __construct(
+        ChannelFactoryInterface $channelFactory,
+        TagListUpdaterInterface $tagListUpdater,
+        ChannelRepositoryInterface $channelRepository,
+        int $id
+    ) {
+        $this->channelFactory    = $channelFactory;
+        $this->tagListUpdater    = $tagListUpdater;
+        $this->channelRepository = $channelRepository;
+        $this->id                = $id;
     }
 
     public function getId(): int
@@ -110,6 +117,11 @@ class Channel extends database_object implements Media, library_item
         return (int) ($this->getDbData()['peak_listeners'] ?? 0);
     }
 
+    public function setPeakListeners(int $value): void
+    {
+        $this->dbData['peak_listeners'] = $value;
+    }
+
     public function getMaxListeners(): int
     {
         return (int) ($this->getDbData()['max_listeners'] ?? 0);
@@ -120,9 +132,19 @@ class Channel extends database_object implements Media, library_item
         return (int) ($this->getDbData()['listeners'] ?? 0);
     }
 
+    public function setListeners(int $value): void
+    {
+        $this->dbData['listeners'] = $value;
+    }
+
     public function getPid(): int
     {
         return (int) ($this->getDbData()['pid'] ?? 0);
+    }
+
+    public function setPid(int $value): void
+    {
+        $this->dbData['pid'] = $value;
     }
 
     public function getStartDate(): int
@@ -130,14 +152,29 @@ class Channel extends database_object implements Media, library_item
         return (int) ($this->getDbData()['start_date'] ?? 0);
     }
 
+    public function setStartDate(int $value): void
+    {
+        $this->dbData['start_date'] = $value;
+    }
+
     public function getPort(): int
     {
         return (int) ($this->getDbData()['port'] ?? 0);
     }
 
+    public function setPort(int $value): void
+    {
+        $this->dbData['port'] = $value;
+    }
+
     public function getInterface(): string
     {
         return $this->getDbData()['interface'] ?? '';
+    }
+
+    public function setInterface(string $value): void
+    {
+        $this->dbData['interface'] = $value;
     }
 
     public function getIsPrivate(): int
@@ -150,54 +187,16 @@ class Channel extends database_object implements Media, library_item
         return $this->getDbData() === [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getDbData(): array
     {
         if ($this->dbData === null) {
-            $this->dbData = $this->getChannelRepository()->getDataById($this->id);
+            $this->dbData = $this->channelRepository->getDataById($this->id);
         }
 
         return $this->dbData;
-    }
-
-    /**
-     * update_start
-     * @param string $start_date
-     * @param string $address
-     * @param string $port
-     * @param string $pid
-     */
-    public function update_start($start_date, $address, $port, $pid)
-    {
-        $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, array($start_date, $address, $port, $pid, $this->id));
-
-        $this->start_date = $start_date;
-        $this->interface  = $address;
-        $this->port       = (int)$port;
-        $this->pid        = $pid;
-    }
-
-    /**
-     * update_listeners
-     * @param integer $listeners
-     * @param boolean $addition
-     */
-    public function update_listeners($listeners, $addition = false)
-    {
-        $sql             = "UPDATE `channel` SET `listeners` = ? ";
-        $params          = array($listeners);
-        $this->listeners = $listeners;
-        if ($listeners > $this->getPeakListeners()) {
-            $this->peak_listeners = $listeners;
-            $sql .= ", `peak_listeners` = ? ";
-            $params[] = $listeners;
-        }
-        if ($addition) {
-            $sql .= ", `connections`=`connections`+1 ";
-        }
-        $sql .= "WHERE `id` = ?";
-        $params[] = $this->id;
-        Dba::write($sql, $params);
     }
 
     /**
@@ -218,33 +217,11 @@ class Channel extends database_object implements Media, library_item
         return $genre;
     }
 
-    /**
-     * delete
-     */
     public function delete(): bool
     {
-        $sql = "DELETE FROM `channel` WHERE `id` = ?";
+        $this->channelRepository->delete($this);
 
-        return Dba::write($sql, array($this->id));
-    }
-
-    /**
-     * get_next_port
-     * @return integer
-     */
-    public static function get_next_port()
-    {
-        $port       = 8200;
-        $sql        = "SELECT MAX(`port`) AS `max_port` FROM `channel`";
-        $db_results = Dba::read($sql);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            if ($results['max_port'] > 0) {
-                $port = $results['max_port'] + 1;
-            }
-        }
-
-        return $port;
+        return true;
     }
 
     /**
@@ -314,7 +291,7 @@ class Channel extends database_object implements Media, library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            $this->getTagListUpdater()->update($data['edit_tags'], 'channel', $this->id, true);
+            $this->tagListUpdater->update($data['edit_tags'], 'channel', $this->id, true);
         }
 
         $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " . "WHERE `id` = ?";
@@ -535,63 +512,12 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * start_channel
-     */
-    public function start_channel()
-    {
-        $path = __DIR__ . '/../../../bin/cli';
-        $cmd  = sprintf(
-            'env php %s run:channel %d > /dev/null &',
-            $path,
-            $this->id
-        );
-        exec($cmd);
-    }
-
-    /**
-     * stop_channel
-     */
-    public function stop_channel()
-    {
-        if ($this->getPid()) {
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                exec("taskkill /F /PID " . $this->getPid());
-            } else {
-                exec("kill -9 " . $this->getPid());
-            }
-
-            $sql = "UPDATE `channel` SET `start_date` = '0', `listeners` = '0', `pid` = '0' WHERE `id` = ?";
-            Dba::write($sql, array($this->id));
-
-            $this->pid = 0;
-        }
-    }
-
-    /**
-     * check_channel
-     * @return boolean
-     */
-    public function check_channel()
-    {
-        $check = false;
-        if ($this->getInterface() && $this->getPort()) {
-            $connection = @fsockopen($this->getInterface(), $this->getPort());
-            if (is_resource($connection)) {
-                $check = true;
-                fclose($connection);
-            }
-        }
-
-        return $check;
-    }
-
-    /**
      * get_channel_state
      * @return string
      */
     public function get_channel_state()
     {
-        if ($this->check_channel()) {
+        if ($this->channelFactory->createChannelManager($this)->checkChannel()) {
             $state = T_("Running");
         } else {
             $state = T_("Stopped");
@@ -690,25 +616,5 @@ class Channel extends database_object implements Media, library_item
     public function isEnabled(): bool
     {
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getTagListUpdater(): TagListUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(TagListUpdaterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getChannelRepository(): ChannelRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ChannelRepositoryInterface::class);
     }
 }
