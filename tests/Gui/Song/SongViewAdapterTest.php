@@ -236,8 +236,8 @@ class SongViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             sprintf(
                 '%s/song.php?action=%s&song_id=%d',
-                DeleteAction::REQUEST_KEY,
                 $webPath,
+                DeleteAction::REQUEST_KEY,
                 $songId
             ),
             $this->subject->getDeletionUrl()
