@@ -633,6 +633,7 @@ class Catalog_local extends Catalog
             }
             unset($info);
         }
+        Catalog::update_counts();
 
         Ui::update_text('verify_count_' . $this->id, $count);
 

@@ -176,6 +176,33 @@ final class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * gets the songs (including songs where they are the album artist) for this artist
+     *
+     * @return int[]
+     */
+    public function getAllByArtist(
+        int $artistId
+    ): array {
+        $sql = "SELECT DISTINCT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` WHERE `song`.`artist` = ?) OR `song`.`album` IN (SELECT `album`.`id` FROM `album` WHERE `album`.`album_artist` = ?) ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY `song`.`album`, `song`.`track`";
+        $db_results = Dba::read($sql, array($artistId, $artistId));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * Returns a list of song ID's attached to a license ID.
      *
      * @return int[]
