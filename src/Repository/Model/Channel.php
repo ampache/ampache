@@ -27,146 +27,136 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
+use Ampache\Repository\ChannelRepositoryInterface;
 
 class Channel extends database_object implements Media, library_item
 {
     protected const DB_TABLENAME = 'channel';
 
     public $id;
-    private $is_private;
     private $interface;
     private $port;
     private $start_date;
     private $pid;
     private $listeners;
-    private $max_listeners;
     private $peak_listeners;
-    private $object_type;
-    private $object_id;
-    private $stream_type;
-    private $random;
-    private $loop;
-    private $bitrate;
-    private $name;
-    private $description;
-    private $fixed_endpoint;
-    private $url;
 
-    /**
-     * Constructor
-     * @param integer $channel_id
-     */
-    public function __construct($channel_id)
+
+    /** @var array<string, mixed>|null */
+    private ?array $dbData = null;
+
+    public function __construct(int $id)
     {
-        /* Get the information from the db */
-        $info = $this->get_info($channel_id);
-
-        // Foreach what we've got
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
-    } // constructor
+        $this->id = $id;
+    }
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function getFixedEndpoint(): int
     {
-        return $this->fixed_endpoint;
+        return (int) ($this->getDbData()['fixed_endpoint'] ?? 0);
     }
 
     public function getUrl(): string
     {
-        return $this->url;
+        return $this->getDbData()['url'] ?? '';
     }
 
     public function getDescription(): string
     {
-        return $this->description;
+        return $this->getDbData()['description'] ?? '';
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->getDbData()['name'] ?? '';
     }
 
     public function getBitrate(): int
     {
-        return $this->bitrate;
+        return (int) ($this->getDbData()['bitrate'] ?? 0);
     }
 
     public function getLoop(): int
     {
-        return $this->loop;
+        return (int) ($this->getDbData()['loop'] ?? 0);
     }
 
     public function getRandom(): int
     {
-        return $this->random;
+        return (int) ($this->getDbData()['random'] ?? 0);
     }
 
     public function getStreamType(): string
     {
-        return $this->stream_type;
+        return $this->getDbData()['stream_type'] ?? '';
     }
 
     public function getObjectId(): int
     {
-        return $this->object_id;
+        return (int) ($this->getDbData()['object_id'] ?? 0);
     }
 
     public function getObjectType(): string
     {
-        return $this->object_type;
+        return $this->getDbData()['object_type'] ?? '';
     }
 
     public function getPeakListeners(): int
     {
-        return $this->peak_listeners;
+        return (int) ($this->getDbData()['peak_listeners'] ?? 0);
     }
 
     public function getMaxListeners(): int
     {
-        return $this->max_listeners;
+        return (int) ($this->getDbData()['max_listeners'] ?? 0);
     }
 
     public function getListeners(): int
     {
-        return $this->listeners;
+        return (int) ($this->getDbData()['listeners'] ?? 0);
     }
 
     public function getPid(): int
     {
-        return $this->pid;
+        return (int) ($this->getDbData()['pid'] ?? 0);
     }
 
     public function getStartDate(): int
     {
-        return $this->start_date;
+        return (int) ($this->getDbData()['start_date'] ?? 0);
     }
 
     public function getPort(): int
     {
-        return $this->port;
+        return (int) ($this->getDbData()['port'] ?? 0);
     }
 
     public function getInterface(): string
     {
-        return $this->interface;
+        return $this->getDbData()['interface'] ?? '';
     }
 
     public function getIsPrivate(): int
     {
-        return $this->is_private;
+        return (int) ($this->getDbData()['is_private'] ?? 0);
     }
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
+    }
+
+    private function getDbData(): array
+    {
+        if ($this->dbData === null) {
+            $this->dbData = $this->getChannelRepository()->getDataById($this->id);
+        }
+
+        return $this->dbData;
     }
 
     /**
@@ -710,5 +700,15 @@ class Channel extends database_object implements Media, library_item
         global $dic;
 
         return $dic->get(TagListUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getChannelRepository(): ChannelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ChannelRepositoryInterface::class);
     }
 }
