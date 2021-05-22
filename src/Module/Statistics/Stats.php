@@ -91,9 +91,14 @@ class Stats
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $params = array($new_object_id, $object_type, $old_object_id);
+        if (in_array($object_type, array('artist', 'album'))) {
+            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$object_type` = ?));";
+            $params[] = $new_object_id;
+        }
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        return Dba::write($sql, $params);
     }
 
     /**
