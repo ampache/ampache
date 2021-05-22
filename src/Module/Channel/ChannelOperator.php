@@ -27,7 +27,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\Model\ChannelInterface;
 
-final class ChannelManager implements ChannelManagerInterface
+final class ChannelOperator implements ChannelOperatorInterface
 {
     private ChannelInterface $channel;
 

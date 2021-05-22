@@ -61,7 +61,7 @@ final class ChannelRepository implements ChannelRepositoryInterface
             'SELECT MAX(`port`) AS `max_port` FROM `channel`',
         );
 
-        if ($maxPort !== false) {
+        if ($maxPort !== null) {
             return ((int) $maxPort + 1);
         }
 

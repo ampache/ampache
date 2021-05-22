@@ -29,7 +29,7 @@ interface ChannelFactoryInterface
         ChannelInterface $channel
     ): ChannelStreamerInterface;
 
-    public function createChannelManager(
+    public function createChannelOperator(
         ChannelInterface $channel
-    ): ChannelManagerInterface;
+    ): ChannelOperatorInterface;
 }

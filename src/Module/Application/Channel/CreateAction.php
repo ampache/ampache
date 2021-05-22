@@ -32,8 +32,9 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,12 +46,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,6 +70,12 @@ final class CreateAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
+
+        /** @var Playlist $object */
+        $object = $this->modelFactory->mapObjectType(
+            $_REQUEST['type'],
+            (int) $_REQUEST['id'],
+        );
 
         $this->ui->showHeader();
 
@@ -86,7 +97,12 @@ final class CreateAction implements ApplicationActionInterface
         );
 
         if (!$created) {
-            require_once Ui::find_template('show_add_channel.inc.php');
+            $this->ui->show(
+                'show_add_channel.inc.php',
+                [
+                    'object' => $object
+                ]
+            );
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),

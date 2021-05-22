@@ -324,11 +324,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     $channel = $this->modelFactory->createChannel((int) Core::get_request('id'));
                     if ($channel->isNew() === false) {
-                        $channelManager = $this->channelFactory->createChannelManager($channel);
-                        if ($channelManager->checkChannel()) {
-                            $channelManager->stopChannel();
+                        $channelOperator = $this->channelFactory->createChannelOperator($channel);
+                        if ($channelOperator->checkChannel()) {
+                            $channelOperator->stopChannel();
                         }
-                        $channelManager->startChannel();
+                        $channelOperator->startChannel();
                         sleep(1);
                         echo $channel->get_channel_state();
                     }
@@ -340,9 +340,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     $channel = $this->modelFactory->createChannel((int) Core::get_request('id'));
                     if ($channel->isNew() === false) {
-                        $channelManager = $this->channelFactory->createChannelManager($channel);
+                        $channelOperator = $this->channelFactory->createChannelOperator($channel);
 
-                        $channelManager->stopChannel();
+                        $channelOperator->stopChannel();
                         sleep(1);
                         echo $channel->get_channel_state();
                     }

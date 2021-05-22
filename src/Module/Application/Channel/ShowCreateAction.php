@@ -26,14 +26,13 @@ namespace Ampache\Module\Application\Channel;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\ChannelRepositoryInterface;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ChannelRepositoryInterface;
+use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -67,20 +66,28 @@ final class ShowCreateAction implements ApplicationActionInterface
             return null;
         }
 
+        /** @var array<string, mixed> $queryParams */
+        $queryParams = $request->getParsedBody() ?? $request->getQueryParams();
+
         $this->ui->showHeader();
 
-        $type = Channel::format_type(Core::get_request('type'));
-        if (!empty($type) && !empty($_REQUEST['id'])) {
+        $type = $request->getQueryParams()['type'] ?? null;
+        if ($type === 'playlist' && !empty($_REQUEST['id'])) {
+            /** @var Playlist $object */
             $object = $this->modelFactory->mapObjectType(
                 $type,
-                (int) Core::get_request('id')
+                (int) ($queryParams['id'] ?? 0)
             );
-            if ($object->id) {
+            if ($object->isNew() === false) {
                 $object->format();
 
-                $newPort = $this->channelRepository->getNextPort(Channel::DEFAULT_PORT);
-
-                require_once Ui::find_template('show_add_channel.inc.php');
+                $this->ui->show(
+                    'show_add_channel.inc.php',
+                    [
+                        'object' => $object,
+                        'newPort' => $this->channelRepository->getNextPort(Channel::DEFAULT_PORT)
+                    ]
+                );
             }
         }
 

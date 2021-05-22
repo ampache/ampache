@@ -46,7 +46,7 @@ final class HttpServer implements HttpServerInterface
     }
 
     public function serve(
-        ChannelManagerInterface $channelManager,
+        ChannelOperatorInterface $channelOperator,
         ChannelStreamerInterface $channelStreamer,
         Interactor $interactor,
         ChannelInterface $channel,
@@ -57,7 +57,7 @@ final class HttpServer implements HttpServerInterface
     ): void {
         $data = fread($sock, 1024);
         if (!$data) {
-            $this->disconnect($channelManager, $interactor, $channel, $client_socks, $stream_clients, $sock);
+            $this->disconnect($channelOperator, $interactor, $channel, $client_socks, $stream_clients, $sock);
 
             return;
         }
@@ -310,7 +310,7 @@ final class HttpServer implements HttpServerInterface
     }
 
     public function disconnect(
-        ChannelManagerInterface $channelManager,
+        ChannelOperatorInterface $channelOperator,
         Interactor $interactor,
         ChannelInterface $channel,
         array &$client_socks,
@@ -324,7 +324,7 @@ final class HttpServer implements HttpServerInterface
             throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
         }
 
-        $channelManager->updateListeners(count($client_socks));
+        $channelOperator->updateListeners(count($client_socks));
         debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);
 
         $interactor->info('Client disconnected', true);

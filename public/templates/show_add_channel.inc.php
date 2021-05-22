@@ -24,10 +24,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\database_object;
-use Ampache\Repository\Model\library_item;
 
-/** @var database_object&library_item $object */
+/** @var \Ampache\Repository\Model\Playlist $object */
 /** @var int $newPort */
 
 ?>

@@ -318,25 +318,6 @@ final class Channel extends database_object implements ChannelInterface
     }
 
     /**
-     * format_type
-     * @param string $type
-     * @return string
-     */
-    public static function format_type($type)
-    {
-        switch ($type) {
-            case 'playlist':
-                $ftype = $type;
-                break;
-            default:
-                $ftype = '';
-                break;
-        }
-
-        return $ftype;
-    }
-
-    /**
      * format
      * @param boolean $details
      */
@@ -517,7 +498,7 @@ final class Channel extends database_object implements ChannelInterface
      */
     public function get_channel_state()
     {
-        if ($this->channelFactory->createChannelManager($this)->checkChannel()) {
+        if ($this->channelFactory->createChannelOperator($this)->checkChannel()) {
             $state = T_("Running");
         } else {
             $state = T_("Stopped");

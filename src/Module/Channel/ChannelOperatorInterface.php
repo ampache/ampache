@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Channel;
 
-interface ChannelManagerInterface
+interface ChannelOperatorInterface
 {
     public function updateListeners(
         int $listeners,

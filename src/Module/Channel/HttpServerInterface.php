@@ -28,7 +28,7 @@ use Ampache\Repository\Model\ChannelInterface;
 interface HttpServerInterface
 {
     public function serve(
-        ChannelManagerInterface $channelManager,
+        ChannelOperatorInterface $channelOperator,
         ChannelStreamerInterface $channelStreamer,
         Interactor $interactor,
         ChannelInterface $channel,
@@ -39,7 +39,7 @@ interface HttpServerInterface
     ): void;
 
     public function disconnect(
-        ChannelManagerInterface $channelManager,
+        ChannelOperatorInterface $channelOperator,
         Interactor $interactor,
         ChannelInterface $channel,
         array &$client_socks,

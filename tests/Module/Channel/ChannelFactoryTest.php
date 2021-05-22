@@ -66,8 +66,8 @@ class ChannelFactoryTest extends MockeryTestCase
     public function testCreateChannelManagerReturnsInstance(): void
     {
         $this->assertInstanceOf(
-            ChannelManagerInterface::class,
-            $this->subject->createChannelManager(
+            ChannelOperatorInterface::class,
+            $this->subject->createChannelOperator(
                 $this->mock(ChannelInterface::class)
             )
         );

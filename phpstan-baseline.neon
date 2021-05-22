@@ -5428,17 +5428,6 @@ parameters:
 			message: "#^Parameter \\#9 \\$private of static method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Channel/CreateAction.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Channel/ShowCreateAction.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Channel/ShowCreateAction.php
-
 		-
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Exception\\\\AccessDeniedException\\:\\:\\$message has no typehint specified\\.$#"
 			count: 1

@@ -95,7 +95,7 @@ final class ChannelRunner implements ChannelRunnerInterface
             }
         }
 
-        $channelManager = $this->channelFactory->createChannelManager($channel);
+        $channelOperator = $this->channelFactory->createChannelOperator($channel);
 
         ob_start();
 
@@ -109,7 +109,7 @@ final class ChannelRunner implements ChannelRunnerInterface
 
             return;
         }
-        $channelManager->updateStart($start_date, $address, (int) $portNumber, (int) getmypid());
+        $channelOperator->updateStart($start_date, $address, (int) $portNumber, (int) getmypid());
 
         $interactor->info(
             sprintf('Listening on `%s:%d`', $address, $portNumber),
@@ -141,7 +141,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                     if ($new_client) {
                         debug_event('channel_run', 'Connection accepted from ' . stream_socket_get_name($new_client, true) . '.', 5);
                         $client_socks[] = $new_client;
-                        $channelManager->updateListeners(count($client_socks), true);
+                        $channelOperator->updateListeners(count($client_socks), true);
                         debug_event('channel_run', 'Now there are total ' . count($client_socks) . ' clients.', 4);
 
                         $interactor->info('Client connected', true);
@@ -157,7 +157,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                 foreach ($read_socks as $sock) {
                     // Handle data parse
                     $this->httpServer->serve(
-                        $channelManager,
+                        $channelOperator,
                         $channelStreamer,
                         $interactor,
                         $channel,
@@ -237,7 +237,7 @@ final class ChannelRunner implements ChannelRunnerInterface
 
                         if (!is_resource($sock)) {
                             $this->httpServer->disconnect(
-                                $channelManager,
+                                $channelOperator,
                                 $interactor,
                                 $channel,
                                 $client_socks,
@@ -309,7 +309,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                         //debug_event('channel_run', 'Client stream current length: ' . $client['length'], 5);
                     }
                 } else {
-                    $channelManager->updateListeners(0);
+                    $channelOperator->updateListeners(0);
                     debug_event('channel_run', 'No more data, stream ended.', 4);
                     die('No more data, stream ended');
                 }

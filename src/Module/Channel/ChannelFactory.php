@@ -56,10 +56,10 @@ final class ChannelFactory implements ChannelFactoryInterface
         );
     }
 
-    public function createChannelManager(
+    public function createChannelOperator(
         ChannelInterface $channel
-    ): ChannelManagerInterface {
-        return new ChannelManager(
+    ): ChannelOperatorInterface {
+        return new ChannelOperator(
             $this->channelRepository,
             $channel
         );
