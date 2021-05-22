@@ -7,6 +7,7 @@
 * NowPlaying stats would be overwritten when they didn't need to be
 * SubSonic:
   * getNowPlaying was unable to return playing media or the correct time
+  * createShare would not set the object_id correctly and ignored expires value
 
 ## Ampache 4.4.2-release
 
