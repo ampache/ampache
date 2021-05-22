@@ -23,7 +23,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Channel;
 
-use Ampache\Module\System\Dba;
 use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\Model\ChannelInterface;
 
@@ -45,34 +44,40 @@ final class ChannelOperator implements ChannelOperatorInterface
         int $listeners,
         bool $addition = false
     ): void {
-        $sql             = "UPDATE `channel` SET `listeners` = ? ";
-        $params          = array($listeners);
-        $this->channel->setListeners($listeners);
-        if ($listeners > $this->channel->getPeakListeners()) {
-            $this->channel->setPeakListeners($listeners);
-            $sql .= ", `peak_listeners` = ? ";
-            $params[] = $listeners;
-        }
+        $peakListeners = $listeners > $this->channel->getPeakListeners() ?
+            $listeners :
+            $this->channel->getPeakListeners();
+
+        $connections = $this->channel->getConnections();
         if ($addition) {
-            $sql .= ", `connections`=`connections`+1 ";
+            $connections++;
         }
-        $sql .= "WHERE `id` = ?";
-        $params[] = $this->channel->getId();
-        Dba::write($sql, $params);
+
+        $this->channelRepository->updateListeners(
+            $this->channel->getId(),
+            $listeners,
+            $peakListeners,
+            $connections
+        );
     }
 
     public function updateStart(
-        int $start_date,
+        int $startDate,
         string $address,
         int $port,
         int $pid
     ): void {
-        $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, array($start_date, $address, $port, $pid, $this->channel->getId()));
+        $this->channelRepository->updateStart(
+            $this->channel->getId(),
+            $startDate,
+            $address,
+            $port,
+            $pid
+        );
 
-        $this->channel->setStartDate($start_date);
+        $this->channel->setStartDate($startDate);
         $this->channel->setInterface($address);
-        $this->channel->setPort((int) $port);
+        $this->channel->setPort($port);
         $this->channel->setPid($pid);
     }
 
@@ -98,8 +103,7 @@ final class ChannelOperator implements ChannelOperatorInterface
                 exec("kill -9 " . $pid);
             }
 
-            $sql = "UPDATE `channel` SET `start_date` = '0', `listeners` = '0', `pid` = '0' WHERE `id` = ?";
-            Dba::write($sql, array($this->channel->getId()));
+            $this->channelRepository->stop($this->channel->getId());
 
             $this->channel->setPid(0);
         }

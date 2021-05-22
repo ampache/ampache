@@ -182,6 +182,11 @@ final class Channel extends database_object implements ChannelInterface
         return (int) ($this->getDbData()['is_private'] ?? 0);
     }
 
+    public function getConnections(): int
+    {
+        return (int) ($this->getDbData()['connections'] ?? 0);
+    }
+
     public function isNew(): bool
     {
         return $this->getDbData() === [];

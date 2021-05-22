@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ChannelInterface;
 use Doctrine\DBAL\Connection;
 
@@ -73,6 +72,40 @@ final class ChannelRepository implements ChannelRepositoryInterface
         $this->database->executeQuery(
             'DELETE FROM `channel` WHERE `id` = ?',
             [$channel->getId()]
+        );
+    }
+
+    public function updateListeners(
+        int $channelId,
+        int $listeners,
+        int $peakListeners,
+        int $connections
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `channel` SET `listeners` = ?, `peak_listeners` = ?, `connections` = ? WHERE `id` = ?',
+            [$listeners, $peakListeners, $connections, $channelId]
+        );
+    }
+
+    public function updateStart(
+        int $channelId,
+        int $startDate,
+        string $address,
+        int $port,
+        int $pid
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = \'0\' WHERE `id` = ?',
+            [$startDate, $address, $port, $pid, $channelId]
+        );
+    }
+
+    public function stop(
+        int $channelId
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `channel` SET `start_date` = \'0\', `listeners` = \'0\', `pid` = \'0\' WHERE `id` = ?',
+            [$channelId]
         );
     }
 }

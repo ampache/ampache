@@ -71,6 +71,8 @@ interface ChannelInterface extends Media, library_item
 
     public function setInterface(string $value): void;
 
+    public function getConnections(): int;
+
     public function getIsPrivate(): int;
 
     public function isNew(): bool;

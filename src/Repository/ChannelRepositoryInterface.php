@@ -34,4 +34,23 @@ interface ChannelRepositoryInterface
     public function getNextPort(int $defaultPort): int;
 
     public function delete(ChannelInterface $channel): void;
+
+    public function updateListeners(
+        int $channelId,
+        int $listeners,
+        int $peakListeners,
+        int $connections
+    ): void;
+
+    public function updateStart(
+        int $channelId,
+        int $startDate,
+        string $address,
+        int $port,
+        int $pid
+    ): void;
+
+    public function stop(
+        int $channelId
+    ): void;
 }
