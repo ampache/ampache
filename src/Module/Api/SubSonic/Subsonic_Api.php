@@ -50,8 +50,6 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
@@ -1663,10 +1661,8 @@ class Subsonic_Api
     {
         $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
-
         if (AmpConfig::get('share')) {
             $expire_days = static::getExpirationDateCalculator()->calculate((int) $input['expires']);
-            $object_id   = null;
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_Xml_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_Xml_Data::getAmpacheId($libitem_id[0]);
@@ -1674,7 +1670,7 @@ class Subsonic_Api
                 $object_id   = Subsonic_Xml_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
-                Subsonic_Xml_Data::getAmpacheId($libitem_id);
+                $object_id = Subsonic_Xml_Data::getAmpacheId($libitem_id);
                 if (Subsonic_Xml_Data::isAlbum($libitem_id)) {
                     $object_type = 'album';
                 }
@@ -1687,7 +1683,7 @@ class Subsonic_Api
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
-            if (!empty($object_type)) {
+            if (!empty($object_type) && !empty($object_id)) {
                 // @todo remove after refactoring
                 global $dic;
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);

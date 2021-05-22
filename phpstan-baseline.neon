@@ -3801,11 +3801,6 @@ parameters:
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#2 \\$object_id of method Ampache\\\\Module\\\\Share\\\\ShareCreatorInterface\\:\\:create\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Api.php
-
-		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
