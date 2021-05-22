@@ -17,23 +17,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Module\Channel;
 
-use Ampache\Repository\ChannelRepositoryInterface;
-
-final class ChannelCreator implements ChannelCreatorInterface
+interface ChannelCreatorInterface
 {
-    private ChannelRepositoryInterface $channelRepository;
-
-    public function __construct(
-        ChannelRepositoryInterface $channelRepository
-    ) {
-        $this->channelRepository = $channelRepository;
-    }
-
     public function create(
         string $name,
         string $description,
@@ -49,28 +38,5 @@ final class ChannelCreator implements ChannelCreatorInterface
         int $loop,
         string $stream_type,
         int $bitrate
-    ): bool {
-        if (!empty($name)) {
-            $this->channelRepository->create(
-                $name,
-                $description,
-                $url,
-                $object_type,
-                $object_id,
-                $interface,
-                $port,
-                $admin_password,
-                $private,
-                $max_listeners,
-                $random,
-                $loop,
-                $stream_type,
-                $bitrate
-            );
-
-            return true;
-        }
-
-        return false;
-    }
+    ): bool;
 }

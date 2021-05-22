@@ -27,10 +27,10 @@ namespace Ampache\Module\Application\Channel;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Channel\ChannelCreatorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -48,14 +48,18 @@ final class CreateAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ChannelCreatorInterface $channelCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ChannelCreatorInterface $channelCreator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->channelCreator  = $channelCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,21 +83,21 @@ final class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $created = Channel::create(
+        $created = $this->channelCreator->create(
             $_REQUEST['name'],
             $_REQUEST['description'],
             $_REQUEST['url'],
             $_REQUEST['type'],
-            $_REQUEST['id'],
+            (int) $_REQUEST['id'],
             $_REQUEST['interface'],
-            $_REQUEST['port'],
+            (int) $_REQUEST['port'],
             $_REQUEST['admin_password'],
             isset($_REQUEST['private']) ? 1 : 0,
-            $_REQUEST['max_listeners'],
-            $_REQUEST['random'] ?: 0,
-            $_REQUEST['loop'] ?: 0,
+            (int) $_REQUEST['max_listeners'],
+            (int) $_REQUEST['random'] ?: 0,
+            (int) $_REQUEST['loop'] ?: 0,
             $_REQUEST['stream_type'],
-            $_REQUEST['bitrate']
+            (int) $_REQUEST['bitrate']
         );
 
         if (!$created) {

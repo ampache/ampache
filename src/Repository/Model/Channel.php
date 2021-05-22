@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Channel\ChannelFactoryInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
 
@@ -230,65 +229,6 @@ final class Channel extends database_object implements ChannelInterface
     }
 
     /**
-     * create
-     * @param string $name
-     * @param string $description
-     * @param string $url
-     * @param string $object_type
-     * @param integer $object_id
-     * @param array $interface
-     * @param array $port
-     * @param string $admin_password
-     * @param string $private
-     * @param string $max_listeners
-     * @param string $random
-     * @param string $loop
-     * @param string $stream_type
-     * @param string $bitrate
-     */
-    public static function create(
-        $name,
-        $description,
-        $url,
-        $object_type,
-        $object_id,
-        $interface,
-        $port,
-        $admin_password,
-        $private,
-        $max_listeners,
-        $random,
-        $loop,
-        $stream_type,
-        $bitrate
-    ): bool {
-        if (!empty($name)) {
-            $sql    = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $params = array(
-                $name,
-                $description,
-                $url,
-                $object_type,
-                $object_id,
-                $interface,
-                $port,
-                (!empty($interface) && !empty($port)),
-                $admin_password,
-                $private,
-                $max_listeners,
-                $random,
-                $loop,
-                $stream_type,
-                $bitrate
-            );
-
-            return Dba::write($sql, $params);
-        }
-
-        return false;
-    }
-
-    /**
      * update
      * @param array $data
      * @return integer
@@ -299,25 +239,22 @@ final class Channel extends database_object implements ChannelInterface
             $this->tagListUpdater->update($data['edit_tags'], 'channel', $this->id, true);
         }
 
-        $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " . "WHERE `id` = ?";
-        $params = array(
+        $this->channelRepository->update(
+            $this->getId(),
             $data['name'],
             $data['description'],
             $data['url'],
             $data['interface'],
-            $data['port'],
-            (!empty($data['interface']) && !empty($data['port'])),
+            (int) $data['port'],
             $data['admin_password'],
             (int) $data['private'],
-            $data['max_listeners'],
+            (int) $data['max_listeners'],
             (int) $data['random'],
             $data['loop'],
             $data['stream_type'],
-            $data['bitrate'],
-            $data['object_id'],
-            $this->id
+            (int) $data['bitrate'],
+            (int) $data['object_id'],
         );
-        Dba::write($sql, $params);
 
         return $this->id;
     }

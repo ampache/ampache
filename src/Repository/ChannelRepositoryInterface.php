@@ -53,4 +53,38 @@ interface ChannelRepositoryInterface
     public function stop(
         int $channelId
     ): void;
+
+    public function create(
+        string $name,
+        string $description,
+        string $url,
+        string $objectType,
+        int $objectId,
+        string $interface,
+        int $port,
+        string $adminPassword,
+        int $isPrivate,
+        int $maxListeners,
+        int $random,
+        int $loop,
+        string $streamType,
+        int $bitrate
+    ): void;
+
+    public function update(
+        int $channelId,
+        string $name,
+        string $description,
+        string $url,
+        string $interface,
+        int $port,
+        string $adminPassword,
+        int $isPrivate,
+        int $maxListeners,
+        int $random,
+        int $loop,
+        string $streamType,
+        int $bitrate,
+        int $objectId
+    ): void;
 }

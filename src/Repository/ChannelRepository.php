@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ChannelInterface;
 use Doctrine\DBAL\Connection;
 
@@ -106,6 +107,82 @@ final class ChannelRepository implements ChannelRepositoryInterface
         $this->database->executeQuery(
             'UPDATE `channel` SET `start_date` = \'0\', `listeners` = \'0\', `pid` = \'0\' WHERE `id` = ?',
             [$channelId]
+        );
+    }
+
+    public function create(
+        string $name,
+        string $description,
+        string $url,
+        string $objectType,
+        int $objectId,
+        string $interface,
+        int $port,
+        string $adminPassword,
+        int $isPrivate,
+        int $maxListeners,
+        int $random,
+        int $loop,
+        string $streamType,
+        int $bitrate
+    ): void {
+        $this->database->executeQuery(
+            'INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $name,
+                $description,
+                $url,
+                $objectType,
+                $objectId,
+                $interface,
+                $port,
+                $interface !== '' && $port !== 0,
+                $adminPassword,
+                $isPrivate,
+                $maxListeners,
+                $random,
+                $loop,
+                $streamType,
+                $bitrate
+            ]
+        );
+    }
+
+    public function update(
+        int $channelId,
+        string $name,
+        string $description,
+        string $url,
+        string $interface,
+        int $port,
+        string $adminPassword,
+        int $isPrivate,
+        int $maxListeners,
+        int $random,
+        int $loop,
+        string $streamType,
+        int $bitrate,
+        int $objectId
+    ): void {
+        $this->database->executeQuery(
+            'UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? ' . "WHERE `id` = ?",
+            [
+                $name,
+                $description,
+                $url,
+                $interface,
+                $port,
+                $interface !== '' && $port !== 0,
+                $adminPassword,
+                $isPrivate,
+                $maxListeners,
+                $random,
+                $loop,
+                $streamType,
+                $bitrate,
+                $objectId,
+                $channelId
+            ]
         );
     }
 }

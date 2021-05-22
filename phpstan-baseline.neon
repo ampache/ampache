@@ -5423,11 +5423,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Parameter \\#9 \\$private of static method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Application/Channel/CreateAction.php
 		-
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Exception\\\\AccessDeniedException\\:\\:\\$message has no typehint specified\\.$#"
 			count: 1
@@ -22555,16 +22550,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|true supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) has parameter \\$interface with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:create\\(\\) has parameter \\$port with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Channel.php
 
