@@ -279,7 +279,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
-        return $count;
+        return (int)$count;
     }
 
     /**

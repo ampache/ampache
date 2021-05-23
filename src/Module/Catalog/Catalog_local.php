@@ -594,7 +594,7 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "Verify starting chunk $chunk", 5);
+        debug_event('local.catalog', "catalog " . $this->id . " starting verify on chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
@@ -689,7 +689,7 @@ class Catalog_local extends Catalog
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
 
-        return $dead_total;
+        return (int)$dead_total;
     }
 
     /**
@@ -703,7 +703,7 @@ class Catalog_local extends Catalog
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "Starting chunk $chunk", 5);
+        debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
         $dead  = array();
         $count = $chunk * $chunk_size;
 

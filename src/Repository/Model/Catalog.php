@@ -223,7 +223,7 @@ abstract class Catalog extends database_object
     abstract public function verify_catalog_proc();
 
     /**
-     * @return mixed
+     * @return int
      */
     abstract public function clean_catalog_proc();
 
@@ -2320,7 +2320,9 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        self::clean_empty_albums();
+        if ($dead_total > 0) {
+            self::clean_empty_albums();
+        }
 
         debug_event(self::class, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
