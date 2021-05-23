@@ -1543,6 +1543,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Userflag::migrate('artist', $old_artist, $new_artist);
         Rating::migrate('artist', $old_artist, $new_artist);
         Art::migrate('artist', $old_artist, $new_artist);
+        Catalog::migrate_map('artist', $old_artist, $new_artist);
         Artist::update_artist_counts($new_artist);
     } // update_artist
 
@@ -1567,6 +1568,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Userflag::migrate('album', $old_album, $new_album);
         Rating::migrate('album', $old_album, $new_album);
         Art::migrate('album', $old_album, $new_album);
+        Catalog::migrate_map('album', $old_album, $new_album);
     } // update_album
 
     /**

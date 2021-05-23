@@ -978,6 +978,7 @@ class Album extends database_object implements library_item
             Userflag::migrate('album', $this->id, $album_id);
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
+            Catalog::migrate_map('album', $this->id, $album_id);
             if (!$cron_cache) {
                 $this->getAlbumRepository()->collectGarbage();
             }

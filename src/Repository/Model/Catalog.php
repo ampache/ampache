@@ -2881,8 +2881,6 @@ abstract class Catalog extends database_object
         Dba::write($sql);
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
-        // update after removing the garbage
-        self::update_mapping();
     }
 
     /**
@@ -2900,6 +2898,21 @@ abstract class Catalog extends database_object
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($catalog, $object_type, $object_id));
         }
+    }
+
+    /**
+     * Migrate an object associated catalog to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate_map($object_type, $old_object_id, $new_object_id)
+    {
+        $sql    = "UPDATE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $params = array($new_object_id, $object_type, $old_object_id);
+
+        return Dba::write($sql, $params);
     }
 
     /**
@@ -3152,6 +3165,7 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::migrate($object_type, $old_object_id, $new_object_id);
+            Catalog::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
         }
