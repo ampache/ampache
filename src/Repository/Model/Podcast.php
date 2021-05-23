@@ -530,7 +530,7 @@ class Podcast extends database_object implements library_item
         }
 
         if ($pubdate > $afterdate) {
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
                 $title,
@@ -543,7 +543,8 @@ class Podcast extends database_object implements library_item
                 $category,
                 $time,
                 $pubdate,
-                time()
+                time(),
+                $this->catalog
             ));
         } else {
             debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);

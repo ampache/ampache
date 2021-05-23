@@ -2180,6 +2180,8 @@ abstract class Catalog extends database_object
         // album.total_count
         $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
+        // mapa catalog id's that are missing
+        self::update_mapping();
     }
 
     /**
@@ -2844,6 +2846,50 @@ abstract class Catalog extends database_object
         } // end switch
     }
     // export
+
+    /**
+     * Update the catalog mapping for various types
+     */
+    public static function update_mapping()
+    {
+        // delete non-existent maps
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `song` ON `song`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='song' AND `song`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `album` ON `album`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='album' AND `album`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `artist` ON `artist`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
+        Dba::write($sql);
+
+        // fill the data
+        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
+            Dba::write($sql);
+        }
+        // artist is a special one as it can be across multiple tables
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;";
+        Dba::write($sql);
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;";
+        Dba::write($sql);
+    }
+
+    /**
+     * Update the catalog map for a single item
+     */
+    public static function update_map($catalog, $object_type, $object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
+            Dba::write($sql, array($object_id));
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
+            Dba::write($sql, array($object_id));
+        } elseif ($catalog > 0) {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($catalog, $object_type, $object_id));
+        }
+    }
 
     /**
      * Updates create_modify for album times

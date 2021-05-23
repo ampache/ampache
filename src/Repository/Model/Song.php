@@ -523,6 +523,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $song_id = (int)Dba::insert_id();
 
+        Catalog::update_map((int)$catalog, 'song', $song_id);
+
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
         }

@@ -233,6 +233,9 @@ class Update
         $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
         $version[]     = array('version' => '500002', 'description' => $update_string);
 
+        $update_string = "* add `catalog` to podcast_episode table<br />* Create catalog_map table and fill it with data";
+        $version[]     = array('version' => '500003', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1274,6 +1277,40 @@ class Update
             $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;";
             $retval &= Dba::write($sql);
         }
+
+        return $retval;
+    }
+
+    /**
+     * update_500003
+     *
+     * add `catalog` to podcast_episode table
+     * Create catalog_map table and fill it with data
+     */
+    public static function update_500003()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
+        $retval &= Dba::write($sql);
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        // create the table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= Dba::write($sql);
+        // fill the data
+        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;";
+            $retval &= Dba::write($sql);
+        }
+        // artist is a special one as it can be across multiple tables
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id`;";
+        $retval &= Dba::write($sql);
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id`;";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
