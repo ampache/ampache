@@ -58,7 +58,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $pubdate;
     public $enabled;
     public $object_cnt;
-    private $total_count;
     public $catalog;
     public $f_title;
     public $f_file;
@@ -76,6 +75,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
+    private $total_count;
 
     /**
      * Constructor
@@ -170,7 +170,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->catalog        = $podcast->catalog;
             $this->f_podcast      = $podcast->f_title;
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
