@@ -2138,6 +2138,7 @@ abstract class Catalog extends database_object
      */
     public static function update_counts($type = '')
     {
+        debug_event(self::class, 'Updating counts after catalog changes', 5);
         // object_count might need some migration help
         if (empty($type)) {
             // object_count.album
@@ -2154,7 +2155,6 @@ abstract class Catalog extends database_object
         }
         // updating an artist
         if (empty($type) || $type == 'artist') {
-            debug_event(self::class, 'Updating Artist and album counts after catalog changes', 5);
             // artist.album_count
             $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql);
@@ -2180,8 +2180,6 @@ abstract class Catalog extends database_object
         // album.total_count
         $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
-        // mapa catalog id's that are missing
-        self::update_mapping();
     }
 
     /**
@@ -2852,15 +2850,7 @@ abstract class Catalog extends database_object
      */
     public static function update_mapping()
     {
-        // delete non-existent maps
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `song` ON `song`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='song' AND `song`.`id` IS NULL";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `album` ON `album`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='album' AND `album`.`id` IS NULL";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `artist` ON `artist`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
-        Dba::write($sql);
+        debug_event(self::class, 'Updating catalog mapping after catalog changes', 5);
 
         // fill the data
         $tables = ['album',  'song', 'video', 'podcast_episode'];
@@ -2876,10 +2866,29 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Update the catalog mapping for various types
+     */
+    public static function garbage_collect_mapping()
+    {
+        // delete non-existent maps
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `song` ON `song`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='song' AND `song`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `album` ON `album`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='album' AND `album`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `artist` ON `artist`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+        Dba::write($sql);
+        $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
+        Dba::write($sql);
+        // update after removing the garbage
+        self::update_mapping();
+    }
+
+    /**
      * Update the catalog map for a single item
      */
     public static function update_map($catalog, $object_type, $object_id)
     {
+        debug_event(self::class, "Updating catalog mapping for $object_type ($object_id)", 5);
         if ($object_type == 'artist') {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
             Dba::write($sql, array($object_id));

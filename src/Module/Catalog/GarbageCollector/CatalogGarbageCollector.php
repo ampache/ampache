@@ -82,6 +82,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
 
-        Catalog::update_mapping();
+        Catalog::garbage_collect_mapping();
     }
 }
