@@ -2873,12 +2873,11 @@ abstract class Catalog extends database_object
     public static function garbage_collect_mapping()
     {
         // delete non-existent maps
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `song` ON `song`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='song' AND `song`.`id` IS NULL";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `album` ON `album`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='album' AND `album`.`id` IS NULL";
-        Dba::write($sql);
-        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `artist` ON `artist`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-        Dba::write($sql);
+        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
+            Dba::write($sql);
+        }
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
     }
