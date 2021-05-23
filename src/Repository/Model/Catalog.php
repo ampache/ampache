@@ -2909,7 +2909,7 @@ abstract class Catalog extends database_object
      */
     public static function migrate_map($object_type, $old_object_id, $new_object_id)
     {
-        $sql    = "UPDATE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = array($new_object_id, $object_type, $old_object_id);
 
         return Dba::write($sql, $params);
