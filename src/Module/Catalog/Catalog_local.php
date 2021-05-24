@@ -598,7 +598,9 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog`='$this->id' ORDER BY `$tableName`.`update_time` ASC, `$tableName`.`file` LIMIT $count, $chunk_size";
+        $sql = ($tableName == 'song')
+            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND `song`.`update_time` < `catalog`.`last_update`) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+            : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
