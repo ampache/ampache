@@ -17,17 +17,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Video;
 
-use function DI\autowire;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Video;
 
-return [
-    VideoFromTagUpdaterInterface::class => autowire(VideoFromTagUpdater::class),
-    ClipCreatorInterface::class => autowire(ClipCreator::class),
-    VideoLoaderInterface::class => autowire(VideoLoader::class),
-];
+interface VideoLoaderInterface
+{
+    /**
+     * Create a video strongly typed object from its id.
+     *
+     * @return Video&library_item
+     */
+    public function load(int $videoId);
+}

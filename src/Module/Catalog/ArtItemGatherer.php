@@ -24,6 +24,7 @@ namespace Ampache\Module\Catalog;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
@@ -34,12 +35,16 @@ final class ArtItemGatherer implements ArtItemGathererInterface
 
     private ArtCollectorInterface $artCollector;
 
+    private VideoLoaderInterface $videoLoader;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        ArtCollectorInterface $artCollector
+        ArtCollectorInterface $artCollector,
+        VideoLoaderInterface $videoLoader
     ) {
         $this->modelFactory = $modelFactory;
         $this->artCollector = $artCollector;
+        $this->videoLoader  = $videoLoader;
     }
 
     public function gather(
@@ -50,7 +55,7 @@ final class ArtItemGatherer implements ArtItemGathererInterface
     ): bool {
         // Should be more generic !
         if ($type == 'video') {
-            $libitem = Video::create_from_id($objectId);
+            $libitem = $this->videoLoader->load($objectId);
         } else {
             $libitem = $this->modelFactory->mapObjectType($type, $objectId);
         }

@@ -77,6 +77,7 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        /** @var array<string, mixed> $body */
         $body        = $request->getParsedBody();
         $queryParams = $request->getQueryParams();
 

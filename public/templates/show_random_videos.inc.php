@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Video;
@@ -31,6 +32,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var string $web_path */
 /** @var int[] $videos */
+/** @var VideoLoaderInterface $videoLoader */
+
+global $dic;
+$videoLoader = $dic->get(VideoLoaderInterface::class);
 
 $web_path = AmpConfig::get('web_path');
 $button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh'); ?>
@@ -38,8 +43,10 @@ $button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refre
 <?php
 if ($videos) {
     foreach ($videos as $video_id) {
-        $video = Video::create_from_id($video_id);
-        $video->format(); ?>
+        $video = $videoLoader->load($video_id);
+        if (method_exists($video, 'format')) {
+            $video->format();
+        } ?>
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {

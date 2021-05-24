@@ -26,11 +26,11 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Psr\Http\Message\ResponseInterface;
@@ -44,12 +44,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->formVerificator = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,7 +62,7 @@ final class CreateAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_radio')
+            $this->formVerificator->verify($request, 'add_radio') === false
         ) {
             throw new AccessDeniedException();
         }
@@ -76,11 +80,9 @@ final class CreateAction implements ApplicationActionInterface
                 ]
             );
         } else {
-            $body  = T_('Radio Station created');
-            $title = '';
             $this->ui->showConfirmation(
-                $title,
-                $body,
+                '',
+                T_('Radio Station created'),
                 sprintf(
                     '%s/browse.php?action=live_stream',
                     $this->configContainer->getWebPath()

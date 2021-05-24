@@ -20,15 +20,22 @@
  *
  */
 
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */
+/** @var VideoLoaderInterface $videoLoader */
 
-$libitem = Video::create_from_id($libitem->id);
-$libitem->format();
+global $dic;
+$videoLoader = $dic->get(VideoLoaderInterface::class);
+
+$libitem = $videoLoader->load($libitem->getId());
+if (method_exists($libitem, 'format')) {
+    $libitem->format();
+}
 $video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem)); ?>
 <div>
     <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">

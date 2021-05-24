@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -29,8 +30,13 @@ use Ampache\Repository\Model\Video;
 
 /** @var User $np_user */
 /** @var string $web_path */
+/** @var VideoLoaderInterface $videoLoader */
+/** @var Video $media */
 
-$media = Video::create_from_id($media->id);
+global $dic;
+$videoLoader = $dic->get(VideoLoaderInterface::class);
+
+$media = $videoLoader->load($media->getId());
 $media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">

@@ -20,18 +20,18 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Video;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +43,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private VideoLoaderInterface $videoLoader;
+
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        VideoLoaderInterface $videoLoader,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->videoLoader          = $videoLoader;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,17 +65,17 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $video = Video::create_from_id(
-            filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
-        );
-        if (!Catalog::can_remove($video)) {
+        $videoId = (int) ($request->getQueryParams()['video_id'] ?? 0);
+
+        $video = $this->videoLoader->load($videoId);
+
+        if ($this->mediaDeletionChecker->mayDelete($video, $gatekeeper->getUserId()) === false) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the video `%s`', $video->id),
+                sprintf('Unauthorized to remove the video `%d`', $videoId)
             );
         }
 
         $this->ui->showHeader();
-
         if ($video->remove()) {
             $this->ui->showConfirmation(
                 T_('No Problem'),

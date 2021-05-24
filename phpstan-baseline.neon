@@ -5423,6 +5423,7 @@ parameters:
 			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
+
 		-
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Exception\\\\AccessDeniedException\\:\\:\\$message has no typehint specified\\.$#"
 			count: 1
@@ -25920,11 +25921,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:compare_video_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) should return Ampache\\\\Repository\\\\Model\\\\Video but returns Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

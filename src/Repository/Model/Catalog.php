@@ -53,6 +53,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Video\VideoFromTagUpdaterInterface;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
@@ -916,13 +917,14 @@ abstract class Catalog extends database_object
         if (!$catalogs) {
             $catalogs = static::getCatalogRepository()->getList();
         }
+        $vidoeLoader = static::getVideoLoader();
 
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog   = self::create_from_id($catalog_id);
             $video_ids = $catalog->get_video_ids($type);
             foreach ($video_ids as $video_id) {
-                $results[] = Video::create_from_id($video_id);
+                $results[] = $vidoeLoader->load($video_id);
             }
         }
 
@@ -1248,7 +1250,7 @@ abstract class Catalog extends database_object
     {
         // Should be more generic !
         if ($type == 'video') {
-            $libitem = Video::create_from_id($object_id);
+            $libitem = static::getVideoLoader()->load((int) $object_id);
         } else {
             $libitem = static::getModelFactory()->mapObjectType($type, (int) $object_id);
         }
@@ -2656,5 +2658,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(AlbumArtistUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getVideoLoader(): VideoLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(VideoLoaderInterface::class);
     }
 }

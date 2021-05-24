@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -41,6 +42,10 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
 
     private TvShowSeasonRepositoryInterface $tvShowSeasonRepository;
 
+    private ModelFactoryInterface $modelFactory;
+
+    private VideoLoaderInterface $videoLoader;
+
     private ?TvShow $tvShow = null;
 
     /** @var array<string, mixed>|null */
@@ -49,19 +54,19 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
     /** @var null|array{episode_count?: int, catalog_id?: int} */
     private ?array $extra_info = null;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $userActivityRepository,
         TvShowSeasonRepositoryInterface $tvShowRepository,
         ModelFactoryInterface $modelFactory,
+        VideoLoaderInterface $videoLoader,
         int $id
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->userActivityRepository = $userActivityRepository;
         $this->tvShowSeasonRepository = $tvShowRepository;
         $this->modelFactory           = $modelFactory;
+        $this->videoLoader            = $videoLoader;
         $this->id                     = $id;
     }
 
@@ -357,7 +362,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         $deleted = true;
         $videos  = $this->getEpisodeIds();
         foreach ($videos as $video_id) {
-            $video   = Video::create_from_id($video_id);
+            $video   = $this->videoLoader->load($video_id);
             $deleted = $video->remove();
             if (!$deleted) {
                 debug_event(self::class, 'Error when deleting the video `' . $video_id . '`.', 1);

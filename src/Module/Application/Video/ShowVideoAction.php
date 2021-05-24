@@ -20,15 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Video;
 
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,21 +37,30 @@ final class ShowVideoAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private VideoLoaderInterface $videoLoader;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        VideoLoaderInterface $videoLoader
     ) {
-        $this->ui = $ui;
+        $this->ui          = $ui;
+        $this->videoLoader = $videoLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
+        $videoId = (int) ($request->getQueryParams()['video_id'] ?? 0);
 
-        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $video = $this->videoLoader->load($videoId);
         $video->format();
 
-        require_once Ui::find_template('show_video.inc.php');
-
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_video.inc.php',
+            [
+                'video' => $video,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

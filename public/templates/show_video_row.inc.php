@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -33,9 +34,17 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var VideoLoaderInterface $videoLoader */
+/** @var Video $libitem */
+
+global $dic;
+$videoLoader = $dic->get(VideoLoaderInterface::class);
+
 if (!isset($video_type)) {
-    $libitem = Video::create_from_id($libitem->id);
-    $libitem->format();
+    $libitem = $videoLoader->load($libitem->getId());
+    if (method_exists($libitem, 'format')) {
+        $libitem->format();
+    }
     $video_type = ObjectTypeToClassNameMapper::reverseMap($libitem);
 } ?>
 <td class="cel_play">
