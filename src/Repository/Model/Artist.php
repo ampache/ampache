@@ -888,7 +888,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Tag::migrate('artist', $this->id, $artist_id);
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
-                Art::migrate('artist', $this->id, $artist_id);
+                Art::duplicate('artist', $this->id, $artist_id);
                 Catalog::migrate_map('artist', $this->id, $artist_id);
             } // end if it changed
 

@@ -3163,7 +3163,7 @@ abstract class Catalog extends database_object
             Tag::migrate($object_type, $old_object_id, $new_object_id);
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::migrate($object_type, $old_object_id, $new_object_id);
+            Art::duplicate($object_type, $old_object_id, $new_object_id);
             Catalog::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
