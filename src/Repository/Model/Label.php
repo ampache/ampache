@@ -297,16 +297,6 @@ class Label extends database_object implements library_item
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $mbid, strtolower($category), $summary, $address, $country, $email, $website, $active, $this->id));
 
-        $this->name     = $name;
-        $this->mbid     = $mbid;
-        $this->category = $category;
-        $this->summary  = $summary;
-        $this->address  = $address;
-        $this->country  = $country;
-        $this->email    = $email;
-        $this->website  = $website;
-        $this->active   = $active;
-
         return $this->id;
     }
 

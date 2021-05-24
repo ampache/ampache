@@ -140,7 +140,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $interactor->info('------------------', true);
                 Album::update_album_artist();
-                Catalog::update_counts();
             } elseif ($addArt === true) {
                 ob_start();
 
@@ -162,7 +161,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $interactor->info('------------------', true);
             }
             if ($updateInfo === true) {
-                Catalog::update_counts();
                 ob_start();
 
                 // Look for updated artist information. (missing or < 6 months since last update)
@@ -203,8 +201,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
-            Catalog::update_counts();
         }
+        Catalog::update_counts();
         if ($optimizeDatabase === true) {
             ob_start();
 
