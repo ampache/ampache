@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ChannelInterface;
 use Doctrine\DBAL\Connection;
 
@@ -61,7 +60,7 @@ final class ChannelRepository implements ChannelRepositoryInterface
             'SELECT MAX(`port`) AS `max_port` FROM `channel`',
         );
 
-        if ($maxPort !== null) {
+        if ($maxPort) {
             return ((int) $maxPort + 1);
         }
 
@@ -96,7 +95,7 @@ final class ChannelRepository implements ChannelRepositoryInterface
         int $pid
     ): void {
         $this->database->executeQuery(
-            'UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = \'0\' WHERE `id` = ?',
+            'UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = 0 WHERE `id` = ?',
             [$startDate, $address, $port, $pid, $channelId]
         );
     }
@@ -105,7 +104,7 @@ final class ChannelRepository implements ChannelRepositoryInterface
         int $channelId
     ): void {
         $this->database->executeQuery(
-            'UPDATE `channel` SET `start_date` = \'0\', `listeners` = \'0\', `pid` = \'0\' WHERE `id` = ?',
+            'UPDATE `channel` SET `start_date` = 0, `listeners` = 0, `pid` = 0 WHERE `id` = ?',
             [$channelId]
         );
     }

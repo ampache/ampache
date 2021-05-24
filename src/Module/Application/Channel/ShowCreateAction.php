@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Channel;
 
@@ -32,7 +32,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -69,15 +68,13 @@ final class ShowCreateAction implements ApplicationActionInterface
         /** @var array<string, mixed> $queryParams */
         $queryParams = $request->getParsedBody() ?? $request->getQueryParams();
 
+        $playlistId = (int) ($queryParams['id'] ?? 0);
+        $type       = $queryParams['type'] ?? null;
+
         $this->ui->showHeader();
 
-        $type = $request->getQueryParams()['type'] ?? null;
-        if ($type === 'playlist' && !empty($_REQUEST['id'])) {
-            /** @var Playlist $object */
-            $object = $this->modelFactory->mapObjectType(
-                $type,
-                (int) ($queryParams['id'] ?? 0)
-            );
+        if ($type === 'playlist' && $playlistId !== 0) {
+            $object = $this->modelFactory->createPlaylist($playlistId);
             if ($object->isNew() === false) {
                 $object->format();
 

@@ -24,17 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Channel;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Channel\ChannelCreatorInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -50,16 +48,20 @@ final class CreateAction implements ApplicationActionInterface
 
     private ChannelCreatorInterface $channelCreator;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ChannelCreatorInterface $channelCreator
+        ChannelCreatorInterface $channelCreator,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->channelCreator  = $channelCreator;
+        $this->formVerificator = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,48 +72,57 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_channel')
+            $this->formVerificator->verify($request, 'add_channel') === false
         ) {
             throw new AccessDeniedException();
         }
 
-        /** @var Playlist $object */
-        $object = $this->modelFactory->mapObjectType(
-            $_REQUEST['type'],
-            (int) $_REQUEST['id'],
-        );
+        $body        = $request->getParsedBody();
+        $queryParams = $request->getQueryParams();
+
+        $playlistId = (int) ($queryParams['id'] ?? 0);
+
+        $playlist = $this->modelFactory->createPlaylist($playlistId);
+
+        if ($playlist->isNew() === true) {
+            return null;
+        }
+        $playlist->format();
 
         $this->ui->showHeader();
 
         $created = $this->channelCreator->create(
-            $_REQUEST['name'],
-            $_REQUEST['description'],
-            $_REQUEST['url'],
-            $_REQUEST['type'],
-            (int) $_REQUEST['id'],
-            $_REQUEST['interface'],
-            (int) $_REQUEST['port'],
-            $_REQUEST['admin_password'],
-            isset($_REQUEST['private']) ? 1 : 0,
-            (int) $_REQUEST['max_listeners'],
-            (int) $_REQUEST['random'] ?: 0,
-            (int) $_REQUEST['loop'] ?: 0,
-            $_REQUEST['stream_type'],
-            (int) $_REQUEST['bitrate']
+            $body['name'] ?? '',
+            $body['description'] ?? '',
+            $body['url'] ?? '',
+            $queryParams['type'] ?? 'playlist',
+            $playlistId,
+            $body['interface'] ?? '',
+            (int) ($body['port'] ?? 0),
+            $body['admin_password'] ?? '',
+            isset($body['private']) ? 1 : 0,
+            (int) ($body['max_listeners'] ?? 0),
+            ($body['random'] ?? 0) ? 1 : 0,
+            ($body['loop'] ?? 0) ? 1 : 0,
+            $body['stream_type'] ?? '',
+            (int) ($body['bitrate'] ?? 0)
         );
 
         if (!$created) {
             $this->ui->show(
                 'show_add_channel.inc.php',
                 [
-                    'object' => $object
+                    'object' => $playlist,
                 ]
             );
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Channel has been created'),
-                AmpConfig::get('web_path') . '/browse.php?action=channel'
+                sprintf(
+                    '%s/browse.php?action=channel',
+                    $this->configContainer->getWebPath()
+                )
             );
         }
 

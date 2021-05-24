@@ -27,16 +27,16 @@ interface ChannelCreatorInterface
         string $name,
         string $description,
         string $url,
-        string $object_type,
-        int $object_id,
+        string $objectType,
+        int $objectId,
         string $interface,
         int $port,
-        string $admin_password,
-        int $private,
-        int $max_listeners,
+        string $adminPassword,
+        int $isPrivate,
+        int $maxListeners,
         int $random,
         int $loop,
-        string $stream_type,
+        string $streamType,
         int $bitrate
     ): bool;
 }
