@@ -559,8 +559,6 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        $this->update_last_update();
-
         /** @var Song|Video $media_type */
         foreach (array(Video::class, Song::class) as $media_type) {
             $total = $stats['items'];
@@ -579,6 +577,7 @@ class Catalog_local extends Catalog
         Catalog::update_counts();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
+        $this->update_last_update();
 
         return array('total' => $number, 'updated' => $total_updated);
     } // verify_catalog_proc
@@ -613,6 +612,7 @@ class Catalog_local extends Catalog
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
+        $verify_by_time = AmpConfig::get('catalog_verify_by_time');
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
@@ -627,10 +627,13 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
+            // the file has not been modified since the last verify and you're wasting your time reading this again
+            if ($verify_by_time && filemtime($row['file']) < $this->last_update) {
+                continue;
+            }
 
-            $media      = new $class_name($row['id']);
-            $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,
-                $this->rename_pattern);
+            $media = new $class_name($row['id']);
+            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
