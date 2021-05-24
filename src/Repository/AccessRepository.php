@@ -34,11 +34,10 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function getAccessLists(): array
     {
-        $sql        = 'SELECT `id` FROM `access_list`';
+        $sql = 'SELECT `id` FROM `access_list`';
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }

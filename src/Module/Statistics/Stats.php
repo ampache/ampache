@@ -480,20 +480,13 @@ class Stats
             $user_id = Core::get_global('user')->id;
         }
         $order = ($newest) ? 'DESC' : 'ASC';
-
-        $sql = "SELECT * FROM `object_count` " . "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+        $sql   = (AmpConfig::get('catalog_disable'))
+            ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
+            : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
         $sql .= "ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, array($user_id, $time));
 
         $results = array();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
         }
@@ -669,9 +662,9 @@ class Stats
         $type = self::validate_type($input_type);
         $sql  = self::get_recent_sql($type, null, $newest);
         $sql .= "LIMIT $limit";
-        $db_results = Dba::read($sql);
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

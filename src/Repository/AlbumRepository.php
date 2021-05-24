@@ -91,14 +91,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getSongs(
         int $albumId
     ): array {
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ';
-        }
-        $sql .= 'WHERE `song`.`album` = ? ';
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -134,14 +129,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getRandomSongs(
         int $albumId
     ): array {
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ';
-        }
-        $sql .= 'WHERE `song`.`album` = ? ';
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumId]);
 

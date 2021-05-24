@@ -863,11 +863,10 @@ class Search extends playlist_object
      */
     public static function get_searches()
     {
-        $sql        = "SELECT `id` from `search` WHERE `type`='public' OR " . "`user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+        $sql = "SELECT `id` from `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1080,10 +1079,10 @@ class Search extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $results = Dba::fetch_row($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_row($db_results);
 
         return (int)$results['0'];
     } // get_total_duration
@@ -1498,8 +1497,9 @@ class Search extends playlist_object
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $join['song'] || $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1745,8 +1745,9 @@ class Search extends playlist_object
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -2367,8 +2368,9 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['playlist_data'] = true;
-        $join['song']          = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog']       = AmpConfig::get('catalog_disable');
+        $catalog_disable       = AmpConfig::get('catalog_disable');
+        $join['song']          = $join['song'] || $catalog_disable;
+        $join['catalog']       = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 

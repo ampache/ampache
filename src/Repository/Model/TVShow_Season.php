@@ -90,19 +90,13 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_episodes()
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
+            : "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' ";
         $sql .= "ORDER BY `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

@@ -105,18 +105,18 @@ class Podcast extends database_object implements library_item
      */
     public function get_episodes($state_filter = '')
     {
-        $params = array();
-        $sql    = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` ";
+        $params          = array();
+        $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        if ($catalog_disable) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ";
         }
         $sql .= "WHERE `podcast_episode`.`podcast`='" . Dba::escape($this->id) . "' ";
         if (!empty($state_filter)) {
             $sql .= "AND `podcast_episode`.`state` = ? ";
             $params[] = $state_filter;
         }
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog_disable) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `podcast_episode`.`pubdate` DESC";

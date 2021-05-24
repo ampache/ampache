@@ -931,12 +931,11 @@ class Query
      */
     public function get_objects()
     {
-        // First we need to get the SQL statement we are going to run
-        // This has to run against any possible filters (dependent on type)
-        $sql        = $this->get_sql();
-        $db_results = Dba::read($sql);
+        // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
+        $sql = $this->get_sql();
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
         }
@@ -1143,7 +1142,6 @@ class Query
                 case "song":
                     $dis = Catalog::get_enable_filter('song', '`' . $this->get_type() . '`.`id`');
                     break;
-
                 case "tag":
                     $dis = Catalog::get_enable_filter('tag', '`' . $this->get_type() . '`.`object_id`');
                     break;

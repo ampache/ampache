@@ -164,11 +164,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instances()
     {
-        $sql        = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
+        $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }

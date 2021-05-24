@@ -55,9 +55,9 @@ class Random
             $sql .= " " . $multi_where . " `artist`.`id` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'artist'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= "GROUP BY `artist`.`id` " . "ORDER BY RAND() LIMIT 1";
-        $db_results = Dba::read($sql);
 
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
 
         return $results['id'];
     } // artist
@@ -70,10 +70,10 @@ class Random
      */
     public static function playlist()
     {
-        $sql        = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " . " ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " . " ORDER BY RAND()";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " . " ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " . " ORDER BY RAND()";
 
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['id'];
     } // playlist

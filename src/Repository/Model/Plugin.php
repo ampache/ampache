@@ -251,10 +251,10 @@ class Plugin
      */
     public function get_ampache_db_version()
     {
-        $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `update_info` WHERE `key`='db_version'";
 
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
 
         return $results['value'];
     } // get_ampache_db_version

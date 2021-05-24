@@ -485,9 +485,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . "LIMIT $limit";
 
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
         }

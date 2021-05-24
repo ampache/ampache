@@ -585,22 +585,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($idlist == '()') {
             return false;
         }
-
-        // Song data cache
-        $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' . '`year`, `artist`, `title`, `bitrate`, `rate`, ' . '`mode`, `size`, `time`, `track`, `played`, ' . '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, ' . '`mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` ' . 'FROM `song` LEFT JOIN `tag_map` ' . 'ON `tag_map`.`object_id`=`song`.`id` ' . "AND `tag_map`.`object_type`='song' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`id` IN $idlist ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $db_results = Dba::read($sql);
-
         $artists = array();
         $albums  = array();
         $tags    = array();
 
+        // Song data cache
+        $sql   = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
+
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = (!empty($limit_threshold))
@@ -716,8 +710,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $sql .= " AND `album`.`mbid` = '" . $song_mbid . "'";
         }
         $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
+        $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             return $results['id'];
         }
@@ -857,13 +850,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($search_type == 'artist_album_title') {
             $sql .= ',`album`';
         }
-
         $sql .= ' HAVING COUNT(`title`) > 1 ORDER BY `title`';
 
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($item = Dba::fetch_assoc($db_results)) {
             $results[] = $item;
         } // end while
