@@ -611,7 +611,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music') as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -734,7 +734,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music') as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
