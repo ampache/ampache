@@ -186,7 +186,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                     $labels = $catalog->get_label_ids('tag_generated');
-                    $catalog->gather_label_info($labels);
+                    $catalog->update_from_external($labels);
 
                     $buffer = ob_get_contents();
 

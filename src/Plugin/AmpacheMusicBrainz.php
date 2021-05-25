@@ -132,17 +132,18 @@ class AmpacheMusicBrainz
     } // get_metadata
 
     /**
-     * update_label_metadata
-     * Update a label from musicbrainz
-     * @param Label $label
+     * get_external_metadata
+     * Update an object (label for now) using musicbrainz
+     * @param Label $object
+     * @param string $object_type
      * @return bool
      */
-    public function update_label_metadata(Label $label)
+    public function get_external_metadata(Label $object, string $object_type = 'label')
     {
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
-        if ($label->mbid) {
+        if ($object->mbid) {
             try {
-                $results = $mbrainz->lookup('label', $label->mbid);
+                $results = $mbrainz->lookup($object_type, $object->mbid);
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
@@ -150,7 +151,8 @@ class AmpacheMusicBrainz
             }
         } else {
             try {
-                $results = $mbrainz->search(new LabelFilter(array("label" => $label->name)), 1);
+                $args    = array($object_type => $object->name);
+                $results = $mbrainz->search(new LabelFilter($args), 1);
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
@@ -161,21 +163,23 @@ class AmpacheMusicBrainz
             $results = $results[0];
         }
         if (!empty($results)) {
-            debug_event('MusicBrainz.plugin', "Updating Label: " . $label->name, 3);
+            debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->name, 3);
             $data = array(
-                'name' => $label->name,
-                'mbid' => $results->{'id'} ?: $label->mbid,
-                'category' => $results->{'type'} ?: $label->category,
-                'summary' => $results->{'disambiguation'} ?: $label->summary,
-                'address' => $label->address,
-                'country' => $results->{'country'} ?: $label->country,
-                'email' => $label->email,
-                'website' => $label->website,
+                'name' => $object->name,
+                'mbid' => $results->{'id'} ?: $object->mbid,
+                'category' => $results->{'type'} ?: $object->category,
+                'summary' => $results->{'disambiguation'} ?: $object->summary,
+                'address' => $object->address,
+                'country' => $results->{'country'} ?: $object->country,
+                'email' => $object->email,
+                'website' => $object->website,
                 'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
             );
-            $label->update($data);
+            $object->update($data);
+
+            return true;
         }
 
-        return true;
+        return false;
     } // get_metadata
 }

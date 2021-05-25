@@ -1620,23 +1620,23 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * gather_label_info
+     * update_from_external
      *
      * This runs through all of the labels and refreshes information from musicbrainz
-     * @param array $label_list
+     * @param array $object_list
      */
-    public function gather_label_info($label_list = array())
+    public function update_from_external($object_list = array())
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        debug_event(self::class, 'gather_label_info found ' . (string) count($label_list) . ' items to check', 4);
+        debug_event(self::class, 'update_from_external found ' . (string) count($object_list) . ' items to check', 4);
         $plugin = new Plugin('musicbrainz');
         // Run through items and refresh info
-        foreach ($label_list as $label_id) {
+        foreach ($object_list as $label_id) {
             if ($plugin->load(new User(-1))) {
                 $label = new Label($label_id);
-                $plugin->_plugin->update_label_metadata($label);
+                $plugin->_plugin->get_external_metadata($label, 'label');
             }
         }
     }
