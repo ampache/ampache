@@ -509,14 +509,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if (!$this->id) {
             return true;
         }
-        if ($this->time == 0) {
-            $this->update_time();
-        }
-        if ($this->album_count == 0 && $this->album_group_count == 0 && $this->song_count == 0) {
-            $this->update_album_count();
-            $this->update_song_count();
-            $this->update_time();
-        }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
 

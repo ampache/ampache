@@ -151,7 +151,7 @@ class Stats
         }
 
         $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname));
 
         // the count was inserted
@@ -185,9 +185,9 @@ class Stats
     {
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` " .
-                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-                "`object_count`.`count_type` = 'stream' AND " .
-                "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
+            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
+            "`object_count`.`count_type` = 'stream' AND " .
+            "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -319,10 +319,10 @@ class Stats
         $sqlres = array($user_id);
 
         $sql = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, " .
-               "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, " .
-               "`object_count`.`count_type` FROM `object_count` " .
-               "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
-               "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
+            "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, " .
+            "`object_count`.`count_type` FROM `object_count` " .
+            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
+            "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             array_push($sqlres, $agent);
@@ -374,7 +374,7 @@ class Stats
             return 0;
         }
         $sql = "SELECT `time` FROM `$object_type` " .
-               "WHERE `id` = ?";
+            "WHERE `id` = ?";
         $db_results = Dba::read($sql, array($object_id));
         $results    = Dba::fetch_assoc($db_results);
 
@@ -743,41 +743,41 @@ class Stats
 
         $base_type         = 'song';
         $multi_where       = 'WHERE';
-        $sql_type          = ($type === 'song' || $type === 'playlist' || $type === 'video') ? $type . '`.`id' : $base_type . "`.`" . $type;
         $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
+        $sql_type          = (in_array($type, array('song', 'album', 'playlist', 'video')))
+            ? $type . '`.`id'
+            : $base_type . "`.`" . $type;
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {
-            $type = $type . '`.`id';
-            $sql  = "SELECT `$type` as `id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` ";
+            return "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` GROUP BY `$sql_type` ORDER BY `real_atime` DESC";
+        }
+        // everything else
+        if ($type === 'song') {
+            $sql = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+        } elseif ($type === 'album') {
+            $sql = "SELECT MIN(`album`.`id`) as `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` ";
+        } elseif ($type === 'video') {
+            $base_type = 'video';
+            $sql       = "SELECT DISTINCT(`video`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
+            $type      = 'video`.`id';
         } else {
-            $sql = "SELECT MAX(`$type`) as `id`, MAX(`song`.`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
-            if ($type === 'song') {
-                $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
-            }
-            if ($allow_group_disks && $type == 'album') {
-                $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
-            }
-            if ($type === 'video') {
-                $base_type = 'video';
-                $sql       = "SELECT DISTINCT(`$type`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
-                $type      = 'video`.`id';
-            }
-            if (AmpConfig::get('catalog_disable')) {
-                $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
-                $sql .= $multi_where . " `catalog`.`enabled` = '1' ";
-                $multi_where = 'AND';
-            }
-            if ($catalog > 0) {
-                $sql .= $multi_where . " `catalog` = '" . (string)scrub_in($catalog) . "' ";
-                $multi_where = 'AND';
-            }
-            $rating_filter = AmpConfig::get_rating_filter();
-            $user_id       = (int)Core::get_global('user')->id;
-            if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
-                $sql .= $multi_where . " `" . $sql_type . "` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = '" . $type . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
-                $multi_where = 'AND';
-            }
+            $sql = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+        }
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
+            $sql .= $multi_where . " `catalog`.`enabled` = '1' ";
+            $multi_where = 'AND';
+        }
+        if ($catalog > 0) {
+            $sql .= $multi_where . " `catalog` = '" . (string)scrub_in($catalog) . "' ";
+            $multi_where = 'AND';
+        }
+        $rating_filter = AmpConfig::get_rating_filter();
+        $user_id       = (int)Core::get_global('user')->id;
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
+            $sql .= $multi_where . " `" . $sql_type . "` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = '" . $type . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
+            $multi_where = 'AND';
         }
         if ($allow_group_disks && $type == 'album') {
             $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";

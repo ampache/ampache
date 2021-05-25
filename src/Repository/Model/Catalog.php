@@ -1163,11 +1163,11 @@ abstract class Catalog extends database_object
      * @param string $object_id
      * @return integer
      */
-    public function get_catalog_map($object_type, $object_id)
+    public static function get_catalog_map($object_type, $object_id)
     {
         $sql = "SELECT MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
 
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($object_type, $object_id));
         if ($row = Dba::fetch_assoc($db_results)) {
             return (int) $row['catalog_id'];
         }
@@ -1812,9 +1812,11 @@ abstract class Catalog extends database_object
                 foreach ($libitem->get_child_ids() as $album_id) {
                     $album_tags = self::getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
+                    static::getAlbumRepository()->updateTime($libitem);
                 }
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                Artist::update_artist_counts($libitem->id);
                 break;
         } // end switch type
 

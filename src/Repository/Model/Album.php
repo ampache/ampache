@@ -299,7 +299,7 @@ class Album extends database_object implements library_item
             $this->allow_group_disks = true;
 
             foreach ($this->album_suite as $albumId) {
-                $this->total_duration += $albumRepository->getDuration((int) $albumId);
+                $this->total_duration += $albumRepository->getAlbumDuration((int) $albumId);
             }
         }
 

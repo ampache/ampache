@@ -474,7 +474,7 @@ class Json_Data
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {
                 $theArray['artist'] = array(
-                    "id" => (string)$album->artist_id,
+                    "id" => (string)$album->album_artist,
                     "name" => $album->album_artist_name
                 );
             } elseif ($album->artist_count != 1) {

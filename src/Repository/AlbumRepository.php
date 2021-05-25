@@ -47,9 +47,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         $sort_disk = (AmpConfig::get('album_group')) ? 'AND `album`.`disk` = 1 ' : '';
 
-        $sql = 'SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` ';
+        $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ';
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` ';
             $where = sprintf(
                 'WHERE `catalog`.`enabled` = \'1\' %s',
                 $sort_disk
@@ -65,7 +65,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
             $sql .= sprintf(
-                'AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ',
+                "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
@@ -206,7 +206,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             "(`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') " .
             "AND `album`.`year` = $year ";
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
 
         if ($catalogId) {
             $catalog_where .= " AND `catalog`.`id` = '$catalogId'";
@@ -240,12 +240,27 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * Get time for an album disk.
+     * Get time for an album disk by song.
      */
     public function getDuration(int $albumId): int
     {
         $db_results = Dba::read(
             'SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?',
+            [$albumId]
+        );
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
+    }
+
+    /**
+     * Get time for an album disk by album.
+     */
+    public function getAlbumDuration(int $albumId): int
+    {
+        $db_results = Dba::read(
+            'SELECT `time` from `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -286,7 +301,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
         if ($catalog !== null) {
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }

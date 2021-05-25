@@ -44,9 +44,9 @@ class Random
     public static function artist()
     {
         $multi_where = 'WHERE';
-        $sql         = "SELECT `artist`.`id` FROM `artist` " . "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
+        $sql         = "SELECT `artist`.`id` FROM `artist` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . "WHERE `catalog`.`enabled` = '1' ";
+            $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `catalog_map`.`catalog_id` WHERE `catalog`.`enabled` = '1' ";
             $multi_where = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
@@ -335,7 +335,7 @@ class Random
                 break;
             case 'album':
             case 'artist':
-                $sql = "SELECT `$type`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `$type` ";
+                $sql = "SELECT `$type`.`id`, SUM(`song`.`size`) AS `size`, `$type`.`time` FROM `$type` ";
                 if (!$search_info || !$search_info['join']['song']) {
                     $sql .= "LEFT JOIN `song` ON `song`.`$type`=`$type`.`id` ";
                 }
