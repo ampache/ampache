@@ -319,8 +319,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Catalog verify by time
 ; Only verify the files that have been modified since the last verify.
-; For large catalogs the verify process can be terribly long so this will
-; help speed things up by checking the filemtime before loading the file
+; For large catalogs the verify process can be terribly long so this will help
+; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "false"
 catalog_verify_by_time = "true"
 
