@@ -456,12 +456,19 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $artists
      * @param $lastModified
+     * @param array $catalogs
      */
-    public static function addArtistsIndexes($xml, $artists, $lastModified)
+    public static function addArtistsIndexes($xml, $artists, $lastModified, $catalogs)
     {
         $xindexes = $xml->addChild('indexes');
-        self::addIgnoredArticles($xindexes);
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
+        self::addIgnoredArticles($xindexes);
+        foreach ($catalogs as $folderid) {
+            $catalog = Catalog::create_from_id($folderid);
+            $xfolder = $xindexes->addChild('shortcut');
+            $xfolder->addAttribute('id', (string)$folderid);
+            $xfolder->addAttribute('name', (string)$catalog->name);
+        }
         self::addArtistArrays($xindexes, $artists);
     }
 
@@ -614,6 +621,7 @@ class Subsonic_Xml_Data
         $sub_id  = (string)self::getArtistId($artist['id']);
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('parent', $artist['catalog_id']);
         $xartist->addAttribute('name', (string)self::checkName($artist['f_name']));
 
         if (isset($artist['album_count'])) {
@@ -649,6 +657,7 @@ class Subsonic_Xml_Data
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', (string)self::getAlbumId($album->id));
+        $xalbum->addAttribute('parent', (string) self::getArtistId($album->album_artist));
         $xalbum->addAttribute('album', (string)self::checkName($album->f_name));
         $xalbum->addAttribute('title', (string)self::formatAlbum($album));
         $xalbum->addAttribute('name', (string)self::checkName($album->f_name));
@@ -658,9 +667,9 @@ class Subsonic_Xml_Data
         $album->format();
         $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
         $xalbum->addAttribute('songCount', (string) $album->song_count);
+        $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
-        $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
-        $xalbum->addAttribute('parent', (string) self::getArtistId($album->artist_id));
+        $xalbum->addAttribute('artistId', (string) self::getArtistId($album->album_artist));
         $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
         if ($album->year > 0) {
             $xalbum->addAttribute('year', (string)$album->year);
@@ -956,6 +965,7 @@ class Subsonic_Xml_Data
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
+        $xdir->addAttribute('parent', (string)Catalog::get_catalog_map('artist', $artist_id));
         $xdir->addAttribute('name', (string)$data['f_name']);
         $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
@@ -975,10 +985,12 @@ class Subsonic_Xml_Data
         $album->format();
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$album_id);
-        $xdir->addAttribute('name', (string)self::formatAlbum($album));
-        if ($album->artist_id) {
-            $xdir->addAttribute('parent', (string)self::getArtistId($album->artist_id));
+        if ($album->album_artist) {
+            $xdir->addAttribute('parent', (string)self::getArtistId($album->album_artist));
+        } else {
+            $xdir->addAttribute('parent', (string)$album->catalog);
         }
+        $xdir->addAttribute('name', (string)self::formatAlbum($album));
 
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
