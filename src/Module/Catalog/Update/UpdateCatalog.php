@@ -140,7 +140,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $interactor->info('------------------', true);
                 Album::update_album_artist();
-            } elseif ($addArt === true) {
+            }
+            if ($addArt === true) {
                 ob_start();
 
                 // Look for media art

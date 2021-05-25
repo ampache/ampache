@@ -484,7 +484,7 @@ class Json_Data
                 );
             } else {
                 $theArray['artist'] = array(
-                    "id" => (string)$album->artist_id,
+                    "id" => (string)$album->album_artist,
                     "name" => $album->artist_name
                 );
             }
