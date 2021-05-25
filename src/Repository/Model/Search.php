@@ -1324,9 +1324,8 @@ class Search extends playlist_object
                         "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
-                    $input          = $input * 60;
-                    $where[]        = "`alength`.`time` $sql_match_operator '$input'";
-                    $table['atime'] = "LEFT JOIN (SELECT `album`, SUM(`time`) AS `time` FROM `song` GROUP BY `album`) " . "AS `alength` ON `alength`.`album`=`album`.`id` ";
+                    $input   = $input * 60;
+                    $where[] = "`album`.`time` $sql_match_operator '$input'";
                     break;
                 case 'rating':
                     // average ratings only
@@ -1588,6 +1587,9 @@ class Search extends playlist_object
                 case 'placeformed':
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                     break;
+                case 'time':
+                    $input   = $input * 60;
+                    $where[] = "`artist`.`time` $sql_match_operator '$input'";
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
@@ -1664,6 +1666,7 @@ class Search extends playlist_object
                         "ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
+                    break;
                     break;
                 case 'last_play':
                     $my_type = 'artist';

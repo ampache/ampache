@@ -838,7 +838,7 @@ class Query
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON  $source1 = $dest1  AND  $source2 = $dest2";
-    } // set_join
+    } // set_join_and
 
     /**
      * set_having
