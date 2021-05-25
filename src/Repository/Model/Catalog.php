@@ -621,10 +621,9 @@ abstract class Catalog extends database_object
             $params[] = $filter_type;
         }
         $sql .= "ORDER BY `name`";
+
         $db_results = Dba::read($sql, $params);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1069,14 +1068,13 @@ abstract class Catalog extends database_object
      */
     public static function get_artist_arrays($catalogs)
     {
-        $results = array();
-        foreach ($catalogs as $catalog_id) {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`";
-            $db_results = Dba::read($sql, array($catalog_id));
+        $list = Dba::escape(implode(',', $catalogs));
+        $sql  = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, MIN(`catalog_map`.`catalog_id`) FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN ($list) GROUP BY `artist`.`id` ORDER BY `artist`.`name`";
 
-            while ($row = Dba::fetch_assoc($db_results, false)) {
-                $results[] = $row;
-            }
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
         }
 
         return $results;
@@ -1155,6 +1153,26 @@ abstract class Catalog extends database_object
         }
 
         return $results;
+    }
+
+    /**
+     * get_catalog_map
+     *
+     * This returns an id of artist that have songs in this catalog
+     * @param string $object_type
+     * @param string $object_id
+     * @return integer
+     */
+    public function get_catalog_map($object_type, $object_id)
+    {
+        $sql = "SELECT MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
+
+        $db_results = Dba::read($sql, array($this->id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['catalog_id'];
+        }
+
+        return 0;
     }
 
     /**

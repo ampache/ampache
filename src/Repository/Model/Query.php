@@ -825,6 +825,22 @@ class Query
     } // set_join
 
     /**
+     * set_join_and
+     * This sets the joins for the current browse object and a second option as well
+     * @param string $type
+     * @param string $table
+     * @param string $source1
+     * @param string $dest1
+     * @param string $source2
+     * @param string $dest2
+     * @param integer $priority
+     */
+    public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
+    {
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON  $source1 = $dest1  AND  $source2 = $dest2";
+    } // set_join
+
+    /**
      * set_having
      * This sets the "HAVING" part of the query, we can only have one..
      * god this is ugly
@@ -1351,17 +1367,17 @@ class Query
                     case 'artist':
                         $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
                         break;
-                    case 'add_gt':
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
                     case 'add_lt':
                         $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
                         break;
-                    case 'update_gt':
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
+                    case 'add_gt':
+                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'update_lt':
                         $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'update_gt':
+                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'catalog':
                         if ($value != 0) {
@@ -1424,13 +1440,6 @@ class Query
                         $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
-                            $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
-                            $filter_sql = " (`song`.`catalog` = '$value') AND ";
-                        }
-                        break;
                     case 'update_lt':
                         $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
@@ -1439,9 +1448,13 @@ class Query
                         $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
+                    case 'catalog':
+                        if ($value != 0) {
+                            $filter_sql = " (`album`.`catalog` = '$value') AND ";
+                        }
+                        break;
                     case 'catalog_enabled':
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     default:
@@ -1458,13 +1471,6 @@ class Query
                             $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
-                        break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
-                            $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
-                            $filter_sql = " (`catalog`.`id` = '$value') AND ";
-                        }
                         break;
                     case 'exact_match':
                         $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1505,9 +1511,15 @@ class Query
                         $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
+                    case 'catalog':
+                        if ($value != 0) {
+                            $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', 'artist', 100);
+                            $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
+                        }
+                        break;
                     case 'catalog_enabled':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+                        $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', 'artist', 100);
+                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':

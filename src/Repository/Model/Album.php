@@ -151,11 +151,6 @@ class Album extends database_object implements library_item
     public $artist_name;
 
     /**
-     * @var integer $artist_id
-     */
-    public $artist_id;
-
-    /**
      * @var array $tags
      */
     public $tags;
@@ -670,7 +665,7 @@ class Album extends database_object implements library_item
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
             $this->f_artist_name = $artist;
-            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
+            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist      = $artist;
         } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
@@ -737,7 +732,7 @@ class Album extends database_object implements library_item
     public function get_parent()
     {
         if ($this->artist_count == 1) {
-            return array('object_type' => 'artist', 'object_id' => $this->artist_id);
+            return array('object_type' => 'artist', 'object_id' => $this->album_artist);
         }
 
         return null;
@@ -893,7 +888,7 @@ class Album extends database_object implements library_item
     public function get_description()
     {
         // Album description is not supported yet, always return artist description
-        $artist = new Artist($this->artist_id);
+        $artist = new Artist($this->album_artist);
 
         return $artist->get_description();
     }
@@ -912,8 +907,8 @@ class Album extends database_object implements library_item
             $album_id = $this->id;
             $type     = 'album';
         } else {
-            if (Art::has_db($this->artist_id, 'artist') || $force) {
-                $album_id = $this->artist_id;
+            if (Art::has_db($this->album_artist, 'artist') || $force) {
+                $album_id = $this->album_artist;
                 $type     = 'artist';
             }
         }
@@ -934,7 +929,6 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $name           = (isset($data['name'])) ? $data['name'] : $this->name;
-        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
         $album_artist   = (isset($data['album_artist'])) ? (int) $data['album_artist'] : $this->album_artist;
         $year           = (isset($data['year'])) ? $data['year'] : $this->year;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
