@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -134,7 +135,7 @@ class ConfirmDeleteActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
 
         $podcastId = 666;
         $webPath   = 'some-web-path';
@@ -201,7 +202,7 @@ class ConfirmDeleteActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
 
         $podcastId = 666;
         $webPath   = 'some-web-path';

@@ -26,6 +26,7 @@ namespace Ampache\Module\Podcast;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
@@ -61,7 +62,7 @@ class PodcastDeleterTest extends MockeryTestCase
         $episodeId = 666;
 
         $podcastEpisode = $this->mock(Podcast_Episode::class);
-        $podcast        = $this->mock(Podcast::class);
+        $podcast        = $this->mock(PodcastInterface::class);
 
         $this->podcastEpisodeRepository->shouldReceive('getEpisodeIds')
             ->with($podcast)

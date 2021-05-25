@@ -35,6 +35,7 @@ use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Mockery\MockInterface;
@@ -159,7 +160,7 @@ class PodcastDeleteMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
 
         $objectId = 666;
 
@@ -194,7 +195,7 @@ class PodcastDeleteMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
 
         $objectId = 666;
 
@@ -234,7 +235,7 @@ class PodcastDeleteMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $objectId = 666;

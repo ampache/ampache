@@ -26,7 +26,6 @@ namespace Ampache\Repository;
 
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\PodcastInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -81,7 +80,7 @@ class PodcastRepositoryTest extends MockeryTestCase
 
     public function testRemoveRemoves(): void
     {
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
         $result  = $this->mock(Result::class);
 
         $podcastId = 666;
@@ -111,7 +110,7 @@ class PodcastRepositoryTest extends MockeryTestCase
 
     public function testUpdateLastsyncUpdates(): void
     {
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
 
         $podcastId = 666;
         $time      = 42;
@@ -375,6 +374,43 @@ class PodcastRepositoryTest extends MockeryTestCase
         $this->assertSame(
             $podcast,
             $this->subject->findById($id)
+        );
+    }
+
+    public function testGetDataByIdReturnsEmptyArrayIfNothingWasFound(): void
+    {
+        $podcastId = 666;
+
+        $this->connection->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `podcast` WHERE `id`= ?',
+                [$podcastId]
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertSame(
+            [],
+            $this->subject->getDataById($podcastId)
+        );
+    }
+
+    public function testGetDataByIdReturnsData(): void
+    {
+        $podcastId = 666;
+        $result    = ['some' => 'data'];
+
+        $this->connection->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `podcast` WHERE `id`= ?',
+                [$podcastId]
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->assertSame(
+            $result,
+            $this->subject->getDataById($podcastId)
         );
     }
 }

@@ -38,7 +38,7 @@ interface PodcastRepositoryInterface
     ): bool;
 
     public function updateLastsync(
-        Podcast $podcast,
+        PodcastInterface $podcast,
         int $time
     ): void;
 
@@ -72,4 +72,9 @@ interface PodcastRepositoryInterface
     ): ?int;
 
     public function findById(int $id): ?PodcastInterface;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataById(int $podcastId): array;
 }

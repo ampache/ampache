@@ -12585,11 +12585,6 @@ parameters:
 			path: src/Module/Podcast/PodcastEpisodeDownloader.php
 
 		-
-			message: "#^Parameter \\#1 \\$podcast of method Ampache\\\\Repository\\\\PodcastRepositoryInterface\\:\\:updateLastsync\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast, Ampache\\\\Repository\\\\Model\\\\PodcastInterface given\\.$#"
-			count: 1
-			path: src/Module/Podcast/PodcastSyncer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Preference\\\\UserPreferenceUpdater\\:\\:update\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Preference/UserPreferenceUpdater.php
@@ -23150,7 +23145,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\PodcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
@@ -23185,7 +23180,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Channel' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\.$#"
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Channel' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Podcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\PodcastInterface\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
@@ -23555,41 +23550,6 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$copyright\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$description\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$feed\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$generator\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$title\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$website\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:display_art\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
@@ -23636,11 +23596,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#7 \\$copyright of method Ampache\\\\Repository\\\\PodcastRepositoryInterface\\:\\:update\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:\\$id has no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast.php
 

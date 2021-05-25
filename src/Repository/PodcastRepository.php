@@ -30,7 +30,7 @@ use Doctrine\DBAL\Connection;
 
 final class PodcastRepository implements PodcastRepositoryInterface
 {
-    private Connection $connection;
+    private Connection $database;
 
     private ModelFactoryInterface $modelFactory;
 
@@ -38,7 +38,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
         Connection $connection,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->connection   = $connection;
+        $this->database     = $connection;
         $this->modelFactory = $modelFactory;
     }
 
@@ -50,7 +50,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     public function getPodcastIds(
         int $catalogId
     ): array {
-        $result = $this->connection->executeQuery(
+        $result = $this->database->executeQuery(
             'SELECT `id` FROM `podcast` WHERE `catalog` = ?',
             [$catalogId]
         );
@@ -66,7 +66,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     public function remove(
         PodcastInterface $podcast
     ): bool {
-        $result = $this->connection->executeQuery(
+        $result = $this->database->executeQuery(
             'DELETE FROM `podcast` WHERE `id` = ?',
             [$podcast->getId()]
         );
@@ -75,10 +75,10 @@ final class PodcastRepository implements PodcastRepositoryInterface
     }
 
     public function updateLastsync(
-        Podcast $podcast,
+        PodcastInterface $podcast,
         int $time
     ): void {
-        $this->connection->executeQuery(
+        $this->database->executeQuery(
             'UPDATE `podcast` SET `lastsync` = ? WHERE `id` = ?',
             [$time, $podcast->getId()]
         );
@@ -93,7 +93,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
         string $generator,
         string $copyright
     ): void {
-        $this->connection->executeQuery(
+        $this->database->executeQuery(
             'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?',
             [$feed, $title, $website, $description, $generator, $copyright, $podcastId]
         );
@@ -118,7 +118,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
             (?, ?, ?, ?, ?, ?, ?, ?, ?)
         SQL;
 
-        $result = $this->connection->executeQuery(
+        $result = $this->database->executeQuery(
             $sql,
             [
                 $feedUrl,
@@ -137,7 +137,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
             return null;
         }
 
-        return (int) $this->connection->lastInsertId();
+        return (int) $this->database->lastInsertId();
     }
 
     /**
@@ -146,7 +146,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     public function findByFeedUrl(
         string $feedUrl
     ): ?int {
-        $result = $this->connection->executeQuery(
+        $result = $this->database->executeQuery(
             'SELECT `id` FROM `podcast` WHERE `feed`= ?',
             [$feedUrl]
         );
@@ -167,5 +167,22 @@ final class PodcastRepository implements PodcastRepositoryInterface
         }
 
         return $podcast;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDataById(int $podcastId): array
+    {
+        $result = $this->database->fetchAssociative(
+            'SELECT * FROM `podcast` WHERE `id`= ?',
+            [$podcastId]
+        );
+
+        if ($result === false) {
+            return [];
+        }
+
+        return $result;
     }
 }

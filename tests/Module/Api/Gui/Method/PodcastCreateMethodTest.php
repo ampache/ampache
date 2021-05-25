@@ -35,6 +35,7 @@ use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -216,7 +217,7 @@ class PodcastCreateMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $stream     = $this->mock(StreamInterface::class);
-        $podcast    = $this->mock(Podcast::class);
+        $podcast    = $this->mock(PodcastInterface::class);
 
         $url       = 'some-url & co';
         $catalogId = 666;

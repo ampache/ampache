@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Podcast\Exception\PodcastFeedLoadingException;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
@@ -81,7 +82,7 @@ class PodcastSyncerTest extends MockeryTestCase
 
     public function testSyncReturnsFalseIfLoadingFails(): void
     {
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
 
         $feedUrl = 'some-feed-url';
 
@@ -102,7 +103,7 @@ class PodcastSyncerTest extends MockeryTestCase
 
     public function testSyncTriesToAddEpisodesAndReturnsTrue(): void
     {
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
 
         $feedUrl   = 'some-feed-url';
         $afterDate = 666;
@@ -176,7 +177,7 @@ class PodcastSyncerTest extends MockeryTestCase
 
     public function testAddEpisodesCleansUpAndDownloads(): void
     {
-        $podcast        = $this->mock(Podcast::class);
+        $podcast        = $this->mock(PodcastInterface::class);
         $podcastEpisode = $this->mock(Podcast_Episode::class);
 
         $afterdate      = 666;

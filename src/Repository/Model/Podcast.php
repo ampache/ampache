@@ -29,31 +29,41 @@ use Ampache\Module\Podcast\PodcastFeedLoaderInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 
-class Podcast extends database_object implements library_item, PodcastInterface
+final class Podcast extends database_object implements PodcastInterface
 {
-    protected const DB_TABLENAME = 'podcast';
+    private PodcastRepositoryInterface $podcastRepository;
 
-    /* Variables from DB */
-    public $id;
+    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
-    /** @var array<string, mixed> */
-    private array $data = [];
+    private PodcastFeedLoaderInterface $podcastFeedLoader;
+
+    public int $id;
+
+    /** @var null|array<string, mixed> */
+    private ?array $dbData = null;
+
+    public function __construct(
+        PodcastRepositoryInterface $podcastRepository,
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        PodcastFeedLoaderInterface $podcastFeedLoader,
+        int $id = 0
+    ) {
+        $this->podcastRepository        = $podcastRepository;
+        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->podcastFeedLoader        = $podcastFeedLoader;
+        $this->id                       = $id;
+    }
 
     /**
-     * Takes the ID of the podcast and pulls the info from the db
-     * @param integer $podcast_id
+     * @return array<string, mixed>
      */
-    public function __construct($podcast_id = 0)
+    private function getDbData(): array
     {
-        /* If they failed to pass in an id, just run for it */
-        if (!$podcast_id) {
-            return false;
+        if ($this->dbData === null) {
+            $this->dbData = $this->podcastRepository->getDataById($this->id);
         }
 
-        /* Get the information from the db */
-        $this->data = $this->get_info($podcast_id);
-
-        $this->id = (int) $this->data['id'];
+        return $this->dbData;
     }
 
     public function getId(): int
@@ -63,7 +73,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function isNew(): bool
     {
-        return $this->getId() === 0;
+        return $this->getDbData() === [];
     }
 
     /**
@@ -92,42 +102,42 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function getEpisodeCount(): int
     {
-        return static::getPodcastEpisodeRepository()->getEpisodeCount($this);
+        return $this->podcastEpisodeRepository->getEpisodeCount($this);
     }
 
     public function getFeed(): string
     {
-        return (string) ($this->data['feed'] ?? '');
+        return (string) ($this->getDbData()['feed'] ?? '');
     }
 
     public function getTitle(): string
     {
-        return (string) ($this->data['title'] ?? '');
+        return (string) ($this->getDbData()['title'] ?? '');
     }
 
     public function getWebsite(): string
     {
-        return (string) ($this->data['website'] ?? '');
+        return (string) ($this->getDbData()['website'] ?? '');
     }
 
     public function getDescription(): string
     {
-        return (string) ($this->data['description'] ?? '');
+        return (string) ($this->getDbData()['description'] ?? '');
     }
 
     public function getLanguage(): string
     {
-        return (string) ($this->data['language'] ?? '');
+        return (string) ($this->getDbData()['language'] ?? '');
     }
 
     public function getGenerator(): string
     {
-        return (string) ($this->data['generator'] ?? '');
+        return (string) ($this->getDbData()['generator'] ?? '');
     }
 
     public function getCopyright(): string
     {
-        return (string) ($this->data['copyright'] ?? '');
+        return (string) ($this->getDbData()['copyright'] ?? '');
     }
 
     public function getLink(): string
@@ -153,7 +163,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function getCatalog(): int
     {
-        return (int) ($this->data['catalog'] ?? 0);
+        return (int) ($this->dbData['catalog'] ?? 0);
     }
 
     public function getTitleFormatted(): string
@@ -188,7 +198,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function getLastSync(): int
     {
-        return (int) ($this->data['lastsync'] ?? 0);
+        return (int) ($this->dbData['lastsync'] ?? 0);
     }
 
     public function getLastSyncFormatted(): string
@@ -198,7 +208,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
 
     public function getLastBuildDate(): int
     {
-        return (int) ($this->data['lastbuilddate'] ?? 0);
+        return (int) ($this->dbData['lastbuilddate'] ?? 0);
     }
 
     public function getLastBuildDateFormatted(): string
@@ -246,7 +256,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
     public function get_childrens()
     {
         return [
-            'podcast_episode' => $this->getPodcastEpisodeRepository()->getEpisodeIds($this)
+            'podcast_episode' => $this->podcastEpisodeRepository->getEpisodeIds($this)
         ];
     }
 
@@ -269,7 +279,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'podcast_episode') {
-            $episodes = $this->getPodcastEpisodeRepository()->getEpisodeIds($this);
+            $episodes = $this->podcastEpisodeRepository->getEpisodeIds($this);
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
                     'object_type' => 'podcast_episode',
@@ -329,7 +339,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
         $feed = $data['feed'] ?? $this->getFeed();
 
         try {
-            $this->getPodcastFeedLoader()->load($feed);
+            $this->podcastFeedLoader->load($feed);
         } catch (PodcastFeedLoadingException $e) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
 
@@ -342,7 +352,7 @@ class Podcast extends database_object implements library_item, PodcastInterface
         $generator   = isset($data['generator']) ? scrub_in($data['generator']) : $this->getGenerator();
         $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : $this->getCopyright();
 
-        $this->getPodastRepository()->update(
+        $this->podcastRepository->update(
             $this->getId(),
             $feed,
             $title,
@@ -352,43 +362,6 @@ class Podcast extends database_object implements library_item, PodcastInterface
             $copyright
         );
 
-        $this->feed        = $feed;
-        $this->title       = $title;
-        $this->website     = $website;
-        $this->description = $description;
-        $this->generator   = $generator;
-        $this->copyright   = $copyright;
-
         return $this->id;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastFeedLoader(): PodcastFeedLoaderInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastFeedLoaderInterface::class);
     }
 }

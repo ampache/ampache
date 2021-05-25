@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
+use Ampache\Module\Podcast\PodcastFeedLoaderInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Video\ClipCreatorInterface;
@@ -38,6 +39,8 @@ use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -172,7 +175,12 @@ final class ModelFactory implements ModelFactoryInterface
     public function createPodcast(
         int $podcastId
     ): PodcastInterface {
-        return new Podcast($podcastId);
+        return new Podcast(
+            $this->dic->get(PodcastRepositoryInterface::class),
+            $this->dic->get(PodcastEpisodeRepositoryInterface::class),
+            $this->dic->get(PodcastFeedLoaderInterface::class),
+            $podcastId
+        );
     }
 
     public function createPodcastEpisode(
@@ -359,6 +367,7 @@ final class ModelFactory implements ModelFactoryInterface
                 Broadcast::class => fn (int $objectId): BroadcastInterface => $this->createBroadcast($objectId),
                 Clip::class => fn (int $objectId): Clip => $this->createClip($objectId),
                 Channel::class => fn (int $objectId): ChannelInterface => $this->createChannel($objectId),
+                Podcast::class => fn (int $objectId): PodcastInterface => $this->createPodcast($objectId),
             ];
         }
 

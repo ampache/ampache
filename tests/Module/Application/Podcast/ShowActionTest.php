@@ -32,8 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Gui\PodcastGuiFactoryInterface;
 use Ampache\Module\Podcast\Gui\PodcastViewAdapterInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,9 +44,6 @@ class ShowActionTest extends MockeryTestCase
 
     /** @var UiInterface|MockInterface */
     private MockInterface $ui;
-
-    /** @var PodcastEpisodeRepositoryInterface|MockInterface */
-    private MockInterface $podcastEpisodeRepository;
 
     /** @var MockInterface|TalFactoryInterface */
     private MockInterface $talFactory;
@@ -62,17 +58,15 @@ class ShowActionTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->configContainer          = $this->mock(ConfigContainerInterface::class);
-        $this->ui                       = $this->mock(UiInterface::class);
-        $this->podcastEpisodeRepository = $this->mock(PodcastEpisodeRepositoryInterface::class);
-        $this->talFactory               = $this->mock(TalFactoryInterface::class);
-        $this->podcastGuiFactory        = $this->mock(PodcastGuiFactoryInterface::class);
-        $this->podcastRepository        = $this->mock(PodcastRepositoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->talFactory        = $this->mock(TalFactoryInterface::class);
+        $this->podcastGuiFactory = $this->mock(PodcastGuiFactoryInterface::class);
+        $this->podcastRepository = $this->mock(PodcastRepositoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->configContainer,
             $this->ui,
-            $this->podcastEpisodeRepository,
             $this->talFactory,
             $this->podcastGuiFactory,
             $this->podcastRepository
@@ -128,7 +122,7 @@ class ShowActionTest extends MockeryTestCase
     {
         $request            = $this->mock(ServerRequestInterface::class);
         $gatekeeper         = $this->mock(GuiGatekeeperInterface::class);
-        $podcast            = $this->mock(Podcast::class);
+        $podcast            = $this->mock(PodcastInterface::class);
         $podcastViewAdapter = $this->mock(PodcastViewAdapterInterface::class);
         $talView            = $this->mock(TalViewInterface::class);
 

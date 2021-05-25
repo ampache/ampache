@@ -26,6 +26,7 @@ namespace Ampache\Module\Podcast;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\PodcastInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -55,7 +56,7 @@ class PodcastByCatalogLoaderTest extends MockeryTestCase
         $catalogId = 666;
         $podcastId = 42;
 
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
 
         $this->catalogRepository->shouldReceive('getList')
             ->with('podcast')
@@ -83,7 +84,7 @@ class PodcastByCatalogLoaderTest extends MockeryTestCase
         $catalogId = 666;
         $podcastId = 42;
 
-        $podcast = $this->mock(Podcast::class);
+        $podcast = $this->mock(PodcastInterface::class);
 
         $this->podcastRepository->shouldReceive('getPodcastIds')
             ->with($catalogId)

@@ -127,7 +127,9 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     public function getPodcast(): PodcastInterface
     {
         if ($this->podcastObj === null) {
-            $this->podcastObj = new Podcast((int) $this->podcast);
+            $this->podcastObj = $this->getModelFactory()->createPodcast(
+                (int) $this->podcast
+            );
         }
 
         return $this->podcastObj;
@@ -619,5 +621,15 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
         global $dic;
 
         return $dic->get(ExtensionToMimeTypeMapperInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getModelFactory(): ModelFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ModelFactoryInterface::class);
     }
 }

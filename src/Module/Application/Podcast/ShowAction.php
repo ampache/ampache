@@ -31,7 +31,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Gui\PodcastGuiFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,8 +43,6 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
     private TalFactoryInterface $talFactory;
 
     private PodcastGuiFactoryInterface $podcastGuiFactory;
@@ -55,17 +52,15 @@ final class ShowAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         TalFactoryInterface $talFactory,
         PodcastGuiFactoryInterface $podcastGuiFactory,
         PodcastRepositoryInterface $podcastRepository
     ) {
-        $this->configContainer          = $configContainer;
-        $this->ui                       = $ui;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->talFactory               = $talFactory;
-        $this->podcastGuiFactory        = $podcastGuiFactory;
-        $this->podcastRepository        = $podcastRepository;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->talFactory        = $talFactory;
+        $this->podcastGuiFactory = $podcastGuiFactory;
+        $this->podcastRepository = $podcastRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
