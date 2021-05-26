@@ -159,7 +159,10 @@ class Stats
             if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
                 $sql = "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
                 Dba::write($sql, array($object_id));
-                static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
+                // song, video, podcast_episode to user_activity only
+                if (!in_array($type, array('album', 'artist'))) {
+                    static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
+                }
             }
         }
         if (!$db_results) {
