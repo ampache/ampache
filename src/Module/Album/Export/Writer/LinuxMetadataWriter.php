@@ -35,7 +35,7 @@ final class LinuxMetadataWriter implements MetadataWriterInterface
         $meta_file = $dirName . '/.directory';
         $string    = sprintf(
             "Name=%s\nIcon=%s",
-            $album->full_name,
+            $album->f_name,
             $iconFileName
         );
 

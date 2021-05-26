@@ -449,12 +449,10 @@ class Stream
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
-
         $sql .= 'ORDER BY `np`.`expire` DESC';
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);

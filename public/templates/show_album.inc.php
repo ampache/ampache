@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
-$title = scrub_out($album->full_name);
+$title = scrub_out($album->f_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
@@ -79,7 +79,7 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>

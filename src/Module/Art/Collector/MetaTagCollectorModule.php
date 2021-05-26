@@ -61,7 +61,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * itself
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -100,6 +100,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from audio files.
+     * @param Art $art
      * @param integer $limit
      * @return array
      */
@@ -176,7 +177,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gatherSongTagsSingle(Art $art, $limit = 5)

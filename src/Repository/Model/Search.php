@@ -611,7 +611,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music') as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -702,6 +702,7 @@ class Search extends playlist_object
         $this->type_numeric('year', T_('Year'));
         $this->type_numeric('original_year', T_('Original Year'));
         $this->type_text('release_type', T_('Release Type'));
+        $this->type_text('release_status', T_('Release Status'));
 
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars);
@@ -733,7 +734,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music') as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -862,11 +863,10 @@ class Search extends playlist_object
      */
     public static function get_searches()
     {
-        $sql        = "SELECT `id` from `search` WHERE `type`='public' OR " . "`user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+        $sql = "SELECT `id` from `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1079,10 +1079,10 @@ class Search extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $results = Dba::fetch_row($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_row($db_results);
 
         return (int)$results['0'];
     } // get_total_duration
@@ -1324,9 +1324,8 @@ class Search extends playlist_object
                         "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
-                    $input          = $input * 60;
-                    $where[]        = "`alength`.`time` $sql_match_operator '$input'";
-                    $table['atime'] = "LEFT JOIN (SELECT `album`, SUM(`time`) AS `time` FROM `song` GROUP BY `album`) " . "AS `alength` ON `alength`.`album`=`album`.`id` ";
+                    $input   = $input * 60;
+                    $where[] = "`album`.`time` $sql_match_operator '$input'";
                     break;
                 case 'rating':
                     // average ratings only
@@ -1426,6 +1425,9 @@ class Search extends playlist_object
                 case 'release_type':
                     $where[] = "`album`.`release_type` $sql_match_operator '$input' ";
                     break;
+                case 'release_status':
+                    $where[] = "`album`.`release_status` $sql_match_operator '$input' ";
+                    break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
@@ -1486,16 +1488,17 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate':
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
-                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
-                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 default:
                     break;
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $join['song'] || $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1584,6 +1587,10 @@ class Search extends playlist_object
                 case 'placeformed':
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                     break;
+                case 'time':
+                    $input   = $input * 60;
+                    $where[] = "`artist`.`time` $sql_match_operator '$input'";
+                    break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
@@ -1600,7 +1607,7 @@ class Search extends playlist_object
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " . "`avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS " . "`average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input'  OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
                     // flag once per user
                     $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
@@ -1733,16 +1740,17 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate_album':
                     $where[]                     = "(`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL)";
-                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
-                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
+                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
+                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
                     break;
                 default:
                     break;
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1776,7 +1784,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`',
+            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`",
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2363,8 +2371,9 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['playlist_data'] = true;
-        $join['song']          = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog']       = AmpConfig::get('catalog_disable');
+        $catalog_disable       = AmpConfig::get('catalog_disable');
+        $join['song']          = $join['song'] || $catalog_disable;
+        $join['catalog']       = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 

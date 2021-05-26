@@ -372,7 +372,7 @@ class Stream_Playlist
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
-                $ext   = $type   = 'm3u';
+                $ext   = $type = 'm3u';
                 $ctype = 'audio/x-mpegurl';
                 break;
         }
@@ -593,7 +593,7 @@ class Stream_Playlist
         $ret .= "#EXT-X-VERSION:1\n";
         $ret .= "#EXT-X-ALLOW-CACHE:NO\n";
         $ret .= "#EXT-X-MEDIA-SEQUENCE:0\n";
-        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n";   // Static list of segments
+        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n"; // Static list of segments
 
         foreach ($this->urls as $url) {
             $soffset = 0;

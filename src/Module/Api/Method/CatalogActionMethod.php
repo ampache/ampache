@@ -79,6 +79,7 @@ final class CatalogActionMethod
                     break;
                 case 'verify_catalog':
                     $catalog->verify_catalog_proc();
+                    Catalog::clean_empty_albums();
                     break;
                 case 'gather_art':
                     $catalog->gather_art();
@@ -90,6 +91,7 @@ final class CatalogActionMethod
                     );
                     $catalog->add_to_catalog($options);
                     Album::update_album_artist();
+                    Catalog::update_counts();
                     break;
             }
             Api::message('successfully started: ' . $task, $input['api_format']);
