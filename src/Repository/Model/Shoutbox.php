@@ -129,11 +129,10 @@ class Shoutbox
      */
     private static function get_sticky()
     {
-        $sql        = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
+        $sql = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

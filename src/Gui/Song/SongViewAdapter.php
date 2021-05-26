@@ -316,8 +316,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/song.php?action=%s&song_id=%d',
-            DeleteAction::REQUEST_KEY,
             $this->configContainer->getWebPath(),
+            DeleteAction::REQUEST_KEY,
             $this->song->getId()
         );
     }

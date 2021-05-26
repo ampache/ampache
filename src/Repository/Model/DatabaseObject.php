@@ -35,9 +35,8 @@ abstract class DatabaseObject
     //private $originalData;
 
     /**
-     *
-     * @var array Stores relation between SQL field name and class name so we
-     * can initialize objects the right way
+     * Stores relation between SQL field name and class name so we can initialize objects the right way
+     * @var array
      */
     protected $fieldClassRelations = array();
 

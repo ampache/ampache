@@ -53,7 +53,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 </td>
 <?php
 if (Art::is_enabled()) {
-                $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name); ?>
+                $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->f_name); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;

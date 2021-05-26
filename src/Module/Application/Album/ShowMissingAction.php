@@ -92,9 +92,9 @@ final class ShowMissingAction implements ApplicationActionInterface
         $images = $this->artCollector->collect(
             $art,
             [
-                'artist' => $artist->name,
+                'artist' => $artist->f_name,
                 'album_name' => $walbum->name,
-                'keyword' => $artist->name . " " . $walbum->name,
+                'keyword' => $artist->f_name . " " . $walbum->name,
             ],
             1
         );
@@ -102,7 +102,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $imageList = '';
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
-            $name = '[' . $artist->name . '] ' . scrub_out($walbum->name);
+            $name = '[' . $artist->f_name . '] ' . scrub_out($walbum->name);
 
             $image = $images[0]['url'];
 

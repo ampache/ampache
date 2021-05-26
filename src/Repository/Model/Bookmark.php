@@ -110,8 +110,8 @@ class Bookmark extends database_object
     /**
      * create
      * @param array $data
-     * @param int $userId
-     * @param int $updateDate
+     * @param integer $userId
+     * @param integer $updateDate
      * @return PDOStatement|boolean
      */
     public static function create(array $data, int $userId, int $updateDate)
@@ -124,8 +124,8 @@ class Bookmark extends database_object
     /**
      * edit
      * @param array $data
-     * @param int $userId
-     * @param int $updateDate
+     * @param integer $userId
+     * @param integer $updateDate
      * @return PDOStatement|boolean
      */
     public static function edit($data, int $userId, int $updateDate)

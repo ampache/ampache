@@ -40,8 +40,8 @@ class Rating extends database_object
     protected const DB_TABLENAME = 'rating';
 
     // Public variables
-    public $id;        // The ID of the object rated
-    public $type;        // The type of object we want
+    public $id; // The ID of the object rated
+    public $type; // The type of object we want
 
     /**
      * Constructor
@@ -94,7 +94,7 @@ class Rating extends database_object
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$type` ON `$type`.`id` = `rating`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+                Dba::write("DELETE FROM `rating` WHERE `object_type` = '$type' AND `rating`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);");
             }
         }
         // delete 'empty' ratings
@@ -228,9 +228,9 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC";
+            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC";
         } else {
-            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
+            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC ";
         }
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 

@@ -49,7 +49,7 @@ class WindowsMetadataWriterTest extends MockeryTestCase
         $iconFileName = 'some-file-name';
         $fullName     = 'some-full-name';
 
-        $album->full_name = $fullName;
+        $album->f_name = $fullName;
 
         $this->subject->write(
             $album,

@@ -133,6 +133,14 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $tags;
     /**
+     * @var integer $object_cnt
+     */
+    public $object_cnt;
+    /**
+     * @var integer $total_count
+     */
+    private $total_count;
+    /**
      * @var integer $f_release_date
      */
     public $update_time;
@@ -227,8 +235,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $this->$key = $value;
         }
 
-        $data       = pathinfo($this->file);
-        $this->type = strtolower((string) $data['extension']);
+        $data             = pathinfo($this->file);
+        $this->type       = strtolower((string) $data['extension']);
+        $this->object_cnt = (int)$this->total_count;
 
         return true;
     } // Constructor
@@ -591,6 +600,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
+        $check_file = Catalog::get_id_from_file($data['file'], 'video');
+        if ($check_file > 0) {
+            return $check_file;
+        }
         $bitrate        = (int) $data['bitrate'];
         $mode           = $data['mode'];
         $rezx           = (int) $data['resolution_x'];
@@ -611,23 +624,25 @@ class Video extends database_object implements Media, library_item, GarbageColle
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
         Dba::write($sql, $params);
-        $vid = (int) Dba::insert_id();
+        $video_id = (int) Dba::insert_id();
+
+        Catalog::update_map((int)$data['catalog'], 'video', $video_id);
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
-                    Tag::add('video', $vid, $tag, false);
+                    Tag::add('video', $video_id, $tag, false);
                 }
             }
         }
 
         if ($data['art'] && $options['gather_art']) {
-            $art = new Art((int) $vid, 'video');
+            $art = new Art((int) $video_id, 'video');
             $art->insert_url($data['art']);
         }
 
-        $data['id'] = $vid;
+        $data['id'] = $video_id;
 
         return self::insert_video_type($data, $gtypes, $options);
     }
