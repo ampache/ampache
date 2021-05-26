@@ -224,7 +224,7 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br />These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
 
-        $update_string = "* Delete duplicate files in the song table<br />* Require `file` to be unique in song table<br />";
+        $update_string = "* Delete duplicate files in the song table<br />";
         $version[]     = array('version' => '500000', 'description' => $update_string);
 
         $update_string = "* Add `release_status`, `addition_time`, `catalog` to album table<br />* Add `mbid`, `country` and `active` to label table<br />* Fill the album `catalog` value using the song table<br />* Fill the artist `album_count`, `album_group_count` and `song_count` values";
@@ -1201,14 +1201,11 @@ class Update
      * update_500000
      *
      * Delete duplicate files in the song table
-     * Require `file` to be unique in song table
      */
     public static function update_500000()
     {
         $retval = true;
         $sql    = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
-        $retval &= Dba::write($sql);
-        $sql    = "ALTER TABLE `song` MODIFY COLUMN `file` varchar(4096) unique;";
         $retval &= Dba::write($sql);
 
         return $retval;

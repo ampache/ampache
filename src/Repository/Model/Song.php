@@ -560,6 +560,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function garbage_collection()
     {
+        // delete duplicates
+        Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
         // clean up missing catalogs
         Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
         // delete the rest
