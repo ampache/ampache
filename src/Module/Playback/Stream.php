@@ -98,7 +98,7 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = AmpConfig::get('transcode_bitrate', '128');
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -167,27 +167,10 @@ class Stream
 
             return false;
         }
-
-        // don't ignore user bitrates
-        $bit_rate = (int) self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
-            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
-            // Validate the bitrate
-            $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
-            // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
-        }
-
-        // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
-        }
+        $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
+        $song_file = self::scrub_arg($media->file);
 
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
-
-        $song_file = self::scrub_arg($media->file);
 
         // Finalise the command line
         $command = $transcode_settings['command'];
@@ -247,6 +230,46 @@ class Stream
         } else {
             return "'" . str_replace("'", "'\\''", $arg) . "'";
         }
+    }
+
+    /**
+     * get_max_bitrate
+     *
+     * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
+     * @param $media
+     * @param string $type
+     * @param string $player
+     * @param array $options
+     * @return integer
+     */
+    public static function get_max_bitrate($media, $type = null, $player = null, $options = array())
+    {
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
+        // Bail out early if we're unutterably broken
+        if ($transcode_settings === false) {
+            debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
+
+            return $media->bitrate;
+        }
+
+        // don't ignore user bitrates
+        $bit_rate = (int)self::get_allowed_bitrate();
+        if (!$options['bitrate']) {
+            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
+            // Validate the bitrate
+            $bit_rate = self::validate_bitrate($bit_rate);
+        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate = 0) {
+            // use the file bitrate if lower than the gathered
+            $bit_rate = $options['bitrate'];
+        }
+
+        // Never upsample a media
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
+        }
+
+        return $bit_rate;
     }
 
     /**
