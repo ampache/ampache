@@ -434,9 +434,7 @@ class Album extends database_object implements library_item
         $results['has_thumb'] = make_bool($art->thumb);
 
         if (AmpConfig::get('show_played_times')) {
-            $results['object_cnt'] = (!empty($limit_threshold))
-                ? Stats::get_object_count('album', $this->id, $limit_threshold)
-                : $this->total_count;
+            $results['object_cnt'] = $this->object_cnt;
         }
 
         parent::add_to_cache('album_extra', $this->id, $results);
