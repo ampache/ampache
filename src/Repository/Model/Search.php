@@ -680,6 +680,14 @@ class Search extends playlist_object
 
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
+        $catalogs = array();
+        foreach (Catalog::get_catalogs('music') as $catid) {
+            $catalog = Catalog::create_from_id($catid);
+            $catalog->format();
+            $catalogs[$catid] = $catalog->f_name;
+        }
+        $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
@@ -1456,8 +1464,7 @@ class Search extends playlist_object
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
-                    $join['song'] = true;
+                    $where[] = "`album`.`catalog` $sql_match_operator '$input'";
                     break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
@@ -1730,6 +1737,10 @@ class Search extends playlist_object
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
+                case 'catalog':
+                    $where[]                = "`artist_catalog`.`catalog_id` $sql_match_operator '$input'";
+                    $join['artist_catalog'] = true;
+                    break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;
@@ -1777,6 +1788,9 @@ class Search extends playlist_object
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
+        }
+        if ($join['artist_catalog']) {
+            $table['catalog_map'] = "LEFT JOIN `catalog_map` AS `artist_catalog` ON `artist_catalog`.`object_type` = 'artist' AND `artist_catalog`.`object_id`=`artist`.`id`";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
