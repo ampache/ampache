@@ -233,8 +233,11 @@ class Update
         $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
         $version[]     = array('version' => '500002', 'description' => $update_string);
 
-        $update_string = "* add `catalog` to podcast_episode table<br />* Create catalog_map table and fill it with data";
+        $update_string = "* Create catalog_map table and fill it with data";
         $version[]     = array('version' => '500003', 'description' => $update_string);
+
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create catalog_map table and fill it with data";
+        $version[]     = array('version' => '500004', 'description' => $update_string);
 
         return $version;
     }
@@ -1282,15 +1285,28 @@ class Update
      * update_500003
      *
      * add `catalog` to podcast_episode table
-     * Create catalog_map table and fill it with data
      */
     public static function update_500003()
     {
         $retval = true;
+        $sql    = "ALTER TABLE `podcast_episode` DROP COLUMN `catalog`;";
+        $retval &= Dba::write($sql);
         $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= Dba::write($sql);
         $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500004
+     *
+     * Create catalog_map table and fill it with data
+     */
+    public static function update_500004()
+    {
+        $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
@@ -1298,7 +1314,7 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= Dba::write($sql);
         // fill the data
-        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        $tables = ['album', 'song', 'video', 'podcast_episode'];
         foreach ($tables as $type) {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;";
             $retval &= Dba::write($sql);
