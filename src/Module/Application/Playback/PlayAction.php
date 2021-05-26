@@ -185,10 +185,8 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         $subtitle         = '';
-        $send_all_in_once = AmpConfig::get('send_full_stream');
-        if (!$send_all_in_once === 'true' || !$send_all_in_once === $player) {
-            $send_all_in_once = false;
-        }
+        $send_full_stream = (string)AmpConfig::get('send_full_stream');
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream === $player);
 
         if (!$type) {
             $type = 'song';

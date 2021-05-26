@@ -138,9 +138,6 @@ class Horde_Browser
 
     /**
      * Creates a browser instance (Constructor).
-     *
-     * @param string $userAgent The browser string to parse.
-     * @param string $accept The HTTP_ACCEPT settings to use.
      */
     public function __construct()
     {

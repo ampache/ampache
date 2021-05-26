@@ -1632,9 +1632,9 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'update_from_external found ' . (string) count($object_list) . ' items to check', 4);
         $plugin = new Plugin('musicbrainz');
-        // Run through items and refresh info
-        foreach ($object_list as $label_id) {
-            if ($plugin->load(new User(-1))) {
+        if ($plugin->load(new User(-1))) {
+            // Run through items and refresh info
+            foreach ($object_list as $label_id) {
                 $label = new Label($label_id);
                 $plugin->_plugin->get_external_metadata($label, 'label');
             }
@@ -1822,7 +1822,7 @@ abstract class Catalog extends database_object
 
         static::getAlbumRepository()->collectGarbage();
         Artist::garbage_collection();
-        Catalog::update_counts($type);
+        self::update_counts($type);
 
         return $result;
     } // update_single_item
@@ -3184,7 +3184,7 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::duplicate($object_type, $old_object_id, $new_object_id);
-            Catalog::migrate_map($object_type, $old_object_id, $new_object_id);
+            self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
         }

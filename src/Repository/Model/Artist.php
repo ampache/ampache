@@ -421,7 +421,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_id_array
      *
      * Get info from the artist table with the minimum detail required for subsonic
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return array
      */
     public static function get_id_array($artist_id)
@@ -891,7 +891,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
-                Artist::update_artist_counts($current_id);
+                self::update_artist_counts($current_id);
             } // if updated
         } else {
             if ($this->mbid != $mbid) {

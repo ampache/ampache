@@ -28,6 +28,7 @@ interface ArtCollectorInterface
 {
     /**
      * This tries to get the art in question
+     * @param Art $art
      * @param array $options
      * @param integer $limit
      * @return array

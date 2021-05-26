@@ -221,7 +221,7 @@ class Update
         $update_string = "* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.<br/ > ";
         $version[]     = array('version' => '400023', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /> These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
 
         $update_string = "* Delete duplicate files in the song table<br />* Require `file` to be unique in song table<br />";

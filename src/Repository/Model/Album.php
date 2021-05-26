@@ -838,7 +838,7 @@ class Album extends database_object implements library_item
      * get_id_array
      *
      * Get info from the album table with the minimum detail required for subsonic
-     * @param int $album_id
+     * @param integer $album_id
      * @return array
      */
     public static function get_id_array($album_id)

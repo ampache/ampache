@@ -129,10 +129,11 @@ final class DefaultAction implements ApplicationActionInterface
                     (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth['success']                 = true;
-                    $auth['info']['username']        = 'Admin - DEMO';
-                    $auth['info']['fullname']        = 'Administrative User';
-                    $auth['info']['offset_limit']    = 25;
+                    $auth                         = array();
+                    $auth['success']              = true;
+                    $auth['info']['username']     = 'Admin - DEMO';
+                    $auth['info']['fullname']     = 'Administrative User';
+                    $auth['info']['offset_limit'] = 25;
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string) scrub_in(Core::get_post('username'));

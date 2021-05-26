@@ -1590,6 +1590,7 @@ class Search extends playlist_object
                 case 'time':
                     $input   = $input * 60;
                     $where[] = "`artist`.`time` $sql_match_operator '$input'";
+                    break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
@@ -1666,7 +1667,6 @@ class Search extends playlist_object
                         "ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
-                    break;
                     break;
                 case 'last_play':
                     $my_type = 'artist';

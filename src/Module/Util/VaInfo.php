@@ -72,11 +72,14 @@ final class VaInfo implements VaInfoInterface
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param UserRepositoryInterface $userRepository
+     * @param ConfigContainerInterface $configContainer
+     * @param LoggerInterface $logger
      * @param string $file
      * @param array $gatherTypes
      * @param string $encoding
      * @param string $encodingId3v1
-     * @param string $encodingId3v2
+     * //TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
      * @param boolean $islocal
@@ -183,6 +186,8 @@ final class VaInfo implements VaInfoInterface
         $this->userRepository  = $userRepository;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+
+        return true;
     }
 
     /**
@@ -1693,15 +1698,16 @@ final class VaInfo implements VaInfoInterface
      * @param string $data
      * @param bool $doTrim
      * @return string|array
+     * @throws Exception
      */
     public function splitSlashedlist($data, $doTrim = true)
     {
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (isset($data) && isset($delimiters)) {
-            $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
-            $items      = preg_split($pattern, $data);
-            $items      = array_map('trim', $items);
-            if ($items === false) {
+            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $items   = preg_split($pattern, $data);
+            $items   = array_map('trim', $items);
+            if (empty($items)) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
             $data = $items;

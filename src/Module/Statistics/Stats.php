@@ -107,7 +107,7 @@ class Stats
      * with the specified information, amazing!
      * @param string $input_type
      * @param integer $object_id
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param string $count_type
@@ -528,7 +528,7 @@ class Stats
         if ($user_id === null && AmpConfig::get('cron_cache') && !$addAdditionalColumns) {
             $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` " . "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " . "GROUP BY `object_id`, `object_type`";
         } else {
-            $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
+            $allow_group_disks = AmpConfig::get('album_group');
             // Select Top objects counting by # of rows for you only
             $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
             // Add additional columns to use the select query as insert values directly
@@ -743,7 +743,7 @@ class Stats
 
         $base_type         = 'song';
         $multi_where       = 'WHERE';
-        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
+        $allow_group_disks = AmpConfig::get('album_group');
         $sql_type          = (in_array($type, array('song', 'album', 'playlist', 'video')))
             ? $type . '`.`id'
             : $base_type . "`.`" . $type;

@@ -2088,7 +2088,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type, $player);
+        return self::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -2220,7 +2220,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
+        return self::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
 
     /**
@@ -2255,7 +2255,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public function run_custom_play_action($action_index, $codec = '')
     {
         $transcoder = array();
-        $actions    = Song::get_custom_play_actions();
+        $actions    = self::get_custom_play_actions();
         if ($action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
             if (!$codec) {
