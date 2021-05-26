@@ -51,7 +51,7 @@ final class UserPreferencesMethod
         User::fix_preferences($user->id);
 
         $preferences  = Preference::get_all($user->id);
-        $output_array =  array('preference' => $preferences);
+        $output_array = array('preference' => $preferences);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);

@@ -385,14 +385,18 @@ class Stream
      * @param integer $length
      * @param string $sid
      * @param string $type
+     * @param integer $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
     {
+        if (!$previous) {
+            $previous = time();
+        }
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
     /**
@@ -414,7 +418,12 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
-     * @return array
+     * @return array<array{
+     *  media: \Ampache\Repository\Model\library_item,
+     *  client: \Ampache\Repository\Model\User,
+     *  agent: string,
+     *  expire: int
+     * }>
      */
     public static function get_now_playing()
     {
@@ -440,12 +449,10 @@ class Stream
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
-
         $sql .= 'ORDER BY `np`.`expire` DESC';
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);

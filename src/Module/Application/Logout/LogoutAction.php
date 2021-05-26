@@ -48,7 +48,7 @@ final class LogoutAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
+        setcookie($this->configContainer->getSessionName() . '_remember', null, ['expires' => -1, 'samesite' => 'Strict']);
 
         $this->authenticationManager->logout('', false);
 

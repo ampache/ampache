@@ -102,6 +102,13 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php
     } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
+                <?php echo UI::get_icon('share', T_('Share playlist')); ?>
+        &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
+        </a>
+    <?php
+    } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play All'), 'directplay_full_' . $playlist->id); ?>

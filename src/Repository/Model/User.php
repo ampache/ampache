@@ -94,7 +94,7 @@ class User extends database_object
      */
     public $state;
     /**
-     * @var string city
+     * @var string $city
      */
     public $city;
     /**

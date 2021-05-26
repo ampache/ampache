@@ -379,7 +379,7 @@ class Art extends database_object
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->f_name;
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
@@ -1093,6 +1093,9 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
+        if (Art::has_db($new_object_id, $object_type)) {
+            return false;
+        }
         debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";

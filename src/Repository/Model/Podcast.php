@@ -105,18 +105,18 @@ class Podcast extends database_object implements library_item
      */
     public function get_episodes($state_filter = '')
     {
-        $params = array();
-        $sql    = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` ";
+        $params          = array();
+        $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        if ($catalog_disable) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ";
         }
         $sql .= "WHERE `podcast_episode`.`podcast`='" . Dba::escape($this->id) . "' ";
         if (!empty($state_filter)) {
             $sql .= "AND `podcast_episode`.`state` = ? ";
             $params[] = $state_filter;
         }
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog_disable) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `podcast_episode`.`pubdate` DESC";
@@ -528,9 +528,19 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        if (!$source) {
+            debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        if (self::get_id_from_source($source) > 0) {
+            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
+
+            return false;
+        }
 
         if ($pubdate > $afterdate) {
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
                 $title,
@@ -543,7 +553,8 @@ class Podcast extends database_object implements library_item
                 $category,
                 $time,
                 $pubdate,
-                time()
+                time(),
+                $this->catalog
             ));
         } else {
             debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
@@ -608,6 +619,25 @@ class Podcast extends database_object implements library_item
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_source($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
     /**
      * get_root_path
      * @return string

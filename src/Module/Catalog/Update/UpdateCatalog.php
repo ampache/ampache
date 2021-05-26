@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -128,12 +129,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $catalog->add_to_catalog($options);
-                Album::update_album_artist();
-                // update artists who need a recent update
-                $artists = $catalog->get_artist_ids('count');
-                foreach ($artists as $artist_id) {
-                    Artist::update_artist_counts($artist_id);
-                }
 
                 $buffer = ob_get_contents();
 
@@ -144,7 +139,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info('------------------', true);
-            } elseif ($addArt === true) {
+                Album::update_album_artist();
+            }
+            if ($addArt === true) {
                 ob_start();
 
                 // Look for media art
@@ -183,12 +180,30 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     $this->cleanBuffer($buffer),
                     true
                 );
+                if (AmpConfig::get('label')) {
+                    $interactor->info(
+                        T_('Update Label information and fetch details using the MusicBrainz plugin'),
+                        true
+                    );
+                    $labels = $catalog->get_label_ids('tag_generated');
+                    $catalog->update_from_external($labels);
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                }
                 $interactor->info('------------------', true);
             }
         }
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
         }
+        Catalog::update_counts();
         if ($optimizeDatabase === true) {
             ob_start();
 

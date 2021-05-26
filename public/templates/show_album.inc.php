@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
-$title = scrub_out($album->full_name);
+$title = scrub_out($album->f_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
@@ -79,25 +79,25 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $album->id; ?>_album">
-        <?php echo Rating::show($album->id, 'album', true); ?>
-    </span>
-    <?php
+        <span id="rating_<?php echo $album->id; ?>_album">
+            <?php echo Rating::show($album->id, 'album', true); ?>
+        </span>
+        <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <span id="userflag_<?php echo $album->id; ?>_album">
-        <?php echo Userflag::show($album->id, 'album'); ?>
-    </span>
-    <?php
-        } ?>
-<?php
+        <span id="userflag_<?php echo $album->id; ?>_album">
+            <?php echo Userflag::show($album->id, 'album'); ?>
+        </span>
+        <?php
     } ?>
+    <?php
+} ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
 <br />

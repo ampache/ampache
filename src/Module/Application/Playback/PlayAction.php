@@ -185,10 +185,8 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         $subtitle         = '';
-        $send_all_in_once = AmpConfig::get('send_full_stream');
-        if (!$send_all_in_once === 'true' || !$send_all_in_once === $player) {
-            $send_all_in_once = false;
-        }
+        $send_full_stream = (string)AmpConfig::get('send_full_stream');
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream === $player);
 
         if (!$type) {
             $type = 'song';
@@ -723,9 +721,6 @@ final class PlayAction implements ApplicationActionInterface
         if (!$transcode) {
             header('ETag: ' . $media->id);
         }
-        if (($action != 'download') && $record_stats) {
-            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
-        }
         // Handle Content-Range
 
         $start        = 0;
@@ -768,6 +763,9 @@ final class PlayAction implements ApplicationActionInterface
             if ($start > 0) {
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
+                if (($action != 'download') && $record_stats) {
+                    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                }
                 $sessionkey = $session_id ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);
                 $location   = Session::get_geolocation($sessionkey);
@@ -837,7 +835,7 @@ final class PlayAction implements ApplicationActionInterface
         // Actually do the streaming
         $buf_all = '';
         $r_arr   = array($filepointer);
-        $w_arr   = $e_arr   = array();
+        $w_arr   = $e_arr = array();
         $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             debug_event('play/index', 'stream_select failed.', 1);

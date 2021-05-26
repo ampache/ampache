@@ -298,7 +298,7 @@ class Subsonic_Api
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
             'keyReplace' => false, // replace values for above search values (as passed to str_replace())
-            'boolean' => true           // replace true and false string with boolean values
+            'boolean' => true // replace true and false string with boolean values
         );
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
@@ -505,7 +505,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
+            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified, $fcatalogs);
         }
         self::apiOutput($input, $response);
     }
@@ -770,13 +770,13 @@ class Subsonic_Api
         if ($musicFolderId) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
                 $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                $finput   = $artist->name;
+                $finput   = $artist->f_name;
                 $operator = 4;
                 $ftype    = "artist";
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->full_name;
+                    $finput   = $album->f_name;
                     $operator = 4;
                     $ftype    = "artist";
                 } else {
@@ -1634,10 +1634,10 @@ class Subsonic_Api
     {
         $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
-
         if (AmpConfig::get('share')) {
-            $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = null;
+            $expire_days = (isset($input['expires']))
+                ? (int) $input['expires']
+                : Share::get_expiry($input['expires']);
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_Xml_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_Xml_Data::getAmpacheId($libitem_id[0]);
@@ -1645,7 +1645,7 @@ class Subsonic_Api
                 $object_id   = Subsonic_Xml_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
-                Subsonic_Xml_Data::getAmpacheId($libitem_id);
+                $object_id = Subsonic_Xml_Data::getAmpacheId($libitem_id);
                 if (Subsonic_Xml_Data::isAlbum($libitem_id)) {
                     $object_type = 'album';
                 }
@@ -1658,7 +1658,7 @@ class Subsonic_Api
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
-            if (!empty($object_type)) {
+            if (!empty($object_type) && !empty($object_id)) {
                 // @todo remove after refactoring
                 global $dic;
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
@@ -2564,18 +2564,16 @@ class Subsonic_Api
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_Xml_Data::getAmpacheObject($current);
-        $time     = time();
         if ($media->id) {
+            $time     = time();
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
-            // track has just started
-            if ($position < 1) {
-                Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
-                // repeated plays aren't called by scrobble so make sure we call this too
-                if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                    $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
-                }
+            // long pauses might cause your now_playing to hide
+            Stream::garbage_collection();
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
+            // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+            if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {

@@ -33,7 +33,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = 'develop';
-    private const CONFIG_VERSION = '50';
+    private const CONFIG_VERSION = '51';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -111,7 +111,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 
             // Variables needed for Auth class
             $results['cookie_path']   = $results['raw_web_path'];
-            $results['cookie_domain'] = $results['http_port'];
+            $results['cookie_domain'] = $results['http_host'];
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }

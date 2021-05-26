@@ -168,7 +168,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         if (item.image !== '') {
                             itemhtml += "<img src='" + item.image + "' class='searchart' alt='' />";
                         }
-                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels)  + "</span>";
+                        itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels === '') ? "" : " - " + item.rels) + "</span>";
                         itemhtml += "</a>";
 
                         return $( "<li class='ui-menu-item'>" )
@@ -324,7 +324,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
         <?php
             if (AmpConfig::get('libitem_contextmenu')) { ?>
-
         <script>
             function libitem_action(item, action)
             {
@@ -401,7 +400,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
             <?php
                 if (AmpConfig::get('topmenu')) { ?>
-
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
@@ -430,7 +428,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
                 <?php
                     if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
-
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
@@ -441,7 +438,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 <?php
                     }
                     if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
-
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
@@ -497,7 +493,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     $('#sidebar').show(500);
                 });
 
-                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
+                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/', samesite: 'Strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
@@ -527,8 +523,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
-                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
-                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
                             </div>
                 <?php
                         }

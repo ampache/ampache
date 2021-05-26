@@ -34,11 +34,10 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function getAccessLists(): array
     {
-        $sql        = 'SELECT `id` FROM `access_list`';
+        $sql = 'SELECT `id` FROM `access_list`';
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
@@ -101,8 +100,8 @@ final class AccessRepository implements AccessRepositoryInterface
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function create(
@@ -122,12 +121,12 @@ final class AccessRepository implements AccessRepositoryInterface
     /**
      * Updates the data of a certain acl item
      *
-     * @param int $accessId Id of an existing acl item
+     * @param integer $accessId Id of an existing acl item
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function update(

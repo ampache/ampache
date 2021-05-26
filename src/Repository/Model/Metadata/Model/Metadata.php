@@ -57,9 +57,8 @@ class Metadata extends DatabaseObject implements Model
     protected $type;
 
     /**
-     *
-     * @var array Stores relation between SQL field name and repository class name so we
-     * can initialize objects the right way
+     * Stores relation between SQL field name and repository class name so we can initialize objects the right way
+     * @var array
      */
     protected $fieldClassRelations = array(
         'field' => \Ampache\Repository\Model\Metadata\Repository\MetadataField::class

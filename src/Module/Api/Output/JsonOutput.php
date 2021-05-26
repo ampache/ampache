@@ -49,8 +49,8 @@ final class JsonOutput implements ApiOutputInterface
      * @param integer|null $user_id
      * @param bool $encode
      * @param bool $asObject
-     * @param int $limit
-     * @param int $offset
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return array|string
      */
