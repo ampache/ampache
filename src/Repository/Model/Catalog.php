@@ -2875,7 +2875,7 @@ abstract class Catalog extends database_object
         debug_event(self::class, 'Updating catalog mapping after catalog changes', 5);
 
         // fill the data
-        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        $tables = ['album', 'song', 'video', 'podcast_episode'];
         foreach ($tables as $type) {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
             Dba::write($sql);
@@ -2893,7 +2893,7 @@ abstract class Catalog extends database_object
     public static function garbage_collect_mapping()
     {
         // delete non-existent maps
-        $tables = ['album',  'song', 'video', 'podcast_episode'];
+        $tables = ['album', 'song', 'video', 'podcast_episode'];
         foreach ($tables as $type) {
             $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
             Dba::write($sql);
