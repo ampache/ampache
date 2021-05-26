@@ -294,12 +294,14 @@ class Album extends database_object implements library_item
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
             $this->total_duration    = 0;
+            $this->object_cnt        = 0;
             $albumRepository         = $this->getAlbumRepository();
             $this->album_suite       = $albumRepository->getAlbumSuite($this);
             $this->allow_group_disks = true;
 
             foreach ($this->album_suite as $albumId) {
                 $this->total_duration += $albumRepository->getAlbumDuration((int) $albumId);
+                $this->object_cnt += $albumRepository->getAlbumPlayCount((int) $albumId);
             }
         }
 

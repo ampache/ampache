@@ -94,6 +94,15 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         } ?>
 <?php
     } ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <br />
+    <div style="display:inline;">
+        <?php echo T_('Played') . ' ' .
+            /* HINT: Number of times an object has been played */
+            sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+    </div>
+<?php
+} ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>

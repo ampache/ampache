@@ -270,6 +270,21 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * Get play count for an album disk by album id.
+     */
+    public function getAlbumPlayCount(int $albumId): int
+    {
+        $db_results = Dba::read(
+            'SELECT `total_count` from `album` WHERE `album`.`id` = ?',
+            [$albumId]
+        );
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return (int) $results['total_count'];
+    }
+
+    /**
      * Get time for an album disk and set it.
      */
     public function updateTime(
