@@ -705,7 +705,6 @@ class Ui implements UiInterface
             case 'show_skipped_times':
             case 'song_page_title':
             case 'subsonic_backend':
-            case 'plex_backend':
             case 'webplayer_flash':
             case 'webplayer_html5':
             case 'allow_personal_info_now':
@@ -714,6 +713,7 @@ class Ui implements UiInterface
             case 'allow_personal_info_agent':
             case 'ui_fixed':
             case 'autoupdate':
+            case 'autoupdate_lastversion_new':
             case 'webplayer_confirmclose':
             case 'webplayer_pausetabs':
             case 'stream_beautiful_url':
@@ -753,6 +753,8 @@ class Ui implements UiInterface
             case 'cron_cache':
             case 'show_lyrics':
             case 'unique_playlist':
+            case 'show_skipped_times':
+            case 'cron_cache':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
