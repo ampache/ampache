@@ -600,6 +600,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
+        $check_file = Catalog::get_id_from_file($data['file'], 'video');
+        if ($check_file > 0) {
+            return $check_file;
+        }
         $bitrate        = (int) $data['bitrate'];
         $mode           = $data['mode'];
         $rezx           = (int) $data['resolution_x'];

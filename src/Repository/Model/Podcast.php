@@ -528,6 +528,16 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        if (!$source) {
+            debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        if (self::get_id_from_source($source) > 0) {
+            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
+
+            return false;
+        }
 
         if ($pubdate > $afterdate) {
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -609,6 +619,25 @@ class Podcast extends database_object implements library_item
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_source($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
     /**
      * get_root_path
      * @return string

@@ -404,33 +404,37 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function insert(array $results)
     {
-        $catalog               = $results['catalog'];
-        $file                  = $results['file'];
-        $title                 = Catalog::check_length(Catalog::check_title($results['title'], $file));
-        $artist                = Catalog::check_length($results['artist']);
-        $album                 = Catalog::check_length($results['album']);
-        $albumartist           = Catalog::check_length($results['albumartist'] ?: $results['band']);
-        $albumartist           = $albumartist ?: null;
-        $bitrate               = $results['bitrate'] ?: 0;
-        $rate                  = $results['rate'] ?: 0;
-        $mode                  = $results['mode'];
-        $size                  = $results['size'] ?: 0;
-        $time                  = $results['time'] ?: 0;
-        $track                 = Catalog::check_track((string) $results['track']);
-        $track_mbid            = $results['mb_trackid'] ?: $results['mbid'];
-        $track_mbid            = $track_mbid ?: null;
-        $album_mbid            = $results['mb_albumid'];
-        $album_mbid_group      = $results['mb_albumid_group'];
-        $artist_mbid           = $results['mb_artistid'];
-        $albumartist_mbid      = $results['mb_albumartistid'];
-        $disk                  = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $year                  = Catalog::normalize_year($results['year'] ?: 0);
-        $comment               = $results['comment'];
-        $tags                  = $results['genre']; // multiple genre support makes this an array
-        $lyrics                = $results['lyrics'];
-        $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
-        $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
-        $label                 = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        $check_file = Catalog::get_id_from_file($results['file'], 'song');
+        if ($check_file > 0) {
+            return $check_file;
+        }
+        $catalog          = $results['catalog'];
+        $file             = $results['file'];
+        $title            = Catalog::check_length(Catalog::check_title($results['title'], $file));
+        $artist           = Catalog::check_length($results['artist']);
+        $album            = Catalog::check_length($results['album']);
+        $albumartist      = Catalog::check_length($results['albumartist'] ?: $results['band']);
+        $albumartist      = $albumartist ?: null;
+        $bitrate          = $results['bitrate'] ?: 0;
+        $rate             = $results['rate'] ?: 0;
+        $mode             = $results['mode'];
+        $size             = $results['size'] ?: 0;
+        $time             = $results['time'] ?: 0;
+        $track            = Catalog::check_track((string) $results['track']);
+        $track_mbid       = $results['mb_trackid'] ?: $results['mbid'];
+        $track_mbid       = $track_mbid ?: null;
+        $album_mbid       = $results['mb_albumid'];
+        $album_mbid_group = $results['mb_albumid_group'];
+        $artist_mbid      = $results['mb_artistid'];
+        $albumartist_mbid = $results['mb_albumartistid'];
+        $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $year             = Catalog::normalize_year($results['year'] ?: 0);
+        $comment          = $results['comment'];
+        $tags             = $results['genre']; // multiple genre support makes this an array
+        $lyrics           = $results['lyrics'];
+        $user_upload      = isset($results['user_upload']) ? $results['user_upload'] : null;
+        $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
+        $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -491,7 +495,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $insert_time = time();
 
-        $sql = 'INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, ' . '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' . '`addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, ' . '`composer`, `channels`) ' . 'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = "INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $db_results = Dba::write($sql, array(
             $catalog,
