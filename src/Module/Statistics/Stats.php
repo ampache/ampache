@@ -406,9 +406,9 @@ class Stats
             $song = new Song($object_id);
             $sql  = "UPDATE `song` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
             Dba::write($sql, array($song->id));
-            $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1 WHERE `id` = ?";
             Dba::write($sql, array($song->album));
-            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` = ?";
             Dba::write($sql, array($song->artist));
         }
 
