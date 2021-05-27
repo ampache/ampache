@@ -27,7 +27,7 @@ UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $random_action; ?>">
 <table class="tabledata">
 <tr id="search_location">
-    <td><?php if ($random_type !== 'song') {
+    <td><?php if ($random_type !== 'song' || $random_action !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
         echo T_('Songs');

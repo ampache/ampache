@@ -27,7 +27,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $search_action; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
     <tr id="search_location">
-    <td><?php if ($search_type !== 'song') { ?>
+    <td><?php if ($search_type !== 'song' || $search_action !== 'song') { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
     } else {
         echo T_('Songs');
