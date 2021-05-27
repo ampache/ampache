@@ -2039,20 +2039,20 @@ class Search extends playlist_object
                 case 'myplayed':
                 case 'myplayedalbum':
                 case 'myplayedartist':
-                // combine these as they all do the same thing just different tables
-                $looking      = str_replace('myplayed', '', $rule[0]);
-                $column       = ($looking == '') ? 'id' : $looking;
-                $my_type      = ($looking == '') ? 'song' : $looking;
-                $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
-                // played once per user
-                $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
-                    "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
-                    "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                    "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
-                    "`myplayed_" . $my_type . "_" . $userid . "` " .
-                    "ON `song`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
-                    "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
+                    // combine these as they all do the same thing just different tables
+                    $looking      = str_replace('myplayed', '', $rule[0]);
+                    $column       = ($looking == '') ? 'id' : $looking;
+                    $my_type      = ($looking == '') ? 'song' : $looking;
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
+                        "`myplayed_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
+                    $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
                     break;
                 case 'bitrate':
                     $input   = $input * 1000;
