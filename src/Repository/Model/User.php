@@ -94,7 +94,7 @@ class User extends database_object
      */
     public $state;
     /**
-     * @var string city
+     * @var string $city
      */
     public $city;
     /**
@@ -1219,7 +1219,7 @@ class User extends database_object
 
         $art = new Art($this->id, 'user');
 
-        return $art->insert($data, $mime);
+        return $art->insert($data['raw'], $mime);
     }
 
     /**
@@ -1230,13 +1230,11 @@ class User extends database_object
     {
         $upload = array();
         if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
-            $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
-            $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, 'user');
 
-            if ($image_data !== '') {
-                return $this->update_avatar($image_data, $upload['mime']);
+            if ($image_data['raw'] !== '') {
+                return $this->update_avatar($image_data, $image_data['mime']);
             }
         }
 

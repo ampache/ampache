@@ -61,7 +61,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * results set is returned
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -107,9 +107,8 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $media  = new Video($art->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
-            $media = new Artist($art->uid);
-            $media->format();
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_full_name);
+            $media              = new Artist($art->uid);
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_name);
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
@@ -194,7 +193,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
                     );
                     $preferred[$index] = [
                         'file' => $full_filename,
-                        'mime' => 'image/' . $extension,
                         'title' => 'Folder'
                     ];
                     break;
@@ -206,7 +204,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
                     );
                     $results[$index] = [
                         'file' => $full_filename,
-                        'mime' => 'image/' . $extension,
                         'title' => 'Folder'
                     ];
                 }

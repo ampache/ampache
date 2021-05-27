@@ -72,11 +72,14 @@ final class VaInfo implements VaInfoInterface
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param UserRepositoryInterface $userRepository
+     * @param ConfigContainerInterface $configContainer
+     * @param LoggerInterface $logger
      * @param string $file
      * @param array $gatherTypes
      * @param string $encoding
      * @param string $encodingId3v1
-     * @param string $encodingId3v2
+     * //TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
      * @param boolean $islocal
@@ -183,6 +186,8 @@ final class VaInfo implements VaInfoInterface
         $this->userRepository  = $userRepository;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+
+        return true;
     }
 
     /**
@@ -372,7 +377,9 @@ final class VaInfo implements VaInfoInterface
      */
     public function prepare_metadata_for_writing($frames)
     {
-        $ndata = array();
+        //non-MusicBrainz tags;  Possibly move list to config file
+        $blacklist = array('totaltracks');
+        $ndata     = array();
         foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':
@@ -381,13 +388,15 @@ final class VaInfo implements VaInfoInterface
                     }
                     break;
                 default:
-                    $ndata[$key][] = $text[0];
+                    if (!in_array($key, $blacklist)) {
+                        $ndata[$key][] = $text[0];
+                    }
                     break;
             }
         }
 
         return $ndata;
-    } // prepare_id3_frames
+    } // prepare_metadata_for_writing
 
     /**
      * read_id3
@@ -518,6 +527,9 @@ final class VaInfo implements VaInfoInterface
             if (trim((string)$tags['release_type']) !== '') {
                 $info['release_type'] = $info['release_type'] ?: trim((string)$tags['release_type']);
             }
+            if (trim((string)$tags['release_status']) !== '') {
+                $info['release_status'] = $info['release_status'] ?: trim((string)$tags['release_status']);
+            }
             // artists is an array treat it as one
             $info['artists'] = self::clean_array_tag('artists', $info, $tags);
 
@@ -536,8 +548,8 @@ final class VaInfo implements VaInfoInterface
             $info['replaygain_track_peak'] = isset($info['replaygain_track_peak']) ? $info['replaygain_track_peak'] : (!is_null($tags['replaygain_track_peak']) ? (float) $tags['replaygain_track_peak'] : null);
             $info['replaygain_album_gain'] = isset($info['replaygain_album_gain']) ? $info['replaygain_album_gain'] : (!is_null($tags['replaygain_album_gain']) ? (float) $tags['replaygain_album_gain'] : null);
             $info['replaygain_album_peak'] = isset($info['replaygain_album_peak']) ? $info['replaygain_album_peak'] : (!is_null($tags['replaygain_album_peak']) ? (float) $tags['replaygain_album_peak'] : null);
-            $info['r128_track_gain']       = isset($info['r128_track_gain'])       ? $info['r128_track_gain'] :       (!is_null($tags['r128_track_gain'])       ? (int) $tags['r128_track_gain'] : null);
-            $info['r128_album_gain']       = isset($info['r128_album_gain'])       ? $info['r128_album_gain'] :       (!is_null($tags['r128_album_gain'])       ? (int) $tags['r128_album_gain'] : null);
+            $info['r128_track_gain']       = isset($info['r128_track_gain']) ? $info['r128_track_gain'] : (!is_null($tags['r128_track_gain']) ? (int) $tags['r128_track_gain'] : null);
+            $info['r128_album_gain']       = isset($info['r128_album_gain']) ? $info['r128_album_gain'] : (!is_null($tags['r128_album_gain']) ? (int) $tags['r128_album_gain'] : null);
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
@@ -972,6 +984,10 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
+                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
                 default:
                     $parsed[$tagname] = $data[0];
                     break;
@@ -1032,10 +1048,15 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'date':
                     $parsed['year'] = $data[0];
+                    $parsed['date'] = $data[0];
                     break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
+                case 'musicbrainz_recordingid':
+                    $parsed['mb_recordingid'] = $data[0];
+                    break;
+
                 case 'musicbrainz_albumid':
                     $parsed['mb_albumid'] = $data[0];
                     break;
@@ -1045,11 +1066,18 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_releasegroupid':
                     $parsed['mb_albumid_group'] = $data[0];
                     break;
-                case 'musicbrainz_trackid':
+                case 'musicbrainz_releasetrackid':
                     $parsed['mb_trackid'] = $data[0];
                     break;
-                case 'musicbrainz_albumtype':
+                case 'releasestatus':
+                    $parsed['release_status'] = $data[0];
+                    break;
+                case 'releasetype':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
+                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
@@ -1070,6 +1098,7 @@ final class VaInfo implements VaInfoInterface
                 case 'barcode':
                     $parsed['barcode'] = $data[0];
                     break;
+                case 'catalog':
                 case 'catalognumber':
                     $parsed['catalog_number'] = $data[0];
                     break;
@@ -1240,6 +1269,9 @@ final class VaInfo implements VaInfoInterface
                             array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]),
                                 array('')));
                         break;
+                    case 'musicbrainz album status':
+                        $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
                     // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
                     // all replaygain values aren't always correctly retrieved
                     case 'replaygain_track_gain':
@@ -1261,6 +1293,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['r128_album_gain'] = (int) $txxx['data'];
                         break;
                     case 'original_year':
+                    case 'originalyear':
                         $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'barcode':
@@ -1365,6 +1398,9 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz album type':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz album status':
+                    $parsed['release_status'] = $data[0];
                     break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
@@ -1601,7 +1637,7 @@ final class VaInfo implements VaInfoInterface
     {
         $abbr         = explode(",", $this->configContainer->get(ConfigurationKeyEnum::COMMON_ABBR));
         $commonabbr   = preg_replace("~\n~", '', $abbr);
-        $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
+        $commonabbr[] = '[1|2][0-9]{3}'; //Remove release year
         $abbr_count   = count($commonabbr);
 
         // scan for brackets, braces, etc and ignore case.
@@ -1676,15 +1712,16 @@ final class VaInfo implements VaInfoInterface
      * @param string $data
      * @param bool $doTrim
      * @return string|array
+     * @throws Exception
      */
     public function splitSlashedlist($data, $doTrim = true)
     {
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (isset($data) && isset($delimiters)) {
-            $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
-            $items      = preg_split($pattern, $data);
-            $items      = array_map('trim', $items);
-            if ($items === false) {
+            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $items   = preg_split($pattern, $data);
+            $items   = array_map('trim', $items);
+            if (empty($items)) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
             $data = $items;

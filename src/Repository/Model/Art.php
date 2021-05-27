@@ -35,6 +35,9 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Exception;
 use getID3;
 use PDOStatement;
@@ -360,9 +363,120 @@ class Art extends database_object
         $mime = $mime ? $mime : 'image/jpeg';
         // Blow it away!
         $this->reset();
+        
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
+        if (AmpConfig::get('write_id3_art', false)) {
+            $class_name = ObjectTypeToClassNameMapper::map($this->type);
+            $object     = new $class_name($this->uid);
+            debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
+            if ($this->type === 'album') {
+                /** Use special treatment for albums */
+                $songs = $this->getSongRepository()->getByAlbum($object->id);
+            } elseif ($this->type === 'artist') {
+                /** Use special treatment for artists */
+                $songs = $this->getSongRepository()->getByArtist($object->id);
+            }
+            global $dic;
+            $utilityFactory = $dic->get(UtilityFactoryInterface::class);
+
+            foreach ($songs as $song_id) {
+                $song   = new Song($song_id);
+                $song->format();
+                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->f_name;
+                $vainfo      = $utilityFactory->createVaInfo(
+                    $song->file
+                );
+        
+                $ndata      = array();
+                $data       = $vainfo->read_id3();
+                $fileformat = $data['fileformat'];
+                if ($fileformat == 'flac' || $fileformat == 'ogg') {
+                    $apics = $data['flac']['PICTURE'];
+                } else {
+                    $apics = $data['id3v2']['APIC'];
+                }
+                /* is the file flac or mp3? */
+                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
+                $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
+                $new_pic       = array('data' => $source, 'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid, 'description' => $description, 'encodingid' => 0);
+
+                if (is_null($apics)) {
+                    $ndata['attached_picture'][]    = $new_pic;
+                } else {
+                    switch (count($apics)) {
+                        case 1:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][] = $new_pic;
+                                $ndata['attached_picture'][] = array('data' => $apics[0]['data'], 'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']);
+                            }
+                            break;
+                        case 2:
+                            $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
+                            /* If $idx is null, it means both images are of opposite types
+                             * of the new image. Either image could be replaced to have
+                             * one cover and one artist image.
+                             */
+                            if (is_null($idx)) {
+                                $ndata['attached_picture'][0] = $new_pic;
+                            } else {
+                                $apicsId                              = ($idx == 0) ? 1 : 0;
+                                $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
+                                'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
+                            }
+                            break;
+                    }
+                }
+                unset($apics);
+                $tags    = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'vorbiscomment' : 'id3v2';
+                $ndata   = array_merge($ndata, $vainfo->prepare_metadata_for_writing($data['tags'][$tags]));
+                $vainfo->write_id3($ndata);
+            } // foreach song
+        } // write_id3
+
+        if (AmpConfig::get('album_art_store_disk')) {
+            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
+            $source = null;
+        }
+        // Insert it!
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
+
+        return true;
+    } // insert
+
+    public function update($source, $mime = '')
+    {
+        // Disabled in demo mode cause people suck and upload porn
+        if (AmpConfig::get('demo_mode')) {
+            return false;
+        }
+
+        // Check to make sure we like this image
+        if (!self::test_image($source)) {
+            debug_event(self::class, 'Not inserting image for ' . $this->type . ' ' . $this->uid . ', invalid data passed', 1);
+
+            return false;
+        }
+
+        $dimensions = Core::image_dimensions($source);
+        $width      = (int)($dimensions['width']);
+        $height     = (int)($dimensions['height']);
+        $sizetext   = 'original';
+
+        if (!self::check_dimensions($dimensions)) {
+            return false;
+        }
+
+        // Default to image/jpeg if they don't pass anything
+        $mime = $mime ? $mime : 'image/jpeg';
+        // Blow it away!
+        $this->reset();
         
         if (AmpConfig::get('write_id3_art', false)) {
+            $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
@@ -396,7 +510,7 @@ class Art extends database_object
                 $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
                 $new_pic       = array('data' => $source, 'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                    'picturetypeid' => $current_picturetypeid, 'description' => $description, 'encodingid' => 0);
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][]    = $new_pic;
@@ -422,9 +536,7 @@ class Art extends database_object
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
-                                ;
                             }
-                            
                             break;
                     }
                 }
@@ -444,9 +556,10 @@ class Art extends database_object
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
-    } // insert
+    } // update
 
-    private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
+
+    public function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
     {
         $idx = null;
         $cnt = count($apics);
@@ -456,6 +569,7 @@ class Art extends database_object
                 $ndata['attached_picture'][$i]['data']              = $new_pic['data'];
                 $ndata['attached_picture'][$i]['mime']              = $new_pic['mime'];
                 $ndata['attached_picture'][$i]['picturetypeid']     = $new_pic['picturetypeid'];
+                $ndata['attached_picture'][$i]['encodingid']        = $new_pic['encodingid'];
                 $idx                                                = $i;
                 break;
             }
@@ -891,61 +1005,65 @@ class Art extends database_object
             $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
 
-        // Already have the data, this often comes from id3tags
-        if (isset($data['raw'])) {
-            return $data['raw'];
-        }
-
         // If it came from the database
         if (isset($data['db'])) {
             $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
             $row        = Dba::fetch_assoc($db_results);
+            $image['raw']    = $row['image'];
+            $image['mime']   = $row['mime'];
+            $image['typeid'] = ($row['object_type'] == 'artist') ? 8 : 3;
 
-            return $row['art'];
+            return $image;
         } // came from the db
 
         // Check to see if it's a URL
-        if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
-            debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
-            $options = array();
-            try {
-                $options['timeout'] = 10;
-                Requests::register_autoloader();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
-                $raw     = $request->body;
-            } catch (Exception $error) {
-                debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
-                $raw = '';
+        if (isset($data['url'])) {
+            if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
+                debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
+                $options = array();
+                try {
+                    $options['timeout'] = 10;
+                    Requests::register_autoloader();
+                    $request         = Requests::get($data['url'], array(), Core::requests_options($options));
+                    $raw             = $request->body;
+                    $mime            = get_mime_from_image(substr($raw,0,6));
+                    $image[] = [
+                        'raw'    => $raw,
+                        'mime'   => $mime,
+                        'typeid' => ($type == 'artist') ? 8 : 3
+                    ];
+                } catch (Exception $error) {
+                    debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
+                    $image['raw'] = '';
+                }
             }
 
-            return $raw;
+            return $image;
         }
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
             $handle     = fopen($data['file'], 'rb');
-            $image_data = (string)fread($handle, Core::get_filesize($data['file']));
+            $image_data = fread($handle, Core::get_filesize($data['file']));
+            //Get mime from file signature
+            $mime = get_mime_from_image(substr($image_data,0,6));
             fclose($handle);
+            $typeId = ($type == 'artist') ? 8 : 3;
+            $image['raw']  = $image_data;
+            $image['mime'] = $mime;
+            $image['typeid'] = $typeId;
 
-            return $image_data;
+            return $image;
         }
 
-        // Check to see if it is embedded in id3 of a song
+         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
-            // If we find a good one, stop looking
-            $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
-
-            if ($id3['format_name'] == "WMA") {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
-            } elseif (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more then one
-                foreach ($id3['id3v2']['APIC'] as $image) {
-                    return $image['data'];
-                }
-            }
-        } // if data song
+            $song_id = Song::find(['file' => $data['song']]);
+            $song = new Song($song_id);
+            $image = MetaTagCollectorModule::gatherMediaTags($song, $type);
+            return $image;
+        }  // if data song
 
         return '';
     } // get_from_source
@@ -1093,6 +1211,9 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
+        if (Art::has_db($new_object_id, $object_type)) {
+            return false;
+        }
         debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";

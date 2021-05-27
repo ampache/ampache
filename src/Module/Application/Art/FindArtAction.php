@@ -117,7 +117,7 @@ final class FindArtAction extends AbstractArtAction
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data != '') {
-                if ($art->insert($image_data, $upload['0']['mime'])) {
+                if ($art->insert($image_data['raw'], $image_data['mime'])) {
                     $this->ui->showConfirmation(
                         T_('No Problem'),
                         T_('Art has been added'),
@@ -140,14 +140,13 @@ final class FindArtAction extends AbstractArtAction
 
         // Attempt to find the art.
         $images = $this->artCollector->collect($art, $options, $limit);
-
         if (!empty($_REQUEST['cover'])) {
             $path_info            = pathinfo($_REQUEST['cover']);
             $cover_url[0]['url']  = scrub_in($_REQUEST['cover']);
             $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
         }
         $images = array_merge($cover_url, $images);
-
+ //       $t = array_keys($images[0]);
         // If we've found anything then go for it!
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array

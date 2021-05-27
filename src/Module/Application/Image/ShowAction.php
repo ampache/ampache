@@ -146,9 +146,9 @@ final class ShowAction implements ApplicationActionInterface
                 case 'session':
                     // If we need to pull the data out of the session
                     Session::check();
-                    $filename    = scrub_in($_REQUEST['image_index']);
-                    $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-                    $mime        = $_SESSION['form']['images'][$filename]['mime'];
+                    $idx         = scrub_in($_REQUEST['image_index']);
+                    $image       = Art::get_from_source($_SESSION['form']['images'][$idx], 'album');
+                    $mime        = $_SESSION['form']['images'][$idx]['mime'];
                     $typeManaged = true;
                     break;
             }
@@ -161,7 +161,7 @@ final class ShowAction implements ApplicationActionInterface
             );
             $filename = $item->name ?: $item->title;
 
-            $art = new Art($item->id,  $type,  $kind);
+            $art = new Art($item->id, $type, $kind);
             $art->has_db_info();
             $etag = $art->id;
 
@@ -218,6 +218,11 @@ final class ShowAction implements ApplicationActionInterface
         if (!empty($image)) {
             $extension = Art::extension($mime);
             $filename  = scrub_out($filename . '.' . $extension);
+            if (isset($image[0]['raw'])) {
+                $img = $image[0]['raw'];
+            } else {
+                $img = $image;
+            }
 
             // Send the headers and output the image
             if (!empty($etag)) {
@@ -242,8 +247,8 @@ final class ShowAction implements ApplicationActionInterface
             $response = $response->withHeader(
                 'Access-Control-Allow-Origin',
                 '*'
-            )->withBody(
-                $this->streamFactory->createStream($image)
+            )->withBody( 
+                $this->streamFactory->createStream($img)
             );
         }
 

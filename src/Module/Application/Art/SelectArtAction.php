@@ -79,7 +79,7 @@ final class SelectArtAction extends AbstractArtAction
 
         $art_type   = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], $art_type);
-        $dimensions = Core::image_dimensions($image);
+        $dimensions = Core::image_dimensions($image[0]['raw']);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
         if (!Art::check_dimensions($dimensions)) {
             $this->ui->showHeader();
@@ -103,11 +103,11 @@ final class SelectArtAction extends AbstractArtAction
             $album_groups = $album->get_group_disks_ids();
             foreach ($album_groups as $a_id) {
                 $art = $this->modelFactory->createArt($a_id, $object_type);
-                $art->insert($image, $mime);
+                $art->insert($image[0]['raw'], $image[0]['mime']);
             }
         } else {
             $art = $this->modelFactory->createArt($object_id, $object_type);
-            $art->insert($image, $mime);
+            $art->insert($image[0]['raw'], $image[0]['mime']);
         }
 
         return $this->responseFactory

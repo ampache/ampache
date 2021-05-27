@@ -61,7 +61,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * itself
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -95,11 +95,12 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $video = new Video($art->uid);
 
-        return $this->gatherMediaTags($video);
+        return self::gatherMediaTags($video->file);
     }
 
     /**
      * Gather tags from audio files.
+     * @param Art $art
      * @param integer $limit
      * @return array
      */
@@ -117,7 +118,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $data = array_merge($data, $this->gatherMediaTags($song));
+            $data = array_merge($data, self::gatherMediaTags($song, $art->type));
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
@@ -132,40 +133,84 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param Song|Video $media
      * @return array
      */
-    private function gatherMediaTags($media)
+    public static function gatherMediaTags($media, $type=null)
     {
-        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $data   = [];
         try {
-            $id3 = $this->getID3->analyze($media->file);
+            $getID3 = new getID3();
+            $id3 = $getID3->analyze($media->file);
         } catch (Exception $error) {
             $this->logger->error(
                 'getid3' . $error->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
         }
+        $this_picturetypeid = ($type == 'artist') ? 8 : 3;
 
-        if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-            $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['mime'],
-                'title' => 'ID3'
-            );
+        if (isset($id3['asf']['extended_content_description_object']['content_descriptors'])) {
+            $wma = $id3['asf']['extended_content_description_object']['content_descriptors'];
+            // search for name = 'wma/picture'
+            $encoding = $id3['asf']['encoding'];
+            foreach ($wma as $item) {
+                $result = trim(mb_convert_encoding($item['name'] , 'UTF-8' , $encoding));
+                if ($result == 'WM/Picture' ) {
+                    if ($item['image_type_id'] == $this_picturetypeid) {
+                        $data[] = [
+                            'song'      => $media->file,
+                            'title'     => 'ID3',
+                            'raw'       => $item['data'],
+                            'mime'      => $item['image_mime'],
+                            'typeid'    => $item['image_type_id']
+                            ];
+                        break;
+                    }
+                }
+            }
         }
-
+        
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
                 if ($image['picturetypeid'] == $this_picturetypeid) {
                     $data[] = [
-                        $mtype => $media->file,
-                        'raw' => $image['data'],
-                        'mime' => $image['mime'],
-                        'title' => 'ID3'
+                        'song'    => $media->file,
+                        'title'   => 'ID3',
+                        'raw'     => $image['data'],
+                        'mime'    => $image['mime'],
+                        'typeid'  => $image['picturetypeid']
                     ];
+                    break;
+                }
+            }
+        }
+
+        if (isset($id3["flac"]['PICTURE'])) {
+            foreach ($id3["flac"]["PICTURE"] as $image) {
+                if ($image['typeid'] == $this_picturetypeid) {
+                    $data[] = [
+                        'song'    => $media->file,
+                        'title'   => 'ID3',
+                        'raw'     => $image['data'],
+                        'mime'    => $image['image_mime'],
+                        'typeid'  => $image['typeid']
+                    ];
+                    break;
+                }
+            }
+        }
+        
+        if (isset($id3["flac"]['PICTURE'])) {
+            foreach ($id3["flac"]["PICTURE"] as $image) {
+                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
+                if ($image['typeid'] == $this_picturetypeid) {
+                    $data[] = [
+                        'song'   => $media->file,
+                        'raw'    => $image['data'],
+                        'mime'   => $image['image_mime'],
+                        'typeid' => $image['typeid'],
+                        'title'  => 'ID3'
+                    ];
+                    break;
                 }
             }
         }
@@ -176,7 +221,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gatherSongTagsSingle(Art $art, $limit = 5)
@@ -184,7 +229,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);
         $data = array();
-        $data = array_merge($data, $this->gatherMediaTags($song));
+        $data = array_merge($data, self::gatherMediaTags($song->file, $art->type));
 
         if ($limit && count($data) >= $limit) {
             return array_slice($data, 0, $limit);

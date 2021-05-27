@@ -1475,3 +1475,25 @@ function canEditArtist(
         AccessLevelEnum::LEVEL_CONTENT_MANAGER
     );
 }
+
+function get_mime_from_image($data)
+{
+    $mime         = '';
+    $magic_number = bin2hex(substr($data, 0, 4));
+    switch ($magic_number) {
+        case substr($magic_number,0,2) == 'ffd8':
+            $mime = 'image/jpg';
+            break;
+        case substr($magic_number,0,2) == '424d':
+            $mime = 'image/bmp';
+            break;
+        case '89504e47':
+            $mime = 'image/png';
+        case '47494638':
+            $mime = 'image/gif';
+            break;
+        default:
+            $mime = 'image/jpg';
+    }
+    return $mime;
+}
