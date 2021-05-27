@@ -1859,10 +1859,9 @@ abstract class Catalog extends database_object
         } // end switch type
 
         // Cleanup old objects that are no longer needed
-        if (!AmpConfig::get('cron_cache')) {
-            Album::garbage_collection();
-            Artist::garbage_collection();
-        }
+        Album::garbage_collection();
+        Artist::garbage_collection();
+        self::update_counts($type);
 
         return $result;
     } // update_single_item
@@ -2165,6 +2164,34 @@ abstract class Catalog extends database_object
         );
 
         return array_filter($tags);
+    }
+
+    /**
+     * update the artist or album counts on catalog changes
+     * @param string $type
+     */
+    public static function update_counts($type = '')
+    {
+        debug_event(self::class, 'Updating counts after catalog changes', 5);
+        if (empty($type)) {
+            // object_count might need some migration help
+            $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, `song`.`id` as `songid`, `song`.`album`, `album_count`.`object_id` as `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` as `song_count` on `song_count`.`object_type` = 'song' and `song_count`.`count_type` = 'stream' and `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` as `album_count` on `album_count`.`object_type` = 'album' and `album_count`.`count_type` = 'stream' and `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
+            Dba::write($sql);
+            $sql = "UPDATE `object_count`, (SELECT song_count.date, MIN(song.id) as songid, MIN(song.artist) AS artist, `artist_count`.`object_id` as `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM song LEFT JOIN `object_count` as `song_count` on `song_count`.`object_type` = 'song' and `song_count`.`count_type` = 'stream' and `song_count`.`object_id` = `song`.`id` LEFT JOIN object_count as `artist_count` on `artist_count`.`object_type` = 'artist' and `artist_count`.`count_type` = 'stream' and `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`,`user`,`agent`,`count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
+            Dba::write($sql);
+            $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+            Dba::write($sql);
+            $sql = "UPDATE `song` SET `song`.`played` = 1 WHERE `song`.`played` = 0 AND `song`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+            Dba::write($sql);
+        }
+        if (empty($type) || $type == 'artist') {
+            $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
+            Dba::write($sql);
+        }
+        if (empty($type) || $type == 'album') {
+            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+            Dba::write($sql);
+        }
     }
 
     /**
@@ -2953,7 +2980,6 @@ abstract class Catalog extends database_object
                     if (!defined('SSE_OUTPUT')) {
                         AmpError::display('catalog_add');
                     }
-                    Album::update_album_artist();
                 }
                 break;
             case 'update_all_catalogs':
@@ -2983,7 +3009,6 @@ abstract class Catalog extends database_object
                         $catalog->add_to_catalog();
                     }
                 }
-                Album::update_album_artist();
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
@@ -3008,7 +3033,6 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
-                            Album::update_album_artist();
                         }
                     }
                 } // end if add
@@ -3066,9 +3090,10 @@ abstract class Catalog extends database_object
         }
 
         // Remove any orphaned artists/albums/etc.
-        if (!AmpConfig::get('cron_cache')) {
-            self::garbage_collection();
-        }
+        self::garbage_collection();
+        self::clean_empty_albums();
+        Album::update_album_artist();
+        self::update_counts();
     }
 
     /**
