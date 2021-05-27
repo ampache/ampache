@@ -2318,7 +2318,6 @@ abstract class Catalog extends database_object
             $db_results = Dba::write($sql, array($object_id));
             $artists[]  = (int) $album['album_artist'];
         }
-        self::update_counts('album');
     }
 
     /**
@@ -3032,8 +3031,6 @@ abstract class Catalog extends database_object
                             $catalog->add_to_catalog($options);
                         }
                     }
-                    Album::update_album_artist();
-                    self::update_counts();
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
@@ -3051,7 +3048,6 @@ abstract class Catalog extends database_object
                             $catalog->verify_catalog();
                         }
                     }
-                    self::update_counts();
                 }
                 break;
             case 'full_service':
@@ -3068,8 +3064,6 @@ abstract class Catalog extends database_object
                         $catalog->add_to_catalog();
                     }
                 }
-                Album::update_album_artist();
-                self::update_counts();
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
@@ -3083,7 +3077,6 @@ abstract class Catalog extends database_object
                             $catalog->clean_catalog();
                         }
                     } // end foreach catalogs
-                    self::update_counts();
                     Dba::optimize_tables();
                 }
                 break;
@@ -3095,8 +3088,6 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
-                            Album::update_album_artist();
-                            self::update_counts();
                         }
                     }
                 } // end if add
@@ -3161,6 +3152,9 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         debug_event(self::class, 'Run Garbage collection', 5);
         static::getCatalogGarbageCollector()->collect();
+        self::clean_empty_albums();
+        Album::update_album_artist();
+        self::update_counts();
     }
 
     /**
