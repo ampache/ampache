@@ -30,7 +30,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var VideoRepositoryInterface $videoRepository */
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) ?: 'song'; ?>">
 <table class="tabledata">
 <tr id="search_location">
     <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'song') {
