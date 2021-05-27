@@ -31,7 +31,10 @@ use Ampache\Repository\VideoRepositoryInterface;
 $get_type    = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 $random_type = (in_array($get_type, array('song', 'album', 'artist', 'video')))
     ? $get_type
-    : 'song';
+    : null;
+if (!$random_type) {
+    header("Location: " . AmpConfig::get('web_path') . '/random.php?action=get_advanced&type=song');
+}
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">

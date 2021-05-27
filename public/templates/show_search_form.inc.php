@@ -33,7 +33,10 @@ $currentType     = (isset($searchType))
     : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 $currentType     = (in_array($currentType, array('song', 'album', 'artist', 'label', 'playlist', 'video')))
     ? $currentType
-    : 'song';
+    : null;
+if (!$currentType) {
+    header("Location: " . AmpConfig::get('web_path') . '/search.php?type=song');
+}
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
