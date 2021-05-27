@@ -19,15 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-$search_type   = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-$search_action = (in_array($search_type, array('song', 'album', 'artist', 'label', 'playlist', 'video')))
-    ? (string) scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))
-    : 'song';
+$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$search_type = (in_array($search_type, array('song', 'album', 'artist', 'label', 'playlist', 'video')))
+    ? (string) scrub_out($search_type)
+    : null;
+if (!$search_type) {
+    header("Location: " . AmpConfig::get('web_path') . '/search.php?type=song');
+}
 UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
-<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $search_action; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $search_type; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
     <tr id="search_location">
-    <td><?php if ($search_type !== 'song' && $search_action !== 'song') { ?>
+    <td><?php if ($search_type !== 'song') { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
     } else {
         echo T_('Songs');

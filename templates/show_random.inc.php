@@ -19,15 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-$random_type   = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-$random_action = (in_array($random_type, array('song', 'album', 'artist', 'video')))
-    ? (string) scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))
-    : 'song';
+$random_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$random_type = (in_array($random_type, array('song', 'album', 'artist', 'video')))
+    ? (string) scrub_out($random_type)
+    : null;
+if (!$random_type) {
+    header("Location: " . AmpConfig::get('web_path') . '/random.php?action=get_advanced&type=song');
+}
 UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $random_action; ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $random_type; ?>">
 <table class="tabledata">
 <tr id="search_location">
-    <td><?php if ($random_type !== 'song' && $random_action !== 'song') {
+    <td><?php if ($random_type !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
         echo T_('Songs');
