@@ -23,10 +23,18 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Doctrine\DBAL\Connection;
 
 final class UserPreferenceRepository implements UserPreferenceRepositoryInterface
 {
+    private Connection $database;
+
+    public function __construct(
+        Connection $database
+    ) {
+        $this->database = $database;
+    }
+
     /**
      * @return mixed
      */
@@ -34,18 +42,17 @@ final class UserPreferenceRepository implements UserPreferenceRepositoryInterfac
         int $userId,
         int $preferenceId
     ) {
-        $db_results = Dba::read(
+        $value = $this->database->fetchOne(
             'SELECT `value` FROM `user_preference` WHERE `preference`= ? AND `user` = ?',
             [$preferenceId, $userId]
         );
-        if (Dba::num_rows($db_results) < 1) {
-            $db_results = Dba::read(
-                "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'",
+        if ($value === false) {
+            $value = $this->database->fetchOne(
+                'SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`=\'-1\'',
                 [$preferenceId]
             );
         }
-        $data = Dba::fetch_assoc($db_results);
 
-        return $data['value'];
+        return $value;
     }
 }
