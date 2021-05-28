@@ -52,16 +52,9 @@ final class TvShowEpisodeRepository implements TvShowEpisodeRepositoryInterface
     ): array {
         $catalogDisable = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE);
 
-        $sql = 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ';
-        if ($catalogDisable) {
-            $sql .= 'LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ';
-        }
-        $sql .= 'LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` ';
-        $sql .= 'WHERE `tvshow_season`.`tvshow` = ? ';
-        if ($catalogDisable) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
-        }
+        $sql = $catalogDisable
+            ? 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow` = ? AND `catalog`.`enabled` = \'1\' '
+            : 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow` = ? ';
         $sql .= 'ORDER BY `tvshow_season`.`season_number`, `tvshow_episode`.`episode_number`';
 
         $dbResults = $this->database->executeQuery(

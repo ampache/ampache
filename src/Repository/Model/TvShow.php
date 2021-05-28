@@ -392,7 +392,6 @@ final class TvShow extends database_object implements TvShowInterface
                 $current_id = $tvshow_id;
 
                 static::getDataMigrator()->migrate('tvshow', $this->id, (int)$tvshow_id);
-
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }

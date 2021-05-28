@@ -138,7 +138,6 @@ final class HttpServer implements HttpServerInterface
                         $key                  = array_search($sock, $read_socks);
                         $stream_clients[$key] = $options;
                         break;
-
                     case '/':
                     case '/status.xsl':
                         // Stream request
@@ -249,7 +248,6 @@ final class HttpServer implements HttpServerInterface
                         fclose($sock);
                         unset($client_socks[array_search($sock, $client_socks)]);
                         break;
-
                     case '/style.css':
                     case '/favicon.ico':
                     case '/images/corner_bottomleft.jpg':

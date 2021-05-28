@@ -161,14 +161,15 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         string $author,
         string $category,
         int $time,
-        int $publicationDate
+        int $publicationDate,
+        int $catalogId
     ): bool {
         $sql = <<<SQL
         INSERT INTO
             `podcast_episode`
-            (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`)
+            (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?)
         SQL;
 
         $result = $this->connection->executeQuery(
@@ -185,6 +186,7 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
                 $category,
                 $time,
                 $publicationDate,
+                $catalogId,
             ]
         );
 
@@ -202,14 +204,17 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
     ): array {
         $catalogDisabled = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE);
 
-        $params = [];
-        $sql    = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ';
+        $params = [
+            $podcast->getId()
+        ];
+
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ';
+
         if ($catalogDisabled) {
-            $sql .= 'LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ';
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` ';
+            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ';
         }
-        $sql .= 'WHERE `podcast_episode`.`podcast`= ? ';
-        $params[] = $podcast->getId();
+        $sql .= 'WHERE `podcast_episode`.`podcast`= ?  ';
+
         if ($state_filter !== null) {
             $sql .= 'AND `podcast_episode`.`state` = ? ';
             $params[] = $state_filter;
@@ -361,5 +366,22 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
             'UPDATE `podcast_episode` SET `played` = ? WHERE `id` = ?',
             [1, $episode->getId()]
         );
+    }
+
+    /**
+     * Get episode id from the source url.
+     */
+    public function findByUrl(string $url): ?int
+    {
+        $result = $this->connection->fetchOne(
+            'SELECT `id` FROM `podcast_episode` WHERE `source` = ?',
+            [$url]
+        );
+
+        if ($result === false) {
+            return null;
+        }
+
+        return (int) $result;
     }
 }

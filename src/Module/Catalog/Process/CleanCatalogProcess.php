@@ -28,6 +28,5 @@ final class CleanCatalogProcess implements CatalogProcessInterface
     public function process(Catalog $catalog): void
     {
         $catalog->clean_catalog_proc();
-        Catalog::clean_empty_albums();
     }
 }

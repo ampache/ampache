@@ -86,9 +86,8 @@ final class AlbumSearchType extends AbstractSearchType
                         "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
-                    $input          = $input * 60;
-                    $where[]        = "`alength`.`time` $sql_match_operator '$input'";
-                    $table['atime'] = "LEFT JOIN (SELECT `album`, SUM(`time`) AS `time` FROM `song` GROUP BY `album`) " . "AS `alength` ON `alength`.`album`=`album`.`id` ";
+                    $input   = $input * 60;
+                    $where[] = "`album`.`time` $sql_match_operator '$input'";
                     break;
                 case 'rating':
                     // average ratings only
@@ -216,8 +215,7 @@ final class AlbumSearchType extends AbstractSearchType
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
-                    $join['song'] = true;
+                    $where[] = "`album`.`catalog` $sql_match_operator '$input'";
                     break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
@@ -256,8 +254,9 @@ final class AlbumSearchType extends AbstractSearchType
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $join['song'] || $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 

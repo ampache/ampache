@@ -28,7 +28,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -93,9 +92,9 @@ final class ShowMissingAction implements ApplicationActionInterface
         $images = $this->artCollector->collect(
             $art,
             [
-                'artist' => $artist->name,
+                'artist' => $artist->f_name,
                 'album_name' => $walbum->getName(),
-                'keyword' => $artist->name . " " . $walbum->getName(),
+                'keyword' => $artist->f_name . " " . $walbum->getName(),
             ],
             1
         );
@@ -103,7 +102,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $imageList = '';
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
-            $name = '[' . $artist->name . '] ' . scrub_out($walbum->getName());
+            $name = '[' . $artist->f_name . '] ' . scrub_out($walbum->getName());
 
             $image = $images[0]['url'];
 

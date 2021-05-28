@@ -44,5 +44,6 @@ final class AddToCatalogProcess implements CatalogProcessInterface
         ];
         $catalog->add_to_catalog($options);
         $this->albumArtistUpdater->update();
+        Catalog::clean_empty_albums();
     }
 }

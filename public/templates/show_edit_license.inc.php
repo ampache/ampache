@@ -42,7 +42,7 @@ use Ampache\Repository\Model\License;
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>
-    <td><textarea rows="5" cols="70"  maxlength="250" name="description"><?php if (isset($license)) {
+    <td><textarea rows="5" cols="70" maxlength="250" name="description"><?php if (isset($license)) {
     echo $license->getDescription();
 } ?></textarea></td>
 </tr>

@@ -41,9 +41,9 @@ class easy_captcha_dxy_wave
      */
     public function __construct($max_x, $max_y)
     {
-        $this->dist_x = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
+        $this->dist_x = $this->real_rand(2.5, 3.5); // max +-x/y delta distance
         $this->dist_y = $this->real_rand(2.5, 3.5);
-        $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
+        $this->slow_x = $this->real_rand(7.5, 20.0); // =wave-width in pixel/3
         $this->slow_y = $this->real_rand(7.5, 15.0);
     }
 
@@ -97,6 +97,6 @@ class easy_captcha_dxy_wave
     {
         $random = rand(0, 1 << 30);
 
-        return ($random / (1 << 30) * ($b - $a) + $a);   // base + diff * (0..1)
+        return ($random / (1 << 30) * ($b - $a) + $a); // base + diff * (0..1)
     }
 }

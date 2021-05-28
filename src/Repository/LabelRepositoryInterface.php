@@ -62,6 +62,9 @@ interface LabelRepositoryInterface
         string $summary,
         string $address,
         string $email,
-        string $website
+        string $website,
+        string $country,
+        string $musicBrainzId,
+        int $active
     ): void;
 }

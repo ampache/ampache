@@ -105,7 +105,8 @@ class Upnp_Api
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-        if ($host == "239.255.255.250") {  // when broadcast, set broadcast socket option
+        // when broadcast, set broadcast socket option
+        if ($host == "239.255.255.250") {
             socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         }
         socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
@@ -180,12 +181,13 @@ class Upnp_Api
         $response .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $response .= 'ST: ' . $actst . "\r\n";
         $response .= 'USN: ' . 'uuid:' . self::get_uuidStr() . '::' . $actst . "\r\n";
-        $response .= "\r\n";  // gupnp-universal-cp cannot see us without this line.
+        $response .= "\r\n"; // gupnp-universal-cp cannot see us without this line.
 
         if ($delaytime > 5) {
             $delaytime = 5;
         }
-        $delay = random_int(15, $delaytime * 1000);   // Delay in ms
+        // Delay in ms
+        $delay = random_int(15, $delaytime * 1000);
 
         $addr=explode(":", $address);
         if (self::SSDP_DEBUG) {
@@ -193,7 +195,8 @@ class Upnp_Api
         }
         self::udpSend($response, $delay, $addr[0], (int) $addr[1]);
         if (self::SSDP_DEBUG) {
-            debug_event(self::class, '(Sent)', 5);     // for timing
+            // for timing
+            debug_event(self::class, '(Sent)', 5);
         }
     }
 
@@ -217,7 +220,7 @@ class Upnp_Api
      */
     public static function get_headers($data)
     {
-        $lines  = explode(PHP_EOL, $data);   // split into lines
+        $lines  = explode(PHP_EOL, $data); // split into lines
         $keys   = array();
         $values = array();
         foreach ($lines as $line) {
@@ -391,9 +394,9 @@ class Upnp_Api
         } else {
             $testKey = $keytoCheck;
         }
-        $filt = explode(',', $filterValue);      // do exact word match rather than partial, which is what strpos does.
+        $filt = explode(',', $filterValue); // do exact word match rather than partial, which is what strpos does.
         //debug_event(self::class, 'checking '.$testKey.' in '.var_export($filt, true), 5);
-        return in_array($testKey, $filt, true);  // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
+        return in_array($testKey, $filt, true); // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
     /**
@@ -404,7 +407,7 @@ class Upnp_Api
     public static function createDIDL($prmItems, $filterValue)
     {
         $xmlDoc               = new DOMDocument('1.0' /*, 'utf-8'*/);
-        $xmlDoc->formatOutput = true;    // Note: other players don't seem to do this
+        $xmlDoc->formatOutput = true; // Note: other players don't seem to do this
         // Create root element and add namespaces:
         $ndDIDL = $xmlDoc->createElementNS('urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/', 'DIDL-Lite');
         $ndDIDL->setAttribute('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
@@ -1643,7 +1646,7 @@ class Upnp_Api
             'restricted' => 'false',
             'childCount' => $album->song_count,
             'dc:title' => self::_replaceSpecialSymbols($album->f_title),
-            'upnp:class' => 'object.container.album.musicAlbum',  // object.container.album.musicAlbum
+            'upnp:class' => 'object.container.album.musicAlbum', // object.container.album.musicAlbum
             //'upnp:class' => 'object.container',
             'upnp:albumArtist' => $album->album_artist,
             'upnp:albumArtURI' => $art_url,
@@ -1663,7 +1666,7 @@ class Upnp_Api
             'restricted' => 'false',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
-            'upnp:class' => 'object.container',  // object.container.playlistContainer
+            'upnp:class' => 'object.container', // object.container.playlistContainer
         );
     }
 
@@ -1712,7 +1715,7 @@ class Upnp_Api
         return array(
             'id' => 'amp://music/songs/' . $song->id,
             'parentID' => $parent,
-            'restricted' => 'false',  // XXX
+            'restricted' => 'false', // XXX
             'dc:title' => self::_replaceSpecialSymbols($song->f_title),
             'dc:date' => date("c", (int) $song->addition_time),
             'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
@@ -1728,7 +1731,7 @@ class Upnp_Api
             'duration' => $song->getFullDurationFormatted() . '.0',
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
-            'nrAudioChannels' => '2',  // Just say its stereo as we don't have the real info
+            'nrAudioChannels' => '2', // Just say its stereo as we don't have the real info
             'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }

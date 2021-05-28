@@ -74,6 +74,10 @@ final class ArtistSearchType extends AbstractSearchType
                 case 'placeformed':
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                     break;
+                case 'time':
+                    $input   = $input * 60;
+                    $where[] = "`artist`.`time` $sql_match_operator '$input'";
+                    break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
@@ -213,6 +217,10 @@ final class ArtistSearchType extends AbstractSearchType
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
+                case 'catalog':
+                    $where[]                = "`artist_catalog`.`catalog_id` $sql_match_operator '$input'";
+                    $join['artist_catalog'] = true;
+                    break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;
@@ -231,8 +239,9 @@ final class ArtistSearchType extends AbstractSearchType
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -259,6 +268,9 @@ final class ArtistSearchType extends AbstractSearchType
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
+        }
+        if ($join['artist_catalog']) {
+            $table['catalog_map'] = "LEFT JOIN `catalog_map` AS `artist_catalog` ON `artist_catalog`.`object_type` = 'artist' AND `artist_catalog`.`object_id`=`artist`.`id`";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);

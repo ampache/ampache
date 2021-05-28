@@ -26,15 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -66,7 +65,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
      * results set is returned
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -112,9 +111,8 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $media  = new Video($art->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
-            $media = $this->modelFactory->createArtist($art->uid);
-            $media->format();
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_full_name);
+            $media              = $this->modelFactory->createArtist($art->uid);
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_name);
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }

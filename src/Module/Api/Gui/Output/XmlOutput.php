@@ -140,15 +140,15 @@ final class XmlOutput implements ApiOutputInterface
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
 
-            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->full_name . "]]></name>\n";
+            $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->f_name . "]]></name>\n";
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != "") {
-                $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->album_artist_name]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->album_artist_name]]></artist>\n";
             } elseif ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
-                $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->artist_name]]></artist>\n";
             }
 
             // Handle includes
@@ -232,7 +232,7 @@ final class XmlOutput implements ApiOutputInterface
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
-                "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
+                "\t<name><![CDATA[" . $artist->f_name . "]]></name>\n" .
                 $tag_string .
                 "\t<albums>" . $albums . "</albums>\n" .
                 "\t<albumcount>" . ($artist->albums ?: 0) . "</albumcount>\n" .
@@ -978,12 +978,12 @@ final class XmlOutput implements ApiOutputInterface
                         $artist->format();
                         $albums = $this->albumRepository->getByArtist((int) $objectId, null, true);
                         $string .= "<$type id=\"" . $objectId . "\">\n" .
-                            "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
+                            "\t<name><![CDATA[" . $artist->f_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
                                 $string .= "\t<album id=\"" . $album_id .
-                                    '"><![CDATA[' . $album->full_name .
+                                    '"><![CDATA[' . $album->f_name .
                                     "]]></album>\n";
                             }
                         }
@@ -997,7 +997,7 @@ final class XmlOutput implements ApiOutputInterface
                         $album = new Album($objectId);
                         $album->format();
                         $string .= "<$type id=\"" . $objectId . "\">\n" .
-                            "\t<name><![CDATA[" . $album->full_name . "]]></name>\n" .
+                            "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
                             "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                             "</$type>\n";
                     }

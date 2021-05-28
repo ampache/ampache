@@ -88,8 +88,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Artists'),
                             'link' => $artist->link,
-                            'label' => $artist->name,
-                            'value' => $artist->name,
+                            'label' => $artist->f_name,
+                            'value' => $artist->f_name,
                             'rels' => '',
                             'image' => Art::url($artist->id, 'artist', null, 10),
                         );

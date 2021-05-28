@@ -88,6 +88,22 @@ final class PodcastEpisodeCreator implements PodcastEpisodeCreatorInterface
             return false;
         }
 
+        if (!$source) {
+            $this->logger->error(
+                'Episode source URL not found, skipped',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
+            return false;
+        }
+
+        if ($this->podcastEpisodeRepository->findByUrl($source) !== null) {
+            $this->logger->error(
+                'Episode source URL already exists, skipped',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+        }
+
         if ($pubdate > $afterdate) {
             return $this->podcastEpisodeRepository->create(
                 $podcast,
@@ -99,7 +115,8 @@ final class PodcastEpisodeCreator implements PodcastEpisodeCreatorInterface
                 html_entity_decode((string) $episode->author),
                 html_entity_decode((string) $episode->category),
                 $time,
-                $pubdate
+                $pubdate,
+                $podcast->getCatalog()
             );
         } else {
             $this->logger->info(

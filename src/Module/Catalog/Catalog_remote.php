@@ -331,7 +331,7 @@ class Catalog_remote extends Catalog
         if (!$remote_handle) {
             debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
 
-            return false;
+            return 0;
         }
 
         $dead = 0;

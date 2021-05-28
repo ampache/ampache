@@ -33,7 +33,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Tag;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 
@@ -100,7 +99,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 break;
             case 'artist':
                 $libitem = $this->modelFactory->createArtist($objectId);
-                $songs   = $this->songRepository->getByArtist($libitem->getId());
+                $songs   = $this->songRepository->getAllByArtist($libitem->getId());
                 break;
             case 'song':
                 $songs[] = $objectId;

@@ -57,15 +57,9 @@ final class TvShowSeasonRepository implements TvShowSeasonRepositoryInterface
     ): array {
         $catalogDisable = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE);
 
-        $sql = 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ';
-        if ($catalogDisable) {
-            $sql .= 'LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ';
-        }
-        $sql .= 'WHERE `tvshow_episode`.`season` = ? ';
-        if ($catalogDisable) {
-            $sql .= 'AND `catalog`.`enabled` = \'1\' ';
-        }
+        $sql = $catalogDisable
+            ? 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `tvshow_episode`.`season` = ? AND `catalog`.`enabled` = \'1\' '
+            : 'SELECT `tvshow_episode`.`id` FROM `tvshow_episode` WHERE `tvshow_episode`.`season` = ? ';
         $sql .= 'ORDER BY `tvshow_episode`.`episode_number`';
         $dbResults = $this->database->executeQuery(
             $sql,

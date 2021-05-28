@@ -149,13 +149,13 @@ class Update
         $update_string = "- Fix change in <a href='https://github.com/ampache/ampache/commit/0c26c336269624d75985e46d324e2bc8108576ee'>this commit</a>, that left the userbase with an inconsistent database, if users updated or installed Ampache before 28 Apr 2015<br />";
         $version[]     = array('version' => '380012', 'description' => $update_string);
 
-        $update_string = "* Enable better podcast defaults<br />" . "* Increase copyright column size to fix issue #1861<br />" . "* Add name_track, name_artist, name_album to user_activity<br />" . "* Add mbid_track, mbid_artist, mbid_album to user_activity<br />" . "* Insert some decent SmartLists for a better default experience<br />" . "* Delete plex preferences from the server<br />";
+        $update_string = "* Enable better podcast defaults<br />* Increase copyright column size to fix issue #1861<br />* Add name_track, name_artist, name_album to user_activity<br />* Add mbid_track, mbid_artist, mbid_album to user_activity<br />* Insert some decent SmartLists for a better default experience<br />* Delete plex preferences from the server<br />";
         $version[]     = array('version' => '400000', 'description' => $update_string);
 
-        $update_string = "* Update preferences for older users to match current subcategory items<br />" . "  (~3.6 introduced subcategories but didn't include updates for existing users.<br />" . "  This is a cosmetic update and does not affect any operation)<br />";
+        $update_string = "* Update preferences for older users to match current subcategory items<br /> (~3.6 introduced subcategories but didn't include updates for existing users.<br /> This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" . "This is part of a major update to how Ampache handles Albums, " . "Artists and data migration during tag updates.<br /><br />" . " * Update album disk support to allow 1 instead of 0 by default.<br />" . " * Add barcode catalog_number and original_year to albums.<br />" . " * Drop catalog_number from song_data and use album instead.<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates.<br /><br />* Update album disk support to allow 1 instead of 0 by default.<br />* Add barcode catalog_number and original_year to albums.<br />* Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
 
         $update_string = "* Make sure preference names are updated to current strings<br />";
@@ -167,10 +167,10 @@ class Update
         $update_string = "* Add a last_count to search table to speed up access requests<br />";
         $version[]     = array('version' => '400005', 'description' => $update_string);
 
-        $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />" . "* Drop localplay_shoutcast table if present.<br />";
+        $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />* Drop localplay_shoutcast table if present.<br />";
         $version[]     = array('version' => '400006', 'description' => $update_string);
 
-        $update_string = "* Add ui option for skip_count display.<br />" . "* Add ui option for displaying dates in a custom format.<br />";
+        $update_string = "* Add ui option for skip_count display.<br />* Add ui option for displaying dates in a custom format.<br />";
         $version[]     = array('version' => '400007', 'description' => $update_string);
 
         $update_string = "* Add system option for cron based cache and create related tables.<br />";
@@ -182,7 +182,7 @@ class Update
         $update_string = "* Add a last_duration to search table to speed up access requests<br />";
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" . "To allow negatives the maximum value of `song`.`track` has been reduced. " . "This shouldn't affect anyone due to the large size allowed.<br /><br />" . "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" . "* Truncate database tracks to 0 when greater than 32,767<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br /> To allow negatives the maximum value of `song`.`track` has been reduced. This shouldn't affect anyone due to the large size allowed.<br /><br />* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
         $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
@@ -221,8 +221,23 @@ class Update
         $update_string = "* Delete 'concerts_limit_past' and 'concerts_limit_future' database settings.<br/ > ";
         $version[]     = array('version' => '400023', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br />" . "These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />" . "* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />These columns will fill dynamically in the web UI but you should do a catalog 'add' as soon as possible to fill them.<br />It will take a while for large libraries but will help API and SubSonic clients.<br /><br />* Add 'song_count', 'album_count' and 'album_group_count' to artist. <br />";
         $version[]     = array('version' => '400024', 'description' => $update_string);
+
+        $update_string = "* Delete duplicate files in the song table<br />";
+        $version[]     = array('version' => '500000', 'description' => $update_string);
+
+        $update_string = "* Add `release_status`, `addition_time`, `catalog` to album table<br />* Add `mbid`, `country` and `active` to label table<br />* Fill the album `catalog` value using the song table<br />* Fill the artist `album_count`, `album_group_count` and `song_count` values";
+        $version[]     = array('version' => '500001', 'description' => $update_string);
+
+        $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
+        $version[]     = array('version' => '500002', 'description' => $update_string);
+
+        $update_string = "* Create catalog_map table and fill it with data";
+        $version[]     = array('version' => '500003', 'description' => $update_string);
+
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create catalog_map table and fill it with data";
+        $version[]     = array('version' => '500004', 'description' => $update_string);
 
         $update_string = "* Adds bitrate, rate and mode information to podcast_episode<br/ > ";
         $version[]     = array('version' => '510001', 'description' => $update_string);
@@ -359,7 +374,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -377,13 +392,13 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern',100, 'boolean', 'system', 'upload')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern',100, 'boolean', 'system', 'upload')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates',100, 'boolean', 'system', 'catalog')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates',100, 'boolean', 'system', 'catalog')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
@@ -442,19 +457,19 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('custom_blankalbum', '', 'Custom blank album default image',75, 'string', 'interface', 'custom')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image',75, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('custom_blankmovie', '', 'Custom blank video default image',75, 'string', 'interface', 'custom')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankmovie', '', 'Custom blank video default image',75, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)',75, 'string', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)',75, 'string', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
@@ -531,46 +546,46 @@ class Update
         $sql = "ALTER TABLE `podcast` MODIFY `copyright` VARCHAR(255)";
         $retval &= Dba::write($sql);
 
-        $sql = "ALTER TABLE `user_activity` " . "ADD COLUMN `name_track` VARCHAR(255) NULL DEFAULT NULL," . "ADD COLUMN `name_artist` VARCHAR(255) NULL DEFAULT NULL," . "ADD COLUMN `name_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $sql = "ALTER TABLE `user_activity` ADD COLUMN `name_track` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `name_album` VARCHAR(255) NULL DEFAULT NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "ALTER TABLE `user_activity` " . "ADD COLUMN `mbid_track` VARCHAR(255) NULL DEFAULT NULL," . "ADD COLUMN `mbid_artist` VARCHAR(255) NULL DEFAULT NULL," . "ADD COLUMN `mbid_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $sql = "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` VARCHAR(255) NULL DEFAULT NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES " . "(-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), " . "(-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), " . "(-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), " . "(-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), " . "(-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), " . "(-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), " . "(-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), " . "(-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), " . "(-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), " . "(-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), " . "(-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), " . "(-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), " . "(-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), " . "(-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), " . "(-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);";
+        $sql = "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES (-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_backend');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_backend');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'myplex_username');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_username');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'myplex_authtoken');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_authtoken');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'myplex_published');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_published');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_uniqid');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_uniqid');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_servername');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_servername');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_public_address');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_address');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_public_port');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_port');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_local_auth');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_local_auth');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'plex_match_email');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_match_email');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `preference` " . "WHERE `preference`.`name` IN " . "('plex_backend', 'myplex_username', " . "'myplex_authtoken', 'myplex_published', 'plex_uniqid', " . "'plex_servername', 'plex_public_address', " . "'plex_public_port ', 'plex_local_auth', 'plex_match_email');";
+        $sql = "DELETE FROM `preference` WHERE `preference`.`name` IN ('plex_backend', 'myplex_username', 'myplex_authtoken', 'myplex_published', 'plex_uniqid', 'plex_servername', 'plex_public_address', 'plex_public_port ', 'plex_local_auth', 'plex_match_email');";
         $retval &= Dba::write($sql);
 
         return $retval;
@@ -584,70 +599,70 @@ class Update
     public static function update_400001()
     {
         $retval = true;
-        $sql    = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'library' " . "WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'backend' " . "WHERE `preference`.`name` in ('subsonic_backend', 'daap_backend', 'daap_pass', 'upnp_backend', 'webdav_backend') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'backend' WHERE `preference`.`name` in ('subsonic_backend', 'daap_backend', 'daap_pass', 'upnp_backend', 'webdav_backend') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'catalog' " . "WHERE `preference`.`name` = 'catalog_check_duplicate' AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'catalog' WHERE `preference`.`name` = 'catalog_check_duplicate' AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'custom' " . "WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'custom' WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'feature' " . "WHERE `preference`.`name` in ('download', 'allow_stream_playback', 'allow_democratic_playback', 'share', 'allow_video', 'geolocation') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'feature' WHERE `preference`.`name` in ('download', 'allow_stream_playback', 'allow_democratic_playback', 'share', 'allow_video', 'geolocation') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'home' " . "WHERE `preference`.`name` in ('now_playing_per_user', 'home_moment_albums', 'home_moment_videos', 'home_recently_played', 'home_now_playing') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'home' WHERE `preference`.`name` in ('now_playing_per_user', 'home_moment_albums', 'home_moment_videos', 'home_recently_played', 'home_now_playing') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'httpq' " . "WHERE `preference`.`name` = 'httpq_active' AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'httpq' WHERE `preference`.`name` = 'httpq_active' AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'lastfm' " . "WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'lastfm' WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'localplay' " . "WHERE `preference`.`name` in ('localplay_controller', 'localplay_level', 'allow_localplay_playback') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'localplay' WHERE `preference`.`name` in ('localplay_controller', 'localplay_level', 'allow_localplay_playback') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'metadata' " . "WHERE `preference`.`name` in ('disabled_custom_metadata_fields', 'disabled_custom_metadata_fields_input') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'metadata' WHERE `preference`.`name` in ('disabled_custom_metadata_fields', 'disabled_custom_metadata_fields_input') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'mpd' " . "WHERE `preference`.`name` = 'mpd_active' AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'mpd' WHERE `preference`.`name` = 'mpd_active' AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'notification' " . "WHERE `preference`.`name` in ('browser_notify', 'browser_notify_timeout') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'notification' WHERE `preference`.`name` in ('browser_notify', 'browser_notify_timeout') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'player' " . "WHERE `preference`.`name` in ('show_lyrics', 'song_page_title', 'webplayer_flash', 'webplayer_html5', 'webplayer_confirmclose', 'webplayer_pausetabs', 'slideshow_time', 'broadcast_by_default', 'direct_play_limit', 'webplayer_aurora') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'player' WHERE `preference`.`name` in ('show_lyrics', 'song_page_title', 'webplayer_flash', 'webplayer_html5', 'webplayer_confirmclose', 'webplayer_pausetabs', 'slideshow_time', 'broadcast_by_default', 'direct_play_limit', 'webplayer_aurora') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'podcast' " . "WHERE `preference`.`name` in ('podcast_keep', 'podcast_new_download') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'podcast' WHERE `preference`.`name` in ('podcast_keep', 'podcast_new_download') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'privacy' " . "WHERE `preference`.`name` in ('allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_personal_info_agent') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'privacy' WHERE `preference`.`name` in ('allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_personal_info_agent') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'query' " . "WHERE `preference`.`name` in ('popular_threshold', 'offset_limit', 'stats_threshold', 'concerts_limit_future', 'concerts_limit_past') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'query' WHERE `preference`.`name` in ('popular_threshold', 'offset_limit', 'stats_threshold', 'concerts_limit_future', 'concerts_limit_past') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'share' " . "WHERE `preference`.`name` = 'share_expire' AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'share' WHERE `preference`.`name` = 'share_expire' AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'shoutcast' " . "WHERE `preference`.`name` = 'shoutcast_active' AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'shoutcast' WHERE `preference`.`name` = 'shoutcast_active' AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'theme' " . "WHERE `preference`.`name` in ('theme_name', 'ui_fixed', 'topmenu', 'theme_color', 'sidebar_light') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'theme' WHERE `preference`.`name` in ('theme_name', 'ui_fixed', 'topmenu', 'theme_color', 'sidebar_light') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'transcoding' " . "WHERE `preference`.`name` in ('transcode_bitrate', 'rate_limit', 'transcode') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'transcoding' WHERE `preference`.`name` in ('transcode_bitrate', 'rate_limit', 'transcode') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'update' " . "WHERE `preference`.`name` in ('autoupdate', 'autoupdate_lastcheck', 'autoupdate_lastversion', 'autoupdate_lastversion_new') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'update' WHERE `preference`.`name` in ('autoupdate', 'autoupdate_lastcheck', 'autoupdate_lastversion', 'autoupdate_lastversion_new') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`subcatagory` = 'upload' " . "WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND " . "`preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'upload' WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND `preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;
@@ -663,13 +678,13 @@ class Update
     public static function update_400002()
     {
         $retval = true;
-        $sql    = "UPDATE `album` SET `album`.`disk` = 1 " . "WHERE `album`.`disk` = 0;";
+        $sql    = "UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;";
         $retval &= Dba::write($sql);
 
-        $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL," . "ADD `barcode` VARCHAR(64) NULL," . "ADD `catalog_number` VARCHAR(64) NULL;";
+        $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL, ADD `barcode` VARCHAR(64) NULL, ADD `catalog_number` VARCHAR(64) NULL;";
         $retval &= Dba::write($sql);
 
-        $sql = "ALTER TABLE `song_data`  DROP `catalog_number`";
+        $sql = "ALTER TABLE `song_data` DROP `catalog_number`";
         $retval &= Dba::write($sql);
 
         return $retval;
@@ -683,127 +698,127 @@ class Update
     public static function update_400003()
     {
         $retval = true;
-        $sql    = "UPDATE `preference` " . "SET `preference`.`description` = 'Force HTTP playback regardless of port' " . "WHERE `preference`.`name` = 'force_http_play' ";
+        $sql    = "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Playback Type' " . "WHERE `preference`.`name` = 'play_type' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Playback Type' WHERE `preference`.`name` = 'play_type' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'httpQ Active Instance' " . "WHERE `preference`.`name` = 'httpq_active' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'httpQ Active Instance' WHERE `preference`.`name` = 'httpq_active' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Now Playing filtered per user' " . "WHERE `preference`.`name` = 'now_playing_per_user' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Now Playing filtered per user' WHERE `preference`.`name` = 'now_playing_per_user' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Use Subsonic backend' " . "WHERE `preference`.`name` = 'subsonic_backend' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Use Subsonic backend' WHERE `preference`.`name` = 'subsonic_backend' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Share Now Playing information' " . "WHERE `preference`.`name` = 'allow_personal_info_now' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Now Playing information' WHERE `preference`.`name` = 'allow_personal_info_now' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Share Recently Played information' " . "WHERE `preference`.`name` = 'allow_personal_info_recent' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information' WHERE `preference`.`name` = 'allow_personal_info_recent' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming date/time' " . "WHERE `preference`.`name` = 'allow_personal_info_time' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming date/time' WHERE `preference`.`name` = 'allow_personal_info_time' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming agent' " . "WHERE `preference`.`name` = 'allow_personal_info_agent' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming agent' WHERE `preference`.`name` = 'allow_personal_info_agent' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Enable URL Rewriting' " . "WHERE `preference`.`name` = 'stream_beautiful_url' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Enable URL Rewriting' WHERE `preference`.`name` = 'stream_beautiful_url' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Destination catalog' " . "WHERE `preference`.`name` = 'upload_catalog' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Destination catalog' WHERE `preference`.`name` = 'upload_catalog' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow user uploads' " . "WHERE `preference`.`name` = 'allow_upload' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow user uploads' WHERE `preference`.`name` = 'allow_upload' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Create a subdirectory per user' " . "WHERE `preference`.`name` = 'upload_subdir' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Create a subdirectory per user' WHERE `preference`.`name` = 'upload_subdir' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Consider the user sender as the track''s artist' " . "WHERE `preference`.`name` = 'upload_user_artist' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Consider the user sender as the track''s artist' WHERE `preference`.`name` = 'upload_user_artist' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Post-upload script (current directory = upload target directory)' " . "WHERE `preference`.`name` = 'upload_script' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Post-upload script (current directory = upload target directory)' WHERE `preference`.`name` = 'upload_script' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow users to edit uploaded songs' " . "WHERE `preference`.`name` = 'upload_allow_edit' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow users to edit uploaded songs' WHERE `preference`.`name` = 'upload_allow_edit' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow users to remove uploaded songs' " . "WHERE `preference`.`name` = 'upload_allow_remove' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow users to remove uploaded songs' WHERE `preference`.`name` = 'upload_allow_remove' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Show Albums of the Moment' " . "WHERE `preference`.`name` = 'home_moment_albums' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Albums of the Moment' WHERE `preference`.`name` = 'home_moment_albums' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Show Videos of the Moment' " . "WHERE `preference`.`name` = 'home_moment_videos' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Videos of the Moment' WHERE `preference`.`name` = 'home_moment_videos' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Custom URL - Logo' " . "WHERE `preference`.`name` = 'custom_logo' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Logo' WHERE `preference`.`name` = 'custom_logo' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Custom URL - Login page logo' " . "WHERE `preference`.`name` = 'custom_login_logo' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Login page logo' WHERE `preference`.`name` = 'custom_login_logo' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Custom URL - Favicon' " . "WHERE `preference`.`name` = 'custom_favicon' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Favicon' WHERE `preference`.`name` = 'custom_favicon' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Album - Default sort' " . "WHERE `preference`.`name` = 'album_sort' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Album - Default sort' WHERE `preference`.`name` = 'album_sort' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow Geolocation' " . "WHERE `preference`.`name` = 'Geolocation' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Geolocation' WHERE `preference`.`name` = 'Geolocation' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow Video Features' " . "WHERE `preference`.`name` = 'allow_video' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Video Features' WHERE `preference`.`name` = 'allow_video' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' " . "WHERE `preference`.`name` = 'demo_clear_sessions' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' WHERE `preference`.`name` = 'demo_clear_sessions' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow Transcoding' " . "WHERE `preference`.`name` = 'transcoding' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcoding' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Authorize Flash Web Player' " . "WHERE `preference`.`name` = 'webplayer_flash' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize Flash Web Player' WHERE `preference`.`name` = 'webplayer_flash' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Authorize HTML5 Web Player' " . "WHERE `preference`.`name` = 'webplayer_html5' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize HTML5 Web Player' WHERE `preference`.`name` = 'webplayer_html5' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Web Player browser notifications' " . "WHERE `preference`.`name` = 'browser_notify' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications' WHERE `preference`.`name` = 'browser_notify' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' " . "WHERE `preference`.`name` = 'browser_notify_timeout' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' WHERE `preference`.`name` = 'browser_notify_timeout' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' " . "WHERE `preference`.`name` = 'webplayer_aurora' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' WHERE `preference`.`name` = 'webplayer_aurora' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Show Now Playing' " . "WHERE `preference`.`name` = 'home_now_playing' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Now Playing' WHERE `preference`.`name` = 'home_now_playing' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Show Recently Played' " . "WHERE `preference`.`name` = 'home_recently_played' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Recently Played' WHERE `preference`.`name` = 'home_recently_played' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = '# latest episodes to keep' " . "WHERE `preference`.`name` = 'podcast_keep' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = '# latest episodes to keep' WHERE `preference`.`name` = 'podcast_keep' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = '# episodes to download when new episodes are available' " . "WHERE `preference`.`name` = 'podcast_new_download' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = '# episodes to download when new episodes are available' WHERE `preference`.`name` = 'podcast_new_download' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow Transcoding' " . "WHERE `preference`.`name` = 'transcode' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcode' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Allow E-mail notifications' " . "WHERE `preference`.`name` = 'notify_email' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow E-mail notifications' WHERE `preference`.`name` = 'notify_email' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Custom metadata - Disable these fields' " . "WHERE `preference`.`name` = 'disabled_custom_metadata_fields' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Disable these fields' WHERE `preference`.`name` = 'disabled_custom_metadata_fields' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Custom metadata - Define field list' " . "WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Define field list' WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " . "SET `preference`.`description` = 'Auto-pause between tabs' " . "WHERE `preference`.`name` = 'webplayer_pausetabs' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Auto-pause between tabs' WHERE `preference`.`name` = 'webplayer_pausetabs' ";
         $retval &= Dba::write($sql);
 
         return $retval;
@@ -818,10 +833,10 @@ class Update
     {
         $retval = true;
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'upload_user_artist');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'upload_user_artist');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `preference` " . "WHERE `preference`.`name` = 'upload_user_artist';";
+        $sql = "DELETE FROM `preference` WHERE `preference`.`name` = 'upload_user_artist';";
         $retval &= Dba::write($sql);
 
         return $retval;
@@ -850,10 +865,10 @@ class Update
     {
         $retval = true;
 
-        $sql = "DELETE FROM `user_preference` " . "WHERE `user_preference`.`preference` IN  " . "(SELECT `preference`.`id` FROM `preference`  " . "WHERE `preference`.`name` = 'shoutcast_active');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'shoutcast_active');";
         $retval &= Dba::write($sql);
 
-        $sql = "DELETE FROM `preference` " . "WHERE `preference`.`name` = 'shoutcast_active';";
+        $sql = "DELETE FROM `preference` WHERE `preference`.`name` = 'shoutcast_active';";
         $retval &= Dba::write($sql);
 
         $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
@@ -872,13 +887,13 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
@@ -896,7 +911,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -907,7 +922,7 @@ class Update
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         foreach ($tables as $table) {
-            $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" . "`object_id` int(11) unsigned NOT NULL," . "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL," . "`count` int(11) unsigned NOT NULL DEFAULT '0'," . "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," . "`count_type` varchar(16) NOT NULL," . "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" . ") ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` ( `object_id` int(11) unsigned NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL, `count` int(11) unsigned NOT NULL DEFAULT '0', `threshold` int(11) unsigned NOT NULL DEFAULT '0', `count_type` varchar(16) NOT NULL, PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`) ) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
             $retval &= Dba::write($sql);
         }
 
@@ -926,7 +941,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
@@ -1158,8 +1173,8 @@ class Update
         $retval = true;
 
         $sql = "DELETE FROM `user_preference` " .
-            "WHERE `user_preference`.`preference` IN  " .
-            "(SELECT `preference`.`id` FROM `preference`  " .
+            "WHERE `user_preference`.`preference` IN " .
+            "(SELECT `preference`.`id` FROM `preference` " .
             "WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future'));";
         $retval &= Dba::write($sql);
 
@@ -1183,6 +1198,134 @@ class Update
         $sql    = "ALTER TABLE `artist` ADD `album_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= Dba::write($sql);
         $sql    = "ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500000
+     *
+     * Delete duplicate files in the song table
+     */
+    public static function update_500000()
+    {
+        $retval = true;
+        $sql    = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500001
+     *
+     * Add `release_status`, `addition_time`, `catalog` to album table
+     * Add `mbid`, `country`, `active` to label table
+     * Fill the album `catalog` and `time` values using the song table
+     * Fill the artist `album_count`, `album_group_count` and `song_count` values
+     */
+    public static function update_500001()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` ADD `release_status` varchar(32) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `album` ADD `addition_time` int(11) UNSIGNED DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `album` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `label` ADD `mbid` varchar(36) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `label` ADD `country` varchar(64) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `label` ADD `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_500002
+     *
+     * Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
+     * Fill counts into the columns
+     */
+    public static function update_500002()
+    {
+        $retval = true;
+        // tables which usually calculate a count
+        $tables = ['album', 'artist', 'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "ALTER TABLE `$type` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+            $retval &= Dba::write($sql);
+            $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_count` = `object_count`.`total_count` WHERE `$type`.`total_count` != `object_count`.`total_count` AND `$type`.`id` = `object_count`.`object_id`;";
+            $retval &= Dba::write($sql);
+        }
+        // tables that also have a skip count
+        $tables = ['song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "ALTER TABLE `$type` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+            $retval &= Dba::write($sql);
+            $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;";
+            $retval &= Dba::write($sql);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * update_500003
+     *
+     * add `catalog` to podcast_episode table
+     */
+    public static function update_500003()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast_episode` DROP COLUMN `catalog`;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500004
+     *
+     * Create catalog_map table and fill it with data
+     */
+    public static function update_500004()
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        // create the table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= Dba::write($sql);
+        // fill the data
+        $tables = ['album', 'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
+            $retval &= Dba::write($sql);
+        }
+        // artist is a special one as it can be across multiple tables
+        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;";
+        $retval &= Dba::write($sql);
+        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;";
         $retval &= Dba::write($sql);
 
         return $retval;

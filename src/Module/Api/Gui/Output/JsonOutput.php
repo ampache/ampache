@@ -30,7 +30,6 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Media;
@@ -133,12 +132,12 @@ final class JsonOutput implements ApiOutputInterface
             $theArray = [];
 
             $theArray['id']   = (string)$album->id;
-            $theArray['name'] = $album->full_name;
+            $theArray['name'] = $album->f_name;
 
             // Do a little check for artist stuff
             if ($album->album_artist_name != '') {
                 $theArray['artist'] = [
-                    'id' => (string)$album->artist_id,
+                    'id' => (string)$album->album_artist,
                     'name' => $album->album_artist_name
                 ];
             } elseif ($album->artist_count != 1) {
@@ -148,7 +147,7 @@ final class JsonOutput implements ApiOutputInterface
                 ];
             } else {
                 $theArray['artist'] = [
-                    'id' => (string)$album->artist_id,
+                    'id' => (string)$album->album_artist,
                     'name' => $album->artist_name
                 ];
             }
@@ -248,7 +247,7 @@ final class JsonOutput implements ApiOutputInterface
 
             $result[] = [
                 'id' => (string)$artist->id,
-                'name' => $artist->f_full_name,
+                'name' => $artist->f_name,
                 'albums' => $albums,
                 'albumcount' => (int) $artist->albums,
                 'songs' => $songs,

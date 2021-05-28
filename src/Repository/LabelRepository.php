@@ -164,10 +164,13 @@ final class LabelRepository implements LabelRepositoryInterface
         string $summary,
         string $address,
         string $email,
-        string $website
+        string $website,
+        string $country,
+        string $musicBrainzId,
+        int $active
     ): void {
         $this->database->executeQuery(
-            'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?',
+            'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ?, `country` = ?, `mbid` = ?, `active` = ? WHERE `id` = ?',
             [$name, $category, $summary, $address, $email, $website, $labelId]
         );
     }

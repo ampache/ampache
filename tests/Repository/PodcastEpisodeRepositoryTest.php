@@ -235,6 +235,7 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
         $category        = 'some-category';
         $time            = 42;
         $publicationDate = 33;
+        $catalogId       = 21;
 
         $result  = $this->mock(Result::class);
         $podcast = $this->mock(PodcastInterface::class);
@@ -247,9 +248,9 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
         $sql = <<<SQL
         INSERT INTO
             `podcast_episode`
-            (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`)
+            (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?)
         SQL;
 
         $this->connection->shouldReceive('executeQuery')
@@ -267,6 +268,7 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
                     $category,
                     $time,
                     $publicationDate,
+                    $catalogId
                 ]
             )
             ->once()
@@ -288,7 +290,8 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
                 $author,
                 $category,
                 $time,
-                $publicationDate
+                $publicationDate,
+                $catalogId
             )
         );
     }
@@ -302,7 +305,7 @@ class PodcastEpisodeRepositoryTest extends MockeryTestCase
         $podcastId = 42;
         $state     = 'some-state';
 
-        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` WHERE `podcast_episode`.`podcast`= ? AND `podcast_episode`.`state` = ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC';
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` WHERE `podcast_episode`.`podcast`= ?  AND `podcast_episode`.`state` = ? AND `catalog`.`enabled` = \'1\' ORDER BY `podcast_episode`.`pubdate` DESC';
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::CATALOG_DISABLE)

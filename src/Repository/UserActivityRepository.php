@@ -159,12 +159,16 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             foreach ($types as $type) {
                 $this->connection->executeQuery(
                     sprintf(
-                        'DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `%s` ON `%s`.`id` = `user_activity`.`object_id` WHERE `object_type` = \'%s\' AND `%s`.`id` IS NULL',
-                        $type,
-                        $type,
+                        'DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`)',
                         $type,
                         $type
-                    )
+                    ),
+                    [
+                        $type
+                    ]
+                );
+                $this->connection->executeQuery(
+                    'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
                 );
             }
         }

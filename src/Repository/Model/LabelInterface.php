@@ -46,4 +46,10 @@ interface LabelInterface extends library_item
     public function getLink(): string;
 
     public function getNameFormatted(): string;
+
+    public function getMusicBrainzId(): string;
+
+    public function getActive(): int;
+
+    public function getCountry(): string;
 }

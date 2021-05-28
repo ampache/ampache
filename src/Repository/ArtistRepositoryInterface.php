@@ -99,7 +99,7 @@ interface ArtistRepositoryInterface
     /**
      * Get info from the artist table with the minimum detail required for subsonic
      *
-     * @return array{id: int, full_name: string, name: string, album_count: int, song_count: int}
+     * @return array{id: int, f_name: string, name: string, album_count: int, song_count: int}
      */
     public function getSubsonicRelatedDataByArtist(int $artistId): array;
 }

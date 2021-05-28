@@ -109,6 +109,21 @@ final class Label extends database_object implements LabelInterface
         return $this->getDbData()['name'] ?? '';
     }
 
+    public function getMusicBrainzId(): string
+    {
+        return $this->getDbData()['mbid'] ?? '';
+    }
+
+    public function getActive(): int
+    {
+        return (int) ($this->getDbData()['active'] ?? 1);
+    }
+
+    public function getCountry(): string
+    {
+        return $this->getDbData()['country'] ?? '';
+    }
+
     /**
      * display_art
      * @param integer $thumb
@@ -287,7 +302,10 @@ final class Label extends database_object implements LabelInterface
             $data['summary'] ?? $this->getSummary(),
             $data['address'] ?? $this->getAddress(),
             $data['email'] ?? $this->getEmail(),
-            $data['website'] ?? $this->getWebsite()
+            $data['website'] ?? $this->getWebsite(),
+            $data['country'] ?? $this->getCountry(),
+            $data['mbid'] ?? $this->getMusicBrainzId(),
+            (int) ($data['active'] ?? $this->getActive()),
         );
 
         return $this->getId();

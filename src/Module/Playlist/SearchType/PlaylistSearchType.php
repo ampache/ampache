@@ -71,9 +71,9 @@ final class PlaylistSearchType extends AbstractSearchType
             } // switch on ruletype
         } // foreach rule
 
-        $join['playlist_data'] = true;
-        $join['song']          = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog']       = AmpConfig::get('catalog_disable');
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $join['song']    = $join['song'] || $catalog_disable;
+        $join['catalog'] = $catalog_disable;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 

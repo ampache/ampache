@@ -207,17 +207,20 @@ class LabelRepositoryTest extends MockeryTestCase
 
     public function testUpdateUpdates(): void
     {
-        $labelId  = 666;
-        $name     = 'some-name';
-        $category = 'some-category';
-        $summary  = 'some-summary';
-        $address  = 'some-address';
-        $email    = 'some-email';
-        $website  = 'some-website';
+        $labelId       = 666;
+        $name          = 'some-name';
+        $category      = 'some-category';
+        $summary       = 'some-summary';
+        $address       = 'some-address';
+        $email         = 'some-email';
+        $website       = 'some-website';
+        $country       = 'some-country';
+        $musicBrainzId = 'some-musicbrainz-id';
+        $active        = 1;
 
         $this->database->shouldReceive('executeQuery')
             ->with(
-                'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?',
+                'UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ?, `country` = ?, `mbid` = ?, `active` = ? WHERE `id` = ?',
                 [$name, $category, $summary, $address, $email, $website, $labelId]
             )
             ->once();
@@ -229,7 +232,10 @@ class LabelRepositoryTest extends MockeryTestCase
             $summary,
             $address,
             $email,
-            $website
+            $website,
+            $country,
+            $musicBrainzId,
+            $active
         );
     }
 }

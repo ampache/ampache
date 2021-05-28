@@ -141,7 +141,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' . 'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' . 'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' . 'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
+        Dba::write('DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song`) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album`) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted`) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip`)');
     }
 
     /**
@@ -240,16 +240,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
         $group_column = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
         if ($catalogIds !== []) {
             $sql = <<<SQL
-            SELECT
-                DISTINCT `artist`.`id`,
-                LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
-                `artist`.`name`,
-                %s AS `album_count`,
-                `artist`.`song_count`
-            FROM `song`
-            LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`
-            LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist`
-            WHERE `song`.`catalog` = ? ORDER BY `artist`.`name`
+            SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` = ? ORDER BY `artist`.`name`
             SQL;
 
             $db_results = Dba::read(
@@ -258,13 +249,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
             );
         } else {
             $sql = <<<SQL
-            SELECT DISTINCT
-                `artist`.`id`,
-                LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
-                `artist`.`name`,
-                %s AS `album_count`,
-                `artist`.`song_count`
-                FROM `artist` ORDER BY `artist`.`name`
+            SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`   FROM `artist` ORDER BY `artist`.`name`
             SQL;
 
             $db_results = Dba::read(
@@ -283,20 +268,14 @@ final class ArtistRepository implements ArtistRepositoryInterface
     /**
      * Get info from the artist table with the minimum detail required for subsonic
      *
-     * @return array{id: int, full_name: string, name: string, album_count: int, song_count: int}
+     * @return array{id: int, f_name: string, name: string, album_count: int, song_count: int}
      */
     public function getSubsonicRelatedDataByArtist(int $artistId): array
     {
         $group_column = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
 
         $sql = <<<SQL
-        SELECT
-            DISTINCT `artist`.`id`,
-            LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `full_name`,
-            `artist`.`name`,
-            %s AS `album_count`,
-            `artist`.`song_count`
-        FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`
+        SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`
         SQL;
 
         $db_results = Dba::read(

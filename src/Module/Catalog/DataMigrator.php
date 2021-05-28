@@ -25,6 +25,8 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\ArtRepositoryInterface;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -105,7 +107,8 @@ final class DataMigrator implements DataMigratorInterface
             $this->tagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->userflagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->ratingRepository->migrate($objectType, $oldObjectId, $newObjectId);
-            $this->artRepository->migrate($objectType, $oldObjectId, $newObjectId);
+            Art::duplicate($objectType, $oldObjectId, $newObjectId);
+            Catalog::migrate_map($objectType, $oldObjectId, $newObjectId);
 
             return true;
         }

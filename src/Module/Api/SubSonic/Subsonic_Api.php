@@ -307,7 +307,7 @@ class Subsonic_Api
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
             'keyReplace' => false, // replace values for above search values (as passed to str_replace())
-            'boolean' => true           // replace true and false string with boolean values
+            'boolean' => true // replace true and false string with boolean values
         );
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
@@ -514,7 +514,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
+            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified, $fcatalogs);
         }
         self::apiOutput($input, $response);
     }
@@ -781,13 +781,13 @@ class Subsonic_Api
         if ($musicFolderId) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
                 $artist   = static::getModelFactory()->createArtist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                $finput   = $artist->name;
+                $finput   = $artist->f_name;
                 $operator = 4;
                 $ftype    = "artist";
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->full_name;
+                    $finput   = $album->f_name;
                     $operator = 4;
                     $ftype    = "artist";
                 } else {

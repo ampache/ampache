@@ -3882,7 +3882,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
+			count: 2
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
 		-
@@ -3962,6 +3962,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Xml_Data\\:\\:addArtistsIndexes\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Xml_Data\\:\\:addArtistsIndexes\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
@@ -4438,11 +4443,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$episode of static method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Xml_Data\\:\\:addPodcastEpisode\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|null given\\.$#"
 			count: 2
-			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_object_count\\(\\) expects int, string given\\.$#"
-			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
 		-
@@ -5516,7 +5516,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
-			count: 1
+			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -5675,17 +5675,12 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#3 \\$user of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) expects int, array\\|int\\|string given\\.$#"
+			message: "#^Parameter \\#3 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) expects int, array\\|int\\|string given\\.$#"
 			count: 5
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Right side of && is always false\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between bool and 'true' will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -7760,6 +7755,11 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
+			message: "#^Variable \\$verify_by_time might not be defined\\.$#"
+			count: 1
+			path: src/Module/Catalog/Catalog_local.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
@@ -8520,6 +8520,16 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
+			message: "#^Cannot call method get_label_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
+			count: 1
+			path: src/Module/Catalog/Update/UpdateCatalog.php
+
+		-
+			message: "#^Cannot call method update_from_external\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
+			count: 1
+			path: src/Module/Catalog/Update/UpdateCatalog.php
+
+		-
 			message: "#^Cannot call method verify_catalog_proc\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
@@ -8531,7 +8541,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 6
+			count: 7
+			path: src/Module/Catalog/Update/UpdateCatalog.php
+
+		-
+			message: "#^Variable \\$catalog might not be defined\\.$#"
+			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
@@ -10680,16 +10695,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:instanceOnly\\(\\) has parameter \\$command with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:instanceOnly\\(\\) has parameter \\$instance_id with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:parseDescriptionUrl\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
@@ -10710,11 +10715,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$command\\)\\: Unexpected token \"\\$command\", expected type at offset 74$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$descriptionUrl\\)\\: Unexpected token \"\\$descriptionUrl\", expected type at offset 18$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
@@ -10726,11 +10726,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$descriptionUrl\\)\\: Unexpected token \"\\$descriptionUrl\", expected type at offset 60$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
@@ -10917,11 +10912,6 @@ parameters:
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$value\\)\\: Unexpected token \"\\$value\", expected type at offset 69$#"
 			count: 2
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, bool\\|string given\\.$#"
-			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
@@ -12000,22 +11990,12 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_resolution\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$type\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12031,6 +12011,16 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_image_preview\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Module/Playback/Stream.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$media with no typehint specified\\.$#"
+			count: 1
+			path: src/Module/Playback/Stream.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12096,6 +12086,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$command\\)\\: Unexpected token \"\\$command\", expected type at offset 39$#"
+			count: 1
+			path: src/Module/Playback/Stream.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$media\\)\\: Unexpected token \"\\$media\", expected type at offset 158$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12425,8 +12420,13 @@ parameters:
 			path: src/Module/Playlist/SearchType/AlbumSearchType.php
 
 		-
+			message: "#^Binary operation \"\\*\" between string\\|false and 60 results in an error\\.$#"
+			count: 1
+			path: src/Module/Playlist/SearchType/ArtistSearchType.php
+
+		-
 			message: "#^If condition is always true\\.$#"
-			count: 2
+			count: 3
 			path: src/Module/Playlist/SearchType/ArtistSearchType.php
 
 		-
@@ -12440,17 +12440,22 @@ parameters:
 			path: src/Module/Playlist/SearchType/ArtistSearchType.php
 
 		-
-			message: "#^Offset 'count' does not exist on array\\('song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>, 'catalog' \\=\\> mixed, \\?'image' \\=\\> true\\)\\.$#"
+			message: "#^Offset 'artist_catalog' does not exist on array\\('song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>, 'catalog' \\=\\> mixed, \\?'artist_catalog' \\=\\> true, \\?'image' \\=\\> true, 'count' \\=\\> mixed\\)\\.$#"
 			count: 1
 			path: src/Module/Playlist/SearchType/ArtistSearchType.php
 
 		-
-			message: "#^Offset 'image' does not exist on array\\('song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>, 'catalog' \\=\\> mixed, \\?'image' \\=\\> true, 'count' \\=\\> mixed\\)\\.$#"
+			message: "#^Offset 'count' does not exist on array\\('song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>, 'catalog' \\=\\> mixed, \\?'artist_catalog' \\=\\> true, \\?'image' \\=\\> true\\)\\.$#"
 			count: 1
 			path: src/Module/Playlist/SearchType/ArtistSearchType.php
 
 		-
-			message: "#^Offset 'song' does not exist on array\\(\\?'image' \\=\\> true, \\?'song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>\\)\\.$#"
+			message: "#^Offset 'image' does not exist on array\\('song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>, 'catalog' \\=\\> mixed, \\?'artist_catalog' \\=\\> true, \\?'image' \\=\\> true, 'count' \\=\\> mixed\\)\\.$#"
+			count: 1
+			path: src/Module/Playlist/SearchType/ArtistSearchType.php
+
+		-
+			message: "#^Offset 'song' does not exist on array\\(\\?'artist_catalog' \\=\\> true, \\?'image' \\=\\> true, \\?'song' \\=\\> true, 'tag' \\=\\> array\\<string, string\\>\\)\\.$#"
 			count: 1
 			path: src/Module/Playlist/SearchType/ArtistSearchType.php
 
@@ -12460,17 +12465,17 @@ parameters:
 			path: src/Module/Playlist/SearchType/LabelSearchType.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Playlist/SearchType/PlaylistSearchType.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\SearchType\\\\PlaylistSearchType\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playlist/SearchType/PlaylistSearchType.php
 
 		-
-			message: "#^Offset 'song' does not exist on array\\('playlist_data' \\=\\> true\\)\\.$#"
+			message: "#^Offset 'playlist_data' does not exist on array\\('song' \\=\\> bool, 'catalog' \\=\\> mixed\\)\\.$#"
+			count: 1
+			path: src/Module/Playlist/SearchType/PlaylistSearchType.php
+
+		-
+			message: "#^Offset 'song' does not exist on array\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Playlist/SearchType/PlaylistSearchType.php
 
@@ -12810,12 +12815,12 @@ parameters:
 			path: src/Module/Song/Tag/SongFromTagUpdater.php
 
 		-
-			message: "#^Parameter \\#2 \\$str of function explode expects string, string\\|null given\\.$#"
+			message: "#^Parameter \\#10 \\$original_year of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongFromTagUpdater.php
 
 		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int given\\.$#"
+			message: "#^Parameter \\#2 \\$str of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongFromTagUpdater.php
 
@@ -12966,6 +12971,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:skip_last_play\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/Statistics/Stats.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:skip_last_play\\(\\) has parameter \\$object_id with no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -13395,11 +13405,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$current_file_path\\)\\: Unexpected token \"\\$current_file_path\", expected type at offset 108$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$mode\\)\\: Unexpected token \"\\$mode\", expected type at offset 18$#"
 			count: 1
 			path: src/Module/System/InstallationHelper.php
@@ -13526,11 +13531,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$configfile\\)\\: Unexpected token \"\\$configfile\", expected type at offset 205$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$current_file_path\\)\\: Unexpected token \"\\$current_file_path\", expected type at offset 108$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
 
@@ -13856,6 +13856,31 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_400024\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500000\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500001\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500002\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500003\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500004\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/System/Update.php
 
@@ -15505,16 +15530,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
-			message: "#^Constant CAPTCHA_BASE_URL not found\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/init.php
-
-		-
-			message: "#^Static call to instance method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:canonical_path\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/init.php
-
-		-
 			message: "#^Static call to instance method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:tmp\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/init.php
@@ -15756,7 +15771,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: src/Module/Util/FileSystem.php
 
 		-
@@ -15976,16 +15991,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$accept$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$userAgent$#"
 			count: 1
 			path: src/Module/Util/Horde_Browser.php
 
@@ -17540,6 +17545,11 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
+			count: 1
+			path: src/Module/Util/VaInfo.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_clean_type\\(\\) has parameter \\$type with no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -17890,13 +17900,8 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$encodingId3v2$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Parameter \\#1 \\$arr1 of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 4
+			count: 6
 			path: src/Module/Util/VaInfo.php
 
 		-
@@ -18016,11 +18021,6 @@ parameters:
 
 		-
 			message: "#^Result of && is always true\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between array\\<string\\> and false will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -21375,7 +21375,7 @@ parameters:
 			path: src/Repository/ArtistRepository.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\ArtistRepository\\:\\:getSubsonicRelatedDataByArtist\\(\\) should return array\\('id' \\=\\> int, 'full_name' \\=\\> string, 'name' \\=\\> string, 'album_count' \\=\\> int, 'song_count' \\=\\> int\\) but returns array\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\ArtistRepository\\:\\:getSubsonicRelatedDataByArtist\\(\\) should return array\\('id' \\=\\> int, 'f_name' \\=\\> string, 'name' \\=\\> string, 'album_count' \\=\\> int, 'song_count' \\=\\> int\\) but returns array\\.$#"
 			count: 1
 			path: src/Repository/ArtistRepository.php
 
@@ -21480,11 +21480,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$_mapcache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -21515,7 +21510,7 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Cannot access property \\$full_name on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			message: "#^Cannot access property \\$f_name on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -22205,6 +22200,11 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
+			message: "#^Class Ampache\\\\Repository\\\\Model\\\\Label constructor invoked with 1 parameter, 3 required\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:_update_item\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -22266,6 +22266,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:format\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:garbage_collect_mapping\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22420,7 +22425,27 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:updateAlbumTimes\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_counts\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_enabled\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_from_external\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_from_external\\(\\) has parameter \\$object_list with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22436,6 +22461,31 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_last_update\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_map\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_map\\(\\) has parameter \\$catalog with no typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_map\\(\\) has parameter \\$object_id with no typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_map\\(\\) has parameter \\$object_type with no typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_mapping\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -23980,6 +24030,11 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_join_and\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_offset\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -24096,7 +24151,7 @@ parameters:
 
 		-
 			message: "#^Offset 'song' does not exist on string\\.$#"
-			count: 2
+			count: 1
 			path: src/Repository/Model/Random.php
 
 		-
@@ -24156,12 +24211,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$f_name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
+			count: 3
 			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
+			count: 3
 			path: src/Repository/Model/Search.php
 
 		-
@@ -24886,11 +24941,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$date of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:check_play_history\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#6 \\$album_artist of static method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:check\\(\\) expects string\\|null, int\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 

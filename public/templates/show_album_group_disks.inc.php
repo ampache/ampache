@@ -39,7 +39,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->full_name) . '&nbsp;(' . $album->year . ')';
+$title = scrub_out($album->f_name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
@@ -73,7 +73,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     </div>
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         echo Art::display('album', $album->id, $name, $thumb);
     } ?>
@@ -93,6 +93,15 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         } ?>
 <?php
     } ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <br />
+    <div style="display:inline;">
+        <?php echo T_('Played') . ' ' .
+            /* HINT: Number of times an object has been played */
+            sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+    </div>
+<?php
+} ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>

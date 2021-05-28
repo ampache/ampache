@@ -56,9 +56,12 @@ final class LabelCreator implements LabelCreatorInterface
         $website       = $data['website'];
         $user          = $data['user'] ?: Core::get_global('user')->id;
         $creation_date = $data['creation_date'] ?: time();
+        $country       = $data['country'] ?? '';
+        $musicBrainzId = $data['mobid'] ?? '';
+        $active        = $data['active'] ?? 1;
 
-        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
+        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`, `country`, `mbid`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date, $country, $musicBrainzId, $active));
 
         return (int) Dba::insert_id();
     }

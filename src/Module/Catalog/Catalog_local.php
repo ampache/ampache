@@ -23,14 +23,20 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastByCatalogLoaderInterface;
+use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastStateEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
@@ -41,13 +47,6 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
@@ -566,8 +565,6 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        $this->update_last_update();
-
         /** @var Song|Video $media_type */
         foreach (array(Video::class, Song::class) as $media_type) {
             $total = $stats['items'];
@@ -579,8 +576,10 @@ class Catalog_local extends Catalog
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
+        Catalog::update_counts();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
+        $this->update_last_update();
 
         return array('total' => $number, 'updated' => $total_updated);
     } // verify_catalog_proc
@@ -596,11 +595,13 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "Verify starting chunk $chunk", 5);
+        debug_event('local.catalog', "catalog " . $this->id . " starting verify on chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` " . "WHERE `catalog`='$this->id' ORDER BY `$tableName`.`update_time` ASC, `$tableName`.`file` LIMIT $count, $chunk_size";
+        $sql = ($tableName == 'song')
+            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND `song`.`update_time` < `catalog`.`last_update`) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+            : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
@@ -619,10 +620,13 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
+            // the file has not been modified since the last verify and you're wasting your time reading this again
+            if ($verify_by_time && filemtime($row['file']) < $this->last_update) {
+                continue;
+            }
 
-            $media      = new $class_name($row['id']);
-            $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,
-                $this->rename_pattern);
+            $media = new $class_name($row['id']);
+            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
@@ -642,8 +646,7 @@ class Catalog_local extends Catalog
     public function clean_catalog_proc()
     {
         if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable
-            // catalog root.
+            // First sanity check; no point in proceeding with an unreadable catalog root.
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
             echo AmpError::display('general');
@@ -666,7 +669,6 @@ class Catalog_local extends Catalog
             }
 
             $dead_count = count($dead);
-            // The AlmightyOatmeal sanity check
             // Check for unmounted path
             if (!file_exists($this->path)) {
                 if ($dead_count >= $total) {
@@ -677,7 +679,7 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql        = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
                 Dba::write($sql);
             }
         }
@@ -685,7 +687,7 @@ class Catalog_local extends Catalog
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
 
-        return $dead_total;
+        return (int)$dead_total;
     }
 
     /**
@@ -699,13 +701,13 @@ class Catalog_local extends Catalog
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "Starting chunk $chunk", 5);
+        debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
         $dead  = array();
         $count = $chunk * $chunk_size;
 
         $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` " . "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {

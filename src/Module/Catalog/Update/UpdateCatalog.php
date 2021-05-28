@@ -25,12 +25,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\AlbumArtistUpdaterInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use PDOStatement;
 
@@ -139,17 +138,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $catalog->add_to_catalog($options);
 
-                $this->albumArtistUpdater->update();
-
-                // update artists who need a recent update
-                $artists = $catalog->get_artist_ids('count');
-                foreach ($artists as $artist_id) {
-                    if ($artist_id > 0) {
-                        $artist = $this->modelFactory->createArtist($artist_id);
-                        $artist->update_album_count();
-                    }
-                }
-
                 $buffer = ob_get_contents();
 
                 ob_end_clean();
@@ -159,7 +147,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info('------------------', true);
-            } elseif ($addArt === true) {
+
+                $this->albumArtistUpdater->update();
+            }
+            if ($addArt === true) {
                 ob_start();
 
                 // Look for media art
@@ -198,12 +189,40 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     $this->cleanBuffer($buffer),
                     true
                 );
+                if (AmpConfig::get('label')) {
+                    $interactor->info(
+                        T_('Update Label information and fetch details using the MusicBrainz plugin'),
+                        true
+                    );
+                    $labels = $catalog->get_label_ids('tag_generated');
+                    $catalog->update_from_external($labels);
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                }
                 $interactor->info('------------------', true);
             }
         }
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
         }
+
+        // update artists who need a recent update
+        $artists = $catalog->get_artist_ids('count');
+        foreach ($artists as $artist_id) {
+            if ($artist_id > 0) {
+                $artist = $this->modelFactory->createArtist($artist_id);
+                $artist->update_album_count();
+            }
+        }
+
+
         if ($optimizeDatabase === true) {
             ob_start();
 

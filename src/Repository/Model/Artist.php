@@ -113,7 +113,6 @@ class Artist extends database_object implements library_item
      */
     public $manual_update;
 
-
     /**
      * @var array $tags
      */
@@ -140,14 +139,14 @@ class Artist extends database_object implements library_item
     public $object_cnt;
 
     /**
-     * @var string $f_name
+     * @var integer $total_count
      */
-    public $f_name;
+    private $total_count;
 
     /**
-     * @var string $f_full_name
+     * @var string $f_name // Prefix + Name, generated
      */
-    public $f_full_name;
+    public $f_name;
 
     /**
      * @var string $link
@@ -201,7 +200,10 @@ class Artist extends database_object implements library_item
             $this->$key = $value;
         } // foreach info
 
+        // set the full name
+        $this->f_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         // make sure the int values are cast to integers
+        $this->object_cnt        = (int)$this->total_count;
         $this->time              = (int)$this->time;
         $this->album_count       = (int)$this->album_count;
         $this->album_group_count = (int)$this->album_group_count;
@@ -231,7 +233,7 @@ class Artist extends database_object implements library_item
     {
         $params = array($this->id);
         // Get associated information from first song only
-        $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id`, `artist`.`total_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ";
         $sqlw = "WHERE `song`.`artist` = ? ";
         if ($catalog) {
             $params[] = $catalog;
@@ -243,7 +245,9 @@ class Artist extends database_object implements library_item
         $row        = Dba::fetch_assoc($db_results);
 
         if (AmpConfig::get('show_played_times')) {
-            $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
+            $row['object_cnt'] = (!empty($limit_threshold))
+                ? Stats::get_object_count('artist', $row['artist'], $limit_threshold)
+                : $row['total_count'];
         }
 
         /* Set Object Vars */
@@ -264,11 +268,6 @@ class Artist extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = '')
     {
-        /* Combine prefix and name, trim then add ... if needed */
-        $name              = trim((string)$this->prefix . " " . $this->name);
-        $this->f_name      = $name;
-        $this->f_full_name = trim(trim((string)$this->prefix) . ' ' . trim((string)$this->name));
-
         // If this is a memory-only object, we're done here
         if (!$this->id) {
             return true;
@@ -284,10 +283,10 @@ class Artist extends database_object implements library_item
 
         if ($this->catalog_id) {
             $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
         } else {
             $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
         }
 
         if ($details) {
@@ -331,7 +330,7 @@ class Artist extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => $this->f_full_name
+            'value' => $this->f_name
         );
 
         return $keywords;
@@ -343,7 +342,7 @@ class Artist extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_full_name;
+        return $this->f_name;
     }
 
     /**
@@ -501,40 +500,30 @@ class Artist extends database_object implements library_item
         // Check if name is different than current name
         if ($this->name != $name) {
             $updated    = false;
-            $songs      = array();
             $artist_id  = static::getArtistFinder()->find($name, $mbid, true);
-            $cron_cache = AmpConfig::get('cron_cache');
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
+                $time  = time();
                 $songs = $this->getSongRepository()->getByArtist($this->getId());
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
+                    Song::update_utime($song_id, $time);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
 
                 $this->getDataMigrator()->migrate('artist', $this->id, $artist_id);
-
-                if (!$cron_cache) {
-                    $this->getArtistRepository()->collectGarbage();
-                }
             } // end if it changed
 
+            // clear out the old data
             if ($updated) {
-                foreach ($songs as $song_id) {
-                    Song::update_utime($song_id);
-                }
-                if (!$cron_cache) {
-                    Stats::garbage_collection();
-                    Rating::garbage_collection();
-                    Userflag::garbage_collection();
-                    $this->getUseractivityRepository()->collectGarbage();
-                }
-                if ($current_id > 0) {
-                    $artist = $this->getModelFactory()->createArtist((int) $current_id);
-                    $artist->update_album_count();
-                }
+                Stats::garbage_collection();
+                Rating::garbage_collection();
+                Userflag::garbage_collection();
+                $this->getUseractivityRepository()->collectGarbage();
+                $artist = $this->getModelFactory()->createArtist((int) $current_id);
+                $artist->update_album_count();
             } // if updated
         } else {
             if ($this->mbid != $mbid) {

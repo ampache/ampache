@@ -64,7 +64,8 @@ interface PodcastEpisodeRepositoryInterface
         string $author,
         string $category,
         int $time,
-        int $publicationDate
+        int $publicationDate,
+        int $catalogId
     ): bool;
 
     /**
@@ -124,4 +125,9 @@ interface PodcastEpisodeRepositoryInterface
      * Sets the played state for the episode
      */
     public function setPlayed(PodcastEpisodeInterface $episode): void;
+
+    /**
+     * Get episode id from the source url.
+     */
+    public function findByUrl(string $url): ?int;
 }

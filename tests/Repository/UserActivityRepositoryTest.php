@@ -205,12 +205,18 @@ class UserActivityRepositoryTest extends MockeryTestCase
             $this->connection->shouldReceive('executeQuery')
                 ->with(
                     sprintf(
-                        'DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `%s` ON `%s`.`id` = `user_activity`.`object_id` WHERE `object_type` = \'%s\' AND `%s`.`id` IS NULL',
-                        $type,
-                        $type,
+                        'DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`)',
                         $type,
                         $type
-                    )
+                    ),
+                    [
+                        $type
+                    ]
+                )
+                ->once();
+            $this->connection->shouldReceive('executeQuery')
+                ->with(
+                    'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
                 )
                 ->once();
         }

@@ -40,8 +40,8 @@ class Userflag extends database_object
     protected const DB_TABLENAME = 'user_flag';
 
     // Public variables
-    public $id;        // The ID of the object flagged
-    public $type;        // The type of object we want
+    public $id; // The ID of the object flagged
+    public $type; // The type of object we want
 
     /**
      * Constructor
@@ -93,7 +93,7 @@ class Userflag extends database_object
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$type` ON `$type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+                Dba::write("DELETE FROM `user_flag` WHERE `object_type` = '$type' AND `user_flag`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);");
             }
         }
     }

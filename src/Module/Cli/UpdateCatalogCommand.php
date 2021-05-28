@@ -43,7 +43,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-e|--verify', T_('Verifies Catalog entries and updates them if related files have new information'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media to Catalogs'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
-            ->option('-u|--update', T_('Update artist information and fetch similar artists from last.fm'), 'boolval', false)
+            ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
             ->option('-i|--import', T_('Imports playlists'),  'boolval',false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)

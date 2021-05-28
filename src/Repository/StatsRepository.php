@@ -32,9 +32,13 @@ final class StatsRepository implements StatsRepositoryInterface
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
-        Dba::write(
-            'UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
+        $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $params = array($objectType, $newObjectId, $oldObjectId);
+        if (in_array($objectType, ['artist', 'album'])) {
+            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$objectType` = ?));";
+            $params[] = $newObjectId;
+        }
+
+        Dba::write($sql, $params);
     }
 }

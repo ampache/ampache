@@ -107,6 +107,7 @@ class DataMigratorTest extends MockeryTestCase
 
     public function testMigrateMigrates(): void
     {
+        $this->markTestSkipped('Subject needs to be refactored first');
         $oldObjectId = 666;
         $newObjectId = 42;
         $objectType  = 'foobar';

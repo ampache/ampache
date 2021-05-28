@@ -222,10 +222,10 @@ class Playlist extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $results = Dba::fetch_row($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_row($db_results);
 
         return (int) $results['0'];
     } // get_total_duration

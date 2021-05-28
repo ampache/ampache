@@ -154,6 +154,9 @@ final class ArtistFinder implements ArtistFinderInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
+        // map the new id
+        Catalog::update_map(0, 'artist', $artist_id);
+
         return $artist_id;
     }
 }

@@ -60,6 +60,9 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     private ?int $rate;
     private ?string $mode;
 
+    /** @var int */
+    private $total_count;
+
     private ?PodcastInterface $podcastObj = null;
 
     private ?string $filename = null;
@@ -547,7 +550,7 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     public function getObjectCount(): ?int
     {
         if (AmpConfig::get('show_played_times')) {
-            return (int) Stats::get_object_count('podcast_episode', $this->id);
+            return (int) $this->total_count;
         }
 
         return null;

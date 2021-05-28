@@ -210,10 +210,8 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         $subtitle         = '';
-        $send_all_in_once = AmpConfig::get('send_full_stream');
-        if (!$send_all_in_once === 'true' || !$send_all_in_once === $player) {
-            $send_all_in_once = false;
-        }
+        $send_full_stream = (string)AmpConfig::get('send_full_stream');
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream === $player);
 
         if (!$type) {
             $type = 'song';
@@ -673,8 +671,8 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
+        $troptions = array();
         if ($transcode) {
-            $troptions = array();
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
             }
@@ -720,19 +718,22 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        if ($transcode) {
+        if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+            $maxbitrate = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
             if (Core::get_request('content_length') == 'required') {
-                $max_bitrate = Stream::get_allowed_bitrate();
-                if ($media->time > 0 && $max_bitrate > 0) {
-                    $stream_size = ($media->time * $max_bitrate * 1000) / 8;
+                if ($media->time > 0 && $maxbitrate > 0) {
+                    $stream_size = ($media->time * $maxbitrate * 1000) / 8;
                 } else {
                     debug_event('play/index', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
                     $stream_size = null;
                 }
             } else {
-                $stream_size = null;
+                $stream_rate = ($maxbitrate < floor($media->bitrate / 1000))
+                    ? $maxbitrate
+                    : floor($media->bitrate / 1000);
+                $stream_size = ($media->time * $stream_rate * 1000) / 8;
             }
         } else {
             $stream_size = $media->size;
@@ -765,10 +766,7 @@ final class PlayAction implements ApplicationActionInterface
             if ($stream_size == null) {
                 debug_event('play/index', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
             } else {
-                if ($transcode) {
-                    debug_event('play/index', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
-                    $stream_size = null;
-                } else {
+                if (!$transcode) {
                     debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
                     fseek($filepointer, $start);
 
@@ -865,7 +863,7 @@ final class PlayAction implements ApplicationActionInterface
         // Actually do the streaming
         $buf_all = '';
         $r_arr   = array($filepointer);
-        $w_arr   = $e_arr   = array();
+        $w_arr   = $e_arr = array();
         $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             debug_event('play/index', 'stream_select failed.', 1);
