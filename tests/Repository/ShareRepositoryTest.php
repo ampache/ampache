@@ -228,4 +228,41 @@ class ShareRepositoryTest extends MockeryTestCase
             $userId
         );
     }
+
+    public function testGetDbDataReturnsEmptyArrayIfNothingWasFound(): void
+    {
+        $shareId = 666;
+
+        $this->database->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `share` WHERE `id` = ?',
+                [$shareId]
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertSame(
+            [],
+            $this->subject->getDbData($shareId)
+        );
+    }
+
+    public function testGetDbDataReturnsData(): void
+    {
+        $shareId = 666;
+        $data    = ['some' => 'data'];
+
+        $this->database->shouldReceive('fetchAssociative')
+            ->with(
+                'SELECT * FROM `share` WHERE `id` = ?',
+                [$shareId]
+            )
+            ->once()
+            ->andReturn($data);
+
+        $this->assertSame(
+            $data,
+            $this->subject->getDbData($shareId)
+        );
+    }
 }

@@ -150,23 +150,10 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             $result['name'] = $sreg['fullname'];
                         }
 
-                        $users = $this->userRepository->findByWebsite($result['website']);
-                        if (count($users) > 0) {
-                            if (count($users) == 1) {
-                                $user                = new User($users[0]);
-                                $result['success']   = true;
-                                $result['username']  = $user->username;
-                            } else {
-                                // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
-                                // Should we make website field unique?
-                                foreach ($users as $userid) {
-                                    $user = new User($userid);
-                                    if ($user->username == $result['username']) {
-                                        $result['success']  = true;
-                                        $result['username'] = $user->username;
-                                    }
-                                }
-                            }
+                        $user = $this->userRepository->findByWebsite($result['website']);
+                        if ($user !== null) {
+                            $result['success']   = true;
+                            $result['username']  = $user->username;
                         } else {
                             // Don't return success if an user already exists for this username but don't have this openid identity as website
                             $user = User::get_from_username($result['username']);

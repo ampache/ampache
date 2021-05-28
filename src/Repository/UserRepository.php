@@ -23,24 +23,40 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
+use Doctrine\DBAL\Connection;
 
 final class UserRepository implements UserRepositoryInterface
 {
+    private Connection $database;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        Connection $database,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->database     = $database;
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * This returns a built user from a rsstoken
      */
-    public function getByRssToken(string $rssToken): ?User
+    public function findByRssToken(string $rssToken): ?User
     {
-        $user       = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, array($rssToken));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
+        $userId = $this->database->fetchOne(
+            'SELECT `id` FROM `user` WHERE `rsstoken` = ?',
+            [$rssToken]
+        );
+
+        if ($userId === false) {
+            return null;
         }
 
-        return $user;
+        return $this->modelFactory->createUser((int) $userId);
     }
 
     /**
@@ -48,20 +64,16 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function findByUsername(string $username): ?int
     {
-        $db_results = Dba::read(
+        $userId = $this->database->fetchOne(
             'SELECT `id` FROM `user` WHERE `username`= ?',
             [$username]
         );
 
-        $data = Dba::fetch_assoc($db_results);
-
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
+        if ($userId === false) {
+            return null;
         }
 
-        return $result;
+        return (int) $userId;
     }
 
     /**
@@ -71,14 +83,15 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function getValid(bool $includeDisabled = false): array
     {
-        $users = array();
-        $sql   = ($includeDisabled)
+        $users = [];
+        $sql   = $includeDisabled
             ? 'SELECT `id` FROM `user`'
             : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\'';
 
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
+        $dbResult = $this->database->executeQuery($sql);
+
+        while ($userId = $dbResult->fetchOne()) {
+            $users[] = (int) $userId;
         }
 
         return $users;
@@ -89,34 +102,35 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function findByEmail(string $email): ?User
     {
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
-        $db_results = Dba::read($sql, array($email));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
+        $userId = $this->database->fetchOne(
+            'SELECT `id` FROM `user` WHERE `email` = ?',
+            [$email]
+        );
+
+        if ($userId === false) {
+            return null;
         }
 
-        return $user;
+        return $this->modelFactory->createUser((int) $userId);
     }
 
     /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
+     * This returns a user related to a website.
      */
-    public function findByWebsite(string $website): array
+    public function findByWebsite(string $website): ?User
     {
-        $website    = rtrim((string)$website, "/");
-        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
-        $db_results = Dba::read($sql, array($website));
-        $users      = array();
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
+        $userId = $this->database->fetchOne(
+            'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1',
+            [
+                rtrim($website, '/')
+            ]
+        );
+
+        if ($userId === false) {
+            return null;
         }
 
-        return $users;
+        return $this->modelFactory->createUser((int) $userId);
     }
 
     /**

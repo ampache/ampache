@@ -6305,11 +6305,6 @@ parameters:
 			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
 
 		-
-			message: "#^Offset 'username' does not exist on array\\(\\?'email' \\=\\> mixed, \\?'name' \\=\\> mixed, \\?'success' \\=\\> true, 'type' \\=\\> 'openid', \\?'username' \\=\\> mixed, 'website' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
 			message: "#^Parameter \\#1 \\$required of static method Auth_OpenID_SRegRequest\\:\\:build\\(\\) expects null, array\\<int, string\\> given\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php

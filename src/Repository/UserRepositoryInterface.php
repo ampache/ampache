@@ -28,7 +28,7 @@ interface UserRepositoryInterface
     /**
      * This returns a built user from a rsstoken
      */
-    public function getByRssToken(string $rssToken): ?User;
+    public function findByRssToken(string $rssToken): ?User;
 
     /**
      * Lookup for a user with a certain name
@@ -48,13 +48,9 @@ interface UserRepositoryInterface
     public function findByEmail(string $email): ?User;
 
     /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
+     * This returns a user related to a website.
      */
-    public function findByWebsite(string $website): array;
+    public function findByWebsite(string $website): ?User;
 
     /**
      * This returns a built user from an apikey

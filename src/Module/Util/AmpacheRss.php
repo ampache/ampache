@@ -276,7 +276,7 @@ class AmpacheRss
      */
     public static function load_recently_played($rsstoken = "")
     {
-        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user    = ($rsstoken) ? static::getUserRepository()->findByRssToken($rsstoken) : null;
         $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 

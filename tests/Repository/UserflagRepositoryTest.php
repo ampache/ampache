@@ -17,32 +17,45 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\MockeryTestCase;
 use Doctrine\DBAL\Connection;
+use Mockery\MockInterface;
 
-final class UserflagRepository implements UserflagRepositoryInterface
+class UserflagRepositoryTest extends MockeryTestCase
 {
-    private Connection $database;
+    private MockInterface $database;
 
-    public function __construct(
-        Connection $database
-    ) {
-        $this->database = $database;
+    private UserflagRepository $subject;
+
+    public function setUp(): void
+    {
+        $this->database = $this->mock(Connection::class);
+
+        $this->subject = new UserflagRepository(
+            $this->database
+        );
     }
 
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    public function testMigrateMigrates(): void
     {
-        $this->database->executeQuery(
-            'UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
+        $objectType  = 'some-typ';
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+                [$newObjectId, $objectType, $oldObjectId]
+            )
+            ->once();
+
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
     }
 }
