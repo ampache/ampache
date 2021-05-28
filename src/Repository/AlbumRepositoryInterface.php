@@ -143,4 +143,6 @@ interface AlbumRepositoryInterface
      * Get count for an artist's albums.
      */
     public function getGroupedCountByArtist(Artist $artist): int;
+
+    public function cleanEmptyAlbums(): void;
 }

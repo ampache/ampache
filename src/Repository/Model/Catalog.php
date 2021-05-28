@@ -54,6 +54,7 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Video\VideoFromTagUpdaterInterface;
 use Ampache\Module\Video\VideoLoaderInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
@@ -1817,22 +1818,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * clean_empty_albums
-     */
-    public static function clean_empty_albums()
-    {
-        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS " . "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
-        $db_results = Dba::read($sql);
-        $artists    = array();
-        while ($album = Dba::fetch_assoc($db_results)) {
-            $object_id  = $album['id'];
-            $sql        = "DELETE FROM `album` WHERE `id` = ?";
-            Dba::write($sql, array($object_id));
-            $artists[]  = (int) $album['album_artist'];
-        }
-    }
-
-    /**
      * clean_catalog
      *
      * Cleans the catalog of files that no longer exist.
@@ -1852,7 +1837,7 @@ abstract class Catalog extends database_object
 
         $dead_total = $this->clean_catalog_proc();
         if ($dead_total > 0) {
-            self::clean_empty_albums();
+            static::getAlbumRepository()->cleanEmptyAlbums();
         }
 
         debug_event(self::class, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
@@ -2297,7 +2282,7 @@ abstract class Catalog extends database_object
         if (!$db_results) {
             return false;
         }
-        self::clean_empty_albums();
+        static::getAlbumRepository()->cleanEmptyAlbums();
 
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
@@ -2435,21 +2420,6 @@ abstract class Catalog extends database_object
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($catalog, $object_type, $object_id));
         }
-    }
-
-    /**
-     * Migrate an object associated catalog to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate_map($object_type, $old_object_id, $new_object_id)
-    {
-        $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        $params = array($new_object_id, $object_type, $old_object_id);
-
-        return Dba::write($sql, $params);
     }
 
     /**
@@ -2636,7 +2606,7 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         debug_event(self::class, 'Run Garbage collection', 5);
         static::getCatalogGarbageCollector()->collect();
-        self::clean_empty_albums();
+        static::getAlbumRepository()->cleanEmptyAlbums();
         static::getAlbumArtistUpdater()->update();
         self::update_counts();
     }
@@ -2830,5 +2800,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(VideoLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

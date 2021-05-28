@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\Label\LabelCreatorInterface;
@@ -59,6 +60,8 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
     private TagListUpdaterInterface $tagListUpdater;
 
+    private ArtDuplicatorInterface $artDuplicator;
+
     public function __construct(
         DataMigratorInterface $dataMigrator,
         LabelRepositoryInterface $labelRepository,
@@ -67,7 +70,8 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         ArtistFinderInterface $artistFinder,
         ModelFactoryInterface $modelFactory,
         LabelCreatorInterface $labelCreator,
-        TagListUpdaterInterface $tagListUpdater
+        TagListUpdaterInterface $tagListUpdater,
+        ArtDuplicatorInterface $artDuplicator
     ) {
         $this->dataMigrator      = $dataMigrator;
         $this->labelRepository   = $labelRepository;
@@ -77,6 +81,7 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         $this->modelFactory      = $modelFactory;
         $this->labelCreator      = $labelCreator;
         $this->tagListUpdater    = $tagListUpdater;
+        $this->artDuplicator     = $artDuplicator;
     }
 
     /**
@@ -231,17 +236,17 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         // Duplicate arts if required
         if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
-                Art::duplicate('artist', $song->artist, $new_song->artist);
+                $this->artDuplicator->duplicate('artist', $song->artist, $new_song->artist);
             }
         }
         if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
-                Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
+                $this->artDuplicator->duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
         if (($song->album && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
-                Art::duplicate('album', $song->album, $new_song->album);
+                $this->artDuplicator->duplicate('album', $song->album, $new_song->album);
             }
         }
         if ($song->label && AmpConfig::get('label')) {

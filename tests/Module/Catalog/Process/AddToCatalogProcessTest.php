@@ -25,6 +25,7 @@ namespace Ampache\Module\Catalog\Process;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Album\AlbumArtistUpdaterInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Mockery\MockInterface;
 
@@ -32,21 +33,23 @@ class AddToCatalogProcessTest extends MockeryTestCase
 {
     private MockInterface $albumArtistUpdater;
 
+    private MockInterface $albumRepository;
+
     private AddToCatalogProcess $subject;
 
     public function setUp(): void
     {
         $this->albumArtistUpdater = $this->mock(AlbumArtistUpdaterInterface::class);
+        $this->albumRepository    = $this->mock(AlbumRepositoryInterface::class);
 
         $this->subject = new AddToCatalogProcess(
-            $this->albumArtistUpdater
+            $this->albumArtistUpdater,
+            $this->albumRepository
         );
     }
 
     public function testProcessProcesses(): void
     {
-        $this->markTestSkipped('Subject needs to be refactored first');
-
         $catalog = $this->mock(Catalog::class);
 
         $catalog->shouldReceive('add_to_catalog')
@@ -57,6 +60,10 @@ class AddToCatalogProcessTest extends MockeryTestCase
             ->once();
 
         $this->albumArtistUpdater->shouldReceive('update')
+            ->withNoArgs()
+            ->once();
+
+        $this->albumRepository->shouldReceive('cleanEmptyAlbums')
             ->withNoArgs()
             ->once();
 

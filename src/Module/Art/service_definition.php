@@ -31,4 +31,5 @@ use function DI\autowire;
 return [
     ArtCleanupInterface::class => autowire(ArtCleanup::class),
     ArtCollectorInterface::class => autowire(ArtCollector::class),
+    ArtDuplicatorInterface::class => autowire(ArtDuplicator::class),
 ];

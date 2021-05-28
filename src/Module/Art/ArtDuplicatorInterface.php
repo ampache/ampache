@@ -20,27 +20,15 @@
  *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Art;
 
-interface CatalogRepositoryInterface
+interface ArtDuplicatorInterface
 {
     /**
-     * Pull all the current catalogs and return a list of ids
-     * of what you find
-     *
-     * @return int[]
+     * Duplicate an object associate images to a new object
+     * @param string $objectType
+     * @param integer $oldObjectId
+     * @param integer $newObjectId
      */
-    public function getList(?string $filterType = null): array;
-
-    /**
-     * Returne the date for last updates, additions and cleanup
-     *
-     * @return array<string, string>
-     */
-    public function getLastActionDates(): array;
-
-    /**
-     * Migrate an object associated catalog to a new object
-     */
-    public function migrateMap(string $objectType, int $oldObjectId, int $newObjectId): void;
+    public function duplicate(string $objectType, int $oldObjectId, int $newObjectId): void;
 }

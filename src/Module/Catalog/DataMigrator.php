@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
+use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\ArtRepositoryInterface;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -57,7 +56,9 @@ final class DataMigrator implements DataMigratorInterface
 
     private RatingRepositoryInterface $ratingRepository;
 
-    private ArtRepositoryInterface $artRepository;
+    private CatalogRepositoryInterface $catalogRepository;
+
+    private ArtDuplicatorInterface $artDuplicator;
 
     public function __construct(
         UserActivityRepositoryInterface $userActivityRepository,
@@ -69,7 +70,8 @@ final class DataMigrator implements DataMigratorInterface
         StatsRepositoryInterface $statsRepository,
         UserflagRepositoryInterface $userflagRepository,
         RatingRepositoryInterface $ratingRepository,
-        ArtRepositoryInterface $artRepository
+        CatalogRepositoryInterface $catalogRepository,
+        ArtDuplicatorInterface $artDuplicator
     ) {
         $this->userActivityRepository   = $userActivityRepository;
         $this->logger                   = $logger;
@@ -80,7 +82,8 @@ final class DataMigrator implements DataMigratorInterface
         $this->statsRepository          = $statsRepository;
         $this->userflagRepository       = $userflagRepository;
         $this->ratingRepository         = $ratingRepository;
-        $this->artRepository            = $artRepository;
+        $this->catalogRepository        = $catalogRepository;
+        $this->artDuplicator            = $artDuplicator;
     }
 
     /**
@@ -107,8 +110,8 @@ final class DataMigrator implements DataMigratorInterface
             $this->tagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->userflagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->ratingRepository->migrate($objectType, $oldObjectId, $newObjectId);
-            Art::duplicate($objectType, $oldObjectId, $newObjectId);
-            Catalog::migrate_map($objectType, $oldObjectId, $newObjectId);
+            $this->artDuplicator->duplicate($objectType, $oldObjectId, $newObjectId);
+            $this->catalogRepository->migrateMap($objectType, $oldObjectId, $newObjectId);
 
             return true;
         }

@@ -21575,11 +21575,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:duplicate\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -22231,11 +22226,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:clean_catalog\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:clean_empty_albums\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

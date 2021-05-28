@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\ArtRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -66,8 +68,9 @@ class DataMigratorTest extends MockeryTestCase
     /** @var RatingRepositoryInterface|MockInterface */
     private MockInterface $ratingRepository;
 
-    /** @var ArtRepositoryInterface|MockInterface */
-    private MockInterface $artRepository;
+    private MockInterface $catalogRepository;
+
+    private MockInterface $artDuplicator;
 
     private DataMigrator $subject;
 
@@ -83,6 +86,8 @@ class DataMigratorTest extends MockeryTestCase
         $this->userflagRepository       = $this->mock(UserflagRepositoryInterface::class);
         $this->ratingRepository         = $this->mock(RatingRepositoryInterface::class);
         $this->artRepository            = $this->mock(ArtRepositoryInterface::class);
+        $this->artDuplicator            = $this->mock(ArtDuplicatorInterface::class);
+        $this->catalogRepository        = $this->mock(CatalogRepositoryInterface::class);
 
         $this->subject = new DataMigrator(
             $this->userActivityRepository,
@@ -94,7 +99,8 @@ class DataMigratorTest extends MockeryTestCase
             $this->statsRepository,
             $this->userflagRepository,
             $this->ratingRepository,
-            $this->artRepository
+            $this->catalogRepository,
+            $this->artDuplicator
         );
     }
 
@@ -107,7 +113,6 @@ class DataMigratorTest extends MockeryTestCase
 
     public function testMigrateMigrates(): void
     {
-        $this->markTestSkipped('Subject needs to be refactored first');
         $oldObjectId = 666;
         $newObjectId = 42;
         $objectType  = 'foobar';
@@ -148,7 +153,10 @@ class DataMigratorTest extends MockeryTestCase
         $this->ratingRepository->shouldReceive('migrate')
             ->with($objectType, $oldObjectId, $newObjectId)
             ->once();
-        $this->artRepository->shouldReceive('migrate')
+        $this->artDuplicator->shouldReceive('duplicate')
+            ->with($objectType, $oldObjectId, $newObjectId)
+            ->once();
+        $this->catalogRepository->shouldReceive('migrateMap')
             ->with($objectType, $oldObjectId, $newObjectId)
             ->once();
 

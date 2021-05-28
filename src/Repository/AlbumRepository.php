@@ -426,4 +426,15 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return (int) $results['album_count'];
     }
+
+    public function cleanEmptyAlbums(): void
+    {
+        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $db_results = Dba::read($sql);
+        while ($album = Dba::fetch_assoc($db_results)) {
+            $object_id  = $album['id'];
+            $sql        = "DELETE FROM `album` WHERE `id` = ?";
+            Dba::write($sql, array($object_id));
+        }
+    }
 }

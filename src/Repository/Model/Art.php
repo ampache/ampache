@@ -529,7 +529,7 @@ class Art extends database_object
      * @param $kind
      * @return boolean
      */
-    private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
+    public static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
@@ -554,7 +554,7 @@ class Art extends database_object
      * @param $kind
      * @return string|null
      */
-    private static function read_from_dir($sizetext, $type, $uid, $kind)
+    public static function read_from_dir($sizetext, $type, $uid, $kind)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
         if ($path === false) {
@@ -1003,34 +1003,6 @@ class Art extends database_object
                 Dba::write($sql);
             } // foreach
         }
-    }
-
-    /**
-     * Duplicate an object associate images to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     */
-    public static function duplicate($object_type, $old_object_id, $new_object_id)
-    {
-        if (Art::has_db($new_object_id, $object_type)) {
-            return false;
-        }
-        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
-        if (AmpConfig::get('album_art_store_disk')) {
-            $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, array($object_type, $old_object_id));
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind']);
-                if ($image !== null) {
-                    self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind']);
-                }
-            }
-        }
-
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-
-        Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
     /**

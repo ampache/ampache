@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 final class CatalogRepository implements CatalogRepositoryInterface
 {
@@ -66,5 +67,16 @@ final class CatalogRepository implements CatalogRepositoryInterface
         $db_results = Dba::read($sql);
 
         return Dba::fetch_assoc($db_results);
+    }
+
+    /**
+     * Migrate an object associated catalog to a new object
+     */
+    public function migrateMap(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $sql    = 'UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?';
+        $params = [$newObjectId, $objectType, $oldObjectId];
+
+        Dba::write($sql, $params);
     }
 }

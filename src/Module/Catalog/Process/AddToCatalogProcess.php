@@ -24,16 +24,21 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\Process;
 
 use Ampache\Module\Album\AlbumArtistUpdaterInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 
 final class AddToCatalogProcess implements CatalogProcessInterface
 {
     private AlbumArtistUpdaterInterface $albumArtistUpdater;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
-        AlbumArtistUpdaterInterface $albumArtistUpdater
+        AlbumArtistUpdaterInterface $albumArtistUpdater,
+        AlbumRepositoryInterface $albumRepository
     ) {
         $this->albumArtistUpdater = $albumArtistUpdater;
+        $this->albumRepository    = $albumRepository;
     }
 
     public function process(Catalog $catalog): void
@@ -44,6 +49,7 @@ final class AddToCatalogProcess implements CatalogProcessInterface
         ];
         $catalog->add_to_catalog($options);
         $this->albumArtistUpdater->update();
-        Catalog::clean_empty_albums();
+
+        $this->albumRepository->cleanEmptyAlbums();
     }
 }
