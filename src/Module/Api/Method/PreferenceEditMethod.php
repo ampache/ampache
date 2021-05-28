@@ -80,7 +80,7 @@ final class PreferenceEditMethod
             return false;
         }
         $preference   = Preference::get($pref_name, $user->id);
-        $output_array =  array('preference' => $preference);
+        $output_array = array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);

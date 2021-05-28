@@ -44,8 +44,8 @@ class Catalog_beets extends Catalog
     protected $listCommand = 'ls';
 
     /**
-     *
-     * @var string Beets Database File
+     * Beets Database File
+     * @var string $beetsdb
      */
     protected $beetsdb;
 

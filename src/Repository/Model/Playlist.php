@@ -124,7 +124,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
             $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
@@ -184,7 +184,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
             $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
@@ -308,10 +308,10 @@ class Playlist extends playlist_object
     } // get_media_count
 
     /**
-    * get_total_duration
-    * Get the total duration of all songs.
-    * @return integer
-    */
+     * get_total_duration
+     * Get the total duration of all songs.
+     * @return integer
+     */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
@@ -319,10 +319,10 @@ class Playlist extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $results = Dba::fetch_row($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_row($db_results);
 
         return (int) $results['0'];
     } // get_total_duration

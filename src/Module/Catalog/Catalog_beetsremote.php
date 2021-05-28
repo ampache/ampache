@@ -42,8 +42,8 @@ class Catalog_beetsremote extends Catalog
     protected $listCommand = 'item/query';
 
     /**
-     *
-     * @var string Beets Database File
+     * Beets Database File
+     * @var string
      */
     protected $uri;
 

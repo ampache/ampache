@@ -519,11 +519,6 @@ class Album extends database_object implements library_item
         $sql .= 'AND `album`.`catalog` = ? ';
         $params[] = $catalog;
 
-        if ($release_status) {
-            $sql .= 'AND `album`.`release_status` = ? ';
-            $params[] = $release_status;
-        }
-
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {

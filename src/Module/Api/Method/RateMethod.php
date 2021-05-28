@@ -49,7 +49,7 @@ final class RateMethod
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
-     * @return boolean|void
+     * @return bool
      */
     public static function rate(array $input)
     {

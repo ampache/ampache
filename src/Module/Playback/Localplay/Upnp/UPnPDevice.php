@@ -108,7 +108,7 @@ class UPnPDevice
      * @param string $method Method name
      * @param array $arguments Key-Value array
      * @param string $type
-     * @return boolean|string
+     * @return string
      */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
@@ -159,47 +159,16 @@ class UPnPDevice
             }
         }
 
-        $response = join("\r\n", $tmp);
-
-        /*
-        $lastHeaders = $headers[count($headers) - 1];
-        $responseCode = $this->getResponseCode($lastHeaders);
-        debug_event('upnpdevice', 'sendRequestToDevice responseCode: ' . $responseCode, 5);
-        if ($responseCode == 500)
-        {
-            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 3);
-        }
-        else
-        {
-            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code OK - Create response', 5);
-        }
-        */
-
-        return $response;
+        return join("\r\n", $tmp);
     }
 
     /**
-     * Filters response HTTP-Code from response headers
+     * helper function for calls that require only an instance id
      * @param $command
      * @param string $type
-     * @param integer $id
-     * @return mixed             Response code (int) or null if not found
+     * @param integer $instance_id
+     * @return string
      */
-    /*
-    private function getResponseCode($headers)
-    {
-        $tmp = explode("\n", $headers);
-        $firstLine = array_shift($tmp);
-
-        if(substr($headers, 0, 8) == 'HTTP/1.1') {
-            return substr($headers, 9, 3);
-        }
-
-        return null;
-    }
-    */
-
-    // helper function for calls that require only an instance id
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
     {
         $args = array('InstanceID' => $instance_id);

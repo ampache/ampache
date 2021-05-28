@@ -34,10 +34,10 @@ final class LicenseRepository implements LicenseRepositoryInterface
      */
     public function getAll(): array
     {
-        $sql        = 'SELECT `id` from `license` ORDER BY `name`';
-        $db_results = Dba::read($sql);
+        $sql = 'SELECT `id` from `license` ORDER BY `name`';
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }

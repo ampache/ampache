@@ -69,7 +69,7 @@ final class LocalplaySongsMethod
 
             return false;
         }
-        $output_array =  array('localplay_songs' => $songs);
+        $output_array = array('localplay_songs' => $songs);
 
         ob_end_clean();
         switch ($input['api_format']) {

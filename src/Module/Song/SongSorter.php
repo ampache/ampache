@@ -142,18 +142,19 @@ final class SongSorter implements SongSorterInterface
         $original_year  = $album_object->original_year ?: '%Y';
         $genre          = implode("; ", $album_object->tags) ?: '%b';
         $release_type   = $album_object->release_type ?: '%r';
+        $release_status = $album_object->release_status ?: '%R';
 
         /* Replace everything we can find */
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $disk, $genre, $barcode);
+        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%d', '%g', '%b');
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $disk, $genre, $barcode);
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         /* Remove non A-Z0-9 chars */
         $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
 
         // Replace non-critical search patterns
-        $post_replace_array = array('%Y', '%c', '%C', '%r', '%g', '%b', ' []', ' ()');
-        $post_content_array = array('', '', '', '', '', '', '', '', '');
+        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
+        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
         $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
 
         $home .= "/$sort_pattern";

@@ -318,12 +318,7 @@ class AmpacheRss
                 'description' => $album->f_artist_name . ' - ' . $album->f_name,
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
-                'pubDate' => date(
-                    'c',
-                    static::getAlbumRepository()->getFirstSongAddTime(
-                        $album->id
-                    )
-                )
+                'pubDate' => date('c', $album->addition_time)
             );
             $results[] = $xml_array;
         } // end foreach

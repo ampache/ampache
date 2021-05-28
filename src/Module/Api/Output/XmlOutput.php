@@ -47,18 +47,18 @@ final class XmlOutput implements ApiOutputInterface
      * @param integer[] $albums
      * @param array $include
      * @param integer|null $user_id
-     * @param bool $fullXml
+     * @param bool $encode
      * @param bool $asObject
-     * @param int $limit
-     * @param int $offset
+     * @param integer $limit
+     * @param integer $offset
      *
-     * @return array|string
+     * @return string
      */
     public function albums(
         array $albums,
         array $include = [],
         ?int $user_id = null,
-        bool $fullXml = true,
+        bool $encode = true,
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
@@ -66,6 +66,6 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_offset($offset);
         Xml_Data::set_limit($limit);
 
-        return Xml_Data::albums($albums, $include, $user_id, $fullXml);
+        return Xml_Data::albums($albums, $include, $user_id, $encode);
     }
 }

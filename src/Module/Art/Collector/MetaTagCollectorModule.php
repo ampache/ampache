@@ -214,6 +214,20 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                 }
             }
         }
+        
+        if (isset($id3["flac"]['PICTURE'])) {
+            foreach ($id3["flac"]["PICTURE"] as $image) {
+                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
+                if ($image['typeid'] == $this_picturetypeid) {
+                    $data[] = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3'
+                    ];
+                }
+            }
+        }
 
         return $data;
     }

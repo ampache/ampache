@@ -665,16 +665,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "1.11.0",
+            "version": "1.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "a9c1b59eba5a08ca2770a76eddb88922f504e8e0"
+                "reference": "9c53086695937c50c47936ed86d96150ffbcf60d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/a9c1b59eba5a08ca2770a76eddb88922f504e8e0",
-                "reference": "a9c1b59eba5a08ca2770a76eddb88922f504e8e0",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/9c53086695937c50c47936ed86d96150ffbcf60d",
+                "reference": "9c53086695937c50c47936ed86d96150ffbcf60d",
                 "shasum": ""
             },
             "require": {
@@ -744,7 +744,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/cache/issues",
-                "source": "https://github.com/doctrine/cache/tree/1.11.0"
+                "source": "https://github.com/doctrine/cache/tree/1.11.2"
             },
             "funding": [
                 {
@@ -760,7 +760,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-13T14:46:17+00:00"
+            "time": "2021-05-20T14:57:29+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -1230,12 +1230,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "422485c471958a56b4197854303a8aaa3004cce0"
+                "reference": "ee705f24c7c47863a16dc60e1396c610f715e777"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/422485c471958a56b4197854303a8aaa3004cce0",
-                "reference": "422485c471958a56b4197854303a8aaa3004cce0",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/ee705f24c7c47863a16dc60e1396c610f715e777",
+                "reference": "ee705f24c7c47863a16dc60e1396c610f715e777",
                 "shasum": ""
             },
             "require": {
@@ -1290,7 +1290,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-04-16T16:46:20+00:00"
+            "time": "2021-05-15T18:51:29+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -1975,16 +1975,16 @@
         },
         {
             "name": "nyholm/psr7-server",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7-server.git",
-                "reference": "5c134aeb5dd6521c7978798663470dabf0528c96"
+                "reference": "b846a689844cef114e8079d8c80f0afd96745ae3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7-server/zipball/5c134aeb5dd6521c7978798663470dabf0528c96",
-                "reference": "5c134aeb5dd6521c7978798663470dabf0528c96",
+                "url": "https://api.github.com/repos/Nyholm/psr7-server/zipball/b846a689844cef114e8079d8c80f0afd96745ae3",
+                "reference": "b846a689844cef114e8079d8c80f0afd96745ae3",
                 "shasum": ""
             },
             "require": {
@@ -2025,7 +2025,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Nyholm/psr7-server/issues",
-                "source": "https://github.com/Nyholm/psr7-server/tree/1.0.1"
+                "source": "https://github.com/Nyholm/psr7-server/tree/1.0.2"
             },
             "funding": [
                 {
@@ -2037,7 +2037,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-15T15:26:20+00:00"
+            "time": "2021-05-12T11:11:27+00:00"
         },
         {
             "name": "oomphinc/composer-installers-extender",
@@ -4132,26 +4132,27 @@
         },
         {
             "name": "scn/phptal",
-            "version": "v3.0.2",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SC-Networks/PHPTAL.git",
-                "reference": "b9d75d420b4b47cbc8d609cb5340bbfc421a1b99"
+                "reference": "6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SC-Networks/PHPTAL/zipball/b9d75d420b4b47cbc8d609cb5340bbfc421a1b99",
-                "reference": "b9d75d420b4b47cbc8d609cb5340bbfc421a1b99",
+                "url": "https://api.github.com/repos/SC-Networks/PHPTAL/zipball/6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec",
+                "reference": "6f02a2d9748cb5a7405ba12acf1db9c8ffe043ec",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2",
+                "ext-dom": "*",
+                "ext-gettext": "*",
+                "ext-simplexml": "*",
+                "php": "^7.3||^8.0",
                 "symfony/polyfill-mbstring": "^1.12"
             },
             "require-dev": {
-                "php": "^7.2",
-                "phpdocumentor/phpdocumentor": "^2",
-                "phpunit/phpunit": "^8.0",
+                "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.2"
             },
             "suggest": {
@@ -4201,9 +4202,9 @@
             ],
             "support": {
                 "issues": "https://github.com/SC-Networks/PHPTAL/issues",
-                "source": "https://github.com/SC-Networks/PHPTAL/tree/3.0"
+                "source": "https://github.com/SC-Networks/PHPTAL/tree/v3.1.0"
             },
-            "time": "2019-09-09T08:57:35+00:00"
+            "time": "2021-05-18T10:15:39+00:00"
         },
         {
             "name": "shrikeh/teapot",
@@ -5378,28 +5379,30 @@
         },
         {
             "name": "doctrine/annotations",
-            "version": "1.12.1",
+            "version": "1.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b"
+                "reference": "e6e7b7d5b45a2f2abc5460cc6396480b2b1d321f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/b17c5014ef81d212ac539f07a1001832df1b6d3b",
-                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/e6e7b7d5b45a2f2abc5460cc6396480b2b1d321f",
+                "reference": "e6e7b7d5b45a2f2abc5460cc6396480b2b1d321f",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "1.*",
                 "ext-tokenizer": "*",
-                "php": "^7.1 || ^8.0"
+                "php": "^7.1 || ^8.0",
+                "psr/cache": "^1 || ^2 || ^3"
             },
             "require-dev": {
-                "doctrine/cache": "1.*",
+                "doctrine/cache": "^1.11 || ^2.0",
                 "doctrine/coding-standard": "^6.0 || ^8.1",
                 "phpstan/phpstan": "^0.12.20",
-                "phpunit/phpunit": "^7.5 || ^9.1.5"
+                "phpunit/phpunit": "^7.5 || ^8.0 || ^9.1.5",
+                "symfony/cache": "^4.4 || ^5.2"
             },
             "type": "library",
             "autoload": {
@@ -5442,9 +5445,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/annotations/issues",
-                "source": "https://github.com/doctrine/annotations/tree/1.12.1"
+                "source": "https://github.com/doctrine/annotations/tree/1.13.1"
             },
-            "time": "2021-02-21T21:00:45+00:00"
+            "time": "2021-05-16T18:07:53+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -8101,16 +8104,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.2.4",
+            "version": "v5.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "0d639a0943822626290d169965804f79400e6a04"
+                "reference": "ccccb9d48ca42757dd12f2ca4bf857a4e217d90d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/0d639a0943822626290d169965804f79400e6a04",
-                "reference": "0d639a0943822626290d169965804f79400e6a04",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/ccccb9d48ca42757dd12f2ca4bf857a4e217d90d",
+                "reference": "ccccb9d48ca42757dd12f2ca4bf857a4e217d90d",
                 "shasum": ""
             },
             "require": {
@@ -8142,7 +8145,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.2.4"
+                "source": "https://github.com/symfony/finder/tree/v5.2.9"
             },
             "funding": [
                 {
@@ -8158,7 +8161,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-15T18:55:04+00:00"
+            "time": "2021-05-16T13:07:46+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

@@ -47,9 +47,9 @@ class LinuxMetadataWriterTest extends MockeryTestCase
 
         $dirName      = $dir->url();
         $iconFileName = 'some-file-name';
-        $full_name    = 'some-full-name';
+        $f_name       = 'some-full-name';
 
-        $album->full_name = $full_name;
+        $album->f_name = $f_name;
 
         $this->subject->write(
             $album,
@@ -60,7 +60,7 @@ class LinuxMetadataWriterTest extends MockeryTestCase
         $this->assertSame(
             sprintf(
                 "Name=%s\nIcon=%s",
-                $full_name,
+                $f_name,
                 $iconFileName
             ),
             $file->getContent()

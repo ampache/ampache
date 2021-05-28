@@ -933,7 +933,6 @@ class Daap_Api
             case 404:
                 $error = "Not Found";
                 break;
-
             case 401:
                 $error = "Unauthorized";
                 break;

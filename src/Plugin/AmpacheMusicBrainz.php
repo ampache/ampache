@@ -23,8 +23,10 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\User;
 use Exception;
+use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
@@ -127,5 +129,57 @@ class AmpacheMusicBrainz
         }
 
         return $results;
+    } // get_metadata
+
+    /**
+     * get_external_metadata
+     * Update an object (label for now) using musicbrainz
+     * @param Label $object
+     * @param string $object_type
+     * @return bool
+     */
+    public function get_external_metadata(Label $object, string $object_type = 'label')
+    {
+        $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+        if ($object->mbid) {
+            try {
+                $results = $mbrainz->lookup($object_type, $object->mbid);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return false;
+            }
+        } else {
+            try {
+                $args    = array($object_type => $object->name);
+                $results = $mbrainz->search(new LabelFilter($args), 1);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return false;
+            }
+        }
+        if (is_array($results) && !empty($results)) {
+            $results = $results[0];
+        }
+        if (!empty($results)) {
+            debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->name, 3);
+            $data = array(
+                'name' => $object->name,
+                'mbid' => $results->{'id'} ?: $object->mbid,
+                'category' => $results->{'type'} ?: $object->category,
+                'summary' => $results->{'disambiguation'} ?: $object->summary,
+                'address' => $object->address,
+                'country' => $results->{'country'} ?: $object->country,
+                'email' => $object->email,
+                'website' => $object->website,
+                'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
+            );
+            $object->update($data);
+
+            return true;
+        }
+
+        return false;
     } // get_metadata
 }

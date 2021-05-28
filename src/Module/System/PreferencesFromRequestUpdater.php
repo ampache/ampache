@@ -54,8 +54,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
         }
 
         $db_results = Dba::read($sql);
-
-        $results = array();
+        $results    = array();
         // Collect the current possible keys
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);

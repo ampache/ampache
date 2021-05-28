@@ -128,6 +128,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     }
                 }
             }
+
             $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
 
@@ -138,6 +139,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                         'picturetypeid' => $apic['picturetypeid'], 'description' => $apic['description'], 'encodingid' => $apic['encodingid']);
                 }
             }
+
+            $song->format();
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3_ART) === true) {
                 $art         = new Art($song->album, 'album');
                 if ($art->has_db_info()) {
@@ -157,8 +160,8 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     $idx = $art->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                     if (is_null($idx)) {
                         $ndata['attached_picture'][] = $new_pic;                    }
+                    }
                 }
-            }
             $vainfo->write_id3($ndata);
         }
     } //write
