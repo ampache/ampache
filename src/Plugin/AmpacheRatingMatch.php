@@ -153,6 +153,15 @@ class AmpacheRatingMatch
                 $album->set_rating($new_rating, $this->user_id);
             }
         }
+        if ($rating->type == 'album' && $new_rating >= $this->min_stars && $this->min_stars > 0) {
+            $album  = new Album($rating->id);
+            $artist = new Rating($album->album_artist, 'artist');
+
+            $rating_artist = (int) $artist->get_user_rating($this->user_id);
+            if ($rating_artist < $new_rating) {
+                $artist->set_rating($new_rating, $this->user_id);
+            }
+        }
     }
 
     /**
