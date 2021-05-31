@@ -95,7 +95,7 @@ final class FindArtAction extends AbstractArtAction
 
         $limit     = 0;
         if (isset($_REQUEST['artist_filter'])) {
-            $options['artist_filter'] =true;
+            $options['artist_filter'] = true;
         }
         if (isset($_REQUEST['search_limit'])) {
             $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
