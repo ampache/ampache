@@ -12,15 +12,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
-        php: [7.4]
+        os: ['ubuntu-latest']
+        php-versions: [7.4, 8.0]
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: ${{ matrix.php-versions }}
+          extensions: soap
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -35,11 +36,7 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run test suite
         run: composer run-script tests
-
-      - name: Run static analysis
-        run: composer run-script stan
