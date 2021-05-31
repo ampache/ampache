@@ -25,11 +25,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
-use Ampache\Repository\Model\MediaInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 
@@ -79,8 +79,8 @@ class WebPlayer
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
-            $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
-            $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
+            $transcode = self::can_transcode(strtolower(get_class($media)), $media->getFileExtension(), $types, $urlinfo, $transcode_cfg, $force_type);
+            $types     = self::get_media_types($urlinfo, $types, $media->getFileExtension(), $transcode);
         } else {
             if ($item->type == 'live_stream') {
                 $types['real'] = $item->codec;
@@ -105,7 +105,7 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array $urlinfo
-     * @return MediaInterface|null
+     * @return PlayableMediaInterface|null
      */
     public static function get_media_object($urlinfo)
     {
@@ -330,7 +330,7 @@ class WebPlayer
             $json['media_id']   = $media->id;
             $json['media_type'] = $urlinfo['type'];
 
-            if ($media->type != $types['real']) {
+            if ($media->getFileExtension() != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];
             }
             //$url .= "&content_length=required";

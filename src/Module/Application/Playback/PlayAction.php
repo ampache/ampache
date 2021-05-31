@@ -524,7 +524,7 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name = $media->get_stream_name() . "." . $media->type;
+        $media_name = $media->get_stream_name() . "." . $media->getFileExtension();
 
         header('Access-Control-Allow-Origin: *');
 
@@ -609,7 +609,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         debug_event('play/index', $action . ' file (' . $media->getFile() . '}...', 5);
-        debug_event('play/index', 'Media type {' . $media->type . '}', 5);
+        debug_event('play/index', 'Media type {' . $media->getFileExtension() . '}', 5);
 
         $cpaction = $_REQUEST['custom_play_action'];
         if ($cpaction) {
@@ -618,7 +618,7 @@ final class PlayAction implements ApplicationActionInterface
         // Determine whether to transcode
         $transcode = false;
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
+        $transcode_to = $transcode_to == $media->getFileExtension() ? null : $transcode_to;
         if ($transcode_to) {
             debug_event('play/index', 'Transcode to {' . (string) $transcode_to . '}', 5);
         }

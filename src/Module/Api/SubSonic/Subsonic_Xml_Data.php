@@ -1064,7 +1064,7 @@ class Subsonic_Xml_Data
             $xvideo->addAttribute('genre', (string)$tags[0]['name']);
         }
         $xvideo->addAttribute('size', (string)$video->getSize());
-        $xvideo->addAttribute('suffix', (string)$video->type);
+        $xvideo->addAttribute('suffix', $video->getFileExtension());
         $xvideo->addAttribute('contentType', (string)$video->mime);
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
         $path = basename($video->getFile());
@@ -1073,7 +1073,7 @@ class Subsonic_Xml_Data
         self::setIfStarred($xvideo, 'video', $video->id);
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types   = Song::get_stream_types_for_type($video->type, 'api');
+        $valid_types   = Song::get_stream_types_for_type($video->getFileExtension(), 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
             if (!empty($transcode_settings)) {
@@ -1590,7 +1590,7 @@ class Subsonic_Xml_Data
         if ($episode->getFile()) {
             $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episodeId));
             $xepisode->addAttribute('size', (string)$episode->getSize());
-            $xepisode->addAttribute('suffix', (string)$episode->type);
+            $xepisode->addAttribute('suffix', (string)$episode->getFileExtension());
             $xepisode->addAttribute('contentType', (string)$episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
             $path = basename($episode->getFile());

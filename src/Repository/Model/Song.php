@@ -118,7 +118,7 @@ class Song extends database_object implements
     /**
      * @var string $type
      */
-    public $type;
+    private $type;
     /**
      * @var string $mime
      */
@@ -386,6 +386,11 @@ class Song extends database_object implements
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function getFileExtension(): ?string
+    {
+        return $this->type;
     }
 
     /**

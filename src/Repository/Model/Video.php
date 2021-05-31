@@ -69,7 +69,7 @@ class Video extends database_object implements
     /**
      * @var integer $size
      */
-    public $size;
+    private $size;
     /**
      * @var string $video_codec
      */
@@ -134,7 +134,7 @@ class Video extends database_object implements
     /**
      * @var string $type
      */
-    public $type;
+    private $type;
     /**
      * @var array $tags
      */
@@ -239,6 +239,11 @@ class Video extends database_object implements
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function getFileExtension(): string
+    {
+        return $this->type;
     }
 
     /**

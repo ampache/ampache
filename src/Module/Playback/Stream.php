@@ -244,7 +244,7 @@ class Stream
      * get_max_bitrate
      *
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
-     * @param $media
+     * @param PlayableMediaInterface $media
      * @param string $type
      * @param string $player
      * @param array $options
@@ -272,7 +272,7 @@ class Stream
         }
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
+        if ($media->getFileExtension() == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }

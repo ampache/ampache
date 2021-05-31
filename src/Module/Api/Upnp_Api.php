@@ -1698,7 +1698,7 @@ class Upnp_Api
         $art_url     = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$song->type];
+        $arrFileType    = $fileTypesByExt[$song->getFileExtension()];
         /**
          * Properties observed for MS media player include
          * GetSearchCapabilities
@@ -1807,7 +1807,7 @@ class Upnp_Api
         $art_url     = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$video->type];
+        $arrFileType    = $fileTypesByExt[$video->getFileExtension()];
 
         return array(
             'id' => $parent . '/' . $video->id,
@@ -1853,7 +1853,7 @@ class Upnp_Api
         $art_url     = Art::url($episode->getPodcast()->getId(), 'podcast', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = (!empty($episode->type)) ? $fileTypesByExt[$episode->type] : array();
+        $arrFileType    = (!empty($episode->getFileExtension())) ? $fileTypesByExt[$episode->getFileExtension()] : array();
 
         $ret = array(
             'id' => 'amp://music/podcasts/' . $episode->getPodcast()->getId() . '/' . $episode->getId(),

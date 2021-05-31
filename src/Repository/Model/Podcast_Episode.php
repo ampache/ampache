@@ -45,10 +45,10 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     private string $state;
     private $file;
     private string $source;
-    public $size;
+    private $size;
     public $time;
     private int $played;
-    public $type;
+    private $type;
     public $mime;
     private string $website;
     private string $description;
@@ -102,6 +102,11 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function getFileExtension(): ?string
+    {
+        return $this->type;
     }
 
     /**
@@ -443,7 +448,13 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
+        return Song::get_transcode_settings_for_media(
+            (string) $this->getFileExtension(),
+            $target,
+            $player,
+            'song',
+            $options
+        );
     }
 
     /**
@@ -471,7 +482,7 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
             $uid = -1;
         }
 
-        $type = $this->type;
+        $type = $this->getFileExtension();
 
         $media_name = $this->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
@@ -493,17 +504,17 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
      */
     public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type, $player);
+        return Song::get_stream_types_for_type((string) $this->getFileExtension(), $player);
     }
 
     public function getFilename(): string
     {
         if ($this->filename === null) {
             $this->filename = sprintf(
-            '%s - %s.%s',
-            $this->getPodcast()->getTitleFormatted(),
-            scrub_out($this->title),
-            $this->type
+                '%s - %s.%s',
+                $this->getPodcast()->getTitleFormatted(),
+                scrub_out($this->title),
+                $this->getFileExtension()
             );
         }
 

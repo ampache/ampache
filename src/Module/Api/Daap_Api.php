@@ -550,7 +550,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $album->disk);
                         break;
                     case 'daap.songformat':
-                        $output .= self::tlv($tag, $song->type);
+                        $output .= self::tlv($tag, $song->getFileExtension());
                         break;
                     case 'daap.songgenre':
                         $output .= self::tlv($tag, Tag::get_display($song->tags, false, 'song'));

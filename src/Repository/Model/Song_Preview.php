@@ -40,14 +40,14 @@ class Song_Preview extends database_object implements
     protected const DB_TABLENAME = 'song_preview';
 
     public $id;
-    public $file;
+    private $file;
     public $artist; // artist.id (Int)
     public $title;
     public $disk;
     public $track;
     public $album_mbid;
     public $artist_mbid;
-    public $type;
+    private $type;
     public $mime;
     public $mbid; // MusicBrainz ID
 
@@ -95,6 +95,11 @@ class Song_Preview extends database_object implements
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    public function getFileExtension(): ?string
+    {
+        return $this->type;
     }
 
     /**

@@ -91,7 +91,7 @@ class Waveform
                     $transcode_cfg = AmpConfig::get('transcode');
                     $valid_types   = $song->get_stream_types();
 
-                    if ($song->type != $transcode_to) {
+                    if ($song->getFileExtension() != $transcode_to) {
                         $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {

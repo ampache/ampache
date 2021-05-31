@@ -261,7 +261,7 @@ class Stream_Playlist
                     $art_type         = ($show_song_art) ? 'song' : 'album';
                     $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
-                    $url['codec']     = $object->type;
+                    $url['codec']     = $object->getFileExtension();
                     //$url['track_num'] = $object->f_track;
                     break;
                 case 'video':
@@ -269,7 +269,7 @@ class Stream_Playlist
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->getFullArtistNameFormatted();
                     $url['resolution'] = $object->f_resolution;
-                    $url['codec']      = $object->type;
+                    $url['codec']      = $object->getFileExtension();
                     break;
                 case 'live_stream':
                     /** @var Live_Stream $object */
@@ -284,7 +284,7 @@ class Stream_Playlist
                     /** @var Song_Preview $object */
                     $url['title']  = $object->title;
                     $url['author'] = $object->getFullArtistNameFormatted();
-                    $url['codec']  = $object->type;
+                    $url['codec']  = $object->getFileExtension();
                     break;
                 case 'channel':
                     /** @var Channel $object */
@@ -297,7 +297,7 @@ class Stream_Playlist
                     $url['author']    = $object->getPodcast()->getTitleFormatted();
                     $url['info_url']  = $object->getLinkFormatted();
                     $url['image_url'] = Art::url($object->getPodcast()->getId(), 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['codec']     = $object->type;
+                    $url['codec']     = $object->getFileExtension();
                     break;
                 case 'random':
                     $url['title'] = 'Random URL';

@@ -49,4 +49,6 @@ interface PlayableMediaInterface extends MediaInterface
      * Allows to set the filename (e.g. for external catalog types)
      */
     public function setFilename(string $filename): void;
+
+    public function getFileExtension(): ?string;
 }

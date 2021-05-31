@@ -157,7 +157,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
+                $this_picturetypeid = ($mtype == 'artist') ? 8 : 3;
                 if ($image['picturetypeid'] == $this_picturetypeid) {
                     $data[] = [
                         $mtype => $media->getFile(),

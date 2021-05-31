@@ -3816,11 +3816,6 @@ parameters:
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\:\\:\\$type\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$year\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
@@ -5492,11 +5487,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
 			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$type\\.$#"
-			count: 3
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -11925,6 +11915,11 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$bitrate\\.$#"
+			count: 2
+			path: src/Module/Playback/Stream.php
+
+		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_resolution\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -11941,11 +11936,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_image_preview\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:get_max_bitrate\\(\\) has parameter \\$media with no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12016,11 +12006,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$command\\)\\: Unexpected token \"\\$command\", expected type at offset 39$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$media\\)\\: Unexpected token \"\\$media\", expected type at offset 158$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12160,57 +12145,52 @@ parameters:
 			path: src/Module/Playback/Stream_Url.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$album\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$album\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$artist\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$artist\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$r128_album_gain\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$r128_album_gain\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$r128_track_gain\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$r128_track_gain\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$replaygain_album_gain\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$replaygain_album_gain\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$replaygain_album_peak\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$replaygain_album_peak\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$replaygain_track_gain\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$replaygain_track_gain\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$replaygain_track_peak\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$replaygain_track_peak\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$type\\.$#"
-			count: 3
-			path: src/Module/Playback/WebPlayer.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:fill_ext_info\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:fill_ext_info\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
@@ -12250,7 +12230,7 @@ parameters:
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) should return Ampache\\\\Repository\\\\Model\\\\MediaInterface\\|null but returns Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_object\\(\\) should return Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\|null but returns Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
@@ -12286,6 +12266,16 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_types\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Playback/WebPlayer.php
+
+		-
+			message: "#^Parameter \\#2 \\$file_type of static method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:can_transcode\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Module/Playback/WebPlayer.php
+
+		-
+			message: "#^Parameter \\#3 \\$file_type of static method Ampache\\\\Module\\\\Playback\\\\WebPlayer\\:\\:get_media_types\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Playback/WebPlayer.php
 
