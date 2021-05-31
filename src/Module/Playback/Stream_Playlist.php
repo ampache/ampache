@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -182,7 +183,7 @@ class Stream_Playlist
 
     /**
      * media_to_url
-     * @param $media
+     * @param PlayableMediaInterface $media
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_Url
@@ -211,7 +212,7 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
-     * @param Media $object
+     * @param PlayableMediaInterface $object
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_Url
@@ -229,7 +230,7 @@ class Stream_Playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
         if ($object->isEnabled()) {
             if ($urltype == 'file') {
-                $url['url'] = $object->file;
+                $url['url'] = $object->getFile();
                 // Relative path
                 if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
                     $url['url'] = substr($url['url'], strlen((string)$additional_params));

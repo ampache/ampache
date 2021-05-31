@@ -63,7 +63,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $catalog = Catalog::create_from_id($song->getCatalogId());
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
-                sprintf('Writing id3 metadata to file %s', $song->file),
+                sprintf('Writing id3 metadata to file %s', $song->getFile()),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -72,7 +72,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                     $meta[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }
-            $vainfo = $this->utilityFactory->createVaInfo($song->file);
+            $vainfo = $this->utilityFactory->createVaInfo($song->getFile());
             
             $result = $vainfo->read_id3();
             if ($result['fileformat'] == 'mp3') {

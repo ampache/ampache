@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -1005,8 +1006,8 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * @param PodcastEpisodeInterface|Song|Song_Preview|Video $media
-     * @return Media|PodcastEpisodeInterface|Song|Song_Preview|Video|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      */
     public function prepare_media($media)
     {

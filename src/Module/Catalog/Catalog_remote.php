@@ -25,6 +25,7 @@ namespace Ampache\Module\Catalog;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -417,8 +418,8 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return boolean|Media|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      * @throws Exception
      */
     public function prepare_media($media)
@@ -433,7 +434,7 @@ class Catalog_remote extends Catalog
         }
 
         $handshake = $remote_handle->info();
-        $url       = $media->file . '&ssid=' . $handshake['auth'];
+        $url       = $media->getFile() . '&ssid=' . $handshake['auth'];
 
         header('Location: ' . $url);
         debug_event('remote.catalog', 'Started remote stream - ' . $url, 5);

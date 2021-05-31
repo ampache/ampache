@@ -66,7 +66,7 @@ class Video extends database_object implements
     /**
      * @var string $file
      */
-    public $file;
+    private $file;
     /**
      * @var integer $size
      */
@@ -695,7 +695,7 @@ class Video extends database_object implements
     public function get_subtitles()
     {
         $subtitles = array();
-        $pinfo     = pathinfo($this->file);
+        $pinfo     = pathinfo($this->getFile());
         $filter    = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
 
         foreach (glob($filter) as $srt) {
@@ -924,7 +924,7 @@ class Video extends database_object implements
     {
         $subtitle = '';
         if ($lang_code == '__' || $this->get_language_name($lang_code)) {
-            $pinfo    = pathinfo($this->file);
+            $pinfo    = pathinfo($this->getFile());
             $subtitle = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'];
             if ($lang_code != '__') {
                 $subtitle .= '.' . $lang_code;
@@ -940,8 +940,8 @@ class Video extends database_object implements
      */
     public function remove()
     {
-        if (file_exists($this->file)) {
-            $deleted = unlink($this->file);
+        if (file_exists($this->getFile())) {
+            $deleted = unlink($this->getFile());
         } else {
             $deleted = true;
         }
@@ -956,7 +956,7 @@ class Video extends database_object implements
                 $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
             }
         } else {
-            debug_event(self::class, 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event(self::class, 'Cannot delete ' . $this->getFile() . 'file. Please check permissions.', 1);
         }
 
         return $deleted;
@@ -1080,6 +1080,16 @@ class Video extends database_object implements
     public function getFullTitle(): string
     {
         return $this->f_title;
+    }
+
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    public function setFile(string $file): void
+    {
+        $this->file = $file;
     }
 
     /**

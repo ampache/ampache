@@ -44,7 +44,7 @@ final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
     ): array {
         /* Setup the vars */
         $new_video                = new Video();
-        $new_video->file          = $results['file'];
+        $new_video->setFile($results['file']);
         $new_video->title         = $results['title'];
         $new_video->size          = $results['size'];
         $new_video->video_codec   = $results['video_codec'];
@@ -70,7 +70,7 @@ final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
 
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
-            debug_event(self::class, $video->file . " : differences found, updating database", 5);
+            debug_event(self::class, $video->getFile() . " : differences found, updating database", 5);
 
             Video::update_video($video->id, $new_video);
 
@@ -78,7 +78,7 @@ final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
                 $this->tagListUpdater->update(implode(',', $new_video->tags), 'video', $video->id, true);
             }
         } else {
-            debug_event(self::class, $video->file . " : no differences found", 5);
+            debug_event(self::class, $video->getFile() . " : no differences found", 5);
         }
 
         return $info;

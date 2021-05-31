@@ -105,11 +105,11 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $songs = $this->songRepository->getByAlbum((int) $media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
-                $dirs[] = Core::conv_lc_file(dirname($song->file));
+                $dirs[] = Core::conv_lc_file(dirname($song->getFile()));
             }
         } elseif ($art->type == 'video') {
             $media  = new Video($art->uid);
-            $dirs[] = Core::conv_lc_file(dirname($media->file));
+            $dirs[] = Core::conv_lc_file(dirname($media->getFile()));
         } elseif ($art->type == 'artist') {
             $media              = $this->modelFactory->createArtist($art->uid);
             $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_name);
@@ -121,9 +121,9 @@ final class FolderCollectorModule implements CollectorModuleInterface
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file));
+                $dirs[] = Core::conv_lc_file(dirname($song->getFile()));
                 // look one level up (e.g. /mnt/Music/%artistName%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
+                $dirs[] = Core::conv_lc_file(dirname($song->getFile(), 2));
             }
         }
 

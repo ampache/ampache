@@ -73,8 +73,6 @@ interface PodcastEpisodeInterface extends
 
     public function hasFile(): bool;
 
-    public function getFile(): string;
-
     public function getBitrate(): ?int;
 
     public function getRate(): ?int;

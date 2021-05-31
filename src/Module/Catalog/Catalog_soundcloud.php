@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -487,15 +488,15 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      */
     public function prepare_media($media)
     {
         try {
             $api = $this->createClient();
             if ($api != null) {
-                $track = $this->url_to_track($media->file);
+                $track = $this->url_to_track($media->getFile());
                 debug_event('soundcloud.catalog', 'Starting stream - ' . $track, 5);
 
                 $headers = $api->stream($track);
@@ -503,7 +504,7 @@ class Catalog_soundcloud extends Catalog
                     debug_event('soundcloud.catalog', 'Started remote stream - ' . $headers['Location'], 5);
                     header('Location: ' . $headers['Location']);
                 } else {
-                    debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->file, 3);
+                    debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->getFile(), 3);
                 }
             } else {
                 debug_event('soundcloud.catalog', "API Error: Couldnt connect to SoundCloud.", 1);

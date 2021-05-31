@@ -142,12 +142,12 @@ class AmpacheRatingMatch
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
             if ($rating->type == 'song') {
-                $song = new Song($rating->id);
+                $song   = new Song($rating->id);
                 $artist = new Rating($song->artist, 'artist');
-                $album = new Rating($song->album, 'album');
+                $album  = new Rating($song->album, 'album');
 
                 $rating_artist = (int)$artist->get_user_rating($this->user_id);
-                $rating_album = (int)$album->get_user_rating($this->user_id);
+                $rating_album  = (int)$album->get_user_rating($this->user_id);
                 if ($rating_artist < $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }
@@ -156,7 +156,7 @@ class AmpacheRatingMatch
                 }
             }
             if ($rating->type == 'album') {
-                $album = new Album($rating->id);
+                $album  = new Album($rating->id);
                 $artist = new Rating($album->album_artist, 'artist');
 
                 $rating_artist = (int)$artist->get_user_rating($this->user_id);

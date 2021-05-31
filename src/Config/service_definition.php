@@ -72,6 +72,7 @@ return [
     Init::class => factory(static function (ContainerInterface $c): Init {
         /** @todo repair initialization order problem */
         $c->get(InitializationHandlerConfig::class)->init();
+
         return new Init(
             $c->get(EnvironmentInterface::class),
             [

@@ -26,6 +26,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -447,13 +448,13 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      */
     public function prepare_media($media)
     {
         $subsonic = $this->createClient();
-        $url      = $subsonic->parameterize($media->file . '&');
+        $url      = $subsonic->parameterize($media->getFile() . '&');
 
         header('Location: ' . $url);
         debug_event('subsonic.catalog', 'Started remote stream - ' . $url, 5);

@@ -25,7 +25,7 @@ namespace Ampache\Repository\Model;
 /**
  * Describes all media items which are play/streamable
  */
-interface PlayableMediaInterface
+interface PlayableMediaInterface extends Media
 {
     public function getFullArtistNameFormatted(): string;
 
@@ -34,4 +34,8 @@ interface PlayableMediaInterface
     public function getDurationFormatted(): string;
 
     public function getCatalogId(): int;
+
+    public function getFile(): string;
+
+    public function setFile(string $file): void;
 }

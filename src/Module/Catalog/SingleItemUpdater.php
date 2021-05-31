@@ -121,7 +121,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                     $change = explode(' --> ', (string)$info['element'][$type]);
                     $result = (int)$change[1];
                 }
-                $file = scrub_out($song->file);
+                $file = scrub_out($song->getFile());
                 echo '<tr>' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
@@ -129,7 +129,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 flush();
             } else {
                 if (!$api) {
-                    echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr><td>' . scrub_out($song->getFile()) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
                 flush();
             }

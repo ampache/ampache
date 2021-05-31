@@ -163,7 +163,7 @@ final class Podcast extends database_object implements PodcastInterface
 
     public function getCatalog(): int
     {
-        return (int) ($this->dbData['catalog'] ?? 0);
+        return (int) ($this->getDbData()['catalog'] ?? 0);
     }
 
     public function getTitleFormatted(): string

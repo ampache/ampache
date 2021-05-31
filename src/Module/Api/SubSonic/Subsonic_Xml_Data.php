@@ -1067,7 +1067,7 @@ class Subsonic_Xml_Data
         $xvideo->addAttribute('suffix', (string)$video->type);
         $xvideo->addAttribute('contentType', (string)$video->mime);
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-        $path = basename($video->file);
+        $path = basename($video->getFile());
         $xvideo->addAttribute('path', (string)$path);
 
         self::setIfStarred($xvideo, 'video', $video->id);
@@ -1587,13 +1587,13 @@ class Subsonic_Xml_Data
 
         self::setIfStarred($xepisode, 'podcast_episode', $episodeId);
 
-        if ($episode->file) {
+        if ($episode->getFile()) {
             $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episodeId));
             $xepisode->addAttribute('size', (string)$episode->size);
             $xepisode->addAttribute('suffix', (string)$episode->type);
             $xepisode->addAttribute('contentType', (string)$episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-            $path = basename($episode->file);
+            $path = basename($episode->getFile());
             $xepisode->addAttribute('path', (string)$path);
         }
     }

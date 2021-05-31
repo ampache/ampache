@@ -84,7 +84,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
             // Get the first song in the album
             $songs = $this->songRepository->getByAlbum($albumId, 1);
             $song  = $this->modelFactory->createSong((int) $songs[0]);
-            $dir   = dirname($song->file);
+            $dir   = dirname($song->getFile());
 
             $extension = Art::extension($art->raw_mime);
 

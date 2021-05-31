@@ -43,7 +43,7 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     private string $guid;
     private int $podcast;
     private string $state;
-    public $file;
+    private $file;
     private string $source;
     public $size;
     public $time;
@@ -569,6 +569,11 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     public function getFile(): string
     {
         return $this->file;
+    }
+
+    public function setFile(string $file): void
+    {
+        $this->file = $file;
     }
 
     public function getCatalogId(): int

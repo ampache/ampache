@@ -31,6 +31,7 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Song;
 
 /**
@@ -85,12 +86,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      *
-     * @param Media $media
-     * @return Media
+     * @param Media&PlayableMediaInterface $media
+     * @return Media&PlayableMediaInterface
      */
     public function prepare_media($media)
     {
-        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
+        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->getFile(), 5);
 
         return $media;
     }

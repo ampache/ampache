@@ -316,7 +316,7 @@ class Song_Preview extends database_object implements
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->load(Core::get_global('user'))) {
-                if ($plugin->_plugin->stream_song_preview($this->file)) {
+                if ($plugin->_plugin->stream_song_preview($this->getFile())) {
                     break;
                 }
             }
@@ -441,6 +441,16 @@ class Song_Preview extends database_object implements
     public function getCatalogId(): int
     {
         return 0;
+    }
+
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    public function setFile(string $file): void
+    {
+        $this->file = $file;
     }
 
     /**

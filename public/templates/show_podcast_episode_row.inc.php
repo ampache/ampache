@@ -40,7 +40,7 @@ $episodeId = $libitem->getId();
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php
-        if (AmpConfig::get('directplay') && !empty($libitem->file)) {
+        if (AmpConfig::get('directplay') && !empty($libitem->getFile())) {
             echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId, 'play', T_('Play'), 'play_podcast_episode_' . $episodeId);
             if (Stream_Playlist::check_autoplay_next()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episodeId);
@@ -89,7 +89,7 @@ if ($played_times !== null) { ?>
         }
     } ?>
 <td class="cel_action">
-    <?php if (Access::check_function('download') && !empty($libitem->file)) { ?>
+    <?php if (Access::check_function('download') && !empty($libitem->getFile())) { ?>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episodeId; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
 } ?>

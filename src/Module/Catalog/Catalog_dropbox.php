@@ -28,6 +28,7 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -689,26 +690,28 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @param PlayableMediaInterface $media
+     * @return PlayableMediaInterface
      */
     public function prepare_media($media)
     {
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
+        $file    = $media->getFile();
+
         try {
             set_time_limit(0);
-            $meta = $dropbox->getMetadata($media->file);
+            $meta = $dropbox->getMetadata($file);
 
             $outfile = sys_get_temp_dir() . "/" . $meta->getName();
 
             // Download File
-            $this->download($dropbox, $media->file, null, $outfile);
-            $media->file = $outfile;
+            $this->download($dropbox, $file, null, $outfile);
+            $media->setFile($outfile);
             // Generate browser class for sending headers
             fclose($outfile);
         } catch (DropboxClientException $e) {
-            debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
+            debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $file, 5);
         }
 
         return $media;
@@ -752,17 +755,17 @@ class Catalog_dropbox extends Catalog
             $searches['artist'] = array();
             foreach ($songs as $song) {
                 if ($song->id) {
-                    $meta    = $dropbox->getMetadata($song->file);
+                    $meta    = $dropbox->getMetadata($song->getFile());
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                     // Download File
-                    $res = $this->download($dropbox, $song->file, 40960, $outfile);
+                    $res = $this->download($dropbox, $song->getFile(), 40960, $outfile);
                     if ($res) {
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($outfile, $song->id));
                         parent::gather_art([$song->id]);
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                        Dba::write($sql, array($song->file, $song->id));
+                        Dba::write($sql, array($song->getFile(), $song->id));
                         $search_count++;
                         if (Ui::check_ticker()) {
                             Ui::update_text('count_art_' . $this->id, $search_count);

@@ -378,7 +378,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             $songprops[T_('ReplayGain Album Gain')] = scrub_out($this->song->replaygain_album_gain);
         }
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
-            $songprops[T_('Filename')] = scrub_out($this->song->file) . " " . $this->song->f_size;
+            $songprops[T_('Filename')] = scrub_out($this->song->getFile()) . " " . $this->song->f_size;
         }
         if ($this->song->update_time) {
             $songprops[T_('Last Updated')] = get_datetime((int) $this->song->update_time);

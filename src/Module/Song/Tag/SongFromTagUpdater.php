@@ -33,9 +33,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -99,10 +97,10 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
     ): array {
         // info for the song table. This is all the primary file data that is song related
         $new_song       = new Song();
-        $new_song->file = $results['file'];
+        $new_song->setFile($results['file']);
         $new_song->year = (strlen((string)$results['year']) > 4) ? (int)substr($results['year'], -4,
             4) : (int)($results['year']);
-        $new_song->title   = Catalog::check_length(Catalog::check_title($results['title'], $new_song->file));
+        $new_song->title   = Catalog::check_length(Catalog::check_title($results['title'], $new_song->getFile()));
         $new_song->bitrate = $results['bitrate'];
         $new_song->rate    = $results['rate'];
         $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
@@ -277,7 +275,7 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
         $info = Song::compare_song_information($song, $new_song);
         if ($info['change']) {
-            debug_event(self::class, "$song->file : differences found, updating database", 4);
+            debug_event(self::class, $song->getFile() . " : differences found, updating database", 4);
 
             // Update song_data table
             Song::update_song($song->id, $new_song);
@@ -295,7 +293,7 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
             // Refine our reference
             //$song = $new_song;
         } else {
-            debug_event(self::class, "$song->file : no differences found", 5);
+            debug_event(self::class, $song->getFile() . " : no differences found", 5);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it

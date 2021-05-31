@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Batch;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -220,6 +221,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $media = $this->modelFactory->createSong((int) $element);
             }
             if ($media->isEnabled()) {
+                /** @var PlayableMediaInterface $media */
                 $media->format();
                 $total_size .= sprintf("%.2f", ($media->size / 1048576));
                 $dirname = '';
@@ -237,7 +239,7 @@ final class DefaultAction implements ApplicationActionInterface
                 if (!array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
-                array_push($media_files[$dirname], Core::conv_lc_file($media->file));
+                array_push($media_files[$dirname], Core::conv_lc_file($media->getFile()));
             }
         }
 

@@ -49,8 +49,8 @@ final class SongDeleter implements SongDeleterInterface
 
     public function delete(Song $song): bool
     {
-        if (file_exists($song->file)) {
-            $deleted = unlink($song->file);
+        if (file_exists($song->getFile())) {
+            $deleted = unlink($song->getFile());
         } else {
             $deleted = true;
         }
@@ -65,7 +65,7 @@ final class SongDeleter implements SongDeleterInterface
                 $this->useractivityRepository->collectGarbage('song', $songId);
             }
         } else {
-            debug_event(__CLASS__, 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);
+            debug_event(__CLASS__, 'Cannot delete ' . $song->getFile() . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

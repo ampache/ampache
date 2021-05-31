@@ -1306,7 +1306,7 @@ parameters:
 			path: src/Module/Api/Gui/Method/CatalogFileMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Method/CatalogFileMethod.php
 
@@ -1991,52 +1991,52 @@ parameters:
 			path: src/Module/Api/Gui/Output/ApiOutputInterface.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$album\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$album\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$artist\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$artist\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_album_full\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_album_full\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$mime\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$mime\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$tags\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$tags\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$track\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$track\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
@@ -2046,7 +2046,7 @@ parameters:
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
@@ -2481,62 +2481,62 @@ parameters:
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$album\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$album\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$artist\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$artist\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_album_full\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_album_full\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_genre\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_genre\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$genre\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$genre\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$mime\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$mime\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$tags\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$tags\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
 			count: 2
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$track\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$track\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
@@ -2556,7 +2556,7 @@ parameters:
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
@@ -3829,11 +3829,6 @@ parameters:
 			message: "#^Variable \\$response might not be defined\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\:\\:\\$mime\\.$#"
@@ -5360,7 +5355,17 @@ parameters:
 			path: src/Module/Application/Art/UploadArtAction.php
 
 		-
-			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
+			count: 1
+			path: src/Module/Application/Batch/DefaultAction.php
+
+		-
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Application/Batch/DefaultAction.php
+
+		-
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:get_parent\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
@@ -5370,13 +5375,8 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Cannot access property \\$size on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
 			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 3
+			count: 2
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
@@ -5386,11 +5386,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Cannot call method get_parent\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Module/Application/Batch/DefaultAction.php
 
@@ -5515,42 +5510,37 @@ parameters:
 			path: src/Module/Application/LostPassword/SendAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$bitrate\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$bitrate\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
 			count: 9
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$mime\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$mime\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$size\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
 			count: 6
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$time\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
 			count: 3
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$title\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$title\\.$#"
 			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$type\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$type\\.$#"
 			count: 3
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -5565,28 +5555,18 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:getFilename\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:getFilename\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:getFullArtistNameFormatted\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:run_custom_play_action\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:run_custom_play_action\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:delete_track\\(\\)\\.$#"
 			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -5607,6 +5587,11 @@ parameters:
 		-
 			message: "#^Cannot call method getCatalogId\\(\\) on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
 			count: 1
+			path: src/Module/Application/Playback/PlayAction.php
+
+		-
+			message: "#^Cannot call method getFile\\(\\) on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
+			count: 2
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
@@ -5670,7 +5655,7 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$song of method Ampache\\\\Module\\\\Plugin\\\\Adapter\\\\UserMediaPlaySaverAdapterInterface\\:\\:save\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Song, Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
+			message: "#^Parameter \\#2 \\$song of method Ampache\\\\Module\\\\Plugin\\\\Adapter\\\\UserMediaPlaySaverAdapterInterface\\:\\:save\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Song, Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -6525,11 +6510,6 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -7055,17 +7035,12 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$size\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$size\\.$#"
 			count: 2
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Song_Preview\\|Ampache\\\\Repository\\\\Model\\\\Video\\:\\:setFilename\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:setFilename\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
@@ -8575,7 +8550,7 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
 		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
@@ -8645,13 +8620,13 @@ parameters:
 			path: src/Module/Channel/ChannelRunner.php
 
 		-
-			message: "#^Cannot access property \\$file on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 4
+			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\|false\\|null\\.$#"
+			count: 1
 			path: src/Module/Channel/ChannelStreamer.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
-			count: 1
+			message: "#^Cannot call method getFile\\(\\) on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\|false\\|null\\.$#"
+			count: 4
 			path: src/Module/Channel/ChannelStreamer.php
 
 		-
@@ -8660,7 +8635,7 @@ parameters:
 			path: src/Module/Channel/ChannelStreamer.php
 
 		-
-			message: "#^Cannot call method get_stream_types\\(\\) on Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			message: "#^Cannot call method get_stream_types\\(\\) on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\|false\\|null\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelStreamer.php
 
@@ -8690,7 +8665,7 @@ parameters:
 			path: src/Module/Channel/ChannelStreamer.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Channel\\\\ChannelStreamer\\:\\:\\$media \\(Ampache\\\\Repository\\\\Model\\\\Song\\|null\\) does not accept Ampache\\\\Repository\\\\Model\\\\Media\\|null\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Channel\\\\ChannelStreamer\\:\\:\\$media \\(Ampache\\\\Repository\\\\Model\\\\Song\\|null\\) does not accept Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\|false\\|null\\.$#"
 			count: 1
 			path: src/Module/Channel/ChannelStreamer.php
 
@@ -11985,12 +11960,7 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$f_resolution\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$f_resolution\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -12105,12 +12075,22 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$time\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$time\\.$#"
+			message: "#^Cannot access offset 'custom_play_action' on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\.$#"
+			count: 2
+			path: src/Module/Playback/Stream_Playlist.php
+
+		-
+			message: "#^Cannot access offset 'object_id' on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\.$#"
+			count: 1
+			path: src/Module/Playback/Stream_Playlist.php
+
+		-
+			message: "#^Cannot access offset 'object_type' on Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
@@ -12170,11 +12150,6 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_url\\(\\) has parameter \\$media with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_to_urlarray\\(\\) has parameter \\$media with no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
@@ -12190,17 +12165,12 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$media\\)\\: Unexpected token \"\\$media\", expected type at offset 38$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$type\\)\\: Unexpected token \"\\$type\", expected type at offset 18$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Parameter \\#1 \\$object of static method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_object_to_url\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Media, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$object of static method Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:media_object_to_url\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
 
@@ -12710,83 +12680,13 @@ parameters:
 			path: src/Module/Song/SongSorter.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_find_home\\(\\) has parameter \\$base with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_find_home\\(\\) has parameter \\$sort_pattern with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_move_file\\(\\) has parameter \\$fullname with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_move_file\\(\\) has parameter \\$song with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_move_file\\(\\) has parameter \\$test_mode with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$base\\)\\: Unexpected token \"\\$base\", expected type at offset 271$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$fullname\\)\\: Unexpected token \"\\$fullname\", expected type at offset 623$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$song\\)\\: Unexpected token \"\\$song\", expected type at offset 603$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$sort_pattern\\)\\: Unexpected token \"\\$sort_pattern\", expected type at offset 243$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$test_mode\\)\\: Unexpected token \"\\$test_mode\", expected type at offset 647$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Song\\\\SongSorter\\:\\:sort_clean_name\\(\\) expects string, int given\\.$#"
 			count: 2
 			path: src/Module/Song/SongSorter.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|string given\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, array\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Part \\$sort_pattern \\(array\\|string\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
+			count: 2
 			path: src/Module/Song/SongSorter.php
 
 		-
@@ -18375,7 +18275,7 @@ parameters:
 			path: src/Module/WebDav/WebDavDirectory.php
 
 		-
-			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavFile constructor expects Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\database_object&Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
+			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavFile constructor expects Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\database_object&Ampache\\\\Repository\\\\Model\\\\Media given\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavDirectory.php
 
@@ -18395,7 +18295,7 @@ parameters:
 			path: src/Module/WebDav/WebDavFactoryInterface.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Media&Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFile.php
 
@@ -20151,7 +20051,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$rating of method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:set_rating\\(\\) expects string, int given\\.$#"
-			count: 7
+			count: 8
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
@@ -22100,6 +22000,11 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
 			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -22645,11 +22550,6 @@ parameters:
 			path: src/Repository/Model/Channel.php
 
 		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\Channel\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
-			count: 1
-			path: src/Repository/Model/Channel.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:display_art\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/ChannelInterface.php
@@ -22701,11 +22601,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$target\\)\\: Unexpected token \"\\$target\", expected type at offset 18$#"
-			count: 1
-			path: src/Repository/Model/ChannelInterface.php
-
-		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
 			count: 1
 			path: src/Repository/Model/ChannelInterface.php
 
@@ -23070,11 +22965,6 @@ parameters:
 			path: src/Repository/Model/Live_Stream.php
 
 		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
-			count: 2
-			path: src/Repository/Model/Live_Stream.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between array\\('id' \\=\\> int, 'name' \\=\\> string, 'site_url' \\=\\> string, 'url' \\=\\> string, 'genre' \\=\\> int, 'catalog' \\=\\> int, 'codec' \\=\\> string\\) and array\\(\\) will always evaluate to false\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
@@ -23086,11 +22976,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Media.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\) has parameter \\$player with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Media.php
 
@@ -23692,11 +23577,6 @@ parameters:
 		-
 			message: "#^Offset 'extension' does not exist on array\\('dirname' \\=\\> string, 'basename' \\=\\> string, 'filename' \\=\\> string, \\?'extension' \\=\\> string\\)\\.$#"
 			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
-			count: 2
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
@@ -24895,11 +24775,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#1 \\$str of function rawurlencode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -24981,11 +24856,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_song_previews\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_stream_types\\(\\) has parameter \\$player with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -26036,11 +25906,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$original$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#1 \\$player \\(string\\) of method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_stream_types\\(\\) should be compatible with parameter \\$player \\(array\\) of method Ampache\\\\Repository\\\\Model\\\\Media\\:\\:get_stream_types\\(\\)$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 

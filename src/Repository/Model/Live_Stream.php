@@ -268,8 +268,8 @@ final class Live_Stream extends database_object implements LiveStreamInterface
         $this->liveStreamRepository->update(
             $data['name'],
             $data['site_url'],
-            $data['ulr'],
-            strtolower((string)$data['codec']),
+            $data['url'],
+            strtolower((string) ($data['codec'] ?? '')),
             $this->getId()
         );
 

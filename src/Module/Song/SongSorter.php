@@ -73,18 +73,18 @@ final class SongSorter implements SongSorterInterface
                 $directory = $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
                 $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist);
                 if ($directory === false || $filename === false) {
-                    $fullpath = $song->file;
+                    $fullpath = $song->getFile();
                 } else {
-                    $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->getFile(), PATHINFO_EXTENSION);
                 }
 
                 /* We need to actually do the moving (fake it if we are testing)
                  * Don't try to move it, if it's already the same friggin thing!
                  */
-                if ($song->file != $fullpath && strlen($fullpath)) {
+                if ($song->getFile() != $fullpath && strlen($fullpath)) {
                     $interactor->info(T_("Examine File..."), true);
                     /* HINT: filename (File path) */
-                    $interactor->info(sprintf(T_('Source: %s'), $song->file), true);
+                    $interactor->info(sprintf(T_('Source: %s'), $song->getFile()), true);
                     /* HINT: filename (File path) */
                     $interactor->info(sprintf(T_('Destin: %s'), $fullpath));
                     flush();
@@ -99,8 +99,8 @@ final class SongSorter implements SongSorterInterface
      * takes into account various artists and the alphabet_prefix
      * @param Interactor $interactor
      * @param Song $song
-     * @param $sort_pattern
-     * @param $base
+     * @param string $sort_pattern
+     * @param string|null $base
      * @param string $various_artist
      * @return false|string
      */
@@ -175,7 +175,7 @@ final class SongSorter implements SongSorterInterface
      * This is run on every individual element of the search
      * Before it is put together, this removes / and \ and also
      * once I figure it out, it'll clean other stuff
-     * @param  string$string
+     * @param  string $string
      * @return string|string[]|null
      */
     public function sort_clean_name($string)
@@ -198,9 +198,9 @@ final class SongSorter implements SongSorterInterface
      * and unlink.. This is a little unsafe, and as such it verifies the copy
      * worked by doing a filesize() before unlinking.
      * @param Interactor $interactor
-     * @param $song
-     * @param $fullname
-     * @param $test_mode
+     * @param Song $song
+     * @param string $fullname
+     * @param bool $test_mode
      * @return bool
      */
     private function sort_move_file(
@@ -209,7 +209,7 @@ final class SongSorter implements SongSorterInterface
         $fullname,
         $test_mode
     ) {
-        $old_dir   = dirname($song->file);
+        $old_dir   = dirname($song->getFile());
         $info      = pathinfo($fullname);
         $directory = $info['dirname'];
         $file      = $info['basename'];
@@ -264,8 +264,8 @@ final class SongSorter implements SongSorterInterface
                 return false;
             }
 
-            $results = copy($song->file, $fullname);
-            debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
+            $results = copy($song->getFile(), $fullname);
+            debug_event('sort_files', 'Copied ' . $song->getFile() . ' to ' . $fullname, 4);
 
             /* Look for the folder art and copy that as well */
             if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
@@ -293,12 +293,12 @@ final class SongSorter implements SongSorterInterface
 
             /* Check the filesize */
             $new_sum = Core::get_filesize($fullname);
-            $old_sum = Core::get_filesize($song->file);
+            $old_sum = Core::get_filesize($song->getFile());
 
             if ($new_sum != $old_sum || $new_sum == 0) {
                 /* HINT: filename (File path) */
                 $interactor->info(
-                    sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),
+                    sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->getFile()),
                     true
                 );
 
@@ -306,11 +306,11 @@ final class SongSorter implements SongSorterInterface
             } // end if sum's don't match
 
             /* If we've made it this far it should be safe */
-            $results = unlink($song->file);
+            $results = unlink($song->getFile());
             if (!$results) {
                 /* HINT: filename (File path) */
                 $interactor->info(
-                    sprintf(T_('There was an error trying to delete "%s"'), $song->file),
+                    sprintf(T_('There was an error trying to delete "%s"'), $song->getFile()),
                     true
                 );
             }

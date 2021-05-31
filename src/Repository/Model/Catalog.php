@@ -251,8 +251,8 @@ abstract class Catalog extends database_object
     abstract public function get_rel_path($file_path);
 
     /**
-     * @param Song|Podcast_Episode|Song_Preview|Video $media
-     * @return Media|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      */
     abstract public function prepare_media($media);
 
@@ -1598,7 +1598,7 @@ abstract class Catalog extends database_object
      * update_media_from_tags
      * This is a 'wrapper' function calls the update function for the media
      * type in question
-     * @param Song|Video|Podcast_Episode $media
+     * @param PlayableMediaInterface $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
@@ -1636,18 +1636,18 @@ abstract class Catalog extends database_object
         $callable = $functions[$name];
 
         // try and get the tags from your file
-        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+        $extension    = strtolower(pathinfo($media->getFile(), PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
         // for files without tags try to update from their file name instead
         if ($media->id && in_array($extension, array('wav', 'shn'))) {
             debug_event(self::class, 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
             // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-            $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+            $patres  = vainfo::parse_pattern($media->getFile(), $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
             return $callable($results, $media);
         }
-        debug_event(self::class, 'Reading tags from ' . $media->file, 4);
+        debug_event(self::class, 'Reading tags from ' . $media->getFile(), 4);
 
         return $callable($results, $media);
     } // update_media_from_tags
@@ -1732,7 +1732,7 @@ abstract class Catalog extends database_object
 
     /**
      * get_media_tags
-     * @param Song|Video|Podcast_Episode $media
+     * @param PlayableMediaInterface $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
@@ -1747,7 +1747,7 @@ abstract class Catalog extends database_object
         }
 
         $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $media->file,
+            $media->getFile(),
             $gather_types,
             null,
             null,
@@ -1764,7 +1764,7 @@ abstract class Catalog extends database_object
 
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        return VaInfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        return VaInfo::clean_tag_info($vainfo->tags, $key, $media->getFile());
     }
 
     /**
@@ -2363,7 +2363,7 @@ abstract class Catalog extends database_object
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $song = new Song($results['id']);
                     $song->format();
-                    echo '"' . $song->id . '","' . $song->title . '","' . $song->getFullArtistNameFormatted() . '","' . $song->f_album_full . '","' . $song->getDurationFormatted() . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
+                    echo '"' . $song->id . '","' . $song->title . '","' . $song->getFullArtistNameFormatted() . '","' . $song->f_album_full . '","' . $song->getDurationFormatted() . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->getFile() . '"' . "\n";
                 }
                 break;
         } // end switch

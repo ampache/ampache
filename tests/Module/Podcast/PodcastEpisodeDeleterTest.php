@@ -62,18 +62,21 @@ class PodcastEpisodeDeleterTest extends MockeryTestCase
     public function testDeleteLogsError(): void
     {
         $podcastEpisodeId = 666;
-        $fileName         = 'some-file-name';
 
         $podcastEpisode = $this->mock(Podcast_Episode::class);
 
         $dir = vfsStream::setup();
 
-        $podcastEpisode->file = $dir->url() . '/foobar';
+        $fileName = $dir->url() . '/foobar';
 
         $podcastEpisode->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($podcastEpisodeId);
+        $podcastEpisode->shouldReceive('getFile')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($fileName);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DELETE_FROM_DISK)
@@ -88,7 +91,7 @@ class PodcastEpisodeDeleterTest extends MockeryTestCase
             ->once();
         $this->logger->shouldReceive('error')
             ->with(
-                sprintf('Cannot delete file %s', $podcastEpisode->file),
+                sprintf('Cannot delete file %s', $fileName),
                 [LegacyLogger::CONTEXT_TYPE => PodcastEpisodeDeleter::class]
             )
             ->once();
@@ -114,12 +117,14 @@ class PodcastEpisodeDeleterTest extends MockeryTestCase
         $file = vfsStream::newFile($fileName);
         $dir->addChild($file);
 
-        $podcastEpisode->file = $file->url();
-
         $podcastEpisode->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($podcastEpisodeId);
+        $podcastEpisode->shouldReceive('getFile')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($file->url());
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DELETE_FROM_DISK)

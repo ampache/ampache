@@ -127,7 +127,7 @@ final class ChannelStreamer implements ChannelStreamerInterface
                     if ($this->media != null) {
                         $this->media = $catalog->prepare_media($this->media);
 
-                        if (!$this->media->file || !Core::is_readable(Core::conv_lc_file($this->media->file))) {
+                        if (!$this->media->getFile() || !Core::is_readable(Core::conv_lc_file($this->media->getFile()))) {
                             $this->logger->warning(
                                 'Cannot read media ' . $this->media->id . ' file, skipped.',
                                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -137,13 +137,13 @@ final class ChannelStreamer implements ChannelStreamerInterface
                             $valid_types = $this->media->get_stream_types();
                             if (!in_array('transcode', $valid_types)) {
                                 $this->logger->warning(
-                                    'Missing settings to transcode ' . $this->media->file . ', skipped.',
+                                    'Missing settings to transcode ' . $this->media->getFile() . ', skipped.',
                                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                                 );
                                 $this->media = null;
                             } else {
                                 $this->logger->info(
-                                    'Now listening to ' . $this->media->file . '.',
+                                    'Now listening to ' . $this->media->getFile() . '.',
                                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                                 );
                             }

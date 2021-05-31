@@ -338,7 +338,7 @@ final class JsonOutput implements ApiOutputInterface
 
             $ourSong['disk']                  = (int) $song->disk;
             $ourSong['track']                 = (int) $song->track;
-            $ourSong['filename']              = $song->file;
+            $ourSong['filename']              = $song->getFile();
             $ourSong['genre']                 = $this->genre_array($song->tags);
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int)$song->time;

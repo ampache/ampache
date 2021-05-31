@@ -107,7 +107,7 @@ class Waveform
                                 $transcoder  = Stream::start_transcode($song, $transcode_to);
                                 $filepointer = $transcoder['handle'] ?? null;
                                 if ($filepointer === null || !is_resource($filepointer)) {
-                                    debug_event(self::class, "Failed to open " . $song->file . " for waveform.", 3);
+                                    debug_event(self::class, "Failed to open " . $song->getFile() . " for waveform.", 3);
 
                                     return null;
                                 }
@@ -135,7 +135,7 @@ class Waveform
                         }
                     } // Already wav file, no transcode required
                     else {
-                        $waveform = self::create_waveform($song->file);
+                        $waveform = self::create_waveform($song->getFile());
                     }
                 }
 

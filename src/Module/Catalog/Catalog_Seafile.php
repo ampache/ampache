@@ -29,6 +29,7 @@ use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -451,7 +452,7 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Media $media
+     * @param PlayableMediaInterface $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
@@ -461,7 +462,7 @@ class Catalog_Seafile extends Catalog
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         if ($this->seafile->prepare()) {
-            $fileinfo = $this->seafile->from_virtual_path($media->file);
+            $fileinfo = $this->seafile->from_virtual_path($media->getFile());
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
@@ -571,21 +572,21 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @param PlayableMediaInterface $media
+     * @return false|PlayableMediaInterface|null
      */
     public function prepare_media($media)
     {
         if ($this->seafile->prepare()) {
             set_time_limit(0);
 
-            $fileinfo = $this->seafile->from_virtual_path($media->file);
+            $fileinfo = $this->seafile->from_virtual_path($media->getFile());
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
             $tempfile = $this->seafile->download($file);
 
-            $media->file   = $tempfile;
+            $media->setFile($tempfile);
             $media->setFilename($fileinfo['filename']);
 
             // in case this didn't get set for some reason

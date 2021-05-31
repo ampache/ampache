@@ -464,7 +464,7 @@ final class PlayAction implements ApplicationActionInterface
 
             /* If the media is disabled */
             if ($media->isEnabled() === false) {
-                debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
+                debug_event('play/index', "Error: " . $media->getFile() . " is currently disabled, song skipped", 3);
                 // Check to see if this is a democratic playlist, if so remove it completely
                 if ($demo_id !== '' && isset($democratic)) {
                     $democratic->delete_from_oid($object_id, $type);
@@ -488,7 +488,7 @@ final class PlayAction implements ApplicationActionInterface
             if ($type == "song_preview") {
                 $media->stream();
             } else {
-                header('Location: ' . $media->file);
+                header('Location: ' . $media->getFile());
 
                 return null;
             }
@@ -503,7 +503,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         /* If we don't have a file, or the file is not readable */
-        if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
+        if (!$media->getFile() || !Core::is_readable(Core::conv_lc_file($media->getFile()))) {
             // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
             if (is_object($tmp_playlist)) {
                 $tmp_playlist->delete_track($object_id);
@@ -514,7 +514,7 @@ final class PlayAction implements ApplicationActionInterface
                 $democratic->delete_from_oid($object_id, $type);
             }
 
-            debug_event('play/index', "Media $media->file ($media->title) does not have a valid filename specified", 2);
+            debug_event('play/index', "Media " . $media->getFile() . " ($media->title) does not have a valid filename specified", 2);
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
 
             return null;
@@ -554,11 +554,11 @@ final class PlayAction implements ApplicationActionInterface
                 header(sprintf('%s: %s', $headerName, $value));
             }
 
-            $filepointer   = fopen(Core::conv_lc_file($media->file), 'rb');
+            $filepointer   = fopen(Core::conv_lc_file($media->getFile()), 'rb');
             $bytesStreamed = 0;
 
             if (!is_resource($filepointer)) {
-                debug_event('play/index', "Error: Unable to open $media->file for downloading", 2);
+                debug_event('play/index', "Error: Unable to open " . $media->getFile() . " for downloading", 2);
 
                 return null;
             }
@@ -608,7 +608,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
+        debug_event('play/index', $action . ' file (' . $media->getFile() . '}...', 5);
         debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
         $cpaction = $_REQUEST['custom_play_action'];
@@ -714,7 +714,7 @@ final class PlayAction implements ApplicationActionInterface
                 $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;
             } else {
-                $filepointer = fopen(Core::conv_lc_file($media->file), 'rb');
+                $filepointer = fopen(Core::conv_lc_file($media->getFile()), 'rb');
             }
         }
 
@@ -740,7 +740,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         if (!is_resource($filepointer)) {
-            debug_event('play/index', "Failed to open $media->file for streaming", 2);
+            debug_event('play/index', "Failed to open " . $media->getFile() . " for streaming", 2);
 
             return null;
         }

@@ -60,13 +60,15 @@ final class PodcastEpisodeDeleter implements PodcastEpisodeDeleterInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
+        $file = $podcastEpisode->getFile();
+
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DELETE_FROM_DISK) &&
-            !empty($podcastEpisode->file)
+            !empty($file)
         ) {
-            if (!@unlink($podcastEpisode->file)) {
+            if (!@unlink($file)) {
                 $this->logger->error(
-                    sprintf('Cannot delete file %s', $podcastEpisode->file),
+                    sprintf('Cannot delete file %s', $file),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }

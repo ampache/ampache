@@ -350,7 +350,7 @@ class Art extends database_object
                 $song   = new Song($song_id);
                 $song->format();
                 $description = ($this->type == 'artist') ? $song->getFullArtistNameFormatted() : $object->f_name;
-                $vainfo      = $utilityFactory->createVaInfo($song->file);
+                $vainfo      = $utilityFactory->createVaInfo($song->getFile());
 
                 $ndata      = array();
                 $data       = $vainfo->read_id3();

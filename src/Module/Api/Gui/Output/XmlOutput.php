@@ -314,7 +314,7 @@ final class XmlOutput implements ApiOutputInterface
                 "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n" .
                 "\t<track>" . $song->track . "</track>\n";
             $string .= $tag_string .
-                "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
+                "\t<filename><![CDATA[" . $song->getFile() . "]]></filename>\n" .
                 "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" .
                 "\t<time>" . $song->time . "</time>\n" .
                 "\t<year>" . $song->year . "</year>\n" .

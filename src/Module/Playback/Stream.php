@@ -28,6 +28,7 @@ namespace Ampache\Module\Playback;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -154,7 +155,7 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
-     * @param media $media
+     * @param PlayableMediaInterface $media
      * @param string $type
      * @param string $player
      * @param array $options
@@ -175,7 +176,7 @@ class Stream
             return null;
         }
         $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
-        $song_file = self::scrub_arg($media->file);
+        $song_file = self::scrub_arg($media->getFile());
 
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
@@ -293,7 +294,7 @@ class Stream
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
             $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
-                '%FILE%' => self::scrub_arg($media->file),
+                '%FILE%' => self::scrub_arg($media->getFile()),
                 '%TIME%' => $frame
             );
             foreach ($string_map as $search => $replace) {

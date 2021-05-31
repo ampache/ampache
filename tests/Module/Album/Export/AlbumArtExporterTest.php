@@ -156,7 +156,11 @@ class AlbumArtExporterTest extends MockeryTestCase
             ->andReturn('');
 
         $art->raw_mime = $raw_mime;
-        $song->file    = $file;
+
+        $song->shouldReceive('getFile')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($file);
 
         $this->subject->export(
             $interactor,
@@ -221,7 +225,11 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $art->raw_mime = $raw_mime;
         $art->raw      = $raw_art;
-        $song->file    = $file_name;
+
+        $song->shouldReceive('getFile')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($file_name);
 
         $metadataWriter->shouldReceive('write')
             ->with(

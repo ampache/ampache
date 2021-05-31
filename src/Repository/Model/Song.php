@@ -63,7 +63,7 @@ class Song extends database_object implements
     /**
      * @var string $file
      */
-    public $file;
+    private $file;
     /**
      * @var integer $album
      */
@@ -1877,7 +1877,7 @@ class Song extends database_object implements
                 $codec = $this->type;
             }
 
-            $run = str_replace("%f", $this->file, $action['run']);
+            $run = str_replace("%f", $this->getFile(), $action['run']);
             $run = str_replace("%c", $codec, $run);
             $run = str_replace("%a", $this->f_artist, $run);
             $run = str_replace("%A", $this->f_album, $run);
@@ -1996,6 +1996,16 @@ class Song extends database_object implements
     public function getCatalogId(): int
     {
         return (int) $this->catalog;
+    }
+
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    public function setFile(string $file): void
+    {
+        $this->file = $file;
     }
 
     /**

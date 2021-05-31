@@ -136,7 +136,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $data   = [];
         try {
-            $id3 = $this->getID3->analyze($media->file);
+            $id3 = $this->getID3->analyze($media->getFile());
         } catch (Exception $error) {
             $this->logger->error(
                 'getid3' . $error->getMessage(),
@@ -147,7 +147,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             $data[] = array(
-                $mtype => $media->file,
+                $mtype => $media->getFile(),
                 'raw' => $image['data'],
                 'mime' => $image['mime'],
                 'title' => 'ID3'
@@ -160,7 +160,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                 $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
                 if ($image['picturetypeid'] == $this_picturetypeid) {
                     $data[] = [
-                        $mtype => $media->file,
+                        $mtype => $media->getFile(),
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
                         'title' => 'ID3'
