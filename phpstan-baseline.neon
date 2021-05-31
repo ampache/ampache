@@ -5510,11 +5510,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:getFilename\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:run_custom_play_action\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
@@ -5621,6 +5616,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$song of method Ampache\\\\Module\\\\Plugin\\\\Adapter\\\\UserMediaPlaySaverAdapterInterface\\:\\:save\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Song, Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface given\\.$#"
+			count: 1
+			path: src/Module/Application/Playback/PlayAction.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -7007,11 +7007,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\VaInfoInterface\\:\\:\\$tags\\.$#"
 			count: 2
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:setFilename\\(\\)\\.$#"
-			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
@@ -18215,7 +18210,7 @@ parameters:
 			path: src/Module/WebDav/WebDavCatalog.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\|Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavDirectory.php
 
@@ -18235,12 +18230,7 @@ parameters:
 			path: src/Module/WebDav/WebDavDirectory.php
 
 		-
-			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavDirectory constructor expects Ampache\\\\Repository\\\\Model\\\\library_item, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavDirectory.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavFile constructor expects Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\database_object&Ampache\\\\Repository\\\\Model\\\\MediaInterface given\\.$#"
+			message: "#^Parameter \\#1 \\$libitem of class Ampache\\\\Module\\\\WebDav\\\\WebDavFile constructor expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\MediaInterface given\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavDirectory.php
 
@@ -18260,7 +18250,17 @@ parameters:
 			path: src/Module/WebDav/WebDavFactoryInterface.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\MediaFileInterface&Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Module/WebDav/WebDavFile.php
+
+		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$update_time\\.$#"
+			count: 1
+			path: src/Module/WebDav/WebDavFile.php
+
+		-
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFile.php
 
@@ -18275,7 +18275,12 @@ parameters:
 			path: src/Module/WebDav/WebDavFile.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\WebDav\\\\WebDavFile\\:\\:\\$libitem has no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavFile\\:\\:getName\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Module/WebDav/WebDavFile.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\WebDav\\\\WebDavFile\\:\\:getSize\\(\\) should return int but returns int\\|null\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFile.php
 

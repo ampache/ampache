@@ -47,7 +47,6 @@ use Ampache\Repository\Model\Metadata\Metadata;
 class Song extends database_object implements
     MediaInterface,
     library_item,
-    MediaFileInterface,
     PlayableMediaInterface
 {
     use Metadata;

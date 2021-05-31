@@ -25,7 +25,6 @@ interface TvShowEpisodeInterface extends
         MediaInterface,
         library_item,
         GarbageCollectibleInterface,
-        MediaFileInterface,
         PlayableMediaInterface
 {
     public function getSummary(): string;

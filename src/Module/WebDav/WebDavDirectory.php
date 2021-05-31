@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Sabre\DAV;
 
 /**
@@ -101,6 +102,7 @@ class WebDavDirectory extends DAV\Collection
      */
     public static function getChildFromArray($array)
     {
+        /** @var library_item|MediaInterface $libitem */
         $libitem = static::getModelFactory()->mapObjectType(
             $array['object_type'],
             (int) $array['object_id']

@@ -42,4 +42,11 @@ interface PlayableMediaInterface extends MediaInterface
     public function getSize(): ?int;
 
     public function setSize(int $value): void;
+
+    public function getFilename(): ?string;
+
+    /**
+     * Allows to set the filename (e.g. for external catalog types)
+     */
+    public function setFilename(string $filename): void;
 }

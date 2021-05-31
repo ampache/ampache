@@ -24,7 +24,6 @@ namespace Ampache\Repository\Model;
 interface PodcastEpisodeInterface extends
     MediaInterface,
     library_item,
-    MediaFileInterface,
     PlayableMediaInterface
 {
     public function getPodcast(): PodcastInterface;

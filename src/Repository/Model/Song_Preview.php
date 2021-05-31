@@ -462,6 +462,15 @@ class Song_Preview extends database_object implements
     {
     }
 
+    public function getFilename(): ?string
+    {
+        return null;
+    }
+
+    public function setFilename(string $filename): void
+    {
+    }
+
     /**
      * @deprecated Inject by constructor
      */

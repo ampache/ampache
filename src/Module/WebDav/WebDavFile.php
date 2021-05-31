@@ -24,10 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
-use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\MediaFileInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Sabre\DAV;
 
@@ -36,12 +34,9 @@ use Sabre\DAV;
  */
 class WebDavFile extends DAV\File
 {
-    private $libitem;
+    private PlayableMediaInterface $libitem;
 
-    /**
-     * @param MediaInterface&MediaFileInterface&PlayableMediaInterface $libitem
-     */
-    public function __construct(MediaInterface $libitem)
+    public function __construct(PlayableMediaInterface $libitem)
     {
         $this->libitem = $libitem;
         $this->libitem->format();

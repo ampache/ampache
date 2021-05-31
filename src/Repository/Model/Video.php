@@ -44,7 +44,6 @@ class Video extends database_object implements
     MediaInterface,
     library_item,
     GarbageCollectibleInterface,
-    MediaFileInterface,
     PlayableMediaInterface
 {
     protected const DB_TABLENAME = 'video';
