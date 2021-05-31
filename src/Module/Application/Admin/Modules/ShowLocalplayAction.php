@@ -20,16 +20,16 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +40,14 @@ final class ShowLocalplayAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -53,15 +57,15 @@ final class ShowLocalplayAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $controllers = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
-
         $this->ui->showBoxTop(T_('Localplay Controllers'), 'box box_localplay_controllers');
-
-        require_once Ui::find_template('show_localplay_controllers.inc.php');
-
+        $this->ui->show(
+            'show_localplay_controllers.inc.php',
+            [
+                'controllers' => array_keys(LocalPlayTypeEnum::TYPE_MAPPING),
+                'webPath' => $this->configContainer->getWebPath()
+            ]
+        );
         $this->ui->showBoxBottom();
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
