@@ -33,7 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;

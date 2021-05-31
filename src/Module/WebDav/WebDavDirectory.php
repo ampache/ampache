@@ -26,7 +26,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Sabre\DAV;
 
@@ -109,7 +109,7 @@ class WebDavDirectory extends DAV\Collection
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
-        if ($libitem instanceof Media) {
+        if ($libitem instanceof MediaInterface) {
             return new WebDavFile($libitem);
         } else {
             return new WebDavDirectory($libitem);

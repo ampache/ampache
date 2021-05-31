@@ -41,7 +41,7 @@ use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Video extends database_object implements
-    Media,
+    MediaInterface,
     library_item,
     GarbageCollectibleInterface,
     MediaFileInterface,
@@ -434,7 +434,6 @@ class Video extends database_object implements
      * @param string $player
      * @param boolean $local
      * @param integer|bool $uid
-     * @param boolean $original
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
@@ -618,7 +617,7 @@ class Video extends database_object implements
             "`display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, " .
             "`update_time` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $new_video->release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
+        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->getSize(), $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $new_video->release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
     }
 
     /**
@@ -1090,6 +1089,16 @@ class Video extends database_object implements
     public function setFile(string $file): void
     {
         $this->file = $file;
+    }
+
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $value): void
+    {
+        $this->size = $value;
     }
 
     /**

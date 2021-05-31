@@ -23,7 +23,7 @@
 // Don't show disabled medias to normal users
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -33,7 +33,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Media $libitem */
+/** @var MediaInterface $libitem */
 
 if ($libitem->isEnabled() || Access::check('interface', 50)) { ?>
 <td class="cel_play">

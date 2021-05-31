@@ -22,7 +22,7 @@
 namespace Ampache\Repository\Model;
 
 interface LiveStreamInterface extends
-    Media,
+    MediaInterface,
     library_item
 {
     public function getLink(): string;

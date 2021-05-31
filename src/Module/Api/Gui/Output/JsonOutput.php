@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
@@ -348,7 +348,7 @@ final class JsonOutput implements ApiOutputInterface
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $song->mime;
             $ourSong['url']                   = $song->play_url('', 'api', false, $userId);
-            $ourSong['size']                  = (int) $song->size;
+            $ourSong['size']                  = $song->getSize();
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->album_mbid;
             $ourSong['artist_mbid']           = $song->artist_mbid;
@@ -561,7 +561,7 @@ final class JsonOutput implements ApiOutputInterface
                 'title' => $video->title,
                 'mime' => $video->mime,
                 'resolution' => $video->f_resolution,
-                'size' => (int) $video->size,
+                'size' => $video->getSize(),
                 'genre' => $this->genre_array($video->tags),
                 'time' => (int) $video->time,
                 'url' => $video->play_url('', 'api', false, $userId),
@@ -1151,7 +1151,7 @@ final class JsonOutput implements ApiOutputInterface
         $result = [];
 
         foreach ($objectIds as $row_id => $data) {
-            /** @var Media&PlayableMediaInterface $song */
+            /** @var MediaInterface&PlayableMediaInterface $song */
             $song = $this->modelFactory->mapObjectType(
                 $data['object_type'],
                 (int) $data['object_id']
@@ -1171,7 +1171,7 @@ final class JsonOutput implements ApiOutputInterface
                 'time' => (int) $song->time,
                 'mime' => $song->mime,
                 'url' => $song->play_url('', 'api', false, $userId),
-                'size' => (int) $song->size,
+                'size' => $song->getSize(),
                 'art' => $art_url,
                 'preciserating' => ($rating->get_user_rating() ?: null),
                 'rating' => ($rating->get_user_rating() ?: null),

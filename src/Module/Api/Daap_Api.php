@@ -499,8 +499,8 @@ class Daap_Api
     }
 
     /**
-     * @param $songs
-     * @param $meta
+     * @param Song[] $songs
+     * @param array $meta
      * @return string
      */
     private static function tlv_songs($songs, $meta)
@@ -559,7 +559,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->rate);
                         break;
                     case 'daap.songsize':
-                        $output .= self::tlv($tag, $song->size);
+                        $output .= self::tlv($tag, $song->getSize());
                         break;
                     case 'daap.songtime':
                         $output .= self::tlv($tag, $song->time * 1000);

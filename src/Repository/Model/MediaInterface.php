@@ -30,7 +30,7 @@ namespace Ampache\Repository\Model;
  * work, this lists all required functions and the expected
  * input
  */
-interface Media
+interface MediaInterface
 {
     /**
      * get_stream_types

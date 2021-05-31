@@ -46,7 +46,7 @@ final class VideoFromTagUpdater implements VideoFromTagUpdaterInterface
         $new_video                = new Video();
         $new_video->setFile($results['file']);
         $new_video->title         = $results['title'];
-        $new_video->size          = $results['size'];
+        $new_video->setSize((int) $results['size']);
         $new_video->video_codec   = $results['video_codec'];
         $new_video->audio_codec   = $results['audio_codec'];
         $new_video->resolution_x  = $results['resolution_x'];

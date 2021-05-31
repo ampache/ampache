@@ -1727,7 +1727,7 @@ class Upnp_Api
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
-            'size' => $song->size,
+            'size' => $song->getSize(),
             'duration' => $song->getFullDurationFormatted() . '.0',
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
@@ -1820,7 +1820,7 @@ class Upnp_Api
 
             'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
-            'size' => $video->size,
+            'size' => $video->getSize(),
             'duration' => $video->getFullDurationFormatted() . '.0',
         );
     }
@@ -1867,7 +1867,7 @@ class Upnp_Api
         if (isset($arrFileType['mime'])) {
             $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
-            $ret['size']         = $episode->size;
+            $ret['size']         = $episode->getSize();
             $ret['duration']     = $episode->getFullDurationFormatted() . '.0';
         }
 

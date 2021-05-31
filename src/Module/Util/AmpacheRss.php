@@ -522,7 +522,7 @@ class AmpacheRss
                 $surl  = $media->play_url('', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string)$media->mime);
-                $xencl->addAttribute("length", (string)$media->size);
+                $xencl->addAttribute("length", (string)$media->getSize());
                 $xencl->addAttribute("url", $surl);
             }
         }

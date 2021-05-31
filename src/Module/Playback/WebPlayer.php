@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
@@ -105,7 +105,7 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array $urlinfo
-     * @return Media|null
+     * @return MediaInterface|null
      */
     public static function get_media_object($urlinfo)
     {

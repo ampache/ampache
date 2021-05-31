@@ -28,7 +28,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\PlayableMediaInterface;
@@ -86,8 +86,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      *
-     * @param Media&PlayableMediaInterface $media
-     * @return Media&PlayableMediaInterface
+     * @param MediaInterface&PlayableMediaInterface $media
+     * @return MediaInterface&PlayableMediaInterface
      */
     public function prepare_media($media)
     {

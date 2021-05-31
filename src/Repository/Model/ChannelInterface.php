@@ -21,7 +21,7 @@
 
 namespace Ampache\Repository\Model;
 
-interface ChannelInterface extends Media, library_item
+interface ChannelInterface extends MediaInterface, library_item
 {
     public function getId(): int;
 

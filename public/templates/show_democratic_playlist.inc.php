@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
@@ -89,7 +89,7 @@ $democratic = Democratic::get_current_playlist();
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        /** @var Media&PlayableMediaInterface $media */
+        /** @var MediaInterface&PlayableMediaInterface $media */
         $media = $modelFactory->mapObjectType(
             $item['object_type'],
             (int) $item['object_id']

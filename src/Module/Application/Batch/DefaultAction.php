@@ -223,7 +223,7 @@ final class DefaultAction implements ApplicationActionInterface
             if ($media->isEnabled()) {
                 /** @var PlayableMediaInterface $media */
                 $media->format();
-                $total_size .= sprintf("%.2f", ($media->size / 1048576));
+                $total_size .= sprintf("%.2f", ($media->getSize() / 1048576));
                 $dirname = '';
                 $parent  = $media->get_parent();
                 if ($parent != null) {

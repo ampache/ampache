@@ -343,11 +343,9 @@ final class Live_Stream extends database_object implements LiveStreamInterface
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param string $sid
-     * @param string $force_http
      * @return string
      */
-    public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = null, $local = false)
     {
         return $this->getUrl() . $additional_params;
     } // play_url

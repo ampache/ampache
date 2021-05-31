@@ -22,7 +22,7 @@
 namespace Ampache\Repository\Model;
 
 interface PodcastEpisodeInterface extends
-    Media,
+    MediaInterface,
     library_item,
     MediaFileInterface,
     PlayableMediaInterface

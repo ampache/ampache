@@ -33,7 +33,7 @@ use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 
 class Song_Preview extends database_object implements
-    Media,
+    MediaInterface,
     playable_item,
     PlayableMediaInterface
 {
@@ -451,6 +451,15 @@ class Song_Preview extends database_object implements
     public function setFile(string $file): void
     {
         $this->file = $file;
+    }
+
+    public function getSize(): ?int
+    {
+        return null;
+    }
+
+    public function setSize(int $value): void
+    {
     }
 
     /**

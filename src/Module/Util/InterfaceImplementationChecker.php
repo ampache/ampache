@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\playable_item;
 
 /**
@@ -79,6 +79,6 @@ final class InterfaceImplementationChecker
      */
     public static function is_media(string $instance): bool
     {
-        return self::is_class_typeof($instance, Media::class);
+        return self::is_class_typeof($instance, MediaInterface::class);
     }
 }

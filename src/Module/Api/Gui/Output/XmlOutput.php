@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Playlist;
@@ -323,7 +323,7 @@ final class XmlOutput implements ApiOutputInterface
                 "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
                 "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
                 "\t<url><![CDATA[" . $song->play_url('', 'api', false, $userId) . "]]></url>\n" .
-                "\t<size>" . $song->size . "</size>\n" .
+                "\t<size>" . $song->getSize() . "</size>\n" .
                 "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
                 "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" .
                 "\t<artist_mbid><![CDATA[" . $song->artist_mbid . "]]></artist_mbid>\n" .
@@ -496,7 +496,7 @@ final class XmlOutput implements ApiOutputInterface
                 "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
                 "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
                 "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
-                "\t<size>" . $video->size . "</size>\n" .
+                "\t<size>" . $video->getSize() . "</size>\n" .
                 $this->genre_string($video->tags) .
                 "\t<time><![CDATA[" . $video->time . "]]></time>\n" .
                 "\t<url><![CDATA[" . $video->play_url('', 'api', false, $userId) . "]]></url>\n" .
@@ -1107,7 +1107,7 @@ final class XmlOutput implements ApiOutputInterface
         $string     = '';
 
         foreach ($objectIds as $row_id => $data) {
-            /** @var Media&PlayableMediaInterface $song */
+            /** @var MediaInterface&PlayableMediaInterface $song */
             $song = $this->modelFactory->mapObjectType($data['object_type'], (int) $data['object_id']);
             $song->format();
 
@@ -1134,7 +1134,7 @@ final class XmlOutput implements ApiOutputInterface
                 "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
                 "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
                 "\t<url><![CDATA[" . $song->play_url('', 'api', false, $userId) . "]]></url>\n" .
-                "\t<size>" . $song->size . "</size>\n" .
+                "\t<size>" . $song->getSize() . "</size>\n" .
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t<preciserating>" . ($rating->get_user_rating($userId) ?: null) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating($userId) ?: null) . "</rating>\n" .

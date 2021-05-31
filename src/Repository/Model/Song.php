@@ -45,7 +45,7 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
 
 class Song extends database_object implements
-    Media,
+    MediaInterface,
     library_item,
     MediaFileInterface,
     PlayableMediaInterface
@@ -967,7 +967,7 @@ class Song extends database_object implements
             "`update_time` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist,
                                 $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
-                                (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
+                                $new_song->getSize(), (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
@@ -1342,7 +1342,7 @@ class Song extends database_object implements
         $this->f_track = (string)$this->track;
 
         // Format the size
-        $this->f_size = Ui::format_bytes($this->size);
+        $this->f_size = Ui::format_bytes($this->getSize());
 
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
@@ -2006,6 +2006,16 @@ class Song extends database_object implements
     public function setFile(string $file): void
     {
         $this->file = $file;
+    }
+
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $value): void
+    {
+        $this->size = $value;
     }
 
     /**

@@ -27,7 +27,7 @@ use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;

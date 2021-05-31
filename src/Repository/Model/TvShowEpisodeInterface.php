@@ -22,7 +22,7 @@
 namespace Ampache\Repository\Model;
 
 interface TvShowEpisodeInterface extends
-        Media,
+        MediaInterface,
         library_item,
         GarbageCollectibleInterface,
         MediaFileInterface,

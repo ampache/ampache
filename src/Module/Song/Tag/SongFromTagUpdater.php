@@ -104,7 +104,7 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         $new_song->bitrate = $results['bitrate'];
         $new_song->rate    = $results['rate'];
         $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size    = $results['size'];
+        $new_song->setSize((int) $results['size']);
         $new_song->time    = (strlen((string)$results['time']) > 5) ? (int)substr($results['time'], -5,
             5) : (int)($results['time']);
         if ($new_song->time < 0) {

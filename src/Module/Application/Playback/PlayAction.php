@@ -548,7 +548,7 @@ final class PlayAction implements ApplicationActionInterface
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->getFilename());
 
-            $headers = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
+            $headers = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->getSize());
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -736,7 +736,7 @@ final class PlayAction implements ApplicationActionInterface
                 $stream_size = ($media->time * $stream_rate * 1000) / 8;
             }
         } else {
-            $stream_size = $media->size;
+            $stream_size = $media->getSize();
         }
 
         if (!is_resource($filepointer)) {
@@ -757,9 +757,9 @@ final class PlayAction implements ApplicationActionInterface
         if ($range_values > 0 && ($start > 0 || $end > 0)) {
             // Calculate stream size from byte range
             if ($range_values >= 2) {
-                $end = min($end, $media->size - 1);
+                $end = min($end, $media->getSize() - 1);
             } else {
-                $end = $media->size - 1;
+                $end = $media->getSize() - 1;
             }
             $stream_size = ($end - $start) + 1;
 
@@ -767,10 +767,10 @@ final class PlayAction implements ApplicationActionInterface
                 debug_event('play/index', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
             } else {
                 if (!$transcode) {
-                    debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
+                    debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->getSize(), 5);
                     fseek($filepointer, $start);
 
-                    $range = $start . '-' . $end . '/' . $media->size;
+                    $range = $start . '-' . $end . '/' . $media->getSize();
                     header('HTTP/1.1 206 Partial Content');
                     header('Content-Range: bytes ' . $range);
                 }

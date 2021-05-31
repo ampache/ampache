@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Video;

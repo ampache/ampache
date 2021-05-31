@@ -1063,7 +1063,7 @@ class Subsonic_Xml_Data
         if (count($tags) > 0) {
             $xvideo->addAttribute('genre', (string)$tags[0]['name']);
         }
-        $xvideo->addAttribute('size', (string)$video->size);
+        $xvideo->addAttribute('size', (string)$video->getSize());
         $xvideo->addAttribute('suffix', (string)$video->type);
         $xvideo->addAttribute('contentType', (string)$video->mime);
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
@@ -1589,7 +1589,7 @@ class Subsonic_Xml_Data
 
         if ($episode->getFile()) {
             $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episodeId));
-            $xepisode->addAttribute('size', (string)$episode->size);
+            $xepisode->addAttribute('size', (string)$episode->getSize());
             $xepisode->addAttribute('suffix', (string)$episode->type);
             $xepisode->addAttribute('contentType', (string)$episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients

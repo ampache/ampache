@@ -209,7 +209,7 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
 
     public function getSizeFormatted(): string
     {
-        return Ui::format_bytes($this->size);
+        return Ui::format_bytes($this->getSize());
     }
 
     public function getCategory(): string
@@ -599,6 +599,16 @@ class Podcast_Episode extends database_object implements PodcastEpisodeInterface
     public function isEnabled(): bool
     {
         return $this->enabled;
+    }
+
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $value): void
+    {
+        $this->size = $value;
     }
 
     /**

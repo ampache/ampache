@@ -25,6 +25,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
@@ -117,11 +118,12 @@ class AmpacheStreamBandwidth
         // Calculate all media size
         $next_total = 0;
         foreach ($media_ids as $media_id) {
+            /** @var PlayableMediaInterface $media */
             $media = $modelFactory->mapObjectType(
                 $media_id['object_type'],
                 (int) $media_id['object_id']
             );
-            $next_total += $media->size;
+            $next_total += $media->getSize();
         }
 
         $graph         = new Graph();
