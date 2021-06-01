@@ -20,17 +20,16 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Label;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -49,36 +48,39 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LabelDeleterInterface $labelDeleter,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->labelDeleter    = $labelDeleter;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->labelDeleter         = $labelDeleter;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-
             return null;
         }
 
-        $label = $this->modelFactory->createLabel((int) ($request->getQueryParams()['label_id'] ?? 0));
-        if (!Catalog::can_remove($label)) {
+        $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
+
+        $label = $this->modelFactory->createLabel($labelId);
+
+        if ($this->mediaDeletionChecker->mayDelete($label, $gatekeeper->getUserId()) === false) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the label `%s`', $label->getId())
+                sprintf('Unauthorized to remove the label `%s`', $labelId)
             );
         }
 
+        $this->ui->showHeader();
         if ($this->labelDeleter->delete($label)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
@@ -92,7 +94,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             );
         }
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -5420,16 +5420,6 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$label of method Ampache\\\\Module\\\\Label\\\\Deletion\\\\LabelDeleterInterface\\:\\:delete\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Label, Ampache\\\\Repository\\\\Model\\\\LabelInterface given\\.$#"
-			count: 1
-			path: src/Module/Application/Label/ConfirmDeleteAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:can_remove\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\|Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\TvShow\\|Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\LabelInterface given\\.$#"
-			count: 1
-			path: src/Module/Application/Label/ConfirmDeleteAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$label of method Ampache\\\\Module\\\\Application\\\\Label\\\\ShowAction\\:\\:isEditable\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Label, Ampache\\\\Repository\\\\Model\\\\LabelInterface given\\.$#"
 			count: 1
 			path: src/Module/Application/Label/ShowAction.php
@@ -5918,26 +5908,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$var of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Test/ConfigAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\TvShowInterface\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/TvShow/ConfirmDeleteAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:can_remove\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\|Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\TvShow\\|Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\TvShowInterface given\\.$#"
-			count: 1
-			path: src/Module/Application/TvShow/ConfirmDeleteAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\TvShowSeasonInterface\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/TvShowSeason/ConfirmDeleteAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$libitem of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:can_remove\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\|Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\TvShow\\|Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\TvShowSeasonInterface given\\.$#"
-			count: 1
-			path: src/Module/Application/TvShowSeason/ConfirmDeleteAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"

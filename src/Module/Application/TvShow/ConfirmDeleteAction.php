@@ -20,18 +20,18 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\TvShow;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,14 +45,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,11 +65,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $tvshow = $this->modelFactory->createTvShow((int) $_REQUEST['tvshow_id']);
+        $tvShowId = (int) ($request->getQueryParams()['tvshow_id'] ?? 0);
 
-        if (!Catalog::can_remove($tvshow)) {
+        $tvshow = $this->modelFactory->createTvShow($tvShowId);
+
+        if ($this->mediaDeletionChecker->mayDelete($tvshow, $gatekeeper->getUserId()) === false) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the tvshow `%d`', $tvshow->id),
+                sprintf('Unauthorized to remove the tvshow `%d`', $tvShowId),
             );
         }
 

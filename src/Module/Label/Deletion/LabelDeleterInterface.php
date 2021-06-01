@@ -21,9 +21,9 @@
 
 namespace Ampache\Module\Label\Deletion;
 
-use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LabelInterface;
 
 interface LabelDeleterInterface
 {
-    public function delete(Label $label): bool;
+    public function delete(LabelInterface $label): bool;
 }

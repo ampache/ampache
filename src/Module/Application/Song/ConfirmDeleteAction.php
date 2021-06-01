@@ -20,19 +20,19 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,16 +48,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private SongDeleterInterface $songDeleter;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        SongDeleterInterface $songDeleter
+        SongDeleterInterface $songDeleter,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->songDeleter     = $songDeleter;
+        $this->configContainer      = $configContainer;
+        $this->ui                   = $ui;
+        $this->modelFactory         = $modelFactory;
+        $this->songDeleter          = $songDeleter;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(
@@ -69,10 +73,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return $response;
         }
 
-        $song = $this->modelFactory->createSong((int) $_REQUEST['song_id']);
-        if (!Catalog::can_remove($song)) {
+        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
+
+        $song = $this->modelFactory->createSong($songId);
+
+        if ($this->mediaDeletionChecker->mayDelete($song, $gatekeeper->getUserId()) === false) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the song `%s`', $song->id),
+                sprintf('Unauthorized to remove the song `%s`', $songId)
             );
         }
 
@@ -86,13 +93,11 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         } else {
             $this->ui->showConfirmation(
-                T_("There Was a Problem"),
-                T_("Couldn't delete this Song."),
+                T_('There Was a Problem'),
+                T_('Couldn\'t delete this Song.'),
                 $this->configContainer->getWebPath()
             );
         }
-
-        // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

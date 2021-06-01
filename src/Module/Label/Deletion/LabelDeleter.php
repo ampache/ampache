@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label\Deletion;
 
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LabelInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -50,7 +50,7 @@ final class LabelDeleter implements LabelDeleterInterface
     }
 
     public function delete(
-        Label $label
+        LabelInterface $label
     ): bool {
         $labelId = $label->getId();
 

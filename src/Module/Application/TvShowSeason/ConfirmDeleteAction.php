@@ -26,15 +26,14 @@ namespace Ampache\Module\Application\TvShowSeason;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -46,14 +45,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui                   = $ui;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,15 +65,17 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $tvshow_season = $this->modelFactory->createTvShowSeason((int) $_REQUEST['tvshow_season_id']);
-        if (!Catalog::can_remove($tvshow_season)) {
+        $tvshowSeasonId = (int) ($request->getQueryParams()['tvshow_season_id'] ?? 0);
+
+        $tvshow_season = $this->modelFactory->createTvShowSeason($tvshowSeasonId);
+
+        if ($this->mediaDeletionChecker->mayDelete($tvshow_season, $gatekeeper->getUserId()) === false) {
             throw new AccessDeniedException(
-                sprintf('Unauthorized to remove the tvshow `%s`', $tvshow_season->id),
+                sprintf('Unauthorized to remove the tvshow `%s`', $tvshowSeasonId),
             );
         }
 
         $this->ui->showHeader();
-
         if ($tvshow_season->remove()) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
@@ -84,7 +89,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             );
         }
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
