@@ -1996,8 +1996,6 @@ abstract class Catalog extends database_object
         if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
         }
-        // album might be created earlier with this track
-        self::updateAlbumTimes($song, $new_song);
 
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
@@ -2931,17 +2929,6 @@ abstract class Catalog extends database_object
         $params = array($new_object_id, $object_type, $old_object_id);
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * Updates create_modify for album times
-     * @param Song $song
-     * @param Song $new_song
-     */
-    protected static function updateAlbumTimes(Song $song, Song $new_song)
-    {
-        $sql = "UPDATE `album` SET `album`.`addition_time` = ? WHERE `album`.`id` = ? AND (`album`.`addition_time` = 0 OR `album`.`addition_time` > ?)";
-        Dba::write($sql, array((int)$song->addition_time, (int)$new_song->album, (int)$song->addition_time));
     }
 
     /**
