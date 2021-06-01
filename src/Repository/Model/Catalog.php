@@ -2423,14 +2423,18 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Updates create_modify for album times
-     * @param Song $song
-     * @param Song $new_song
+     * Migrate an object associated catalog to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
      */
-    protected static function updateAlbumTimes(Song $song, Song $new_song)
+    public static function migrate_map($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `album` SET `album`.`addition_time` = ? WHERE `album`.`id` = ? AND (`album`.`addition_time` = 0 OR `album`.`addition_time` > ?)";
-        Dba::write($sql, array((int)$song->addition_time, (int)$new_song->album, (int)$song->addition_time));
+        $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $params = array($new_object_id, $object_type, $old_object_id);
+
+        return Dba::write($sql, $params);
     }
 
     /**

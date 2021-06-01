@@ -721,7 +721,14 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $maxbitrate = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
+            $transcode_to = Song::get_transcode_settings_for_media(
+                (string) $media->getFileExtension(),
+                $transcode_to,
+                $player,
+                (string) $media->getFileExtension(),
+                $troptions
+            )['format'];
+            $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
                     $stream_size = ($media->time * $maxbitrate * 1000) / 8;
@@ -729,11 +736,15 @@ final class PlayAction implements ApplicationActionInterface
                     debug_event('play/index', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
                     $stream_size = null;
                 }
-            } else {
+            } elseif ($transcode_to == 'mp3') {
+                // mp3 seems to be the only codec that calculates properly
                 $stream_rate = ($maxbitrate < floor($media->bitrate / 1000))
                     ? $maxbitrate
                     : floor($media->bitrate / 1000);
                 $stream_size = ($media->time * $stream_rate * 1000) / 8;
+            } else {
+                $stream_size = null;
+                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $media->getSize();
