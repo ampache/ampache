@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 
 /**
@@ -41,14 +43,18 @@ final class PodcastGuiFactory implements PodcastGuiFactoryInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
         $this->modelFactory             = $modelFactory;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->configContainer          = $configContainer;
+        $this->mediaDeletionChecker     = $mediaDeletionChecker;
     }
 
     public function createPodcastViewAdapter(
@@ -62,11 +68,14 @@ final class PodcastGuiFactory implements PodcastGuiFactoryInterface
     }
 
     public function createPodcastEpisodeViewAdapter(
-        PodcastEpisodeInterface $podcastEpisode
+        PodcastEpisodeInterface $podcastEpisode,
+        User $user
     ): PodcastEpisodeViewAdapterInterface {
         return new PodcastEpisodeViewAdapter(
             $this->configContainer,
-            $podcastEpisode
+            $this->mediaDeletionChecker,
+            $podcastEpisode,
+            $user
         );
     }
 }

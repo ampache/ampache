@@ -23,11 +23,12 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -35,6 +36,10 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 
 /** @var Video $video */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 ?>
 <?php Ui::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
@@ -134,7 +139,7 @@ $subtitles = $video->get_subtitles();
             </a>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($video)) { ?>
+        <?php if ($mediaDeletionChecker->mayDelete($video, Core::get_global('user')->getId())) { ?>
             <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>

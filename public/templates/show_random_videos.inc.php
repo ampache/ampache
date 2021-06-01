@@ -24,7 +24,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;

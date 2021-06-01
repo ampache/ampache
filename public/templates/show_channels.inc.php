@@ -21,7 +21,6 @@
  */
 
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\ModelFactoryInterface;

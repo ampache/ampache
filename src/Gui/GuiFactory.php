@@ -41,6 +41,7 @@ use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
@@ -65,6 +66,8 @@ final class GuiFactory implements GuiFactoryInterface
 
     private CatalogLoaderInterface $catalogLoader;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
@@ -72,7 +75,8 @@ final class GuiFactory implements GuiFactoryInterface
         PlaylistLoaderInterface $playlistLoader,
         VideoRepositoryInterface $videoRepository,
         CatalogRepositoryInterface $catalogRepository,
-        CatalogLoaderInterface $catalogLoader
+        CatalogLoaderInterface $catalogLoader,
+        MediaDeletionCheckerInterface $mediaDeletionChecker
     ) {
         $this->configContainer          = $configContainer;
         $this->modelFactory             = $modelFactory;
@@ -81,6 +85,7 @@ final class GuiFactory implements GuiFactoryInterface
         $this->videoRepository          = $videoRepository;
         $this->catalogRepository        = $catalogRepository;
         $this->catalogLoader            = $catalogLoader;
+        $this->mediaDeletionChecker     = $mediaDeletionChecker;
     }
 
     public function createSongViewAdapter(
@@ -90,6 +95,7 @@ final class GuiFactory implements GuiFactoryInterface
         return new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->mediaDeletionChecker,
             $gatekeeper,
             $song
         );

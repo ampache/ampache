@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -34,6 +35,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
+
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -128,7 +134,7 @@ if (Art::is_enabled()) {
             </a>
     <?php
     }
-        if (Catalog::can_remove($libitem)) { ?>
+        if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) {?>
             <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>

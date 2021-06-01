@@ -39,7 +39,6 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Catalog\MediaDeletionChecker;
 use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
@@ -2435,34 +2434,6 @@ abstract class Catalog extends database_object
         $params = array($new_object_id, $object_type, $old_object_id);
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * @param Artist|Album|Song|Video|Podcast_Episode|TvShow|TVShow_Episode|Label|TVShow_Season $libitem
-     * @param integer|null $user_id
-     * @return boolean
-     *
-     * @deprecated
-     * @see MediaDeletionChecker
-     */
-    public static function can_remove($libitem, $user_id = null)
-    {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
-        }
-
-        if (!$user_id) {
-            return false;
-        }
-
-        if (!AmpConfig::get('delete_from_disk')) {
-            return false;
-        }
-
-        return (
-            Access::check('interface', 75) ||
-            ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove'))
-        );
     }
 
     /**

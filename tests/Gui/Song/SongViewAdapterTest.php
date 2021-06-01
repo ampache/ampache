@@ -27,6 +27,7 @@ namespace Ampache\Gui\Song;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -43,6 +44,9 @@ class SongViewAdapterTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var MockInterface|MediaDeletionCheckerInterface */
+    private MockInterface $mediaDeletionChecker;
+
     /** @var MockInterface|GuiGatekeeperInterface|null */
     private ?MockInterface $gatekeeper;
 
@@ -56,12 +60,14 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
         $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
         $this->song            = $this->mock(Song::class);
 
         $this->subject = new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->mediaDeletionChecker,
             $this->gatekeeper,
             $this->song
         );
@@ -510,6 +516,25 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->assertTrue(
             $this->subject->canBeReordered()
+        );
+    }
+
+    public function testCanBeDeletedReturnsValus(): void
+    {
+        $userId = 666;
+
+        $this->gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->mediaDeletionChecker->shouldReceive('mayDelete')
+            ->with($this->song, $userId)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canBeDeleted()
         );
     }
 }

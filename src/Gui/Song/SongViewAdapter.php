@@ -26,25 +26,27 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Userflag;
 
 final class SongViewAdapter implements SongViewAdapterInterface
 {
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
+
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
 
     private GuiGatekeeperInterface $gatekeeper;
 
@@ -53,13 +55,15 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
         GuiGatekeeperInterface $gatekeeper,
         Song $song
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->gatekeeper      = $gatekeeper;
-        $this->song            = $song;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->gatekeeper           = $gatekeeper;
+        $this->song                 = $song;
     }
 
     public function getId(): int
@@ -329,7 +333,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canBeDeleted(): bool
     {
-        return Catalog::can_remove($this->song);
+        return $this->mediaDeletionChecker->mayDelete($this->song, $this->gatekeeper->getUserId());
     }
 
     public function getProperties(): array

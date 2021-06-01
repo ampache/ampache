@@ -21,7 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -32,8 +33,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var PodcastEpisodeInterface $libitem */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
 $podcast   = $libitem->getPodcast();
 $episodeId = $libitem->getId();
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 ?>
 <td class="cel_play">
@@ -103,7 +108,7 @@ if ($played_times !== null) { ?>
     </a>
     <?php
     }
-    if (Catalog::can_remove($libitem)) { ?>
+    if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) { ?>
     <a id="<?php echo 'delete_podcast_episode_' . $episodeId ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episodeId; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>

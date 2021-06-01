@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -34,9 +35,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $libitem */
-// @deprecated
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
 global $dic;
-$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$gatekeeper           = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
+
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -110,7 +114,7 @@ if (Art::is_enabled()) {
         </a>
     <?php
     }
-        if (Catalog::can_remove($libitem)) { ?>
+        if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) {?>
         <a id="<?php echo 'delete_artist_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>

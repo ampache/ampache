@@ -25,9 +25,11 @@ namespace Ampache\Module\Podcast\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -35,6 +37,9 @@ class PodcastGuiFactoryTest extends MockeryTestCase
 {
     /** @var MockInterface|ModelFactoryInterface */
     private MockInterface $modelFactory;
+
+    /** @var MockInterface|MediaDeletionCheckerInterface */
+    private MockInterface $mediaDeletionChecker;
 
     /** @var MockInterface|PodcastEpisodeRepositoryInterface */
     private MockInterface $podcastEpisodeRepository;
@@ -47,13 +52,15 @@ class PodcastGuiFactoryTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->modelFactory             = $this->mock(ModelFactoryInterface::class);
+        $this->mediaDeletionChecker     = $this->mock(MediaDeletionCheckerInterface::class);
         $this->podcastEpisodeRepository = $this->mock(PodcastEpisodeRepositoryInterface::class);
         $this->configContainer          = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastGuiFactory(
             $this->modelFactory,
             $this->podcastEpisodeRepository,
-            $this->configContainer
+            $this->configContainer,
+            $this->mediaDeletionChecker
         );
     }
 
@@ -72,7 +79,8 @@ class PodcastGuiFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             PodcastEpisodeViewAdapter::class,
             $this->subject->createPodcastEpisodeViewAdapter(
-                $this->mock(PodcastEpisodeInterface::class)
+                $this->mock(PodcastEpisodeInterface::class),
+                $this->mock(User::class)
             )
         );
     }

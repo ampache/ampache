@@ -21,8 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\User;
@@ -37,9 +38,13 @@ use Ampache\Module\Util\Ui;
 /** @var int[] $object_ids */
 /** @var string $object_type */
 /** @var string $web_path */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
 
 $browse = new Browse();
 $browse->set_type($object_type);
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 Ui::show_box_top($tvshow->getNameFormatted(), 'info-box'); ?>
 <div class="item_right_info">
@@ -98,7 +103,7 @@ Ui::show_box_top($tvshow->getNameFormatted(), 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($tvshow)) { ?>
+        <?php if ($mediaDeletionChecker->mayDelete($tvshow, Core::get_global('user')->getId())) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo $web_path ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>

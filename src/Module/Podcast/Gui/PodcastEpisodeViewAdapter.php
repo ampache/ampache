@@ -28,9 +28,9 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -40,14 +40,22 @@ final class PodcastEpisodeViewAdapter implements PodcastEpisodeViewAdapterInterf
 {
     private ConfigContainerInterface $configContainer;
 
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
     private PodcastEpisodeInterface $podcastEpisode;
+
+    private User $user;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        PodcastEpisodeInterface $podcastEpisode
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        PodcastEpisodeInterface $podcastEpisode,
+        User $user
     ) {
-        $this->configContainer = $configContainer;
-        $this->podcastEpisode  = $podcastEpisode;
+        $this->configContainer      = $configContainer;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->podcastEpisode       = $podcastEpisode;
+        $this->user                 = $user;
     }
 
     public function isRealUser(): bool
@@ -199,7 +207,7 @@ final class PodcastEpisodeViewAdapter implements PodcastEpisodeViewAdapterInterf
 
     public function canDelete(): bool
     {
-        return Catalog::can_remove($this->podcastEpisode);
+        return $this->mediaDeletionChecker->mayDelete($this->podcastEpisode, $this->user->getId());
     }
 
     public function getDeletionIcon(): string

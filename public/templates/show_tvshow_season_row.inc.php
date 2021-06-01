@@ -21,8 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
@@ -33,6 +34,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var TVShow_Season $libitem */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 ?>
 <td class="cel_play">
@@ -82,7 +87,7 @@ use Ampache\Module\Util\Ui;
     </a>
     <?php
     }
-    if (Catalog::can_remove($libitem)) { ?>
+    if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) { ?>
     <a id="<?php echo 'delete_tvshow_season_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>

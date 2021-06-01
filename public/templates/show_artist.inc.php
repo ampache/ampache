@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -43,6 +43,10 @@ $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 /** @var Artist $artist */
 /** @var GuiGatekeeperInterface $gatekeeper */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->songs <= $directplay_limit);
@@ -237,7 +241,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($artist)) {
+        <?php if ($mediaDeletionChecker->mayDelete($artist, $gatekeeper->getUserId())) {
         $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">

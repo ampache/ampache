@@ -21,25 +21,30 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\Util\Ui;
 
 /** @var TVShow_Season $season */
 /** @var string $web_path */
 /** @var string $object_type */
 /** @var int[] $object_ids */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
 
 $browse = new Browse();
 $browse->set_type($object_type);
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 Ui::show_box_top($season->getNameFormatted() . ' - ' . $season->getTvShow()->getLinkFormatted(), 'info-box'); ?>
 <div class="item_right_info">
@@ -92,7 +97,8 @@ Ui::show_box_top($season->getNameFormatted() . ' - ' . $season->getTvShow()->get
         </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($season)) { ?>
+
+        <?php if ($mediaDeletionChecker->mayDelete($season, Core::get_global('user')->getId())) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>

@@ -25,7 +25,9 @@ namespace Ampache\Module\Podcast\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 
 class PodcastEpisodeViewAdapterTest extends MockeryTestCase
@@ -33,19 +35,29 @@ class PodcastEpisodeViewAdapterTest extends MockeryTestCase
     /** @var MockInterface|ConfigContainerInterface */
     private MockInterface $configContainer;
 
+    /** @var MockInterface|MediaDeletionCheckerInterface */
+    private MockInterface $mediaDeletionChecker;
+
     /** @var PodcastEpisodeInterface|MockInterface */
     private MockInterface $podcastEpisode;
+
+    /** @var MockInterface|User */
+    private MockInterface $user;
 
     private PodcastEpisodeViewAdapter $subject;
 
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->podcastEpisode  = $this->mock(PodcastEpisodeInterface::class);
+        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
+        $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
+        $this->podcastEpisode       = $this->mock(PodcastEpisodeInterface::class);
+        $this->user                 = $this->mock(User::class);
 
         $this->subject = new PodcastEpisodeViewAdapter(
             $this->configContainer,
-            $this->podcastEpisode
+            $this->mediaDeletionChecker,
+            $this->podcastEpisode,
+            $this->user
         );
     }
 
@@ -282,6 +294,25 @@ class PodcastEpisodeViewAdapterTest extends MockeryTestCase
                 strtoupper($mode)
             ),
             $this->subject->getBitrate()
+        );
+    }
+
+    public function testCanDeleteReturnsValue(): void
+    {
+        $userId = 666;
+
+        $this->user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->mediaDeletionChecker->shouldReceive('mayDelete')
+            ->with($this->podcastEpisode, $userId)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canDelete()
         );
     }
 }

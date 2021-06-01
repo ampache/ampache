@@ -24,6 +24,7 @@ namespace Ampache\Module\Podcast\Gui;
 
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\PodcastInterface;
+use Ampache\Repository\Model\User;
 
 /**
  * Creates podcast related gui views
@@ -35,6 +36,7 @@ interface PodcastGuiFactoryInterface
     ): PodcastViewAdapterInterface;
 
     public function createPodcastEpisodeViewAdapter(
-        PodcastEpisodeInterface $podcastEpisode
+        PodcastEpisodeInterface $podcastEpisode,
+        User $user
     ): PodcastEpisodeViewAdapterInterface;
 }

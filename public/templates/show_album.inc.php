@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -43,6 +43,10 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 /** @var AlbumRepositoryInterface $albumRepository */
 /** @var bool $isAlbumEditable */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 // Title for this album
 $title = scrub_out($album->f_name);
@@ -251,7 +255,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
         } ?>
-        <?php if (Catalog::can_remove($album)) {
+
+        <?php if ($mediaDeletionChecker->mayDelete($album, Core::get_global('user')->getId())) {
             $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">

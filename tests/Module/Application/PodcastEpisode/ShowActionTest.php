@@ -32,6 +32,7 @@ use Ampache\Module\Podcast\Gui\PodcastEpisodeViewAdapterInterface;
 use Ampache\Module\Podcast\Gui\PodcastGuiFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -79,10 +80,16 @@ class ShowActionTest extends MockeryTestCase
         $episode     = $this->mock(Podcast_Episode::class);
         $viewAdapter = $this->mock(PodcastEpisodeViewAdapterInterface::class);
         $talView     = $this->mock(TalViewInterface::class);
+        $user        = $this->mock(User::class);
 
         $podcastEpisodeId = 666;
         $result           = 'some-result';
         $webPath          = 'some-path';
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
@@ -95,7 +102,7 @@ class ShowActionTest extends MockeryTestCase
             ->andReturn($podcastEpisodeId);
 
         $this->podcastGuiFactory->shouldReceive('createPodcastEpisodeViewAdapter')
-            ->with($episode)
+            ->with($episode, $user)
             ->once()
             ->andReturn($viewAdapter);
 

@@ -12425,11 +12425,6 @@ parameters:
 			path: src/Module/Playlist/SearchType/VideoSearchType.php
 
 		-
-			message: "#^Parameter \\#1 \\$libitem of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:can_remove\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\|Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\TvShow\\|Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\|Ampache\\\\Repository\\\\Model\\\\Video, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface given\\.$#"
-			count: 1
-			path: src/Module/Podcast/Gui/PodcastEpisodeViewAdapter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Podcast\\\\Gui\\\\PodcastViewAdapter\\:\\:getEpisodeList\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Podcast/Gui/PodcastViewAdapter.php

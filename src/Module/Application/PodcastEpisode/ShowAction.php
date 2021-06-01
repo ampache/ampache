@@ -72,7 +72,10 @@ final class ShowAction implements ApplicationActionInterface
         echo $this->talFactory
             ->createTalView()
             ->setTemplate('podcast/podcast_episode.xhtml')
-            ->setContext('EPISODE', $this->podcastGuiFactory->createPodcastEpisodeViewAdapter($episode))
+            ->setContext(
+                'EPISODE',
+                $this->podcastGuiFactory->createPodcastEpisodeViewAdapter($episode, $gatekeeper->getUser())
+            )
             ->setContext('EPISODE_ID', $episode->getId())
             ->setContext('WEB_PATH', $this->configContainer->getWebPath())
             ->render();

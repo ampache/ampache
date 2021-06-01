@@ -21,15 +21,19 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Label;
 
 /** @var Label $libitem */
-?>
-<?php
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
+
 if (Art::is_enabled()) {
     $name = $libitem->getNameFormatted(); ?>
     <td class="<?php echo $cel_cover; ?>">
@@ -55,7 +59,7 @@ if (Art::is_enabled()) {
     </a>
     <?php
     }
-        if (Catalog::can_remove($libitem)) { ?>
+        if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) {?>
         <a id="<?php echo 'delete_label_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->getId() ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>

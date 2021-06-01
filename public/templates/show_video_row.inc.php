@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -36,9 +37,11 @@ use Ampache\Module\Util\Ui;
 
 /** @var VideoLoaderInterface $videoLoader */
 /** @var Video $libitem */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
 
 global $dic;
-$videoLoader = $dic->get(VideoLoaderInterface::class);
+$videoLoader          = $dic->get(VideoLoaderInterface::class);
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 if (!isset($video_type)) {
     $libitem = $videoLoader->load($libitem->getId());
@@ -139,7 +142,7 @@ if (Access::check_function('download')) { ?>
     </a>
 <?php
     }
-    if (Catalog::can_remove($libitem)) { ?>
+    if ($mediaDeletionChecker->mayDelete($libitem, Core::get_global('user')->getId())) { ?>
     <a id="<?php echo 'delete_video_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?> /video.php?action=delete&video_id=<?php echo $libitem->id ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')) ?>
     </a>

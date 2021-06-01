@@ -34,6 +34,7 @@ use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -51,6 +52,9 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
+
+    /** @var MockInterface|MediaDeletionCheckerInterface */
+    private MockInterface $mediaDeletionChecker;
 
     /** @var MockInterface|AjaxUriRetrieverInterface|null */
     private MockInterface $ajaxUriRetriever;
@@ -79,6 +83,7 @@ class GuiFactoryTest extends MockeryTestCase
         $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
         $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
         $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
+        $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
 
         $this->subject = new GuiFactory(
             $this->configContainer,
@@ -87,7 +92,8 @@ class GuiFactoryTest extends MockeryTestCase
             $this->playlistLoader,
             $this->videoRepository,
             $this->catalogRepository,
-            $this->catalogLoader
+            $this->catalogLoader,
+            $this->mediaDeletionChecker
         );
     }
 

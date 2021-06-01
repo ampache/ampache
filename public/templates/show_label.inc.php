@@ -21,8 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
@@ -33,9 +34,13 @@ use Ampache\Repository\Model\Label;
 /** @var string $object_type */
 /** @var int[] $object_ids */
 /** @var bool $isLabelEditable */
+/** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
 
 $browse = new Browse();
 $browse->set_type($object_type);
+
+global $dic;
+$mediaDeletionChecker = $dic->get(MediaDeletionCheckerInterface::class);
 
 $nameFormatted = $label->getNameFormatted();
 
@@ -96,7 +101,7 @@ if ($label->website) {
         </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($label)) { ?>
+        <?php if ($mediaDeletionChecker->mayDelete($label, Core::get_global('user')->getId())) {?>
         <li>
             <a id="<?php echo 'delete_label_' . $label->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->getId(); ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
