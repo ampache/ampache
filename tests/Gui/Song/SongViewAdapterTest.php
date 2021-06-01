@@ -58,11 +58,11 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
         $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
-        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
-        $this->song            = $this->mock(Song::class);
+        $this->gatekeeper           = $this->mock(GuiGatekeeperInterface::class);
+        $this->song                 = $this->mock(Song::class);
 
         $this->subject = new SongViewAdapter(
             $this->configContainer,

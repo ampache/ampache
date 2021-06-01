@@ -76,13 +76,13 @@ class GuiFactoryTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
-        $this->ajaxUriRetriever  = $this->mock(AjaxUriRetrieverInterface::class);
-        $this->playlistLoader    = $this->mock(PlaylistLoaderInterface::class);
-        $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
-        $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
-        $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
+        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
+        $this->ajaxUriRetriever     = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->playlistLoader       = $this->mock(PlaylistLoaderInterface::class);
+        $this->videoRepository      = $this->mock(VideoRepositoryInterface::class);
+        $this->catalogRepository    = $this->mock(CatalogRepositoryInterface::class);
+        $this->catalogLoader        = $this->mock(CatalogLoaderInterface::class);
         $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
 
         $this->subject = new GuiFactory(
