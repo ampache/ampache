@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Video;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
+use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
@@ -33,14 +37,22 @@ class VideoLoaderTest extends MockeryTestCase
 {
     private MockInterface $modelFactory;
 
+    private MockInterface $catalogRepository;
+
+    private MockInterface $catalogLoader;
+
     private VideoLoader $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
+        $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
 
         $this->subject = new VideoLoader(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->catalogRepository,
+            $this->catalogLoader
         );
     }
 
@@ -107,6 +119,50 @@ class VideoLoaderTest extends MockeryTestCase
         $this->assertSame(
             $result,
             $this->subject->load($videoId)
+        );
+    }
+
+    public function testLoadByCatalogsReturnsList(): void
+    {
+        $catalogId      = 666;
+        $wrongCatalogId = 42;
+        $videoId        = 33;
+
+        $catalog = $this->mock(Catalog::class);
+        $result  = $this->mock(database_object::class);
+
+        $this->catalogRepository->shouldReceive('getList')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([$catalogId, $wrongCatalogId]);
+
+        $this->catalogLoader->shouldReceive('byId')
+            ->with($catalogId)
+            ->once()
+            ->andReturn($catalog);
+        $this->catalogLoader->shouldReceive('byId')
+            ->with($wrongCatalogId)
+            ->once()
+            ->andThrow(new CatalogNotFoundException());
+
+        $catalog->shouldReceive('get_video_ids')
+            ->with('')
+            ->once()
+            ->andReturn([$videoId]);
+
+        $this->modelFactory->shouldReceive('mapObjectType')
+            ->with('tvshow_episode', $videoId)
+            ->once()
+            ->andReturn($result);
+
+        $result->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertSame(
+            [$result],
+            $this->subject->loadByCatalogs([], '')
         );
     }
 }

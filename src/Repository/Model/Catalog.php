@@ -909,31 +909,6 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param integer[]|null $catalogs
-     * @param string $type
-     * @return Video[]
-     */
-    public static function get_videos($catalogs = null, $type = '')
-    {
-        if (!$catalogs) {
-            $catalogs = static::getCatalogRepository()->getList();
-        }
-        $vidoeLoader = static::getVideoLoader();
-
-        $results = array();
-        foreach ($catalogs as $catalog_id) {
-            $catalog   = self::create_from_id($catalog_id);
-            $video_ids = $catalog->get_video_ids($type);
-            foreach ($video_ids as $video_id) {
-                $results[] = $vidoeLoader->load($video_id);
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     *
      * @param integer|null $catalog_id
      * @param string $type
      * @return integer

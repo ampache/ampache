@@ -32,4 +32,12 @@ interface VideoLoaderInterface
      * @return Video&library_item
      */
     public function load(int $videoId);
+
+    /**
+     * @param array<int> $catalogIds
+     * @param string $type
+     *
+     * @return array<Video>
+     */
+    public function loadByCatalogs(array $catalogIds = [], string $type = ''): array;
 }

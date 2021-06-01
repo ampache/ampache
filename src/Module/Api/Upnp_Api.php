@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Podcast\PodcastByCatalogLoaderInterface;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
@@ -1191,7 +1192,7 @@ class Upnp_Api
             case 'clips':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
-                        $videos                  = Catalog::get_videos(null, 'clip');
+                        $videos                  = static::getVideoLoader()->loadByCatalogs([], 'clip');
                         [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
@@ -1203,7 +1204,7 @@ class Upnp_Api
             case 'movies':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
-                        $videos                  = Catalog::get_videos(null, 'movie');
+                        $videos                  = static::getVideoLoader()->loadByCatalogs([], 'movie');
                         [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
@@ -1215,7 +1216,7 @@ class Upnp_Api
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
-                        $videos                  = Catalog::get_videos(null, 'personal_video');
+                        $videos                  = static::getVideoLoader()->loadByCatalogs([], 'personal_video');
                         [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
@@ -2025,5 +2026,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getVideoLoader(): VideoLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(VideoLoaderInterface::class);
     }
 }

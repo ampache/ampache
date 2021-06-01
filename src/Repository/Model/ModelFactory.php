@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\Playback\PlaybackFactoryInterface;
@@ -331,7 +332,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(ClipRepositoryInterface::class),
             $this,
             $this->dic->get(SongRepositoryInterface::class),
-            $this->dic->get(ClipCreatorInterface::class),
+            $this->dic->get(ArtistFinderInterface::class),
             $clipId
         );
     }

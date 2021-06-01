@@ -22010,11 +22010,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Cannot call method get_video_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Class Ampache\\\\Repository\\\\Model\\\\Label constructor invoked with 1 parameter, 3 required\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php

@@ -43,6 +43,7 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -624,7 +625,7 @@ class Subsonic_Api
     public static function getvideos($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getvideos');
-        $videos   = Catalog::get_videos();
+        $videos   = static::getVideoLoader()->loadByCatalogs();
         Subsonic_Xml_Data::addVideos($response, $videos);
         self::apiOutput($input, $response);
     }
@@ -2642,5 +2643,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getVideoLoader(): VideoLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(VideoLoaderInterface::class);
     }
 }

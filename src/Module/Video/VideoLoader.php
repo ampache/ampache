@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Video;
 
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
@@ -32,10 +35,18 @@ final class VideoLoader implements VideoLoaderInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
+    private CatalogLoaderInterface $catalogLoader;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        CatalogRepositoryInterface $catalogRepository,
+        CatalogLoaderInterface $catalogLoader
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory      = $modelFactory;
+        $this->catalogRepository = $catalogRepository;
+        $this->catalogLoader     = $catalogLoader;
     }
 
     /**
@@ -54,5 +65,34 @@ final class VideoLoader implements VideoLoaderInterface
         }
 
         return $this->modelFactory->createVideo($videoId);
+    }
+
+    /**
+     * @param array<int> $catalogIds
+     * @param string $type
+     *
+     * @return array<Video>
+     */
+    public function loadByCatalogs(array $catalogIds = [], string $type = ''): array
+    {
+        if (!$catalogIds) {
+            $catalogIds = $this->catalogRepository->getList();
+        }
+
+        $results = [];
+        foreach ($catalogIds as $catalogId) {
+            try {
+                $catalog  = $this->catalogLoader->byId($catalogId);
+            } catch (CatalogNotFoundException $e) {
+                continue;
+            }
+            $videoIds = $catalog->get_video_ids($type);
+
+            foreach ($videoIds as $videoId) {
+                $results[] = $this->load($videoId);
+            }
+        }
+
+        return $results;
     }
 }
