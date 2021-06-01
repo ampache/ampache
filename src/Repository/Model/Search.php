@@ -715,7 +715,7 @@ class Search extends playlist_object
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars);
-            $this->type_select('artistrating', T_('Rating (Artist)'), 'numeric', $this->stars);
+            $this->type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars);
         }
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
