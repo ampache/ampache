@@ -20,17 +20,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\System\Core;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +44,18 @@ final class DeleteAvatarAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->formVerificator = $formVerificator;
     }
 
     protected function handle(
@@ -62,14 +66,16 @@ final class DeleteAvatarAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_avatar')) {
+        if ($this->formVerificator->verify($request, 'delete_avatar') === false) {
             throw new AccessDeniedException();
         }
-        $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $client = $this->modelFactory->createUser(
+            (int) ($request->getQueryParams()['user_id'] ?? 0)
+        );
         $client->delete_avatar();
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Avatar has been deleted'),
