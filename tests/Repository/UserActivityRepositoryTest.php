@@ -214,12 +214,12 @@ class UserActivityRepositoryTest extends MockeryTestCase
                     ]
                 )
                 ->once();
-            $this->connection->shouldReceive('executeQuery')
-                ->with(
-                    'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
-                )
-                ->once();
         }
+        $this->connection->shouldReceive('executeQuery')
+            ->with(
+                'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
+            )
+            ->once();
 
         $this->subject->collectGarbage();
     }

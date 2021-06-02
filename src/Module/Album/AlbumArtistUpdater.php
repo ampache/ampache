@@ -56,7 +56,7 @@ final class AlbumArtistUpdater implements AlbumArtistUpdaterInterface
         }
         foreach ($results as $album_id) {
             $artists    = [];
-            $sql        = 'SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1';
+            $sql        = 'SELECT MIN(`artist`) FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1';
             $db_results = Dba::read($sql, array($album_id));
 
             // these are albums that only have 1 artist
@@ -64,16 +64,6 @@ final class AlbumArtistUpdater implements AlbumArtistUpdaterInterface
                 $artists[] = (int) $row['artist'];
             }
 
-            // if there isn't a distinct artist, sort by the count with another fall back to id order
-            if (empty($artists)) {
-                $sql        = 'SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist`, `id` ORDER BY COUNT(`id`) DESC, `id` ASC LIMIT 1';
-                $db_results = Dba::read($sql, array($album_id));
-
-                // these are album pick the artist by majority count
-                while ($row = Dba::fetch_assoc($db_results)) {
-                    $artists[] = (int) $row['artist'];
-                }
-            }
             // Update the album
             if (!empty($artists)) {
                 $this->logger->debug(

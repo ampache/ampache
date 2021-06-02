@@ -167,10 +167,11 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                         $type
                     ]
                 );
-                $this->connection->executeQuery(
-                    'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
-                );
             }
+            // accidental plays
+            $this->connection->executeQuery(
+                'DELETE FROM `user_activity` WHERE `object_type` IN (\'album\', \'artist\')'
+            );
         }
     }
 
