@@ -1721,7 +1721,7 @@ class Art extends database_object
     {
         $video = new Video($this->uid);
 
-        return $this->gather_media_tags($video);
+        return $this->gather_media_tags($video, 'video', array());
     }
 
     /**
@@ -1746,7 +1746,7 @@ class Art extends database_object
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $data = array_merge($data, $this->gather_media_tags($song));
+            $data = $this->gather_media_tags($song, $this->type, $data);
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
@@ -1766,8 +1766,7 @@ class Art extends database_object
     {
         // get song object directly from id, not by loop through album
         $song = new Song($this->uid);
-        $data = array();
-        $data = array_merge($data, $this->gather_media_tags($song));
+        $data = $this->gatherMediaTags($song, 'song', array());
 
         if ($limit && count($data) >= $limit) {
             return array_slice($data, 0, $limit);
@@ -1781,10 +1780,9 @@ class Art extends database_object
      * @param Song|Video $media
      * @return array
      */
-    protected function gather_media_tags($media)
+    protected function gather_media_tags($media, $art_type, $data)
     {
         $mtype  = strtolower(get_class($media));
-        $data   = array();
         $getID3 = new getID3();
         try {
             $id3 = $getID3->analyze($media->file);
@@ -1792,25 +1790,37 @@ class Art extends database_object
             debug_event(self::class, 'getid3' . $error->getMessage(), 1);
         }
 
+        // stop collecting dupes for each album/track
+        $raw_array = array();
+        foreach ($data as $image) {
+            $raw_array[] = $image['raw'];
+        }
+
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['mime'],
-                'title' => 'ID3');
+            if (!in_array($image['data'], $raw_array)) {
+                $data[] = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3 asf'
+                );
+            }
         }
 
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($this->type == 'artist') ? 8 : 3;
-                if ($image['picturetypeid'] == $this_picturetypeid) {
-                    $data[] = array(
+                if ($art_type == 'artist' && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    debug_event(self::class, 'Skipping picture id ' . $image['picturetypeid'] . ' for artist search', 5);
+                } elseif (isset($image['picturetypeid']) && !in_array($image['data'], $raw_array)) {
+                    $type   = self::getPictureType((int)$image['picturetypeid']);
+                    $data[] = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
-                        'title' => 'ID3');
+                        'title' => 'ID3 ' . $type
+                    ];
                 }
             }
         }
@@ -2177,5 +2187,59 @@ class Art extends database_object
         echo "</div>";
 
         return true;
+    }
+
+    /**
+     * Get the type of id3 picture being returned (https://exiftool.org/TagNames/ID3.html)
+     * @param integer $id3_type
+     * @return integer
+     */
+    public function getPictureType($id3_type)
+    {
+        switch ($id3_type) {
+            case 1:
+                return '32x32 PNG Icon';
+            case 2:
+                return 'Other Icon';
+            case 3:
+                return 'Front Cover';
+            case 4:
+                return 'Back Cover';
+            case 5:
+                return 'Leaflet';
+            case 6:
+                return 'Media';
+            case 7:
+                return 'Lead Artist';
+            case 8:
+                return 'Artist';
+            case 9:
+                return 'Conductor';
+            case 10:
+                return 'Band';
+            case 11:
+                return 'Composer';
+            case 12:
+                return 'Lyricist';
+            case 13:
+                return 'Recording Studio or Location';
+            case 14:
+                return 'Recording Session';
+            case 15:
+                return 'Performance';
+            case 16:
+                return 'Capture from Movie or Video';
+            case 17:
+                return 'Bright(ly) Colored Fish';
+            case 18:
+                return 'Illustration';
+            case 19:
+                return 'Band Logo';
+            case 20:
+                return 'Publisher Logo';
+            case 0:
+            default:
+                return 'Other';
+        }
     }
 } // end art.class
