@@ -2192,9 +2192,9 @@ class Art extends database_object
     /**
      * Get the type of id3 picture being returned (https://exiftool.org/TagNames/ID3.html)
      * @param integer $id3_type
-     * @return integer
+     * @return string
      */
-    public function getPictureType($id3_type)
+    public static function getPictureType($id3_type)
     {
         switch ($id3_type) {
             case 1:
