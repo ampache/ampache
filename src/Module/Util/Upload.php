@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use RuntimeException;

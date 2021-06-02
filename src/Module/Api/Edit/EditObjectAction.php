@@ -35,7 +35,6 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Wanted;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

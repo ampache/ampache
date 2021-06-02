@@ -31,7 +31,6 @@ use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Podcast\PodcastFeedLoaderInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Video\ClipCreatorInterface;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BroadcastRepositoryInteface;

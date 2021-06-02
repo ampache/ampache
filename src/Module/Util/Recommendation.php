@@ -29,7 +29,6 @@ use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;

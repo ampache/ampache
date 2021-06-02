@@ -26,7 +26,6 @@ namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\BroadcastRepositoryInteface;
-use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\BroadcastInterface;
 use Exception;

@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\MediaInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\PlayableMediaInterface;
 use Sabre\DAV;
 
 /**

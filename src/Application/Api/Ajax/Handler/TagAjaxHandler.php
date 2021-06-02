@@ -31,7 +31,6 @@ use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;

@@ -21,7 +21,6 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\BroadcastInterface;
 
 interface BroadcastRepositoryInteface

@@ -21,7 +21,6 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TvShowEpisodeInterface;
 
 interface TvShowEpisodeRepositoryInterface

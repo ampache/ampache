@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
 use Doctrine\DBAL\Connection;
 
 final class ClipRepository implements ClipRepositoryInterface

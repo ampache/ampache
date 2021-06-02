@@ -29,7 +29,6 @@ use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\DemocraticRepositoryInterface;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
 /**

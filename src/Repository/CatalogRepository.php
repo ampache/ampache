@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 final class CatalogRepository implements CatalogRepositoryInterface
 {

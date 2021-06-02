@@ -30,7 +30,6 @@ use Ampache\Module\Api\Gui\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\SubSonic;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;

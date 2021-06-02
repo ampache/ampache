@@ -24,7 +24,6 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;

@@ -27,7 +27,6 @@ namespace Ampache\Module\Channel;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\ChannelInterface;
 use RuntimeException;
 

@@ -21,7 +21,6 @@
 
 namespace Ampache\Module\Label;
 
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 

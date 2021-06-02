@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\FormVerificatorInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AccessRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,31 +46,34 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
     private AccessRepositoryInterface $accessRepository;
 
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        AccessRepositoryInterface $accessRepository
+        AccessRepositoryInterface $accessRepository,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->ui               = $ui;
         $this->configContainer  = $configContainer;
         $this->accessRepository = $accessRepository;
+        $this->formVerificator  = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            !Core::form_verify('delete_access')
+            $this->formVerificator->verify($request, 'delete_access') === false
         ) {
             throw new AccessDeniedException();
         }
-
-        $this->ui->showHeader();
 
         $this->accessRepository->delete(
             (int) $request->getQueryParams()['access_id'] ?? 0
         );
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your Access List entry has been removed'),

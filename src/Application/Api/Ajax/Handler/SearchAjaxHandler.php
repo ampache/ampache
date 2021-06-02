@@ -28,8 +28,6 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;

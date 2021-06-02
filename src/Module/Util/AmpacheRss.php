@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\library_item;
@@ -412,16 +411,6 @@ class AmpacheRss
 
         return $element['date'];
     } // pubdate_recently_played
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
 
     /**
      * @deprecated Inject by constructor

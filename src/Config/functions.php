@@ -31,7 +31,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\TVShow_Season;
 use Gettext\Translator;
 use Psr\Log\LoggerInterface;
 
@@ -129,17 +128,6 @@ function make_bool($string)
 
     return (bool) $string;
 } // make_bool
-
-/**
- * invert_bool
- * This returns the opposite of what you've got
- * @param $value
- * @return boolean
- */
-function invert_bool($value)
-{
-    return make_bool($value) ? false : true;
-} // invert_bool
 
 /**
  * get_languages
@@ -701,20 +689,13 @@ function catalog_worker($action, $catalogs = null, $options = null)
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST));
         }
-        sse_worker($sse_url);
+
+        echo '<script>';
+        echo "sse_worker('$sse_url');";
+        echo "</script>\n";
     } else {
         Catalog::process_action($action, $catalogs, $options);
     }
-}
-
-/**
- * @param string $url
- */
-function sse_worker($url)
-{
-    echo '<script>';
-    echo "sse_worker('$url');";
-    echo "</script>\n";
 }
 
 /**
@@ -1184,22 +1165,6 @@ function toggle_visible($element)
 } // toggle_visible
 
 /**
-<<<<<<< HEAD
-=======
- * display_notification
- * Show a javascript notification to the user
- * @param string $message
- * @param integer $timeout
- */
-function display_notification($message, $timeout = 5000)
-{
-    echo "<script>";
-    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
-    echo "</script>\n";
-}
-
-/**
->>>>>>> develop
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.

@@ -21,7 +21,6 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\PodcastInterface;
 
 interface PodcastRepositoryInterface
