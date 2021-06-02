@@ -103,6 +103,8 @@ class Useractivity extends database_object
             foreach ($types as $type) {
                 Dba::write("DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `$type` ON `$type`.`id` = `user_activity`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
             }
+            // accidental plays
+            Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';");
         }
     }
 

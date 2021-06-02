@@ -127,18 +127,29 @@ class AmpacheRatingMatch
      */
     public function save_rating($rating, $new_rating)
     {
-        if ($rating->type == 'song' && $new_rating >= $this->min_stars && $this->min_stars > 0) {
-            $song   = new Song($rating->id);
-            $artist = new Rating($song->artist, 'artist');
-            $album  = new Rating($song->album, 'album');
+        if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
+            if ($rating->type == 'song') {
+                $song   = new Song($rating->id);
+                $artist = new Rating($song->artist, 'artist');
+                $album  = new Rating($song->album, 'album');
 
-            $rating_artist = (int) $artist->get_user_rating($this->user_id);
-            $rating_album  = (int) $album->get_user_rating($this->user_id);
-            if ($rating_artist < $new_rating) {
-                $artist->set_rating($new_rating, $this->user_id);
+                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                $rating_album  = (int)$album->get_user_rating($this->user_id);
+                if ($rating_artist < $new_rating) {
+                    $artist->set_rating($new_rating, $this->user_id);
+                }
+                if ($rating_album < $new_rating) {
+                    $album->set_rating($new_rating, $this->user_id);
+                }
             }
-            if ($rating_album < $new_rating) {
-                $album->set_rating($new_rating, $this->user_id);
+            if ($rating->type == 'album') {
+                $album  = new Album($rating->id);
+                $artist = new Rating($album->album_artist, 'artist');
+
+                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                if ($rating_artist < $new_rating) {
+                    $artist->set_rating($new_rating, $this->user_id);
+                }
             }
         }
     }

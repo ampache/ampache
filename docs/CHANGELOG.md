@@ -2,8 +2,27 @@
 
 ## Ampache 4.4.3-develop
 
+### Added
+
+* Catalog::update_counts to manage catalog changes
+* Gather more art files from your tags
+* Allow RatingMatch plugin to rate Album->Artist (Originally Song->Album->Artist)
+
+### Changed
+
+* Calculate MP3 stream length on transcode to avoid cutting it off early
+
+### Removed
+
+* Don't apply an album artist when it isn't distinct
+
 ### Fixed
 
+* CVE-2021-32644
+* Identifying a distint album_artist query wasn't great
+* Don't return duplicate art while searching file tags
+* SQL query in random::advanced_sql was ambiguous
+* Filtering random and search page type element
 * NowPlaying stats would be overwritten when they didn't need to be
 * SubSonic:
   * getNowPlaying was unable to return playing media or the correct time
