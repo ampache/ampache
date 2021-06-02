@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Shout\ShoutParentObjectLoaderInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Repository\Model\Album;
@@ -375,9 +376,11 @@ class AmpacheRss
 
         $results = array();
 
+        $shoutParentObjectLoader = static::getShoutParentObjectLoader();
+
         foreach ($ids as $shoutid) {
             $shout  = static::getModelFactory()->createShoutbox($shoutid);
-            $object = Shoutbox::get_object($shout->getObjectType(), $shout->getObjectId());
+            $object = $shoutParentObjectLoader->load($shout->getObjectType(), $shout->getObjectId());
             if ($object !== null) {
                 $object->format();
                 $user = new User($shout->getUserId());
@@ -566,5 +569,15 @@ class AmpacheRss
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShoutParentObjectLoader(): ShoutParentObjectLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutParentObjectLoaderInterface::class);
     }
 }

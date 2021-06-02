@@ -1168,7 +1168,7 @@ function toggle_visible($element)
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.
- * @param $value
+ * @param mixed $value
  * @return string
  */
 function print_bool($value)

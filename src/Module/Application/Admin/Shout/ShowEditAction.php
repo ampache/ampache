@@ -20,19 +20,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Shout\ShoutParentObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,18 +40,18 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
     private ModelFactoryInterface $modelFactory;
+
+    private ShoutParentObjectLoaderInterface $shoutParentObjectLoader;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutParentObjectLoaderInterface $shoutParentObjectLoader
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui                      = $ui;
+        $this->modelFactory            = $modelFactory;
+        $this->shoutParentObjectLoader = $shoutParentObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,19 +60,24 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $shout = $this->modelFactory->createShoutbox(
             (int) ($request->getQueryParams()['shout_id'] ?? 0)
         );
-        $object = Shoutbox::get_object($shout->getObjectType(), $shout->getObjectId());
+        $object = $this->shoutParentObjectLoader->load($shout->getObjectType(), $shout->getObjectId());
         $object->format();
 
         $client = $this->modelFactory->createUser($shout->getUserId());
         $client->format();
 
-        require_once Ui::find_template('show_edit_shout.inc.php');
-
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_edit_shout.inc.php',
+            [
+                'client' => $client,
+                'object' => $object,
+                'shout' => $shout,
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

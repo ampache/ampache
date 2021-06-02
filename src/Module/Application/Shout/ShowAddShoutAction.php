@@ -24,14 +24,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
-use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Shout\ShoutParentObjectLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,18 +44,25 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
     private ShoutRepositoryInterface $shoutRepository;
 
+    private ShoutParentObjectLoaderInterface $shoutParentObjectLoader;
+
     public function __construct(
         UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository
+        ShoutRepositoryInterface $shoutRepository,
+        ShoutParentObjectLoaderInterface $shoutParentObjectLoader
     ) {
-        $this->ui              = $ui;
-        $this->shoutRepository = $shoutRepository;
+        $this->ui                      = $ui;
+        $this->shoutRepository         = $shoutRepository;
+        $this->shoutParentObjectLoader = $shoutParentObjectLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
+        $object = $this->shoutParentObjectLoader->load(
+            $_REQUEST['type'],
+            (int) Core::get_request('id')
+        );
 
         $this->ui->showHeader();
 

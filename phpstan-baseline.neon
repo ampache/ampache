@@ -296,11 +296,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function display_notification\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function get_datetime\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -331,11 +326,6 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^Function invert_bool\\(\\) has parameter \\$value with no typehint specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function is_rtl\\(\\) has parameter \\$locale with no typehint specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -362,11 +352,6 @@ parameters:
 
 		-
 			message: "#^Function pGraph_Yformat_bytes\\(\\) has parameter \\$value with no typehint specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function print_bool\\(\\) has parameter \\$value with no typehint specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -427,11 +412,6 @@ parameters:
 
 		-
 			message: "#^Function show_user_select\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Function sse_worker\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -531,17 +511,7 @@ parameters:
 			path: src/Config/functions.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$value\\)\\: Unexpected token \"\\$value\", expected type at offset 131$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$value\\)\\: Unexpected token \"\\$value\", expected type at offset 52$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$value\\)\\: Unexpected token \"\\$value\", expected type at offset 77$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -552,11 +522,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$dir_handle of function readdir expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: "#^Parameter \\#1 \\$str of function addslashes expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Config/functions.php
 
@@ -5215,7 +5180,7 @@ parameters:
 			path: src/Module/Application/Admin/Shout/EditShoutAction.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
+			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\library_item\\|null\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/Shout/ShowEditAction.php
 
@@ -5795,27 +5760,12 @@ parameters:
 			path: src/Module/Application/Share/ExternalShareAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_title\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$f_title\\.$#"
 			count: 1
 			path: src/Module/Application/Shout/ShowAddShoutAction.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Shout/ShowAddShoutAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Shout/ShowAddShoutAction.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Application/Shout/ShowAddShoutAction.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
 			count: 1
 			path: src/Module/Application/Shout/ShowAddShoutAction.php
 
@@ -12545,6 +12495,11 @@ parameters:
 			path: src/Module/Shout/ShoutCreatorInterface.php
 
 		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Module/Shout/ShoutParentObjectLoader.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Song/SongSorter.php
@@ -14140,17 +14095,7 @@ parameters:
 			path: src/Module/Util/AmpacheRss.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$link\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/AmpacheRss.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_fullname\\(\\)\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$link\\.$#"
 			count: 1
 			path: src/Module/Util/AmpacheRss.php
 
@@ -16950,17 +16895,12 @@ parameters:
 			path: src/Module/Util/SlideshowInterface.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$f_link\\.$#"
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$f_link\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
 		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -24275,27 +24215,12 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:getDbData\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:getTextFormatted\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:get_object\\(\\) should return object but returns Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Shoutbox.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Shoutbox\\:\\:get_object\\(\\) should return object but returns null\\.$#"
 			count: 1
 			path: src/Repository/Model/Shoutbox.php
 

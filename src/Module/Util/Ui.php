@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\Shout\ShoutParentObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Art;
@@ -1149,7 +1150,13 @@ class Ui implements UiInterface
         bool $details = true,
         bool $jsbuttons = false
     ): string {
-        $object = Shoutbox::get_object($shoutbox->getObjectType(), $shoutbox->getObjectId());
+        $object = static::getShoutParentObjectLoader()->load(
+            $shoutbox->getObjectType(),
+            $shoutbox->getObjectId()
+        );
+        if ($object === null) {
+            return '';
+        }
         $object->format();
 
         $img = '';
@@ -1261,5 +1268,15 @@ class Ui implements UiInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShoutParentObjectLoader(): ShoutParentObjectLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutParentObjectLoaderInterface::class);
     }
 }

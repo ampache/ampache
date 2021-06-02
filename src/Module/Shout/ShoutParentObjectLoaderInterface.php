@@ -17,16 +17,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Shout;
 
-use function DI\autowire;
+use Ampache\Repository\Model\library_item;
 
-return [
-    ShoutCreatorInterface::class => autowire(ShoutCreator::class),
-    ShoutParentObjectLoaderInterface::class => autowire(ShoutParentObjectLoader::class),
-];
+interface ShoutParentObjectLoaderInterface
+{
+    /**
+     * This takes a type and an ID and returns a created object
+     */
+    public function load(
+        string $type,
+        int $objectId
+    ): ?library_item;
+}

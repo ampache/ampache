@@ -24,11 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\ShoutRepositoryInterface;
 
 final class Shoutbox implements ShoutboxInterface
 {
+    private ShoutRepositoryInterface $shoutRepository;
+
     private int $id;
 
     /**
@@ -44,8 +45,6 @@ final class Shoutbox implements ShoutboxInterface
      * }
      */
     private ?array $dbData = null;
-
-    private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
@@ -93,7 +92,7 @@ final class Shoutbox implements ShoutboxInterface
 
     public function getObjectId(): int
     {
-        return (int) ($this->getDbData()['object_id'] ?? '');
+        return (int) ($this->getDbData()['object_id'] ?? 0);
     }
 
     public function getUserId(): int
@@ -121,35 +120,6 @@ final class Shoutbox implements ShoutboxInterface
         return (int) ($this->getDbData()['date'] ?? 0);
     }
 
-    /**
-     * get_object
-     * This takes a type and an ID and returns a created object
-     * @param string $type
-     * @param integer $object_id
-     * @return Object
-     */
-    public static function get_object($type, $object_id)
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return null;
-        }
-
-        $object = static::getModelFactory()->mapObjectType($type, (int) $object_id);
-
-        if ($object->id > 0) {
-            if (strtolower((string)$type) === 'song') {
-                /** @var Song $object */
-                if (!$object->isEnabled()) {
-                    $object = null;
-                }
-            }
-        } else {
-            $object = null;
-        }
-
-        return $object;
-    }
-
     public function getStickyFormatted(): string
     {
         return $this->getSticky() == 0 ? 'No' : 'Yes';
@@ -163,15 +133,5 @@ final class Shoutbox implements ShoutboxInterface
     public function getDateFormatted(): string
     {
         return get_datetime($this->getDate());
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getModelFactory(): ModelFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ModelFactoryInterface::class);
     }
 }
