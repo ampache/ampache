@@ -210,9 +210,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Get the type of id3 picture being returned (https://exiftool.org/TagNames/ID3.html)
      * @param int $id3_type
-     * @return int
+     * @return string
      */
-    public function getPictureType(int $id3_type)
+    public static function getPictureType(int $id3_type)
     {
         switch ($id3_type) {
             case 1:
