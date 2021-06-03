@@ -1,81 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Property Ampache\\\\Application\\\\Api\\\\Ajax\\\\AjaxApplication\\:\\:\\$dic has no typehint specified\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/AjaxApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 5
-			path: src/Application/Api/Ajax/Handler/BrowseAjaxHandler.php
-
-		-
-			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 3
-			path: src/Application/Api/Ajax/Handler/CatalogAjaxHandler.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 4
-			path: src/Application/Api/Ajax/Handler/CatalogAjaxHandler.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/CatalogAjaxHandler.php
-
-		-
-			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/DefaultAjaxHandler.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$accepted\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
-
-		-
-			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/PlaylistAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/RandomAjaxHandler.php
-
-		-
-			message: "#^Variable \\$songs might not be defined\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/RandomAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$shoutbox of static method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:getShoutboxDisplay\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Shoutbox, Ampache\\\\Repository\\\\Model\\\\ShoutboxInterface given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/SongAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
-
-		-
-			message: "#^Cannot call method get_user_owner\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/TagAjaxHandler.php
-
-		-
-			message: "#^Variable \\$results might not be defined\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/UserAjaxHandler.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
 			count: 1
 			path: src/Application/Api/Upnp/ControlReplyApplication.php
@@ -674,6 +599,76 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:\\$include_override has no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Api/Ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
+			count: 5
+			path: src/Module/Api/Ajax/Handler/BrowseAjaxHandler.php
+
+		-
+			message: "#^Cannot access property \\$enabled on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
+			count: 3
+			path: src/Module/Api/Ajax/Handler/CatalogAjaxHandler.php
+
+		-
+			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
+			count: 4
+			path: src/Module/Api/Ajax/Handler/CatalogAjaxHandler.php
+
+		-
+			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/CatalogAjaxHandler.php
+
+		-
+			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/DefaultAjaxHandler.php
+
+		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$accepted\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/IndexAjaxHandler.php
+
+		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/IndexAjaxHandler.php
+
+		-
+			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/PlaylistAjaxHandler.php
+
+		-
+			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/RandomAjaxHandler.php
+
+		-
+			message: "#^Variable \\$songs might not be defined\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/RandomAjaxHandler.php
+
+		-
+			message: "#^Parameter \\#1 \\$shoutbox of static method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:getShoutboxDisplay\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Shoutbox, Ampache\\\\Repository\\\\Model\\\\ShoutboxInterface given\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/SongAjaxHandler.php
+
+		-
+			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/StatsAjaxHandler.php
+
+		-
+			message: "#^Cannot call method get_user_owner\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/TagAjaxHandler.php
+
+		-
+			message: "#^Variable \\$results might not be defined\\.$#"
+			count: 1
+			path: src/Module/Api/Ajax/Handler/UserAjaxHandler.php
 
 		-
 			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\('Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', mixed\\) given\\.$#"

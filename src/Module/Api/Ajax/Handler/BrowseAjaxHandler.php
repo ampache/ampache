@@ -23,22 +23,24 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function debug_event;
+use function scrub_in;
+use function xoutput_from_array;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
     private ModelFactoryInterface $modelFactory;
-
-    private FunctionCheckerInterface $functionChecker;
 
     private LiveStreamRepositoryInterface $liveStreamRepository;
 
@@ -46,26 +48,18 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        FunctionCheckerInterface $functionChecker,
         LiveStreamRepositoryInterface $liveStreamRepository,
         ShareUiLinkRendererInterface $shareUiLinkRenderer
     ) {
         $this->modelFactory         = $modelFactory;
-        $this->functionChecker      = $functionChecker;
         $this->liveStreamRepository = $liveStreamRepository;
         $this->shareUiLinkRenderer  = $shareUiLinkRenderer;
     }
 
-    public function handle(): void
-    {
-        if (!Core::is_session_started()) {
-            session_start();
-        }
-
-        if (!defined('AJAX_INCLUDE')) {
-            return;
-        }
-
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         if (isset($_REQUEST['browse_id'])) {
             $browse_id = $_REQUEST['browse_id'];
         } else {

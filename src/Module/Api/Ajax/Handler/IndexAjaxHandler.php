@@ -23,7 +23,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
@@ -46,6 +46,11 @@ use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function debug_event;
+use function T_;
+use function xoutput_from_array;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
@@ -97,8 +102,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->channelFactory     = $channelFactory;
     }
 
-    public function handle(): void
-    {
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         $results = array();
         $action  = Core::get_request('action');
         $moment  = (int) AmpConfig::get('of_the_moment');

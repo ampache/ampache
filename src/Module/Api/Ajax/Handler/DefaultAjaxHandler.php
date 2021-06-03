@@ -23,7 +23,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
@@ -38,6 +38,9 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function xoutput_from_array;
 
 final class DefaultAjaxHandler implements AjaxHandlerInterface
 {
@@ -57,8 +60,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
         $this->modelFactory    = $modelFactory;
     }
 
-    public function handle(): void
-    {
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         $action = Core::get_request('action');
 
         // Switch on the actions

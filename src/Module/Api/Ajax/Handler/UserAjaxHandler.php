@@ -23,7 +23,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -31,6 +31,9 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function xoutput_from_array;
 
 final class UserAjaxHandler implements AjaxHandlerInterface
 {
@@ -46,8 +49,10 @@ final class UserAjaxHandler implements AjaxHandlerInterface
         $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
 
-    public function handle(): void
-    {
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         $user_id = (int) (Core::get_request('user_id'));
 
         // Switch on the actions

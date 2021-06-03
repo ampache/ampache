@@ -23,7 +23,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
@@ -31,6 +31,10 @@ use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function debug_event;
+use function xoutput_from_array;
 
 final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
@@ -54,8 +58,10 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
         $this->podcastRepository        = $podcastRepository;
     }
 
-    public function handle(): void
-    {
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'sync':

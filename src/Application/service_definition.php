@@ -25,23 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Application;
 
-use Ampache\Application\Api\Ajax\AjaxApplication;
-use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PlayerAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PlaylistAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PodcastAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\RandomAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\SearchAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\SongAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\StatsAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\StreamAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\TagAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Application\Api\Upnp\CmControlReplyApplication;
 use Ampache\Application\Api\Upnp\ControlReplyApplication;
 use Ampache\Application\Api\Upnp\EventReplyApplication;
@@ -60,21 +43,4 @@ return [
     ControlReplyApplication::class => autowire(ControlReplyApplication::class),
     EventReplyApplication::class => autowire(EventReplyApplication::class),
     MediaServiceDescriptionApplication::class => autowire(MediaServiceDescriptionApplication::class),
-    AjaxApplication::class => autowire(AjaxApplication::class),
-    BrowseAjaxHandler::class => autowire(BrowseAjaxHandler::class),
-    DefaultAjaxHandler::class => autowire(DefaultAjaxHandler::class),
-    CatalogAjaxHandler::class => autowire(CatalogAjaxHandler::class),
-    DemocraticPlaybackAjaxHandler::class => autowire(DemocraticPlaybackAjaxHandler::class),
-    IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
-    LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
-    PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
-    PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
-    PodcastAjaxHandler::class => autowire(PodcastAjaxHandler::class),
-    RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
-    SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
-    SongAjaxHandler::class => autowire(SongAjaxHandler::class),
-    StatsAjaxHandler::class => autowire(StatsAjaxHandler::class),
-    StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
-    TagAjaxHandler::class => autowire(TagAjaxHandler::class),
-    UserAjaxHandler::class => autowire(UserAjaxHandler::class),
 ];

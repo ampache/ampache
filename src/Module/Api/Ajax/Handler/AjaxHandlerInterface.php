@@ -23,9 +23,15 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface AjaxHandlerInterface
 {
-    public function handle(): void;
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void;
 }

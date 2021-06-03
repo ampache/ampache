@@ -1,8 +1,5 @@
 <?php
-
-declare(strict_types=0);
-
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -23,27 +20,33 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Application\Api\Ajax;
+declare(strict_types=0);
 
-use Ampache\Application\Api\Ajax\Handler\AjaxHandlerInterface;
-use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PlayerAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PlaylistAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\PodcastAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\RandomAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\SearchAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\SongAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\StatsAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\StreamAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\TagAjaxHandler;
-use Ampache\Application\Api\Ajax\Handler\UserAjaxHandler;
+namespace Ampache\Module\Api\Ajax;
+
+use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
+use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PodcastAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Application\ApplicationInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+use function debug_event;
+use function xoutput_headers;
 
 final class AjaxApplication implements ApplicationInterface
 {
@@ -65,7 +68,7 @@ final class AjaxApplication implements ApplicationInterface
         'user' => UserAjaxHandler::class,
     ];
 
-    private $dic;
+    private ContainerInterface $dic;
 
     public function __construct(
         ContainerInterface $dic
@@ -87,6 +90,9 @@ final class AjaxApplication implements ApplicationInterface
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);
 
-        $handler->handle();
+        $handler->handle(
+            $this->dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+            $this->dic->get(Psr17Factory::class)->createResponse()
+        );
     }
 }

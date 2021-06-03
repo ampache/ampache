@@ -24,6 +24,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Ajax\Handler\PodcastAjaxHandler;
+use Ampache\Module\Api\Ajax\AjaxApplication;
+use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
+use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -143,4 +160,21 @@ return [
     SubSonic\Method\DownloadPodcastEpisodeMethod::class => autowire(),
     SubSonic\Method\DeletePodcastEpisode::class => autowire(),
     SubSonic\Method\RefreshPodcastsMethod::class => autowire(),
+    AjaxApplication::class => autowire(AjaxApplication::class),
+    BrowseAjaxHandler::class => autowire(BrowseAjaxHandler::class),
+    DefaultAjaxHandler::class => autowire(DefaultAjaxHandler::class),
+    CatalogAjaxHandler::class => autowire(CatalogAjaxHandler::class),
+    DemocraticPlaybackAjaxHandler::class => autowire(DemocraticPlaybackAjaxHandler::class),
+    IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
+    LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
+    PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
+    PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
+    PodcastAjaxHandler::class => autowire(PodcastAjaxHandler::class),
+    RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
+    SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
+    SongAjaxHandler::class => autowire(SongAjaxHandler::class),
+    StatsAjaxHandler::class => autowire(StatsAjaxHandler::class),
+    StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
+    TagAjaxHandler::class => autowire(TagAjaxHandler::class),
+    UserAjaxHandler::class => autowire(UserAjaxHandler::class),
 ];

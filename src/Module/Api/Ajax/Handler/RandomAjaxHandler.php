@@ -23,7 +23,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Application\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
@@ -34,6 +34,9 @@ use Ampache\Repository\Model\Random;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use function xoutput_from_array;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
 {
@@ -49,8 +52,10 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
         $this->songRepository  = $songRepository;
     }
 
-    public function handle(): void
-    {
+    public function handle(
+        ServerRequestInterface $reqest,
+        ResponseInterface $response
+    ): void {
         $results = array();
         $action  = Core::get_request('action');
 
