@@ -22,6 +22,8 @@
 
 namespace Ampache\Module\Api\Gui\Method\Lib;
 
+use Ampache\Repository\Model\User;
+
 /**
  * Provides access to vital server informations
  */
@@ -32,5 +34,5 @@ interface ServerDetailsRetrieverInterface
      *
      * @return array<string, mixed>
      */
-    public function retrieve(string $token = ''): array;
+    public function retrieve(User $user, string $token = ''): array;
 }

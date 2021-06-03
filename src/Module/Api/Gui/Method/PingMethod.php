@@ -100,7 +100,7 @@ final class PingMethod implements MethodInterface
             $data = array_merge(
                 $data,
                 ['session_expire' => date('c', $gatekeeper->getSessionExpiryDate())],
-                $this->serverDetailsRetriever->retrieve()
+                $this->serverDetailsRetriever->retrieve($gatekeeper->getUser())
             );
         }
 

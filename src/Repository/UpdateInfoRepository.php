@@ -142,6 +142,24 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
     }
 
     /**
+     * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
+     *
+     * @return array<string, int>
+     */
+    public function getServerCounts(): array
+    {
+        $sql = "SELECT `key`, `value` FROM `update_info`;";
+
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[(string) $row['key']] = (int) $row['value'];
+        }
+
+        return $results;
+    }
+
+    /**
      * write the total_counts to update_info
      */
     private function setCount(string $tableName, int $value): void

@@ -45,4 +45,11 @@ interface UpdateInfoRepositoryInterface
      * This returns the date cron has finished.
      */
     public function getLastCronDate(): int;
+
+    /**
+     * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
+     *
+     * @return array<string, int>
+     */
+    public function getServerCounts(): array;
 }

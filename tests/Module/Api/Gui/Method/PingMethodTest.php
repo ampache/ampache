@@ -32,6 +32,7 @@ use Ampache\Module\Api\Gui\Method\Lib\ServerDetailsRetrieverInterface;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -80,6 +81,7 @@ class PingMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $stream     = $this->mock(StreamInterface::class);
+        $user       = $this->mock(User::class);
 
         $version           = '5.0.0';
         $serverVersion     = '1234';
@@ -109,9 +111,13 @@ class PingMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($sessionExpiryDate);
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->serverDetailsRetriever->shouldReceive('retrieve')
-            ->withNoArgs()
+            ->with($user)
             ->once()
             ->andReturn($serverDetails);
 

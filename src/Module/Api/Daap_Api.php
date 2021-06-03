@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 /**
  * DAAP Class
@@ -382,7 +383,7 @@ class Daap_Api
             $tlv = self::tlv('dmap.itemid', 1);
             $tlv .= self::tlv('dmap.persistentid', 1);
             $tlv .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_server();
+            $counts = static::getUpdateInfoRepository()->getServerCounts();
             $tlv .= self::tlv('dmap.itemcount', $counts['song']);
             $tlv .= self::tlv('dmap.containercount', count($playlistRepository->getPlaylists()));
             $tlv = self::tlv('dmap.listingitem', $tlv);
@@ -592,7 +593,7 @@ class Daap_Api
         $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
         $library .= self::tlv('dmap.itemname', 'Music');
         $library .= self::tlv('daap.baseplaylist', 1);
-        $counts = Catalog::count_server();
+        $counts = static::getUpdateInfoRepository()->getServerCounts();
         $library .= self::tlv('dmap.itemcount', $counts['song']);
 
         return self::tlv('dmap.listingitem', $library);
@@ -995,5 +996,15 @@ class Daap_Api
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUpdateInfoRepository(): UpdateInfoRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UpdateInfoRepositoryInterface::class);
     }
 }

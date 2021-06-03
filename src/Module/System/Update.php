@@ -238,6 +238,8 @@ class Update
 
         $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create catalog_map table and fill it with data";
         $version[]     = array('version' => '500004', 'description' => $update_string);
+        $update_string = "* Add song_count, artist_count to album";
+        $version[]     = array('version' => '500005', 'description' => $update_string);
 
         $update_string = "* Adds bitrate, rate and mode information to podcast_episode<br/ > ";
         $version[]     = array('version' => '510001', 'description' => $update_string);
@@ -1326,6 +1328,28 @@ class Update
         $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;";
         $retval &= Dba::write($sql);
         $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500005
+     *
+     * Add song_count, artist_count to album
+     */
+    public static function update_500005()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "ALTER TABLE `album` ADD `artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+        $retval &= Dba::write($sql);
+        $sql    = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`));";
         $retval &= Dba::write($sql);
 
         return $retval;

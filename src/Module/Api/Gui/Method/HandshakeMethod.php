@@ -132,7 +132,7 @@ final class HandshakeMethod implements MethodInterface
         return $response->withBody(
             $this->streamFactory->createStream(
                 $output->dict(
-                    $this->serverDetailsRetriever->retrieve($token)
+                    $this->serverDetailsRetriever->retrieve($user, $token)
                 )
             )
         );

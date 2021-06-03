@@ -110,6 +110,16 @@ interface AlbumRepositoryInterface
     public function getAlbumPlayCount(int $albumId): int;
 
     /**
+     * Get song count for an album disk by album id.
+     */
+    public function getSongCount(int $albumId): int;
+
+    /**
+     * Get distinct artist count for an album disk by album id.
+     */
+    public function getArtistCount(int $albumId): int;
+
+    /**
      * Get time for an album disk and set it.
      */
     public function updateTime(

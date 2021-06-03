@@ -24,8 +24,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Gui\Method\Lib;
 
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Gui\Api;
+use Ampache\Module\Preference\UserPreferenceRetrieverInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 /**
@@ -37,12 +40,16 @@ final class ServerDetailsRetriever implements ServerDetailsRetrieverInterface
 
     private UpdateInfoRepositoryInterface $updateInfoRepository;
 
+    private UserPreferenceRetrieverInterface $userPreferenceRetriever;
+
     public function __construct(
         CatalogRepositoryInterface $catalogRepository,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        UserPreferenceRetrieverInterface $userPreferenceRetriever
     ) {
-        $this->catalogRepository    = $catalogRepository;
-        $this->updateInfoRepository = $updateInfoRepository;
+        $this->catalogRepository       = $catalogRepository;
+        $this->updateInfoRepository    = $updateInfoRepository;
+        $this->userPreferenceRetriever = $userPreferenceRetriever;
     }
 
     /**
@@ -50,13 +57,19 @@ final class ServerDetailsRetriever implements ServerDetailsRetrieverInterface
      *
      * @return array<string, mixed>
      */
-    public function retrieve(string $token = ''): array
-    {
+    public function retrieve(
+        User $user,
+        string $token = ''
+    ): array {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $details = $this->catalogRepository->getLastActionDates();
 
         // Now we need to quickly get the totals
-        $counts = $this->updateInfoRepository->countServer(true);
+        $counts = $this->updateInfoRepository->getServerCounts();
+
+        $album_count = $this->userPreferenceRetriever->retrieve($user->getId(), ConfigurationKeyEnum::ALBUM_GROUP)
+            ? $counts['album_group']
+            : $counts['album'];
 
         $authResult = $token !== '' ? ['auth' => $token] : [];
 
@@ -67,10 +80,10 @@ final class ServerDetailsRetriever implements ServerDetailsRetrieverInterface
             'add' => date('c', (int) $details['add']),
             'clean' => date('c', (int) $details['clean']),
             'songs' => $counts['song'],
-            'albums' => $counts['album'],
+            'albums' => $album_count,
             'artists' => $counts['artist'],
             'genres' => $counts['tag'],
-            'playlists' => ($counts['playlist'] + $counts['search']),
+            'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
             'users' => $counts['user'],
             'catalogs' => $counts['catalog'],
             'videos' => $counts['video'],

@@ -65,7 +65,7 @@ final class IntermediateHttpAdapter extends AbstractHttpAdapter
         );
         foreach ($params as $name => $value) {
             $url .= ($i++ == 0) ? '?' : '&';
-            $url .= urlencode($name) . '=' . urlencode($value);
+            $url .= urlencode($name) . '=' . urlencode((string) $value);
         }
 
         $request = $this->requestFactory

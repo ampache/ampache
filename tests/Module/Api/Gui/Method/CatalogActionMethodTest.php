@@ -35,7 +35,6 @@ use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Module\Catalog\Process\CatalogProcessInterface;
 use Ampache\Module\Catalog\Process\CatalogProcessTypeMapperInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -52,9 +51,6 @@ class CatalogActionMethodTest extends MockeryTestCase
     /** @var CatalogLoaderInterface|MockInterface|null */
     private MockInterface $catalogLoader;
 
-    /** @var UpdateInfoRepositoryInterface|MockInterface|null */
-    private MockInterface $updateInfoRepository;
-
     private ?CatalogActionMethod $subject;
 
     public function setUp(): void
@@ -62,13 +58,11 @@ class CatalogActionMethodTest extends MockeryTestCase
         $this->streamFactory            = $this->mock(StreamFactoryInterface::class);
         $this->catalogProcessTypeMapper = $this->mock(CatalogProcessTypeMapperInterface::class);
         $this->catalogLoader            = $this->mock(CatalogLoaderInterface::class);
-        $this->updateInfoRepository     = $this->mock(UpdateInfoRepositoryInterface::class);
 
         $this->subject = new CatalogActionMethod(
             $this->streamFactory,
             $this->catalogProcessTypeMapper,
-            $this->catalogLoader,
-            $this->updateInfoRepository
+            $this->catalogLoader
         );
     }
 
@@ -205,10 +199,6 @@ class CatalogActionMethodTest extends MockeryTestCase
 
         $processType->shouldReceive('process')
             ->with($catalog)
-            ->once();
-
-        $this->updateInfoRepository->shouldReceive('countServer')
-            ->withNoArgs()
             ->once();
 
         $output->shouldReceive('success')

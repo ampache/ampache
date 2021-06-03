@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Module\Catalog\Process\CatalogProcessTypeMapperInterface;
-use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -47,18 +46,14 @@ final class CatalogActionMethod implements MethodInterface
 
     private CatalogLoaderInterface $catalogLoader;
 
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
     public function __construct(
         StreamFactoryInterface $streamFactory,
         CatalogProcessTypeMapperInterface $catalogProcessTypeMapper,
-        CatalogLoaderInterface $catalogLoader,
-        UpdateInfoRepositoryInterface $updateInfoRepository
+        CatalogLoaderInterface $catalogLoader
     ) {
         $this->streamFactory            = $streamFactory;
         $this->catalogProcessTypeMapper = $catalogProcessTypeMapper;
         $this->catalogLoader            = $catalogLoader;
-        $this->updateInfoRepository     = $updateInfoRepository;
     }
 
     /**
@@ -117,8 +112,6 @@ final class CatalogActionMethod implements MethodInterface
         define('API', true);
 
         $processType->process($catalog);
-
-        $this->updateInfoRepository->countServer();
 
         return $response->withBody(
             $this->streamFactory->createStream(

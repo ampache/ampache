@@ -13615,6 +13615,11 @@ parameters:
 			path: src/Module/System/Update.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500005\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_510001\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/System/Update.php
@@ -21910,11 +21915,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Class Ampache\\\\Repository\\\\Model\\\\Label constructor invoked with 1 parameter, 3 required\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:_update_item\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -21946,16 +21946,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:count_catalog\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:count_server\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:count_table\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22221,11 +22211,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$year\\)\\: Unexpected token \"\\$year\", expected type at offset 18$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$table$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

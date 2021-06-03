@@ -52,6 +52,7 @@ use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use DateTime;
 use DOMDocument;
 use Exception;
@@ -599,13 +600,13 @@ class Upnp_Api
             array_shift($pathreq);
         }
 
-        $meta = null;
+        $meta   = null;
+        $counts = static::getUpdateInfoRepository()->getServerCounts();
 
         switch ($pathreq[0]) {
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'artist');
                         $meta   = array(
                             'id' => $root . '/artists',
                             'parentID' => $root,
@@ -627,7 +628,6 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'album');
                         $meta   = array(
                             'id' => $root . '/albums',
                             'parentID' => $root,
@@ -649,7 +649,6 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'song');
                         $meta   = array(
                             'id' => $root . '/songs',
                             'parentID' => $root,
@@ -671,7 +670,6 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'playlist');
                         $meta   = array(
                             'id' => $root . '/playlists',
                             'parentID' => $root,
@@ -693,7 +691,6 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'smartplaylist');
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
@@ -715,7 +712,6 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'live_stream');
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
@@ -736,7 +732,6 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false, 'podcast');
                         $meta   = array(
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
@@ -813,6 +808,7 @@ class Upnp_Api
             array_shift($pathreq);
         }
         debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
+        $counts = static::getUpdateInfoRepository()->getServerCounts();
 
         $modelFactory = static::getModelFactory();
 
@@ -820,9 +816,8 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1: // Get artists list
-                        $artists                  = Catalog::get_artists(null, $count, $start);
-                        $counts                   = Catalog::count_server(false, 'artist');
-                        [$maxCount, $artists]     = array($counts['artist'], $artists);
+                        $artists              = Catalog::get_artists(null, $count, $start);
+                        [$maxCount, $artists] = array($counts['artist'], $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
@@ -831,8 +826,8 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = $modelFactory->createArtist((int) $pathreq[1]);
                         if ($artist->id) {
-                            $album_ids                  = static::getAlbumRepository()->getByArtist($artist->id);
-                            [$maxCount, $album_ids]     = self::_slice($album_ids, $start, $count);
+                            $album_ids              = static::getAlbumRepository()->getByArtist($artist->id);
+                            [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
                                 $album->format();
@@ -845,9 +840,8 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1: // Get albums list
-                        $album_ids                  = Catalog::get_albums($count, $start);
-                        $counts                     = Catalog::count_server(false, 'album');
-                        [$maxCount, $album_ids]     = array($counts['album'], $album_ids);
+                        $album_ids              = Catalog::get_albums($count, $start);
+                        [$maxCount, $album_ids] = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             $album->format();
@@ -873,9 +867,9 @@ class Upnp_Api
                     case 1: // Get songs list
                         $catalogs = static::getCatalogRepository()->getList();
                         foreach ($catalogs as $catalog_id) {
-                            $catalog                = Catalog::create_from_id($catalog_id);
-                            $songs                  = $catalog->get_songs();
-                            [$maxCount, $songs]     = self::_slice($songs, $start, $count);
+                            $catalog            = Catalog::create_from_id($catalog_id);
+                            $songs              = $catalog->get_songs();
+                            [$maxCount, $songs] = self::_slice($songs, $start, $count);
                             foreach ($songs as $song) {
                                 $song->format();
                                 $mediaItems[] = self::_itemSong($song, $parent);
@@ -887,8 +881,9 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
-                        $pl_ids                  = static::getPlaylistRepository();
-                        [$maxCount, $pl_ids]     = self::_slice($pl_ids, $start, $count);
+                        $pl_ids              = static::getPlaylistRepository();
+                        [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
+
                         foreach ($pl_ids as $pl_id) {
                             $playlist = new Playlist($pl_id);
                             $playlist->format();
@@ -898,8 +893,8 @@ class Upnp_Api
                     case 2: // Get playlist's songs list
                         $playlist = new Playlist($pathreq[1]);
                         if ($playlist->id) {
-                            $items                  = $playlist->get_items();
-                            [$maxCount, $items]     = self::_slice($items, $start, $count);
+                            $items              = $playlist->get_items();
+                            [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
                                 if ($item['object_type'] == 'song') {
                                     $song = new Song($item['object_id']);
@@ -914,8 +909,8 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
-                        $pl_ids                  = Search::get_searches();
-                        [$maxCount, $pl_ids]     = self::_slice($pl_ids, $start, $count);
+                        $pl_ids              = Search::get_searches();
+                        [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
                             $playlist = new Search($pl_id, 'song');
                             $playlist->format();
@@ -925,8 +920,8 @@ class Upnp_Api
                     case 2: // Get playlist's songs list
                         $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
-                            $items                  = $playlist->get_items();
-                            [$maxCount, $items]     = self::_slice($items, $start, $count);
+                            $items              = $playlist->get_items();
+                            [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
                                 if ($item['object_type'] == 'song') {
                                     $song = new Song($item['object_id']);
@@ -941,8 +936,8 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
-                        $radios                  = static::getLiveStreamRepository()->getAll();
-                        [$maxCount, $radios]     = self::_slice($radios, $start, $count);
+                        $radios              = static::getLiveStreamRepository()->getAll();
+                        [$maxCount, $radios] = self::_slice($radios, $start, $count);
                         foreach ($radios as $radio_id) {
                             $radio        = $modelFactory->createLiveStream($radio_id);
                             $mediaItems[] = self::_itemLiveStream($radio, $parent);
@@ -953,7 +948,8 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
-                        $podcasts              = static::getPodcastByCatalogLoader()->load();
+                        $podcasts = static::getPodcastByCatalogLoader()->load();
+
                         [$maxCount, $podcasts] = self::_slice($podcasts, $start, $count);
                         foreach ($podcasts as $podcast) {
                             $podcast->format();
@@ -966,6 +962,7 @@ class Upnp_Api
                             $podcastEpisodeRepository = static::getPodcastEpisodeRepository();
                             $episodes                 = $podcastEpisodeRepository->getEpisodeIds($podcast);
                             [$maxCount, $episodes]    = self::_slice($episodes, $start, $count);
+
                             foreach ($episodes as $episode_id) {
                                 $episode      = $podcastEpisodeRepository->findById($episode_id);
                                 $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
@@ -2034,5 +2031,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(VideoLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUpdateInfoRepository(): UpdateInfoRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UpdateInfoRepositoryInterface::class);
     }
 }

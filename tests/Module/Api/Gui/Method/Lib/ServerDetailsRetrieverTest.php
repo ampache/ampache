@@ -24,9 +24,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Gui\Method\Lib;
 
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Gui\Api;
+use Ampache\Module\Preference\UserPreferenceRetrieverInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -38,24 +41,31 @@ class ServerDetailsRetrieverTest extends MockeryTestCase
     /** @var UpdateInfoRepositoryInterface|MockInterface|null */
     private MockInterface $updateInfoRepository;
 
+    private MockInterface $userPreferenceRetriever;
+
     private ServerDetailsRetriever $subject;
 
     public function setUp(): void
     {
-        $this->catalogRepository    = $this->mock(CatalogRepositoryInterface::class);
-        $this->updateInfoRepository = $this->mock(UpdateInfoRepositoryInterface::class);
+        $this->catalogRepository       = $this->mock(CatalogRepositoryInterface::class);
+        $this->updateInfoRepository    = $this->mock(UpdateInfoRepositoryInterface::class);
+        $this->userPreferenceRetriever = $this->mock(UserPreferenceRetrieverInterface::class);
 
         $this->subject = new ServerDetailsRetriever(
             $this->catalogRepository,
-            $this->updateInfoRepository
+            $this->updateInfoRepository,
+            $this->userPreferenceRetriever
         );
     }
 
     public function testRetrieveReturnsData(): void
     {
+        $user = $this->mock(User::class);
+
         $lastUpdate = 11111;
         $lastAdd    = 22222;
         $lastClean  = 33333;
+        $userId     = 666;
 
         $token = 'some-token';
 
@@ -75,6 +85,11 @@ class ServerDetailsRetrieverTest extends MockeryTestCase
         $liveStreamCount      = 666;
         $labelCount           = 777;
 
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
         $this->catalogRepository->shouldReceive('getLastActionDates')
             ->withNoArgs()
             ->once()
@@ -84,8 +99,13 @@ class ServerDetailsRetrieverTest extends MockeryTestCase
                 'clean' => $lastClean
             ]);
 
-        $this->updateInfoRepository->shouldReceive('countServer')
-            ->with(true)
+        $this->userPreferenceRetriever->shouldReceive('retrieve')
+            ->with($userId, ConfigurationKeyEnum::ALBUM_GROUP)
+            ->once()
+            ->andReturn('');
+
+        $this->updateInfoRepository->shouldReceive('getServerCounts')
+            ->withNoArgs()
             ->once()
             ->andReturn([
                 'song' => $songCount,
@@ -127,7 +147,100 @@ class ServerDetailsRetrieverTest extends MockeryTestCase
                 'live_streams' => $liveStreamCount,
                 'labels' => $labelCount,
             ],
-            $this->subject->retrieve($token)
+            $this->subject->retrieve($user, $token)
+        );
+    }
+
+    public function testRetrieveReturnsDataForGroupedMode(): void
+    {
+        $user = $this->mock(User::class);
+
+        $lastUpdate = 11111;
+        $lastAdd    = 22222;
+        $lastClean  = 33333;
+        $userId     = 666;
+
+        $token = 'some-token';
+
+        $songCount            = 11;
+        $albumCount           = 22;
+        $artistCount          = 33;
+        $tagCount             = 44;
+        $playlistCount        = 55;
+        $searchCount          = 77;
+        $userCount            = 88;
+        $catalogCount         = 99;
+        $videoCount           = 111;
+        $podcastCount         = 222;
+        $podcastEpiscodeCount = 333;
+        $shareCount           = 444;
+        $licenseCount         = 555;
+        $liveStreamCount      = 666;
+        $labelCount           = 777;
+
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $this->catalogRepository->shouldReceive('getLastActionDates')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'update' => $lastUpdate,
+                'add' => $lastAdd,
+                'clean' => $lastClean
+            ]);
+
+        $this->userPreferenceRetriever->shouldReceive('retrieve')
+            ->with($userId, ConfigurationKeyEnum::ALBUM_GROUP)
+            ->once()
+            ->andReturn(1);
+
+        $this->updateInfoRepository->shouldReceive('getServerCounts')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'song' => $songCount,
+                'album_group' => $albumCount,
+                'artist' => $artistCount,
+                'tag' => $tagCount,
+                'playlist' => $playlistCount,
+                'search' => $searchCount,
+                'user' => $userCount,
+                'catalog' => $catalogCount,
+                'video' => $videoCount,
+                'podcast' => $podcastCount,
+                'podcast_episode' => $podcastEpiscodeCount,
+                'share' => $shareCount,
+                'license' => $licenseCount,
+                'live_stream' => $liveStreamCount,
+                'label' => $labelCount,
+            ]);
+
+        $this->assertSame(
+            [
+                'auth' => $token,
+                'api' => Api::$version,
+                'update' => date('c', $lastUpdate),
+                'add' => date('c', $lastAdd),
+                'clean' => date('c', $lastClean),
+                'songs' => $songCount,
+                'albums' => $albumCount,
+                'artists' => $artistCount,
+                'genres' => $tagCount,
+                'playlists' => $playlistCount + $searchCount,
+                'users' => $userCount,
+                'catalogs' => $catalogCount,
+                'videos' => $videoCount,
+                'podcasts' => $podcastCount,
+                'podcast_episodes' => $podcastEpiscodeCount,
+                'shares' => $shareCount,
+                'licenses' => $licenseCount,
+                'live_streams' => $liveStreamCount,
+                'labels' => $labelCount,
+            ],
+            $this->subject->retrieve($user, $token)
         );
     }
 }
