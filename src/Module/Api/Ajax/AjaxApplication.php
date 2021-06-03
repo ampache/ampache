@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Ajax;
 
+use Ampache\Application\ApplicationInterface;
+use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
@@ -33,7 +35,6 @@ use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\PodcastAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
@@ -41,7 +42,7 @@ use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
-use Ampache\Application\ApplicationInterface;
+use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -58,7 +59,9 @@ final class AjaxApplication implements ApplicationInterface
         'localplay' => LocalPlayAjaxHandler::class,
         'player' => PlayerAjaxHandler::class,
         'playlist' => PlaylistAjaxHandler::class,
-        'podcast' => PodcastAjaxHandler::class,
+        'podcast' => [
+            'sync' => Handler\Podcast\SyncAction::class,
+        ],
         'random' => RandomAjaxHandler::class,
         'search' => SearchAjaxHandler::class,
         'song' => SongAjaxHandler::class,
@@ -80,19 +83,43 @@ final class AjaxApplication implements ApplicationInterface
     {
         xoutput_headers();
 
-        $page = $_REQUEST['page'] ?? null;
+        $request = $this->dic->get(ServerRequestCreatorInterface::class)->fromGlobals();
+
+        $queryParams = $request->getQueryParams();
+
+        $page = $queryParams['page'] ?? null;
         if ($page) {
             debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
         }
 
+        $action = $queryParams['action'] ?? null;
+
         $handlerClassName = static::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
 
-        /** @var AjaxHandlerInterface $handler */
-        $handler = $this->dic->get($handlerClassName);
+        if (is_array($handlerClassName)) {
+            if (array_key_exists($action, $handlerClassName)) {
+                /** @var ActionInterface $handler */
+                $handler = $this->dic->get($handlerClassName[$action]);
 
-        $handler->handle(
-            $this->dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-            $this->dic->get(Psr17Factory::class)->createResponse()
-        );
+                $result = $handler->handle(
+                    $request,
+                    $this->dic->get(Psr17Factory::class)->createResponse(),
+                    Core::get_global('user')
+                );
+            } else {
+                $result = ['rfc3514' => '0x1'];
+            }
+
+            // We always do this
+            echo xoutput_from_array($result);
+        } else {
+            /** @var AjaxHandlerInterface $handler */
+            $handler = $this->dic->get($handlerClassName);
+
+            $handler->handle(
+                $request,
+                $this->dic->get(Psr17Factory::class)->createResponse()
+            );
+        }
     }
 }

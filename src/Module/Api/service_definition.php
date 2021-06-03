@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Api\Ajax\Handler\PodcastAjaxHandler;
 use Ampache\Module\Api\Ajax\AjaxApplication;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
@@ -169,7 +168,6 @@ return [
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
     PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
     PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
-    PodcastAjaxHandler::class => autowire(PodcastAjaxHandler::class),
     RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
     SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
     SongAjaxHandler::class => autowire(SongAjaxHandler::class),
@@ -177,4 +175,5 @@ return [
     StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
     TagAjaxHandler::class => autowire(TagAjaxHandler::class),
     UserAjaxHandler::class => autowire(UserAjaxHandler::class),
+    Ajax\Handler\Podcast\SyncAction::class => autowire(),
 ];
