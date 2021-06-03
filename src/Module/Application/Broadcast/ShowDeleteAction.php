@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Broadcast;
 
@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,19 +55,17 @@ final class ShowDeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $objectId = (int) ($request->getQueryParams()['id'] ?? 0);
+
         $this->ui->showHeader();
-
-        $object_id = Core::get_request('id');
-
-        $next_url = sprintf(
-            '%s/broadcast.php?action=delete&id=%s',
-            $this->configContainer->getWebPath(),
-            scrub_out($object_id)
-        );
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Broadcast will be deleted'),
-            $next_url,
+            sprintf(
+                '%s/broadcast.php?action=delete&id=%d',
+                $this->configContainer->getWebPath(),
+                $objectId
+            ),
             1,
             'delete_broadcast'
         );
