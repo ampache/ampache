@@ -302,9 +302,9 @@ class Album extends database_object implements library_item
         if (AmpConfig::get('album_group')) {
             $albumRepository         = $this->getAlbumRepository();
             $this->album_suite       = $albumRepository->getAlbumSuite($this);
+            $this->allow_group_disks = true;
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
-                $this->allow_group_disks = true;
                 $this->total_duration    = 0;
                 $this->object_cnt        = 0;
                 $this->song_count        = 0;
