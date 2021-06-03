@@ -440,7 +440,7 @@ abstract class Catalog extends database_object
     /**
      * Get catalog info from table.
      * @param integer $object_id
-     * @param string $table
+     * @param string $table_name
      * @return array
      */
     public function get_info($object_id, $table_name = 'catalog')
@@ -669,7 +669,7 @@ abstract class Catalog extends database_object
      */
     public static function get_stats($catalog_id = null)
     {
-        $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::count_server();
+        $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts();
         $counts         = array_merge(User::count(), $counts);
         $counts['tags'] = self::count_tags();
 
@@ -763,78 +763,23 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_server
+     * get_server_counts
      *
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     * @param boolean $enabled
-     * @param string $table
+     * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
      * @return array
      */
-    public static function count_server($enabled = false, $table = '')
+    public static function get_server_counts()
     {
-        // tables with media items to count, song-related tables and the rest
-        $media_tables = array('song', 'video', 'podcast_episode');
-        $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
-        if (!empty($table)) {
-            if (in_array($table, $media_tables)) {
-                $media_tables = array($table);
-                $song_tables  = array();
-                $list_tables  = array();
-            }
-            if (in_array($table, $song_tables)) {
-                $media_tables = array();
-                $song_tables  = array($table);
-                $list_tables  = array();
-            }
-            if (in_array($table, $list_tables)) {
-                $media_tables = array();
-                $song_tables  = array();
-                $list_tables  = array($table);
-            }
-        }
+        $sql = "SELECT `key`, `value` FROM `update_info`;";
 
-        $results = array();
-        $items   = '0';
-        $time    = '0';
-        $size    = '0';
-        foreach ($media_tables as $table) {
-            $enabled_sql = ($enabled && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
-            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
-            $db_results  = Dba::read($sql);
-            $data        = Dba::fetch_row($db_results);
-            // save the object and add to the current size
-            $results[$table] = $data[0];
-            $items += $data[0];
-            $time += $data[1];
-            $size += $data[2];
-            // write the total_counts as well
-            self::set_count($table, $data[0]);
-        }
-        // return the totals for all media tables
-        $results['items'] = $items;
-        $results['size']  = $size;
-        $results['time']  = $time;
-
-        foreach ($song_tables as $table) {
-            $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
-            $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
-            // save the object count
-            $results[$table] = $data[0];
-            // write the total_counts as well
-            self::set_count($table, $data[0]);
-        }
-
-        foreach ($list_tables as $table) {
-            $data = self::count_table($table);
-            // save the object count
-            $results[$table] = $data[0];
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['key']] = $row['value'];
         }
 
         return $results;
-    } // count_server
+    } // get_server_counts
 
     /**
      * count_table
@@ -2198,6 +2143,55 @@ abstract class Catalog extends database_object
         // album.total_count
         $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
+        // album.song_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        // album.artist_count
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+
+        // update server total counts
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        // tables with media items to count, song-related tables and the rest
+        $media_tables = array('song', 'video', 'podcast_episode');
+        $items        = 0;
+        $time         = 0;
+        $size         = 0;
+        foreach ($media_tables as $table) {
+            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
+            $db_results  = Dba::read($sql);
+            $data        = Dba::fetch_row($db_results);
+            // save the object and add to the current size
+            $items += $data[0];
+            $time += $data[1];
+            $size += $data[2];
+            self::set_count($table, $data[0]);
+        }
+        self::set_count('items', $data[0]);
+        self::set_count('size', $data[0]);
+        self::set_count('time', $data[0]);
+
+        $song_tables = array('artist', 'album');
+        foreach ($song_tables as $table) {
+            $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            self::set_count($table, $data[0]);
+        }
+        // grouped album counts
+        $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`);";
+        $db_results = Dba::read($sql);
+        $data       = Dba::fetch_row($db_results);
+        self::set_count('album_group', $data[0]);
+
+        $list_tables = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        foreach ($list_tables as $table) {
+            $sql        = "SELECT COUNT(`id`) FROM `$table`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            self::set_count($table, $data[0]);
+        }
     }
 
     /**

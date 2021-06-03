@@ -60,7 +60,7 @@ final class PingMethod
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details());
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details($input['auth']));
         }
 
         debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR'), 5);
