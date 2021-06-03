@@ -29,14 +29,6 @@ interface UpdateInfoRepositoryInterface
     public function updateCountByTableName(string $tableName): int;
 
     /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function countServer(bool $enabled = false, string $table = ''): array;
-
-    /**
      * Record when the cron has finished.
      */
     public function setLastCronDate(): void;
