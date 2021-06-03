@@ -59,14 +59,14 @@ final class FindArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $item        = $this->getItem($gatekeeper);
+        $queryParams = $request->getQueryParams();
 
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
+        $object_type = $queryParams['object_type'] ?? '';
+        $object_id   = (int) ($queryParams['object_id'] ?? 0);
 
-        $object_id = $item->id;
+        $item = $this->getItem($gatekeeper, $object_type, $object_id);
+
+        $object_id = $item->getId();
 
         $burl = '';
         if (filter_has_var(INPUT_GET, 'burl')) {

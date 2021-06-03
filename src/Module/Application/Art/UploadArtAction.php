@@ -51,17 +51,17 @@ final class UploadArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $queryParams = $request->getQueryParams();
+
+        $object_type = $queryParams['object_type'] ?? '';
+        $object_id   = (int) ($queryParams['object_id'] ?? 0);
+
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
-            $burl = base64_decode(Core::get_get('burl'));
+        if (array_key_exists('burl', $queryParams)) {
+            $burl = base64_decode($queryParams['burl']);
         }
 
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $item        = $this->getItem($gatekeeper);
-
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
+        $item = $this->getItem($gatekeeper, $object_type, $object_id);
 
         $this->ui->showHeader();
 
@@ -82,7 +82,7 @@ final class UploadArtAction extends AbstractArtAction
 
         // If we got something back insert it
         if ($image_data !== '') {
-            $art = $this->modelFactory->createArt($item->id, $object_type);
+            $art = $this->modelFactory->createArt($item->getId(), $object_type);
             if ($art->insert($image_data, $_FILES['file']['type'])) {
                 $this->ui->showConfirmation(
                     T_('No Problem'),

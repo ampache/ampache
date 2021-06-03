@@ -22,12 +22,12 @@
 
 namespace Ampache\Module\Application\Art;
 
-use Ampache\Repository\Model\database_object;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 
 abstract class AbstractArtAction implements ApplicationActionInterface
@@ -40,24 +40,29 @@ abstract class AbstractArtAction implements ApplicationActionInterface
         $this->modelFactory = $modelFactory;
     }
 
-    protected function getItem(GuiGatekeeperInterface $gatekeeper): ?database_object
-    {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            return null;
+    /**
+     * @throws AccessDeniedException
+     */
+    protected function getItem(
+        GuiGatekeeperInterface $gatekeeper,
+        string $objectType,
+        int $objectId
+    ): library_item {
+        if (!InterfaceImplementationChecker::is_library_item($objectType)) {
+            throw new AccessDeniedException();
         }
 
-        $item = $this->modelFactory->mapObjectType($object_type, (int) $object_id);
+        /** @var library_item $item */
+        $item = $this->modelFactory->mapObjectType($objectType, $objectId);
 
         // If not a content manager user then kick em out
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false && (
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
-                $item->get_user_owner() != Core::get_global('user')->id
+                $item->get_user_owner() != $gatekeeper->getUserId()
             )
         ) {
-            return null;
+            throw new AccessDeniedException();
         }
 
         $item->format();

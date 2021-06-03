@@ -1,0 +1,212 @@
+<?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Ampache\Module\Application\Art;
+
+use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Mockery\MockInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class ShowArtDlgActionTest extends MockeryTestCase
+{
+    private MockInterface $modelFactory;
+
+    private MockInterface $ui;
+
+    private ShowArtDlgAction $subject;
+
+    public function setUp(): void
+    {
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->ui           = $this->mock(UiInterface::class);
+
+        $this->subject = new ShowArtDlgAction(
+            $this->ui,
+            $this->modelFactory
+        );
+    }
+
+    public function testRunThrowsExceptionIfItemIsNotLibraryItem(): void
+    {
+        $objectType = 'some-object-type';
+        $objectId   = 666;
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['object_type' => $objectType, 'object_id' => (string) $objectId]);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfAccessLevelIsBelowUser(): void
+    {
+        $objectType = 'song';
+        $objectId   = 666;
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $item       = $this->mock(library_item::class, database_object::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['object_type' => $objectType, 'object_id' => (string) $objectId]);
+
+        $this->modelFactory->shouldReceive('mapObjectType')
+            ->with($objectType, $objectId)
+            ->once()
+            ->andReturn($item);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsExceptionIfObjectIsNotOwned(): void
+    {
+        $objectType = 'song';
+        $objectId   = 666;
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $item       = $this->mock(library_item::class, database_object::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['object_type' => $objectType, 'object_id' => (string) $objectId]);
+
+        $this->modelFactory->shouldReceive('mapObjectType')
+            ->with($objectType, $objectId)
+            ->once()
+            ->andReturn($item);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnFalse();
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnTrue();
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(456);
+
+        $item->shouldReceive('get_user_owner')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(123);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunRendersDialog(): void
+    {
+        $objectType = 'song';
+        $objectId   = 666;
+        $burl       = 'some-url';
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $item       = $this->mock(library_item::class, database_object::class);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'object_type' => $objectType,
+                'object_id' => (string) $objectId,
+                'burl' => base64_encode($burl)
+            ]);
+
+        $this->modelFactory->shouldReceive('mapObjectType')
+            ->with($objectType, $objectId)
+            ->once()
+            ->andReturn($item);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $item->shouldReceive('format')
+            ->withNoArgs()
+            ->once();
+        $item->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('show')
+            ->with(
+                'show_get_art.inc.php',
+                [
+                    'item' => $item,
+                    'object_type' => $objectType,
+                    'object_id' => $objectId,
+                    'burl' => $burl,
+                ]
+            )
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+}

@@ -59,17 +59,17 @@ final class SelectArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $queryParams = $request->getQueryParams();
+
         /* Check to see if we have the image url still */
-        $image_id = $_REQUEST['image'];
+        $image_id = $queryParams['image'];
 
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = $queryParams['object_type'] ?? '';
+        $object_id   = (int) ($queryParams['object_id'] ?? 0);
 
-        $item = $this->getItem($gatekeeper);
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
+        $item = $this->getItem($gatekeeper, $object_type, $object_id);
 
-        $object_id = $item->id;
+        $object_id = $item->getId();
 
         $burl = '';
         if (filter_has_var(INPUT_GET, 'burl')) {

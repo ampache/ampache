@@ -24,10 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Art;
 
-use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -50,23 +47,28 @@ final class ShowArtDlgAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $item        = $this->getItem($gatekeeper);
+        $queryParams = $request->getQueryParams();
 
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
+        $object_type = $queryParams['object_type'] ?? '';
+        $object_id   = (int) ($queryParams['object_id'] ?? 0);
+
+        $item = $this->getItem($gatekeeper, $object_type, $object_id);
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
-            $burl = base64_decode(Core::get_get('burl'));
+        if (array_key_exists('burl', $queryParams)) {
+            $burl = base64_decode($queryParams['burl']);
         }
 
-        $object_id   = $item->id;
-
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_get_art.inc.php');
+        $this->ui->show(
+            'show_get_art.inc.php',
+            [
+                'item' => $item,
+                'object_type' => $object_type,
+                'object_id' => $item->getId(),
+                'burl' => $burl
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

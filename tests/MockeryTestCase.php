@@ -36,9 +36,9 @@ abstract class MockeryTestCase extends TestCase
     /**
      * @param string|string[] $className
      */
-    public function mock($className): MockInterface
+    public function mock(...$className): MockInterface
     {
-        return Mockery::mock($className);
+        return Mockery::mock(...$className);
     }
 
     protected function arrayAsGenerator(array $array): \Generator

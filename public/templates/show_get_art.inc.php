@@ -27,6 +27,9 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\library_item;
 
 /** @var library_item $item */
+/** @var string $burl */
+/** @var string $object_type */
+/** @var int $object_id */
 
 ?>
 <?php

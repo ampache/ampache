@@ -52,30 +52,27 @@ final class ClearArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $queryParams = $request->getQueryParams();
+
+        $objectType = $queryParams['object_type'] ?? '';
+        $objectId   = (int) ($queryParams['object_id'] ?? 0);
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
-            $burl = base64_decode(Core::get_get('burl'));
+        if (array_key_exists('burl', $queryParams)) {
+            $burl = base64_decode($queryParams['burl']);
         }
 
-        $item = $this->getItem($gatekeeper);
+        $item = $this->getItem($gatekeeper, $objectType, $objectId);
 
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
-
-        $art = $this->modelFactory->createArt($item->id, $object_type);
+        $art = $this->modelFactory->createArt($item->getId(), $objectType);
         $art->reset();
 
         $this->ui->showHeader();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Art information has been removed from the database'),
             $burl
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

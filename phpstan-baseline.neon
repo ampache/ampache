@@ -5230,31 +5230,6 @@ parameters:
 			path: src/Module/Application/ApplicationRunner.php
 
 		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Cannot call method get_user_owner\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Art/ClearArtAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Art/FindArtAction.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:get_keywords\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Art/FindArtAction.php
-
-		-
 			message: "#^Offset '0' does not exist on array\\('file' \\=\\> mixed, 'mime' \\=\\> string\\)\\.$#"
 			count: 1
 			path: src/Module/Application/Art/FindArtAction.php
@@ -5263,21 +5238,6 @@ parameters:
 			message: "#^Offset 'extension' does not exist on array\\('dirname' \\=\\> string, 'basename' \\=\\> string, 'filename' \\=\\> string, \\?'extension' \\=\\> string\\)\\.$#"
 			count: 2
 			path: src/Module/Application/Art/FindArtAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Art/SelectArtAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Art/ShowArtDlgAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Application/Art/UploadArtAction.php
 
 		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"

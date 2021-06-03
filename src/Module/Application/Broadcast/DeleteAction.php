@@ -31,7 +31,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,13 +68,13 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
-        $object_id = Core::get_request('id');
-        $broadcast = $this->modelFactory->createBroadcast((int) $object_id);
+        $broadcast = $this->modelFactory->createBroadcast(
+            (int) ($request->getQueryParams()['id'] ?? 0)
+        );
 
         $this->broadcastRepository->delete($broadcast);
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Broadcast has been deleted'),
@@ -84,7 +83,6 @@ final class DeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             )
         );
-
         $this->ui->showFooter();
 
         return null;
