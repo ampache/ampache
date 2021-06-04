@@ -1622,9 +1622,9 @@ abstract class Catalog extends database_object
             $size += $data[2];
             self::set_count($table, $data[0]);
         }
-        self::set_count('items', $data[0]);
-        self::set_count('size', $data[0]);
-        self::set_count('time', $data[0]);
+        self::set_count('items', $items);
+        self::set_count('size', $time);
+        self::set_count('time', $size);
 
         $song_tables = array('artist', 'album');
         foreach ($song_tables as $table) {
