@@ -39,7 +39,6 @@ use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -174,6 +173,6 @@ return [
     StatsAjaxHandler::class => autowire(StatsAjaxHandler::class),
     StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
     TagAjaxHandler::class => autowire(TagAjaxHandler::class),
-    UserAjaxHandler::class => autowire(UserAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
+    Ajax\Handler\User\FlipFollowAction::class => autowire(),
 ];

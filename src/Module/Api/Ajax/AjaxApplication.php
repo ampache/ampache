@@ -41,7 +41,6 @@ use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -68,7 +67,9 @@ final class AjaxApplication implements ApplicationInterface
         'stats' => StatsAjaxHandler::class,
         'stream' => StreamAjaxHandler::class,
         'tag' => TagAjaxHandler::class,
-        'user' => UserAjaxHandler::class,
+        'user' => [
+            'flip_follow' => Handler\User\FlipFollowAction::class
+        ],
     ];
 
     private ContainerInterface $dic;

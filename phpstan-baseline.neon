@@ -666,11 +666,6 @@ parameters:
 			path: src/Module/Api/Ajax/Handler/TagAjaxHandler.php
 
 		-
-			message: "#^Variable \\$results might not be defined\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax/Handler/UserAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\('Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', mixed\\) given\\.$#"
 			count: 1
 			path: src/Module/Api/DaapApiApplication.php
@@ -22237,6 +22232,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art_item\\(\\) expects int, Ampache\\\\Repository\\\\Model\\\\Song\\|int given\\.$#"
 			count: 1
+			path: src/Repository/Model/Catalog.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:set_count\\(\\) expects string, \\(float\\|int\\) given\\.$#"
+			count: 3
 			path: src/Repository/Model/Catalog.php
 
 		-
