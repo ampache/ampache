@@ -634,9 +634,11 @@ if ($transcode) {
     }
 }
 
-if ($transcode) {
+if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
     // Content-length guessing if required by the player.
     // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+    $transcode_to = Song::get_transcode_settings_for_media($media->type, $transcode_to, $player, $media->type, $troptions)['format'];
+    $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
     if (Core::get_request('content_length') == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate();
         if ($media->time > 0 && $max_bitrate > 0) {
@@ -645,8 +647,15 @@ if ($transcode) {
             debug_event('play/index', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
             $stream_size = null;
         }
-    } else {
+    } elseif ($transcode_to == 'mp3') {
+        // mp3 seems to be the only codec that calculates properly
+        $stream_rate = ($maxbitrate < floor($media->bitrate / 1000))
+            ? $maxbitrate
+            : floor($media->bitrate / 1000);
+        $stream_size = ($media->time * $stream_rate * 1000) / 8;
+} else {
         $stream_size = null;
+        $maxbitrate  = 0;
     }
 } else {
     $stream_size = $media->size;
@@ -660,9 +669,6 @@ if (!is_resource($filepointer)) {
 
 if (!$transcode) {
     header('ETag: ' . $media->id);
-}
-if (($action != 'download') && $record_stats) {
-    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, get_class($media));
 }
 // Handle Content-Range
 
@@ -706,6 +712,9 @@ if (!isset($_REQUEST['segment'])) {
     if ($start > 0) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
+        if (($action != 'download') && $record_stats) {
+            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, get_class($media));
+        }
         $sessionkey = $session_id ?: Stream::get_session();
         $agent      = Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);

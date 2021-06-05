@@ -28,7 +28,17 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'get_advanced':
-        $object_ids = Random::advanced($_REQUEST['type'], $_POST);
+        switch ($_REQUEST['type']) {
+            case 'album':
+            case 'artist':
+            case 'video':
+            case 'song':
+                $object_ids = Random::advanced(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS), $_POST);
+                break;
+            default:
+                $object_ids = array();
+        }
+        //'song', 'album', 'artist', 'video'
 
         // We need to add them to the active playlist
         if (!empty($object_ids)) {

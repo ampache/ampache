@@ -345,7 +345,7 @@ class Rating extends database_object
                 try {
                     $plugin = new Plugin($plugin_name);
                     if ($plugin->load($user)) {
-                        debug_event(self::class, 'save_rating...' . $plugin->_plugin->name, 5);
+                        debug_event(self::class, 'save_rating... ' . $plugin->_plugin->name, 5);
                         $plugin->_plugin->save_rating($rating, $new_rating);
                     }
                 } catch (Exception $error) {

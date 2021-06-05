@@ -158,26 +158,7 @@ class Stream
 
             return false;
         }
-
-        // don't ignore user bitrates
-        $bit_rate = (int) self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
-            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
-            // Validate the bitrate
-            $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
-            // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
-        }
-
-        // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
-        }
-
-        debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
-
+        $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
         $song_file = scrub_arg($media->file);
 
         // Finalise the command line
@@ -224,6 +205,46 @@ class Stream
         }
 
         return self::start_process($command, array('format' => $transcode_settings['format']));
+    }
+
+    /**
+     * get_max_bitrate
+     *
+     * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
+     * @param $media
+     * @param string $type
+     * @param string $player
+     * @param array $options
+     * @return integer
+     */
+    public static function get_max_bitrate($media, $type = null, $player = null, $options = array())
+    {
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
+        // Bail out early if we're unutterably broken
+        if ($transcode_settings === false) {
+            debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
+
+            return $media->bitrate;
+        }
+
+        // don't ignore user bitrates
+        $bit_rate = (int)self::get_allowed_bitrate();
+        if (!$options['bitrate']) {
+            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
+            // Validate the bitrate
+            $bit_rate = self::validate_bitrate($bit_rate);
+        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate = 0) {
+            // use the file bitrate if lower than the gathered
+            $bit_rate = $options['bitrate'];
+        }
+
+        // Never upsample a media
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
+        }
+
+        return $bit_rate;
     }
 
     /**
@@ -362,14 +383,18 @@ class Stream
      * @param integer $length
      * @param string $sid
      * @param string $type
+     * @param integer $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
     {
+        if (!$previous) {
+            $previous = time();
+        }
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
     /**

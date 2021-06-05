@@ -87,7 +87,7 @@ if (Core::is_playable_item($object_type) && $object_type !== 'album') {
         case 'album':
             $albumList = explode(',', $_REQUEST['id']);
             $media_ids = Album::get_songs_grouped($albumList);
-            $libitem   = new Album($albumList[0]);
+            $libitem   = new Album((int) $albumList[0]);
             if ($libitem->id) {
                 $libitem->format();
                 $name = $libitem->get_fullname();

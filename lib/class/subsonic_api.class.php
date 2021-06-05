@@ -989,7 +989,7 @@ class Subsonic_Api
      */
     private static function _updatePlaylist($playlist_id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true, $clearFirst = false)
     {
-        $playlist           = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlist_id));
+        $playlist           = new Playlist(Subsonic_XML_Data::getAmpacheId($playlist_id));
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
@@ -1564,8 +1564,7 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = null;
+            $expire_days = (isset($input['expires'])) ? (int) $input['expires'] : Share::get_expiry($input['expires']);
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_XML_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
@@ -1573,7 +1572,7 @@ class Subsonic_Api
                 $object_id   = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
-                Subsonic_XML_Data::getAmpacheId($libitem_id);
+                $object_id = Subsonic_XML_Data::getAmpacheId($libitem_id);
                 if (Subsonic_XML_Data::isAlbum($libitem_id)) {
                     $object_type = 'album';
                 }
@@ -1586,7 +1585,7 @@ class Subsonic_Api
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
-            if (!empty($object_type)) {
+            if (!empty($object_type) && !empty($object_id)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
                 $shares   = array();
                 $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, generate_password(8), 0, $description);
@@ -1638,7 +1637,7 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            $share = new Share(Subsonic_Xml_Data::getAmpacheId($share_id));
+            $share = new Share(Subsonic_XML_Data::getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = $share->expire_days;
                 if (isset($input['expires'])) {
@@ -2438,18 +2437,16 @@ class Subsonic_Api
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_XML_Data::getAmpacheObject($current);
-        $time     = time();
         if ($media->id) {
+            $time     = time();
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_XML_Data::getAmpacheType($current);
-            // track has just started
-            if ($position < 1) {
-                Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
-                // repeated plays aren't called by scrobble so make sure we call this too
-                if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                    $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
-                }
+            // long pauses might cause your now_playing to hide
+            Stream::garbage_collection();
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int) $media->time - $position), $username, $type, ((int) $time - $position));
+            // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+            if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {

@@ -431,7 +431,7 @@ class Subsonic_XML_Data
     /**
      * addArtistsIndexes
      * @param SimpleXMLElement $xml
-     * @param Artist[] $artists
+     * @param array $artists
      * @param $lastModified
      */
     public static function addArtistsIndexes($xml, $artists, $lastModified)
@@ -1180,10 +1180,10 @@ class Subsonic_XML_Data
     {
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $d) {
-            $track = self::addSong($xplaynow, $d['media'], false, "entry");
+            $track = self::addSong($xplaynow, $d['media']->id, false, "entry");
             if ($track !== null) {
                 $track->addAttribute('username', (string) $d['client']->username);
-                $track->addAttribute('minutesAgo', (string) (time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
+                $track->addAttribute('minutesAgo', (string) (abs((time() - ($d['expire'] - $d['media']->time)) / 60)));
                 $track->addAttribute('playerId', (string) $d['agent']);
             }
         }
