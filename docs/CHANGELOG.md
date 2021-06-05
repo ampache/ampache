@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 4.4.3-develop
+## Ampache 4.4.3-release
 
 ### Added
 
@@ -19,7 +19,7 @@
 ### Fixed
 
 * CVE-2021-32644
-* Identifying a distint album_artist query wasn't great
+* Identifying a distinct album_artist query wasn't great
 * Don't return duplicate art while searching file tags
 * SQL query in random::advanced_sql was ambiguous
 * Filtering random and search page type element
@@ -27,6 +27,10 @@
 * SubSonic:
   * getNowPlaying was unable to return playing media or the correct time
   * createShare would not set the object_id correctly and ignored expires value
+
+### API 4.4.3
+
+**NO CHANGE**
 
 ## Ampache 4.4.2-release
 
