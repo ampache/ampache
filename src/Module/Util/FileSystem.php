@@ -32,7 +32,7 @@ class FileSystem
 
     /**
      * @param $path
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     protected function real($path)

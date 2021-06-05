@@ -705,7 +705,6 @@ class Ui implements UiInterface
             case 'show_skipped_times':
             case 'song_page_title':
             case 'subsonic_backend':
-            case 'plex_backend':
             case 'webplayer_flash':
             case 'webplayer_html5':
             case 'allow_personal_info_now':
@@ -714,6 +713,7 @@ class Ui implements UiInterface
             case 'allow_personal_info_agent':
             case 'ui_fixed':
             case 'autoupdate':
+            case 'autoupdate_lastversion_new':
             case 'webplayer_confirmclose':
             case 'webplayer_pausetabs':
             case 'stream_beautiful_url':
@@ -746,6 +746,7 @@ class Ui implements UiInterface
             case 'upload_catalog_pattern':
             case 'catalogfav_gridview':
             case 'personalfav_display':
+            case 'ratingmatch_flags':
             case 'catalog_check_duplicate':
             case 'browse_filter':
             case 'sidebar_light':

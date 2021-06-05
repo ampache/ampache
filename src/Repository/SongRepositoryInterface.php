@@ -71,6 +71,15 @@ interface SongRepositoryInterface
     ): array;
 
     /**
+     * gets the songs (including songs where they are the album artist) for this artist
+     *
+     * @return int[]
+     */
+    public function getAllByArtist(
+        int $artistId
+    ): array;
+
+    /**
      * Returns a list of song ID's attached to a license ID.
      *
      * @return int[]

@@ -61,7 +61,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * itself
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -95,11 +95,12 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $video = new Video($art->uid);
 
-        return $this->gatherMediaTags($video);
+        return $this->gatherMediaTags($video, 'video', array());
     }
 
     /**
      * Gather tags from audio files.
+     * @param Art $art
      * @param integer $limit
      * @return array
      */
@@ -117,7 +118,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $data = array_merge($data, $this->gatherMediaTags($song));
+            $data = $this->gatherMediaTags($song, $art->type, $data);
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
@@ -128,14 +129,15 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     /**
-     * Gather tags from files.
+     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
      * @param Song|Video $media
+     * @param string $art_type
+     * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media)
+    private function gatherMediaTags($media, $art_type, $data)
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        $data   = [];
         try {
             $id3 = $this->getID3->analyze($media->file);
         } catch (Exception $error) {
@@ -145,26 +147,39 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             );
         }
 
+        // stop collecting dupes for each album/track
+        $raw_array = array();
+        foreach ($data as $image) {
+            $raw_array[] = $image['raw'];
+        }
+
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['mime'],
-                'title' => 'ID3'
-            );
+            if (!in_array($image['data'], $raw_array)) {
+                $data[] = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3 asf'
+                );
+            }
         }
 
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
-                if ($image['picturetypeid'] == $this_picturetypeid) {
+                if ($art_type == 'artist' && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    $this->logger->debug(
+                        'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                } elseif (isset($image['picturetypeid']) && !in_array($image['data'], $raw_array)) {
+                    $type   = self::getPictureType((int)$image['picturetypeid']);
                     $data[] = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
-                        'title' => 'ID3'
+                        'title' => 'ID3 ' . $type
                     ];
                 }
             }
@@ -176,20 +191,73 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gatherSongTagsSingle(Art $art, $limit = 5)
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);
-        $data = array();
-        $data = array_merge($data, $this->gatherMediaTags($song));
+        $data = $this->gatherMediaTags($song, 'song', array());
 
         if ($limit && count($data) >= $limit) {
             return array_slice($data, 0, $limit);
         }
 
         return $data;
+    }
+
+    /**
+     * Get the type of id3 picture being returned (https://exiftool.org/TagNames/ID3.html)
+     * @param int $id3_type
+     * @return string
+     */
+    public static function getPictureType(int $id3_type)
+    {
+        switch ($id3_type) {
+            case 1:
+                return '32x32 PNG Icon';
+            case 2:
+                return 'Other Icon';
+            case 3:
+                return 'Front Cover';
+            case 4:
+                return 'Back Cover';
+            case 5:
+                return 'Leaflet';
+            case 6:
+                return 'Media';
+            case 7:
+                return 'Lead Artist';
+            case 8:
+                return 'Artist';
+            case 9:
+                return 'Conductor';
+            case 10:
+                return 'Band';
+            case 11:
+                return 'Composer';
+            case 12:
+                return 'Lyricist';
+            case 13:
+                return 'Recording Studio or Location';
+            case 14:
+                return 'Recording Session';
+            case 15:
+                return 'Performance';
+            case 16:
+                return 'Capture from Movie or Video';
+            case 17:
+                return 'Bright(ly) Colored Fish';
+            case 18:
+                return 'Illustration';
+            case 19:
+                return 'Band Logo';
+            case 20:
+                return 'Publisher Logo';
+            case 0:
+            default:
+                return 'Other';
+        }
     }
 }

@@ -371,11 +371,10 @@ class Preference extends database_object
      */
     public static function get_categories()
     {
-        $sql        = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
+        $sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['catagory'] != 'internal') {
                 $results[] = $row['catagory'];

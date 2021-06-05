@@ -73,7 +73,7 @@ final class SongAction implements ApplicationActionInterface
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title', 'ASC');
-        $browse->update_browse_from_session();  // Update current index depending on what is in session.
+        $browse->update_browse_from_session(); // Update current index depending on what is in session.
         $browse->show_objects();
 
         $browse->store();

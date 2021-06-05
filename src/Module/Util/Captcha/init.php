@@ -138,6 +138,6 @@ define("CAPTCHA_WHATIS_TEXT", 'What is %s = ');
 define("CAPTCHA_REDRAW_TEXT", 'click on image to redraw');
 
 #-- init (triggered if *this* script is called directly)
-if ((basename($_SERVER["SCRIPT_FILENAME"]) == basename(__FILE__)) || (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
-    //easy_captcha_utility::API();
-}
+//if ((basename($_SERVER["SCRIPT_FILENAME"]) == basename(__FILE__)) || (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
+//    //easy_captcha_utility::API();
+//}

@@ -176,11 +176,10 @@ class Democratic extends Tmp_Playlist
      */
     public static function get_playlists()
     {
-        $sql        = "SELECT `id` FROM `democratic` ORDER BY `name`";
+        $sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -234,9 +233,7 @@ class Democratic extends Tmp_Playlist
         }
 
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['id']) {
                 $results[] = $row;

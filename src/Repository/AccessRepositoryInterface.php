@@ -65,8 +65,8 @@ interface AccessRepositoryInterface
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function create(
@@ -81,12 +81,12 @@ interface AccessRepositoryInterface
     /**
      * Updates the data of a certain acl item
      *
-     * @param int $accessId Id of an existing acl item
+     * @param integer $accessId Id of an existing acl item
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function update(

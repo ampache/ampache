@@ -28,10 +28,17 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$currentType     = (isset($searchType)) ? $searchType : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+$currentType     = (isset($searchType))
+    ? $searchType
+    : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$currentType     = (in_array($currentType, array('song', 'album', 'artist', 'label', 'playlist', 'video')))
+    ? $currentType
+    : null;
+if (!$currentType) {
+    header("Location: " . AmpConfig::get('web_path') . '/search.php?type=song');
+}
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
-<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $currentType ? scrub_out($currentType) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
     <tr id="search_location">
     <td><?php if ($currentType !== 'song') { ?>
