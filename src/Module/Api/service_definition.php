@@ -26,12 +26,9 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Api\Ajax\AjaxApplication;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -153,12 +150,9 @@ return [
     SubSonic\Method\RefreshPodcastsMethod::class => autowire(),
     AjaxApplication::class => autowire(AjaxApplication::class),
     BrowseAjaxHandler::class => autowire(BrowseAjaxHandler::class),
-    DefaultAjaxHandler::class => autowire(DefaultAjaxHandler::class),
-    CatalogAjaxHandler::class => autowire(CatalogAjaxHandler::class),
     DemocraticPlaybackAjaxHandler::class => autowire(DemocraticPlaybackAjaxHandler::class),
     IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
-    SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
     Ajax\Handler\Stats\GeolocationAction::class => autowire(),
     Ajax\Handler\Tag\AddFilterAction::class => autowire(),
@@ -184,4 +178,12 @@ return [
     Ajax\Handler\Player\BroadcastAction::class => autowire(),
     Ajax\Handler\Player\ShowBroadcastsAction::class => autowire(),
     Ajax\Handler\Player\UnbroadcastAction::class => autowire(),
+    Ajax\Handler\Catalog\FlipStateAction::class => autowire(),
+    Ajax\Handler\Search\SearchAction::class => autowire(),
+    Ajax\Handler\Defaults\RefreshRightbarAction::class => autowire(),
+    Ajax\Handler\Defaults\CurrentPlaylistAction::class => autowire(),
+    Ajax\Handler\Defaults\BasketAction::class => autowire(),
+    Ajax\Handler\Defaults\SetRatingAction::class => autowire(),
+    Ajax\Handler\Defaults\SetUserflagAction::class => autowire(),
+    Ajax\Handler\Defaults\ActionButtonsAction::class => autowire(),
 ];

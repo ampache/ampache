@@ -28,12 +28,9 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\CatalogAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -45,7 +42,17 @@ final class AjaxApplication implements ApplicationInterface
 {
     private const HANDLER_LIST = [
         'browse' => BrowseAjaxHandler::class,
-        'catalog' => CatalogAjaxHandler::class,
+        'catalog' => [
+            'flip_state' => Handler\Catalog\FlipStateAction::class,
+        ],
+        'default' => [
+            'refresh_rightbar' => Handler\Defaults\RefreshRightbarAction::class,
+            'current_playlist' => Handler\Defaults\CurrentPlaylistAction::class,
+            'basket' => Handler\Defaults\BasketAction::class,
+            'set_rating' => Handler\Defaults\SetRatingAction::class,
+            'set_userflag' => Handler\Defaults\SetUserflagAction::class,
+            'action_buttons' => Handler\Defaults\ActionButtonsAction::class,
+        ],
         'democratic' => DemocraticPlaybackAjaxHandler::class,
         'index' => IndexAjaxHandler::class,
         'localplay' => LocalPlayAjaxHandler::class,
@@ -68,7 +75,9 @@ final class AjaxApplication implements ApplicationInterface
             'playlist' => Handler\Random\PlaylistAction::class,
             'advanced_random' => Handler\Random\AdvancedRandomAction::class,
         ],
-        'search' => SearchAjaxHandler::class,
+        'search' => [
+            'search' => Handler\Search\SearchAction::class,
+        ],
         'song' => [
             'fiip_state' => Handler\Song\FlipStateAction::class,
             'shouts' => Handler\Song\ShoutsAction::class,
@@ -119,7 +128,7 @@ final class AjaxApplication implements ApplicationInterface
 
         $action = $queryParams['action'] ?? null;
 
-        $handlerClassName = static::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
+        $handlerClassName = static::HANDLER_LIST[$page] ?? static::HANDLER_LIST['default'];
 
         if (is_array($handlerClassName)) {
             if (array_key_exists($action, $handlerClassName)) {
