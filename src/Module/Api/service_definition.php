@@ -36,7 +36,6 @@ use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -168,7 +167,6 @@ return [
     RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
     SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
     SongAjaxHandler::class => autowire(SongAjaxHandler::class),
-    StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
     Ajax\Handler\Stats\GeolocationAction::class => autowire(),
     Ajax\Handler\Tag\AddFilterAction::class => autowire(),
@@ -180,4 +178,7 @@ return [
     Ajax\Handler\Tag\AddTagAction::class => autowire(),
     Ajax\Handler\Tag\RemoveTagMap::class => autowire(),
     Ajax\Handler\User\FlipFollowAction::class => autowire(),
+    Ajax\Handler\Stream\SetPlayTypeAction::class => autowire(),
+    Ajax\Handler\Stream\DirectplayAction::class => autowire(),
+    Ajax\Handler\Stream\BasketAction::class => autowire(),
 ];
