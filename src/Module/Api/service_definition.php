@@ -33,7 +33,6 @@ use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
@@ -164,7 +163,6 @@ return [
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
     PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
     PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
-    RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
     SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
     SongAjaxHandler::class => autowire(SongAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
@@ -181,4 +179,8 @@ return [
     Ajax\Handler\Stream\SetPlayTypeAction::class => autowire(),
     Ajax\Handler\Stream\DirectplayAction::class => autowire(),
     Ajax\Handler\Stream\BasketAction::class => autowire(),
+    Ajax\Handler\Random\SongAction::class => autowire(),
+    Ajax\Handler\Random\AlbumAction::class => autowire(),
+    Ajax\Handler\Random\ArtistAction::class => autowire(),
+    Ajax\Handler\Random\PlaylistAction::class => autowire(),
 ];

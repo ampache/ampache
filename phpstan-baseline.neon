@@ -641,16 +641,6 @@ parameters:
 			path: src/Module/Api/Ajax/Handler/PlaylistAjaxHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$limit of static method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_default\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax/Handler/RandomAjaxHandler.php
-
-		-
-			message: "#^Variable \\$songs might not be defined\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax/Handler/RandomAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$shoutbox of static method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:getShoutboxDisplay\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Shoutbox, Ampache\\\\Repository\\\\Model\\\\ShoutboxInterface given\\.$#"
 			count: 1
 			path: src/Module/Api/Ajax/Handler/SongAjaxHandler.php

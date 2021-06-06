@@ -35,7 +35,6 @@ use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\System\Core;
@@ -58,7 +57,13 @@ final class AjaxApplication implements ApplicationInterface
         'podcast' => [
             'sync' => Handler\Podcast\SyncAction::class,
         ],
-        'random' => RandomAjaxHandler::class,
+        'random' => [
+            'song' => Handler\Random\SongAction::class,
+            'album' => Handler\Random\AlbumAction::class,
+            'artist' => Handler\Random\ArtistAction::class,
+            'playlist' => Handler\Random\PlaylistAction::class,
+            'advanced_random' => Handler\Random\AdvancedRandomAction::class,
+        ],
         'search' => SearchAjaxHandler::class,
         'song' => SongAjaxHandler::class,
         'stats' => [

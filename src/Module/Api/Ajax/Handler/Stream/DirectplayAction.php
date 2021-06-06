@@ -38,7 +38,7 @@ final class DirectplayAction implements ActionInterface
         ResponseInterface $response,
         User $user
     ): array {
-        $results = [];
+        $results     = [];
         $object_type = Core::get_request('object_type');
         $object_id   = $_GET['object_id'];
         if (is_array($object_id)) {
