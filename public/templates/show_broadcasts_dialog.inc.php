@@ -20,14 +20,14 @@
  *
  */
 
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 
 /** @var ModelFactoryInterface $modelFactory */
-/** @var BroadcastRepositoryInteface $broadcastRepository */
+/** @var BroadcastRepositoryInterface $broadcastRepository */
 global $dic;
-$broadcastRepository = $dic->get(BroadcastRepositoryInteface::class);
+$broadcastRepository = $dic->get(BroadcastRepositoryInterface::class);
 $modelFactory        = $dic->get(ModelFactoryInterface::class);
 
 ?>

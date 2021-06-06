@@ -33,10 +33,7 @@ use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -52,8 +49,15 @@ final class AjaxApplication implements ApplicationInterface
         'democratic' => DemocraticPlaybackAjaxHandler::class,
         'index' => IndexAjaxHandler::class,
         'localplay' => LocalPlayAjaxHandler::class,
-        'player' => PlayerAjaxHandler::class,
-        'playlist' => PlaylistAjaxHandler::class,
+        'player' => [
+            'show_broadcasts' => Handler\Player\ShowBroadcastsAction::class,
+            'broadcast' => Handler\Player\BroadcastAction::class,
+            'unbroadcast' => Handler\Player\UnbroadcastAction::class,
+        ],
+        'playlist' => [
+            'delete_track' => Handler\Playlist\DeleteTrackAction::class,
+            'append_item' => Handler\Playlist\AppendItemAction::class,
+        ],
         'podcast' => [
             'sync' => Handler\Podcast\SyncAction::class,
         ],
@@ -65,7 +69,10 @@ final class AjaxApplication implements ApplicationInterface
             'advanced_random' => Handler\Random\AdvancedRandomAction::class,
         ],
         'search' => SearchAjaxHandler::class,
-        'song' => SongAjaxHandler::class,
+        'song' => [
+            'fiip_state' => Handler\Song\FlipStateAction::class,
+            'shouts' => Handler\Song\ShoutsAction::class,
+        ],
         'stats' => [
             'geolocation' => Handler\Stats\GeolocationAction::class,
         ],

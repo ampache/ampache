@@ -31,10 +31,7 @@ use Ampache\Module\Api\Ajax\Handler\DefaultAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\PlayerAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -161,10 +158,7 @@ return [
     DemocraticPlaybackAjaxHandler::class => autowire(DemocraticPlaybackAjaxHandler::class),
     IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
-    PlayerAjaxHandler::class => autowire(PlayerAjaxHandler::class),
-    PlaylistAjaxHandler::class => autowire(PlaylistAjaxHandler::class),
     SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
-    SongAjaxHandler::class => autowire(SongAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
     Ajax\Handler\Stats\GeolocationAction::class => autowire(),
     Ajax\Handler\Tag\AddFilterAction::class => autowire(),
@@ -183,4 +177,11 @@ return [
     Ajax\Handler\Random\AlbumAction::class => autowire(),
     Ajax\Handler\Random\ArtistAction::class => autowire(),
     Ajax\Handler\Random\PlaylistAction::class => autowire(),
+    Ajax\Handler\Song\FlipStateAction::class => autowire(),
+    Ajax\Handler\Song\ShoutsAction::class => autowire(),
+    Ajax\Handler\Playlist\DeleteTrackAction::class => autowire(),
+    Ajax\Handler\Playlist\AppendItemAction::class => autowire(),
+    Ajax\Handler\Player\BroadcastAction::class => autowire(),
+    Ajax\Handler\Player\ShowBroadcastsAction::class => autowire(),
+    Ajax\Handler\Player\UnbroadcastAction::class => autowire(),
 ];

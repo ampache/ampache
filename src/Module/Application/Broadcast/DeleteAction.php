@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Broadcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,13 +45,13 @@ final class DeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private BroadcastRepositoryInteface $broadcastRepository;
+    private BroadcastRepositoryInterface $broadcastRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        BroadcastRepositoryInteface $broadcastRepository
+        BroadcastRepositoryInterface $broadcastRepository
     ) {
         $this->configContainer     = $configContainer;
         $this->ui                  = $ui;

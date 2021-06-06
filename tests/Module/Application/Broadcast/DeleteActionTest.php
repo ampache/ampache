@@ -30,7 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\Model\BroadcastInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
@@ -53,7 +53,7 @@ class DeleteActionTest extends MockeryTestCase
         $this->configContainer     = $this->mock(ConfigContainerInterface::class);
         $this->ui                  = $this->mock(UiInterface::class);
         $this->modelFactory        = $this->mock(ModelFactoryInterface::class);
-        $this->broadcastRepository = $this->mock(BroadcastRepositoryInteface::class);
+        $this->broadcastRepository = $this->mock(BroadcastRepositoryInterface::class);
 
         $this->subject = new DeleteAction(
             $this->configContainer,

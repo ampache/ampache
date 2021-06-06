@@ -27,7 +27,7 @@ use Ampache\Repository\Model\BroadcastInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Doctrine\DBAL\Connection;
 
-final class BroadcastRepository implements BroadcastRepositoryInteface
+final class BroadcastRepository implements BroadcastRepositoryInterface
 {
     private Connection $database;
 

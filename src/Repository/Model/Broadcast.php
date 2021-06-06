@@ -28,13 +28,13 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 
 final class Broadcast extends database_object implements BroadcastInterface
 {
     protected const DB_TABLENAME = 'broadcast';
 
-    private BroadcastRepositoryInteface $broadcastRepository;
+    private BroadcastRepositoryInterface $broadcastRepository;
 
     private TagListUpdaterInterface $tagListUpdater;
 
@@ -44,7 +44,7 @@ final class Broadcast extends database_object implements BroadcastInterface
     private ?array $dbData = null;
 
     public function __construct(
-        BroadcastRepositoryInteface $broadcastRepository,
+        BroadcastRepositoryInterface $broadcastRepository,
         TagListUpdaterInterface $tagListUpdater,
         int $id
     ) {

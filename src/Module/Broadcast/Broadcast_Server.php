@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\BroadcastInterface;
 use Exception;
@@ -457,10 +457,10 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      * @deprecated Inject by constructor
      */
-    private function getBroadcastRepository(): BroadcastRepositoryInteface
+    private function getBroadcastRepository(): BroadcastRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(BroadcastRepositoryInteface::class);
+        return $dic->get(BroadcastRepositoryInterface::class);
     }
 }

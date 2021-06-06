@@ -23,7 +23,7 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\BroadcastInterface;
 
-interface BroadcastRepositoryInteface
+interface BroadcastRepositoryInterface
 {
     /**
      * @return int[]

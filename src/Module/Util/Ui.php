@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\ShoutboxInterface;
 use Ampache\Repository\Model\User;
 
 /**
@@ -1146,7 +1146,7 @@ class Ui implements UiInterface
     }
 
     public static function getShoutboxDisplay(
-        Shoutbox $shoutbox,
+        ShoutboxInterface $shoutbox,
         bool $details = true,
         bool $jsbuttons = false
     ): string {

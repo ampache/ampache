@@ -1,7 +1,7 @@
 <?php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
@@ -10,13 +10,13 @@ use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\ModelFactoryInterface;
 
-/** @var BroadcastRepositoryInteface $broadcastRepository */
+/** @var BroadcastRepositoryInterface $broadcastRepository */
 /** @var ModelFactoryInterface $modelFactory */
 
 // TODO remove me
 global $dic;
 $environment         = $dic->get(EnvironmentInterface::class);
-$broadcastRepository = $dic->get(BroadcastRepositoryInteface::class);
+$broadcastRepository = $dic->get(BroadcastRepositoryInterface::class);
 $modelFactory        = $dic->get(ModelFactoryInterface::class);
 
 /** @var bool $iframed */

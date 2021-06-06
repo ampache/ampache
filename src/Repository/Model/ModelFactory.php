@@ -33,7 +33,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
-use Ampache\Repository\BroadcastRepositoryInteface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -146,7 +146,7 @@ final class ModelFactory implements ModelFactoryInterface
         int $broadcastId
     ): BroadcastInterface {
         return new Broadcast(
-            $this->dic->get(BroadcastRepositoryInteface::class),
+            $this->dic->get(BroadcastRepositoryInterface::class),
             $this->dic->get(TagListUpdaterInterface::class),
             $broadcastId
         );

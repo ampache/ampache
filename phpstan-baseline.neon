@@ -636,16 +636,6 @@ parameters:
 			path: src/Module/Api/Ajax/Handler/IndexAjaxHandler.php
 
 		-
-			message: "#^Cannot call method get_medias\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax/Handler/PlaylistAjaxHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$shoutbox of static method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:getShoutboxDisplay\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Shoutbox, Ampache\\\\Repository\\\\Model\\\\ShoutboxInterface given\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax/Handler/SongAjaxHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\('Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', mixed\\) given\\.$#"
 			count: 1
 			path: src/Module/Api/DaapApiApplication.php
@@ -21665,7 +21655,7 @@ parameters:
 			path: src/Repository/Model/Broadcast.php
 
 		-
-			message: "#^Parameter \\#2 \\$started of method Ampache\\\\Repository\\\\BroadcastRepositoryInteface\\:\\:updateState\\(\\) expects int, string given\\.$#"
+			message: "#^Parameter \\#2 \\$started of method Ampache\\\\Repository\\\\BroadcastRepositoryInterface\\:\\:updateState\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
