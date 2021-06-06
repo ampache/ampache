@@ -36,9 +36,7 @@ use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -170,9 +168,16 @@ return [
     RandomAjaxHandler::class => autowire(RandomAjaxHandler::class),
     SearchAjaxHandler::class => autowire(SearchAjaxHandler::class),
     SongAjaxHandler::class => autowire(SongAjaxHandler::class),
-    StatsAjaxHandler::class => autowire(StatsAjaxHandler::class),
     StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
-    TagAjaxHandler::class => autowire(TagAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
+    Ajax\Handler\Stats\GeolocationAction::class => autowire(),
+    Ajax\Handler\Tag\AddFilterAction::class => autowire(),
+    Ajax\Handler\Tag\GetLabelsAction::class => autowire(),
+    Ajax\Handler\Tag\GetTagMapAction::class => autowire(),
+    Ajax\Handler\Tag\BrowseTypeAction::class => autowire(),
+    Ajax\Handler\Tag\AddTageByNameAction::class => autowire(),
+    Ajax\Handler\Tag\DeleteAction::class => autowire(),
+    Ajax\Handler\Tag\AddTagAction::class => autowire(),
+    Ajax\Handler\Tag\RemoveTagMap::class => autowire(),
     Ajax\Handler\User\FlipFollowAction::class => autowire(),
 ];

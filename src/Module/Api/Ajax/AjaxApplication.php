@@ -38,9 +38,7 @@ use Ampache\Module\Api\Ajax\Handler\PlaylistAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\RandomAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SearchAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\SongAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\StatsAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\StreamAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\TagAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -64,9 +62,20 @@ final class AjaxApplication implements ApplicationInterface
         'random' => RandomAjaxHandler::class,
         'search' => SearchAjaxHandler::class,
         'song' => SongAjaxHandler::class,
-        'stats' => StatsAjaxHandler::class,
+        'stats' => [
+            'geolocation' => Handler\Stats\GeolocationAction::class,
+        ],
         'stream' => StreamAjaxHandler::class,
-        'tag' => TagAjaxHandler::class,
+        'tag' => [
+            'get_tag_map' => Handler\Tag\GetTagMapAction::class,
+            'get_labels' => Handler\Tag\GetLabelsAction::class,
+            'add_filter' => Handler\Tag\AddFilterAction::class,
+            'browse_type' => Handler\Tag\BrowseTypeAction::class,
+            'add_tag_by_name' => Handler\Tag\AddTageByNameAction::class,
+            'delete' => Handler\Tag\DeleteAction::class,
+            'add_tag' => Handler\Tag\AddTagAction::class,
+            'remove_tag_map' => Handler\Tag\RemoveTagMap::class,
+        ],
         'user' => [
             'flip_follow' => Handler\User\FlipFollowAction::class
         ],
