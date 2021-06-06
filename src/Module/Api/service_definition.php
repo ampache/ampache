@@ -26,8 +26,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Api\Ajax\AjaxApplication;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
@@ -150,8 +148,6 @@ return [
     SubSonic\Method\RefreshPodcastsMethod::class => autowire(),
     AjaxApplication::class => autowire(AjaxApplication::class),
     BrowseAjaxHandler::class => autowire(BrowseAjaxHandler::class),
-    DemocraticPlaybackAjaxHandler::class => autowire(DemocraticPlaybackAjaxHandler::class),
-    IndexAjaxHandler::class => autowire(IndexAjaxHandler::class),
     LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
     Ajax\Handler\Stats\GeolocationAction::class => autowire(),
@@ -186,4 +182,25 @@ return [
     Ajax\Handler\Defaults\SetRatingAction::class => autowire(),
     Ajax\Handler\Defaults\SetUserflagAction::class => autowire(),
     Ajax\Handler\Defaults\ActionButtonsAction::class => autowire(),
+    Ajax\Handler\DemocraticPlayback\AddVoteAction::class => autowire(),
+    Ajax\Handler\DemocraticPlayback\DeleteVoteAction::class => autowire(),
+    Ajax\Handler\DemocraticPlayback\DeleteAction::class => autowire(),
+    Ajax\Handler\DemocraticPlayback\SendPlaylistAction::class => autowire(),
+    Ajax\Handler\DemocraticPlayback\ClearPlaylistAction::class => autowire(),
+    Ajax\Handler\Index\RandomAlbumsAction::class => autowire(),
+    Ajax\Handler\Index\RandomVideosAction::class => autowire(),
+    Ajax\Handler\Index\ArtistInfoAction::class => autowire(),
+    Ajax\Handler\Index\SimilarArtistAction::class => autowire(),
+    Ajax\Handler\Index\SimilarNowPlayingAction::class => autowire(),
+    Ajax\Handler\Index\LabelsAction::class => autowire(),
+    Ajax\Handler\Index\WantedMissingAlbumsAction::class => autowire(),
+    Ajax\Handler\Index\AddWantedAction::class => autowire(),
+    Ajax\Handler\Index\RemoveWantedAction::class => autowire(),
+    Ajax\Handler\Index\AcceptWantedAction::class => autowire(),
+    Ajax\Handler\Index\ReloadNpAction::class => autowire(),
+    Ajax\Handler\Index\SidebarAction::class => autowire(),
+    Ajax\Handler\Index\StartChannelAction::class => autowire(),
+    Ajax\Handler\Index\StopChannelAction::class => autowire(),
+    Ajax\Handler\Index\SlideshowAction::class => autowire(),
+    Ajax\Handler\Index\SongsAction::class => autowire(),
 ];

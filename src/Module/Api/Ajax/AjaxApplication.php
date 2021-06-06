@@ -28,8 +28,6 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
 use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\IndexAjaxHandler;
 use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -53,8 +51,31 @@ final class AjaxApplication implements ApplicationInterface
             'set_userflag' => Handler\Defaults\SetUserflagAction::class,
             'action_buttons' => Handler\Defaults\ActionButtonsAction::class,
         ],
-        'democratic' => DemocraticPlaybackAjaxHandler::class,
-        'index' => IndexAjaxHandler::class,
+        'democratic' => [
+            'delete_vote' => Handler\DemocraticPlayback\DeleteVoteAction::class,
+            'add_vote' => Handler\DemocraticPlayback\AddVoteAction::class,
+            'delete' => Handler\DemocraticPlayback\DeleteAction::class,
+            'send_playlist' => Handler\DemocraticPlayback\SendPlaylistAction::class,
+            'clear_playlist' => Handler\DemocraticPlayback\ClearPlaylistAction::class,
+        ],
+        'index' => [
+            'random_albums' => Handler\Index\RandomAlbumsAction::class,
+            'random_videos' => Handler\Index\RandomVideosAction::class,
+            'artist_info' => Handler\Index\ArtistInfoAction::class,
+            'similar_artist' => Handler\Index\SimilarArtistAction::class,
+            'similar_now_playing' => Handler\Index\SimilarNowPlayingAction::class,
+            'labels' => Handler\Index\LabelsAction::class,
+            'wanted_missing_albums' => Handler\Index\WantedMissingAlbumsAction::class,
+            'add_wanted' => Handler\Index\AddWantedAction::class,
+            'remove_wanted' => Handler\Index\RemoveWantedAction::class,
+            'accept_wanted' => Handler\Index\AcceptWantedAction::class,
+            'reloadnp' => Handler\Index\ReloadNpAction::class,
+            'sidebar' => Handler\Index\SidebarAction::class,
+            'start_channel' => Handler\Index\StartChannelAction::class,
+            'stop_channel' => Handler\Index\StopChannelAction::class,
+            'slideshow' => Handler\Index\SlideshowAction::class,
+            'songs' => Handler\Index\SongsAction::class,
+        ],
         'localplay' => LocalPlayAjaxHandler::class,
         'player' => [
             'show_broadcasts' => Handler\Player\ShowBroadcastsAction::class,
