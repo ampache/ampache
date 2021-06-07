@@ -677,13 +677,14 @@ class Subsonic_Api
                 }
                 break;
             case "byGenre":
-                $genre = self::check_parameter($input, 'genre');
-
+                $genre  = self::check_parameter($input, 'genre');
                 $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
+            default:
+                $albums = false;
         }
 
         return $albums;
@@ -703,9 +704,11 @@ class Subsonic_Api
             $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
             $errorOccured = false;
             $albums       = self::_albumList($input, $type);
-            if (!$albums) {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC,
-                    "Invalid list type: " . scrub_out((string)$type), 'getAlbumList');
+            if ($albums === false) {
+                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
+                $errorOccured = true;
+            } elseif (empty($albums)) {
+                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "The requested data was not found: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
             }
             if (!$errorOccured) {
