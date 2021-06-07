@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Api\Ajax\AjaxApplication;
-use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\Api\Gui\ApiHandler;
 use Ampache\Module\Api\Gui\ApiHandlerInterface;
 use Ampache\Module\Api\Gui\JsonApiApplication;
@@ -147,8 +145,6 @@ return [
     SubSonic\Method\DeletePodcastEpisode::class => autowire(),
     SubSonic\Method\RefreshPodcastsMethod::class => autowire(),
     AjaxApplication::class => autowire(AjaxApplication::class),
-    BrowseAjaxHandler::class => autowire(BrowseAjaxHandler::class),
-    LocalPlayAjaxHandler::class => autowire(LocalPlayAjaxHandler::class),
     Ajax\Handler\Podcast\SyncAction::class => autowire(),
     Ajax\Handler\Stats\GeolocationAction::class => autowire(),
     Ajax\Handler\Tag\AddFilterAction::class => autowire(),
@@ -203,4 +199,19 @@ return [
     Ajax\Handler\Index\StopChannelAction::class => autowire(),
     Ajax\Handler\Index\SlideshowAction::class => autowire(),
     Ajax\Handler\Index\SongsAction::class => autowire(),
+    Ajax\Handler\LocalPlay\SetInstanceAction::class => autowire(),
+    Ajax\Handler\LocalPlay\CommandAction::class => autowire(),
+    Ajax\Handler\LocalPlay\DeleteTrackAction::class => autowire(),
+    Ajax\Handler\LocalPlay\DeleteInstanceAction::class => autowire(),
+    Ajax\Handler\LocalPlay\RepeatAction::class => autowire(),
+    Ajax\Handler\LocalPlay\RandomAction::class => autowire(),
+    Ajax\Handler\Browse\BrowseAction::class => autowire(),
+    Ajax\Handler\Browse\SetSortAction::class => autowire(),
+    Ajax\Handler\Browse\ToggleTagAction::class => autowire(),
+    Ajax\Handler\Browse\DeleteObjectAction::class => autowire(),
+    Ajax\Handler\Browse\PageAction::class => autowire(),
+    Ajax\Handler\Browse\ShowArtAction::class => autowire(),
+    Ajax\Handler\Browse\GetFiltersAction::class => autowire(),
+    Ajax\Handler\Browse\OptionsAction::class => autowire(),
+    Ajax\Handler\Browse\GetShareLinksAction::class => autowire(),
 ];

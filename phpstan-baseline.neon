@@ -601,11 +601,6 @@ parameters:
 			path: src/Module/Api/Ajax.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 5
-			path: src/Module/Api/Ajax/Handler/BrowseAjaxHandler.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$accepted\\.$#"
 			count: 1
 			path: src/Module/Api/Ajax/Handler/Index/RemoveWantedAction.php
@@ -2724,11 +2719,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$artist_id$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 1
-			path: src/Module/Api/RefreshReordered/RefreshAlbumSongsAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Method\\\\CreatePodcastChannelMethod\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -5718,11 +5708,6 @@ parameters:
 			message: "#^Cannot call method get_user_owner\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Module/Application/Stats/AbstractGraphRendererAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_ids of method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) expects array, null given\\.$#"
-			count: 1
-			path: src/Module/Application/Stats/PopularAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recent_sql\\(\\) expects string\\|null, int given\\.$#"

@@ -152,7 +152,7 @@ class Browse extends Query
      * and requires the correct template based on the
      * type that we are currently browsing
      *
-     * @param array $object_ids
+     * @param null|array $object_ids
      * @param boolean|array|string $argument
      */
     public function show_objects($object_ids = array(), $argument = false)

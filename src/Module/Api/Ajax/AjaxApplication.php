@@ -26,9 +26,6 @@ namespace Ampache\Module\Api\Ajax;
 
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\Api\Ajax\Handler\AjaxHandlerInterface;
-use Ampache\Module\Api\Ajax\Handler\BrowseAjaxHandler;
-use Ampache\Module\Api\Ajax\Handler\LocalPlayAjaxHandler;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -39,7 +36,17 @@ use function xoutput_headers;
 final class AjaxApplication implements ApplicationInterface
 {
     private const HANDLER_LIST = [
-        'browse' => BrowseAjaxHandler::class,
+        'browse' => [
+            'browse' => Handler\Browse\BrowseAction::class,
+            'set_sort' => Handler\Browse\SetSortAction::class,
+            'toggle_tag' => Handler\Browse\ToggleTagAction::class,
+            'delete_object' => Handler\Browse\DeleteObjectAction::class,
+            'page' => Handler\Browse\PageAction::class,
+            'show_art' => Handler\Browse\ShowArtAction::class,
+            'get_filters' => Handler\Browse\GetFiltersAction::class,
+            'options' => Handler\Browse\OptionsAction::class,
+            'get_share_links' => Handler\Browse\GetShareLinksAction::class,
+        ],
         'catalog' => [
             'flip_state' => Handler\Catalog\FlipStateAction::class,
         ],
@@ -76,7 +83,14 @@ final class AjaxApplication implements ApplicationInterface
             'slideshow' => Handler\Index\SlideshowAction::class,
             'songs' => Handler\Index\SongsAction::class,
         ],
-        'localplay' => LocalPlayAjaxHandler::class,
+        'localplay' => [
+            'set_instance' => Handler\LocalPlay\SetInstanceAction::class,
+            'command' => Handler\LocalPlay\CommandAction::class,
+            'delete_track' => Handler\LocalPlay\DeleteTrackAction::class,
+            'delete_instance' => Handler\LocalPlay\DeleteInstanceAction::class,
+            'repeat' => Handler\LocalPlay\RepeatAction::class,
+            'random' => Handler\LocalPlay\RandomAction::class,
+        ],
         'player' => [
             'show_broadcasts' => Handler\Player\ShowBroadcastsAction::class,
             'broadcast' => Handler\Player\BroadcastAction::class,
@@ -151,30 +165,20 @@ final class AjaxApplication implements ApplicationInterface
 
         $handlerClassName = static::HANDLER_LIST[$page] ?? static::HANDLER_LIST['default'];
 
-        if (is_array($handlerClassName)) {
-            if (array_key_exists($action, $handlerClassName)) {
-                /** @var ActionInterface $handler */
-                $handler = $this->dic->get($handlerClassName[$action]);
+        if (array_key_exists($action, $handlerClassName)) {
+            /** @var ActionInterface $handler */
+            $handler = $this->dic->get($handlerClassName[$action]);
 
-                $result = $handler->handle(
-                    $request,
-                    $this->dic->get(Psr17Factory::class)->createResponse(),
-                    Core::get_global('user')
-                );
-            } else {
-                $result = ['rfc3514' => '0x1'];
-            }
-
-            // We always do this
-            echo xoutput_from_array($result);
-        } else {
-            /** @var AjaxHandlerInterface $handler */
-            $handler = $this->dic->get($handlerClassName);
-
-            $handler->handle(
+            $result = $handler->handle(
                 $request,
-                $this->dic->get(Psr17Factory::class)->createResponse()
+                $this->dic->get(Psr17Factory::class)->createResponse(),
+                Core::get_global('user')
             );
+        } else {
+            $result = ['rfc3514' => '0x1'];
         }
+
+        // We always do this
+        echo xoutput_from_array($result);
     }
 }

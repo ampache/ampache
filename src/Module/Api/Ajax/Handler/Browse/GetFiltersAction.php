@@ -1,5 +1,4 @@
 <?php
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,20 +17,32 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+declare(strict_types=0);
 
-namespace Ampache\Module\Api\Ajax\Handler;
+namespace Ampache\Module\Api\Ajax\Handler\Browse;
 
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface AjaxHandlerInterface
+final class GetFiltersAction extends AbstractBrowseAction
 {
     public function handle(
-        ServerRequestInterface $reqest,
-        ResponseInterface $response
-    ): void;
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        User $user
+    ): array {
+        $browse = $this->getBrowse();
+
+        ob_start();
+        require_once Ui::find_template('browse_filters.inc.php');
+        $results['browse_filters'] = ob_get_clean();
+
+        $browse->store();
+
+        return $results;
+    }
 }
