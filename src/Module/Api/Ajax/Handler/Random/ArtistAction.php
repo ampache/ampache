@@ -24,8 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Ajax\Handler\Random;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -36,10 +35,14 @@ final class ArtistAction implements ActionInterface
 {
     private SongRepositoryInterface $songRepository;
 
+    private UiInterface $ui;
+
     public function __construct(
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        UiInterface $ui
     ) {
         $this->songRepository = $songRepository;
+        $this->ui             = $ui;
     }
 
     public function handle(
@@ -58,9 +61,9 @@ final class ArtistAction implements ActionInterface
 
         $songs  = $this->songRepository->getByArtist($artist_id);
         foreach ($songs as $song_id) {
-            Core::get_global('user')->playlist->add_object($song_id, 'song');
+            $user->playlist->add_object($song_id, 'song');
         }
-        $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+        $results['rightbar'] = $this->ui->ajaxInclude('rightbar.inc.php');
 
         return $results;
     }

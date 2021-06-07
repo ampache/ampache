@@ -146,18 +146,14 @@ class Ui implements UiInterface
     }
 
     /**
-     * ajax_include
-     *
-     * Does some trickery with the output buffer to return the output of a
+     * does some trickery with the output buffer to return the output of a
      * template.
-     * @param string $template
-     * @return string
      */
-    public static function ajax_include($template)
+    public function ajaxInclude(string $template): string
     {
         ob_start();
         require self::find_template('') . $template;
-        $output = ob_get_contents();
+        $output = (string) ob_get_contents();
         ob_end_clean();
 
         return $output;

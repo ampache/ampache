@@ -113,4 +113,10 @@ interface UiInterface
         bool $allow_none = false,
         string $filter_type = ''
     ): string;
+
+    /**
+     * does some trickery with the output buffer to return the output of a
+     * template.
+     */
+    public function ajaxInclude(string $template): string;
 }

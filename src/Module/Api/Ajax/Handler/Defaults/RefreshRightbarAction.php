@@ -24,20 +24,28 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler\Defaults;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class RefreshRightbarAction implements ActionInterface
 {
+    private UiInterface $ui;
+
+    public function __construct(
+        UiInterface $ui
+    ) {
+        $this->ui = $ui;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
         return [
-            'rightbar' => Ui::ajax_include('rightbar.inc.php')
+            'rightbar' => $this->ui->ajaxInclude('rightbar.inc.php')
         ];
     }
 }

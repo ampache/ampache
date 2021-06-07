@@ -24,8 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Ajax\Handler\Random;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
@@ -34,6 +33,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class AdvancedRandomAction implements ActionInterface
 {
+    private UiInterface $ui;
+
+    public function __construct(
+        UiInterface $ui
+    ) {
+        $this->ui = $ui;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -45,10 +52,10 @@ final class AdvancedRandomAction implements ActionInterface
         // First add them to the active playlist
         if (!empty($object_ids)) {
             foreach ($object_ids as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                $user->playlist->add_object($object_id, 'song');
             }
         }
-        $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+        $results['rightbar'] = $this->ui->ajaxInclude('rightbar.inc.php');
 
         // Now setup the browse and show them below!
         $browse = new Browse();

@@ -19,47 +19,48 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
-namespace Ampache\Module\Api\Ajax\Handler\Random;
+namespace Ampache\Module\Api\Ajax\Handler\Defaults;
 
-use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\System\Core;
+use Ampache\MockeryTestCase;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\User;
+use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class SongAction implements ActionInterface
+class RefreshRightbarActionTest extends MockeryTestCase
 {
-    private UiInterface $ui;
+    private MockInterface $ui;
 
-    public function __construct(
-        UiInterface $ui
-    ) {
-        $this->ui = $ui;
+    private RefreshRightbarAction $subject;
+
+    public function setUp(): void
+    {
+        $this->ui = $this->mock(UiInterface::class);
+
+        $this->subject = new RefreshRightbarAction(
+            $this->ui
+        );
     }
 
-    public function handle(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        User $user
-    ): array {
-        $results = [];
-        $songs   = Random::get_default('', Core::get_global('user')->id);
+    public function testHandleReturnsOutput(): void
+    {
+        $request  = $this->mock(ServerRequestInterface::class);
+        $response = $this->mock(ResponseInterface::class);
+        $user     = $this->mock(User::class);
 
-        if (!count($songs)) {
-            $results['rfc3514'] = '0x1';
+        $content = 'some-content';
 
-            return $results;
-        }
+        $this->ui->shouldReceive('ajaxInclude')
+            ->with('rightbar.inc.php')
+            ->once()
+            ->andReturn($content);
 
-        foreach ($songs as $song_id) {
-            Core::get_global('user')->playlist->add_object($song_id, 'song');
-        }
-        $results['rightbar'] = $this->ui->ajaxInclude('rightbar.inc.php');
-
-        return $results;
+        $this->assertSame(
+            ['rightbar' => $content],
+            $this->subject->handle($request, $response, $user)
+        );
     }
 }

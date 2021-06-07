@@ -23,7 +23,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Ajax\Handler\Defaults;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -33,26 +34,47 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ActionButtonsAction implements ActionInterface
 {
+    private ConfigContainerInterface $config;
+
+    public function __construct(
+        ConfigContainerInterface $config
+    ) {
+        $this->config = $config;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
-        $results = [];
-        ob_start();
-        if (AmpConfig::get('ratings')) {
-            echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-            echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-            echo "</div> |";
-        }
-        if (AmpConfig::get('userflags')) {
-            echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-            echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-            echo "</div>";
-        }
-        $results['action_buttons'] = ob_get_contents();
-        ob_end_clean();
+        $result      = '';
+        $queryParams = $request->getQueryParams();
 
-        return $results;
+        $objectId   = $queryParams['object_id'] ?? 0;
+        $objectType = $queryParams['object_type'] ?? '';
+
+        if ($this->config->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
+            $result .= sprintf(
+                ' <div id=\'rating_%s_%s\'>',
+                $objectId,
+                $objectType
+            );
+            $result .= Rating::show($objectId, $objectType);
+            $result .= '</div> |';
+        }
+
+        if ($this->config->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS)) {
+            $result .= sprintf(
+                ' <div id=\'userflag_%s_%s\'>',
+                $objectId,
+                $objectType
+            );
+            $result .= Userflag::show($objectId, $objectType);
+            $result .= '</div>';
+        }
+
+        return [
+            'action_buttons' => $result
+        ];
     }
 }

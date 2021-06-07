@@ -27,7 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
@@ -48,14 +48,18 @@ final class BasketAction implements ActionInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private UiInterface $ui;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        UiInterface $ui
     ) {
         $this->modelFactory    = $modelFactory;
         $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
+        $this->ui              = $ui;
     }
 
     public function handle(
@@ -127,6 +131,8 @@ final class BasketAction implements ActionInterface
             }
         }
 
-        return ['rightbar' => Ui::ajax_include('rightbar.inc.php')];
+        return [
+            'rightbar' => $this->ui->ajaxInclude('rightbar.inc.php')
+        ];
     }
 }

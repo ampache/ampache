@@ -26,7 +26,7 @@ namespace Ampache\Module\Api\Ajax\Handler\Stream;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -34,6 +34,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class SetPlayTypeAction implements ActionInterface
 {
+    private UiInterface $ui;
+
+    public function __construct(
+        UiInterface $ui
+    ) {
+        $this->ui = $ui;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -62,7 +70,6 @@ final class SetPlayTypeAction implements ActionInterface
                 $new = 'web_player';
                 break;
             default:
-                $new                = 'stream';
                 $results['rfc3514'] = '0x1';
 
                 return $results;
@@ -76,7 +83,7 @@ final class SetPlayTypeAction implements ActionInterface
         }
 
         if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
-            $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+            $results['rightbar'] = $this->ui->ajaxInclude('rightbar.inc.php');
         }
 
         $results['rfc3514'] = '0x0';
