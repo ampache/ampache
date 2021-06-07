@@ -28,7 +28,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -72,11 +71,14 @@ final class FlipFollowAction implements ActionInterface
             $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE)
         ) {
-            $followUserId = (int) (Core::get_request('user_id'));
+            $fuser = $this->modelFactory->createUser(
+                (int) $request->getQueryParams()['user_id'] ?? 0
+            );
+
+            $followUserId = $fuser->getId();
             $userId       = $user->getId();
 
-            $fuser = $this->modelFactory->createUser($followUserId);
-            if ($fuser->getId() && $fuser->getId() !== $userId) {
+            if ($followUserId && $followUserId !== $userId) {
                 $this->userFollowToggler->toggle(
                     $followUserId,
                     $userId
