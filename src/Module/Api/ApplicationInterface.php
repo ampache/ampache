@@ -20,7 +20,7 @@
  *
  */
 
-namespace Ampache\Application;
+namespace Ampache\Module\Api;
 
 interface ApplicationInterface
 {

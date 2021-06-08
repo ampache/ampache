@@ -1,41 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access offset 'host' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Cannot access offset 'path' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 4
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Cannot access offset 'query' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 2
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Cannot access offset 'scheme' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 2
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\AmpConfig\\:\\:get_all\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/AmpConfig.php
@@ -4324,6 +4289,41 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Xml_Data\\:\\:\\$enable_json_checks has no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
+
+		-
+			message: "#^Cannot access offset 'host' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Cannot access offset 'path' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
+			count: 4
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Cannot access offset 'query' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
+			count: 2
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Cannot access offset 'scheme' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
+			count: 2
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp/ControlReplyApplication.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\TvShowInterface\\:\\:\\$id\\.$#"

@@ -32,6 +32,12 @@ use Ampache\Module\Api\Gui\XmlApiApplication;
 use Ampache\Module\Api\Gui\Output\ApiOutputFactory;
 use Ampache\Module\Api\Gui\Output\ApiOutputFactoryInterface;
 use Ampache\Module\Api\SubSonic\SubsonicApiApplication;
+use Ampache\Module\Api\Upnp\CmControlReplyApplication;
+use Ampache\Module\Api\Upnp\ControlReplyApplication;
+use Ampache\Module\Api\Upnp\EventReplyApplication;
+use Ampache\Module\Api\Upnp\MediaServiceDescriptionApplication;
+use Ampache\Module\Api\Upnp\PlayStatusApplication;
+use Ampache\Module\Api\Upnp\UpnpApplication;
 use function DI\autowire;
 
 return [
@@ -214,4 +220,10 @@ return [
     Ajax\Handler\Browse\GetFiltersAction::class => autowire(),
     Ajax\Handler\Browse\OptionsAction::class => autowire(),
     Ajax\Handler\Browse\GetShareLinksAction::class => autowire(),
+    UpnpApplication::class => autowire(UpnpApplication::class),
+    PlayStatusApplication::class => autowire(PlayStatusApplication::class),
+    CmControlReplyApplication::class => autowire(CmControlReplyApplication::class),
+    ControlReplyApplication::class => autowire(ControlReplyApplication::class),
+    EventReplyApplication::class => autowire(EventReplyApplication::class),
+    MediaServiceDescriptionApplication::class => autowire(MediaServiceDescriptionApplication::class),
 ];

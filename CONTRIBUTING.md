@@ -192,10 +192,6 @@ Fonts, scripts, templates and non-code resources that are required by Ampache.
 Most of the logic resides within the Module folder. The model-files (in `Repository`) may also
 contain application logic, this logic fragments will be migrated into their corresponding domains in `Module`
 
-##### Application (deprecated) #####
-
-Api-related code which didn't fit into existing domains within the Module folder yet.
-
 ##### Config #####
 
 Application bootstrapping and config initialization related code.

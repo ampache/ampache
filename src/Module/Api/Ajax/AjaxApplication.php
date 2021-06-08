@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Ajax;
 
-use Ampache\Application\ApplicationInterface;
+use Ampache\Module\Api\ApplicationInterface;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\System\Core;
 use Nyholm\Psr7\Factory\Psr17Factory;

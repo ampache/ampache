@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // No event subscribe support but avoid few players error (e.g. Windows Media Player).
 
-use Ampache\Application\Api\Upnp\EventReplyApplication;
+use Ampache\Module\Api\Upnp\EventReplyApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

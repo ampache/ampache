@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,12 +17,13 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Application\Api\Upnp;
+declare(strict_types=0);
 
-use Ampache\Application\ApplicationInterface;
+namespace Ampache\Module\Api\Upnp;
+
+use Ampache\Module\Api\ApplicationInterface;
 
 final class EventReplyApplication implements ApplicationInterface
 {

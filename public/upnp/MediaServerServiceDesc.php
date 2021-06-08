@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\Upnp\MediaServiceDescriptionApplication;
+use Ampache\Module\Api\Upnp\MediaServiceDescriptionApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

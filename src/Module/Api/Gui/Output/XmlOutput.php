@@ -211,7 +211,7 @@ final class XmlOutput implements ApiOutputInterface
         $string = '';
 
         foreach ($artistIds as $artistId) {
-            $artist = $this->modelFactory->createArtist($artist_id);
+            $artist = $this->modelFactory->createArtist($artistId);
             $artist->format();
 
             $rating     = new Rating($artistId, 'artist');
