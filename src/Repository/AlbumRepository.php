@@ -44,8 +44,10 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (!$count) {
             $count = 1;
         }
-
-        $sort_disk = (AmpConfig::get('album_group')) ? 'AND `album`.`disk` = 1 ' : '';
+        $allow_group_disks = (AmpConfig::get('album_group'));
+        $sort_disk         = ($allow_group_disks)
+            ? 'AND `album`.`disk` = 1 '
+            : '';
 
         $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
         if (AmpConfig::get('catalog_disable')) {
@@ -353,9 +355,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
-
-        $sort_type = AmpConfig::get('album_sort');
-        $sort_disk = (AmpConfig::get('album_group')) ? "" : ", `album`.`disk`";
+        $allow_group_disks = (AmpConfig::get('album_group'));
+        $sort_type         = AmpConfig::get('album_sort');
+        $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
         switch ($sort_type) {
             case 'year_asc':
                 $sql_sort = '`album`.`year` ASC' . $sort_disk;
@@ -375,7 +377,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 
-        if (AmpConfig::get('album_group')) {
+        if ($allow_group_disks) {
             $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
 

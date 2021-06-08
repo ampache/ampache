@@ -292,7 +292,6 @@ class Userflag extends database_object
             $user_id = Core::get_global('user')->id;
         }
         $user_id           = (int)($user_id);
-        $type              = Stats::validate_type($type);
         $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
         $sql               = ($allow_group_disks)
             ? "SELECT MIN(`user_flag`.`object_id`) as `id`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
@@ -323,7 +322,7 @@ class Userflag extends database_object
      * @param integer $offset
      * @return array
      */
-    public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
+    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0)
     {
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);

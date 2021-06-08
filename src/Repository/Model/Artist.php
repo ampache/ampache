@@ -960,8 +960,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
         $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret  = Dba::write($sql,
-            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
+        $sqlret  = Dba::write($sql, array($summary, $placeformed, $yearformed, time(), (int)$manual, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
