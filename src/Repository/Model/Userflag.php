@@ -291,10 +291,10 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        $user_id     = (int)($user_id);
-        $type        = Stats::validate_type($type);
-        $album_group = ($type == 'album' && AmpConfig::get('album_group'));
-        $sql         = ($album_group)
+        $user_id           = (int)($user_id);
+        $type              = Stats::validate_type($type);
+        $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
+        $sql               = ($allow_group_disks)
             ? "SELECT MIN(`user_flag`.`object_id`) as `id`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
             : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " . "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
         if ($user_id < 1) {
@@ -306,7 +306,7 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= ($album_group)
+        $sql .= ($allow_group_disks)
             ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `user_flag`.`date` DESC "
             : " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
