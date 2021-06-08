@@ -237,26 +237,24 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        $user_id = (int)($user_id);
-        $type    = Stats::validate_type($type);
-        $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " . "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
+        $user_id           = (int)($user_id);
+        $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
+        $sql               = ($allow_group_disks)
+            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
+            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " . "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
         if ($user_id < 1) {
-            // Get latest only from user rights >= content manager
-            $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" . " WHERE `user`.`access` >= 50";
-        }
-        if ($user_id < 1) {
-            $sql .= " AND";
+            // Get latest only from user rights >= content manager TODO: why only content manager?
+            $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" . " WHERE `user`.`access` >= 50 AND `user_flag`.`object_type` = '" . $type . "'";
         } else {
-            $sql .= " WHERE";
-        }
-        $sql .= " `user_flag`.`object_type` = '" . $type . "'";
-        if ($user_id > 0) {
-            $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
+            $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'";
         }
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
+        $sql .= ($allow_group_disks)
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `user_flag`.`date` DESC "
+            : " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
+        //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -264,13 +262,13 @@ class Userflag extends database_object
     /**
      * get_latest
      * Get the latest user flagged objects
-     * @param string $type
+     * @param null|string $type
      * @param string $user_id
      * @param integer $count
      * @param integer $offset
      * @return array
      */
-    public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
+    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0)
     {
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);

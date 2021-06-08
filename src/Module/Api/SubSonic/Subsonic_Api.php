@@ -665,13 +665,17 @@ class Subsonic_Api
                 $albums = Rating::get_highest("album", $size, $offset);
                 break;
             case "frequent":
-                $albums = Stats::get_top("album", $size, 0, $offset);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Stats::get_top("album", $size, 0, $offset, $user->id);
                 break;
             case "recent":
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums = Userflag::get_latest('album', 0, $size);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Userflag::get_latest('album', $user->id, $size);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -689,13 +693,14 @@ class Subsonic_Api
                 }
                 break;
             case "byGenre":
-                $genre = self::check_parameter($input, 'genre');
-
+                $genre  = self::check_parameter($input, 'genre');
                 $tag_id = static::getTagRepository()->findByName($genre);
                 if ($tag_id > 0) {
                     $albums = static::getTagRepository()->getTagObjectIds('album', $tag_id, $size, $offset);
                 }
                 break;
+            default:
+                $albums = false;
         }
 
         return $albums;
@@ -715,9 +720,11 @@ class Subsonic_Api
             $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
             $errorOccured = false;
             $albums       = self::_albumList($input, $type);
-            if (!$albums) {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC,
-                    "Invalid list type: " . scrub_out((string)$type), 'getAlbumList');
+            if ($albums === false) {
+                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
+                $errorOccured = true;
+            } elseif (empty($albums)) {
+                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "The requested data was not found: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
             }
             if (!$errorOccured) {

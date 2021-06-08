@@ -595,7 +595,7 @@ class Artist extends database_object implements library_item
             $summary,
             $placeformed,
             $yearformed,
-            $manual
+            (bool) $manual
         );
 
         $this->summary     = $summary;

@@ -109,12 +109,12 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 return;
             }
             // existing files
-            if (is_file($filePath) && Core::is_readable($filePath)) {
+            if (is_file($filePath) && Core::is_readable($filePath) && $media !== null) {
                 $interactor->info(
                     sprintf(T_('Reading File: "%s"'), $filePath),
                     true
                 );
-                if ($media->id && $verificationMode == 1) {
+                if ($media->getId() && $verificationMode == 1) {
                     // Verify Existing files
                     $catalog = $media->getCatalogId();
                     Catalog::update_media_from_tags($media);
@@ -149,6 +149,11 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                             Catalog::gather_art_item($type, $file_id, true);
                         }
                     }
+                }
+                // update counts after adding/verifying
+                if ($type == 'song' && $media->getId()) {
+                    /** @var Song $media */
+                    $media->update_parent_counts();
                 }
             }
         }

@@ -8290,27 +8290,12 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
 		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
 			message: "#^Cannot call method add_file\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|int\\|null\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
 		-
 			message: "#^Cannot call method clean_file\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
-			message: "#^Cannot call method getCatalogId\\(\\) on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
 
