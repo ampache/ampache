@@ -13605,11 +13605,6 @@ parameters:
 			path: src/Module/User/Activity/UserActivityRenderer.php
 
 		-
-			message: "#^Parameter \\#1 \\$userId of method Ampache\\\\Repository\\\\UserRepositoryInterface\\:\\:updateApiKey\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/User/Authorization/UserAccessKeyGenerator.php
-
-		-
 			message: "#^Parameter \\#1 \\$str of function base64_encode expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/User/PasswordGenerator.php

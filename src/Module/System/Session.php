@@ -89,7 +89,10 @@ final class Session implements SessionInterface
                 return false;
             }
 
-            $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
+            $this->userRepository->updateLastSeen(
+                (int) Core::get_global('user')->id,
+                time()
+            );
         } elseif (!$useAuth) {
             $auth['success']      = 1;
             $auth['username']     = '-1';
@@ -121,7 +124,10 @@ final class Session implements SessionInterface
 
                     return false;
                 }
-                $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
+                $this->userRepository->updateLastSeen(
+                    (int) Core::get_global('user')->id,
+                    time()
+                );
             }
         } else {
             // If Auth, but no session is set

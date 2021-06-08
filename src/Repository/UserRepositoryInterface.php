@@ -61,7 +61,8 @@ interface UserRepositoryInterface
      * updates the last seen data for this user
      */
     public function updateLastSeen(
-        int $userId
+        int $userId,
+        int $time
     ): void;
 
     /**
@@ -87,7 +88,7 @@ interface UserRepositoryInterface
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void;
+    public function updateApiKey(int $userId, string $apiKey): void;
 
     /**
      * Get the current hashed user password

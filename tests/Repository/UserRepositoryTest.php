@@ -260,4 +260,150 @@ class UserRepositoryTest extends MockeryTestCase
             $this->subject->findByWebsite($website)
         );
     }
+
+    public function testUpdateLastSeenUpdates(): void
+    {
+        $userId = 666;
+        $time   = 42;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE user SET last_seen = ? WHERE `id` = ?',
+                [$time, $userId]
+            )
+            ->once();
+
+        $this->subject->updateLastSeen($userId, $time);
+    }
+
+    public function testEnableEnables(): void
+    {
+        $userId = 666;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `user` SET `disabled` = \'0\' WHERE id = ?',
+                [$userId]
+            )
+            ->once();
+
+        $this->subject->enable($userId);
+    }
+
+    public function testGetValidationByUsernameReturnsNullIfNothingWasfound(): void
+    {
+        $username = 'some-username';
+
+        $this->database->shouldReceive('fetchOne')
+            ->with(
+                'SELECT `validation` FROM `user` WHERE `username` = ?',
+                [$username]
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertNull(
+            $this->subject->getValidationByUsername($username)
+        );
+    }
+
+    public function testGetValidationByUsernameReturnsValue(): void
+    {
+        $username = 'some-username';
+        $value    = 'some-value';
+
+        $this->database->shouldReceive('fetchOne')
+            ->with(
+                'SELECT `validation` FROM `user` WHERE `username` = ?',
+                [$username]
+            )
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getValidationByUsername($username)
+        );
+    }
+
+    public function testActivateByUsernameEnables(): void
+    {
+        $username = 'some-username';
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `user` SET `disabled` = \'0\' WHERE `username` = ?',
+                [$username]
+            )
+            ->once();
+
+        $this->subject->activateByUsername($username);
+    }
+
+    public function testUpdateRssTokenUpdates(): void
+    {
+        $userId = 666;
+        $token  = 'some-token';
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?',
+                [$token, $userId]
+            )
+            ->once();
+
+        $this->subject->updateRssToken($userId, $token);
+    }
+
+    public function testUpdateApiKeyUpdates(): void
+    {
+        $userId = 666;
+        $apiKey = 'some-api-key';
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `user` SET `apikey` = ? WHERE `id` = ?',
+                [$apiKey, $userId]
+            )
+            ->once();
+
+        $this->subject->updateApiKey($userId, $apiKey);
+    }
+
+    public function testRetrievePasswordFromUserReturnsEmptyStringIfNotFound(): void
+    {
+        $userId = 666;
+
+        $this->database->shouldReceive('fetchOne')
+            ->with(
+                'SELECT password FROM `user` WHERE `id` = ?',
+                [$userId]
+            )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertSame(
+            '',
+            $this->subject->retrievePasswordFromUser($userId)
+        );
+    }
+
+    public function testRetrievePasswordFromUserReturnsPassword(): void
+    {
+        $userId = 666;
+        $value  = 'some-value';
+
+        $this->database->shouldReceive('fetchOne')
+            ->with(
+                'SELECT password FROM `user` WHERE `id` = ?',
+                [$userId]
+            )
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->retrievePasswordFromUser($userId)
+        );
+    }
 }

@@ -177,11 +177,12 @@ final class UserRepository implements UserRepositoryInterface
      * updates the last seen data for the user
      */
     public function updateLastSeen(
-        int $userId
+        int $userId,
+        int $time
     ): void {
-        Dba::write(
+        $this->database->executeQuery(
             'UPDATE user SET last_seen = ? WHERE `id` = ?',
-            [time(), $userId]
+            [$time, $userId]
         );
     }
 
@@ -190,8 +191,8 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function enable(int $userId): void
     {
-        Dba::write(
-            'UPDATE `user` SET `disabled`=\'0\' WHERE id = ?',
+        $this->database->executeQuery(
+            'UPDATE `user` SET `disabled` = \'0\' WHERE id = ?',
             [$userId]
         );
     }
@@ -201,12 +202,16 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function getValidationByUsername(string $username): ?string
     {
-        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, [$username]);
+        $validation = $this->database->fetchOne(
+            'SELECT `validation` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
 
-        $row = Dba::fetch_assoc($db_results);
+        if ($validation === false) {
+            return null;
+        }
 
-        return $row['validation'] ?? null;
+        return $validation;
     }
 
     /**
@@ -214,8 +219,10 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function activateByUsername(string $username): void
     {
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
-        Dba::write($sql, [$username]);
+        $this->database->executeQuery(
+            'UPDATE `user` SET `disabled` = \'0\' WHERE `username` = ?',
+            [$username]
+        );
     }
 
     /**
@@ -223,19 +230,21 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function updateRssToken(int $userId, string $rssToken): void
     {
-        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
-
-        Dba::write($sql, array($rssToken, $userId));
+        $this->database->executeQuery(
+            'UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?',
+            [$rssToken, $userId]
+        );
     }
 
     /**
      * Updates a users api key
      */
-    public function updateApiKey(string $userId, string $apikey): void
+    public function updateApiKey(int $userId, string $apiKey): void
     {
-        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-
-        Dba::write($sql, array($apikey, $userId));
+        $this->database->executeQuery(
+            'UPDATE `user` SET `apikey` = ? WHERE `id` = ?',
+            [$apiKey, $userId]
+        );
     }
 
     /**
@@ -243,11 +252,16 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function retrievePasswordFromUser(int $userId): string
     {
-        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($userId));
-        $row        = Dba::fetch_assoc($db_results);
+        $password = $this->database->fetchOne(
+            'SELECT password FROM `user` WHERE `id` = ?',
+            [$userId]
+        );
 
-        return $row['password'] ?? '';
+        if ($password === false) {
+            return '';
+        }
+
+        return $password;
     }
 
     /**
@@ -296,13 +310,12 @@ final class UserRepository implements UserRepositoryInterface
         }
 
         $sql .= ")";
-        $db_results = Dba::write($sql, $params);
-
-        if (!$db_results) {
-            return null;
-        }
+        $this->database->executeQuery(
+            $sql,
+            $params
+        );
 
         // Get the insert_id
-        return (int) Dba::insert_id();
+        return (int) $this->database->lastInsertId();
     }
 }
