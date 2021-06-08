@@ -23,31 +23,67 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Ajax\Handler\Tag;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Tag;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class DeleteAction implements ActionInterface
 {
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private LoggerInterface $logger;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        PrivilegeCheckerInterface $privilegeChecker,
+        ModelFactoryInterface $modelFactory,
+        LoggerInterface $logger,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->privilegeChecker = $privilegeChecker;
+        $this->modelFactory     = $modelFactory;
+        $this->logger           = $logger;
+        $this->configContainer  = $configContainer;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
-        if (!Access::check('interface', 75)) {
-            debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete tag', 1);
+        if (!$this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
+            $this->logger->critical(
+                $user->username . ' attempted to delete tag',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return [];
         }
-        debug_event('tag.ajax', 'Deleting tag...', 5);
-        $tag = new Tag($_GET['tag_id']);
+
+        $this->logger->debug(
+            'Deleting tag...',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+
+        $tag = $this->modelFactory->createTag($_GET['tag_id']);
         $tag->delete();
-        header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag&type=song');
+
+        header(
+            sprintf(
+                "Location: %s/browse.php?action=tag&type=song",
+                $this->configContainer->getWebPath()
+            )
+        );
 
         return [];
     }

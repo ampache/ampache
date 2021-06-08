@@ -24,26 +24,39 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Ajax\Handler\Tag;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class AddFilterAction implements ActionInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
-        $browse = new Browse($_GET['browse_id']);
-        $browse->set_filter('tag', $_GET['tag_id']);
+        $queryParams = $request->getQueryParams();
+
+        $browse = $this->modelFactory->createBrowse(
+            (int) ($queryParams['browse_id'] ?? 0)
+        );
+
+        $browse->set_filter('tag', (int) ($queryParams['tag_id'] ?? 0));
         $object_ids = $browse->get_objects();
+
         ob_start();
         $browse->show_objects($object_ids);
         $results = [$browse->get_content_div() => ob_get_clean()];
         $browse->store();
-        // Retrieve current objects of type based on combined filters
 
         return $results;
     }

@@ -19,25 +19,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Ajax\Handler\Tag;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class BrowseTypeAction implements ActionInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
-        $browse = new Browse($_GET['browse_id']);
-        $browse->set_filter('object_type', filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $queryParams = $request->getQueryParams();
+
+        $browse = $this->modelFactory->createBrowse(
+            (int) ($queryParams['browse_id'] ?? 0)
+        );
+
+        $browse->set_filter(
+            'object_type',
+            $queryParams['type'] ?? ''
+        );
         $browse->store();
 
         return [];

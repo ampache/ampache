@@ -24,21 +24,31 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Ajax\Handler\Tag;
 
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class AddTageByNameAction implements ActionInterface
 {
     private TagCreatorInteface $tagCreator;
 
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    private LoggerInterface $logger;
+
     public function __construct(
-        TagCreatorInteface $tagCreator
+        TagCreatorInteface $tagCreator,
+        PrivilegeCheckerInterface $privilegeChecker,
+        LoggerInterface $logger
     ) {
-        $this->tagCreator = $tagCreator;
+        $this->tagCreator       = $tagCreator;
+        $this->privilegeChecker = $privilegeChecker;
+        $this->logger           = $logger;
     }
 
     public function handle(
@@ -46,16 +56,26 @@ final class AddTageByNameAction implements ActionInterface
         ResponseInterface $response,
         User $user
     ): array {
-        if (!Access::check('interface', 75)) {
-            debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add new tag', 1);
+        if (!$this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
+            $this->logger->critical(
+                $user->username . ' attempted to add new tag',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return [];
         }
-        debug_event('tag.ajax', 'Adding new tag by name...', 5);
+
+        $this->logger->debug(
+            'Adding new tag by name...',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+
+        $queryParams = $request->getQueryParams();
+
         $this->tagCreator->add(
-            filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES),
-            filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT),
-            $_GET['tag_name']
+            $queryParams['type'] ?? '',
+            (int) ($queryParams['object_id'] ?? 0),
+            $queryParams['tag_name'] ?? ''
         );
 
         return [];
