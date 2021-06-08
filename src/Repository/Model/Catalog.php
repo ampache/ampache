@@ -2324,21 +2324,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Update the catalog mapping for various types
-     */
-    public static function garbage_collect_mapping()
-    {
-        // delete non-existent maps
-        $tables = ['album', 'song', 'video', 'podcast_episode'];
-        foreach ($tables as $type) {
-            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
-            Dba::write($sql);
-        }
-        $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
-        Dba::write($sql);
-    }
-
-    /**
      * Update the catalog map for a single item
      */
     public static function update_map($catalog, $object_type, $object_id)

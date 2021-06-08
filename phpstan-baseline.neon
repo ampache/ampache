@@ -21860,11 +21860,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:garbage_collect_mapping\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_artist_info\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php

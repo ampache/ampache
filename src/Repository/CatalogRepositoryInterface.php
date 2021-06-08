@@ -43,4 +43,9 @@ interface CatalogRepositoryInterface
      * Migrate an object associated catalog to a new object
      */
     public function migrateMap(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Update the catalog mapping for various types
+     */
+    public function collectMappingGarbage(): void;
 }

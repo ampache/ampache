@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
@@ -56,18 +57,22 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         ArtistRepositoryInterface $artistRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        CatalogRepositoryInterface $catalogRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
         $this->artistRepository       = $artistRepository;
         $this->songRepository         = $songRepository;
+        $this->catalogRepository      = $catalogRepository;
     }
 
     public function collect(): void
@@ -90,6 +95,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
 
-        Catalog::garbage_collect_mapping();
+        $this->catalogRepository->collectMappingGarbage();
     }
 }

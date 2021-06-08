@@ -78,4 +78,19 @@ final class CatalogRepository implements CatalogRepositoryInterface
 
         Dba::write($sql, $params);
     }
+
+    /**
+     * Update the catalog mapping for various types
+     */
+    public function collectMappingGarbage(): void
+    {
+        // delete non-existent maps
+        $tables = ['album', 'song', 'video', 'podcast_episode'];
+        foreach ($tables as $type) {
+            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
+            Dba::write($sql);
+        }
+        $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
+        Dba::write($sql);
+    }
 }
