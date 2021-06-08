@@ -48,7 +48,11 @@ final class UserFollowToggler implements UserFollowTogglerInterface
         if ($this->userFollowerRepository->isFollowedBy($userId, $followingUserId)) {
             $this->userFollowerRepository->delete($userId, $followingUserId);
         } else {
-            $this->userFollowerRepository->add($userId, $followingUserId);
+            $this->userFollowerRepository->add(
+                $userId,
+                $followingUserId,
+                time()
+            );
 
             $this->userActivityPoster->post($followingUserId, 'follow', 'user', $userId, time());
         }

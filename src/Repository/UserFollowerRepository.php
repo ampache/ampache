@@ -24,10 +24,18 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Doctrine\DBAL\Connection;
 
 final class UserFollowerRepository implements UserFollowerRepositoryInterface
 {
+    private Connection $database;
+
+    public function __construct(
+        Connection $database
+    ) {
+        $this->database = $database;
+    }
+
     /**
      * Get users following the user
      *
@@ -35,11 +43,15 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
      */
     public function getFollowers(int $userId): array
     {
-        $sql        = "SELECT `user` FROM `user_follower` WHERE `follow_user` = ?";
-        $db_results = Dba::read($sql, [$userId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['user'];
+        $dbResults = $this->database->executeQuery(
+            'SELECT `user` FROM `user_follower` WHERE `follow_user` = ?',
+            [$userId]
+        );
+
+        $results = [];
+
+        while ($followerId = $dbResults->fetchOne()) {
+            $results[] = (int) $followerId;
         }
 
         return $results;
@@ -52,11 +64,15 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
      */
     public function getFollowing(int $userId): array
     {
-        $sql        = "SELECT `follow_user` FROM `user_follower` WHERE `user` = ?";
-        $db_results = Dba::read($sql, [$userId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['follow_user'];
+        $db_results = $this->database->executeQuery(
+            'SELECT `follow_user` FROM `user_follower` WHERE `user` = ?',
+            [$userId]
+        );
+
+        $results = [];
+
+        while ($userId = $db_results->fetchOne()) {
+            $results[] = (int) $userId;
         }
 
         return $results;
@@ -67,22 +83,23 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
      */
     public function isFollowedBy(int $userId, int $followingUserId): bool
     {
-        $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        $db_results = Dba::read($sql, array($followingUserId, $userId));
-
-        return Dba::num_rows($db_results) > 0;
+        return $this->database->executeQuery(
+            'SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
+            [$followingUserId, $userId]
+        )->rowCount() > 0;
     }
 
     public function add(
         int $userId,
-        int $followingUserId
+        int $followingUserId,
+        int $time
     ): void {
-        Dba::write(
-            "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)",
+        $this->database->executeQuery(
+            'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)',
             [
                 $followingUserId,
                 $userId,
-                time()
+                $time
             ]
         );
     }
@@ -91,8 +108,8 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
         int $userId,
         int $followingUserId
     ): void {
-        Dba::write(
-            "DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?",
+        $this->database->executeQuery(
+            'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
             [
                 $followingUserId,
                 $userId,

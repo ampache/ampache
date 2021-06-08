@@ -60,7 +60,7 @@ class UserFollowTogglerTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
         $this->userFollowerRepository->shouldReceive('add')
-            ->with($userId, $followingUserId)
+            ->with($userId, $followingUserId, \Mockery::type('int'))
             ->once();
 
         $this->userActivityPoster->shouldReceive('post')

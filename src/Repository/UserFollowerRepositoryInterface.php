@@ -45,7 +45,8 @@ interface UserFollowerRepositoryInterface
 
     public function add(
         int $userId,
-        int $followingUserId
+        int $followingUserId,
+        int $time
     ): void;
 
     public function delete(
