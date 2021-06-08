@@ -2681,11 +2681,6 @@ parameters:
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
 		-
-			message: "#^Undefined variable\\: \\$artist_id$#"
-			count: 1
-			path: src/Module/Api/Gui/Output/XmlOutput.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Method\\\\CreatePodcastChannelMethod\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Method/CreatePodcastChannelMethod.php
@@ -22593,26 +22588,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\License\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/License.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:create\\(\\) should return bool but returns int\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:display_art\\(\\) has no return typehint specified\\.$#"

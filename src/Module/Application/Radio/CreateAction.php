@@ -31,8 +31,8 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\LiveStream\LiveStreamCreatorInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Live_Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,14 +46,18 @@ final class CreateAction implements ApplicationActionInterface
 
     private FormVerificatorInterface $formVerificator;
 
+    private LiveStreamCreatorInterface $liveStreamCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        FormVerificatorInterface $formVerificator
+        FormVerificatorInterface $formVerificator,
+        LiveStreamCreatorInterface $liveStreamCreator
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->formVerificator = $formVerificator;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->formVerificator   = $formVerificator;
+        $this->liveStreamCreator = $liveStreamCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,11 +71,12 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        /** @var array<string, mixed> $data */
+        $data = $request->getParsedBody();
+
+        $results = $this->liveStreamCreator->create($data);
+
         $this->ui->showHeader();
-
-        // Try to create the sucker
-        $results = Live_Stream::create($_POST);
-
         if (!$results) {
             $this->ui->show(
                 'show_add_live_stream.inc.php',
@@ -89,7 +94,6 @@ final class CreateAction implements ApplicationActionInterface
                 )
             );
         }
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

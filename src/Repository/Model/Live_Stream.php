@@ -277,56 +277,6 @@ final class Live_Stream extends database_object implements LiveStreamInterface
     } // update
 
     /**
-     * create
-     * This is a static function that takes a key'd array for input
-     * and if everything is good creates the object.
-     * @param array $data
-     */
-    public static function create(array $data): bool
-    {
-        // Make sure we've got a name and codec
-        if (!strlen((string)$data['name'])) {
-            AmpError::add('name', T_('Name is required'));
-        }
-        if (!strlen((string)$data['codec'])) {
-            AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
-        }
-
-        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
-
-        $elements = explode(":", (string)$data['url']);
-
-        if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
-        }
-
-        if (!empty($data['site_url'])) {
-            $elements = explode(":", (string)$data['site_url']);
-            if (!in_array($elements['0'], $allowed_array)) {
-                AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
-            }
-        }
-
-        // Make sure it's a real catalog
-        $catalog = Catalog::create_from_id($data['catalog']);
-        if (!$catalog->name) {
-            AmpError::add('catalog', T_('Catalog is invalid'));
-        }
-
-        if (AmpError::occurred()) {
-            return false;
-        }
-
-        return static::getLiveStreamRepository()->create(
-            $data['name'],
-            $data['site_url'],
-            $data['url'],
-            $catalog->getId(),
-            strtolower((string)$data['codec'])
-        );
-    } // create
-
-    /**
      * get_stream_types
      * This is needed by the media interface
      * @param string $player
@@ -408,12 +358,5 @@ final class Live_Stream extends database_object implements LiveStreamInterface
     public function isEnabled(): bool
     {
         return true;
-    }
-
-    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LiveStreamRepositoryInterface::class);
     }
 }

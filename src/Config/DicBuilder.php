@@ -66,6 +66,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Shout/service_definition.php',
     require_once __DIR__ . '/../Module/Video/service_definition.php',
     require_once __DIR__ . '/../Module/Tag/service_definition.php',
+    require_once __DIR__ . '/../Module/LiveStream/service_definition.php',
 );
 
 return $builder->build();
