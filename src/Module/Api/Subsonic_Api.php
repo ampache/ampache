@@ -653,13 +653,17 @@ class Subsonic_Api
                 $albums = Rating::get_highest("album", $size, $offset);
                 break;
             case "frequent":
-                $albums = Stats::get_top("album", $size, 0, $offset);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Stats::get_top("album", $size, 0, $offset, $user->id);
                 break;
             case "recent":
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums = Userflag::get_latest('album', 0, $size);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Userflag::get_latest('album', $user->id, $size);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
