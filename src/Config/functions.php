@@ -25,6 +25,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\CatalogProcessorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -694,7 +695,9 @@ function catalog_worker($action, $catalogs = null, $options = null)
         echo "sse_worker('$sse_url');";
         echo "</script>\n";
     } else {
-        Catalog::process_action($action, $catalogs, $options);
+        global $dic;
+
+        $dic->get(CatalogProcessorInterface::class)->process($action, $catalogs, $options);
     }
 }
 

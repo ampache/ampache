@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Album\AlbumArtistUpdaterInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\ArtItemGatherer;
@@ -38,11 +37,8 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
-use Ampache\Module\Catalog\CatalogStatisticUpdaterInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
-use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -2025,156 +2021,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * process_action
-     * @param string $action
-     * @param $catalogs
-     * @param array $options
-     */
-    public static function process_action($action, $catalogs, $options = null)
-    {
-        if (!$options || !is_array($options)) {
-            $options = array();
-        }
-
-        switch ($action) {
-            case 'add_to_all_catalogs':
-                $catalogs = static::getCatalogRepository()->getList();
-                // Intentional break fall-through
-            case 'add_to_catalog':
-                if ($catalogs) {
-                    foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->add_to_catalog($options);
-                        }
-                    }
-
-                    if (!defined('SSE_OUTPUT') && !defined('CLI')) {
-                        echo AmpError::display('catalog_add');
-                    }
-                }
-                break;
-            case 'update_all_catalogs':
-                $catalogs = static::getCatalogRepository()->getList();
-                // Intentional break fall-through
-            case 'update_catalog':
-                if ($catalogs) {
-                    foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->verify_catalog();
-                        }
-                    }
-                }
-                break;
-            case 'full_service':
-                if (!$catalogs) {
-                    $catalogs = static::getCatalogRepository()->getList();
-                }
-
-                /* This runs the clean/verify/add in that order */
-                foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        $catalog->clean_catalog();
-                        $catalog->verify_catalog();
-                        $catalog->add_to_catalog();
-                    }
-                }
-                Dba::optimize_tables();
-                break;
-            case 'clean_all_catalogs':
-                $catalogs = static::getCatalogRepository()->getList();
-                // Intentional break fall-through
-            case 'clean_catalog':
-                if ($catalogs) {
-                    foreach ($catalogs as $catalog_id) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->clean_catalog();
-                        }
-                    } // end foreach catalogs
-                    Dba::optimize_tables();
-                }
-                break;
-            case 'update_from':
-                $catalog_id = 0;
-                // First see if we need to do an add
-                if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
-                    if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
-                        $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
-                        }
-                    }
-                } // end if add
-
-                // Now check for an update
-                if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
-                    if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = Song::get_from_path($options['update_path']);
-                        foreach ($songs as $song_id) {
-                            static::getSingleItemUpdater()->update('song', (int) $song_id);
-                        }
-                    }
-                } // end if update
-
-                if ($catalog_id < 1) {
-                    AmpError::add('general',
-                        T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
-                }
-                break;
-            case 'gather_media_art':
-                if (!$catalogs) {
-                    $catalogs = static::getCatalogRepository()->getList();
-                }
-
-                // Iterate throughout the catalogs and gather as needed
-                foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        require Ui::find_template('show_gather_art.inc.php');
-                        flush();
-                        $catalog->gather_art();
-                    }
-                }
-                break;
-            case 'update_all_file_tags':
-                $catalogs = static::getCatalogRepository()->getList();
-                // Intentional break fall-through
-            case 'update_file_tags':
-                $write_id3     = AmpConfig::get('write_id3', false);
-                $write_id3_art = AmpConfig::get('write_id3_art', false);
-                AmpConfig::set_by_array(['write_id3' => 'true'], true);
-                AmpConfig::set_by_array(['write_id3_art' => 'true'], true);
-
-                $id3Writer = static::getSongId3TagWriter();
-                set_time_limit(0);
-                foreach ($catalogs as $catalog_id) {
-                    $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        $song_ids = $catalog->get_song_ids();
-                        foreach ($song_ids as $song_id) {
-                            $song = new Song($song_id);
-                            $song->format();
-
-                            $id3Writer->write($song);
-                        }
-                    }
-                }
-                AmpConfig::set_by_array(['write_id3' => $write_id3], true);
-                AmpConfig::set_by_array(['write_id3' => $write_id3_art], true);
-        }
-
-        // Remove any orphaned artists/albums/etc.
-        debug_event(self::class, 'Run Garbage collection', 5);
-        static::getCatalogGarbageCollector()->collect();
-        static::getAlbumRepository()->cleanEmptyAlbums();
-        static::getAlbumArtistUpdater()->update();
-        static::getCatalogStatisticcUpdater()->update();
-    }
-
-    /**
      * xml_get_footer
      * This takes the type and returns the correct xml footer
      * @param string $type
@@ -2238,31 +2084,11 @@ abstract class Catalog extends database_object
     /**
      * @deprecated
      */
-    private static function getSongId3TagWriter(): SongId3TagWriterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongId3TagWriterInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
     private static function getCatalogRepository(): CatalogRepositoryInterface
     {
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSingleItemUpdater(): SingleItemUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(SingleItemUpdaterInterface::class);
     }
 
     /**
@@ -2328,16 +2154,6 @@ abstract class Catalog extends database_object
     /**
      * @deprecated Inject by constructor
      */
-    private static function getAlbumArtistUpdater(): AlbumArtistUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumArtistUpdaterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getVideoLoader(): VideoLoaderInterface
     {
         global $dic;
@@ -2363,15 +2179,5 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UpdateInfoRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getCatalogStatisticcUpdater(): CatalogStatisticUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(CatalogStatisticUpdaterInterface::class);
     }
 }

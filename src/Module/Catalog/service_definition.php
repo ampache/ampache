@@ -42,4 +42,5 @@ return [
     DataMigratorInterface::class => autowire(DataMigrator::class),
     CatalogStatisticUpdaterInterface::class => autowire(CatalogStatisticUpdater::class),
     PlaylistImport\PlaylistImporterInterface::class => autowire(PlaylistImport\PlaylistImporter::class),
+    CatalogProcessorInterface::class => autowire(CatalogProcessor::class),
 ];

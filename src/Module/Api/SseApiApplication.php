@@ -26,8 +26,8 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\CatalogProcessorInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 
@@ -35,10 +35,14 @@ final class SseApiApplication implements ApiApplicationInterface
 {
     private UiInterface $ui;
 
+    private CatalogProcessorInterface $catalogProcessor;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        CatalogProcessorInterface $catalogProcessor
     ) {
-        $this->ui = $ui;
+        $this->ui               = $ui;
+        $this->catalogProcessor = $catalogProcessor;
     }
 
     public function run(): void
@@ -68,7 +72,11 @@ final class SseApiApplication implements ApiApplicationInterface
             $options = null;
         }
         if (isset($_REQUEST['catalogs'])) {
-            $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
+            /** @var array<int> $catalogs */
+            $catalogs = array_map(
+                'intval',
+                json_decode(urldecode($_REQUEST['catalogs']), true)
+            );
         } else {
             $catalogs = null;
         }
@@ -85,7 +93,7 @@ final class SseApiApplication implements ApiApplicationInterface
                     flush();
                 }
 
-                Catalog::process_action(Core::get_request('action'), $catalogs, $options);
+                $this->catalogProcessor->process(Core::get_request('action'), $catalogs, $options);
 
                 if (defined('SSE_OUTPUT')) {
                     echo "data: toggleVisible('ajax-loading')\n\n";
