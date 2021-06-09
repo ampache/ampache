@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\PlaylistImport\PlaylistImporterInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -40,12 +40,16 @@ final class ImportPlaylistAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private PlaylistImporterInterface $playlistImporter;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        PlaylistImporterInterface $playlistImporter
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui               = $ui;
+        $this->configContainer  = $configContainer;
+        $this->playlistImporter = $playlistImporter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,9 +62,10 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         $filename = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
 
-        $result = Catalog::import_playlist($filename);
+        $result = $this->playlistImporter->import($filename);
 
         if ($result['success']) {
+            /** @var array{id: int, count: int} $result */
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
             $title = T_('No Problem');
             $body  = basename($_FILES['filename']['name']);
@@ -68,6 +73,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
                 /* HINT: Number of songs */
                 sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
+            /** @var array{error: string} $result */
             $url   = 'show_import_playlist';
             $title = T_("There Was a Problem");
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];

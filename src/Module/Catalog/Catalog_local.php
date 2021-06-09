@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\PlaylistImport\PlaylistImporterInterface;
 use Ampache\Module\Podcast\PodcastByCatalogLoaderInterface;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
 use Ampache\Module\Podcast\PodcastStateEnum;
@@ -509,10 +510,12 @@ class Catalog_local extends Catalog
             $this->add_files($this->path, $options);
 
             if ($options['parse_playlist'] && count($this->_playlists)) {
+                $playlistImporter = $this->getPlaylistImporter();
+
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = self::import_playlist($full_file);
+                    $result = $playlistImporter->import($full_file);
                     if ($result['success']) {
                         $file = basename($full_file);
                     } // end if import worked
@@ -1150,5 +1153,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(CatalogStatisticUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getPlaylistImporter(): PlaylistImporterInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistImporterInterface::class);
     }
 }

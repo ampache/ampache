@@ -41,4 +41,5 @@ return [
     ArtItemGathererInterface::class => autowire(ArtItemGatherer::class),
     DataMigratorInterface::class => autowire(DataMigrator::class),
     CatalogStatisticUpdaterInterface::class => autowire(CatalogStatisticUpdater::class),
+    PlaylistImport\PlaylistImporterInterface::class => autowire(PlaylistImport\PlaylistImporter::class),
 ];

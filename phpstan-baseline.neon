@@ -21730,11 +21730,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Cannot call method add_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Playlist\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -21885,37 +21880,12 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:import_playlist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:is_playlist_file\\(\\) should return int but returns int\\|false\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:normalize_year\\(\\) has parameter \\$year with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_asx\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_m3u\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_pls\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_xspf\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22040,37 +22010,12 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\('dirname' \\=\\> string, 'basename' \\=\\> string, 'filename' \\=\\> string, \\?'extension' \\=\\> string\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$catalogs\\)\\: Unexpected token \"\\$catalogs\", expected type at offset 69$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$year\\)\\: Unexpected token \"\\$year\", expected type at offset 18$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_asx\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_m3u\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_pls\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:parse_xspf\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
