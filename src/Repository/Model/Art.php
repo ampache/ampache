@@ -818,7 +818,19 @@ class Art extends database_object
         // Create a new blank image of the correct size
         $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
+        if ($source_size['width'] > $source_size['height']) {
+            $new_height = $size['height'];
+            $new_width  = floor($source_size['width'] * ($new_height / $source_size['height']));
+            $crop_x     = ceil(($source_size['width'] - $source_size['height']) / 2);
+            $crop_y     = 0;
+        } else {
+            $new_width  = $size['width'];
+            $new_height = floor($source_size['height'] * ($new_width / $source_size['width']));
+            $crop_x     = 0;
+            $crop_y     = ceil(($source_size['height'] - $source_size['width']) / 3); // assuming portrait images would have faces closer to the top
+        }
+
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, $crop_x, $crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
             debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);

@@ -49,7 +49,7 @@ while ($count <= $rows) {
             echo "<td>&nbsp;</td>\n";
         } else { ?>
             <td>
-                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="" width="175" /></a>
                 <br />
                 <p>
                 <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
