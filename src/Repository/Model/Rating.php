@@ -218,7 +218,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type              = Stats::validate_type($type);
-        $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`rating`.`id`) AS `order` FROM `rating`";
+        $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count` FROM `rating`";
         $allow_group_disks = (AmpConfig::get('album_group') && $type === 'album');
         if ($allow_group_disks) {
             $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
@@ -228,8 +228,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `rating`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC"
-            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC ";
+            ? " GROUP BY `rating`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC"
+            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
