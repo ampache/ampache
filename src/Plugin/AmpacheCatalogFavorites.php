@@ -26,11 +26,11 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 class AmpacheCatalogFavorites
@@ -123,8 +123,7 @@ class AmpacheCatalogFavorites
             }
             echo '">';
             foreach ($userflags as $userflag) {
-                $class_name = ObjectTypeToClassNameMapper::map($userflag['type']);
-                $item       = new $class_name($userflag['id']);
+                $item = new Song($userflag['id']);
                 $item->format();
                 $user = new User($userflag['user']);
                 $user->format();
