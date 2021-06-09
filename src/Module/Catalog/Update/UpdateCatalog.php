@@ -64,7 +64,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
 
         $options = [
-            'gather_art' => $addArt,
+            'gather_art' => false,
             'parse_playlist' => $importPlaylists
         ];
 
