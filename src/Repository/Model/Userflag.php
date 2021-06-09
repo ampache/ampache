@@ -336,11 +336,7 @@ class Userflag extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($type === null) {
-                $results[] = $row;
-            } else {
-                $results[] = $row['id'];
-            }
+            $results[] = $row['id'];
         }
 
         return $results;
