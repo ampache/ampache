@@ -228,8 +228,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC"
-            : " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC ";
+            ? " GROUP BY `rating`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC"
+            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
