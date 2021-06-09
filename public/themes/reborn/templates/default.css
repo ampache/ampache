@@ -1120,8 +1120,8 @@ table.tabledata tbody td.cel_counter {
 }
 
 table.tabledata tbody td.cel_ratings {
-    width: 130px !important;
-    max-width: 130px;
+    width: 140px !important;
+    max-width: 140px;
 }
 
 table.tabledata tbody .cel_cover {
