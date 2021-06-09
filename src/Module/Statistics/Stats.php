@@ -572,7 +572,7 @@ class Stats
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
         $sql   = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
 
-        if ($user_id === null) {
+        if ($limit) {
             $sql .= "LIMIT $limit";
         }
         //debug_event(self::class, 'get_top ' . $sql, 5);

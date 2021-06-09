@@ -201,7 +201,7 @@ final class PodcastEpisodeViewAdapter implements PodcastEpisodeViewAdapterInterf
             sprintf('?action=basket&type=podcast_episode&id=%d', $episodeId),
             'add',
             T_('Add to Temporary Playlist'),
-            sprintf('add_podcast_episode_%s', $episodeId)
+            sprintf('addnext_podcast_episode_%s', $episodeId)
         );
     }
 

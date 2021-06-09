@@ -72,7 +72,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
 
         $options = [
-            'gather_art' => $addArt,
+            'gather_art' => false,
             'parse_playlist' => $importPlaylists
         ];
 
@@ -108,26 +108,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $interactor->info('------------------', true);
             }
-            if ($verification === true) {
-                ob_start();
-
-                // Verify Existing
-                $interactor->info(
-                    T_('Start verifying media related to Catalog entries'),
-                    true
-                );
-                $catalog->verify_catalog_proc();
-
-                $buffer = ob_get_contents();
-
-                ob_end_clean();
-
-                $interactor->info(
-                    $this->cleanBuffer($buffer),
-                    true
-                );
-                $interactor->info('------------------', true);
-            }
             if ($addNew === true) {
                 ob_start();
 
@@ -149,6 +129,26 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $interactor->info('------------------', true);
 
                 $this->albumArtistUpdater->update();
+            }
+            if ($verification === true) {
+                ob_start();
+
+                // Verify Existing
+                $interactor->info(
+                    T_('Start verifying media related to Catalog entries'),
+                    true
+                );
+                $catalog->verify_catalog_proc();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
+                $interactor->info('------------------', true);
             }
             if ($addArt === true) {
                 ob_start();

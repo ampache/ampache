@@ -32,10 +32,10 @@ use Ampache\Module\Util\Ui;
 /** @var Browse $browse */
 /** @var int[] $object_ids */
 
-$is_table = $browse->is_grid_view();
+$is_table     = $browse->is_grid_view();
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -45,25 +45,17 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) { ?>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
-            <?php
-} ?>
+            <?php } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
-        } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-        } ?>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
-    } ?>
+            } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -94,28 +86,21 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
             <?php if (AmpConfig::get('playlist_art')) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <?php
-        } ?>
+            } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update_bottom'); ?></th>
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'), 'playlist_sort_owner_bottom'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php
-            } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
-        } ?>
+            } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>

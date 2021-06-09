@@ -5,13 +5,14 @@
             <div class="item_right_info" tal:content="structure PODCAST/getArt">ART</div>
             <div id="item_summary" tal:condition="PODCAST/getDescription" tal:content="PODCAST/getDescription">DESCRIPTION</div>
             <tal:block tal:condition="PODCAST/isRealUser">
-                <div tal:condition="CONFIG/isRatingEnabled" id="rating_${PODCAST_ID}_podcast" style="display:inline;" tal:content="structure PODCAST/getRating">RATING</div>
-                <div tal:condition="CONFIG/isUserFlagsEnabled" style="display:table-cell;" id="userflag_${PODCAST_ID}_podcast" tal:content="structure PODCAST/getUserFlags">USERFLAG</div>
+                <span tal:condition="CONFIG/isRatingEnabled" id="rating_${PODCAST_ID}_podcast" style="display:inline;" tal:content="structure PODCAST/getRating">RATING</span>
+                <span tal:condition="CONFIG/isUserFlagsEnabled" style="display:table-cell;" id="userflag_${PODCAST_ID}_podcast" tal:content="structure PODCAST/getUserFlags">USERFLAG</span>
             </tal:block>
             <div id="information_actions">
                 <h3 i18n:translate="">Actions:</h3>
                 <ul>
                     <li tal:condition="CONFIG/isDirectplayEnabled" tal:content="structure PODCAST/getDirectPlayButton">DIRECT PLAY</li>
+                    <li tal:condition="PODCAST/canAutoplayNext" tal:content="structure PODCAST/getAutoplayNextButton">APPEND NEXT</li>
                     <li tal:condition="PODCAST/canAppendNext" tal:content="structure PODCAST/getAppendNextButton">APPEND NEXT</li>
                     <tal:block tal:condition="PODCAST/canBeManaged">
                         <li tal:condition="CONFIG/isStatisticalGraphsEnabled">

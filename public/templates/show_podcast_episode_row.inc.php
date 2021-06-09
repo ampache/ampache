@@ -25,7 +25,6 @@ use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\PodcastEpisodeInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -79,19 +78,23 @@ if ($played_times !== null) { ?>
 <td class="cel_pubdate"><?php echo $libitem->getPublicationDateFormatted(); ?></td>
 <td class="cel_state"><?php echo $libitem->getStateFormatted(); ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $episodeId; ?>_podcast_episode">
-        <?php echo Rating::show($episodeId, 'podcast_episode'); ?>
-    </td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $episodeId; ?>_podcast_episode">
+                    <?php echo Rating::show($episodeId, 'podcast_episode'); ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $episodeId; ?>_podcast_episode">
+                    <?php echo Userflag::show($episodeId, 'podcast_episode'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $episodeId; ?>_podcast_episode">
-        <?php echo Userflag::show($episodeId, 'podcast_episode'); ?>
-    </td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
     <?php if (Access::check_function('download') && !empty($libitem->getFile())) { ?>

@@ -89,15 +89,15 @@ if ($directplay_limit > 0) {
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php echo Rating::show($album->id, 'album'); ?>
-        </div>
+        <span id="rating_<?php echo $album->id; ?>_album">
+            <?php echo Rating::show($album->id, 'album', true); ?>
+        </span>
         <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-        <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+        <span id="userflag_<?php echo $album->id; ?>_album">
             <?php echo Userflag::show($album->id, 'album'); ?>
-        </div>
+        </span>
         <?php
     } ?>
     <?php

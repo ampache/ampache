@@ -36,6 +36,10 @@ interface PodcastViewAdapterInterface
 
     public function getDirectplayButton(): string;
 
+    public function canAutoplayNext(): bool;
+
+    public function getAutoplayNextButton(): string;
+
     public function canAppendNext(): bool;
 
     public function getAppendNextButton(): string;

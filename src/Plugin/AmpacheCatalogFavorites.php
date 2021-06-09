@@ -126,37 +126,29 @@ class AmpacheCatalogFavorites
             $modelFactory = $this->getModelFactory();
 
             foreach ($userflags as $userflag) {
-                $item = $modelFactory->mapObjectType($userflag['type'], (int) $userflag['id']);
+                $item = $modelFactory->createSong((int) $userflag);
                 $item->format();
-                $user = new User($userflag['user']);
-                $user->format();
 
                 if ($item->id) {
-                    if (property_exists($item, 'f_link')) {
-                        $link = $item->f_link;
-                    } else {
-                        $link = $item->getLinkFormatted();
-                    }
-
-                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="libitem_menu">';
+                    echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $link . '</span><br> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],
-                                'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
+                                'play', T_('Play'), 'play_song_' . $userflag);
                             if (Stream_Playlist::check_autoplay_next()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&playnext=true',
+                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
                                     'play_next', T_('Play next'),
-                                    'nextplay_' . $userflag['type'] . '_' . $userflag['id']);
+                                    'nextplay_song_' . $userflag);
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true',
+                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
                                     'play_add', T_('Play last'),
-                                    'addplay_' . $userflag['type'] . '_' . $userflag['id']);
+                                    'addplay_song_' . $userflag);
                             }
                         }
-                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag['id']);
+                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
                         echo '</span></td>';
                     }
                     echo '<td class=grid_cover>';
@@ -165,16 +157,12 @@ class AmpacheCatalogFavorites
                     echo '</td>';
 
                     if (!$this->gridview) {
-                        echo '<td>' . $link . '</td>';
+                        echo '<td>' . $item->f_link . '</td>';
                     }
 
                     echo '<td class="optional">';
                     echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
                     echo '</div>';
-                    if ($this->gridview) {
-                        echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' ' . $user->f_link . '</div>';
-                        echo '</div><br />';
-                    }
                     echo '</td></tr>';
 
                     $count++;

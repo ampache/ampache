@@ -21,18 +21,17 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Ajax;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
 /** @var MediaDeletionCheckerInterface $mediaDeletionChecker */
@@ -96,15 +95,23 @@ if (Art::is_enabled()) {
     } ?>
 <td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-            <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album"><?php echo Rating::show($libitem->id, 'album'); ?></td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album">
+                    <?php echo Rating::show($libitem->id, 'album'); ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album">
+                    <?php echo Userflag::show($libitem->id, 'album'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_album"><?php echo Userflag::show($libitem->id, 'album'); ?></td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {

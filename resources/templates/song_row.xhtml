@@ -49,12 +49,11 @@
         <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
         <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
     </tal:block>
-    <tal:block tal:condition="USER_IS_REGISTERED">
-        <td tal:condition="CONFIG/isRatingEnabled" class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</td>
-        <tal:block tal:condition="CONFIG/isUserflagsEnabled">
-            <td tal:condition="IS_TABLE_VIEW" class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</td>
-            <td tal:condition="not:IS_TABLE_VIEW" class="mash_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</td>
-        </tal:block>
+    <tal:block tal:condition="USING_RATINGS">
+        <td class="cel_ratings">
+            <span tal:condition="CONFIG/isRatingEnabled" class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
+            <span tal:condition="CONFIG/isUserflagsEnabled" class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
+        </td>
     </tal:block>
     <td class="cel_action">
         <a tal:attributes="href SONG/getSongUrl" tal:content="structure SONG/getPreferencesIcon">PREFERENCES</a>

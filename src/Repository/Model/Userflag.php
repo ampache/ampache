@@ -252,8 +252,8 @@ class Userflag extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `user_flag`.`date` DESC "
-            : " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
+            ? " GROUP BY `user_flag`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `user_flag`.`date` DESC "
+            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql;
@@ -282,11 +282,7 @@ class Userflag extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($type === null) {
-                $results[] = $row;
-            } else {
-                $results[] = $row['id'];
-            }
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -330,7 +326,7 @@ class Userflag extends database_object
             );
         }
 
-        return sprintf('<div class="userflag">%s</div>', $text);
+        return sprintf('<span class="userflag">%s</span>', $text);
     } // show
 
     /**

@@ -10,14 +10,14 @@
         <dl class="media_details">
             <tal:block tal:condition="EPISODE/isRealUser">
                 <tal:block tal:condition="CONFIG/isRatingEnabled">
-                    <dt class="even" i18n:translate="">Rating</dt>
-                    <dd class="even">
+                    <dt i18n:translate="">Rating</dt>
+                    <dd>
                         <div id="rating_${EPISODE_ID}_podcast_episode" tal:content="structure EPISODE/getRating">RATING</div>
                     </dd>
                 </tal:block>
                 <tal:block tal:condition="CONFIG/isUserFlagsEnabled">
-                    <dt class="odd" i18n:translate="">Fav.</dt>
-                    <dd class="odd">
+                    <dt i18n:translate="">Fav.</dt>
+                    <dd>
                         <div id="userflag_${EPISODE_ID}_podcast_episode" tal:content="structure EPISODE/getUserFlags">FLAGS</div>
                     </dd>
                 </tal:block>

@@ -33,15 +33,15 @@ use Ampache\Module\Util\Ui;
 /** @var string $web_path */
 /** @var int[] $object_ids */
 
-$web_path = AmpConfig::get('web_path');
-$thcount  = 8;
-$is_table = $browse->is_grid_view();
+$web_path     = AmpConfig::get('web_path');
+$thcount      = 8;
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
 $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
-$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
@@ -67,18 +67,10 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php
     } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) {
+            <?php if ($show_ratings) {
         ++$thcount; ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-    } ?>
-                <?php if (AmpConfig::get('userflags')) {
-        ++$thcount; ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-    } ?>
-            <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
@@ -129,17 +121,10 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php
         } ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+            <?php if ($show_ratings) { ?>
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
             } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
-            <?php
-        } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
@@ -147,5 +132,5 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>

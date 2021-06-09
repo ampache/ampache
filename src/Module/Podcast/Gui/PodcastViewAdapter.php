@@ -101,6 +101,23 @@ final class PodcastViewAdapter implements PodcastViewAdapterInterface
         );
     }
 
+    public function canAutoplayNext(): bool
+    {
+        return Stream_Playlist::check_autoplay_next();
+    }
+
+    public function getAutoplayNextButton(): string
+    {
+        $podcastId = $this->podcast->getId();
+
+        return Ajax::button_with_text(
+            '?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId . '&playnext=true',
+            'play_next',
+            T_('Play All Next'),
+            'addnext_podcast_' . $podcastId
+        );
+    }
+
     public function canAppendNext(): bool
     {
         return Stream_Playlist::check_autoplay_append();

@@ -3111,11 +3111,6 @@ parameters:
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Api\\:\\:getcoverart\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Api\\:\\:getcoverart\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
@@ -18290,36 +18285,6 @@ parameters:
 			path: src/Plugin/AmpacheBitly.php
 
 		-
-			message: "#^Cannot access property \\$f_link on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Cannot call method display_art\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Cannot call method getLinkFormatted\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Cannot call method get_description\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
@@ -18341,11 +18306,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheCatalogFavorites\\:\\:upgrade\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheCatalogFavorites.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, Ampache\\\\Repository\\\\Model\\\\database_object\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheCatalogFavorites.php
 

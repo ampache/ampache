@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -79,11 +80,15 @@ if ($videos) {
         } ?>
         </div>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
-            echo "<div id=\"rating_" . $video->id . "_video\">";
-            echo Rating::show($video->id, 'video');
-            echo "</div>";
-        } ?>
+        if (Access::check('interface', 25)) { ?>
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
+            <?php } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_rating" id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>
+            <?php } ?>
+        <?php } ?>
     </div>
     <?php
     } ?>

@@ -52,15 +52,15 @@ ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-    <div style="display:table-cell;" id="rating_<?php echo $playlist->id; ?>_playlist">
-            <?php echo Rating::show($playlist->id, 'playlist'); ?>
-    </div>
+    <span id="rating_<?php echo $playlist->id; ?>_playlist">
+        <?php echo Rating::show($playlist->id, 'playlist'); ?>
+    </span>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $playlist->id; ?>_playlist">
-            <?php echo Userflag::show($playlist->id, 'playlist'); ?>
-    </div>
+    <span id="userflag_<?php echo $playlist->id; ?>_playlist">
+        <?php echo Userflag::show($playlist->id, 'playlist'); ?>
+    </span>
     <?php
     } ?>
 <?php

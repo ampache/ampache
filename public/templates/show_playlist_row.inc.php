@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -73,15 +72,23 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_medias"><?php echo $libitem->get_media_count(); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php echo Rating::show($libitem->id, 'playlist'); ?></td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist">
+                    <?php echo Rating::show($libitem->id, 'playlist'); ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist">
+                    <?php echo Userflag::show($libitem->id, 'playlist'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php echo Userflag::show($libitem->id, 'playlist'); ?></td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
 <?php

@@ -675,7 +675,7 @@ class Subsonic_Api
             case "starred":
                 $username = self::check_parameter($input, 'u');
                 $user     = User::get_from_username((string)$username);
-                $albums   = Userflag::get_latest('album', $user->id, $size);
+                $albums   = Userflag::get_latest('album', $user->id, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -1296,6 +1296,7 @@ class Subsonic_Api
      * Get a cover art image.
      * Takes the cover art id in parameter.
      * @param array $input
+     * @return boolean
      */
     public static function getcoverart($input)
     {
@@ -1311,10 +1312,10 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
-            self::apiOutput($input, $response);
+            // type not found
+            http_response_code(400);
 
-            return;
+            return false;
         }
 
         $art = null;
@@ -1358,10 +1359,10 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
-            self::apiOutput($input, $response);
+            // art not found
+            http_response_code(404);
 
-            return;
+            return false;
         }
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -1375,13 +1376,15 @@ class Subsonic_Api
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));
                 echo $thumb['thumb'];
 
-                return;
+                return true;
             }
         }
         $image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
+
+        return true;
     }
 
     /**

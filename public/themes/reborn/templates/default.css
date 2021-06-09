@@ -1025,7 +1025,7 @@ table.tabledata thead .th-top {
     border-bottom: 1px solid;
 }
 
-table.tabledata thead th.cel_rating {
+table.tabledata thead th.cel_ratings {
     padding-left: 7px;
 }
 
@@ -1119,14 +1119,9 @@ table.tabledata tbody td.cel_counter {
     text-align: center;
 }
 
-table.tabledata tbody td.cel_rating {
-    width: 100px !important;
-    max-width: 100px;
-}
-
-table.tabledata tbody td.cel_userflag {
-    width: 40px !important;
-    max-width: 40px;
+table.tabledata tbody td.cel_ratings {
+    width: 130px !important;
+    max-width: 130px;
 }
 
 table.tabledata tbody .cel_cover {
@@ -1144,10 +1139,6 @@ table.tabledata tbody .cel_license {
 table.tabledata tbody td.grid_cover {
     height: auto;
     overflow: visible;
-}
-
-table.tabledata tbody td.grid_userflag {
-    margin-left: 41%;
 }
 
 table.tabledata tbody .grid_cover img,
@@ -1202,7 +1193,7 @@ table.gatherart thead .th-top {
     border-bottom: 1px solid;
 }
 
-table.gatherart thead th.cel_rating {
+table.gatherart thead th.cel_ratings {
     padding-left: 7px;
 }
 
@@ -1301,7 +1292,7 @@ table.disablegv td.cel_drag {
     display: none !important;
 }
 
-table.disablegv td.cel_rating {
+table.disablegv td.cel_ratings {
     display: inline-block !important;
 }
 
@@ -1449,7 +1440,7 @@ div.box.box_rules {
     font-size: 13px;
 }
 
-#now_playing .cel_rating label {
+#now_playing .cel_ratings label {
     display: none;
 }
 
@@ -1760,10 +1751,6 @@ span.fatalerror {
     position: relative;
 }
 
-.dynamic-star-rating {
-    width: 95px;
-}
-
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
@@ -1779,14 +1766,21 @@ span.fatalerror {
     margin: 0;
     padding: 0;
     background-position: left top;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 .star-rating li {
     display: inline;
 }
 
+.star-rating .global-rating {
+    font-size: 0.8em;
+    position: relative;
+    bottom: 2px;
+}
+
 .star-rating a,
-.star-rating span,
 .star-rating .current-rating {
     position: absolute;
     top: 0;
@@ -1821,7 +1815,11 @@ span.fatalerror {
 }
 
 .dynamic-star-rating ul {
-    left: 16px;
+    margin-left: 16px;
+}
+
+[id^=rating_] + [id^=userflag_] {
+    margin-left: 5px;
 }
 
 /* ------------------------
@@ -1831,11 +1829,12 @@ span.fatalerror {
     position: relative;
     width: 16px;
     height: 16px;
+    display: inline-block;
 }
 
 .userflag a {
-    position: absolute;
-    display: inline;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 .userflag a.userflag_true {

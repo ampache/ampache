@@ -60,15 +60,15 @@ Ui::show_box_top($tvshow->getNameFormatted(), 'info-box'); ?>
 <?php if (User::is_registered()) { ?>
     <?php
     if (AmpConfig::get('ratings')) { ?>
-    <div id="rating_<?php echo (int) ($tvshow->id); ?>_tvshow" style="display:inline;">
+    <span id="rating_<?php echo (int) ($tvshow->id); ?>_tvshow">
         <?php echo Rating::show($tvshow->id, 'tvshow'); ?>
-    </div>
+    </span>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $tvshow->id; ?>_tvshow">
-            <?php echo Userflag::show($tvshow->id, 'tvshow'); ?>
-    </div>
+    <span id="userflag_<?php echo $tvshow->id; ?>_tvshow">
+        <?php echo Userflag::show($tvshow->id, 'tvshow'); ?>
+    </span>
     <?php
     } ?>
 <?php

@@ -55,22 +55,22 @@ final class ActionButtonsAction implements ActionInterface
 
         if ($this->config->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
             $result .= sprintf(
-                ' <div id=\'rating_%s_%s\'>',
+                ' <span id=\'rating_%s_%s\'>',
                 $objectId,
                 $objectType
             );
             $result .= Rating::show($objectId, $objectType);
-            $result .= '</div> |';
+            $result .= '</span> |';
         }
 
         if ($this->config->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS)) {
             $result .= sprintf(
-                ' <div id=\'userflag_%s_%s\'>',
+                ' <span id=\'userflag_%s_%s\'>',
                 $objectId,
                 $objectType
             );
             $result .= Userflag::show($objectId, $objectType);
-            $result .= '</div>';
+            $result .= '</span>';
         }
 
         return [
