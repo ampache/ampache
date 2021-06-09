@@ -19,31 +19,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Catalog;
 
-interface UpdateInfoRepositoryInterface
+interface CatalogStatisticUpdaterInterface
 {
     /**
-     * Updates the count of item by table name
+     * update the artist or album counts on catalog changes
      */
-    public function updateCountByTableName(string $tableName): int;
-
-    /**
-     * Record when the cron has finished.
-     */
-    public function setLastCronDate(): void;
-
-    /**
-     * This returns the date cron has finished.
-     */
-    public function getLastCronDate(): int;
-
-    /**
-     * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function getServerCounts(): array;
-
-    public function setCount(string $tableName, int $value): void;
+    public function update(string $type = ''): void;
 }

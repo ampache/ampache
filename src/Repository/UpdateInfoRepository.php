@@ -92,7 +92,7 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
     /**
      * write the total_counts to update_info
      */
-    private function setCount(string $tableName, int $value): void
+    public function setCount(string $tableName, int $value): void
     {
         Dba::write(
             'REPLACE INTO `update_info` SET `key`= ?, `value`= ?',

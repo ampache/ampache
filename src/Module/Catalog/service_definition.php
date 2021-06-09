@@ -40,4 +40,5 @@ return [
     SingleItemUpdaterInterface::class => autowire(SingleItemUpdater::class),
     ArtItemGathererInterface::class => autowire(ArtItemGatherer::class),
     DataMigratorInterface::class => autowire(DataMigrator::class),
+    CatalogStatisticUpdaterInterface::class => autowire(CatalogStatisticUpdater::class),
 ];

@@ -574,7 +574,7 @@ class Catalog_local extends Catalog
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
-        Catalog::update_counts();
+        static::getCatalogStatisticcUpdater()->update();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
@@ -1140,5 +1140,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogStatisticcUpdater(): CatalogStatisticUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogStatisticUpdaterInterface::class);
     }
 }

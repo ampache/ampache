@@ -21945,11 +21945,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:set_count\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:show_ready_process\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -21966,11 +21961,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:trim_slashed_list\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_counts\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -22092,11 +22082,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:gather_art_item\\(\\) expects int, Ampache\\\\Repository\\\\Model\\\\Song\\|int given\\.$#"
 			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:set_count\\(\\) expects string, \\(float\\|int\\) given\\.$#"
-			count: 3
 			path: src/Repository/Model/Catalog.php
 
 		-
