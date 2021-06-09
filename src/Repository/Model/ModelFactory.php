@@ -33,6 +33,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
 use Ampache\Repository\ClipRepositoryInterface;
@@ -292,6 +293,7 @@ final class ModelFactory implements ModelFactoryInterface
         ?int $userId = null
     ): BookmarkInterface {
         return new Bookmark(
+            $this->dic->get(BookmarkRepositoryInterface::class),
             $this,
             $bookmarkId,
             $objectType,

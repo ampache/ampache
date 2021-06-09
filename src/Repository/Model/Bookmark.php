@@ -31,6 +31,8 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class Bookmark extends database_object implements BookmarkInterface
 {
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
     private ModelFactoryInterface $modelFactory;
 
     private int $object_id;
@@ -43,20 +45,22 @@ final class Bookmark extends database_object implements BookmarkInterface
     private ?array $dbData = null;
 
     public function __construct(
+        BookmarkRepositoryInterface $bookmarkRepository,
         ModelFactoryInterface $modelFactory,
         int $objectId,
         ?string $objectType = null,
         ?int $userId = null
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->object_id    = $objectId;
-        $this->object_type  = $objectType;
-        $this->user_id      = $userId;
+        $this->bookmarkRepository = $bookmarkRepository;
+        $this->modelFactory       = $modelFactory;
+        $this->object_id          = $objectId;
+        $this->object_type        = $objectType;
+        $this->user_id            = $userId;
     }
 
     public function getId(): int
     {
-        return (int) ($this->getDbData()['id'] ?? 0);
+        return $this->object_id;
     }
 
     public function getUserId(): int
@@ -101,9 +105,9 @@ final class Bookmark extends database_object implements BookmarkInterface
     {
         if ($this->dbData === null) {
             if ($this->object_type === null) {
-                $this->dbData = $this->getBookmarkRepository()->getDataById($this->object_id);
+                $this->dbData = $this->bookmarkRepository->getDataById($this->object_id);
             } else {
-                $bookmarkIds = $this->getBookmarkRepository()->lookup(
+                $bookmarkIds = $this->bookmarkRepository->lookup(
                     $this->object_type,
                     $this->object_id,
                     $this->user_id
@@ -112,19 +116,12 @@ final class Bookmark extends database_object implements BookmarkInterface
                 if ($bookmarkIds === []) {
                     $this->dbData = [];
                 } else {
-                    $this->dbData = $this->getBookmarkRepository()->getDataById(current($bookmarkIds));
+                    $this->dbData = $this->bookmarkRepository->getDataById(current($bookmarkIds));
                 }
             }
         }
 
         return $this->dbData;
-    }
-
-    private function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
     }
 
     public function isNew(): bool
