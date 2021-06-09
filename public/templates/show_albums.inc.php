@@ -136,5 +136,5 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>

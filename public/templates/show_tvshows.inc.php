@@ -54,10 +54,10 @@ $cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';?>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php if ($show_ratings) {
-                ++$thcount; ?>
+        ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-            } ?>
+    } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -108,5 +108,5 @@ $cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>

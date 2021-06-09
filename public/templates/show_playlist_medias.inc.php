@@ -62,21 +62,21 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
         </thead>
         <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
             <?php foreach ($object_ids as $object) {
-        if (!is_array($object)) {
-            $object = (array) $object;
-        }
-        $object_type = $object['object_type'];
-        if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object['object_id']);
-            $libitem->format();
-            $playlist_track = $object['track']; ?>
+                    if (!is_array($object)) {
+                        $object = (array) $object;
+                    }
+                    $object_type = $object['object_type'];
+                    if (InterfaceImplementationChecker::is_library_item($object_type)) {
+                        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                        $libitem    = new $class_name($object['object_id']);
+                        $libitem->format();
+                        $playlist_track = $object['track']; ?>
         <tr id="track_<?php echo $object['track_id'] ?>">
             <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
         </tr>
         <?php
-        }
-    } ?>
+                    }
+                } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">
@@ -100,6 +100,6 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
 </form>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
-        require Ui::find_template('list_header.inc.php');
-        echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
-    } ?>
+                    require Ui::find_template('list_header.inc.php');
+                    echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
+                } ?>
