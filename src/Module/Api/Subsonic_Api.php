@@ -663,7 +663,7 @@ class Subsonic_Api
             case "starred":
                 $username = self::check_parameter($input, 'u');
                 $user     = User::get_from_username((string)$username);
-                $albums   = Userflag::get_latest('album', $user->id, $size);
+                $albums   = Userflag::get_latest('album', $user->id, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
