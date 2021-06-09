@@ -1757,7 +1757,8 @@ abstract class Catalog extends database_object
                 foreach ($libitem->get_child_ids() as $album_id) {
                     $album_tags = self::getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, false);
-                    static::getAlbumRepository()->updateTime($album_id);
+                    $album = new Album($album_id);
+                    static::getAlbumRepository()->updateTime($album);
                 }
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
