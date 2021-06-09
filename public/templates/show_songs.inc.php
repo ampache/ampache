@@ -32,15 +32,15 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
-$thcount  = 8;
-$is_table = $browse->is_grid_view();
+$web_path     = AmpConfig::get('web_path');
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$thcount      = 8;
+$is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_song    = ($is_table) ? "cel_song" : 'grid_song';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
 $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
-$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
 $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
 $cel_license = ($is_table) ? "cel_license" : 'grid_license';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
@@ -69,22 +69,19 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Skipped'); ?></th>
             <?php
     } ?>
-            <?php if (User::is_registered()) { ?>
+            <?php if ($show_ratings) {
+        ++$thcount; ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php if (AmpConfig::get('ratings')) {
-        ++$thcount;
-        Rating::build_cache('song', $object_ids); ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
-    } ?>
+            Rating::build_cache('song', $object_ids);
+        } ?>
                 <?php if (AmpConfig::get('userflags')) {
-        ++$thcount;
-        Userflag::build_cache('song', $object_ids); ?>
-                <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-            <?php
-    } ?>
+            Userflag::build_cache('song', $object_ids);
+        } ?>
                 <?php
     } ?>
-                <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+            <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+
             <?php if (isset($argument) && $argument) {
         ++$thcount; ?>
                 <th class="cel_drag essential"></th>
@@ -108,6 +105,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                     $content = $talFactory->createTalView()
                         ->setContext('BROWSE_ARGUMENT', isset($argument) ? $argument : '')
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
+                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
                         ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                         ->setContext('IS_TABLE_VIEW', $is_table)
@@ -142,24 +140,19 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('show_skipped_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Skipped'); ?></th>
-            <?php } ?>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php
-                } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?>"></th>
-                <?php
-                } ?>
             <?php
             } ?>
-                <th class="cel_action"></th>
+            <?php if (AmpConfig::get('show_skipped_times')) { ?>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Skipped'); ?></th>
+            <?php
+            } ?>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <?php
+            } ?>
+            <th class="cel_action"></th>
             <?php if (isset($argument) && $argument) { ?>
-                <th class="cel_drag"></th>
+            <th class="cel_drag"></th>
             <?php
             } ?>
         </tr>

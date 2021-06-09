@@ -521,8 +521,12 @@ span.fatalerror {
 }
 
 /* ------------------------
-    Styles for user flags
+    Styles for ratings / user flags
    ------------------------ */
+.star-rating .global-rating {
+    color: #777;
+}
+
 .userflag a.userflag_true {
     background: url(../../../images/icon_flag.png) left top;
 }

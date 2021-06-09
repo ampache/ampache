@@ -26,7 +26,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -72,16 +71,24 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </span>
 </td>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?></td>
-<?php if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php echo Rating::show($libitem->id, $object_type) ?></td>
-    <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php echo Userflag::show($libitem->id, $object_type) ?></td>
-    <?php
-        }
-    } ?>
+<?php if ($show_ratings) { ?>
+    <td class="cel_ratings">
+        <?php if (AmpConfig::get('ratings')) { ?>
+            <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
+                <?php echo Rating::show($libitem->id, $object_type) ?>
+            </span>
+        <?php
+        } ?>
+
+        <?php if (AmpConfig::get('userflags')) { ?>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
+                <?php echo Userflag::show($libitem->id, $object_type) ?>
+            </span>
+        <?php
+        } ?>
+    </td>
+<?php
+} ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) { ?>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;<?php echo $object_type ?>_id=<?php echo $libitem->id ?>">

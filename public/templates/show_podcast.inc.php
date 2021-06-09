@@ -47,21 +47,18 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
 </div>
 <?php } ?>
 <?php if (User::is_registered()) { ?>
-    <?php
-    if (AmpConfig::get('ratings')) { ?>
-    <div id="rating_<?php echo (int) ($podcast->id); ?>_podcast" style="display:inline;">
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <span id="rating_<?php echo (int) ($podcast->id); ?>_podcast">
         <?php echo Rating::show($podcast->id, 'podcast'); ?>
-    </div>
-    <?php
-    } ?>
+    </span>
+    <?php } ?>
+
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $podcast->id; ?>_podcast">
-            <?php echo Userflag::show($podcast->id, 'podcast'); ?>
-    </div>
-    <?php
-    } ?>
-<?php
-    } ?>
+    <span id="userflag_<?php echo $podcast->id; ?>_podcast">
+        <?php echo Userflag::show($podcast->id, 'podcast'); ?>
+    </span>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
