@@ -53,6 +53,11 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User_Playlist;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use DOMDocument;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
@@ -65,13 +70,9 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\NowPlayingRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
-use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
-use DOMDocument;
 use SimpleXMLElement;
 
 /**
@@ -302,7 +303,7 @@ class Subsonic_Api
                                      'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
                                      'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
                                      'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
-                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
+                                     'time', 'totalHits', 'track', 'userRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -722,9 +723,6 @@ class Subsonic_Api
             $albums       = self::_albumList($input, $type);
             if ($albums === false) {
                 $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
-                $errorOccured = true;
-            } elseif (empty($albums)) {
-                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "The requested data was not found: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
             }
             if (!$errorOccured) {
@@ -1296,11 +1294,10 @@ class Subsonic_Api
      * Get a cover art image.
      * Takes the cover art id in parameter.
      * @param array $input
-     * @return boolean
      */
     public static function getcoverart($input)
     {
-        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id'));
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1312,10 +1309,11 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
-            // type not found
-            http_response_code(400);
+            self::setHeader($input['f']);
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
 
-            return false;
+            return;
         }
 
         $art = null;
@@ -1329,8 +1327,7 @@ class Subsonic_Api
         if (($type == 'song')) {
             $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
+                // in most cases the song doesn't have a picture, but the album does
                 $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $show_song_art = AmpConfig::get('show_song_art', false);
                 $art_object    = ($show_song_art) ? $song->id : $song->album;
@@ -1359,10 +1356,11 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
-            // art not found
-            http_response_code(404);
+            self::setHeader($input['f']);
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
 
-            return false;
+            return;
         }
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -1376,15 +1374,13 @@ class Subsonic_Api
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));
                 echo $thumb['thumb'];
 
-                return true;
+                return;
             }
         }
         $image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
-
-        return true;
     }
 
     /**
@@ -2157,7 +2153,6 @@ class Subsonic_Api
                 $search['rule_' . $count . '_input']    = $title;
                 $search['rule_' . $count . '_operator'] = 4;
                 $search['rule_' . $count . '']          = "title";
-                ++$count;
             }
 
             $songs    = Search::run($search);
@@ -2415,32 +2410,40 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input)
     {
-        $current  = (int)$input['current'];
-        $position = (int) $input['position'] / 1000;
-        $username = (string) $input['u'];
-        $user_id  = User::get_from_username($username)->id;
-        $media    = Subsonic_Xml_Data::getAmpacheObject($current);
+        $current = (int)$input['current'];
+        $media   = Subsonic_Xml_Data::getAmpacheObject($current);
         if ($media->id) {
+            $response = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
+            $position = (int) $input['position'] / 1000;
+            $username = (string) $input['u'];
+            $client   = (string) $input['c'];
+            $user_id  = User::get_from_username($username)->id;
             $time     = time();
-            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $previous = Stats::get_last_play($user_id, $client);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // long pauses might cause your now_playing to hide
             static::getNowPlayingRepository()->collectGarbage();
             Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
             // track has just started. repeated plays aren't called by scrobble so make sure we call this too
             if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+                $media->set_played((int) $user_id, $client, array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {
-                Stats::shift_last_play($user_id, (string) $input['c'], $previous['date'], ($time - $position));
+                Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
             }
+            $playQueue = new User_Playlist($user_id);
+            $sub_ids   = (is_array($input['id']))
+                ? $input['id']
+                : array($input['id']);
+            $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
+            $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
+        } else {
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         }
-        // continue to fail saving the queue
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
+        // we finally support this function
         self::apiOutput($input, $response);
     }
-    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getPlayQueue
@@ -2451,7 +2454,11 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
+        $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
+        $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
+
+        Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::apiOutput($input, $response);
     }
 

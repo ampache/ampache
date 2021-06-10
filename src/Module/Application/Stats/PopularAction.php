@@ -73,7 +73,7 @@ final class PopularAction implements ApplicationActionInterface
         $this->ui->showBoxTop(T_('Information'));
 
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $user_id      = (int) Core::get_global('user')->id;
+        $user_id      = null;
 
         /**
          * We limit threshold for all items otherwise the counter will not be the same that the top_sql query.

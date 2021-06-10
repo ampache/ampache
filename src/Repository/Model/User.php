@@ -459,6 +459,42 @@ class User extends database_object
     }
 
     /**
+     * set_user_data
+     * This updates some background data for user specific function
+     * @param string $key
+     * @param string|integer $value
+     */
+    public static function set_user_data($user_id, $key, $value)
+    {
+        $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?";
+        Dba::write($sql, array($user_id, $key, $value));
+    } // set_user_data
+
+    /**
+     * get_user_data
+     * This updates some background data for user specific function
+     * @param string $user_id
+     * @param string $key
+     */
+    public static function get_user_data($user_id, $key = null)
+    {
+        $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
+        $params = array($user_id);
+        if ($key) {
+            $sql .= " AND `key` = ?";
+            $params[] = $key;
+        }
+
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['key']] = $row['value'];
+        }
+
+        return $results;
+    } // get_user_data
+
+    /**
      * update
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
