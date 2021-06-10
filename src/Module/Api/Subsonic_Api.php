@@ -1272,7 +1272,7 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', false));
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id'));
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
