@@ -711,9 +711,6 @@ class Subsonic_Api
             if ($albums === false) {
                 $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
-            } elseif (empty($albums)) {
-                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "The requested data was not found: " . scrub_out((string)$type), $elementName);
-                $errorOccured = true;
             }
             if (!$errorOccured) {
                 Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
