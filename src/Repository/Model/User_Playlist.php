@@ -150,7 +150,7 @@ class User_Playlist extends database_object
     public function get_count()
     {
         $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_playlist` WHERE `user` = ?";
-        $db_results = Dba::read($sql, $this->user);
+        $db_results = Dba::read($sql, array($this->user));
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['count'];

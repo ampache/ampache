@@ -491,7 +491,7 @@ class User extends database_object
      * get_user_data
      * This updates some background data for user specific function
      * @param string $user_id
-     * @param array $key
+     * @param string $key
      */
     public static function get_user_data($user_id, $key = null)
     {
