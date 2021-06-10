@@ -1272,7 +1272,6 @@ class Subsonic_Api
      * Get a cover art image.
      * Takes the cover art id in parameter.
      * @param array $input
-     * @return boolean
      */
     public static function getcoverart($input)
     {
@@ -1288,10 +1287,10 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
-            // type not found
-            http_response_code(400);
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
 
-            return false;
+            return;
         }
 
         $art = null;
@@ -1335,10 +1334,10 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
-            // art not found
-            http_response_code(404);
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
 
-            return false;
+            return;
         }
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -1352,15 +1351,13 @@ class Subsonic_Api
                 header('Content-Length: ' . strlen((string) $thumb['thumb']));
                 echo $thumb['thumb'];
 
-                return true;
+                return;
             }
         }
         $image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
-
-        return true;
     }
 
     /**
