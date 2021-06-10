@@ -45,6 +45,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -53,7 +54,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Rating;
 use Requests;
 use Ampache\Repository\Model\Search;
@@ -292,7 +292,7 @@ class Subsonic_Api
                                      'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
                                      'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
                                      'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
-                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
+                                     'time', 'totalHits', 'track', 'userRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -2123,7 +2123,6 @@ class Subsonic_Api
                 $search['rule_' . $count . '_input']    = $title;
                 $search['rule_' . $count . '_operator'] = 4;
                 $search['rule_' . $count . '']          = "title";
-                ++$count;
             }
 
             $songs    = Search::run($search);
@@ -2569,32 +2568,40 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input)
     {
-        $current  = (int)$input['current'];
-        $position = (int) $input['position'] / 1000;
-        $username = (string) $input['u'];
-        $user_id  = User::get_from_username($username)->id;
-        $media    = Subsonic_Xml_Data::getAmpacheObject($current);
+        $current = (int)$input['current'];
+        $media   = Subsonic_Xml_Data::getAmpacheObject($current);
         if ($media->id) {
+            $response = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
+            $position = (int) $input['position'] / 1000;
+            $username = (string) $input['u'];
+            $client   = (string) $input['c'];
+            $user_id  = User::get_from_username($username)->id;
             $time     = time();
-            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $previous = Stats::get_last_play($user_id, $client);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // long pauses might cause your now_playing to hide
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
             // track has just started. repeated plays aren't called by scrobble so make sure we call this too
             if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+                $media->set_played((int) $user_id, $client, array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {
-                Stats::shift_last_play($user_id, (string) $input['c'], $previous['date'], ($time - $position));
+                Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
             }
+            $playQueue = new User_Playlist($user_id);
+            $sub_ids   = (is_array($input['id']))
+                ? $input['id']
+                : array($input['id']);
+            $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
+            $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
+        } else {
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         }
-        // continue to fail saving the queue
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
+        // we finally support this function
         self::apiOutput($input, $response);
     }
-    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getPlayQueue
@@ -2605,7 +2612,11 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
+        $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
+        $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
+
+        Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::apiOutput($input, $response);
     }
 

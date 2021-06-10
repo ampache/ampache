@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
@@ -45,6 +44,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\SongRepositoryInterface;
 use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
@@ -197,6 +197,24 @@ class Subsonic_Xml_Data
         }
 
         return $ampids;
+    }
+
+    /**
+     * getAmpacheIdArrays
+     * @param array $object_ids
+     * @return array
+     */
+    public static function getAmpacheIdArrays($object_ids)
+    {
+        $ampidarrays = array();
+        foreach ($object_ids as $object_id) {
+            $ampidarrays[] = array(
+                'object_id' => self::getAmpacheId($object_id),
+                'object_type' => self::getAmpacheType($object_id)
+            );
+        }
+
+        return $ampidarrays;
     }
 
     /**
@@ -1121,6 +1139,36 @@ class Subsonic_Xml_Data
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $songId) {
                 self::addSong($xplaylist, $songId, false, "entry");
+            }
+        }
+    }
+
+    /**
+     * addPlayQueue
+     * current="133" position="45000" username="admin" changed="2015-02-18T15:22:22.825Z" changedBy="android"
+     * @param SimpleXMLElement $xml
+     * @param int $user_id
+     * @param string $username
+     */
+    public static function addPlayQueue($xml, $user_id, $username)
+    {
+        $PlayQueue = new User_Playlist($user_id);
+        $items     = $PlayQueue->get_items();
+        if (!empty($items)) {
+            $current    = $PlayQueue->get_current_object();
+            $changed    = User::get_user_data($user_id, 'playqueue_date')['playqueue_date'];
+            $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_date'];
+            $xplayqueue = $xml->addChild('playQueue');
+            $xplayqueue->addAttribute('current', self::getSongId($current['object_id']));
+            $xplayqueue->addAttribute('position', (string)$current['current_time']);
+            $xplayqueue->addAttribute('username', (string)$username);
+            $xplayqueue->addAttribute('changed', date("c", (int)$changed));
+            $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+
+            if ($items) {
+                foreach ($items as $row) {
+                    self::addSong($xplayqueue, (int)$row['object_id'], false, "entry");
+                }
             }
         }
     }
