@@ -40,6 +40,7 @@ use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
+use Ampache\Module\User\PlayQueue\PlayQueueSaverInterface;
 use Ampache\Module\Util\ExternalResourceLoaderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
@@ -53,11 +54,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User_Playlist;
-use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
-use DOMDocument;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
@@ -70,9 +66,13 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\NowPlayingRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use DOMDocument;
 use SimpleXMLElement;
 
 /**
@@ -2432,12 +2432,20 @@ class Subsonic_Api
             if ($position > 5 && $previous['object_id'] == $media->id) {
                 Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
             }
-            $playQueue = new User_Playlist($user_id);
             $sub_ids   = (is_array($input['id']))
                 ? $input['id']
                 : array($input['id']);
             $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
-            $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
+
+            static::getPlayQueueSaver()->save(
+                $user_id,
+                $playlist,
+                $type,
+                $media->getId(),
+                $position,
+                $time,
+                $client
+            );
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         }
@@ -2670,5 +2678,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(VideoLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlayQueueSaver(): PlayQueueSaverInterface
+    {
+        global $dic;
+
+        return $dic->get(PlayQueueSaverInterface::class);
     }
 }

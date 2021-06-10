@@ -67,4 +67,5 @@ return [
     BroadcastRepositoryInterface::class => autowire(BroadcastRepository::class),
     ClipRepositoryInterface::class => autowire(ClipRepository::class),
     ChannelRepositoryInterface::class => autowire(ChannelRepository::class),
+    UserPlaylistRepositoryInterface::class => autowire(UserPlaylistRepository::class),
 ];

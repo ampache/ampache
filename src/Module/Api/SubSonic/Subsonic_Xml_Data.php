@@ -50,11 +50,11 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserPlaylistRepositoryInterface;
 use SimpleXMLElement;
 
 /**
@@ -1164,10 +1164,10 @@ class Subsonic_Xml_Data
      */
     public static function addPlayQueue($xml, $user_id, $username)
     {
-        $PlayQueue = new User_Playlist($user_id);
-        $items     = $PlayQueue->get_items();
-        if (!empty($items)) {
-            $current    = $PlayQueue->get_current_object();
+        $items   = static::getUserPlaylistRepository()->getItemsByUser($user_id);
+        $current = static::getUserPlaylistRepository()->getCurrentObjectByUser($user_id);
+
+        if (!empty($items) && $current !== null) {
             $changed    = User::get_user_data($user_id, 'playqueue_date')['playqueue_date'];
             $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_date'];
             $xplayqueue = $xml->addChild('playQueue');
@@ -1795,5 +1795,15 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserPlaylistRepository(): UserPlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserPlaylistRepositoryInterface::class);
     }
 }

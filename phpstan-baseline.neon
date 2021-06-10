@@ -2772,7 +2772,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
-			count: 7
+			count: 6
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
 
 		-
@@ -2802,6 +2802,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method format\\(\\) on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
+			count: 1
+			path: src/Module/Api/SubSonic/Subsonic_Api.php
+
+		-
+			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
 
@@ -3616,11 +3621,6 @@ parameters:
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$user_id of class Ampache\\\\Repository\\\\Model\\\\User_Playlist constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Api.php
-
-		-
 			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_last_play\\(\\) expects string, int given\\.$#"
 			count: 2
 			path: src/Module/Api/SubSonic/Subsonic_Api.php
@@ -4267,11 +4267,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$song_id of static method Ampache\\\\Module\\\\Api\\\\SubSonic\\\\Subsonic_Xml_Data\\:\\:isSong\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$user_id of class Ampache\\\\Repository\\\\Model\\\\User_Playlist constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/SubSonic/Subsonic_Xml_Data.php
 
@@ -25293,56 +25288,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between string\\|false and true will always evaluate to false\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_item\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_item\\(\\) has parameter \\$data with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:clear\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_current_object\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:set_current_id\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:set_current_object\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:set_items\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:set_items\\(\\) has parameter \\$playlist with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Useractivity\\:\\:getData\\(\\) return type has no value type specified in iterable type array\\.$#"

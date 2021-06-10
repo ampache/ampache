@@ -40,4 +40,5 @@ return [
     Authorization\UserAccessKeyGeneratorInterface::class => autowire(Authorization\UserAccessKeyGenerator::class),
     PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
     UserCreatorInterface::class => autowire(UserCreator::class),
+    PlayQueue\PlayQueueSaverInterface::class => autowire(PlayQueue\PlayQueueSaver::class),
 ];
