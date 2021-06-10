@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Export;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Catalog\CatalogExporterInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,48 +38,74 @@ final class ExportAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'export';
 
-    private UiInterface $ui;
+    private CatalogExporterInterface $catalogExporter;
+
+    private Psr17Factory $psr17Factory;
 
     public function __construct(
-        UiInterface $ui
+        CatalogExporterInterface $catalogExporter,
+        Psr17Factory $psr17Factory
     ) {
-        $this->ui = $ui;
+        $this->catalogExporter = $catalogExporter;
+        $this->psr17Factory    = $psr17Factory;
     }
 
+    /**
+     * @todo implement a memory-friendly way to output the stream content
+     */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
+
+        /** @var array<string, mixed> $body */
+        $body = $request->getParsedBody();
+
+        $catalogId = (int) ($body['export_catalog'] ?? 0);
+
         // This may take a while
         set_time_limit(0);
-
-        // Clear everything we've done so far
-        ob_end_clean();
 
         // This will disable buffering so contents are sent immediately to browser.
         // This is very useful for large catalogs because it will immediately display the download dialog to user,
         // instead of waiting until contents are generated, which could take a long time.
         ob_implicit_flush(1);
 
-        header('Content-Transfer-Encoding: binary');
-        header('Cache-control: public');
+        $response = $this->psr17Factory->createResponse()
+            ->withHeader('Content-Transfer-Encoding', 'binary')
+            ->withHeader('Cache-control', 'public');
 
         $date = get_datetime(time(), 'short', 'none', 'y-MM-dd');
 
-        switch ($_REQUEST['export_format']) {
+        switch ($body['export_format'] ?? '') {
             case 'itunes':
-                header("Content-Type: application/itunes+xml; charset=utf-8");
-                header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
-                Catalog::export('itunes', $_REQUEST['export_catalog']);
-                break;
+                return $response
+                    ->withHeader(
+                        'Content-Type',
+                        'application/itunes+xml; charset=utf-8'
+                    )
+                    ->withHeader(
+                        'Content-Disposition',
+                        sprintf('attachment; filename="ampache-itunes-%s.xml"', $date)
+                    )
+                    ->withBody(
+                        $this->catalogExporter->export('itunes', $catalogId)
+                    );
             case 'csv':
-                header("Content-Type: application/vnd.ms-excel");
-                header("Content-Disposition: filename=\"ampache-export-$date.csv\"");
-                Catalog::export('csv', $_REQUEST['export_catalog']);
-                break;
-        } // end switch on format
-
-        return null;
+            default:
+                return $response
+                    ->withHeader(
+                        'Content-Type',
+                        'application/vnd.ms-excel'
+                    )
+                    ->withHeader(
+                        'Content-Disposition',
+                        sprintf('filename="ampache-export-%s.csv"', $date)
+                    )
+                    ->withBody(
+                        $this->catalogExporter->export('csv', $catalogId)
+                    );
+        }
     }
 }

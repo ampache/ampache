@@ -38,6 +38,7 @@ use Doctrine\DBAL\Connection;
 use Endroid\QrCode\Builder\BuilderInterface;
 use getID3;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use MusicBrainz\MusicBrainz;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
@@ -95,6 +96,7 @@ return [
     RequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
     SapiEmitter::class => autowire(SapiEmitter::class),
+    SapiStreamEmitter::class => autowire(SapiStreamEmitter::class),
     BuilderInterface::class => autowire(),
     Connection::class => static function (): Connection {
         return Dba::createDbalConnection();

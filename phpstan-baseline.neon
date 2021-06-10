@@ -21805,11 +21805,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:export\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:format\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php

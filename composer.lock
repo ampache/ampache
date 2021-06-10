@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c050adae9886e5ec7fca2d42a3ecc81a",
+    "content-hash": "339aa3d47cedc89bd210d7cd94362b2a",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -10130,10 +10130,10 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "james-heinrich/getid3": 20,
-        "usox/xbmc-php-rpc": 20,
         "kumailht/responsive-elements": 20,
         "mikealmond/musicbrainz": 20,
-        "symphonic/soundcloud": 20
+        "symphonic/soundcloud": 20,
+        "usox/xbmc-php-rpc": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
