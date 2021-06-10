@@ -222,6 +222,7 @@ class Subsonic_Api
         } else {
             header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
+        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
         header("Access-Control-Allow-Origin: *");
     }
 
@@ -1272,7 +1273,7 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', false));
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1284,6 +1285,7 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
+            self::setHeader($input['f']);
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1301,8 +1303,7 @@ class Subsonic_Api
         if (($type == 'song')) {
             $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
+                // in most cases the song doesn't have a picture, but the album does
                 $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $show_song_art = AmpConfig::get('show_song_art', false);
                 $art_object    = ($show_song_art) ? $song->id : $song->album;
@@ -1331,6 +1332,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
+            self::setHeader($input['f']);
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
