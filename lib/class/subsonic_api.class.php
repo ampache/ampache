@@ -1204,7 +1204,7 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id'));
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1216,6 +1216,7 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_XML_Data::getAmpacheType($sub_id);
         if ($type == "") {
+            self::setHeader($input['f']);
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1262,6 +1263,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
+            self::setHeader($input['f']);
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
