@@ -222,7 +222,6 @@ class Subsonic_Api
         } else {
             header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
-        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
         header("Access-Control-Allow-Origin: *");
     }
 
