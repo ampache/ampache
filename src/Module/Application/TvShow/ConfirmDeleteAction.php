@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\TvShow\Deletion\TvShowDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,16 +48,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private MediaDeletionCheckerInterface $mediaDeletionChecker;
 
+    private TvShowDeleterInterface $tvShowDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        MediaDeletionCheckerInterface $mediaDeletionChecker
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        TvShowDeleterInterface $tvShowDeleter
     ) {
         $this->configContainer      = $configContainer;
         $this->ui                   = $ui;
         $this->modelFactory         = $modelFactory;
         $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->tvShowDeleter        = $tvShowDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,7 +82,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($tvshow->remove()) {
+        if ($this->tvShowDeleter->delete($tvshow)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('TV Show has been deleted'),

@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\TvShow\Deletion\TvShowDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TvShowInterface;
@@ -45,6 +46,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
 
     private MockInterface $mediaDeletionChecker;
 
+    private MockInterface $tvShowDeleter;
+
     private ConfirmDeleteAction $subject;
 
     public function setUp(): void
@@ -53,12 +56,14 @@ class ConfirmDeleteActionTest extends MockeryTestCase
         $this->ui                   = $this->mock(UiInterface::class);
         $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
         $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
+        $this->tvShowDeleter        = $this->mock(TvShowDeleterInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->configContainer,
             $this->ui,
             $this->modelFactory,
-            $this->mediaDeletionChecker
+            $this->mediaDeletionChecker,
+            $this->tvShowDeleter
         );
     }
 
@@ -158,8 +163,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn($userId);
 
-        $tvShow->shouldReceive('remove')
-            ->withNoArgs()
+        $this->tvShowDeleter->shouldReceive('delete')
+            ->with($tvShow)
             ->once()
             ->andReturnTrue();
 
@@ -224,8 +229,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn($userId);
 
-        $tvShow->shouldReceive('remove')
-            ->withNoArgs()
+        $this->tvShowDeleter->shouldReceive('delete')
+            ->with($tvShow)
             ->once()
             ->andReturnFalse();
 

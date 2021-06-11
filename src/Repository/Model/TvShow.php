@@ -28,17 +28,18 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
-use Ampache\Repository\RatingRepositoryInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
-use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class TvShow extends database_object implements TvShowInterface
 {
     protected const DB_TABLENAME = 'tvshow';
 
     private TagListUpdaterInterface $tagListUpdater;
+
+    private TvShowEpisodeRepositoryInterface $tvShowEpisodeRepository;
+
+    private TvShowSeasonRepositoryInterface $tvShowSeasonRepository;
 
     public int $id;
 
@@ -51,16 +52,20 @@ final class TvShow extends database_object implements TvShowInterface
     /** @var array<string, mixed>|null */
     private ?array $dbData = null;
 
-    private RatingRepositoryInterface $ratingRepository;
+    private DataMigratorInterface $dataMigrator;
 
     public function __construct(
         TagListUpdaterInterface $tagListUpdater,
-        RatingRepositoryInterface $ratingRepository,
+        TvShowEpisodeRepositoryInterface $tvShowEpisodeRepository,
+        TvShowSeasonRepositoryInterface $tvShowSeasonRepository,
+        DataMigratorInterface $dataMigrator,
         int $id
     ) {
-        $this->tagListUpdater   = $tagListUpdater;
-        $this->ratingRepository = $ratingRepository;
-        $this->id               = $id;
+        $this->tagListUpdater          = $tagListUpdater;
+        $this->tvShowEpisodeRepository = $tvShowEpisodeRepository;
+        $this->tvShowSeasonRepository  = $tvShowSeasonRepository;
+        $this->dataMigrator            = $dataMigrator;
+        $this->id                      = $id;
     }
 
     private function getDbData(): array
@@ -119,7 +124,7 @@ final class TvShow extends database_object implements TvShowInterface
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` " . "WHERE `tvshow_season`.`id` IS NULL";
+        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` WHERE `tvshow_season`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -129,7 +134,7 @@ final class TvShow extends database_object implements TvShowInterface
     public function get_seasons(): array
     {
         if ($this->seasonIds === null) {
-            $this->seasonIds = $this->getTvShowSeasonRepository()->getSeasonIdsByTvShowId($this->getId());
+            $this->seasonIds = $this->tvShowSeasonRepository->getSeasonIdsByTvShowId($this->getId());
         }
 
         return $this->seasonIds;
@@ -140,7 +145,7 @@ final class TvShow extends database_object implements TvShowInterface
      */
     public function get_episodes()
     {
-        return $this->getTvShowEpisodeRepository()->getEpisodeIdsByTvShow($this->getId());
+        return $this->tvShowEpisodeRepository->getEpisodeIdsByTvShow($this->getId());
     }
 
     /**
@@ -386,17 +391,15 @@ final class TvShow extends database_object implements TvShowInterface
         if ($this->getName() != $name || $this->getYear() != $year) {
             $tvshow_id = self::check($name, $year, true);
 
-            $tvShowSeasonRepository = $this->getTvShowSeasonRepository();
-
             // If it's changed we need to update
             if ($tvshow_id != $this->id && $tvshow_id != null) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
-                    $tvShowSeasonRepository->setTvShow($tvshow_id, $season_id);
+                    $this->tvShowSeasonRepository->setTvShow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
 
-                static::getDataMigrator()->migrate('tvshow', $this->id, (int)$tvshow_id);
+                $this->dataMigrator->migrate('tvshow', $this->id, (int)$tvshow_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }
@@ -448,94 +451,9 @@ final class TvShow extends database_object implements TvShowInterface
         }
     }
 
+    // not in use
     public function remove(): bool
     {
-        $deleted    = true;
-        $season_ids = $this->get_seasons();
-
-        $modelFactory = $this->getModelFactory();
-
-        foreach ($season_ids as $season_object) {
-            $season  = $modelFactory->createTvShowSeason($season_object);
-            $deleted = $season->remove();
-            if (!$deleted) {
-                debug_event(self::class, 'Error when deleting the season `' . (string) $season_object . '`.', 1);
-                break;
-            }
-        }
-
-        if ($deleted) {
-            $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-            if ($deleted) {
-                Art::garbage_collection('tvshow', $this->id);
-                Userflag::garbage_collection('tvshow', $this->id);
-                $this->ratingRepository->collectGarbage('tvshow', $this->getId());
-                $this->getShoutRepository()->collectGarbage('tvshow', $this->getId());
-                $this->getUseractivityRepository()->collectGarbage('tvshow', $this->getId());
-            }
-        }
-
-        return $deleted;
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getDataMigrator(): DataMigratorInterface
-    {
-        global $dic;
-
-        return $dic->get(DataMigratorInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getModelFactory(): ModelFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ModelFactoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getTvShowSeasonRepository(): TvShowSeasonRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(TvShowSeasonRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getTvShowEpisodeRepository(): TvShowEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(TvShowEpisodeRepositoryInterface::class);
+        return false;
     }
 }
