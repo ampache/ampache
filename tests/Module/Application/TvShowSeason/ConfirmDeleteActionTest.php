@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\TvShowSeason\Deletion\TvShowSeasonDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TvShowSeasonInterface;
@@ -45,6 +46,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
 
     private MockInterface $mediaDeletionChecker;
 
+    private MockInterface $tvShowSeasonDeleter;
+
     private ConfirmDeleteAction $subject;
 
     public function setUp(): void
@@ -53,12 +56,14 @@ class ConfirmDeleteActionTest extends MockeryTestCase
         $this->configContainer      = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
         $this->mediaDeletionChecker = $this->mock(MediaDeletionCheckerInterface::class);
+        $this->tvShowSeasonDeleter  = $this->mock(TvShowSeasonDeleterInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
             $this->ui,
             $this->configContainer,
             $this->modelFactory,
-            $this->mediaDeletionChecker
+            $this->mediaDeletionChecker,
+            $this->tvShowSeasonDeleter
         );
     }
 
@@ -158,8 +163,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $season->shouldReceive('remove')
-            ->withNoArgs()
+        $this->tvShowSeasonDeleter->shouldReceive('delete')
+            ->with($season)
             ->once()
             ->andReturnTrue();
 
@@ -224,8 +229,8 @@ class ConfirmDeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $season->shouldReceive('remove')
-            ->withNoArgs()
+        $this->tvShowSeasonDeleter->shouldReceive('delete')
+            ->with($season)
             ->once()
             ->andReturnFalse();
 

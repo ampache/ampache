@@ -32,7 +32,6 @@ use Ampache\Module\Playback\PlaybackFactoryInterface;
 use Ampache\Module\Podcast\PodcastFeedLoaderInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
@@ -44,13 +43,11 @@ use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
-use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
-use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use MusicBrainz\MusicBrainz;
 use Psr\Container\ContainerInterface;
@@ -218,12 +215,8 @@ final class ModelFactory implements ModelFactoryInterface
         int $tvShowSeasonId
     ): TvShowSeasonInterface {
         return new TVShow_Season(
-            $this->dic->get(ShoutRepositoryInterface::class),
-            $this->dic->get(UserActivityRepositoryInterface::class),
             $this->dic->get(TvShowSeasonRepositoryInterface::class),
             $this,
-            $this->dic->get(VideoLoaderInterface::class),
-            $this->dic->get(RatingRepositoryInterface::class),
             $tvShowSeasonId
         );
     }

@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Module\TvShowSeason\Deletion\TvShowSeasonDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,16 +48,20 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private MediaDeletionCheckerInterface $mediaDeletionChecker;
 
+    private TvShowSeasonDeleterInterface $tvShowSeasonDeleter;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        MediaDeletionCheckerInterface $mediaDeletionChecker
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        TvShowSeasonDeleterInterface $tvShowSeasonDeleter
     ) {
         $this->ui                   = $ui;
         $this->configContainer      = $configContainer;
         $this->modelFactory         = $modelFactory;
         $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->tvShowSeasonDeleter  = $tvShowSeasonDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,7 +81,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        if ($tvshow_season->remove()) {
+        if ($this->tvShowSeasonDeleter->delete($tvshow_season)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('TV Season has been deleted'),

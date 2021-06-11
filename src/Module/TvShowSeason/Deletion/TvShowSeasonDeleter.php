@@ -22,81 +22,75 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\TvShow\Deletion;
+namespace Ampache\Module\TvShowSeason\Deletion;
 
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\TvShowSeason\Deletion\TvShowSeasonDeleterInterface;
+use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\TvShowInterface;
+use Ampache\Repository\Model\TvShowSeasonInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
-use Ampache\Repository\TvShowRepositoryInterface;
+use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class TvShowDeleter implements TvShowDeleterInterface
+final class TvShowSeasonDeleter implements TvShowSeasonDeleterInterface
 {
+    private TvShowSeasonRepositoryInterface $tvShowSeasonRepository;
+
     private RatingRepositoryInterface $ratingRepository;
 
     private ShoutRepositoryInterface $shoutRepository;
 
     private UserActivityRepositoryInterface $userActivityRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
-    private TvShowRepositoryInterface $tvShowRepository;
+    private VideoLoaderInterface $videoLoader;
 
     private LoggerInterface $logger;
 
-    private TvShowSeasonDeleterInterface $tvShowSeasonDeleter;
-
     public function __construct(
+        TvShowSeasonRepositoryInterface $tvShowSeasonRepository,
         RatingRepositoryInterface $ratingRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $userActivityRepository,
-        ModelFactoryInterface $modelFactory,
-        TvShowRepositoryInterface $tvShowRepository,
-        TvShowSeasonDeleterInterface $tvShowSeasonDeleter,
+        VideoLoaderInterface $videoLoader,
         LoggerInterface $logger
     ) {
+        $this->tvShowSeasonRepository = $tvShowSeasonRepository;
         $this->ratingRepository       = $ratingRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->userActivityRepository = $userActivityRepository;
-        $this->modelFactory           = $modelFactory;
-        $this->tvShowRepository       = $tvShowRepository;
-        $this->tvShowSeasonDeleter    = $tvShowSeasonDeleter;
+        $this->videoLoader            = $videoLoader;
         $this->logger                 = $logger;
     }
 
-    public function delete(TvShowInterface $tvShow): bool
-    {
-        $deleted    = true;
-        $season_ids = $tvShow->get_seasons();
-        $tvShowId   = $tvShow->getId();
+    public function delete(
+        TvShowSeasonInterface $tvShowSeason
+    ): bool {
+        $tvShowSeasonId = $tvShowSeason->getId();
+        $deleted        = true;
 
-        foreach ($season_ids as $seasonId) {
-            $season  = $this->modelFactory->createTvShowSeason($seasonId);
-
-            $deleted = $this->tvShowSeasonDeleter->delete($season);
+        foreach ($tvShowSeason->getEpisodeIds() as $videoId) {
+            $video   = $this->videoLoader->load($videoId);
+            $deleted = $video->remove();
             if (!$deleted) {
                 $this->logger->critical(
-                    sprintf('Error when deleting the season `%d`.', $seasonId),
-                    [LegacyLogger::class => __CLASS__]
+                    sprintf('Error when deleting the video `%d`.', $videoId),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 break;
             }
         }
 
         if ($deleted) {
-            $this->tvShowRepository->delete($tvShow);
+            $this->tvShowSeasonRepository->delete($tvShowSeasonId);
 
-            Art::garbage_collection('tvshow', $tvShowId);
-            Userflag::garbage_collection('tvshow', $tvShowId);
-            $this->ratingRepository->collectGarbage('tvshow', $tvShowId);
-            $this->shoutRepository->collectGarbage('tvshow', $tvShowId);
-            $this->userActivityRepository->collectGarbage('tvshow', $tvShowId);
+            Art::garbage_collection('tvshow_season', $tvShowSeasonId);
+            Userflag::garbage_collection('tvshow_season', $tvShowSeasonId);
+            $this->ratingRepository->collectGarbage('tvshow_season', $tvShowSeasonId);
+            $this->shoutRepository->collectGarbage('tvshow_season', $tvShowSeasonId);
+            $this->userActivityRepository->collectGarbage('tvshow_season', $tvShowSeasonId);
         }
 
         return $deleted;

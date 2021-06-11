@@ -25,11 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Video\VideoLoaderInterface;
-use Ampache\Repository\RatingRepositoryInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Module\TvShowSeason\Deletion\TvShowSeasonDeleter;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
-use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class TVShow_Season extends database_object implements TvShowSeasonInterface
 {
@@ -37,17 +34,9 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
 
     public int $id;
 
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private UserActivityRepositoryInterface $userActivityRepository;
-
     private TvShowSeasonRepositoryInterface $tvShowSeasonRepository;
 
     private ModelFactoryInterface $modelFactory;
-
-    private VideoLoaderInterface $videoLoader;
-
-    private RatingRepositoryInterface $ratingRepository;
 
     private ?TvShow $tvShow = null;
 
@@ -58,20 +47,12 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
     private ?array $extra_info = null;
 
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $userActivityRepository,
         TvShowSeasonRepositoryInterface $tvShowRepository,
         ModelFactoryInterface $modelFactory,
-        VideoLoaderInterface $videoLoader,
-        RatingRepositoryInterface $ratingRepository,
         int $id
     ) {
-        $this->shoutRepository        = $shoutRepository;
-        $this->userActivityRepository = $userActivityRepository;
         $this->tvShowSeasonRepository = $tvShowRepository;
         $this->modelFactory           = $modelFactory;
-        $this->videoLoader            = $videoLoader;
-        $this->ratingRepository       = $ratingRepository;
         $this->id                     = $id;
     }
 
@@ -362,31 +343,14 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         return $this->id;
     }
 
+    /**
+     * Not in use
+     *
+     * @see TvShowSeasonDeleter
+     */
     public function remove(): bool
     {
-        $deleted = true;
-        $videos  = $this->getEpisodeIds();
-        foreach ($videos as $video_id) {
-            $video   = $this->videoLoader->load($video_id);
-            $deleted = $video->remove();
-            if (!$deleted) {
-                debug_event(self::class, 'Error when deleting the video `' . $video_id . '`.', 1);
-                break;
-            }
-        }
-
-        if ($deleted) {
-            $this->tvShowSeasonRepository->delete(
-                $this->getId()
-            );
-            Art::garbage_collection('tvshow_season', $this->id);
-            Userflag::garbage_collection('tvshow_season', $this->id);
-            $this->ratingRepository->collectGarbage('tvshow_season', $this->getId());
-            $this->shoutRepository->collectGarbage('tvshow_season', $this->getId());
-            $this->userActivityRepository->collectGarbage('tvshow_season', $this->getId());
-        }
-
-        return $deleted;
+        return false;
     }
 
     /**
