@@ -23615,11 +23615,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:get_highest\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php

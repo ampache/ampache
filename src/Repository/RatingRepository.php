@@ -37,4 +37,38 @@ final class RatingRepository implements RatingRepositoryInterface
             [$newObjectId, $objectType, $oldObjectId]
         );
     }
+
+    /**
+     * Remove ratings for items that no longer exist.
+     */
+    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void
+    {
+        $types = [
+            'song',
+            'album',
+            'artist',
+            'video',
+            'tvshow',
+            'tvshow_season',
+            'playlist',
+            'label',
+            'podcast',
+            'podcast_episode'
+        ];
+
+        if ($objectType !== null && $objectType !== '') {
+            if (in_array($objectType, $types)) {
+                $sql = 'DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?';
+                Dba::write($sql, [$objectType, $objectId]);
+            } else {
+                debug_event(self::class, 'Garbage collect on type `' . $objectType . '` is not supported.', 1);
+            }
+        } else {
+            foreach ($types as $type) {
+                Dba::write('DELETE FROM `rating` WHERE `object_type` = \'$type\' AND `rating`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);');
+            }
+        }
+        // delete 'empty' ratings
+        Dba::write('DELETE FROM `rating` WHERE `rating`.`rating` = 0');
+    }
 }

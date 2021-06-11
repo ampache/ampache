@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -59,13 +60,16 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private CatalogRepositoryInterface $catalogRepository;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $useractivityRepository,
         ArtistRepositoryInterface $artistRepository,
         SongRepositoryInterface $songRepository,
-        CatalogRepositoryInterface $catalogRepository
+        CatalogRepositoryInterface $catalogRepository,
+        RatingRepositoryInterface $ratingRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
@@ -73,6 +77,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->artistRepository       = $artistRepository;
         $this->songRepository         = $songRepository;
         $this->catalogRepository      = $catalogRepository;
+        $this->ratingRepository       = $ratingRepository;
     }
 
     public function collect(): void
@@ -83,7 +88,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Video::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
-        Rating::garbage_collection();
+        $this->ratingRepository->collectGarbage();
         Userflag::garbage_collection();
         $this->useractivityRepository->collectGarbage();
         Playlist::garbage_collection();

@@ -31,6 +31,7 @@ use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
@@ -897,7 +898,7 @@ class Album extends database_object implements library_item
             } // foreach song of album
             if (!$cron_cache) {
                 Stats::garbage_collection();
-                Rating::garbage_collection();
+                $this->getRatingRepository()->collectGarbage();
                 Userflag::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
             }
@@ -1034,5 +1035,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getRatingRepository(): RatingRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(RatingRepositoryInterface::class);
     }
 }

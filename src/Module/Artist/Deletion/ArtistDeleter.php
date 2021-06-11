@@ -32,6 +32,7 @@ use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
@@ -52,6 +53,8 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         AlbumDeleterInterface $albumDeleter,
         ArtistRepositoryInterface $artistRepository,
@@ -59,7 +62,8 @@ final class ArtistDeleter implements ArtistDeleterInterface
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        RatingRepositoryInterface $ratingRepository
     ) {
         $this->albumDeleter           = $albumDeleter;
         $this->artistRepository       = $artistRepository;
@@ -68,6 +72,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         $this->logger                 = $logger;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->ratingRepository       = $ratingRepository;
     }
 
     /**
@@ -102,7 +107,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
         if ($deleted) {
             Art::garbage_collection('artist', $artistId);
             Userflag::garbage_collection('artist', $artistId);
-            Rating::garbage_collection('artist', $artistId);
+            $this->ratingRepository->collectGarbage('artist', $artistId);
             $this->shoutRepository->collectGarbage('artist', $artistId);
             $this->useractivityRepository->collectGarbage('artist', $artistId);
         }

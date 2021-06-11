@@ -25,6 +25,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -37,14 +38,18 @@ final class SongDeleter implements SongDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         SongRepositoryInterface $songRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        RatingRepositoryInterface $ratingRepository
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->songRepository         = $songRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->ratingRepository       = $ratingRepository;
     }
 
     public function delete(Song $song): bool
@@ -60,7 +65,7 @@ final class SongDeleter implements SongDeleterInterface
             if ($deleted) {
                 Art::garbage_collection('song', $songId);
                 Userflag::garbage_collection('song', $songId);
-                Rating::garbage_collection('song', $songId);
+                $this->ratingRepository->collectGarbage('song', $songId);
                 $this->shoutRepository->collectGarbage('song', $songId);
                 $this->useractivityRepository->collectGarbage('song', $songId);
             }

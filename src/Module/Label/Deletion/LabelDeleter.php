@@ -28,6 +28,8 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\LabelInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\RatingRepository;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -39,14 +41,18 @@ final class LabelDeleter implements LabelDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         LabelRepositoryInterface $labelRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        RatingRepositoryInterface $ratingRepository
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->labelRepository        = $labelRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->ratingRepository       = $ratingRepository;
     }
 
     public function delete(
@@ -58,7 +64,7 @@ final class LabelDeleter implements LabelDeleterInterface
         if ($deleted) {
             Art::garbage_collection('label', $labelId);
             Userflag::garbage_collection('label', $labelId);
-            Rating::garbage_collection('label', $labelId);
+            $this->ratingRepository->collectGarbage('label', $labelId);
             $this->shoutRepository->collectGarbage('label', $labelId);
             $this->useractivityRepository->collectGarbage('label', $labelId);
         }

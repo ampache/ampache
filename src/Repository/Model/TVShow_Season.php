@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Video\VideoLoaderInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -46,6 +47,8 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
 
     private VideoLoaderInterface $videoLoader;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     private ?TvShow $tvShow = null;
 
     /** @var array<string, mixed>|null */
@@ -60,6 +63,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         TvShowSeasonRepositoryInterface $tvShowRepository,
         ModelFactoryInterface $modelFactory,
         VideoLoaderInterface $videoLoader,
+        RatingRepositoryInterface $ratingRepository,
         int $id
     ) {
         $this->shoutRepository        = $shoutRepository;
@@ -67,6 +71,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         $this->tvShowSeasonRepository = $tvShowRepository;
         $this->modelFactory           = $modelFactory;
         $this->videoLoader            = $videoLoader;
+        $this->ratingRepository       = $ratingRepository;
         $this->id                     = $id;
     }
 
@@ -376,7 +381,7 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
             );
             Art::garbage_collection('tvshow_season', $this->id);
             Userflag::garbage_collection('tvshow_season', $this->id);
-            Rating::garbage_collection('tvshow_season', $this->id);
+            $this->ratingRepository->collectGarbage('tvshow_season', $this->getId());
             $this->shoutRepository->collectGarbage('tvshow_season', $this->getId());
             $this->userActivityRepository->collectGarbage('tvshow_season', $this->getId());
         }
@@ -384,6 +389,9 @@ final class TVShow_Season extends database_object implements TvShowSeasonInterfa
         return $deleted;
     }
 
+    /**
+     * @deprecated Inject by constructor
+     */
     private static function getTvShowSeasonRepository(): TvShowSeasonRepositoryInterface
     {
         global $dic;

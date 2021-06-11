@@ -31,4 +31,9 @@ interface RatingRepositoryInterface
         int $oldObjectId,
         int $newObjectId
     ): void;
+
+    /**
+     * Remove ratings for items that no longer exist.
+     */
+    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
 }

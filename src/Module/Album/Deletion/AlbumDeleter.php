@@ -33,6 +33,7 @@ use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -57,6 +58,8 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
@@ -64,7 +67,8 @@ final class AlbumDeleter implements AlbumDeleterInterface
         SongRepositoryInterface $songRepository,
         ShoutRepositoryInterface $shoutRepository,
         SongDeleterInterface $songDeleter,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        RatingRepositoryInterface $ratingRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->modelFactory           = $modelFactory;
@@ -73,6 +77,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
         $this->shoutRepository        = $shoutRepository;
         $this->songDeleter            = $songDeleter;
         $this->useractivityRepository = $useractivityRepository;
+        $this->ratingRepository       = $ratingRepository;
     }
 
     /**
@@ -111,7 +116,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
         Art::garbage_collection('album', $albumId);
         Userflag::garbage_collection('album', $albumId);
-        Rating::garbage_collection('album', $albumId);
+        $this->ratingRepository->collectGarbage('album', $albumId);
         $this->shoutRepository->collectGarbage('album', $albumId);
         $this->useractivityRepository->collectGarbage('album', $albumId);
     }

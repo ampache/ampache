@@ -43,6 +43,7 @@ use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -204,6 +205,7 @@ final class ModelFactory implements ModelFactoryInterface
     ): TvShowInterface {
         return new TvShow(
             $this->dic->get(TagListUpdaterInterface::class),
+            $this->dic->get(RatingRepositoryInterface::class),
             $tvShowId
         );
     }
@@ -217,6 +219,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(TvShowSeasonRepositoryInterface::class),
             $this,
             $this->dic->get(VideoLoaderInterface::class),
+            $this->dic->get(RatingRepositoryInterface::class),
             $tvShowSeasonId
         );
     }

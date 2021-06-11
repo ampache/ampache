@@ -63,44 +63,6 @@ class Rating extends database_object
     }
 
     /**
-     * garbage_collection
-     *
-     * Remove ratings for items that no longer exist.
-     * @param string $object_type
-     * @param integer $object_id
-     */
-    public static function garbage_collection($object_type = null, $object_id = null)
-    {
-        $types = array(
-            'song',
-            'album',
-            'artist',
-            'video',
-            'tvshow',
-            'tvshow_season',
-            'playlist',
-            'label',
-            'podcast',
-            'podcast_episode'
-        );
-
-        if ($object_type !== null && $object_type !== '') {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
-            } else {
-                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            foreach ($types as $type) {
-                Dba::write("DELETE FROM `rating` WHERE `object_type` = '$type' AND `rating`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);");
-            }
-        }
-        // delete 'empty' ratings
-        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0");
-    }
-
-    /**
      * get_user_rating
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.

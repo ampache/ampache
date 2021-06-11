@@ -35,6 +35,7 @@ use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Video\ClipCreatorInterface;
 use Ampache\Repository\ClipRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
@@ -954,7 +955,7 @@ class Video extends database_object implements
             if ($deleted) {
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
-                Rating::garbage_collection('video', $this->id);
+                $this->getRatingRepository()->collectGarbage('video', $this->getId());
                 $this->getShoutRepository()->collectGarbage('video', $this->getId());
                 $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
             }
@@ -1183,5 +1184,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(ClipCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getRatingRepository(): RatingRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(RatingRepositoryInterface::class);
     }
 }

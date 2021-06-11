@@ -34,6 +34,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -519,7 +520,7 @@ class Artist extends database_object implements library_item
             // clear out the old data
             if ($updated) {
                 Stats::garbage_collection();
-                Rating::garbage_collection();
+                $this->getRatingRepository()->collectGarbage();
                 Userflag::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
                 $artist = $this->getModelFactory()->createArtist((int) $current_id);
@@ -759,5 +760,15 @@ class Artist extends database_object implements library_item
         global $dic;
 
         return $dic->get(ModelFactoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getRatingRepository(): RatingRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(RatingRepositoryInterface::class);
     }
 }

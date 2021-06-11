@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
+use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
@@ -50,12 +51,16 @@ final class TvShow extends database_object implements TvShowInterface
     /** @var array<string, mixed>|null */
     private ?array $dbData = null;
 
+    private RatingRepositoryInterface $ratingRepository;
+
     public function __construct(
         TagListUpdaterInterface $tagListUpdater,
+        RatingRepositoryInterface $ratingRepository,
         int $id
     ) {
-        $this->tagListUpdater = $tagListUpdater;
-        $this->id             = $id;
+        $this->tagListUpdater   = $tagListUpdater;
+        $this->ratingRepository = $ratingRepository;
+        $this->id               = $id;
     }
 
     private function getDbData(): array
@@ -465,7 +470,7 @@ final class TvShow extends database_object implements TvShowInterface
             if ($deleted) {
                 Art::garbage_collection('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);
-                Rating::garbage_collection('tvshow', $this->id);
+                $this->ratingRepository->collectGarbage('tvshow', $this->getId());
                 $this->getShoutRepository()->collectGarbage('tvshow', $this->getId());
                 $this->getUseractivityRepository()->collectGarbage('tvshow', $this->getId());
             }
