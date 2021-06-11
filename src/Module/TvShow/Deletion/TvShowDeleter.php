@@ -24,14 +24,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\TvShow\Deletion;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\TvShowInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TvShowRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class TvShowDeleter implements TvShowDeleterInterface
 {
@@ -43,16 +45,24 @@ final class TvShowDeleter implements TvShowDeleterInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private TvShowRepositoryInterface $tvShowRepository;
+
+    private LoggerInterface $logger;
+
     public function __construct(
         RatingRepositoryInterface $ratingRepository,
         ShoutRepositoryInterface $shoutRepository,
         UserActivityRepositoryInterface $userActivityRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        TvShowRepositoryInterface $tvShowRepository,
+        LoggerInterface $logger
     ) {
         $this->ratingRepository       = $ratingRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->userActivityRepository = $userActivityRepository;
         $this->modelFactory           = $modelFactory;
+        $this->tvShowRepository       = $tvShowRepository;
+        $this->logger                 = $logger;
     }
 
     public function delete(TvShowInterface $tvShow): bool
@@ -61,25 +71,26 @@ final class TvShowDeleter implements TvShowDeleterInterface
         $season_ids = $tvShow->get_seasons();
         $tvShowId   = $tvShow->getId();
 
-        foreach ($season_ids as $season_object) {
-            $season  = $this->modelFactory->createTvShowSeason($season_object);
+        foreach ($season_ids as $seasonId) {
+            $season  = $this->modelFactory->createTvShowSeason($seasonId);
             $deleted = $season->remove();
             if (!$deleted) {
-                debug_event(self::class, 'Error when deleting the season `' . (string) $season_object . '`.', 1);
+                $this->logger->critical(
+                    sprintf('Error when deleting the season `%d`.', $seasonId),
+                    [LegacyLogger::class => __CLASS__]
+                );
                 break;
             }
         }
 
         if ($deleted) {
-            $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
-            $deleted = Dba::write($sql, [$tvShowId]);
-            if ($deleted) {
-                Art::garbage_collection('tvshow', $tvShowId);
-                Userflag::garbage_collection('tvshow', $tvShowId);
-                $this->ratingRepository->collectGarbage('tvshow', $tvShowId);
-                $this->shoutRepository->collectGarbage('tvshow', $tvShowId);
-                $this->userActivityRepository->collectGarbage('tvshow', $tvShowId);
-            }
+            $this->tvShowRepository->delete($tvShow);
+
+            Art::garbage_collection('tvshow', $tvShowId);
+            Userflag::garbage_collection('tvshow', $tvShowId);
+            $this->ratingRepository->collectGarbage('tvshow', $tvShowId);
+            $this->shoutRepository->collectGarbage('tvshow', $tvShowId);
+            $this->userActivityRepository->collectGarbage('tvshow', $tvShowId);
         }
 
         return $deleted;
