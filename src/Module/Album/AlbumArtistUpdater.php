@@ -23,54 +23,47 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album;
 
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class AlbumArtistUpdater implements AlbumArtistUpdaterInterface
 {
     private LoggerInterface $logger;
 
+    private AlbumRepositoryInterface $albumRepository;
+
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AlbumRepositoryInterface $albumRepository,
+        SongRepositoryInterface $songRepository
     ) {
-        $this->logger = $logger;
+        $this->logger          = $logger;
+        $this->albumRepository = $albumRepository;
+        $this->songRepository  = $songRepository;
     }
 
     /**
      * find albums that are missing an album_artist and generate one.
-     *
-     * @param int[] $albumIds
      */
-    public function update(array $albumIds = []): void
+    public function update(): void
     {
-        $results = $albumIds;
-        if (empty($results)) {
-            // Find all albums that are missing an album artist
-            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != 'Unknown (Orphaned)'";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int) $row['id'];
-            }
-        }
-        foreach ($results as $album_id) {
-            $artists    = [];
-            $sql        = 'SELECT MIN(`artist`) FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1';
-            $db_results = Dba::read($sql, array($album_id));
+        $albumIds = $this->albumRepository->getHavingEmptyAlbumArtist();
 
-            // these are albums that only have 1 artist
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $artists[] = (int) $row['artist'];
-            }
+        foreach ($albumIds as $albumId) {
+            $artistId = $this->songRepository->findArtistByAlbum($albumId);
 
             // Update the album
-            if (!empty($artists)) {
+            if ($artistId !== null) {
                 $this->logger->debug(
-                    'Found album_artist {' . $artists[0] . '} for: ' . $album_id,
+                    'Found album_artist {' . $artistId . '} for: ' . $albumId,
                     [LegacyLogger::class => __CLASS__]
                 );
-                Album::update_field('album_artist', $artists[0], $album_id);
+                Album::update_field('album_artist', $artistId, $albumId);
             }
         }
     }

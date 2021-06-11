@@ -23,6 +23,7 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Generator;
 
 interface AlbumRepositoryInterface
 {
@@ -155,4 +156,11 @@ interface AlbumRepositoryInterface
     public function getGroupedCountByArtist(Artist $artist): int;
 
     public function cleanEmptyAlbums(): void;
+
+    /**
+     * Find all albums that are missing an album artist
+     *
+     * @return Generator<int>
+     */
+    public function getHavingEmptyAlbumArtist(): Generator;
 }

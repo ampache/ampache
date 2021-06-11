@@ -29,16 +29,21 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
+use Doctrine\DBAL\Connection;
 use Generator;
 
 final class SongRepository implements SongRepositoryInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private Connection $database;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        Connection $database
     ) {
         $this->modelFactory = $modelFactory;
+        $this->database     = $database;
     }
 
     /**
@@ -354,5 +359,20 @@ final class SongRepository implements SongRepositoryInterface
         }
 
         return null;
+    }
+
+    public function findArtistByAlbum(
+        int $albumId
+    ): ?int {
+        $result = $this->database->fetchOne(
+            'SELECT MIN(`artist`) FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1',
+            [$albumId]
+        );
+
+        if ($result === false) {
+            return null;
+        }
+
+        return (int) $result;
     }
 }

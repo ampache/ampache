@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
+use Generator;
 
 final class AlbumRepository implements AlbumRepositoryInterface
 {
@@ -467,6 +468,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $object_id  = $album['id'];
             $sql        = "DELETE FROM `album` WHERE `id` = ?";
             Dba::write($sql, array($object_id));
+        }
+    }
+
+    /**
+     * Find all albums that are missing an album artist
+     *
+     * @return Generator<int>
+     */
+    public function getHavingEmptyAlbumArtist(): Generator
+    {
+        $sql        = 'SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != \'Unknown (Orphaned)\'';
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            yield (int) $row['id'];
         }
     }
 }

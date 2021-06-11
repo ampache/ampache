@@ -129,4 +129,8 @@ interface SongRepositoryInterface
      * @param array<string, mixed> $data
      */
     public function findBy(array $data): ?int;
+
+    public function findArtistByAlbum(
+        int $albumId
+    ): ?int;
 }

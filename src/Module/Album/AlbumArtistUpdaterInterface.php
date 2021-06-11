@@ -25,8 +25,6 @@ interface AlbumArtistUpdaterInterface
 {
     /**
      * find albums that are missing an album_artist and generate one.
-     *
-     * @param int[] $albumIds
      */
-    public function update(array $albumIds = []): void;
+    public function update(): void;
 }
