@@ -52,6 +52,8 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private TagListUpdaterInterface $tagListUpdater;
 
+    private MediaFromTagUpdaterInterface $mediaFromTagUpdater;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
@@ -59,15 +61,17 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         ConfigContainerInterface $configContainer,
         ArtistRepositoryInterface $artistRepository,
         ModelFactoryInterface $modelFactory,
-        TagListUpdaterInterface $tagListUpdater
+        TagListUpdaterInterface $tagListUpdater,
+        MediaFromTagUpdaterInterface $mediaFromTagUpdater
     ) {
-        $this->songRepository   = $songRepository;
-        $this->albumRepository  = $albumRepository;
-        $this->tagRepository    = $tagRepository;
-        $this->configContainer  = $configContainer;
-        $this->artistRepository = $artistRepository;
-        $this->modelFactory     = $modelFactory;
-        $this->tagListUpdater   = $tagListUpdater;
+        $this->songRepository      = $songRepository;
+        $this->albumRepository     = $albumRepository;
+        $this->tagRepository       = $tagRepository;
+        $this->configContainer     = $configContainer;
+        $this->artistRepository    = $artistRepository;
+        $this->modelFactory        = $modelFactory;
+        $this->tagListUpdater      = $tagListUpdater;
+        $this->mediaFromTagUpdater = $mediaFromTagUpdater;
     }
 
     /**
@@ -114,7 +118,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         }
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $info = Catalog::update_media_from_tags($song);
+            $info = $this->mediaFromTagUpdater->update($song);
             // don't echo useless info when using api
             if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {

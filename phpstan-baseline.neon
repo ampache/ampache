@@ -1156,11 +1156,6 @@ parameters:
 			path: src/Module/Api/Gui/Method/CatalogFileMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$media of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) expects Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface, Ampache\\\\Repository\\\\Model\\\\PodcastEpisodeInterface\\|Ampache\\\\Repository\\\\Model\\\\Song\\|Ampache\\\\Repository\\\\Model\\\\Video\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Gui/Method/CatalogFileMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Gui\\\\Method\\\\CatalogMethod\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Method/CatalogMethod.php
@@ -7893,6 +7888,11 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$enabled \\(int\\) does not accept bool\\.$#"
 			count: 1
 			path: src/Module/Catalog/Loader/CatalogLoader.php
+
+		-
+			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:getId\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Catalog/MediaFromTagUpdater.php
 
 		-
 			message: "#^Cannot call method getBody\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
@@ -21720,11 +21720,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Access to an undefined static property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$aliases\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -22006,16 +22001,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_mapping\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

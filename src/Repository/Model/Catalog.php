@@ -38,16 +38,13 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Song\Tag\SongFromTagUpdaterInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Module\Video\VideoFromTagUpdaterInterface;
 use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -1461,64 +1458,6 @@ abstract class Catalog extends database_object
     } // update_settings
 
     /**
-     * update_media_from_tags
-     * This is a 'wrapper' function calls the update function for the media
-     * type in question
-     * @param PlayableMediaInterface $media
-     * @param array $gather_types
-     * @param string $sort_pattern
-     * @param string $rename_pattern
-     * @return array
-     */
-    public static function update_media_from_tags(
-        $media,
-        $gather_types = array('music'),
-        $sort_pattern = '',
-        $rename_pattern = ''
-    ) {
-        $catalog = self::create_from_id($media->getCatalogId());
-        if ($catalog === null) {
-            debug_event(self::class, 'update_media_from_tags: Error loading catalog ' . $media->getCatalogId(), 2);
-
-            return array();
-        }
-
-        $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        // Figure out what type of object this is and call the right  function
-        $name = ($type == 'song') ? 'song' : 'video';
-
-        $functions = [
-            'song' => static function ($results, $media) {
-                return static::getSongFromTagUpdater()->update($results, $media);
-            },
-            'video' => static function ($results, $media) {
-                return static::getVideoFromTagUpdater()->update($results, $media);
-            },
-            'tvshow' => static function ($results, $media) {
-                return static::getVideoFromTagUpdater()->update($results, $media);
-            },
-        ];
-
-        $callable = $functions[$name];
-
-        // try and get the tags from your file
-        $extension    = strtolower(pathinfo($media->getFile(), PATHINFO_EXTENSION));
-        $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        // for files without tags try to update from their file name instead
-        if ($media->id && in_array($extension, array('wav', 'shn'))) {
-            debug_event(self::class, 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
-            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
-            $patres  = vainfo::parse_pattern($media->getFile(), $catalog->sort_pattern, $catalog->rename_pattern);
-            $results = array_merge($results, $patres);
-
-            return $callable($results, $media);
-        }
-        debug_event(self::class, 'Reading tags from ' . $media->getFile(), 4);
-
-        return $callable($results, $media);
-    } // update_media_from_tags
-
-    /**
      * Get rid of all tags found in the libraryItem
      * @param library_item $libraryItem
      * @param array $metadata
@@ -2001,26 +1940,6 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongFromTagUpdater(): SongFromTagUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongFromTagUpdaterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getVideoFromTagUpdater(): VideoFromTagUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(VideoFromTagUpdaterInterface::class);
     }
 
     /**

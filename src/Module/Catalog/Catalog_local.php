@@ -627,7 +627,12 @@ class Catalog_local extends Catalog
             }
 
             $media = new $class_name($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
+            $info  = $this->getMediaFromTagUpdater()->update(
+                $media,
+                $this->get_gather_types(),
+                $this->sort_pattern,
+                $this->rename_pattern
+            );
             if ($info['change']) {
                 $changed++;
             }
@@ -1163,5 +1168,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(PlaylistImporterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMediaFromTagUpdater(): MediaFromTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(MediaFromTagUpdaterInterface::class);
     }
 }

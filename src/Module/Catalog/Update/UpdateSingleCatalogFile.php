@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\MediaFromTagUpdaterInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
@@ -38,10 +39,14 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 {
     private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
+    private MediaFromTagUpdaterInterface $mediaFromTagUpdater;
+
     public function __construct(
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        MediaFromTagUpdaterInterface $mediaFromTagUpdater
     ) {
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->mediaFromTagUpdater      = $mediaFromTagUpdater;
     }
 
     public function update(
@@ -117,7 +122,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 if ($media->getId() && $verificationMode == 1) {
                     // Verify Existing files
                     $catalog = $media->getCatalogId();
-                    Catalog::update_media_from_tags($media);
+                    $this->mediaFromTagUpdater->update($media);
                 }
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {

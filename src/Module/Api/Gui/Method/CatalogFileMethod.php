@@ -33,9 +33,11 @@ use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\MediaFromTagUpdaterInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
@@ -56,18 +58,22 @@ final class CatalogFileMethod implements MethodInterface
 
     private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
 
+    private MediaFromTagUpdaterInterface $mediaFromTagUpdater;
+
     public function __construct(
         SongDeleterInterface $songDeleter,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         StreamFactoryInterface $streamFactory,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository
+        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        MediaFromTagUpdaterInterface $mediaFromTagUpdater
     ) {
         $this->songDeleter              = $songDeleter;
         $this->modelFactory             = $modelFactory;
         $this->configContainer          = $configContainer;
         $this->streamFactory            = $streamFactory;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
+        $this->mediaFromTagUpdater      = $mediaFromTagUpdater;
     }
 
     /**
@@ -162,7 +168,8 @@ final class CatalogFileMethod implements MethodInterface
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    Catalog::update_media_from_tags($media, array($type));
+                    /** @var PlayableMediaInterface $media */
+                    $this->mediaFromTagUpdater->update($media, [$type]);
                     break;
                 case 'add':
                     $catalog->add_file($file);

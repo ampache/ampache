@@ -44,4 +44,5 @@ return [
     PlaylistImport\PlaylistImporterInterface::class => autowire(PlaylistImport\PlaylistImporter::class),
     CatalogProcessorInterface::class => autowire(CatalogProcessor::class),
     CatalogExporterInterface::class => autowire(CatalogExporter::class),
+    MediaFromTagUpdaterInterface::class => autowire(MediaFromTagUpdater::class),
 ];
