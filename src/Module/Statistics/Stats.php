@@ -645,7 +645,7 @@ class Stats
             }
             $sql .= " ORDER BY `last_update` " . $ordersql;
         }
-        //debug_event(self::class, 'get_recent ' . $sql, 5);
+        //debug_event(self::class, 'get_recent_sql ' . $sql, 5);
 
         return $sql;
     }

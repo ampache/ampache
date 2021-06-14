@@ -228,8 +228,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `rating`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC"
-            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC ";
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC "
+            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
@@ -253,10 +253,10 @@ class Rating extends database_object
         // Select Top objects counting by # of rows
         $sql = self::get_highest_sql($type);
         $sql .= " LIMIT $limit";
+        //debug_event(self::class, 'get_highest ' . $sql, 5);
+
         $db_results = Dba::read($sql, array($type));
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
