@@ -34,6 +34,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Video\ClipCreatorInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -527,7 +528,7 @@ class Video extends database_object implements
         Dba::write($sql, $params);
         $video_id = (int) Dba::insert_id();
 
-        Catalog::update_map((int)$data['catalog'], 'video', $video_id);
+        static::getCatalogRepository()->updateMapping((int)$data['catalog'], 'video', $video_id);
 
         if (is_array($tags)) {
             $tagCreator = static::getTagCreator();
@@ -1194,5 +1195,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(RatingRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

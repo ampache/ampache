@@ -48,4 +48,9 @@ interface CatalogRepositoryInterface
      * Update the catalog mapping for various types
      */
     public function collectMappingGarbage(): void;
+
+    /**
+     * Update the catalog map for a single item
+     */
+    public function updateMapping(int $catalogId, string $objectType, int $objectId): void;
 }

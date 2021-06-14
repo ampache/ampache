@@ -93,4 +93,21 @@ final class CatalogRepository implements CatalogRepositoryInterface
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
     }
+
+    /**
+     * Update the catalog map for a single item
+     */
+    public function updateMapping(int $catalogId, string $objectType, int $objectId): void
+    {
+        debug_event(self::class, "Updating catalog mapping for $objectType ($objectId)", 5);
+        if ($objectType == 'artist') {
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
+            Dba::write($sql, array($objectId));
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
+            Dba::write($sql, array($objectId));
+        } elseif ($catalogId > 0) {
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($catalogId, $objectType, $objectId));
+        }
+    }
 }

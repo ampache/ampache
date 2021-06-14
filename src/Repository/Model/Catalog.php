@@ -50,7 +50,6 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
-use PDOStatement;
 
 /**
  * This class handles all actual work in regards to the catalog,
@@ -1796,58 +1795,6 @@ abstract class Catalog extends database_object
         $array = array_unique(array_map('trim', explode(';', $str_array)));
 
         return implode($array);
-    }
-
-    /**
-     * Update the catalog mapping for various types
-     */
-    public static function update_mapping()
-    {
-        debug_event(self::class, 'Updating catalog mapping after catalog changes', 5);
-
-        // fill the data
-        $tables = ['album', 'song', 'video', 'podcast_episode'];
-        foreach ($tables as $type) {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
-            Dba::write($sql);
-        }
-        // artist is a special one as it can be across multiple tables
-        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0;";
-        Dba::write($sql);
-        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0;";
-        Dba::write($sql);
-    }
-
-    /**
-     * Update the catalog map for a single item
-     */
-    public static function update_map($catalog, $object_type, $object_id)
-    {
-        debug_event(self::class, "Updating catalog mapping for $object_type ($object_id)", 5);
-        if ($object_type == 'artist') {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
-            Dba::write($sql, array($object_id));
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
-            Dba::write($sql, array($object_id));
-        } elseif ($catalog > 0) {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
-            Dba::write($sql, array($catalog, $object_type, $object_id));
-        }
-    }
-
-    /**
-     * Migrate an object associated catalog to a new object
-     * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
-     */
-    public static function migrate_map($object_type, $old_object_id, $new_object_id)
-    {
-        $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        $params = array($new_object_id, $object_type, $old_object_id);
-
-        return Dba::write($sql, $params);
     }
 
     /**

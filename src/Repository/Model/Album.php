@@ -31,6 +31,7 @@ use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -484,7 +485,8 @@ class Album extends database_object implements library_item
         $album_id = Dba::insert_id();
         debug_event(self::class, 'Album check created new album id ' . $album_id, 4);
         // map the new id
-        Catalog::update_map($catalog, 'album', $album_id);
+        static::getCatalogRepository()->updateMapping($catalog, 'album', (int) $album_id);
+
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
@@ -1045,5 +1047,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(RatingRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Artist;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Log\LoggerInterface;
 
@@ -34,10 +35,14 @@ final class ArtistFinder implements ArtistFinderInterface
 {
     private LoggerInterface $logger;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->logger = $logger;
+        $this->logger            = $logger;
+        $this->catalogRepository = $catalogRepository;
     }
 
     /**
@@ -155,7 +160,7 @@ final class ArtistFinder implements ArtistFinderInterface
         );
 
         // map the new id
-        Catalog::update_map(0, 'artist', $artist_id);
+        $this->catalogRepository->updateMapping(0, 'artist', $artist_id);
 
         return $artist_id;
     }

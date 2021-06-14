@@ -41,6 +41,7 @@ use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
 
@@ -536,7 +537,7 @@ class Song extends database_object implements
 
         $song_id = (int)Dba::insert_id();
 
-        Catalog::update_map((int)$catalog, 'song', $song_id);
+        static::getCatalogRepository()->updateMapping((int) $catalog, 'song', $song_id);
 
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
@@ -2179,5 +2180,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(TagListCleanerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }
