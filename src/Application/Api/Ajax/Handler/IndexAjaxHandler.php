@@ -362,6 +362,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->save_objects($object_ids);
                     $browse->store();
 
+                    $hide_columns = array();
                     Ui::show_box_top(T_('Songs'), 'info-box');
                     require_once Ui::find_template('show_songs.inc.php');
                     Ui::show_box_bottom();
