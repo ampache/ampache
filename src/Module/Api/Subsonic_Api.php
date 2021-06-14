@@ -312,7 +312,7 @@ class Subsonic_Api
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
                 $attributeKey = $options['attributePrefix'] . ($prefix ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
-                $strattr      = (string)$attribute;
+                $strattr      = trim((string)$attribute);
                 if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
                 } else {
@@ -653,17 +653,13 @@ class Subsonic_Api
                 $albums = Rating::get_highest("album", $size, $offset);
                 break;
             case "frequent":
-                $username = self::check_parameter($input, 'u');
-                $user     = User::get_from_username((string)$username);
-                $albums   = Stats::get_top("album", $size, 0, $offset, $user->id);
+                $albums = Stats::get_top("album", $size, 0, $offset);
                 break;
             case "recent":
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $username = self::check_parameter($input, 'u');
-                $user     = User::get_from_username((string)$username);
-                $albums   = Userflag::get_latest('album', $user->id, $size, $offset);
+                $albums   = Userflag::get_latest('album', null, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
