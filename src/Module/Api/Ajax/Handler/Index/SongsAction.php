@@ -66,6 +66,8 @@ final class SongsAction implements ActionInterface
             $browse->save_objects($object_ids);
             $browse->store();
 
+            $hide_columns = [];
+
             Ui::show_box_top(T_('Songs'), 'info-box');
             require_once Ui::find_template('show_songs.inc.php');
             Ui::show_box_bottom();

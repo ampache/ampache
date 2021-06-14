@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
@@ -111,7 +110,7 @@ class Userflag extends database_object
         }
         $key = 'userflag_' . $this->type . '_user' . $user_id;
 
-        $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
+        $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $flagged = false;
@@ -153,11 +152,11 @@ class Userflag extends database_object
         debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
 
         if (!$flagged) {
-            $sql    = "DELETE FROM `user_flag` WHERE " . "`object_id` = ? AND " . "`object_type` = ? AND " . "`user` = ?";
+            $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
             $date   = time();
-            $sql    = "REPLACE INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
+            $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, $date);
 
             static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, (int) $this->id, time());
@@ -211,10 +210,10 @@ class Userflag extends database_object
         foreach ($album_array as $album_id) {
             debug_event(self::class, "Setting userflag for Album $album_id to $flagged", 4);
             if (!$flagged) {
-                $sql = "DELETE FROM `user_flag` WHERE " . "`object_id` = " . $album_id . " AND " . "`object_type` = 'album' AND " . "`user` = " . $user_id;
+                $sql = "DELETE FROM `user_flag` WHERE `object_id` = " . $album_id . " AND `object_type` = 'album' AND `user` = " . $user_id;
                 Dba::write($sql);
             } else {
-                $sql    = "INSERT INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
+                $sql    = "INSERT INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
                 Dba::write($sql, $params);
 
@@ -234,26 +233,20 @@ class Userflag extends database_object
      */
     public static function get_latest_sql($type, $user_id = null)
     {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
         $user_id           = (int)($user_id);
         $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
         $sql               = ($allow_group_disks)
-            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
-            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " . "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
-        if ($user_id < 1) {
-            // Get latest only from user rights >= content manager TODO: why only content manager?
-            $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" . " WHERE `user`.`access` >= 50 AND `user_flag`.`object_type` = '" . $type . "'";
-        } else {
-            $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'";
-        }
+            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
+            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
+        $sql .= ($user_id > 0)
+            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
+            : " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `user_flag`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `user_flag`.`date` DESC "
-            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `count` DESC,  `user_flag`.`date` DESC "
+            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `user_flag`.`date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql;
@@ -275,9 +268,10 @@ class Userflag extends database_object
         }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
-        /* Select Top objects counting by # of rows */
+        // Select Top objects counting by # of rows
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();

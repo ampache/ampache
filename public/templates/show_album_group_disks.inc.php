@@ -225,7 +225,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         $browse->set_filter('album', $album_id);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
-        $browse->show_objects(null, true); // true argument is set to show the reorder column
+        $browse->show_objects(null, array('hide' => array('cel_album', 'cel_year', 'cel_drag')));
         $browse->store(); ?>
     </div><br />
 <?php

@@ -75,7 +75,7 @@ class Rating extends database_object
             $user_id = Core::get_global('user')->id;
         }
 
-        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
+        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $rating = 0;
@@ -94,7 +94,8 @@ class Rating extends database_object
      */
     public function get_average_rating()
     {
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE " . "`object_id` = ? AND `object_type` = ? " . "HAVING COUNT(object_id) > 1";
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
+
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -111,7 +112,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type              = Stats::validate_type($type);
-        $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(`object_id`) AS `count` FROM `rating`";
+        $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
         $allow_group_disks = (AmpConfig::get('album_group') && $type === 'album');
         if ($allow_group_disks) {
             $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
@@ -121,8 +122,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `rating`.`object_id`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`" . " ORDER BY `rating` DESC, `count` DESC"
-            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC ";
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC "
+            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
@@ -146,10 +147,10 @@ class Rating extends database_object
         // Select Top objects counting by # of rows
         $sql = self::get_highest_sql($type);
         $sql .= " LIMIT $limit";
+        //debug_event(self::class, 'get_highest ' . $sql, 5);
+
         $db_results = Dba::read($sql, array($type));
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -182,10 +183,10 @@ class Rating extends database_object
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
         if ($rating == '-1') {
             // If score is -1, then remove rating
-            $sql    = "DELETE FROM `rating` WHERE " . "`object_id` = ? AND " . "`object_type` = ? AND " . "`user` = ?";
+            $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
-            $sql    = "REPLACE INTO `rating` " . "(`object_id`, `object_type`, `rating`, `user`) " . "VALUES (?, ?, ?, ?)";
+            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $rating, $user_id);
         }
         Dba::write($sql, $params);
@@ -210,10 +211,10 @@ class Rating extends database_object
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
             if ($rating == '-1') {
                 // If score is -1, then remove rating
-                $sql = "DELETE FROM `rating`" . " WHERE `object_id` = '" . $album_id . "' AND " . " `object_type` = 'album' AND" . " `user` = " . $user_id;
+                $sql = "DELETE FROM `rating` WHERE `object_id` = '" . $album_id . "' AND  `object_type` = 'album' AND `user` = " . $user_id;
                 Dba::write($sql);
             } else {
-                $sql    = "REPLACE INTO `rating` " . "(`object_id`, `object_type`, `rating`, `user`) " . "VALUES (?, ?, ?, ?)";
+                $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $rating, $user_id);
                 Dba::write($sql, $params);
             }
