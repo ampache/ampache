@@ -45,4 +45,5 @@ return [
     CatalogProcessorInterface::class => autowire(CatalogProcessor::class),
     CatalogExporterInterface::class => autowire(CatalogExporter::class),
     MediaFromTagUpdaterInterface::class => autowire(MediaFromTagUpdater::class),
+    CatalogDeleterInterface::class => autowire(CatalogDeleter::class),
 ];

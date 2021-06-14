@@ -37,7 +37,6 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
-use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -1800,57 +1799,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * delete
-     * Deletes the catalog and everything associated with it
-     * it takes the catalog id
-     * @param integer $catalog_id
-     * @return boolean
-     */
-    public static function delete($catalog_id)
-    {
-        // Large catalog deletion can take time
-        set_time_limit(0);
-
-        // First remove the songs in this catalog
-        $sql        = "DELETE FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::write($sql, array($catalog_id));
-
-        // Only if the previous one works do we go on
-        if (!$db_results) {
-            return false;
-        }
-        static::getAlbumRepository()->cleanEmptyAlbums();
-
-        $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
-        $db_results = Dba::write($sql, array($catalog_id));
-
-        if (!$db_results) {
-            return false;
-        }
-        $catalog = self::create_from_id($catalog_id);
-
-        if (!$catalog->id) {
-            return false;
-        }
-
-        $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
-        $db_results = Dba::write($sql, array($catalog_id));
-
-        if (!$db_results) {
-            return false;
-        }
-
-        // Next Remove the Catalog Entry it's self
-        $sql = "DELETE FROM `catalog` WHERE `id` = ?";
-        Dba::write($sql, array($catalog_id));
-
-        // run garbage collection
-        static::getCatalogGarbageCollector()->collect();
-
-        return true;
-    } // delete
-
-    /**
      * Update the catalog mapping for various types
      */
     public static function update_mapping()
@@ -1900,16 +1848,6 @@ abstract class Catalog extends database_object
         $params = array($new_object_id, $object_type, $old_object_id);
 
         return Dba::write($sql, $params);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getCatalogGarbageCollector(): CatalogGarbageCollectorInterface
-    {
-        global $dic;
-
-        return $dic->get(CatalogGarbageCollectorInterface::class);
     }
 
     /**

@@ -24,12 +24,12 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Gui\FormVerificatorInterface;
+use Ampache\Module\Catalog\CatalogDeleterInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,12 +42,20 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private CatalogDeleterInterface $catalogDeleter;
+
+    private FormVerificatorInterface $formVerificator;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        CatalogDeleterInterface $catalogDeleter,
+        FormVerificatorInterface $formVerificator
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->catalogDeleter  = $catalogDeleter;
+        $this->formVerificator = $formVerificator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,7 +63,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('delete_catalog')
+            $this->formVerificator->verify($request, 'delete_catalog') === false
         ) {
             throw new AccessDeniedException();
         }
@@ -64,7 +72,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
         $deleted  = true;
         // Delete the sucker, we don't need to check perms as that's done above
         foreach ($catalogs as $catalog_id) {
-            $deleted = Catalog::delete($catalog_id);
+            $deleted = $this->catalogDeleter->delete((int) $catalog_id);
             if (!$deleted) {
                 break;
             }

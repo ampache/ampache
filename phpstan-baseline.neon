@@ -21741,7 +21741,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 2
+			count: 1
 			path: src/Repository/Model/Catalog.php
 
 		-
@@ -21791,11 +21791,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method get_tvshow_ids\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
