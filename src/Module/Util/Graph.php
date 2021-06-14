@@ -144,7 +144,7 @@ class Graph
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog;
         }
 
-        $object_id = (int)($object_id);
+        $object_id = (int)$object_id;
         if ($object_id > 0) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }

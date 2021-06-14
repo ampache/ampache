@@ -659,7 +659,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums   = Userflag::get_latest('album', null, $size, $offset);
+                $albums   = Userflag::get_latest('album', 0, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);

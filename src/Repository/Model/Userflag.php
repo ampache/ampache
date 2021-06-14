@@ -293,9 +293,9 @@ class Userflag extends database_object
         $sql               = ($allow_group_disks)
             ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
             : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
-        $sql .= ($user_id < 1)
-            ? " WHERE `user_flag`.`object_type` = '" . $type . "'"
-            : " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'";
+        $sql .= ($user_id > 0)
+            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
+            : " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
