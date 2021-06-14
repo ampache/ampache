@@ -398,7 +398,7 @@ class Stats
     public static function skip_last_play($date, $agent, $user_id, $object_id)
     {
         // change from a stream to a skip
-        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND " . "`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') " . "ORDER BY `object_count`.`date` DESC";
+        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') ORDER BY `object_count`.`date` DESC";
         Dba::write($sql, array($date, $agent, $user_id));
 
         // update the total counts as well
@@ -413,7 +413,7 @@ class Stats
         }
 
         // To remove associated album and artist entries
-        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? " . "AND `agent` = ? AND `user` = ? ";
+        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
         return Dba::write($sql, array($date, $agent, $user_id));
     } // skip_last_play
@@ -529,7 +529,7 @@ class Stats
             return $sql;
         }
         if ($user_id === null && AmpConfig::get('cron_cache') && !$addAdditionalColumns) {
-            $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` " . "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " . "GROUP BY `object_id`, `object_type`";
+            $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
         } else {
             $allow_group_disks = AmpConfig::get('album_group');
             // Select Top objects counting by # of rows for you only
@@ -555,7 +555,7 @@ class Stats
             }
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-                $sql .= " AND `object_id` NOT IN" . " (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+                $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
             }
             $sql .= " AND `count_type` = '" . $count_type . "'";
             if ($allow_group_disks && $type == 'album') {
@@ -631,7 +631,7 @@ class Stats
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user_id)) {
-            $sql .= " AND `object_id` NOT IN" . " (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= ($allow_group_disks && $type == 'album')
             ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY MAX(`date`) " . $ordersql . ", `id` "
@@ -698,7 +698,7 @@ class Stats
 
         // Select Objects based on user
         // FIXME:: Requires table scan, look at improving
-        $sql        = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count` WHERE `object_type` = ? AND `date` >= ? AND `user` = ?" . " GROUP BY `object_id` ORDER BY `count` DESC LIMIT $input_count";
+        $sql        = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count` WHERE `object_type` = ? AND `date` >= ? AND `user` = ? GROUP BY `object_id` ORDER BY `count` DESC LIMIT $input_count";
         $db_results = Dba::read($sql, array($type, $date, $user));
 
         $results = array();
@@ -783,7 +783,7 @@ class Stats
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)Core::get_global('user')->id;
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
-            $sql .= $multi_where . " `" . $sql_type . "` NOT IN" . " (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
+            $sql .= $multi_where . " `" . $sql_type . "` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
             $multi_where = 'AND';
         }
         if ($allow_group_disks && $type == 'album') {

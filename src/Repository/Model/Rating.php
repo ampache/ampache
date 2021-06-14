@@ -121,14 +121,14 @@ class Rating extends database_object
         $ratings      = array();
         $user_ratings = array();
         $idlist       = '(' . implode(',', $ids) . ')';
-        $sql          = "SELECT `rating`, `object_id` FROM `rating` " . "WHERE `user` = ? AND `object_id` IN $idlist " . "AND `object_type` = ?";
+        $sql          = "SELECT `rating`, `object_id` FROM `rating` WHERE `user` = ? AND `object_id` IN $idlist AND `object_type` = ?";
         $db_results   = Dba::read($sql, array($user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_ratings[$row['object_id']] = $row['rating'];
         }
 
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating`, `object_id` FROM " . "`rating` WHERE `object_id` IN $idlist AND " . "`object_type` = ? GROUP BY `object_id`";
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating`, `object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type` = ? GROUP BY `object_id`";
         $db_results = Dba::read($sql, array($type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -174,7 +174,7 @@ class Rating extends database_object
             return (double)parent::get_from_cache($key, $this->id)[0];
         }
 
-        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
+        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $rating = 0;
@@ -199,7 +199,7 @@ class Rating extends database_object
             return (double)parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
         }
 
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE " . "`object_id` = ? AND `object_type` = ? " . "HAVING COUNT(object_id) > 1";
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -289,10 +289,10 @@ class Rating extends database_object
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
         if ($rating == '-1') {
             // If score is -1, then remove rating
-            $sql    = "DELETE FROM `rating` WHERE " . "`object_id` = ? AND " . "`object_type` = ? AND " . "`user` = ?";
+            $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = array($this->id, $this->type, $user_id);
         } else {
-            $sql    = "REPLACE INTO `rating` " . "(`object_id`, `object_type`, `rating`, `user`) " . "VALUES (?, ?, ?, ?)";
+            $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $rating, $user_id);
         }
         Dba::write($sql, $params);
@@ -319,10 +319,10 @@ class Rating extends database_object
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
             if ($rating == '-1') {
                 // If score is -1, then remove rating
-                $sql = "DELETE FROM `rating`" . " WHERE `object_id` = '" . $album_id . "' AND " . " `object_type` = 'album' AND" . " `user` = " . $user_id;
+                $sql = "DELETE FROM `rating` WHERE `object_id` = '" . $album_id . "' AND  `object_type` = 'album' AND `user` = " . $user_id;
                 Dba::write($sql);
             } else {
-                $sql    = "REPLACE INTO `rating` " . "(`object_id`, `object_type`, `rating`, `user`) " . "VALUES (?, ?, ?, ?)";
+                $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $rating, $user_id);
                 Dba::write($sql, $params);
 
