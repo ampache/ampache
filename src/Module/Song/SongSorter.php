@@ -31,10 +31,19 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\SongRepositoryInterface;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
+    private SongRepositoryInterface $songRepository;
+
+    public function __construct(
+        SongRepositoryInterface $songRepository
+    ) {
+        $this->songRepository = $songRepository;
+    }
+
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
@@ -58,12 +67,15 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
+            if ($catalog === null) {
+                continue;
+            }
             /* HINT: Catalog Name */
             $interactor->info(
                 sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
                 true
             );
-            $songs = $catalog->get_songs();
+            $songs = $this->songRepository->getByCatalog($catalog);
 
             /* Foreach through each file and find it a home! */
             foreach ($songs as $song) {

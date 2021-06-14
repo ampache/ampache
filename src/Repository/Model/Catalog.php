@@ -48,6 +48,7 @@ use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
 
@@ -1259,7 +1260,7 @@ abstract class Catalog extends database_object
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_songs();
+                $searches['song'] = $this->getSongRepository()->getByCatalog($this);
             }
         } else {
             $searches['album']  = array();
@@ -1360,51 +1361,6 @@ abstract class Catalog extends database_object
                 $plugin->_plugin->get_external_metadata($label, 'label');
             }
         }
-    }
-
-    /**
-     * get_songs
-     *
-     * Returns an array of song objects.
-     * @return Song[]
-     */
-    public function get_songs()
-    {
-        $songs   = array();
-        $results = array();
-
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
-        $db_results = Dba::read($sql, array($this->id));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
-        }
-
-        foreach ($songs as $song_id) {
-            $results[] = new Song($song_id);
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_song_ids
-     *
-     * Returns an array of song ids.
-     * @return integer[]
-     */
-    public function get_song_ids()
-    {
-        $songs = array();
-
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
-        $db_results = Dba::read($sql, array($this->id));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
-        }
-
-        return $songs;
     }
 
     /**
@@ -1875,5 +1831,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UpdateInfoRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

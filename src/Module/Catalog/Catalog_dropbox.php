@@ -34,6 +34,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
@@ -737,7 +738,7 @@ class Catalog_dropbox extends Catalog
         }
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
-        $songs   = $this->get_songs();
+        $songs   = $this->getSongRepository()->getByCatalog($this);
 
         // Prevent the script from timing out
         set_time_limit(0);
@@ -796,5 +797,15 @@ class Catalog_dropbox extends Catalog
         global $dic;
 
         return $dic->get(SongFromTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

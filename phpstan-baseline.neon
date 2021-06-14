@@ -601,11 +601,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Cannot call method play_url\\(\\) on Ampache\\\\Repository\\\\Model\\\\database_object\\|null\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
@@ -4353,11 +4348,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\TvShowSeasonInterface\\:\\:\\$id\\.$#"
 			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
 			path: src/Module/Api/Upnp_Api.php
 
 		-
@@ -12395,6 +12385,11 @@ parameters:
 			path: src/Module/Shout/ShoutParentObjectLoader.php
 
 		-
+			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$path\\.$#"
+			count: 1
+			path: src/Module/Song/SongSorter.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Song/SongSorter.php
@@ -12411,31 +12406,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 0 on array\\<int, string\\>\\|false\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$path on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$rename_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot access property \\$sort_pattern on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
-
-		-
-			message: "#^Cannot call method get_songs\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Song/SongSorter.php
 

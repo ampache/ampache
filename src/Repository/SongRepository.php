@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Doctrine\DBAL\Connection;
@@ -374,5 +375,23 @@ final class SongRepository implements SongRepositoryInterface
         }
 
         return (int) $result;
+    }
+
+    /**
+     * Retrieve all enabled song of the given catalog
+     *
+     * @return Generator<Song>
+     */
+    public function getByCatalog(
+        Catalog $catalog
+    ): Generator {
+        $result = $this->database->executeQuery(
+            'SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`=\'1\'',
+            [$catalog->getId()]
+        );
+
+        while ($songId = $result->fetchOne()) {
+            yield $this->modelFactory->createSong((int) $songId);
+        }
     }
 }

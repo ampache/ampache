@@ -868,11 +868,13 @@ class Upnp_Api
                         $catalogs = static::getCatalogRepository()->getList();
                         foreach ($catalogs as $catalog_id) {
                             $catalog            = Catalog::create_from_id($catalog_id);
-                            $songs              = $catalog->get_songs();
-                            [$maxCount, $songs] = self::_slice($songs, $start, $count);
-                            foreach ($songs as $song) {
-                                $song->format();
-                                $mediaItems[] = self::_itemSong($song, $parent);
+                            if ($catalog !== null) {
+                                $songs              = iterator_to_array(static::getSongRepository()->getByCatalog($catalog));
+                                [$maxCount, $songs] = self::_slice($songs, $start, $count);
+                                foreach ($songs as $song) {
+                                    $song->format();
+                                    $mediaItems[] = self::_itemSong($song, $parent);
+                                }
                             }
                         }
                         break;

@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 /**
@@ -347,11 +348,18 @@ class Daap_Api
         $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.updatetype', 0);
 
-        $songs    = array();
-        $catalogs = static::getCatalogRepository()->getList();
+        $songs          = array();
+        $catalogs       = static::getCatalogRepository()->getList();
+        $songRepository = static::getSongRepository();
+
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $songs   = array_merge($songs, $catalog->get_songs());
+            if ($catalog !== null) {
+                $songs = array_merge(
+                    $songs,
+                    iterator_to_array($songRepository->getByCatalog($catalog))
+                );
+            }
         }
 
         $output .= self::tlv('dmap.specifiedtotalcount', count($songs));
@@ -1006,5 +1014,15 @@ class Daap_Api
         global $dic;
 
         return $dic->get(UpdateInfoRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

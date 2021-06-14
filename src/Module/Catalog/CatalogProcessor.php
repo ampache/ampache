@@ -35,6 +35,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class CatalogProcessor implements CatalogProcessorInterface
@@ -57,6 +58,8 @@ final class CatalogProcessor implements CatalogProcessorInterface
 
     private LoggerInterface $logger;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         CatalogRepositoryInterface $catalogRepository,
         CatalogLoaderInterface $catalogLoader,
@@ -66,7 +69,8 @@ final class CatalogProcessor implements CatalogProcessorInterface
         AlbumRepositoryInterface $albumRepository,
         AlbumArtistUpdaterInterface $albumArtistUpdater,
         CatalogStatisticUpdaterInterface $catalogStatisticUpdater,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SongRepositoryInterface $songRepository
     ) {
         $this->catalogRepository       = $catalogRepository;
         $this->catalogLoader           = $catalogLoader;
@@ -77,6 +81,7 @@ final class CatalogProcessor implements CatalogProcessorInterface
         $this->albumArtistUpdater      = $albumArtistUpdater;
         $this->catalogStatisticUpdater = $catalogStatisticUpdater;
         $this->logger                  = $logger;
+        $this->songRepository          = $songRepository;
     }
 
     /**
@@ -210,9 +215,7 @@ final class CatalogProcessor implements CatalogProcessorInterface
                     foreach ($catalogs as $catalog_id) {
                         $catalog = $this->catalogLoader->byId($catalog_id);
                         if ($catalog !== null) {
-                            $song_ids = $catalog->get_song_ids();
-                            foreach ($song_ids as $song_id) {
-                                $song = new Song($song_id);
+                            foreach ($this->songRepository->getByCatalog($catalog) as $song) {
                                 $song->format();
 
                                 $this->songId3TagWriter->write($song);

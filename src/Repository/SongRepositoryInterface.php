@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Generator;
 
@@ -133,4 +134,13 @@ interface SongRepositoryInterface
     public function findArtistByAlbum(
         int $albumId
     ): ?int;
+
+    /**
+     * Retrieve all enabled song of the given catalog
+     *
+     * @return Generator<Song>
+     */
+    public function getByCatalog(
+        Catalog $catalog
+    ): Generator;
 }
