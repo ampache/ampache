@@ -205,4 +205,28 @@ final class TagRepository implements TagRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * This cleans out tag_maps that are obsolete and then removes tags that
+     * have no maps.
+     */
+    public function collectGarbage(): void
+    {
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+        Dba::write($sql);
+
+        // Now nuke the tags themselves
+        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`id` IS NULL " . "AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
+        Dba::write($sql);
+
+        // delete duplicates
+        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " . "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " . "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
+        Dba::write($sql);
+    }
 }

@@ -71,4 +71,10 @@ interface TagRepositoryInterface
      * }>
      */
     public function getTopTags(string $type, int $object_id, int $limit = 10): array;
+
+    /**
+     * This cleans out tag_maps that are obsolete and then removes tags that
+     * have no maps.
+     */
+    public function collectGarbage(): void;
 }

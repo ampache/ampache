@@ -23,23 +23,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Module\Statistics\Stats;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -62,6 +60,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private RatingRepositoryInterface $ratingRepository;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
@@ -69,7 +69,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         ArtistRepositoryInterface $artistRepository,
         SongRepositoryInterface $songRepository,
         CatalogRepositoryInterface $catalogRepository,
-        RatingRepositoryInterface $ratingRepository
+        RatingRepositoryInterface $ratingRepository,
+        TagRepositoryInterface $tagRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
@@ -78,6 +79,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->songRepository         = $songRepository;
         $this->catalogRepository      = $catalogRepository;
         $this->ratingRepository       = $ratingRepository;
+        $this->tagRepository          = $tagRepository;
     }
 
     public function collect(): void
@@ -94,7 +96,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
-        Tag::garbage_collection();
+        $this->tagRepository->collectGarbage();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();

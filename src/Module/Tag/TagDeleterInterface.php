@@ -17,18 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Tag;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Tag;
 
-return [
-    TagCreatorInteface::class => autowire(TagCreator::class),
-    TagListCleanerInterface::class => autowire(TagListCleaner::class),
-    TagListUpdaterInterface::class => autowire(TagListUpdater::class),
-    TagDeleterInterface::class => autowire(TagDeleter::class),
-];
+interface TagDeleterInterface
+{
+    /**
+     * Delete the tag and all maps
+     */
+    public function delete(Tag $tag): void;
+}

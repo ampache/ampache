@@ -28,6 +28,7 @@ use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Tag\TagDeleterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -44,16 +45,20 @@ final class DeleteAction implements ActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private TagDeleterInterface $tagDeleter;
+
     public function __construct(
         PrivilegeCheckerInterface $privilegeChecker,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        TagDeleterInterface $tagDeleter
     ) {
         $this->privilegeChecker = $privilegeChecker;
         $this->modelFactory     = $modelFactory;
         $this->logger           = $logger;
         $this->configContainer  = $configContainer;
+        $this->tagDeleter       = $tagDeleter;
     }
 
     public function handle(
@@ -75,12 +80,15 @@ final class DeleteAction implements ActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        $tag = $this->modelFactory->createTag($_GET['tag_id']);
-        $tag->delete();
+        $tag = $this->modelFactory->createTag(
+            (int) ($request->getQueryParams()['tag_id'] ?? 0)
+        );
+
+        $this->tagDeleter->delete($tag);
 
         header(
             sprintf(
-                "Location: %s/browse.php?action=tag&type=song",
+                'Location: %s/browse.php?action=tag&type=song',
                 $this->configContainer->getWebPath()
             )
         );

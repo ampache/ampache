@@ -24620,22 +24620,12 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:delete\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:display_art\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:format\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
