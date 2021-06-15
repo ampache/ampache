@@ -778,6 +778,7 @@ class Ui implements UiInterface
             case 'now_playing_per_user':
             case 'show_played_times':
             case 'show_skipped_times':
+            case 'show_license':
             case 'song_page_title':
             case 'subsonic_backend':
             case 'webplayer_flash':

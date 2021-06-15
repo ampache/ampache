@@ -109,15 +109,7 @@ class Stream
 
         // Are there site-wide constraints? (Dynamic downsampling.)
         if ($max_bitrate > 1) {
-            $sql = 'SELECT COUNT(*) FROM `now_playing` ' .
-                'WHERE `user` IN ' .
-                '(SELECT DISTINCT `user_preference`.`user` ' .
-                'FROM `preference` JOIN `user_preference` ' .
-                'ON `preference`.`id` = ' .
-                '`user_preference`.`preference` ' .
-                "WHERE `preference`.`name` = 'play_type' " .
-                "AND `user_preference`.`value` = 'downsample')";
-
+            $sql        = "SELECT COUNT(*) FROM `now_playing` WHERE `user` IN (SELECT DISTINCT `user_preference`.`user` FROM `preference` JOIN `user_preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` = 'play_type' AND `user_preference`.`value` = 'downsample')";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
@@ -415,9 +407,7 @@ class Stream
             $previous = time();
         }
         // Ensure that this client only has a single row
-        $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?)';
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
@@ -492,8 +482,7 @@ class Stream
      */
     public static function check_lock_media($media_id, $type)
     {
-        $sql = 'SELECT `object_id` FROM `now_playing` WHERE ' .
-            '`object_id` = ? AND `object_type` = ?';
+        $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($media_id, $type));
 
         if (Dba::num_rows($db_results)) {
