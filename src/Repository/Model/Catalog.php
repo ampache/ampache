@@ -523,8 +523,7 @@ abstract class Catalog extends database_object
     public static function get_count(string $table)
     {
         if ($table == 'playlist' || $table == 'search') {
-            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info`" .
-                "WHERE `key` IN ('playlist', 'search')";
+            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info`WHERE `key` IN ('playlist', 'search')";
             $db_results = Dba::read($sql);
         } else {
             $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
@@ -1071,7 +1070,7 @@ abstract class Catalog extends database_object
         $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist ";
+            $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
         $sql_limit = "";
@@ -1086,9 +1085,7 @@ abstract class Catalog extends database_object
         }
         $album_type = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
 
-        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, $album_type AS `albums` " .
-            "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where .
-            "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, $album_type ORDER BY `artist`.`name` " . $sql_limit;
+        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, $album_type AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, $album_type ORDER BY `artist`.`name` " . $sql_limit;
 
         $results    = array();
         $db_results = Dba::read($sql);

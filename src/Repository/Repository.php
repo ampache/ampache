@@ -167,8 +167,7 @@ class Repository
      */
     protected function insertRecord($properties)
     {
-        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
-                . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
+        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ") VALUES(" . implode(',', array_fill(0, count($properties), '?')) . ")";
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))

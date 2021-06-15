@@ -395,11 +395,7 @@ class Preference extends database_object
         $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
-            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
-            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
-            " WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit " .
-            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id`  WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit  ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, array($user_id));
         $results    = array();
@@ -432,11 +428,7 @@ class Preference extends database_object
         $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
-            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
-            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
-            " WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit " .
-            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id`  WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit  ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, array($pref_name, $user_id));
         $results    = array();
@@ -467,8 +459,7 @@ class Preference extends database_object
         if ($subcategory !== null) {
             $subcategory = strtolower((string)$subcategory);
         }
-        $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
 
         if (!$db_results) {

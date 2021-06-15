@@ -150,8 +150,7 @@ class Stats
             $date = time();
         }
 
-        $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql        = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname));
 
         // the count was inserted
@@ -187,10 +186,7 @@ class Stats
     public static function is_already_inserted($type, $object_id, $user, $agent, $time)
     {
         $agent = Dba::escape($agent);
-        $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` " .
-            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-            "`object_count`.`count_type` = 'stream' AND " .
-            "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
+        $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -321,11 +317,7 @@ class Stats
 
         $sqlres = array($user_id);
 
-        $sql = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, " .
-            "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, " .
-            "`object_count`.`count_type` FROM `object_count` " .
-            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
-            "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
+        $sql = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             array_push($sqlres, $agent);
@@ -352,13 +344,11 @@ class Stats
     public static function shift_last_play($user_id, $agent, $original_date, $new_date)
     {
         // update the object_count table
-        $sql = "UPDATE `object_count` SET `object_count`.`date` = ? " .
-            "WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
+        $sql = "UPDATE `object_count` SET `object_count`.`date` = ? WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
         Dba::write($sql, array($new_date, $user_id, $agent, $original_date));
 
         // update the user_activity table
-        $sql = "UPDATE `user_activity` SET `user_activity`.`activity_date` = ? " .
-            "WHERE `user_activity`.`user` = ? AND `user_activity`.`activity_date` = ?";
+        $sql = "UPDATE `user_activity` SET `user_activity`.`activity_date` = ? WHERE `user_activity`.`user` = ? AND `user_activity`.`activity_date` = ?";
         Dba::write($sql, array($new_date, $user_id, $original_date));
     } // shift_last_play
 
@@ -376,8 +366,7 @@ class Stats
         if (!$object_id || !$object_type) {
             return 0;
         }
-        $sql = "SELECT `time` FROM `$object_type` " .
-            "WHERE `id` = ?";
+        $sql        = "SELECT `time` FROM `$object_type` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($object_id));
         $results    = Dba::fetch_assoc($db_results);
 

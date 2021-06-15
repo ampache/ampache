@@ -205,9 +205,7 @@ class AmpacheRatingMatch
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS `counting` " .
-            "FROM object_count WHERE object_type = 'song' AND " .
-            "`count_type` = ? AND object_id = ? AND user = ?;";
+        $sql = "SELECT COUNT(*) AS `counting` FROM object_count WHERE object_type = 'song' AND `count_type` = ? AND object_id = ? AND user = ?;";
 
         // get the plays for your user
         $db_results  = Dba::read($sql, array('stream', $song->id, $this->user_id));
