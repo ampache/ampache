@@ -300,7 +300,7 @@ class Userflag extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY `count` DESC,  `user_flag`.`date` DESC "
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `count` DESC, `user_flag`.`date` DESC "
             : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `user_flag`.`date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 

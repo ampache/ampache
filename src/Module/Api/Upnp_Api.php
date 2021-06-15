@@ -1376,13 +1376,13 @@ class Upnp_Api
     {
         // Transforms a upnp search query into an Ampache search query
         $upnp_translations = array(
-            array( 'upnp:class = "object.container.album.musicAlbum"', 'album' ),
-            array( 'upnp:class derivedfrom "object.item.audioItem"' , 'song' ),
-            array( 'upnp:class = "object.container.person.musicArtist"', 'artist'),
-            array( 'upnp:class = "object.container.playlistContainer"', 'playlist'),
-            array( 'upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'),
-            array( 'upnp:class = "object.container.genre.musicGenre"', 'tag' ),
-            array( '@refID exists false', '' )
+            array('upnp:class = "object.container.album.musicAlbum"', 'album'),
+            array('upnp:class derivedfrom "object.item.audioItem"', 'song'),
+            array('upnp:class = "object.container.person.musicArtist"', 'artist'),
+            array('upnp:class = "object.container.playlistContainer"', 'playlist'),
+            array('upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'),
+            array('upnp:class = "object.container.genre.musicGenre"', 'tag'),
+            array('@refID exists false', '')
         );
 
         $tokens = self::gettokens($query);
@@ -1507,7 +1507,7 @@ class Upnp_Api
 
             return array(0, $mediaItems);
         }
-        //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ) , 5);
+        //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ), 5);
         debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $search_terms['type'], 5);
 
         switch ($search_terms['type']) {

@@ -365,7 +365,7 @@ class Graph
     ) {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` " . " JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();

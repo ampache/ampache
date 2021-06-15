@@ -42,7 +42,7 @@ use Ampache\Module\Util\Ui;
         </td>
     </tr>
 <tr>
-    <td><?php echo  T_('Category'); ?></td>
+    <td><?php echo T_('Category'); ?></td>
         <td>
             <select name="category">
                 <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
@@ -116,7 +116,7 @@ use Ampache\Module\Util\Ui;
     </td>
 </tr>
 <tr>
-    <td><?php echo  T_('Status'); ?></td>
+    <td><?php echo T_('Status'); ?></td>
     <td>
         <select name="active">
             <option value="1" <?php if ((int)$_REQUEST['active'] === 1) {

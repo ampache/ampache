@@ -837,7 +837,7 @@ class Query
      */
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
     {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON  $source1 = $dest1  AND  $source2 = $dest2";
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2";
     } // set_join_and
 
     /**
@@ -1733,7 +1733,7 @@ class Query
             case 'user':
                 switch ($filter) {
                     case 'starts_with':
-                        $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%' ) AND ";
+                        $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
                         break;
                 } // end filter
                 break;

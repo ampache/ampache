@@ -358,7 +358,7 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo '<script>' . "var type_fields = new Array();" . "type_fields['none'] = '';";
+        echo '<script>' . "var type_fields = new Array();type_fields['none'] = '';";
         $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
@@ -388,7 +388,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        echo "function catalogTypeChanged() {" . "var sel = document.getElementById('catalog_type');" . "var seltype = sel.options[sel.selectedIndex].value;" . "var ftbl = document.getElementById('" . $divback . "');" . "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" . "} </script>" . "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+        echo "function catalogTypeChanged() {var sel = document.getElementById('catalog_type');var seltype = sel.options[sel.selectedIndex].value;var ftbl = document.getElementById('" . $divback . "');ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';} </script><select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }
 
     /**
@@ -476,9 +476,9 @@ abstract class Catalog extends database_object
             if ($type == "song") {
                 $type = "id";
             }
-            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " . "WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
         } elseif ($type == "video") {
-            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " . "WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -815,7 +815,7 @@ abstract class Catalog extends database_object
         if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
-                $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
+                $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
             $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
@@ -872,7 +872,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album'" . "WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album'WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         $db_results = Dba::read($sql, array($this->id));
 
@@ -1037,7 +1037,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" . "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
@@ -2334,7 +2334,7 @@ abstract class Catalog extends database_object
      */
     public static function clean_empty_albums()
     {
-        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS " . "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
         $artists    = array();
         while ($album = Dba::fetch_assoc($db_results)) {
@@ -2845,7 +2845,7 @@ abstract class Catalog extends database_object
         // Select all songs in catalog
         $params = array();
         if ($catalog_id) {
-            $sql      = 'SELECT `id` FROM `song` ' . "WHERE `catalog`= ? " . 'ORDER BY `album`, `track`';
+            $sql      = "SELECT `id` FROM `song` WHERE `catalog`= ? ORDER BY `album`, `track`";
             $params[] = $catalog_id;
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';

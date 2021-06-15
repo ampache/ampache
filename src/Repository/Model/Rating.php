@@ -319,7 +319,7 @@ class Rating extends database_object
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
             if ($rating == '-1') {
                 // If score is -1, then remove rating
-                $sql = "DELETE FROM `rating` WHERE `object_id` = '" . $album_id . "' AND  `object_type` = 'album' AND `user` = " . $user_id;
+                $sql = "DELETE FROM `rating` WHERE `object_id` = '" . $album_id . "' AND `object_type` = 'album' AND `user` = " . $user_id;
                 Dba::write($sql);
             } else {
                 $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";

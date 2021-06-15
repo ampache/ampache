@@ -697,7 +697,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album_mbid = ''
     ) {
         // by default require song, album, artist for any searches
-        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND " . "(`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND " . "(`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
+        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND (`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND (`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
         if ($song_mbid) {
             $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
         }
@@ -928,7 +928,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (isset($dupe['id'])) {
             $results[] = $dupe['id'];
         } else {
-            $sql = "SELECT `id` FROM `song` WHERE " . "`title`='" . Dba::escape($dupe['title']) . "' ";
+            $sql = "SELECT `id` FROM `song` WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
 
             if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
                 $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
@@ -939,7 +939,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $sql .= 'ORDER BY `time`, `bitrate`, `size`';
 
             if ($search_type == 'album') {
-                $sql = "SELECT `id` from `song` " . "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` " . "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " . "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " . "ORDER BY `album`, `track`";
+                $sql = "SELECT `id` from `song` LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL ORDER BY `album`, `track`";
             }
 
             $db_results = Dba::read($sql);

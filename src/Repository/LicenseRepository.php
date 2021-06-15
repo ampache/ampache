@@ -56,7 +56,7 @@ final class LicenseRepository implements LicenseRepositoryInterface
         string $externalLink
     ): int {
         Dba::write(
-            "INSERT INTO `license` (`name`, `description`, `external_link`) " . 'VALUES (? , ?, ?)',
+            "INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)",
             [$name, $description, $externalLink]
         );
 

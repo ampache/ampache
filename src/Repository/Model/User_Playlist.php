@@ -65,7 +65,7 @@ class User_Playlist extends database_object
     {
         $items = array();
         // Select all objects from this user
-        $sql        = "SELECT `id`, `object_type`, `object_id`, `track`, `current_track`, `current_time`  FROM `user_playlist` WHERE `user` = ? ORDER BY `track`, `id`";
+        $sql        = "SELECT `id`, `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? ORDER BY `track`, `id`";
         $db_results = Dba::read($sql, array($this->user));
 
         while ($results = Dba::fetch_assoc($db_results)) {

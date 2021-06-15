@@ -141,7 +141,7 @@ class Podcast extends database_object implements library_item
         if (parent::is_cached('podcast_extra', $this->id)) {
             $row = parent::get_from_cache('podcast_extra', $this->id);
         } else {
-            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` " . "WHERE `podcast_episode`.`podcast` = ?";
+            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -455,7 +455,7 @@ class Podcast extends database_object implements library_item
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
         if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` " . "WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` " . "ORDER BY `podcast_episode`.`pubdate` DESC";
+            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` ORDER BY `podcast_episode`.`pubdate` DESC";
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
@@ -471,7 +471,7 @@ class Podcast extends database_object implements library_item
         // Remove items outside limit
         $keepnb = AmpConfig::get('podcast_keep');
         if ($keepnb > 0) {
-            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? " . "ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
+            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
@@ -540,7 +540,7 @@ class Podcast extends database_object implements library_item
         }
 
         if ($pubdate > $afterdate) {
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
                 $title,

@@ -256,7 +256,7 @@ class Live_Stream extends database_object implements Media, library_item
         $elements = explode(":", (string)$data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
+            AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
@@ -320,7 +320,7 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
 
         return Dba::write($sql,
             array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));

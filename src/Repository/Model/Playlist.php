@@ -253,7 +253,7 @@ class Playlist extends playlist_object
 
         $limit_sql = $limit ? 'LIMIT ' . (string)($limit) : '';
 
-        $sql        = "SELECT `object_id`, `object_type` FROM `playlist_data` " . "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
+        $sql        = "SELECT `object_id`, `object_type` FROM `playlist_data` WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -523,7 +523,7 @@ class Playlist extends playlist_object
         }
         // check for duplicates
         $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" . " AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "' AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -641,7 +641,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track)
     {
-        $sql = "UPDATE `playlist_data` SET `object_id` = ? " . "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
+        $sql = "UPDATE `playlist_data` SET `object_id` = ? WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
         debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
@@ -723,7 +723,7 @@ class Playlist extends playlist_object
             } // foreach re-ordered results
 
             //replace the last comma
-            $sql = substr_replace($sql ,"", -2);
+            $sql = substr_replace($sql, "", -2);
             $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
             // do this in one go

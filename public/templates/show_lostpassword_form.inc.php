@@ -67,7 +67,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
                 <div class="loginfield" id="emailfield">
-                    <label for="email"><?php echo  T_('E-mail'); ?>:</label>
+                    <label for="email"><?php echo T_('E-mail'); ?>:</label>
                     <input type="hidden" id="action" name="action" value="send" />
                     <input type="text" id="email" name="email" autofocus />
                 </div>
