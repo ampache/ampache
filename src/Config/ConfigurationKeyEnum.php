@@ -46,6 +46,7 @@ final class ConfigurationKeyEnum
     public const LABEL                         = 'label';
     public const SHOW_LYRICS                   = 'show_lyrics';
     public const LICENSING                     = 'licensing';
+    public const SHOW_LICENSE                  = 'show_license';
     public const SHOW_SKIPPED_TIMES            = 'show_skipped_times';
     public const SHOW_PLAYED_TIMES             = 'show_played_times';
     public const DEMO_MODE                     = 'demo_mode';

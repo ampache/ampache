@@ -605,7 +605,7 @@ class Preference extends database_object
                "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
                "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
                "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-               "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'), " .
+               "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'), " .
                "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
                "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
                "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
@@ -667,15 +667,16 @@ class Preference extends database_object
                "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
                "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
                "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates', 100, 'boolean', 'system', 'catalog'), " .
-               "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library'), " .
+               "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
                "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
                "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
                "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
-               "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library'), " .
-               "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library'), " .
+               "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
+               "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
                "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
                "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'), " .
-               "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL);";
+               "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
+               "(158, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse');";
         Dba::write($sql);
     } // set_defaults
 

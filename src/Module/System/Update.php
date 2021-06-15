@@ -245,6 +245,9 @@ class Update
         $update_string = "* Add user_playlist and user_data table";
         $version[]     = array('version' => '500006', 'description' => $update_string);
 
+        $update_string = "* Add a 'Browse' category to interface preferences<br />* Add option ('show_license') for hiding license column in song rows";
+        $version[]     = array('version' => '500007', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1371,6 +1374,27 @@ class Update
         $retval &= Dba::write($sql);
         $sql       = "CREATE TABLE IF NOT EXISTS `user_data` (`user` int(11) DEFAULT NULL, `key` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `value` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, KEY `user` (`user`),  KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500007
+     *
+     * Add a 'Browse' category to interface preferences
+     * Add ui option ('show_license') for hiding license column in song rows
+     */
+    public static function update_500007()
+    {
+        $retval = true;
+        $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')";
+        $retval &= Dba::write($sql);
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_license', '1', 'Show Licence', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
     }
