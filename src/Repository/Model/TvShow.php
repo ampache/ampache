@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\DataMigratorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagListUpdaterInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 
@@ -54,17 +55,21 @@ final class TvShow extends database_object implements TvShowInterface
 
     private DataMigratorInterface $dataMigrator;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         TagListUpdaterInterface $tagListUpdater,
         TvShowEpisodeRepositoryInterface $tvShowEpisodeRepository,
         TvShowSeasonRepositoryInterface $tvShowSeasonRepository,
         DataMigratorInterface $dataMigrator,
+        TagRepositoryInterface $tagRepository,
         int $id
     ) {
         $this->tagListUpdater          = $tagListUpdater;
         $this->tvShowEpisodeRepository = $tvShowEpisodeRepository;
         $this->tvShowSeasonRepository  = $tvShowSeasonRepository;
         $this->dataMigrator            = $dataMigrator;
+        $this->tagRepository           = $tagRepository;
         $this->id                      = $id;
     }
 
@@ -195,7 +200,7 @@ final class TvShow extends database_object implements TvShowInterface
 
     public function getTags(): array
     {
-        return Tag::get_top_tags('tvshow', $this->id);
+        return $this->tagRepository->getTopTags('tvshow', $this->id);
     }
 
     public function getTagsFormatted(): string

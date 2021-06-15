@@ -5240,6 +5240,11 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
+			message: "#^Parameter \\#1 \\$type of method Ampache\\\\Repository\\\\TagRepositoryInterface\\:\\:getByType\\(\\) expects string, array\\|string given\\.$#"
+			count: 1
+			path: src/Module/Application/Browse/TagAction.php
+
+		-
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Exception\\\\AccessDeniedException\\:\\:\\$message has no typehint specified\\.$#"
 			count: 1
 			path: src/Module/Application/Exception/AccessDeniedException.php
@@ -13526,6 +13531,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500006\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Module/System/Update.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\Update\\:\\:update_500007\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/System/Update.php
 
@@ -24585,11 +24595,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Season.php
 
 		-
-			message: "#^Cannot cast array\\|string to string\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:__construct\\(\\) has parameter \\$tag_id with no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -24661,11 +24666,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_object_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 

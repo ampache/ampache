@@ -48,6 +48,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 
 final class XmlOutput implements ApiOutputInterface
 {
@@ -66,13 +67,16 @@ final class XmlOutput implements ApiOutputInterface
 
     private PodcastRepositoryInterface $podcastRepository;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         XmlWriterInterface $xmlWriter,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
+        TagRepositoryInterface $tagRepository
     ) {
         $this->modelFactory             = $modelFactory;
         $this->xmlWriter                = $xmlWriter;
@@ -80,6 +84,7 @@ final class XmlOutput implements ApiOutputInterface
         $this->songRepository           = $songRepository;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->podcastRepository        = $podcastRepository;
+        $this->tagRepository            = $tagRepository;
     }
 
     /**
@@ -293,7 +298,9 @@ final class XmlOutput implements ApiOutputInterface
             }
 
             $song->format();
-            $tag_string    = $this->genre_string(Tag::get_top_tags('song', $songId));
+            $tag_string    = $this->genre_string(
+                $this->tagRepository->getTopTags('song', $songId)
+            );
             $rating        = new Rating($songId, 'song');
             $flag          = new Userflag($songId, 'song');
             $show_song_art = AmpConfig::get('show_song_art', false);

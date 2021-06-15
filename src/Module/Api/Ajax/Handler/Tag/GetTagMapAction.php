@@ -26,18 +26,27 @@ namespace Ampache\Module\Api\Ajax\Handler\Tag;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\TagRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class GetTagMapAction implements ActionInterface
 {
+    private TagRepositoryInterface $tagRepository;
+
+    public function __construct(
+        TagRepositoryInterface $tagRepository
+    ) {
+        $this->tagRepository = $tagRepository;
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
         User $user
     ): array {
         return [
-            'tags' => Tag::get_display(Tag::get_tags())
+            'tags' => Tag::get_display($this->tagRepository->getByType())
         ];
     }
 }

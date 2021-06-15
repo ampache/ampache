@@ -24,15 +24,20 @@ declare(strict_types=1);
 namespace Ampache\Module\Tag;
 
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\TagRepositoryInterface;
 
 final class TagListUpdater implements TagListUpdaterInterface
 {
     private TagCreatorInteface $tagCreator;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
-        TagCreatorInteface $tagCreator
+        TagCreatorInteface $tagCreator,
+        TagRepositoryInterface $tagRepository
     ) {
-        $this->tagCreator = $tagCreator;
+        $this->tagCreator    = $tagCreator;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
@@ -51,7 +56,7 @@ final class TagListUpdater implements TagListUpdaterInterface
         }
         debug_event(self::class, 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
 
-        $ctags       = Tag::get_top_tags($type, $object_id);
+        $ctags       = $this->tagRepository->getTopTags($type, (int) $object_id);
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_', ', ', $filterfolk);
         $filter      = str_replace(';', ', ', $filterunder);

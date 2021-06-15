@@ -29,6 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 
 final class Broadcast extends database_object implements BroadcastInterface
 {
@@ -43,13 +44,17 @@ final class Broadcast extends database_object implements BroadcastInterface
     /** @var array<string, int|string>|null */
     private ?array $dbData = null;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         BroadcastRepositoryInterface $broadcastRepository,
         TagListUpdaterInterface $tagListUpdater,
+        TagRepositoryInterface $tagRepository,
         int $id
     ) {
         $this->broadcastRepository = $broadcastRepository;
         $this->tagListUpdater      = $tagListUpdater;
+        $this->tagRepository       = $tagRepository;
         $this->id                  = $id;
     }
 
@@ -129,7 +134,7 @@ final class Broadcast extends database_object implements BroadcastInterface
 
     public function getTags(): array
     {
-        return Tag::get_top_tags('broadcast', $this->getId());
+        return $this->tagRepository->getTopTags('broadcast', $this->id);
     }
 
     public function getTagsFormatted(): string

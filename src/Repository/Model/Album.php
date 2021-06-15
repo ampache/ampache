@@ -34,6 +34,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
 
@@ -573,7 +574,7 @@ class Album extends database_object implements library_item
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
             }
 
-            $this->tags   = Tag::get_top_tags('album', $this->id);
+            $this->tags   = $this->getTagRepository()->getTopTags('album', $this->getId());
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
         $this->link   = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
@@ -1057,5 +1058,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

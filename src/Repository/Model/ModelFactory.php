@@ -46,6 +46,7 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -149,6 +150,7 @@ final class ModelFactory implements ModelFactoryInterface
         return new Broadcast(
             $this->dic->get(BroadcastRepositoryInterface::class),
             $this->dic->get(TagListUpdaterInterface::class),
+            $this->dic->get(TagRepositoryInterface::class),
             $broadcastId
         );
     }
@@ -169,6 +171,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(ChannelFactoryInterface::class),
             $this->dic->get(TagListUpdaterInterface::class),
             $this->dic->get(ChannelRepositoryInterface::class),
+            $this->dic->get(TagRepositoryInterface::class),
             $channelId
         );
     }
@@ -207,6 +210,7 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(TvShowEpisodeRepositoryInterface::class),
             $this->dic->get(TvShowSeasonRepositoryInterface::class),
             $this->dic->get(DataMigratorInterface::class),
+            $this->dic->get(TagRepositoryInterface::class),
             $tvShowId
         );
     }

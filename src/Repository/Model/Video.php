@@ -38,6 +38,7 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -275,7 +276,7 @@ class Video extends database_object implements
 
         if ($details) {
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('video', $this->id);
+            $this->tags   = $this->getTagRepository()->getTopTags('video', $this->getId());
             $this->f_tags = Tag::get_display($this->tags, true, 'video');
         }
 
@@ -1200,5 +1201,15 @@ class Video extends database_object implements
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

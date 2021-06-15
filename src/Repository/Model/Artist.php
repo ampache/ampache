@@ -36,6 +36,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Artist extends database_object implements library_item
@@ -302,7 +303,7 @@ class Artist extends database_object implements library_item
 
             $this->f_time = ltrim((string)$hours . ':' . $min . ':' . $sec, '0:');
 
-            $this->tags   = Tag::get_top_tags('artist', $this->id);
+            $this->tags   = $this->getTagRepository()->getTopTags('artist', $this->getId());
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
             if (AmpConfig::get('label')) {
@@ -770,5 +771,15 @@ class Artist extends database_object implements library_item
         global $dic;
 
         return $dic->get(RatingRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

@@ -24,12 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Browse;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Tag;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,12 +41,16 @@ final class TagAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        TagRepositoryInterface $tagRepository
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->modelFactory  = $modelFactory;
+        $this->ui            = $ui;
+        $this->tagRepository = $tagRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,7 +71,9 @@ final class TagAction implements ApplicationActionInterface
         // This one's a doozy
         $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
+        $browse->save_objects(
+            $this->tagRepository->getByType(scrub_in($browse_type), 'name')
+        ); // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys       = array_keys($object_ids);
 

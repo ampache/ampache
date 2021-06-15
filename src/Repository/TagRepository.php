@@ -141,4 +141,68 @@ final class TagRepository implements TagRepositoryInterface
 
         return (int)$results['id'];
     }
+
+    /**
+     * This is a non-object non type dependent function that just returns tags
+     * we've got, it can take filters (this is used by the tag cloud)
+     *
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function getByType(string $type = '', string $order = 'count'): array
+    {
+        $results = [];
+
+        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " . "FROM `tag_map` " . "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag`.`is_hidden` = false " . "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+        if (!empty($type)) {
+            $sql .= ", `tag_map`.`object_type` = '" . $type . "' ";
+        }
+        $order = "`" . $order . "`";
+        if ($order == 'count') {
+            $order .= " DESC";
+        }
+        $sql .= "ORDER BY " . $order;
+
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[(int) $row['tag_id']] = [
+                'id' => (int) $row['tag_id'],
+                'name' => $row['name'],
+                'is_hidden' => (int) $row['is_hidden'],
+                'count' => (int) $row['count']
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * This gets the top tags for the specified object using limit
+     *
+     * @return array<int, array{
+     *  user: int,
+     *  id: int,
+     *  name: string
+     * }>
+     */
+    public function getTopTags(string $type, int $object_id, int $limit = 10): array
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            return [];
+        }
+
+        $db_results = Dba::read(
+            sprintf("SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` = ? LIMIT %d", $limit),
+            [$object_id]
+        );
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[(int) $row['id']] = [
+                'user' => (int) $row['user'],
+                'id' => (int) $row['tag_id'],
+                'name' => (string) $row['name']
+            ];
+        }
+
+        return $results;
+    }
 }

@@ -44,6 +44,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Metadata;
+use Ampache\Repository\TagRepositoryInterface;
 
 class Song extends database_object implements
     MediaInterface,
@@ -920,8 +921,7 @@ class Song extends database_object implements
                     }
                     break;
                 case 'edit_tags':
-                    $this->getTagListUpdater()->update($value, 'song', $this->id, true);
-                    $this->tags = Tag::get_top_tags('song', $this->id);
+                    $this->tags = $this->getTagRepository()->getTopTags('song', $this->getId());
                     $changed[]  = (string) $key;
                     break;
                 case 'metadata':
@@ -1333,7 +1333,7 @@ class Song extends database_object implements
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('song', $this->id);
+            $this->tags   = $this->getTagRepository()->getTopTags('song', $this->getId());
             $this->f_tags = Tag::get_display($this->tags, true, 'song');
         }
         // force the album artist.
@@ -2172,5 +2172,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

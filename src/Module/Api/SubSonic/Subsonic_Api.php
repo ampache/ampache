@@ -548,7 +548,10 @@ class Subsonic_Api
     public static function getgenres($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getgenres');
-        Subsonic_Xml_Data::addGenres($response, Tag::get_tags('song'));
+        Subsonic_Xml_Data::addGenres(
+            $response,
+            static::getTagRepository()->getByType('song')
+        );
         self::apiOutput($input, $response);
     }
 

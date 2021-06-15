@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Channel\ChannelFactoryInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\ChannelRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 
 final class Channel extends database_object implements ChannelInterface
 {
@@ -39,6 +40,8 @@ final class Channel extends database_object implements ChannelInterface
 
     private ChannelRepositoryInterface $channelRepository;
 
+    private TagRepositoryInterface $tagRepository;
+
     public int $id;
 
     /** @var array<string, mixed>|null */
@@ -48,11 +51,13 @@ final class Channel extends database_object implements ChannelInterface
         ChannelFactoryInterface $channelFactory,
         TagListUpdaterInterface $tagListUpdater,
         ChannelRepositoryInterface $channelRepository,
+        TagRepositoryInterface $tagRepository,
         int $id
     ) {
         $this->channelFactory    = $channelFactory;
         $this->tagListUpdater    = $tagListUpdater;
         $this->channelRepository = $channelRepository;
+        $this->tagRepository     = $tagRepository;
         $this->id                = $id;
     }
 
@@ -276,7 +281,7 @@ final class Channel extends database_object implements ChannelInterface
      */
     public function getTags(): array
     {
-        return Tag::get_top_tags('channel', $this->id);
+        return $this->tagRepository->getTopTags('channel', $this->id);
     }
 
     /**

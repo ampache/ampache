@@ -30,6 +30,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {
@@ -45,13 +46,16 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
 
     private PodcastRepositoryInterface $podcastRepository;
 
+    private TagRepositoryInterface $tagRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository,
         XmlWriterInterface $xmlWriter,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
+        TagRepositoryInterface $tagRepository
     ) {
         $this->modelFactory             = $modelFactory;
         $this->albumRepository          = $albumRepository;
@@ -59,6 +63,7 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
         $this->xmlWriter                = $xmlWriter;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->podcastRepository        = $podcastRepository;
+        $this->tagRepository            = $tagRepository;
     }
 
     public function createJsonOutput(): ApiOutputInterface
@@ -80,7 +85,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
             $this->albumRepository,
             $this->songRepository,
             $this->podcastEpisodeRepository,
-            $this->podcastRepository
+            $this->podcastRepository,
+            $this->tagRepository
         );
     }
 }

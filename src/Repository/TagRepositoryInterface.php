@@ -52,4 +52,23 @@ interface TagRepositoryInterface
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      */
     public function findByName(string $value): ?int;
+
+    /**
+     * This is a non-object non type dependent function that just returns tags
+     * we've got, it can take filters (this is used by the tag cloud)
+     *
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function getByType(string $type = '', string $order = 'count'): array;
+
+    /**
+     * This gets the top tags for the specified object using limit
+     *
+     * @return array<int, array{
+     *  user: int,
+     *  id: int,
+     *  name: string
+     * }>
+     */
+    public function getTopTags(string $type, int $object_id, int $limit = 10): array;
 }
