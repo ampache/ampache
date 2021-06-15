@@ -69,7 +69,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
-            <?php if (AmpConfig::get('licensing')) { ?>
+            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) { ?>
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
@@ -148,7 +148,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php } ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
-            <?php if (AmpConfig::get('licensing')) { ?>
+            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) { ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
