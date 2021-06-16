@@ -185,7 +185,7 @@ class Random
     public static function advanced($type, $data)
     {
         /* Figure out our object limit */
-        $limit     = (int)($data['random']);
+        $limit     = (int)$data['random'];
         $limit_sql = "LIMIT " . Dba::escape($limit);
 
         /* If they've passed -1 as limit then get everything */
@@ -196,6 +196,7 @@ class Random
 
         $sql     = self::advanced_sql($data, $type, $limit_sql);
         $results = self::advanced_results($sql, $data);
+        //debug_event(self::class, 'advanced ' . $sql, 5);
 
         switch ($type) {
             case 'song':
@@ -327,7 +328,7 @@ class Random
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
-                if ($search_info) {
+                if (!empty($search_info['where_sql'])) {
                     $sql .= ($catalog_disable)
                         ? " AND " . $search_info['where_sql']
                         : " WHERE " . $search_info['where_sql'];
@@ -335,7 +336,7 @@ class Random
                 break;
             case 'album':
             case 'artist':
-                $sql = "SELECT `$type`.`id`, SUM(`song`.`size`) AS `size`, `$type`.`time` FROM `$type` ";
+                $sql = "SELECT `$type`.`id`, SUM(`song`.`size`) AS `size`, SUM(`$type`.`time`) AS `time` FROM `$type` ";
                 if (!$search_info || !$search_info['join']['song']) {
                     $sql .= "LEFT JOIN `song` ON `song`.`$type`=`$type`.`id` ";
                 }
@@ -343,7 +344,7 @@ class Random
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
-                if ($search_info) {
+                if (!empty($search_info['where_sql'])) {
                     $sql .= ($catalog_disable)
                         ? " AND " . $search_info['where_sql']
                         : " WHERE " . $search_info['where_sql'];
