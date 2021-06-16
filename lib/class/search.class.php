@@ -1498,7 +1498,7 @@ class Search extends playlist_object
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='album' " .
+                "WHERE `tag_map`.`object_type`='album' $value " .
                 "GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
@@ -1755,7 +1755,7 @@ class Search extends playlist_object
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                "WHERE `tag_map`.`object_type`='artist' " .
+                "WHERE `tag_map`.`object_type`='artist' $value " .
                 "GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
@@ -1840,19 +1840,19 @@ class Search extends playlist_object
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
                         $tag_string        = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
                         $tag_string        = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($operator['description'] == 'is') {
                         $tag_string        = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } elseif ($operator['description'] == 'is not') {
                         $tag_string        = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } else {
                         $tag_string        = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
-                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
+                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0";
                     }
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
@@ -1875,19 +1875,19 @@ class Search extends playlist_object
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
                         $where[]           = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
                         $where[]           = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($operator['description'] == 'is') {
                         $where[]           = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } elseif ($operator['description'] == 'is not') {
                         $where[]           = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
-                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
+                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0";
                     }
                     break;
                 case 'album_tag':
@@ -2244,8 +2244,7 @@ class Search extends playlist_object
                     "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                    "WHERE `tag_map`.`object_type`='song' " .
-                    "$value" .
+                    "WHERE `tag_map`.`object_type`='song' $value " .
                     "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
@@ -2258,8 +2257,7 @@ class Search extends playlist_object
                     "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                    "WHERE `tag_map`.`object_type`='album' " .
-                    "$value" .
+                    "WHERE `tag_map`.`object_type`='album' $value " .
                     "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
@@ -2272,8 +2270,7 @@ class Search extends playlist_object
                     "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
-                    "WHERE `tag_map`.`object_type`='artist' " .
-                    "$value" .
+                    "WHERE `tag_map`.`object_type`='artist' $value " .
                     "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";
