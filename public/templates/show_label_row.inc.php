@@ -46,7 +46,6 @@ if (Art::is_enabled()) {
     } else {
         echo "<td class=\"cel_active\">" . T_('Inactive') . "</td>";
     } ?>
-<td class="cel_status"><?php echo($libitem->active); ?></td>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>
