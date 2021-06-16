@@ -75,7 +75,7 @@ final class VideoRepository implements VideoRepositoryInterface
     {
         $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
 
-        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
+        $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower((string) $type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
             if ($results['count']) {
