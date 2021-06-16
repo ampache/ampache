@@ -52,7 +52,7 @@ class Random
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " " . $multi_where . " `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $multi_where `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1";
 
@@ -123,8 +123,8 @@ class Random
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " " . $multi_where . " `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
-            $sql .= " AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $multi_where `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= " AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
@@ -162,7 +162,7 @@ class Random
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " " . $multi_where . " `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $multi_where `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
@@ -329,8 +329,8 @@ class Random
                 $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     $sql .= ($catalog_disable)
-                        ? ' AND ' . $search_info['where_sql']
-                        : ' WHERE ' . $search_info['where_sql'];
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
                 }
                 break;
             case 'album':
@@ -345,10 +345,10 @@ class Random
                 $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     $sql .= ($catalog_disable)
-                        ? ' AND ' . $search_info['where_sql']
-                        : ' WHERE ' . $search_info['where_sql'];
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
                 }
-                $sql .= ' GROUP BY `$type`.`id`';
+                $sql .= " GROUP BY `$type`.`id`";
                 break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
