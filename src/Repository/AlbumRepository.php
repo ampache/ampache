@@ -46,23 +46,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
         }
         $allow_group_disks = (AmpConfig::get('album_group'));
         $sort_disk         = ($allow_group_disks)
-            ? 'AND `album`.`disk` = 1 '
-            : '';
+            ? "AND `album`.`disk` = 1 "
+            : "";
 
-        $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` ';
-            $where = sprintf(
-                'WHERE `catalog`.`enabled` = \'1\' %s',
-                $sort_disk
-            );
-        } else {
-            $where = sprintf(
-                'WHERE 1=1 %s',
-                $sort_disk
-            );
-        }
-        $sql .= $where;
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' %s", $sort_disk)
+            : "SELECT DISTINCT `album`.`id` FROM `album` " . str_replace("AND", "WHERE", $sort_disk);
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {

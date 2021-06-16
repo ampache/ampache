@@ -1145,7 +1145,7 @@ class Query
             return '';
         }
 
-        $sql = "WHERE 1=1 AND ";
+        $sql = "WHERE";
 
         foreach ($this->_state['filter'] as $key => $value) {
             $sql .= $this->sql_filter($key, $value);
@@ -1167,7 +1167,8 @@ class Query
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim((string)$sql, 'AND ') . " ";
+        $sql = rtrim((string)$sql, " AND ") . " ";
+        $sql = rtrim((string)$sql, "WHERE ") . " ";
 
         return $sql;
     } // get_filter_sql
