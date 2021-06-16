@@ -655,7 +655,7 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => (($this->artist_count < 2) ? $this->f_artist_name : '')
+            'value' => ($this->f_album_artist_name)
         );
         $keywords['album'] = array(
             'important' => true,
