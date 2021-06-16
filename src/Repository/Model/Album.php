@@ -662,6 +662,11 @@ class Album extends database_object implements library_item
             'label' => T_('Album'),
             'value' => $this->f_name
         );
+        $keywords['year'] = array(
+            'important' => false,
+            'label' => T_('Year'),
+            'value' => $this->year
+        );
 
         return $keywords;
     }
