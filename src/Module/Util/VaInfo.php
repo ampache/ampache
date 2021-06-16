@@ -1083,10 +1083,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_trackid':
                     $parsed['mb_trackid'] = $data[0];
                     break;
+                case 'releasetype':
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
+                case 'releasestatus':
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
@@ -1211,6 +1213,8 @@ final class VaInfo implements VaInfoInterface
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
                     break;
+                case 'recording_time':
+                case 'original_release_time':
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
@@ -1381,6 +1385,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
+            //debug_event(self::class, 'Quicktime tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
@@ -1420,6 +1425,7 @@ final class VaInfo implements VaInfoInterface
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                     break;
+                case 'creation_date':
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {

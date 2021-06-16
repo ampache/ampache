@@ -145,7 +145,7 @@ final class ControlReplyApplication implements ApplicationInterface
                         $items[]                  = Upnp_Api::_musicMetadata('');
                         $items[]                  = Upnp_Api::_videoMetadata('');
                         list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
-                        debug_event('control-reply', 'Root items returning' . $items[0] . $items[1] , 5);
+                        debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
                         // debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
                         // debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
                     }

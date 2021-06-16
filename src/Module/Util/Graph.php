@@ -366,7 +366,7 @@ class Graph
     ) {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` " . " JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -496,7 +496,7 @@ class Graph
         if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
-        $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` $where AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC"; // TODO mysql8 test
+        $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` $where AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC";
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $pts[] = array(

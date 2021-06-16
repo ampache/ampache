@@ -88,7 +88,7 @@ class AmpacheUPnP extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`url` VARCHAR( 255 ) COLLATE $collation NOT NULL " . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_upnp` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `url` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -119,7 +119,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " . "VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
 
         Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
     }

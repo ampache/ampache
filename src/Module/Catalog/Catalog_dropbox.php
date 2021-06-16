@@ -84,7 +84,7 @@ class Catalog_dropbox extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" . "<li>" . T_("Select 'Dropbox API app'") . "</li>" . "<li>" . T_("Select 'Full Dropbox'") . "</li>" . "<li>" . T_("Give a name to your application and create it") . "</li>" . "<li>" . T_("Click the 'Generate' button to create an Access Token") . "</li>" . "<li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li>" . "</ul>";
+        return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li><li>" . T_("Select 'Dropbox API app'") . "</li><li>" . T_("Select 'Full Dropbox'") . "</li><li>" . T_("Give a name to your application and create it") . "</li><li>" . T_("Click the 'Generate' button to create an Access Token") . "</li><li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li></ul>";
     } // get_create_help
 
     /**
@@ -109,7 +109,7 @@ class Catalog_dropbox extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`getchunk` TINYINT(1) NOT NULL, " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE $collation NOT NULL, `secret` VARCHAR(255) COLLATE $collation NOT NULL, `path` VARCHAR(255) COLLATE $collation NOT NULL, `authtoken` VARCHAR(255) COLLATE $collation NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;

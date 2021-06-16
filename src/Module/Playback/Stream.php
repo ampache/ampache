@@ -424,17 +424,10 @@ class Stream
      */
     public static function get_now_playing()
     {
-        $sql = 'SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` ';
-        $sql .= 'LEFT JOIN `session` ON `session`.`id` = `np`.`id` ';
+        $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
         if (AmpConfig::get('now_playing_per_user')) {
-            $sql .= 'INNER JOIN ( ' .
-                'SELECT MAX(`insertion`) AS `max_insertion`, `user` ' .
-                'FROM `now_playing` ' .
-                'GROUP BY `user`' .
-                ') `np2` ' .
-                'ON `np`.`user` = `np2`.`user` ' .
-                'AND `np`.`insertion` = `np2`.`max_insertion` ';
+            $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
@@ -446,7 +439,7 @@ class Stream
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
-        $sql .= 'ORDER BY `np`.`expire` DESC';
+        $sql .= "ORDER BY `np`.`expire` DESC";
 
         $modelFactory = static::getModelFactory();
 

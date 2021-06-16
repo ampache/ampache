@@ -121,7 +121,7 @@ class Catalog_local extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -301,7 +301,7 @@ class Catalog_local extends Catalog
         } // end while reading directory
 
         if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "Finished reading $path , closing handle", 5);
+            debug_event('local.catalog', "Finished reading $path, closing handle", 5);
         }
 
         // This should only happen on the last run
@@ -685,7 +685,7 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
                 Dba::write($sql);
             }
         }

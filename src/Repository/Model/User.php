@@ -208,7 +208,7 @@ class User extends database_object
 
         $time                 = time();
         $last_seen            = $time - 1200;
-        $sql                  = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " . "INNER JOIN `user` ON `session`.`username` = `user`.`username` " . "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
+        $sql                  = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` INNER JOIN `user` ON `session`.`username` = `user`.`username` WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
@@ -314,7 +314,7 @@ class User extends database_object
             }
         }
 
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " . "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " . "WHERE `user_preference`.`user` = '$user_id' " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = '$user_id' " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -351,7 +351,7 @@ class User extends database_object
     {
         $user_id = Dba::escape($this->id);
 
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` " . " FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' " . "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -410,7 +410,7 @@ class User extends database_object
     {
         $username = Dba::escape($this->username);
 
-        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" . " AND `expire` > " . time();
+        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username' AND `expire` > " . time();
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -819,7 +819,7 @@ class User extends database_object
 
         if ($details) {
             /* Calculate their total Bandwidth Usage */
-            $sql        = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " . "WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
+            $sql        = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
             $db_results = Dba::read($sql);
 
             $result = Dba::fetch_assoc($db_results);
@@ -928,7 +928,7 @@ class User extends database_object
             /* Check for duplicates */
             if (isset($results[$pref_id])) {
                 $row['value'] = Dba::escape($row['value']);
-                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND" . " `value`='" . Dba::escape($row['value']) . "'";
+                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND `value`='" . Dba::escape($row['value']) . "'";
                 Dba::write($sql);
             } // if its set
             else {
@@ -1013,7 +1013,7 @@ class User extends database_object
             Dba::write($sql, array($this->id));
         }
         // Clean up the playlist data table
-        $sql = "DELETE FROM `playlist_data` USING `playlist_data` " . "LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " . "WHERE `playlist`.`id` IS NULL";
+        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
         Dba::write($sql);
 
         // Clean out the tags
@@ -1062,7 +1062,7 @@ class User extends database_object
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
 
-        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " . "GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
+        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
@@ -1180,12 +1180,12 @@ class User extends database_object
     public static function rebuild_all_preferences()
     {
         // Clean out any preferences garbage left over
-        $sql = "DELETE `user_preference`.* FROM `user_preference` " . "LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` " . "WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
         Dba::write($sql);
 
         // Get only users who has less preferences than excepted
         // otherwise it would have significant performance issue with large user database
-        $sql        = "SELECT `user` FROM `user_preference` " . "GROUP BY `user` HAVING COUNT(*) < (" . "SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
+        $sql        = "SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < (SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences($row['user']);

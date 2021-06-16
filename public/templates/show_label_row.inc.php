@@ -51,6 +51,13 @@ if (Art::is_enabled()) {
     ); ?></td>
 <td class="cel_category"><?php echo $libitem->getCategory(); ?></td>
 <td class="cel_artists"><?php echo $libitem->getArtistCount(); ?></td>
+
+<td class="cel_country"><?php echo $libitem->getCountry(); ?></td>
+<?php if ($libitem->getActive() == 1) {
+        echo "<td class=\"cel_active\">" . T_('Active') . "</td>";
+    } else {
+        echo "<td class=\"cel_active\">" . T_('Inactive') . "</td>";
+    } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>

@@ -251,7 +251,7 @@ final class Live_Stream extends database_object implements LiveStreamInterface
         $elements = explode(":", (string)$data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
+            AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {

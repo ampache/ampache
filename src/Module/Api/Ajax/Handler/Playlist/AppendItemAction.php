@@ -102,7 +102,9 @@ final class AppendItemAction implements ActionInterface
             foreach ($item_ids as $iid) {
                 /** @var library_item $libitem */
                 $libitem = $this->modelFactory->mapObjectType($item_type, (int) $iid);
-                $medias  = array_merge($medias, $libitem->get_medias());
+                if ($libitem->isNew() === false) {
+                    $medias  = array_merge($medias, $libitem->get_medias());
+                }
             }
         } else {
             debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);

@@ -90,7 +90,7 @@ class AmpacheMpd extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         /* We need to create the MPD table */
-        $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL , " . "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_mpd` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600', `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -136,7 +136,7 @@ class AmpacheMpd extends localplay_controller
 
         $user_id = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) " . "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
+        $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES ('$name', '$host', '$port', '$password', '$user_id')";
 
         Dba::write($sql);
     } // add_instance
@@ -487,7 +487,7 @@ class AmpacheMpd extends localplay_controller
                 default:
                     /** If we don't know it, look up by filename */
                     $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " . "UNION ALL " . "SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {

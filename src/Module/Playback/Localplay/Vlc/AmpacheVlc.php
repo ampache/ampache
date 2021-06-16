@@ -87,7 +87,7 @@ class AmpacheVlc extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`port` INT( 11 ) UNSIGNED NOT NULL , " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_vlc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -353,7 +353,7 @@ class AmpacheVlc extends localplay_controller
     /**
      * next
      * This just tells VLC to skip to the next song, if you play a song by direct
-     * clicking and hit next VLC will start with the first song , needs work.
+     * clicking and hit next VLC will start with the first song, needs work.
      */
     public function next()
     {

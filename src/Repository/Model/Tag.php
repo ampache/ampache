@@ -168,7 +168,7 @@ class Tag extends database_object implements library_item
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " . "FROM `tag_map` AS `tm` " . "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" . "SELECT 1 FROM `tag_map` " . "WHERE `tag_map`.`tag_id` = " . $merge_to . " " . "AND `tag_map`.`object_id` = `tm`.`object_id` " . "AND `tag_map`.`object_type` = `tm`.`object_type` " . "AND `tag_map`.`user` = `tm`.`user`)";
+            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
             Dba::write($sql);
             if ($is_persistent) {
                 $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
@@ -184,7 +184,7 @@ class Tag extends database_object implements library_item
      */
     public function get_merged_tags()
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`" . "FROM `tag_merge` " . "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` " . "WHERE `tag_merge`.`tag_id` = ? " . "ORDER BY `tag`.`name` ";
+        $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
 
         $db_results = Dba::read($sql, array($this->id));
 
@@ -210,7 +210,7 @@ class Tag extends database_object implements library_item
         }
 
         $params = array($type);
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;

@@ -130,7 +130,7 @@ class Stats
             $date = time();
         }
 
-        $sql        = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql        = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname));
 
         // the count was inserted
@@ -601,7 +601,7 @@ class Stats
             $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= ($allow_group_disks && $type == 'album')
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`  ORDER BY MAX(`date`) " . $ordersql . ", `id` "
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY MAX(`date`) " . $ordersql . ", `id` "
             : " GROUP BY `object_id` ORDER BY MAX(`date`) " . $ordersql . ", `id` ";
 
         // playlists aren't the same as other objects so change the sql

@@ -37,7 +37,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Tag\TagCreatorInteface;
 use Ampache\Module\Tag\TagListCleanerInterface;
-use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
@@ -2142,16 +2141,6 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(TagCreatorInteface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getTagListUpdater(): TagListUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(TagListUpdaterInterface::class);
     }
 
     /**

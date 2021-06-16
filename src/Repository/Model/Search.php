@@ -877,7 +877,7 @@ class Search extends playlist_object
      */
     public static function get_searches()
     {
-        $sql = "SELECT `id` from `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+        $sql = "SELECT `id` FROM `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1065,7 +1065,7 @@ class Search extends playlist_object
             } else {
                 $sql .= " AND ";
             }
-            $sql .= "`" . $this->searchtype . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->searchtype . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= "`" . $this->searchtype . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->searchtype . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
@@ -1074,8 +1074,10 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        $sql .= ' ORDER BY RAND()';
-        $sql .= ($limit) ? ' LIMIT ' . (string) ($limit) : ' ';
+        $sql .= " ORDER BY RAND()";
+        $sql .= ($limit)
+            ? " LIMIT " . (string) ($limit)
+            : "";
         //debug_event(self::class, 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);

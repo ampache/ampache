@@ -68,7 +68,7 @@ class Movie extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " . "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -86,7 +86,7 @@ class Movie extends Video
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
-        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];

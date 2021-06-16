@@ -79,7 +79,7 @@ class Catalog_soundcloud extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" . "<li>Give a name to your application and click Register</li>" . "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" . "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
+        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li><li>Give a name to your application and click Register</li><li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li><li>Copy your Client ID and Secret here, and Save the app</li></ul>";
     } // get_create_help
 
     /**
@@ -104,7 +104,7 @@ class Catalog_soundcloud extends Catalog
         $charset   = AmpConfig::get('database_charset', 'utf8mb4');
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`userid` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `userid` VARCHAR(255) COLLATE $collation NOT NULL, `secret` VARCHAR(255) COLLATE $collation NOT NULL, `authtoken` VARCHAR(255) COLLATE $collation NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
