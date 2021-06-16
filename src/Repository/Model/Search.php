@@ -1491,7 +1491,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] = "LEFT JOIN (SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' $value GROUP BY `object_id`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id`";
+            $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`GROUP BY `object_id`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='album'";
         }
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
@@ -1726,7 +1726,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] = "LEFT JOIN (SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' $value GROUP BY `object_id`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id`";
+            $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type` GROUP BY `object_id`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='artist'";
         }
 
         if ($join['song']) {
@@ -2169,17 +2169,17 @@ class Search extends playlist_object
         }
         if ($join['tag']) {
             foreach ($join['tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='song' $value GROUP BY `object_id`) AS `realtag_$key` ON `song`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='song' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `song`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='song'";
             }
         }
         if ($join['album_tag']) {
             foreach ($join['album_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' $value GROUP BY `object_id`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='album'";
             }
         }
         if ($join['artist_tag']) {
             foreach ($join['artist_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' $value GROUP BY `object_id`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='artist'";
             }
         }
         if ($join['playlist_data']) {
