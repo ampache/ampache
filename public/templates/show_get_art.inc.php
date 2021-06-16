@@ -38,6 +38,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         foreach ($keywords as $key => $word) {
             if ($key == 'year') {
                 $year_str = (string)$word['value'];
+                continue;
             }
             if (($key != 'mb_albumid_group' && $key != 'mb_artistid') && ($key != 'keyword' && $word['label'])) { ?>
                 <tr>
