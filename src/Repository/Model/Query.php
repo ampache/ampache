@@ -1330,12 +1330,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                         break;
                     case 'exact_match':
                         $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1400,12 +1400,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                         break;
                     case 'exact_match':
                         $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1466,12 +1466,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                         break;
                     case 'exact_match':
                         $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1636,12 +1636,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                         break;
                     case 'alpha_match':
                         $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
