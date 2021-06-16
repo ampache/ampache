@@ -25,6 +25,7 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Artist\ArtistCountUpdaterInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -54,6 +55,8 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
 
     private MediaFromTagUpdaterInterface $mediaFromTagUpdater;
 
+    private ArtistCountUpdaterInterface $artistCountUpdater;
+
     public function __construct(
         SongRepositoryInterface $songRepository,
         AlbumRepositoryInterface $albumRepository,
@@ -62,7 +65,8 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         ArtistRepositoryInterface $artistRepository,
         ModelFactoryInterface $modelFactory,
         TagListUpdaterInterface $tagListUpdater,
-        MediaFromTagUpdaterInterface $mediaFromTagUpdater
+        MediaFromTagUpdaterInterface $mediaFromTagUpdater,
+        ArtistCountUpdaterInterface $artistCountUpdater
     ) {
         $this->songRepository      = $songRepository;
         $this->albumRepository     = $albumRepository;
@@ -72,6 +76,7 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
         $this->modelFactory        = $modelFactory;
         $this->tagListUpdater      = $tagListUpdater;
         $this->mediaFromTagUpdater = $mediaFromTagUpdater;
+        $this->artistCountUpdater  = $artistCountUpdater;
     }
 
     /**
@@ -157,7 +162,8 @@ final class SingleItemUpdater implements SingleItemUpdaterInterface
                 }
                 $tags = $this->tagRepository->getSongTags('artist', $libitem->id);
                 $this->tagListUpdater->update(implode(',', $tags), 'artist', $libitem->id, false);
-                $libitem->update_album_count();
+
+                $this->artistCountUpdater->update($libitem);
                 break;
         } // end switch type
 

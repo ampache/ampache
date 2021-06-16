@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog\Update;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\AlbumArtistUpdaterInterface;
+use Ampache\Module\Artist\ArtistCountUpdaterInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
@@ -41,14 +42,18 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
     private ModelFactoryInterface $modelFactory;
 
+    private ArtistCountUpdaterInterface $artistCountUpdater;
+
     public function __construct(
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
         AlbumArtistUpdaterInterface $albumArtistUpdater,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ArtistCountUpdaterInterface $artistCountUpdater
     ) {
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->albumArtistUpdater      = $albumArtistUpdater;
         $this->modelFactory            = $modelFactory;
+        $this->artistCountUpdater      = $artistCountUpdater;
     }
 
     public function update(
@@ -218,7 +223,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         foreach ($artists as $artist_id) {
             if ($artist_id > 0) {
                 $artist = $this->modelFactory->createArtist($artist_id);
-                $artist->update_album_count();
+
+                $this->artistCountUpdater->update($artist);
             }
         }
 

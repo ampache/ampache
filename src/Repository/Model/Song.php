@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistCountUpdaterInterface;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Catalog\DataMigratorInterface;
@@ -1160,7 +1161,8 @@ class Song extends database_object implements
 
         if ($new_artist > 0) {
             $artist = static::getModelFactory()->createArtist((int) $new_artist);
-            $artist->update_album_count();
+
+            static::getArtistCountUpdater()->update($artist);
         }
     } // update_artist
 
@@ -2171,5 +2173,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistCountUpdater(): ArtistCountUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistCountUpdaterInterface::class);
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Artist\ArtistCountUpdaterInterface;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
@@ -278,7 +279,7 @@ class Artist extends database_object implements library_item
             $this->update_time();
         }
         if ($this->album_count == 0 && $this->album_group_count == 0 && $this->song_count == 0) {
-            $this->update_album_count();
+            $this->getArtistCountUpdater()->update($this);
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
@@ -525,7 +526,8 @@ class Artist extends database_object implements library_item
                 Userflag::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
                 $artist = $this->getModelFactory()->createArtist((int) $current_id);
-                $artist->update_album_count();
+
+                $this->getArtistCountUpdater()->update($artist);
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -610,7 +612,7 @@ class Artist extends database_object implements library_item
      *
      * Get time for an artist and set it.
      */
-    private function update_time()
+    public function update_time()
     {
         $artistRepository = $this->getArtistRepository();
 
@@ -623,44 +625,34 @@ class Artist extends database_object implements library_item
         }
     }
 
-    /**
-     * update_album_count
-     *
-     * Get album_count, album_group_count for an artist and set it.
-     */
-    public function update_album_count()
+    public function getAlbumCount(): int
     {
-        $albumRepository  = $this->getAlbumRepository();
-        $artistRepository = $this->getArtistRepository();
+        return $this->album_count;
+    }
 
-        $album_count = $albumRepository->getCountByArtist($this);
-        if ($album_count > 0 && $album_count !== $this->album_count && $this->id) {
-            $artistRepository->updateAlbumCount($this, $album_count);
+    public function setAlbumCount(int $albumCount): void
+    {
+        $this->album_count = $albumCount;
+    }
 
-            $this->album_count = $album_count;
+    public function getAlbumGroupCount(): int
+    {
+        return $this->album_group_count;
+    }
 
-            $artistRepository->updateLastUpdate($this->getId());
-        }
+    public function setAlbumGroupCount(int $albumGroupCount): void
+    {
+        $this->album_group_count = $albumGroupCount;
+    }
 
-        $group_count = $albumRepository->getGroupedCountByArtist($this);
-        if ($group_count > 0 && $group_count !== $this->album_group_count && $this->id) {
-            $artistRepository->updateAlbumGroupCount($this, $group_count);
+    public function getSongCount(): int
+    {
+        return $this->song_count;
+    }
 
-            $this->album_group_count = $group_count;
-
-            $artistRepository->updateLastUpdate($this->getId());
-        }
-
-        $song_count = $this->getSongRepository()->getCountByArtist($this);
-        if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
-            $artistRepository->updateSongCount($this, $song_count);
-
-            $this->song_count = $song_count;
-
-            $artistRepository->updateLastUpdate($this->getId());
-        }
-
-        $this->update_time();
+    public function setSongCount(int $songCount): void
+    {
+        $this->song_count = $songCount;
     }
 
     /**
@@ -781,5 +773,15 @@ class Artist extends database_object implements library_item
         global $dic;
 
         return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getArtistCountUpdater(): ArtistCountUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistCountUpdaterInterface::class);
     }
 }

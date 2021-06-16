@@ -8045,7 +8045,7 @@ parameters:
 			path: src/Module/Catalog/SingleItemUpdater.php
 
 		-
-			message: "#^Cannot call method update_album_count\\(\\) on Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|int\\.$#"
+			message: "#^Parameter \\#1 \\$artist of method Ampache\\\\Module\\\\Artist\\\\ArtistCountUpdaterInterface\\:\\:update\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Artist, Ampache\\\\Repository\\\\Model\\\\Album\\|Ampache\\\\Repository\\\\Model\\\\Artist\\|int given\\.$#"
 			count: 1
 			path: src/Module/Catalog/SingleItemUpdater.php
 
@@ -21436,11 +21436,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:update_album_count\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 

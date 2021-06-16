@@ -20,15 +20,14 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Artist;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Artist;
 
-return [
-    Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
-    Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
-    ArtistFinderInterface::class => autowire(ArtistFinder::class),
-    ArtistCountUpdaterInterface::class => autowire(ArtistCountUpdater::class),
-];
+interface ArtistCountUpdaterInterface
+{
+    /**
+     * Get album_count, album_group_count for an artist and set it.
+     */
+    public function update(Artist $artist): void;
+}
