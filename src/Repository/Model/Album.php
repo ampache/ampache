@@ -280,6 +280,10 @@ class Album extends database_object implements library_item
         /* Get the information from the db */
         $info = $this->get_info($album_id);
 
+        if (empty($info)) {
+            return false;
+        }
+
         // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -290,18 +294,28 @@ class Album extends database_object implements library_item
         $this->total_duration = (int)$this->time;
         $this->object_cnt     = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
+        $this->song_count     = (int)$this->song_count;
+        $this->artist_count   = (int)$this->artist_count;
+
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
-            $this->total_duration    = 0;
-            $this->object_cnt        = 0;
             $albumRepository         = $this->getAlbumRepository();
             $this->album_suite       = $albumRepository->getAlbumSuite($this);
             $this->allow_group_disks = true;
+            // don't reset and query if it's all going to be the same
+            if (count($this->album_suite) > 1) {
+                $this->total_duration    = 0;
+                $this->object_cnt        = 0;
+                $this->song_count        = 0;
+                $this->artist_count      = 0;
 
-            foreach ($this->album_suite as $albumId) {
-                $this->total_duration += $albumRepository->getAlbumDuration((int) $albumId);
-                $this->object_cnt += $albumRepository->getAlbumPlayCount((int) $albumId);
+                foreach ($this->album_suite as $albumId) {
+                    $this->total_duration += $albumRepository->getAlbumDuration((int)$albumId);
+                    $this->object_cnt += $albumRepository->getAlbumPlayCount((int)$albumId);
+                    $this->song_count += $albumRepository->getSongCount((int)$albumId);
+                    $this->artist_count += $albumRepository->getArtistCount((int)$albumId);
+                }
             }
         }
 
@@ -310,7 +324,7 @@ class Album extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     public function isNew(): bool
@@ -357,77 +371,13 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
 
-        $f_name         = Dba::escape($this->f_name);
-        $release_type   = "is null";
-        $release_status = "is null";
-        $mbid           = "is null";
-        $artist         = "is null";
-        // for all the artists who love using bad strings for album titles!
-        if (strpos($this->f_name, '>') || strpos($this->f_name, '<') || strpos($this->f_name, '\\')) {
-            $f_name    = Dba::escape(str_replace(array('<', '>', '\\'), '_', $this->f_name));
-            $name_sql  = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '%$f_name%' AND ";
-        } else {
-            $name_sql = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name' AND ";
+        if (!$this->album_artist && $this->artist_count == 1) {
+            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
+            $db_results = Dba::read($sql);
+            $results    = Dba::fetch_assoc($db_results);
+            // overwrite so you can get something
+            $this->album_artist = $results['artist_id'];
         }
-        if ($this->release_type) {
-            $release_type = "= '" . ucwords((string)$this->release_type) . "'";
-        }
-        if ($this->release_status) {
-            $release_status = "= '" . ucwords((string)$this->release_status) . "'";
-        }
-        if ($this->mbid) {
-            $mbid = "= '$this->mbid'";
-        }
-        if ($this->album_artist) {
-            $artist = "= $this->album_artist";
-        }
-
-        // Calculation
-        $sql = "SELECT " .
-                "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
-                "COUNT(`song`.`id`) AS `song_count`";
-
-        $suite_array = $this->album_suite;
-        if (!count($suite_array)) {
-            $suite_array[] = $this->id;
-        }
-
-        $sqlj   = '';
-        $idlist = '(' . implode(',', $suite_array) . ')';
-        if ($this->allow_group_disks) {
-            $sql .= "FROM `album` ";
-            $sqlj .= "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
-            $sqlw = "WHERE " . $name_sql . "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND " . "`album`.`mbid` $mbid AND `album`.`album_artist` $artist AND `album`.`year` = " . (string)$this->year . ") ";
-        } else {
-            $sql .= "FROM `song` ";
-            $sqlw = "WHERE `song`.`album` IN $idlist ";
-        }
-
-        if (AmpConfig::get('catalog_disable')) {
-            $sqlj .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` ";
-            $sqlw .= "AND `catalog`.`enabled` = '1' ";
-        }
-        if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`";
-        } else {
-            $sqlw .= "GROUP BY `song`.`album`, `catalog_id`";
-        }
-        $sql .= $sqlj . $sqlw;
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-        $where_sql  = "`album`.`release_type` $release_type AND " . "`album`.`mbid` $mbid AND " . "`album`.`album_artist` $artist AND " . "`album`.`year` = " . (string)$this->year;
-
-        if ($artist == "is null") {
-            // no album_artist is set
-            // Get associated information from first song only
-            $sql = "SELECT MIN(`song`.`id`) AS `song_id`, " . "`artist`.`name` AS `artist_name`, " . "`artist`.`prefix` AS `artist_prefix`, " . "MIN(`artist`.`id`) AS `artist_id` " . "FROM `album` " . "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " . "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " . "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE " . $name_sql . $where_sql . ") " . "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` " . "LIMIT 1";
-        } else {
-            // album_artist is set
-            $sql = "SELECT DISTINCT `artist`.`name` AS `artist_name`, " . "`artist`.`prefix` AS `artist_prefix`, " . "MIN(`artist`.`id`) AS `artist_id` " . "FROM `album` " . "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " . $name_sql . $where_sql . " " . "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`";
-        }
-        $db_results = Dba::read($sql);
-        $results    = array_merge($results, Dba::fetch_assoc($db_results));
-
         $art = new Art($this->id, 'album');
         $art->has_db_info();
         $results['has_art']   = make_bool($art->raw);
@@ -704,12 +654,17 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => (($this->artist_count < 2) ? $this->f_artist_name : '')
+            'value' => ($this->f_album_artist_name)
         );
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
             'value' => $this->f_name
+        );
+        $keywords['year'] = array(
+            'important' => false,
+            'label' => T_('Year'),
+            'value' => $this->year
         );
 
         return $keywords;
@@ -1121,7 +1076,7 @@ class Album extends database_object implements library_item
         }
         foreach ($results as $album_id) {
             $artists    = array();
-            $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
+            $sql        = "SELECT MIN(`artist`) FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, array($album_id));
 
             // these are albums that only have 1 artist
@@ -1129,16 +1084,6 @@ class Album extends database_object implements library_item
                 $artists[] = (int) $row['artist'];
             }
 
-            // if there isn't a distinct artist, sort by the count with another fall back to id order
-            if (empty($artists)) {
-                $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist`, `id` ORDER BY COUNT(`id`) DESC, `id` ASC LIMIT 1";
-                $db_results = Dba::read($sql, array($album_id));
-
-                // these are album pick the artist by majority count
-                while ($row = Dba::fetch_assoc($db_results)) {
-                    $artists[] = (int) $row['artist'];
-                }
-            }
             // Update the album
             if (!empty($artists)) {
                 debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);

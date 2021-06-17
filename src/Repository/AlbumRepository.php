@@ -44,23 +44,14 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (!$count) {
             $count = 1;
         }
+        $allow_group_disks = (AmpConfig::get('album_group'));
+        $sort_disk         = ($allow_group_disks)
+            ? "AND `album`.`disk` = 1 "
+            : "";
 
-        $sort_disk = (AmpConfig::get('album_group')) ? 'AND `album`.`disk` = 1 ' : '';
-
-        $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= 'LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` ';
-            $where = sprintf(
-                'WHERE `catalog`.`enabled` = \'1\' %s',
-                $sort_disk
-            );
-        } else {
-            $where = sprintf(
-                'WHERE 1=1 %s',
-                $sort_disk
-            );
-        }
-        $sql .= $where;
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' %s", $sort_disk)
+            : "SELECT DISTINCT `album`.`id` FROM `album` " . str_replace("AND", "WHERE", $sort_disk);
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
@@ -285,6 +276,36 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * Get song count for an album disk by album id.
+     */
+    public function getSongCount(int $albumId): int
+    {
+        $db_results = Dba::read(
+            'SELECT `song_count` from `album` WHERE `album`.`id` = ?',
+            [$albumId]
+        );
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return (int) $results['song_count'];
+    }
+
+    /**
+     * Get distinct artist count for an album disk by album id.
+     */
+    public function getArtistCount(int $albumId): int
+    {
+        $db_results = Dba::read(
+            'SELECT `artist_count` from `album` WHERE `album`.`id` = ?',
+            [$albumId]
+        );
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return (int) $results['artist_count'];
+    }
+
+    /**
      * Get time for an album disk and set it.
      */
     public function updateTime(
@@ -323,9 +344,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
-
-        $sort_type = AmpConfig::get('album_sort');
-        $sort_disk = (AmpConfig::get('album_group')) ? "" : ", `album`.`disk`";
+        $allow_group_disks = (AmpConfig::get('album_group'));
+        $sort_type         = AmpConfig::get('album_sort');
+        $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
         switch ($sort_type) {
             case 'year_asc':
                 $sql_sort = '`album`.`year` ASC' . $sort_disk;
@@ -343,10 +364,10 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = '`album`.`name`' . $sort_disk . ', `album`.`year`';
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
+        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 
-        if (AmpConfig::get('album_group')) {
-            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
+        if ($allow_group_disks) {
+            $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
 
         $db_results = Dba::read($sql);

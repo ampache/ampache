@@ -313,8 +313,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected function deleteSongs($songs)
     {
         $ids = implode(',', array_keys($songs));
-        $sql = "DELETE FROM `song` WHERE `id` IN " .
-                '(' . $ids . ')';
+        $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
         Dba::write($sql);
     }
 

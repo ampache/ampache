@@ -295,7 +295,7 @@ class VlcPlayer
 
     /**
      * volume_up
-     * This increases the volume of VLC , set to +20 can be changed to your preference
+     * This increases the volume of VLC, set to +20 can be changed to your preference
      */
     public function volume_up()
     {

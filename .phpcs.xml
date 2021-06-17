@@ -39,6 +39,7 @@
   <exclude-pattern>*client/*</exclude-pattern>
   <exclude-pattern>*newclient/*</exclude-pattern>
   <exclude-pattern>*foam/*</exclude-pattern>
+  <exclude-pattern>*ample/*</exclude-pattern>
   <exclude-pattern>*templates/*</exclude-pattern>
   <exclude-pattern>*components/*</exclude-pattern>
   <exclude-pattern>*vendor/*</exclude-pattern>

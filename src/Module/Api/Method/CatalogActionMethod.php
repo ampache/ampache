@@ -75,11 +75,9 @@ final class CatalogActionMethod
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
-                    Catalog::clean_empty_albums();
                     break;
                 case 'verify_catalog':
                     $catalog->verify_catalog_proc();
-                    Catalog::clean_empty_albums();
                     break;
                 case 'gather_art':
                     $catalog->gather_art();
@@ -90,12 +88,12 @@ final class CatalogActionMethod
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
+                    Catalog::clean_empty_albums();
                     Album::update_album_artist();
                     Catalog::update_counts();
                     break;
             }
             Api::message('successfully started: ' . $task, $input['api_format']);
-            Catalog::count_server();
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }

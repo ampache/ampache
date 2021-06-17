@@ -83,13 +83,13 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                     $results['raw_web_path']
                 );
             }
-            $results['http_port'] = !empty($results['http_port']) ?
-                $results['http_port'] :
-                $this->environment->getHttpPort();
+            $results['http_port'] = (!empty($results['http_port']))
+                ? $results['http_port']
+                : $this->environment->getHttpPort();
 
-            $port = $results['http_port'] != 80 && $results['http_port'] != 443 ?
-                ':' . $results['http_port'] :
-                '';
+            $port = ($results['http_port'] != 80 && $results['http_port'] != 443)
+                ? ':' . $results['http_port']
+                : '';
 
             $results['web_path'] = sprintf(
                 '%s://%s%s%s',

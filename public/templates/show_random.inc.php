@@ -25,31 +25,39 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
+$get_type    = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$random_type = (in_array($get_type, array('song', 'album', 'artist', 'video')))
+    ? $get_type
+    : null;
+if (!$random_type) {
+    header("Location: " . AmpConfig::get('web_path') . '/random.php?action=get_advanced&type=song');
+}
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
 <table class="tabledata">
 <tr id="search_location">
-    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'song') {
+    <td><?php if ($random_type !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
         echo T_('Songs');
     } ?></td>
-    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'album') {
+    <td><?php if ($random_type !== 'album') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php
     } else {
         echo T_('Albums');
     } ?></td>
-    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'artist') {
+    <td><?php if ($random_type !== 'artist') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
     } ?></td>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount('Video')) { ?>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+        <td><?php if ($random_type !== 'video') { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
             <?php } else {
         echo T_('Videos');

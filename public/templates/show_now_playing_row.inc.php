@@ -114,21 +114,15 @@ $(document).ready(function(){
         <div class="np_group" id="np_group_4">
     <?php
         if (AmpConfig::get('ratings')) { ?>
-            <div class="np_cell cel_rating">
-                <label><?php echo T_('Rating'); ?></label>
-                <div id="rating_<?php echo $media->id; ?>_song">
-                    <?php echo Rating::show($media->id, 'song'); ?>
-                </div>
-            </div>
+            <span id="rating_<?php echo $media->id; ?>_song">
+                <?php echo Rating::show($media->id, 'song'); ?>
+            </span>
         <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <div class="np_cell cel_userflag">
-                <label><?php echo T_('Fav.'); ?></label>
-                <div id="userflag_<?php echo $media->id; ?>_song">
-                    <?php echo Userflag::show($media->id, 'song'); ?>
-                </div>
-            </div>
+            <span id="userflag_<?php echo $media->id; ?>_song">
+                <?php echo Userflag::show($media->id, 'song'); ?>
+            </span>
         <?php
         } ?>
         </div>

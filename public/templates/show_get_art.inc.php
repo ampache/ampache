@@ -36,6 +36,10 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
     <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
+            if ($key == 'year') {
+                $year_str = (string)$word['value'];
+                continue;
+            }
             if (($key != 'mb_albumid_group' && $key != 'mb_artistid') && ($key != 'keyword' && $word['label'])) { ?>
                 <tr>
                     <td>
@@ -92,7 +96,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <tr>
            <td>
                 <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
-                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str; ?>">
                 <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
            </td>
           </tr>

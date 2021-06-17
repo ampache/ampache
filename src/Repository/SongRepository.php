@@ -111,7 +111,7 @@ final class SongRepository implements SongRepositoryInterface
     ): array {
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = " . $artist->getId() . " AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' WHERE `song`.`artist` = " . $artist->getId() . " AND `catalog`.`enabled` = '1' ";
+            : "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' WHERE `song`.`artist` = " . $artist->getId() . " ";
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string)$count;
 
         $db_results = Dba::read($sql);

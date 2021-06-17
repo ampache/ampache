@@ -34,41 +34,41 @@ use Ampache\Module\Util\Ui;
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata">
         <tr>
-            <td><?php echo  T_('Username'); ?>: *</td>
+            <td><?php echo T_('Username'); ?>: *</td>
             <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('Password'); ?>: *</td>
+            <td><?php echo T_('Password'); ?>: *</td>
             <td><input type="password" name="password_1" value="" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('Confirm Password'); ?>: *</td>
+            <td><?php echo T_('Confirm Password'); ?>: *</td>
             <td><input type="password" name="password_2" value="" /></td>
         </tr>
         <tr>
-            <td><?php echo  T_('Full Name'); ?>:</td>
+            <td><?php echo T_('Full Name'); ?>:</td>
             <td><input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
                 <?php echo AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('E-mail'); ?>: *</td>
+            <td><?php echo T_('E-mail'); ?>: *</td>
             <td><input type="text" name="email" value="<?php echo scrub_out(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('Website'); ?>:</td>
+            <td><?php echo T_('Website'); ?>:</td>
             <td><input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('User Access Level'); ?>:</td>
+            <td><?php echo T_('User Access Level'); ?>:</td>
                 <td>
                     <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                     <select name="access">

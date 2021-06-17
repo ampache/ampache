@@ -26,7 +26,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
-
 // update from high to low so you return to the first disk in a group album
 rsort($objects);
 foreach ($objects as $object) {
@@ -37,17 +36,17 @@ foreach ($objects as $object) {
 if ($object_id != $return_id) {
     $object_id  = $return_id;
     $target_url = AmpConfig::get('web_path') . '/' . $type . 's.php?action=show&amp;' . $type . '=' . $object_id;
-}
-
+} ?>
+<br />
+<strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
+<a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
+<br />
+<?php
 //gather art for this item
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
     if (is_array($catalog_id) && $catalog_id[0] != '') {
         Catalog::gather_art_item($type, $object_id);
     }
-}
- ?>
-<br />
-<strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
-<a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
+} ?>
 <?php Ui::show_box_bottom(); ?>

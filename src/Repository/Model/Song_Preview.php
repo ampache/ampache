@@ -424,7 +424,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $songs = array();
 
-        $sql        = "SELECT `id` FROM `song_preview` " . "WHERE `session` = ? AND `album_mbid` = ?";
+        $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ?";
         $db_results = Dba::read($sql, array(session_id(), $album_mbid));
 
         while ($results = Dba::fetch_assoc($db_results)) {

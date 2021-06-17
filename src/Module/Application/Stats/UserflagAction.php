@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
@@ -68,13 +69,13 @@ final class UserflagAction implements ApplicationActionInterface
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
+        $user_id = Core::get_global('user')->id;
 
         $this->ui->showBoxTop(T_('Information'));
-
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'album',
-            Userflag::get_latest_sql('album')
+            Userflag::get_latest_sql('album', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -83,7 +84,7 @@ final class UserflagAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'artist',
-            Userflag::get_latest_sql('artist')
+            Userflag::get_latest_sql('artist', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -92,7 +93,7 @@ final class UserflagAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'song',
-            Userflag::get_latest_sql('song')
+            Userflag::get_latest_sql('song', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -105,7 +106,7 @@ final class UserflagAction implements ApplicationActionInterface
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(
                 'video',
-                Userflag::get_latest_sql('video')
+                Userflag::get_latest_sql('video', $user_id)
             );
             $browse->set_simple_browse(true);
             $browse->show_objects();
@@ -115,7 +116,7 @@ final class UserflagAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'playlist',
-            Userflag::get_latest_sql('playlist')
+            Userflag::get_latest_sql('playlist', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();

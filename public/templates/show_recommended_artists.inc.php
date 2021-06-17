@@ -24,10 +24,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-$thcount  = 8; ?>
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$thcount      = 8; ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
@@ -45,15 +47,10 @@ $thcount  = 8; ?>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
             <th class="cel_tags"><?php echo T_('Genres'); ?></th>
-        <?php if (AmpConfig::get('ratings')) {
+            <?php if ($show_ratings) {
         ++$thcount; ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php
-    } ?>
-        <?php if (AmpConfig::get('userflags')) {
-        ++$thcount; ?>
-            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-        <?php
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+                <?php
     } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
@@ -98,23 +95,19 @@ $thcount  = 8; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
             <?php
-        } ?>
+            } ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="cel_time"> <?php echo T_('Time'); ?> </th>
             <th class="cel_tags"><?php echo T_('Genres'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php
-        } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-        <?php
-        } ?>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <?php
+            } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

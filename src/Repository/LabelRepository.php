@@ -35,7 +35,7 @@ final class LabelRepository implements LabelRepositoryInterface
         $results = [];
 
         $db_results = Dba::read(
-            "SELECT `label`.`id`, `label`.`name` FROM `label` " . "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " . 'WHERE `label_asso`.`artist` = ?',
+            "SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?",
             [$artistId]
         );
 

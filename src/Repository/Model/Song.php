@@ -550,8 +550,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
 
-        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = "INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
 
         return $song_id;
@@ -658,16 +657,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
-            '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
-            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
-            '`song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
-            'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
-            'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
-            'WHERE `song`.`id` = ?';
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
-
-        $results = Dba::fetch_assoc($db_results);
+        $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = $results['total_count'];
@@ -705,7 +697,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album_mbid = ''
     ) {
         // by default require song, album, artist for any searches
-        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND " . "(`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND " . "(`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
+        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND (`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND (`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
         if ($song_mbid) {
             $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
         }
@@ -936,7 +928,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (isset($dupe['id'])) {
             $results[] = $dupe['id'];
         } else {
-            $sql = "SELECT `id` FROM `song` WHERE " . "`title`='" . Dba::escape($dupe['title']) . "' ";
+            $sql = "SELECT `id` FROM `song` WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
 
             if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
                 $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
@@ -947,7 +939,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $sql .= 'ORDER BY `time`, `bitrate`, `size`';
 
             if ($search_type == 'album') {
-                $sql = "SELECT `id` from `song` " . "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` " . "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " . "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " . "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " . "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " . "ORDER BY `album`, `track`";
+                $sql = "SELECT `id` from `song` LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL ORDER BY `album`, `track`";
             }
 
             $db_results = Dba::read($sql);
@@ -1328,18 +1320,13 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, " .
-            "`title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
-            "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
-            "`update_time` = ? WHERE `id` = ?";
+        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist,
                                 $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
                                 (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
 
-        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
-            "`replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? " .
-            "WHERE `song_id` = ?";
+        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->comment, $new_song->replaygain_track_gain,
             $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
     } // update_song
@@ -1567,6 +1554,45 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Rating::migrate('album', $old_album, $new_album);
         Art::duplicate('album', $old_album, $new_album);
         Catalog::migrate_map('album', $old_album, $new_album);
+    } // update_album
+
+    /**
+     * update_parent_counts
+     * updates the counts on the album and artist
+     */
+    public function update_parent_counts()
+    {
+        // artist.album_count
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+        Dba::write($sql, array($this->artist));
+        // artist.album_group_count
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+        Dba::write($sql, array($this->artist));
+        // artist.song_count
+        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+        Dba::write($sql, array($this->artist));
+        // artist.total_count
+        $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = 1240 AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql, array($this->artist));
+        // artist.time
+        $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = 1240 GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
+        Dba::write($sql, array($this->artist));
+
+        // album.artist_count
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = 81509 AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql, array($this->album));
+        // album.song_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = 81509 AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql, array($this->album));
+        // album.total_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = 81509 AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql, array($this->album));
+        // album.time
+        $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = 81509 GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        Dba::write($sql, array($this->album));
+        // album.addition_time
+        $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = 81509 GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+        Dba::write($sql, array($this->album));
     } // update_album
 
     /**
@@ -2055,12 +2081,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
-                   "FROM `object_count`" .
-                   "LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user`" .
-                   "LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
-                   "LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
-                   "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` FROM `object_count`LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user`LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }

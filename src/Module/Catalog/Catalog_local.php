@@ -116,7 +116,7 @@ class Catalog_local extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -296,7 +296,7 @@ class Catalog_local extends Catalog
         } // end while reading directory
 
         if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "Finished reading $path , closing handle", 5);
+            debug_event('local.catalog', "Finished reading $path, closing handle", 5);
         }
 
         // This should only happen on the last run
@@ -605,7 +605,7 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = ($tableName == 'song')
-            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND `song`.`update_time` < `catalog`.`last_update`) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND `song`.`update_time` < `catalog`.`last_update` AND `song`.`addition_time` < `catalog`.`last_update`) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
             : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
@@ -693,7 +693,7 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
                 Dba::write($sql);
             }
         }

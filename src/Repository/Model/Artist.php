@@ -382,9 +382,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function get_album_group_count($artist_id)
     {
-        $params = array($artist_id);
-        $sql    = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` " .
-            "FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $params     = array($artist_id);
+        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -960,8 +959,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
         $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret  = Dba::write($sql,
-            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
+        $sqlret  = Dba::write($sql, array($summary, $placeformed, $yearformed, time(), (int)$manual, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
