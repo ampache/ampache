@@ -41,14 +41,6 @@ interface UpdateCatalogInterface
     ): void;
 
     /**
-     * Reduce the Id numbers of large file systems (MariaDB ONLY)
-     */
-    public function compactIds(
-        Interactor $interactor,
-        bool $dryRun
-    ): void;
-
-    /**
      * Updates the filesystem path of all files related to this catalog
      */
     public function updatePath(
