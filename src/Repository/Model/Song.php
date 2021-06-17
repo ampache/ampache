@@ -2359,7 +2359,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         if ($object_type == 'song') {
-            $sql = "UPDATE `song_data` SET `song_id` = ? WHERE `song_id` = ?";
+            $sql = "UPDATE `song_data` SET `song_id` = ? WHERE `song` = ?";
             $params = array($new_object_id, $old_object_id);
 
             return Dba::write($sql, $params);
