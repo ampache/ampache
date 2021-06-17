@@ -3197,7 +3197,6 @@ abstract class Catalog extends database_object
             Label::migrate($object_type, $old_object_id, $new_object_id);
             Wanted::migrate($object_type, $old_object_id, $new_object_id);
             Metadata::migrate($object_type, $old_object_id, $new_object_id);
-            Song::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
