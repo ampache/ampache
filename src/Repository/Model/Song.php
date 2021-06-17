@@ -2361,11 +2361,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($object_type == 'song') {
             $sql = "UPDATE `song_data` SET `song_id` = ? WHERE `song` = ?";
             $params = array($new_object_id, $old_object_id);
-
-            return Dba::write($sql, $params);
         }
 
-        return false;
+        return Dba::write($sql, $params);
     }
 
     /**
