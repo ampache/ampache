@@ -51,6 +51,7 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -3194,6 +3195,8 @@ abstract class Catalog extends database_object
             Art::duplicate($object_type, $old_object_id, $new_object_id);
             Playlist::migrate($object_type, $old_object_id, $new_object_id);
             Label::migrate($object_type, $old_object_id, $new_object_id);
+            Wanted::migrate($object_type, $old_object_id, $new_object_id);
+            Metadata::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;

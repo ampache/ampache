@@ -421,6 +421,10 @@ class Recommendation
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
+        if ($object_type == 'artist') {
+            $sql = "UPDATE IGNORE `recommendation_item` SET `recommendation_id` = ? WHERE `recommendation_id` = ?";
+            Dba::write($sql, array($new_object_id, $old_object_id));
+        }
         $sql = "UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
