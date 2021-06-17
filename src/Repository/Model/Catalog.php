@@ -3211,30 +3211,31 @@ abstract class Catalog extends database_object
      */
     public static function compact_table($object_type)
     {
+        $results = array();
         switch ($object_type) {
             case 'artist':
-                $max_sql = "SELECT MAX(`id`) AS `max` FROM `artist` LIMIT 1";
-                $sql     = "SELECT `artist`.`id` FROM `artist` ORDER BY `id`";
+                $sql = 'SELECT `artist`.`id` FROM `artist` ORDER BY `id`';
                 break;
             case 'album':
-                $max_sql = "SELECT MAX(`id`) AS `max` FROM `album` LIMIT 1";
-                $sql     = "SELECT `album`.`id` FROM `album` ORDER BY `id`";
+                $sql = 'SELECT `album`.`id` FROM `album` ORDER BY `id`';
                 break;
             case 'song':
-                $max_sql = "SELECT MAX(`id`) AS `max` FROM `song` LIMIT 1";
-                $sql     = "SELECT `song`.`id` FROM `song` ORDER BY `id`";
+                $sql = 'SELECT `song`.`id` FROM `song` ORDER BY `id`';
                 break;
             default:
                 return;
         }
-        // get the max current row
-        $db_results = Dba::read($max_sql);
-        $results    = Dba::fetch_assoc($db_results);
-        $max_row    = (int)$results['max'];
-        // and then process each id as you read them
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (!self::compact_object($object_type, $row['id'], $max_row)) {
+            $results[] = $row['id'];
+        }
+        $sql        = "SELECT MAX(`id`) AS `max` FROM $object_type LIMIT 1";
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+        $max_row    = (int)$results['max'];
+        // now that you have the results, compact them
+        foreach ($results as $object_id) {
+            if (!self::compact_object($object_type, $object_id, $max_row)) {
                 // when you run out of results to compact or you can't execute sequences, don't keep going
                 return;
             }
@@ -3266,14 +3267,15 @@ abstract class Catalog extends database_object
         // update the new id if smaller than the current id
         if ($free_row < $object_id) {
             $sql = "UPDATE `$object_type` SET `id` = ? WHERE `id` = ?;";
-            if (Dba::write($sql, array($free_row, $object_id))) {
+            $row = Dba::write($sql, array($free_row, $object_id));
+            if ($row) {
                 self::migrate($object_type, $object_id, $free_row);
+
+                return true;
             } else {
                 return false;
             }
         }
-
-        return true;
     }
 
     /**
