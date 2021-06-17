@@ -733,4 +733,19 @@ class Playlist extends playlist_object
 
         return true;
     } // sort_tracks
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?";
+        $params = array($new_object_id, $old_object_id, $object_type);
+
+        return Dba::write($sql, $params);
+    }
 }

@@ -401,6 +401,25 @@ class Label extends database_object implements library_item
         return $results;
     } // get_display
 
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
+            $params = array($new_object_id, $old_object_id);
+
+            return Dba::write($sql, $params);
+        }
+
+        return false;
+    }
+
     private static function getLabelRepository(): LabelRepositoryInterface
     {
         global $dic;

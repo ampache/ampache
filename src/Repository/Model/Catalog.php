@@ -3192,6 +3192,8 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::duplicate($object_type, $old_object_id, $new_object_id);
+            Playlist::migrate($object_type, $old_object_id, $new_object_id);
+            Label::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
 
             return true;
