@@ -3254,10 +3254,6 @@ abstract class Catalog extends database_object
         if ($free_row < 1) {
             return false;
         }
-        if ($free_row > $object_id) {
-            return true;
-        }
-
         // update the new id if smaller than the current id
         if ($free_row < $object_id) {
             $sql = "UPDATE `$object_type` SET `id` = ? WHERE `id` = ?;";
