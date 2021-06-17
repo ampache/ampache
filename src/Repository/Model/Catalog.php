@@ -3229,13 +3229,9 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
-        $sql        = "SELECT MAX(`id`) AS `max` FROM $object_type LIMIT 1";
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-        $max_row    = (int)$results['max'];
         // now that you have the results, compact them
         foreach ($results as $object_id) {
-            if (!self::compact_object($object_type, $object_id, $max_row)) {
+            if (!self::compact_object($object_type, $object_id)) {
                 // when you run out of results to compact or you can't execute sequences, don't keep going
                 return;
             }
@@ -3246,12 +3242,11 @@ abstract class Catalog extends database_object
      * Migrate high table id's to a lower number and migrate them
      * @param string $object_type
      * @param integer $object_id
-     * @param integer $max_row
      * @return boolean
      */
-    public static function compact_object($object_type, $object_id, $max_row)
+    public static function compact_object($object_type, $object_id)
     {
-        $sql = "SELECT * FROM seq_1_to_$max_row WHERE `seq` NOT IN (SELECT `id` FROM `$object_type`) LIMIT 1;";
+        $sql = "SELECT * FROM seq_1_to_$object_id WHERE `seq` NOT IN (SELECT `id` FROM `$object_type`) LIMIT 1;";
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
@@ -3259,9 +3254,6 @@ abstract class Catalog extends database_object
         // Requires the MariaDB sequence engine [https://mariadb.com/kb/en/sequence-storage-engine/]
         if ($free_row < 1) {
             return false;
-        }
-        if ($free_row > $object_id) {
-            return true;
         }
 
         // update the new id if smaller than the current id
