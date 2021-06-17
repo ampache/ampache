@@ -3201,6 +3201,71 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Migrate high table id's to a lower number and migrate their related data
+     * @param string $object_type
+     */
+    public static function compact_table($object_type)
+    {
+        $results = array();
+        switch ($object_type) {
+            case 'artist':
+                $sql = 'SELECT `artist`.`id` FROM `artist` ORDER BY `id`';
+                break;
+            case 'album':
+                $sql = 'SELECT `album`.`id` FROM `album` ORDER BY `id`';
+                break;
+            case 'song':
+                $sql = 'SELECT `song`.`id` FROM `song` ORDER BY `id`';
+                break;
+            default:
+                return;
+        }
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+        // now that you have the results, compact them
+        foreach ($results as $object_id) {
+            if (!self::compact_object($object_type, $object_id)) {
+                // when you run out of results to compact or you can't execute sequences, don't keep going
+                return;
+            }
+        }
+    }
+
+    /**
+     * Migrate high table id's to a lower number and migrate them
+     * @param string $object_type
+     * @param integer $object_id
+     * @return boolean
+     */
+    public static function compact_object($object_type, $object_id)
+    {
+        $sql = "SELECT * FROM seq_1_to_$object_id WHERE `seq` NOT IN (SELECT `id` FROM `$object_type`) LIMIT 1;";
+
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+        $free_row   = (int)$results['seq'];
+        // Requires the MariaDB sequence engine [https://mariadb.com/kb/en/sequence-storage-engine/]
+        if ($free_row < 1) {
+            return false;
+        }
+
+        // update the new id if smaller than the current id
+        if ($free_row < $object_id) {
+            $sql = "UPDATE `$object_type` SET `id` = ? WHERE `id` = ?;";
+            $row = Dba::write($sql, array($free_row, $object_id));
+            if ($row) {
+                self::migrate($object_type, $object_id, $free_row);
+
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * xml_get_footer
      * This takes the type and returns the correct xml footer
      * @param string $type

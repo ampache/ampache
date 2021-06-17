@@ -27,7 +27,6 @@ namespace Ampache\Module\Catalog\Update;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
@@ -224,6 +223,58 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
 
             $interactor->info('------------------', true);
+        }
+    }
+
+    /**
+     * Reduce the Id numbers of large file systems (MariaDB ONLY)
+     */
+    public function compactIds(
+        Interactor $interactor,
+        $dryRun
+    ): void {
+        ob_end_clean();
+
+        if ($dryRun === true) {
+            $interactor->info(T_('Running in Test Mode. Use -x to execute'), true);
+
+            $sql = "SELECT * FROM seq_1_to_100000 WHERE `seq` NOT IN (SELECT `id` FROM `artist`) LIMIT 1;";
+
+            $db_results = Dba::read($sql);
+            $results    = Dba::fetch_assoc($db_results);
+            $free_row   = (int)$results['seq'];
+            // Requires the MariaDB sequence engine [https://mariadb.com/kb/en/sequence-storage-engine/]
+            if ($free_row < 1) {
+                $interactor->warn(T_("WARNING") . "*** " . T_("Make sure you are using MariaDB"), true);
+            }
+
+            $interactor->ok(T_('No changes have been made'), true);
+        } else {
+            $interactor->warn(T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"), true);
+
+            foreach (array('artist', 'album', 'song') as $table) {
+                $interactor->info(
+                    /* HINT: 'artist', 'album', 'song' */
+                    sprintf(T_('Compacting Table: "%s"'), $table),
+                    true
+                );
+                Catalog::compact_table($table);
+
+                // set the auto_increment back to the next available value
+                $sql        = "SELECT MAX(`id`) AS `max` FROM $table";
+                $db_results = Dba::read($sql);
+                $results    = Dba::fetch_assoc($db_results);
+                $free_row   = (int)$results['max'] + 1;
+                if ($free_row > 1) {
+                    $interactor->info(
+                        /* HINT: int number of the next row e.g. 406 */
+                        sprintf(T_('Next available row: "%s"'), $free_row),
+                        true
+                    );
+                    $alter_sql = "ALTER TABLE $table AUTO_INCREMENT = $free_row";
+                    Dba::write($alter_sql);
+                }
+            }
         }
     }
 
