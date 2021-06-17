@@ -3264,9 +3264,9 @@ abstract class Catalog extends database_object
                 self::migrate($object_type, $object_id, $free_row);
 
                 return true;
-            } else {
-                return false;
             }
+        } else {
+            return false;
         }
     }
 
