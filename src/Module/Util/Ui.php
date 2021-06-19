@@ -34,9 +34,9 @@ use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Shout\ShoutParentObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\ChannelInterface;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -1031,12 +1031,12 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'disabled_custom_metadata_fields':
-                $ids             = explode(',', $value);
-                $options         = array();
-                $fieldRepository = new MetadataField();
-                foreach ($fieldRepository->findAll() as $field) {
-                    $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
-                    $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+                $ids                = explode(',', $value);
+                $options            = array();
+                $metadataRepository = $this->getMetadataRepository();
+                foreach ($metadataRepository->findAllFields() as $field) {
+                    $selected  = in_array($field['id'], $ids) ? ' selected="selected"' : '';
+                    $options[] = '<option value="' . $field['id'] . '"' . $selected . '>' . $field['name'] . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;
@@ -1275,5 +1275,15 @@ class Ui implements UiInterface
         global $dic;
 
         return $dic->get(ShoutParentObjectLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }

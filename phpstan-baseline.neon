@@ -1876,11 +1876,6 @@ parameters:
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Api/Gui/Output/JsonOutput.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:format\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
@@ -2306,11 +2301,6 @@ parameters:
 			path: src/Module/Api/Gui/Output/JsonOutput.php
 
 		-
-			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Gui/Output/JsonOutput.php
-
-		-
 			message: "#^Right side of && is always true\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/JsonOutput.php
@@ -2367,11 +2357,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\PlayableMediaInterface\\:\\:\\$track\\.$#"
-			count: 1
-			path: src/Module/Api/Gui/Output/XmlOutput.php
-
-		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/Api/Gui/Output/XmlOutput.php
 
@@ -6300,22 +6285,12 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:addMetadata\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:getField\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has parameter \\$metadata with no typehint specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addMetadata\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -6405,16 +6380,6 @@ parameters:
 			path: src/Module/Beets/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateMetadata\\(\\) has parameter \\$song with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateMetadata\\(\\) has parameter \\$tags with no typehint specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:updateUi\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -6436,21 +6401,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:verify_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$metadata\\)\\: Unexpected token \"\\$metadata\", expected type at offset 58$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$song\\)\\: Unexpected token \"\\$song\", expected type at offset 18$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$tags\\)\\: Unexpected token \"\\$tags\", expected type at offset 38$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -12490,11 +12440,6 @@ parameters:
 			path: src/Module/Song/Tag/SongFromTagUpdaterInterface.php
 
 		-
-			message: "#^Argument of an invalid type Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Song/Tag/SongId3TagWriter.php
-
-		-
 			message: "#^Cannot call method get_type\\(\\) on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 1
 			path: src/Module/Song/Tag/SongId3TagWriter.php
@@ -16780,11 +16725,6 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 2
 			path: src/Module/Util/Ui.php
@@ -21035,6 +20975,11 @@ parameters:
 			path: src/Repository/LiveStreamRepository.php
 
 		-
+			message: "#^Generator expects value type array\\('id' \\=\\> int, 'name' \\=\\> string, 'public' \\=\\> int\\), array\\<string, mixed\\>&nonEmpty given\\.$#"
+			count: 1
+			path: src/Repository/MetadataRepository.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -22180,51 +22125,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:fromCamelCase\\(\\) has parameter \\$properties with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:fromCamelCase\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getDirtyProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getId\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:initializeChildObjects\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:remapCamelcase\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$properties\\)\\: Unexpected token \"\\$properties\", expected type at offset 18$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:\\$id has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/DatabaseObject.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:__construct\\(\\) has parameter \\$democratic_id with no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -22533,66 +22433,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\MediaInterface\\:\\:set_played\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/MediaInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setData\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setField\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setObjectId\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:setType\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\Metadata\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\MetadataField\\:\\:hide\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/MetadataField.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Model\\\\MetadataField\\:\\:setName\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Model/MetadataField.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/Metadata.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:\\$modelClassName has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/Metadata.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:garbage_collection\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/MetadataField.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:\\$modelClassName has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Metadata/Repository/MetadataField.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Model\\:\\:getId\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Model.php
 
 		-
 			message: "#^Anonymous function should return Ampache\\\\Repository\\\\Model\\\\Label but returns Ampache\\\\Repository\\\\Model\\\\LabelInterface\\.$#"
@@ -23600,11 +23440,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\DatabaseObject\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Cannot access property \\$f_name on Ampache\\\\Repository\\\\Model\\\\Catalog\\|null\\.$#"
 			count: 3
 			path: src/Repository/Model/Search.php
@@ -23910,21 +23745,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:findByObjectIdAndFieldAndType\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\Metadata\\:\\:findByObjectIdAndType\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Metadata\\\\Repository\\\\MetadataField\\:\\:findByName\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Cannot access offset 'catalog' on array\\|bool\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -23960,11 +23780,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:addMetadata\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:compare_media_information\\(\\) has parameter \\$media with no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -23981,11 +23796,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:compare_song_information\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:deleteMetadata\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -24085,11 +23895,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:initializeMetadata\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:insert\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -24121,16 +23926,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateMetadata\\(\\) has parameter \\$meta_value with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateOrInsertMetadata\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:updateOrInsertMetadata\\(\\) has parameter \\$data with no typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -24260,11 +24055,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$data\\)\\: Unexpected token \"\\$data\", expected type at offset 53$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$media\\)\\: Unexpected token \"\\$media\", expected type at offset 51$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -24281,11 +24071,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$new_artist of static method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update_artist\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_id of method Ampache\\\\Repository\\\\Repository\\:\\:findById\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -25573,171 +25358,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\PrivateMessageRepository\\:\\:getDataById\\(\\) should return array\\('id' \\=\\> int, 'subject' \\=\\> string, 'message' \\=\\> string, 'from_user' \\=\\> int, 'to_user' \\=\\> int, 'is_read' \\=\\> int, 'creation_date' \\=\\> int\\) but returns array\\.$#"
 			count: 1
 			path: src/Repository/PrivateMessageRepository.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:__call\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:__call\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:add\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:assembleQuery\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:deleteRecord\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) has parameter \\$fields with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) has parameter \\$values with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findBy\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:findById\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getKeyValuePairs\\(\\) has parameter \\$properties with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getKeyValuePairs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) has parameter \\$field with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) has parameter \\$value with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:getRecords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:insertRecord\\(\\) has parameter \\$properties with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:remove\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:resolveObjects\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:resolveObjects\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:setPrivateProperty\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:update\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:updateRecord\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Repository\\:\\:updateRecord\\(\\) has parameter \\$properties with no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$fields\\)\\: Unexpected token \"\\$fields\", expected type at offset 18$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$properties\\)\\: Unexpected token \"\\$properties\", expected type at offset 18$#"
-			count: 2
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$properties\\)\\: Unexpected token \"\\$properties\", expected type at offset 51$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$values\\)\\: Unexpected token \"\\$values\", expected type at offset 40$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Ampache\\\\Repository\\\\Repository\\:\\:setPrivateProperty\\(\\) expects Ampache\\\\Repository\\\\Model\\\\Model, Ampache\\\\Repository\\\\Model\\\\DatabaseObject given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$str of function lcfirst expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Parameter \\#1 \\$str of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Repository\\:\\:\\$fieldClassRelations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Repository\\:\\:\\$modelClassName has no typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Repository.php
 
 		-
 			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\ShareInterface\\:\\:getId\\(\\)\\.$#"

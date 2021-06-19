@@ -28,6 +28,7 @@ use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
@@ -80,6 +81,8 @@ class DataMigratorTest extends MockeryTestCase
 
     private MockInterface $wantedRepository;
 
+    private MockInterface $metadataRepository;
+
     private DataMigrator $subject;
 
     public function setUp(): void
@@ -98,6 +101,7 @@ class DataMigratorTest extends MockeryTestCase
         $this->labelRepository          = $this->mock(LabelRepositoryInterface::class);
         $this->playlistRepository       = $this->mock(PlaylistRepositoryInterface::class);
         $this->wantedRepository         = $this->mock(WantedRepositoryInterface::class);
+        $this->metadataRepository       = $this->mock(MetadataRepositoryInterface::class);
 
         $this->subject = new DataMigrator(
             $this->userActivityRepository,
@@ -113,7 +117,8 @@ class DataMigratorTest extends MockeryTestCase
             $this->artDuplicator,
             $this->labelRepository,
             $this->playlistRepository,
-            $this->wantedRepository
+            $this->wantedRepository,
+            $this->metadataRepository
         );
     }
 
@@ -126,7 +131,6 @@ class DataMigratorTest extends MockeryTestCase
 
     public function testMigrateMigrates(): void
     {
-        $this->markTestSkipped('Find solution for Metadata repo');
         $oldObjectId = 666;
         $newObjectId = 42;
         $objectType  = 'artist';
@@ -176,7 +180,13 @@ class DataMigratorTest extends MockeryTestCase
         $this->labelRepository->shouldReceive('migrate')
             ->with($objectType, $oldObjectId, $newObjectId)
             ->once();
+        $this->wantedRepository->shouldReceive('migrate')
+            ->with($oldObjectId, $newObjectId)
+            ->once();
         $this->playlistRepository->shouldReceive('migrate')
+            ->with($objectType, $oldObjectId, $newObjectId)
+            ->once();
+        $this->metadataRepository->shouldReceive('migrate')
             ->with($objectType, $oldObjectId, $newObjectId)
             ->once();
 

@@ -24,6 +24,7 @@ namespace Ampache\Module\Song\Tag;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
@@ -38,14 +39,18 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
     private UtilityFactoryInterface $utilityFactory;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        UtilityFactoryInterface $utilityFactory
+        UtilityFactoryInterface $utilityFactory,
+        MetadataRepositoryInterface $metadataRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->logger          = $logger;
-        $this->utilityFactory  = $utilityFactory;
+        $this->configContainer    = $configContainer;
+        $this->logger             = $logger;
+        $this->utilityFactory     = $utilityFactory;
+        $this->metadataRepository = $metadataRepository;
     }
 
     /**
@@ -68,7 +73,11 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             );
 
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) === true) {
-                foreach ($song->getMetadata() as $metadata) {
+                $songMetadata = $this->metadataRepository->findMetadataByObjectIdAndType(
+                    $song->getId(),
+                    'Song'
+                );
+                foreach ($songMetadata as $metadata) {
                     $meta[$metadata->getField()->getName()] = $metadata->getData();
                 }
             }

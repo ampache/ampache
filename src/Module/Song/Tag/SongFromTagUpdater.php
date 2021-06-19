@@ -24,6 +24,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Catalog\DataMigratorInterface;
@@ -31,9 +33,11 @@ use Ampache\Module\Label\LabelCreatorInterface;
 use Ampache\Module\Tag\TagListUpdaterInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\MetadataFieldInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -60,6 +64,10 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
 
     private ArtDuplicatorInterface $artDuplicator;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         DataMigratorInterface $dataMigrator,
         LabelRepositoryInterface $labelRepository,
@@ -69,17 +77,21 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         ModelFactoryInterface $modelFactory,
         LabelCreatorInterface $labelCreator,
         TagListUpdaterInterface $tagListUpdater,
-        ArtDuplicatorInterface $artDuplicator
+        ArtDuplicatorInterface $artDuplicator,
+        MetadataRepositoryInterface $metadataRepository,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->dataMigrator      = $dataMigrator;
-        $this->labelRepository   = $labelRepository;
-        $this->licenseRepository = $licenseRepository;
-        $this->tagRepository     = $tagRepository;
-        $this->artistFinder      = $artistFinder;
-        $this->modelFactory      = $modelFactory;
-        $this->labelCreator      = $labelCreator;
-        $this->tagListUpdater    = $tagListUpdater;
-        $this->artDuplicator     = $artDuplicator;
+        $this->dataMigrator       = $dataMigrator;
+        $this->labelRepository    = $labelRepository;
+        $this->licenseRepository  = $licenseRepository;
+        $this->tagRepository      = $tagRepository;
+        $this->artistFinder       = $artistFinder;
+        $this->modelFactory       = $modelFactory;
+        $this->labelCreator       = $labelCreator;
+        $this->tagListUpdater     = $tagListUpdater;
+        $this->artDuplicator      = $artDuplicator;
+        $this->metadataRepository = $metadataRepository;
+        $this->configContainer    = $configContainer;
     }
 
     /**
@@ -220,14 +232,16 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
 
-        if (Song::isCustomMetadataEnabled()) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
             $ctags = Catalog::get_clean_metadata($song, $results);
-            if (method_exists($song, 'updateOrInsertMetadata') && $song::isCustomMetadataEnabled()) {
-                $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
-                foreach ($ctags as $tag => $value) {
-                    $field = $song->getField($tag);
-                    $song->updateOrInsertMetadata($field, $value);
+            $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
+            foreach ($ctags as $tag => $value) {
+                $field = $this->metadataRepository->findFieldByName($tag);
+                if ($field === null) {
+                    $field = $this->metadataRepository->addMetadataField($tag, 1);
                 }
+
+                $this->updateOrInsertMetadata($song, $field, $value);
             }
         }
 
@@ -307,5 +321,27 @@ final class SongFromTagUpdater implements SongFromTagUpdaterInterface
         }
 
         return $info;
+    }
+
+    private function updateOrInsertMetadata(
+        Song $song,
+        MetadataFieldInterface $field,
+        string $data
+    ): void {
+        $metadata = $this->metadataRepository->findMetadataByObjectIdAndFieldAndType(
+            $song->getId(),
+            $field,
+            'Song'
+        );
+        if ($metadata !== null) {
+            $this->metadataRepository->updateMetadata($metadata, $data);
+        } else {
+            $this->metadataRepository->addMetadata(
+                $field,
+                $song->getId(),
+                'Song',
+                $data
+            );
+        }
     }
 }

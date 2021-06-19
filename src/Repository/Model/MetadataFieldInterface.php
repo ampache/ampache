@@ -17,20 +17,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Repository\Model;
 
-/**
- * Description of Model
- *
- * @author raziel
- */
-interface Model
+interface MetadataFieldInterface
 {
-    /**
-     * Get ID of Database Object
-     */
-    public function getId();
+    public function isNew(): bool;
+
+    public function getId(): int;
+
+    public function getName(): string;
+
+    public function getPublic(): int;
+
+    public function getFormattedName(): string;
 }

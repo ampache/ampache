@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\PlaylistImport\PlaylistImporterInterface;
 use Ampache\Module\Podcast\PodcastByCatalogLoaderInterface;
 use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
@@ -36,11 +37,10 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Rating;
@@ -690,8 +690,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
+        $this->getMetadataRepository()->collectGarbage();
 
         return (int)$dead_total;
     }
@@ -877,7 +876,7 @@ class Catalog_local extends Catalog
                 $song = new Song($song_id);
                 Recommendation::get_artist_info($song->artist);
             }
-            if (Song::isCustomMetadataEnabled()) {
+            if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
                 $song    = new Song($song_id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
@@ -1178,5 +1177,15 @@ class Catalog_local extends Catalog
         global $dic;
 
         return $dic->get(MediaFromTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }

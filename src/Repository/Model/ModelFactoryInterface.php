@@ -157,6 +157,10 @@ interface ModelFactoryInterface
 
     public function createClip(int $clipId): Clip;
 
+    public function createMetadata(int $metadataId): MetadataInterface;
+
+    public function createMetadataField(int $metadataFieldId): MetadataFieldInterface;
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */

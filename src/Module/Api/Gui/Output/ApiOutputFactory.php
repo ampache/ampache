@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Gui\Output;
 
 use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -48,6 +49,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
 
     private TagRepositoryInterface $tagRepository;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
@@ -55,7 +58,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
         XmlWriterInterface $xmlWriter,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         PodcastRepositoryInterface $podcastRepository,
-        TagRepositoryInterface $tagRepository
+        TagRepositoryInterface $tagRepository,
+        MetadataRepositoryInterface $metadataRepository
     ) {
         $this->modelFactory             = $modelFactory;
         $this->albumRepository          = $albumRepository;
@@ -64,6 +68,7 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->podcastRepository        = $podcastRepository;
         $this->tagRepository            = $tagRepository;
+        $this->metadataRepository       = $metadataRepository;
     }
 
     public function createJsonOutput(): ApiOutputInterface
@@ -73,7 +78,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
             $this->albumRepository,
             $this->songRepository,
             $this->podcastEpisodeRepository,
-            $this->podcastRepository
+            $this->podcastRepository,
+            $this->metadataRepository
         );
     }
 
@@ -86,7 +92,8 @@ final class ApiOutputFactory implements ApiOutputFactoryInterface
             $this->songRepository,
             $this->podcastEpisodeRepository,
             $this->podcastRepository,
-            $this->tagRepository
+            $this->tagRepository,
+            $this->metadataRepository
         );
     }
 }

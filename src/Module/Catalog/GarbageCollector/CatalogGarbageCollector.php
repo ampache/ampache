@@ -27,9 +27,8 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\Userflag;
@@ -43,6 +42,8 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 /**
  * This is a wrapper for all of the different database cleaning
  * functions, it runs them in an order that resembles correctness.
+ *
+ * @todo use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
  */
 final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 {
@@ -62,6 +63,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private TagRepositoryInterface $tagRepository;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
@@ -70,7 +73,8 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         SongRepositoryInterface $songRepository,
         CatalogRepositoryInterface $catalogRepository,
         RatingRepositoryInterface $ratingRepository,
-        TagRepositoryInterface $tagRepository
+        TagRepositoryInterface $tagRepository,
+        MetadataRepositoryInterface $metadataRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
@@ -80,6 +84,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->catalogRepository      = $catalogRepository;
         $this->ratingRepository       = $ratingRepository;
         $this->tagRepository          = $tagRepository;
+        $this->metadataRepository     = $metadataRepository;
     }
 
     public function collect(): void
@@ -98,9 +103,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         $this->shoutRepository->collectGarbage();
         $this->tagRepository->collectGarbage();
 
-        // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
+        $this->metadataRepository->collectGarbage();
 
         $this->catalogRepository->collectMappingGarbage();
     }

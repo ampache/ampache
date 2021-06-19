@@ -24,7 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Playlist\SearchType\SearchTypeMapperInterface;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -631,9 +631,9 @@ class Search extends playlist_object
 
         if (AmpConfig::get('enable_custom_metadata')) {
             $metadataFields          = array();
-            $metadataFieldRepository = new MetadataField();
-            foreach ($metadataFieldRepository->findAll() as $metadata) {
-                $metadataFields[$metadata->getId()] = $metadata->getName();
+            $metadataRepository      = $this->getMetadataRepository();
+            foreach ($metadataRepository->findAllFields() as $metadata) {
+                $metadataFields[$metadata['id']] = $metadata['name'];
             }
             $this->types[] = array(
                 'name' => 'metadata',
@@ -1351,5 +1351,15 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }

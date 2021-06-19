@@ -24,6 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Artist\ArtistCountUpdaterInterface;
 use Ampache\Module\Artist\ArtistFinderInterface;
 use Ampache\Module\Authorization\Access;
@@ -43,7 +44,7 @@ use Ampache\Module\Util\ExtensionToMimeTypeMapperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Metadata;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 
 class Song extends database_object implements
@@ -51,8 +52,6 @@ class Song extends database_object implements
     library_item,
     PlayableMediaInterface
 {
-    use Metadata;
-
     protected const DB_TABLENAME = 'song';
 
     /* Variables from DB */
@@ -357,10 +356,6 @@ class Song extends database_object implements
         }
 
         $this->id = (int)($songid);
-
-        if (self::isCustomMetadataEnabled()) {
-            $this->initializeMetadata();
-        }
 
         $info = $this->has_info($limit_threshold);
         if ($info !== false && is_array($info)) {
@@ -925,7 +920,7 @@ class Song extends database_object implements
                     $changed[]  = (string) $key;
                     break;
                 case 'metadata':
-                    if (self::isCustomMetadataEnabled()) {
+                    if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
                         $this->updateMetadata($value);
                     }
                     break;
@@ -1955,11 +1950,13 @@ class Song extends database_object implements
      */
     public function updateMetadata($meta_value)
     {
+        $modelFactory       = static::getModelFactory();
+        $metadataRepository = static::getMetadataRepository();
+
         foreach ($meta_value as $metadataId => $value) {
-            $metadata = $this->metadataRepository->findById($metadataId);
-            if (!$metadata || $value != $metadata->getData()) {
-                $metadata->setData($value);
-                $this->metadataRepository->update($metadata);
+            $metadata = $modelFactory->createMetadata((int) $metadataId);
+            if ($value != $metadata->getData()) {
+                $metadataRepository->updateMetadata($metadata, $value);
             }
         }
     }
@@ -2043,6 +2040,39 @@ class Song extends database_object implements
     public function setSize(int $value): void
     {
         $this->size = $value;
+    }
+
+    /**
+     * Cache variable for disabled metadata field names
+     * @var array
+     */
+    protected ?array $disabledMetadataFields = null;
+
+    /**
+     * Get all disabled Metadata field names
+     * @return array
+     */
+    public function getDisabledMetadataFields(): array
+    {
+        if ($this->disabledMetadataFields === null) {
+            $fields = array();
+            $ids    = explode(',', AmpConfig::get('disabled_custom_metadata_fields'));
+
+            $modelFactory = static::getModelFactory();
+
+            foreach ($ids as $metaid) {
+                $field = $modelFactory->createMetadataField((int) $metaid);
+                if (!$field->isNew()) {
+                    $fields[] = $field->getName();
+                }
+            }
+            $this->disabledMetadataFields = array_merge(
+                $fields,
+                explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
+            );
+        }
+
+        return $this->disabledMetadataFields;
     }
 
     /**
@@ -2183,5 +2213,15 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ArtistCountUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }

@@ -40,6 +40,7 @@ use Ampache\Repository\ClipRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -337,6 +338,23 @@ final class ModelFactory implements ModelFactoryInterface
             $this->dic->get(SongRepositoryInterface::class),
             $this->dic->get(ArtistFinderInterface::class),
             $clipId
+        );
+    }
+
+    public function createMetadata(int $metadataId): MetadataInterface
+    {
+        return new Metadata(
+            $this->dic->get(MetadataRepositoryInterface::class),
+            $this,
+            $metadataId
+        );
+    }
+
+    public function createMetadataField(int $metadataFieldId): MetadataFieldInterface
+    {
+        return new MetadataField(
+            $this->dic->get(MetadataRepositoryInterface::class),
+            $metadataFieldId
         );
     }
 

@@ -17,19 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository\Model\Metadata\Repository;
+namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
-use Ampache\Repository\Repository;
-
-class MetadataField extends Repository
+interface MetadataInterface
 {
-    protected $modelClassName = \Ampache\Repository\Model\Metadata\Model\MetadataField::class;
+    public function getId(): int;
 
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
-    }
+    public function getObjectId(): int;
+
+    public function getFieldId(): int;
+
+    public function getData(): string;
+
+    public function getType(): string;
+
+    public function getField(): MetadataFieldInterface;
 }

@@ -27,7 +27,7 @@ use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
@@ -70,6 +70,8 @@ final class DataMigrator implements DataMigratorInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
     public function __construct(
         UserActivityRepositoryInterface $userActivityRepository,
         LoggerInterface $logger,
@@ -84,7 +86,8 @@ final class DataMigrator implements DataMigratorInterface
         ArtDuplicatorInterface $artDuplicator,
         LabelRepositoryInterface $labelRepository,
         PlaylistRepositoryInterface $playlistRepository,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
+        MetadataRepositoryInterface $metadataRepository
     ) {
         $this->userActivityRepository   = $userActivityRepository;
         $this->logger                   = $logger;
@@ -100,6 +103,7 @@ final class DataMigrator implements DataMigratorInterface
         $this->labelRepository          = $labelRepository;
         $this->playlistRepository       = $playlistRepository;
         $this->wantedRepository         = $wantedRepository;
+        $this->metadataRepository       = $metadataRepository;
     }
 
     /**
@@ -133,7 +137,7 @@ final class DataMigrator implements DataMigratorInterface
             }
             $this->artDuplicator->duplicate($objectType, $oldObjectId, $newObjectId);
             $this->catalogRepository->migrateMap($objectType, $oldObjectId, $newObjectId);
-            Metadata::migrate($objectType, $oldObjectId, $newObjectId);
+            $this->metadataRepository->migrate($objectType, $oldObjectId, $newObjectId);
 
             return true;
         }

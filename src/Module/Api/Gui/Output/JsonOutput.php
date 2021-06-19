@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Gui\Output;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
@@ -62,18 +64,22 @@ final class JsonOutput implements ApiOutputInterface
 
     private PodcastRepositoryInterface $podcastRepository;
 
+    private MetadataRepositoryInterface $metadataRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository,
         PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        PodcastRepositoryInterface $podcastRepository
+        PodcastRepositoryInterface $podcastRepository,
+        MetadataRepositoryInterface $metadataRepository
     ) {
         $this->modelFactory             = $modelFactory;
         $this->albumRepository          = $albumRepository;
         $this->songRepository           = $songRepository;
         $this->podcastEpisodeRepository = $podcastEpisodeRepository;
         $this->podcastRepository        = $podcastRepository;
+        $this->metadataRepository       = $metadataRepository;
     }
 
     /**
@@ -373,8 +379,12 @@ final class JsonOutput implements ApiOutputInterface
             $ourSong['r128_album_gain']       = $song->r128_album_gain;
             $ourSong['r128_track_gain']       = $song->r128_track_gain;
 
-            if (Song::isCustomMetadataEnabled()) {
-                foreach ($song->getMetadata() as $metadata) {
+            if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
+                $songMetadata = $this->metadataRepository->findMetadataByObjectIdAndType(
+                    $song->getId(),
+                    'Song'
+                );
+                foreach ($songMetadata as $metadata) {
                     $meta_name = str_replace(
                         [' ', '(', ')', '/', '\\', '#'],
                         '_',

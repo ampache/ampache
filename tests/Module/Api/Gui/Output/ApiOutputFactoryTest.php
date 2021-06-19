@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Gui\Output;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Util\XmlWriterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -47,7 +48,8 @@ class ApiOutputFactoryTest extends MockeryTestCase
             $this->mock(XmlWriterInterface::class),
             $this->mock(PodcastEpisodeRepositoryInterface::class),
             $this->mock(PodcastRepositoryInterface::class),
-            $this->mock(TagRepositoryInterface::class)
+            $this->mock(TagRepositoryInterface::class),
+            $this->mock(MetadataRepositoryInterface::class)
         );
     }
 

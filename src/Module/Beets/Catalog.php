@@ -23,14 +23,15 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
-use Ampache\Repository\Model\Album;
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\AmpError;
-use Ampache\Repository\Model\Metadata\Repository\Metadata;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\MetadataRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\MediaInterface;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\PlayableMediaInterface;
 use Ampache\Repository\Model\Song;
 
@@ -157,7 +158,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
-            if (Song::isCustomMetadataEnabled() && $songId) {
+            if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && $songId) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
@@ -166,16 +167,26 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @param library_item $libraryItem
-     * @param $metadata
+     * @param library_item&Song $libraryItem
+     * @param array $metadata
      */
-    public function addMetadata(library_item $libraryItem, $metadata)
+    protected function addMetadata(library_item $libraryItem, $metadata)
     {
-        $tags = $this->getCleanMetadata($libraryItem, $metadata);
+        $tags               = $this->getCleanMetadata($libraryItem, $metadata);
+        $metadataRepository = $this->getMetadataRepository();
 
         foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
+            $field = $metadataRepository->findFieldByName($tag);
+            if ($field === null) {
+                $field = $metadataRepository->addMetadataField($tag, 1);
+            }
+
+            $metadataRepository->addMetadata(
+                $field,
+                $libraryItem->getId(),
+                'Song',
+                $value
+            );
         }
     }
 
@@ -250,7 +261,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         if ($song->id) {
             $song->update($beetsSong);
-            if (Song::isCustomMetadataEnabled()) {
+            if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
                 $tags = $this->getCleanMetadata($song, $beetsSong);
                 $this->updateMetadata($song, $tags);
             }
@@ -274,9 +285,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($count > 0) {
             $this->deleteSongs($this->songs);
         }
-        if (Song::isCustomMetadataEnabled()) {
-            Metadata::garbage_collection();
-            MetadataField::garbage_collection();
+        if (AmpConfig::get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
+            $this->getMetadataRepository()->collectGarbage();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
@@ -410,14 +420,44 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @param $song
-     * @param $tags
+     * @param Song $song
+     * @param array<string, string> $tags
      */
     public function updateMetadata($song, $tags)
     {
+        $metadataRepository = $this->getMetadataRepository();
+
         foreach ($tags as $tag => $value) {
-            $field = $song->getField($tag);
-            $song->updateOrInsertMetadata($field, $value);
+            $field = $metadataRepository->findFieldByName($tag);
+            if ($field === null) {
+                $field = $metadataRepository->addMetadataField($tag, 1);
+            }
+
+            $metadata = $metadataRepository->findMetadataByObjectIdAndFieldAndType(
+                $song->getId(),
+                $field,
+                'Song'
+            );
+            if ($metadata !== null) {
+                $metadataRepository->updateMetadata($metadata, $value);
+            } else {
+                $metadataRepository->addMetadata(
+                    $field,
+                    $song->getId(),
+                    'Song',
+                    $value
+                );
+            }
         }
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }
