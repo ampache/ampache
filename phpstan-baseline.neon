@@ -17947,6 +17947,21 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on array\\.$#"
 			count: 1
+			path: src/Module/Wanted/MissingAlbumFinder.php
+
+		-
+			message: "#^Cannot access property \\$release\\-group on array\\.$#"
+			count: 3
+			path: src/Module/Wanted/MissingAlbumFinder.php
+
+		-
+			message: "#^Cannot access property \\$release\\-groups on array\\.$#"
+			count: 1
+			path: src/Module/Wanted/MissingAlbumFinder.php
+
+		-
+			message: "#^Cannot access property \\$name on array\\.$#"
+			count: 1
 			path: src/Module/Wanted/MissingArtistLookup.php
 
 		-
@@ -25440,11 +25455,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
@@ -25455,18 +25465,8 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Cannot access property \\$name on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Cannot access property \\$release\\-group on array\\.$#"
-			count: 5
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-groups on array\\.$#"
-			count: 1
+			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -25505,16 +25505,6 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:get_missing_albums\\(\\) should return array but returns null\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:load_all\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
@@ -25526,11 +25516,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Song_Preview constructor expects int, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Parameter \\#3 \\$wanted of class Ampache\\\\Module\\\\Wanted\\\\Gui\\\\WantedUiItem constructor expects Ampache\\\\Repository\\\\Model\\\\Wanted, Ampache\\\\Repository\\\\Model\\\\WantedInterface given\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 

@@ -20,14 +20,24 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Wanted;
 
-use function DI\autowire;
+use Ampache\Module\Wanted\Gui\WantedUiItemInterface;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\User;
 
-return [
-    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
-    MissingArtistLookupInterface::class => autowire(MissingArtistLookup::class),
-    MissingAlbumFinderInterface::class => autowire(MissingAlbumFinder::class),
-];
+interface MissingAlbumFinderInterface
+{
+    /**
+     * Get list of library's missing albums from MusicBrainz
+     *
+     * @return array<WantedUiItemInterface>
+     *
+     * @throws \MusicBrainz\Exception
+     */
+    public function find(
+        User $user,
+        ?Artist $artist,
+        string $mbid = ''
+    ): ?array;
+}

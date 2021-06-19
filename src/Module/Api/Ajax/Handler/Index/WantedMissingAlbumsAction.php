@@ -26,9 +26,9 @@ namespace Ampache\Module\Api\Ajax\Handler\Index;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax\Handler\ActionInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Wanted\MissingAlbumFinderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Wanted;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,10 +36,14 @@ final class WantedMissingAlbumsAction implements ActionInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private MissingAlbumFinderInterface $missingAlbumFinder;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        MissingAlbumFinderInterface $missingAlbumFinder
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory       = $modelFactory;
+        $this->missingAlbumFinder = $missingAlbumFinder;
     }
 
     public function handle(
@@ -54,12 +58,12 @@ final class WantedMissingAlbumsAction implements ActionInterface
                 $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                 $artist->format();
                 if ($artist->mbid) {
-                    $walbums = Wanted::get_missing_albums($artist);
+                    $walbums = $this->missingAlbumFinder->find($user, $artist);
                 } else {
                     debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
                 }
             } else {
-                $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
+                $walbums = $this->missingAlbumFinder->find($user, null, $_REQUEST['artist_mbid']);
             }
 
             ob_start();

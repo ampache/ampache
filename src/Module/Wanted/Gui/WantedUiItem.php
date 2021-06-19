@@ -28,7 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Wanted;
+use Ampache\Repository\Model\WantedInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 
 final class WantedUiItem implements WantedUiItemInterface
@@ -37,12 +37,12 @@ final class WantedUiItem implements WantedUiItemInterface
 
     private User $user;
 
-    private Wanted $wanted;
+    private WantedInterface $wanted;
 
     public function __construct(
         WantedRepositoryInterface $wantedRepository,
         User $user,
-        Wanted $wanted
+        WantedInterface $wanted
     ) {
         $this->wantedRepository = $wantedRepository;
         $this->user             = $user;

@@ -28,10 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Wanted\Gui\MusicBrainzResultWantedGuiItem;
-use Ampache\Module\Wanted\Gui\WantedUiItem;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
@@ -214,93 +211,6 @@ final class Wanted extends database_object implements WantedInterface
     }
 
     /**
-     * get_missing_albums
-     * Get list of library's missing albums from MusicBrainz
-     * @param Artist|null $artist
-     * @param string $mbid
-     * @return array
-     * @throws \MusicBrainz\Exception
-     */
-    public static function get_missing_albums($artist, $mbid = '')
-    {
-        $mbrainz  = static::getMusicBrainz();
-        $includes = array('release-groups');
-        $types    = explode(',', AmpConfig::get('wanted_types'));
-
-        try {
-            $martist = $mbrainz->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
-        } catch (Exception $error) {
-            debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
-
-            return null;
-        }
-
-        $owngroups = array();
-        $wartist   = array();
-        if ($artist) {
-            $albums = static::getAlbumRepository()->getByArtist($artist->id);
-            foreach ($albums as $albumid) {
-                $album = new Album($albumid);
-                if (trim((string)$album->mbid_group)) {
-                    $owngroups[] = $album->mbid_group;
-                } else {
-                    if (trim((string)$album->mbid)) {
-                        $malbum = $mbrainz->lookup('release', $album->mbid, array('release-groups'));
-                        if ($malbum->{'release-group'}) {
-                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                                $owngroups[] = $malbum->{'release-group'}->id;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            $wartist['mbid'] = $mbid;
-            $wartist['name'] = $martist->name;
-
-            $wartist = static::getMissingArtistLookup()->lookup($mbid);
-        }
-
-        $modelFactory = static::getModelFactory();
-
-        $results = array();
-        foreach ($martist->{'release-groups'} as $group) {
-            if (in_array(strtolower((string)$group->{'primary-type'}), $types)) {
-                $add     = true;
-                $g_count = count($group->{'secondary-types'});
-
-                for ($i = 0; $i < $g_count && $add; ++$i) {
-                    $add = in_array(strtolower((string)$group->{'secondary-types'}[$i]), $types);
-                }
-
-                if ($add) {
-                    debug_event(self::class, 'get_missing_albums ADDING: ' . $group->title, 5);
-                    if (!in_array($group->id, $owngroups)) {
-                        $wantedid = static::getWantedRepository()->getByMusicbrainzId($group->id);
-                        $wanted   = $modelFactory->createWanted($wantedid);
-                        if ($wanted->id) {
-                            $results[] = new WantedUiItem(
-                                static::getWantedRepository(),
-                                Core::get_global('user'),
-                                $wanted
-                            );
-                        } else {
-                            $results[] = new MusicBrainzResultWantedGuiItem(
-                                $artist,
-                                $group,
-                                $mbid,
-                                $wartist['link']
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        return $results;
-    } // get_missing_albums
-
-    /**
      * Delete a wanted release by mbid.
      * @param string $mbid
      * @throws \MusicBrainz\Exception
@@ -446,25 +356,11 @@ final class Wanted extends database_object implements WantedInterface
         return $user;
     }
 
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
     private static function getWantedRepository(): WantedRepositoryInterface
     {
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
-    }
-
-    private static function getModelFactory(): ModelFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ModelFactoryInterface::class);
     }
 
     /**
