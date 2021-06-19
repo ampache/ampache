@@ -22440,7 +22440,7 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\PodcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\>\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:getMap\\(\\) should return array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\> but returns array\\<class\\-string, \\(callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface\\)\\|\\(Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\PodcastInterface\\)\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
 
