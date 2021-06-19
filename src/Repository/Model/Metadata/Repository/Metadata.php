@@ -33,5 +33,16 @@ class Metadata extends Repository
         Dba::write('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL');
     }
 
-    // put your code here
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
+    {
+        $sql = "UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?";
+
+        Dba::write($sql, array($new_object_id, $old_object_id, ucfirst($object_type)));
+    }
 }

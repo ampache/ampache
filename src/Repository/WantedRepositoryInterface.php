@@ -72,4 +72,9 @@ interface WantedRepositoryInterface
      * Get wanted release by mbid.
      */
     public function getByMusicbrainzId(string $musicbrainzId): int;
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(int $oldObjectId, int $newObjectId): void;
 }

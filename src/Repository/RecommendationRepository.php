@@ -40,6 +40,13 @@ final class RecommendationRepository implements RecommendationRepositoryInterfac
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
+        if ($objectType == 'artist') {
+            $this->connection->executeQuery(
+                'UPDATE IGNORE `recommendation_item` SET `recommendation_id` = ? WHERE `recommendation_id` = ?',
+                [$newObjectId, $oldObjectId]
+            );
+        }
+
         $this->connection->executeQuery(
             'UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]

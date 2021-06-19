@@ -82,7 +82,7 @@ final class VideoRepository implements VideoRepositoryInterface
     {
         return (int) $this->database->fetchOne(
             sprintf(
-                'SELECT COUNT(*) as count from `%s`',
+                'SELECT COUNT(*) AS count FROM `%s`',
                 strtolower(ObjectTypeToClassNameMapper::VIDEO_TYPES[$type])
             )
         );

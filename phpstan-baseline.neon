@@ -23475,6 +23475,11 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
+			message: "#^Cannot access offset 'where_sql' on array\\<string\\>\\|false\\.$#"
+			count: 2
+			path: src/Repository/Model/Random.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php

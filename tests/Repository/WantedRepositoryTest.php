@@ -295,4 +295,19 @@ class WantedRepositoryTest extends MockeryTestCase
             $this->subject->getByMusicbrainzId($mbId)
         );
     }
+
+    public function testMigrateMigrates(): void
+    {
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?',
+                [$newObjectId, $oldObjectId]
+            )
+            ->once();
+
+        $this->subject->migrate($oldObjectId, $newObjectId);
+    }
 }

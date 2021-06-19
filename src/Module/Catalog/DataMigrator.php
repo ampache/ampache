@@ -26,6 +26,9 @@ namespace Ampache\Module\Catalog;
 use Ampache\Module\Art\ArtDuplicatorInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\RecommendationRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -34,6 +37,7 @@ use Ampache\Repository\StatsRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserflagRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class DataMigrator implements DataMigratorInterface
@@ -60,6 +64,12 @@ final class DataMigrator implements DataMigratorInterface
 
     private ArtDuplicatorInterface $artDuplicator;
 
+    private LabelRepositoryInterface $labelRepository;
+
+    private PlaylistRepositoryInterface $playlistRepository;
+
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         UserActivityRepositoryInterface $userActivityRepository,
         LoggerInterface $logger,
@@ -71,7 +81,10 @@ final class DataMigrator implements DataMigratorInterface
         UserflagRepositoryInterface $userflagRepository,
         RatingRepositoryInterface $ratingRepository,
         CatalogRepositoryInterface $catalogRepository,
-        ArtDuplicatorInterface $artDuplicator
+        ArtDuplicatorInterface $artDuplicator,
+        LabelRepositoryInterface $labelRepository,
+        PlaylistRepositoryInterface $playlistRepository,
+        WantedRepositoryInterface $wantedRepository
     ) {
         $this->userActivityRepository   = $userActivityRepository;
         $this->logger                   = $logger;
@@ -84,6 +97,9 @@ final class DataMigrator implements DataMigratorInterface
         $this->ratingRepository         = $ratingRepository;
         $this->catalogRepository        = $catalogRepository;
         $this->artDuplicator            = $artDuplicator;
+        $this->labelRepository          = $labelRepository;
+        $this->playlistRepository       = $playlistRepository;
+        $this->wantedRepository         = $wantedRepository;
     }
 
     /**
@@ -110,8 +126,14 @@ final class DataMigrator implements DataMigratorInterface
             $this->tagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->userflagRepository->migrate($objectType, $oldObjectId, $newObjectId);
             $this->ratingRepository->migrate($objectType, $oldObjectId, $newObjectId);
+            $this->playlistRepository->migrate($objectType, $oldObjectId, $newObjectId);
+            if ($objectType === 'artist') {
+                $this->labelRepository->migrate($objectType, $oldObjectId, $newObjectId);
+                $this->wantedRepository->migrate($oldObjectId, $newObjectId);
+            }
             $this->artDuplicator->duplicate($objectType, $oldObjectId, $newObjectId);
             $this->catalogRepository->migrateMap($objectType, $oldObjectId, $newObjectId);
+            Metadata::migrate($objectType, $oldObjectId, $newObjectId);
 
             return true;
         }

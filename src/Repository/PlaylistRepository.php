@@ -93,4 +93,15 @@ final class PlaylistRepository implements PlaylistRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql    = 'UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?';
+        $params = [$new_object_id, $old_object_id, $object_type];
+
+        Dba::write($sql, $params);
+    }
 }

@@ -238,4 +238,20 @@ class LabelRepositoryTest extends MockeryTestCase
             $active
         );
     }
+
+    public function testMigrateMigrates(): void
+    {
+        $objectType  = 'some-type';
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->database->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?',
+                [$newObjectId, $oldObjectId]
+            )
+            ->once();
+
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
+    }
 }

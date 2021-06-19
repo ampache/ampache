@@ -174,4 +174,15 @@ final class LabelRepository implements LabelRepositoryInterface
             [$name, $category, $summary, $address, $email, $website, $labelId]
         );
     }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
+    {
+        $this->database->executeQuery(
+            'UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?',
+            [$newObjectId, $oldObjectId]
+        );
+    }
 }

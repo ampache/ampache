@@ -59,6 +59,28 @@ class RecommendationRepositoryTest extends MockeryTestCase
         $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
     }
 
+    public function testMigratePerformsSpecialMigrationForArtists(): void
+    {
+        $objectType  = 'artist';
+        $oldObjectId = 666;
+        $newObjectId = 42;
+
+        $this->connection->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE IGNORE `recommendation_item` SET `recommendation_id` = ? WHERE `recommendation_id` = ?',
+                [$newObjectId, $oldObjectId]
+            )
+            ->once();
+        $this->connection->shouldReceive('executeQuery')
+            ->with(
+                'UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+                [$newObjectId, $objectType, $oldObjectId]
+            )
+            ->once();
+
+        $this->subject->migrate($objectType, $oldObjectId, $newObjectId);
+    }
+
     public function testCollectGarbageDeletes(): void
     {
         $this->connection->shouldReceive('executeQuery')

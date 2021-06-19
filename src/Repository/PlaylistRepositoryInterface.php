@@ -39,4 +39,6 @@ interface PlaylistRepositoryInterface
         string $playlistName = '',
         bool $like = true
     ): array;
+
+    public function migrate(string $object_type, int $old_object_id, int $new_object_id): void;
 }

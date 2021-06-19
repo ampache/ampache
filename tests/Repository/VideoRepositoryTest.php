@@ -91,7 +91,7 @@ class VideoRepositoryTest extends MockeryTestCase
 
         $this->database->shouldReceive('fetchOne')
             ->with(
-                'SELECT COUNT(*) as count from `video`'
+                'SELECT COUNT(*) AS count FROM `video`'
             )
             ->once()
             ->andReturn((string) $result);

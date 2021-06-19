@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Doctrine\DBAL\Connection;
 
@@ -179,5 +180,16 @@ final class WantedRepository implements WantedRepositoryInterface
         );
 
         return (int) $dbResults->fetchOne();
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public function migrate(int $oldObjectId, int $newObjectId): void
+    {
+        $this->database->executeQuery(
+            'UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?',
+            [$newObjectId, $oldObjectId]
+        );
     }
 }

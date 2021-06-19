@@ -25,6 +25,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
@@ -56,7 +57,7 @@ if (!$random_type) {
     } else {
         echo T_('Artists');
     } ?></td>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount('Video')) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <td><?php if ($random_type !== 'video') { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
             <?php } else {
