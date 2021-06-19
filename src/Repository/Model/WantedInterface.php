@@ -56,8 +56,6 @@ interface WantedInterface
 
     public function setMusicBrainzId(string $value): WantedInterface;
 
-    public function getSongs(): array;
-
     public function getArtistLink(): string;
 
     public function getLinkFormatted(): string;

@@ -59,7 +59,7 @@ interface ModelFactoryInterface
     ): Artist;
 
     public function createWanted(
-        ?int $wantedId = null
+        int $wantedId
     ): WantedInterface;
 
     public function createArt(

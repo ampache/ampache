@@ -30,7 +30,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Ampache\Repository\WantedRepositoryInterface;
-use Exception;
 use MusicBrainz\MusicBrainz;
 
 final class Wanted extends database_object implements WantedInterface
@@ -39,14 +38,10 @@ final class Wanted extends database_object implements WantedInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
-    private MusicBrainz $musicBrainz;
 
     private MissingArtistLookupInterface $missingArtistLookup;
 
     public int $id;
-
-    /** @var array<Song_Preview>|null */
-    private ?array $songs = null;
 
     /** @var array<string, mixed>|null */
     private ?array $dbData = null;
@@ -55,13 +50,11 @@ final class Wanted extends database_object implements WantedInterface
 
     public function __construct(
         WantedRepositoryInterface $wantedRepository,
-        MusicBrainz $musicBrainz,
         MissingArtistLookupInterface $missingArtistLookup,
         ModelFactoryInterface $modelFactory,
         int $id
     ) {
         $this->wantedRepository    = $wantedRepository;
-        $this->musicBrainz         = $musicBrainz;
         $this->id                  = $id;
         $this->modelFactory        = $modelFactory;
         $this->missingArtistLookup = $missingArtistLookup;
@@ -180,15 +173,6 @@ final class Wanted extends database_object implements WantedInterface
         return $this;
     }
 
-    public function getSongs(): array
-    {
-        if ($this->songs === null) {
-            $this->load_all();
-        }
-
-        return $this->songs;
-    }
-
     public function getArtistLink(): string
     {
         if ($this->getArtistId()) {
@@ -278,76 +262,6 @@ final class Wanted extends database_object implements WantedInterface
         }
     }
 
-    /**
-     * Load wanted release data.
-     */
-    private function load_all()
-    {
-        $this->songs = array();
-
-        try {
-            $group = $this->musicBrainz->lookup('release-group', $this->getMusicBrainzId(), array('releases'));
-            // Set fresh data
-            $this->setName($group->title);
-            $this->setYear((int) date("Y", strtotime($group->{'first-release-date'})));
-
-            // Load from database if already cached
-            $this->songs = Song_Preview::get_song_previews($this->getMusicBrainzId());
-            if (count($group->releases) > 0) {
-                if (count($this->songs) == 0) {
-                    // Use the first release as reference for track content
-                    $release = $this->musicBrainz->lookup('release', $group->releases[0]->id, array('recordings'));
-                    foreach ($release->media as $media) {
-                        foreach ($media->tracks as $track) {
-                            $song          = array();
-                            $song['disk']  = Album::sanitize_disk($media->position);
-                            $song['track'] = $track->number;
-                            $song['title'] = $track->title;
-                            $song['mbid']  = $track->id;
-                            if ($this->getArtistId()) {
-                                $song['artist'] = $this->getArtistId();
-                            }
-                            $song['artist_mbid'] = $this->getArtistMusicBrainzId();
-                            $song['session']     = session_id();
-                            $song['album_mbid']  = $this->getMusicBrainzId();
-
-                            if ($this->getArtistId()) {
-                                $artist      = $this->modelFactory->createArtist($this->getArtistId());
-                                $artist_name = $artist->name;
-                            } else {
-                                $wartist     = static::getMissingArtistLookup()->lookup($this->getArtistMusicBrainzId());
-                                $artist_name = $wartist['name'];
-                            }
-
-                            $song['file'] = null;
-                            foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
-                                $plugin = new Plugin($plugin_name);
-                                if ($plugin->load(Core::get_global('user'))) {
-                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name,
-                                        $track->title);
-                                    if ($song['file'] != null) {
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if ($song != null) {
-                                $this->songs[] = new Song_Preview(Song_Preview::insert($song));
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception $error) {
-            $this->songs = array();
-        }
-
-        foreach ($this->songs as $song) {
-            $song->f_album = $this->getName();
-            $song->format();
-        }
-    }
-
     public function getUser(): User
     {
         $user = new User($this->getUserId());
@@ -361,16 +275,6 @@ final class Wanted extends database_object implements WantedInterface
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getMissingArtistLookup(): MissingArtistLookupInterface
-    {
-        global $dic;
-
-        return $dic->get(MissingArtistLookupInterface::class);
     }
 
     /**

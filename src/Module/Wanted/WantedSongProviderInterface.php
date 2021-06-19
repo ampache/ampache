@@ -20,15 +20,17 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Wanted;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\WantedInterface;
 
-return [
-    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
-    MissingArtistLookupInterface::class => autowire(MissingArtistLookup::class),
-    MissingAlbumFinderInterface::class => autowire(MissingAlbumFinder::class),
-    WantedSongProviderInterface::class => autowire(WantedSongProvider::class),
-];
+interface WantedSongProviderInterface
+{
+    /**
+     * Load wanted release data.
+     *
+     * @return array<Song_Preview>
+     */
+    public function provide(WantedInterface $wanted): array;
+}

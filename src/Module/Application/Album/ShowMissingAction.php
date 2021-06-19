@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Module\Wanted\WantedSongProviderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -45,16 +46,20 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
+    private WantedSongProviderInterface $wantedSongProvider;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         ArtCollectorInterface $artCollector,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
+        WantedSongProviderInterface $wantedSongProvider
     ) {
-        $this->modelFactory     = $modelFactory;
-        $this->ui               = $ui;
-        $this->artCollector     = $artCollector;
-        $this->wantedRepository = $wantedRepository;
+        $this->modelFactory       = $modelFactory;
+        $this->ui                 = $ui;
+        $this->artCollector       = $artCollector;
+        $this->wantedRepository   = $wantedRepository;
+        $this->wantedSongProvider = $wantedSongProvider;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -134,7 +139,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('song_preview');
         $browse->set_static_content(true);
-        $browse->show_objects($walbum->getSongs());
+        $browse->show_objects($this->wantedSongProvider->provide($walbum));
 
         print('</div>');
 

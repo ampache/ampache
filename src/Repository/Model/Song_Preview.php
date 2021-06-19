@@ -107,7 +107,7 @@ class Song_Preview extends database_object implements
      *
      * This inserts the song preview described by the passed array
      * @param array $results
-     * @return string|null
+     * @return int
      */
     public static function insert($results)
     {
@@ -120,7 +120,7 @@ class Song_Preview extends database_object implements
         }
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array(
+        Dba::write($sql, array(
             $results['file'],
             $results['album_mbid'],
             $results['artist'],
@@ -132,13 +132,7 @@ class Song_Preview extends database_object implements
             $results['session'],
         ));
 
-        if (!$db_results) {
-            debug_event(self::class, 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
-
-            return null;
-        }
-
-        return Dba::insert_id();
+        return (int) Dba::insert_id();
     }
 
     /**

@@ -50,7 +50,6 @@ use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\TvShowEpisodeRepositoryInterface;
 use Ampache\Repository\TvShowSeasonRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
-use MusicBrainz\MusicBrainz;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -125,11 +124,10 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createWanted(
-        ?int $wantedId = null
+        int $wantedId
     ): WantedInterface {
         return new Wanted(
             $this->dic->get(WantedRepositoryInterface::class),
-            $this->dic->get(MusicBrainz::class),
             $this->dic->get(MissingArtistLookupInterface::class),
             $this->dic->get(ModelFactoryInterface::class),
             $wantedId

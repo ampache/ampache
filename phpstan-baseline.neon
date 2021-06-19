@@ -17975,6 +17975,21 @@ parameters:
 			path: src/Module/Wanted/MissingArtistLookupInterface.php
 
 		-
+			message: "#^Cannot access property \\$media on array\\.$#"
+			count: 1
+			path: src/Module/Wanted/WantedSongProvider.php
+
+		-
+			message: "#^Cannot access property \\$releases on array\\.$#"
+			count: 2
+			path: src/Module/Wanted/WantedSongProvider.php
+
+		-
+			message: "#^Cannot access property \\$title on array\\.$#"
+			count: 1
+			path: src/Module/Wanted/WantedSongProvider.php
+
+		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$password\\)\\: Unexpected token \"\\$password\", expected type at offset 42$#"
 			count: 1
 			path: src/Module/WebDav/WebDavAuth.php
@@ -22615,11 +22630,6 @@ parameters:
 			path: src/Repository/Model/ModelFactory.php
 
 		-
-			message: "#^Parameter \\#5 \\$id of class Ampache\\\\Repository\\\\Model\\\\Wanted constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/ModelFactory.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\ModelFactory\\:\\:\\$map \\(array\\<class\\-string, callable\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\database_object\\>\\|null\\) does not accept array\\('Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Live_Stream' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\LiveStreamInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Share' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ShareInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Label' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Label, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Broadcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\BroadcastInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Clip' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\Clip, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Channel' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\ChannelInterface, 'Ampache\\\\\\\\Repository\\\\\\\\Model\\\\\\\\Podcast' \\=\\> Closure\\(int\\)\\: Ampache\\\\Repository\\\\Model\\\\PodcastInterface\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/ModelFactory.php
@@ -25455,28 +25465,8 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$media on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Cannot access property \\$release\\-group on array\\.$#"
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
-			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -25495,37 +25485,12 @@ parameters:
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getSongs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getSongs\\(\\) should return array but returns array\\<Ampache\\\\Repository\\\\Model\\\\Song_Preview\\>\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:load_all\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:show_action_buttons\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_id of class Ampache\\\\Repository\\\\Model\\\\Song_Preview constructor expects int, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:accept\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/WantedInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\WantedInterface\\:\\:getSongs\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/WantedInterface.php
 
