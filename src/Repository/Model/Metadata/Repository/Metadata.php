@@ -43,6 +43,7 @@ class Metadata extends Repository
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         $sql = "UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?";
+
         return Dba::write($sql, array($new_object_id, $old_object_id, ucfirst($object_type)));
     }
 }

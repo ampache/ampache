@@ -462,7 +462,7 @@ class Wanted extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         if ($object_type == 'artist') {
-            $sql = "UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?";
+            $sql    = "UPDATE `wanted` SET `artist` = ? WHERE `artist` = ?";
             $params = array($new_object_id, $old_object_id);
 
             return Dba::write($sql, $params);

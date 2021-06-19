@@ -288,7 +288,7 @@ class Random
             } // if length does matter
 
             if (!$data['size_limit'] && !$data['length']) {
-                $results[] = $row['id'];
+                $results[] = (int) $row['id'];
             }
         } // end while results
 
