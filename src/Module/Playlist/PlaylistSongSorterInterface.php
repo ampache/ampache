@@ -20,23 +20,14 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Playlist;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Playlist;
 
-return [
-    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
-    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    SearchType\SearchTypeMapperInterface::class => autowire(SearchType\SearchTypeMapper::class),
-    SearchType\AlbumSearchType::class => autowire(),
-    SearchType\ArtistSearchType::class => autowire(),
-    SearchType\LabelSearchType::class => autowire(),
-    SearchType\PlaylistSearchType::class => autowire(),
-    SearchType\SongSearchType::class => autowire(),
-    SearchType\TagSearchType::class => autowire(),
-    SearchType\UserSearchType::class => autowire(),
-    SearchType\VideoSearchType::class => autowire(),
-    PlaylistSongSorterInterface::class => autowire(PlaylistSongSorter::class),
-];
+interface PlaylistSongSorterInterface
+{
+    /**
+     * Sort the tracks and save the new position
+     */
+    public function sort(Playlist $playlist): void;
+}

@@ -30,6 +30,7 @@ use Ampache\Module\Api\Gui\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Playlist\PlaylistSongSorterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;
@@ -45,16 +46,20 @@ class PlaylistEditMethodTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    private MockInterface $playlistSongSorter;
+
     private PlaylistEditMethod $subject;
 
     public function setUp(): void
     {
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->streamFactory      = $this->mock(StreamFactoryInterface::class);
+        $this->modelFactory       = $this->mock(ModelFactoryInterface::class);
+        $this->playlistSongSorter = $this->mock(PlaylistSongSorterInterface::class);
 
         $this->subject = new PlaylistEditMethod(
             $this->streamFactory,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->playlistSongSorter
         );
     }
 
@@ -204,8 +209,9 @@ class PlaylistEditMethodTest extends MockeryTestCase
         $playlist->shouldReceive('set_by_track_number')
             ->with($item2, $tracks2)
             ->once();
-        $playlist->shouldReceive('sort_tracks')
-            ->withNoArgs()
+
+        $this->playlistSongSorter->shouldReceive('sort')
+            ->with($playlist)
             ->once();
 
         $gatekeeper->shouldReceive('getUser->getId')

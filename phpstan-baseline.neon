@@ -22660,11 +22660,6 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:sort_tracks\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php

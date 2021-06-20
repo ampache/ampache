@@ -30,6 +30,7 @@ use Ampache\Module\Api\Gui\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Gui\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Gui\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Playlist\PlaylistSongSorterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -42,12 +43,16 @@ final class PlaylistEditMethod implements MethodInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PlaylistSongSorterInterface $playlistSongSorter;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PlaylistSongSorterInterface $playlistSongSorter
     ) {
-        $this->streamFactory = $streamFactory;
-        $this->modelFactory  = $modelFactory;
+        $this->streamFactory      = $streamFactory;
+        $this->modelFactory       = $modelFactory;
+        $this->playlistSongSorter = $playlistSongSorter;
     }
 
     /**
@@ -128,7 +133,7 @@ final class PlaylistEditMethod implements MethodInterface
             }
         }
         if ($sort > 0) {
-            $playlist->sort_tracks();
+            $this->playlistSongSorter->sort($playlist);
             $change_made = true;
         }
         // if you didn't make any changes; tell me

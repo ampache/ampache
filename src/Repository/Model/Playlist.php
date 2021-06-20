@@ -297,7 +297,7 @@ class Playlist extends playlist_object
      * update_last_update
      * This updates the playlist last update, it calls the generic update_item function
      */
-    private function update_last_update()
+    public function update_last_update()
     {
         $last_update = time();
         if ($this->_update_item('last_update', $last_update, 50)) {
@@ -564,42 +564,4 @@ class Playlist extends playlist_object
 
         return true;
     } // delete
-
-    /**
-     * Sort the tracks and save the new position
-     */
-    public function sort_tracks()
-    {
-        /* First get all of the songs in order of their tracks */
-        $sql = "SELECT `list`.`id` FROM `playlist_data` AS `list` LEFT JOIN `song` ON `list`.`object_id` = `song`.`id` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` WHERE `list`.`playlist` = ? ORDER BY `artist`.`name` ASC, `album`.`name` ASC, `album`.`year` ASC, `album`.`disk` ASC, `song`.`track` ASC, `song`.`title` ASC, `song`.`track` ASC";
-
-
-        $count      = 1;
-        $db_results = Dba::query($sql, array($this->id));
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $new_data          = array();
-            $new_data['id']    = $row['id'];
-            $new_data['track'] = $count;
-            $results[]         = $new_data;
-            $count++;
-        } // end while results
-        if (!empty($results)) {
-            $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
-            foreach ($results as $data) {
-                $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
-            } // foreach re-ordered results
-
-            //replace the last comma
-            $sql = substr_replace($sql, "", -2);
-            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
-
-            // do this in one go
-            Dba::write($sql);
-        }
-        $this->update_last_update();
-
-        return true;
-    } // sort_tracks
 }

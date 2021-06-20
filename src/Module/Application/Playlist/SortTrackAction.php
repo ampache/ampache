@@ -20,15 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Module\Playlist\PlaylistSongSorterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,28 +41,35 @@ final class SortTrackAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PlaylistSongSorterInterface $playlistSongSorter;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        PlaylistSongSorterInterface $playlistSongSorter
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->modelFactory       = $modelFactory;
+        $this->ui                 = $ui;
+        $this->playlistSongSorter = $playlistSongSorter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
+        $playlist = $this->modelFactory->createPlaylist((int) ($request->getQueryParams()['playlist_id'] ?? 0));
         if (!$playlist->has_access()) {
             throw new AccessDeniedException();
         }
 
-        /* Sort the tracks */
-        $playlist->sort_tracks();
-        $object_ids = $playlist->get_items();
-        require_once Ui::find_template('show_playlist.inc.php');
+        $this->playlistSongSorter->sort($playlist);
 
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_playlist.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $playlist->get_items(),
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
