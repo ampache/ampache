@@ -103,7 +103,7 @@ final class MetadataRepository implements MetadataRepositoryInterface
         string $type
     ): ?MetadataInterface {
         $result = $this->database->fetchOne(
-            'SELECT id FROM `metadata` WHERE object_id = ? AND field = ? AND type = ?',
+            'SELECT id FROM `metadata` WHERE object_id = ? AND field = ? AND type = ? LIMIT 1',
             [$objectId, $field->getId(), $type]
         );
 
