@@ -690,7 +690,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        $this->getMetadataRepository()->collectGarbage();
+        static::getMetadataRepository()->collectGarbage();
 
         return (int)$dead_total;
     }
@@ -1182,7 +1182,7 @@ class Catalog_local extends Catalog
     /**
      * @deprecated Inject by constructor
      */
-    private function getMetadataRepository(): MetadataRepositoryInterface
+    private static function getMetadataRepository(): MetadataRepositoryInterface
     {
         global $dic;
 

@@ -425,7 +425,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function updateMetadata($song, $tags)
     {
-        $metadataRepository = $this->getMetadataRepository();
+        $metadataRepository = static::getMetadataRepository();
 
         foreach ($tags as $tag => $value) {
             $field = $metadataRepository->findFieldByName($tag);
@@ -454,7 +454,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * @deprecated Inject by constructor
      */
-    private function getMetadataRepository(): MetadataRepositoryInterface
+    private static function getMetadataRepository(): MetadataRepositoryInterface
     {
         global $dic;
 

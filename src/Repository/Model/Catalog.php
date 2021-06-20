@@ -48,6 +48,7 @@ use Ampache\Module\Video\VideoLoaderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
@@ -1434,9 +1435,20 @@ abstract class Catalog extends database_object
     {
         $tags = self::get_clean_metadata($libraryItem, $metadata);
 
+        $metadataRepository = static::getMetadataRepository();
+
         foreach ($tags as $tag => $value) {
-            $field = $libraryItem->getField($tag);
-            $libraryItem->addMetadata($field, $value);
+            $field = $metadataRepository->findFieldByName($tag);
+            if ($field === null) {
+                $field = $metadataRepository->addMetadataField($tag, 1);
+            }
+
+            $metadataRepository->addMetadata(
+                $field,
+                $libraryItem->getId(),
+                'Song',
+                $value
+            );
         }
     }
 
@@ -1842,5 +1854,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getMetadataRepository(): MetadataRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(MetadataRepositoryInterface::class);
     }
 }
