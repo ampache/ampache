@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Repository\MetadataRepository;
+use Ampache\Repository\MetadataRepositoryInterface;
 
 final class Metadata implements MetadataInterface
 {
-    private MetadataRepository $metadataRepository;
+    private MetadataRepositoryInterface $metadataRepository;
 
     private ModelFactoryInterface $modelFactory;
 
@@ -46,7 +46,7 @@ final class Metadata implements MetadataInterface
     private ?array $dbData = null;
 
     public function __construct(
-        MetadataRepository $metadataRepository,
+        MetadataRepositoryInterface $metadataRepository,
         ModelFactoryInterface $modelFactory,
         int $id
     ) {
