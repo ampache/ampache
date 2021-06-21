@@ -95,6 +95,7 @@ final class ConfigurationKeyEnum
     public const ALLOW_LOCALPLAY_PLAYBACK      = 'allow_localplay_playback';
     public const LOCALPLAY_CONTROLLER          = 'localplay_controller';
     public const CATALOG_DISABLE               = 'catalog_disable';
+    public const CATALOG_FILTER                = 'catalog_filter';
     public const ALBUM_ART_MIN_WIDTH           = 'album_art_min_width';
     public const ALBUM_ART_MAX_WIDTH           = 'album_art_max_width';
     public const ALBUM_ART_MIN_HEIGHT          = 'album_art_min_height';

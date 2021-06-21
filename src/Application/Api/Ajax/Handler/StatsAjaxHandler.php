@@ -42,7 +42,8 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
         switch ($_REQUEST['action']) {
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
-                    if (Core::get_global('user')->id) {
+                    $user = Core::get_global('user');
+                    if ($user->id) {
                         $latitude  = (float) $_REQUEST['latitude'];
                         $longitude = (float) $_REQUEST['longitude'];
                         $name      = $_REQUEST['name'];
@@ -52,7 +53,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             if (empty($name)) {
                                 foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->load(Core::get_global('user'))) {
+                                    if ($plugin->load($user)) {
                                         $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                         if (!empty($name)) {
                                             break;

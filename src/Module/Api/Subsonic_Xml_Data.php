@@ -748,7 +748,7 @@ class Subsonic_Xml_Data
      */
     public static function getSongData($songId)
     {
-        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' . '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' . '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' . '`song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' . 'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . 'WHERE `song`.`id` = ?';
+        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?';
         $db_results = Dba::read($sql, array($songId));
 
         $results = Dba::fetch_assoc($db_results);
@@ -816,7 +816,7 @@ class Subsonic_Xml_Data
         $db_results  = Dba::read($sqllook, [$catalogId]);
         $resultcheck = Dba::fetch_assoc($db_results);
         if (!empty($resultcheck)) {
-            $sql             = 'SELECT `path` FROM ' . 'catalog_' . $resultcheck['catalog_type'] . ' WHERE `catalog_id` = ?';
+            $sql             = 'SELECT `path` FROM catalog_' . $resultcheck['catalog_type'] . ' WHERE `catalog_id` = ?';
             $db_results      = Dba::read($sql, [$catalogId]);
             $result          = Dba::fetch_assoc($db_results);
             $catalog_path    = rtrim((string)$result['path'], "/");

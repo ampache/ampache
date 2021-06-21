@@ -213,9 +213,10 @@ class Rating extends database_object
      * get_highest_sql
      * Get highest sql
      * @param string $type
+     * @param integer $user_id
      * @return string
      */
-    public static function get_highest_sql($type)
+    public static function get_highest_sql($type, $user_id = null)
     {
         $type              = Stats::validate_type($type);
         $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
@@ -226,6 +227,9 @@ class Rating extends database_object
         $sql .= " WHERE `object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        if (AmpConfig::get('catalog_filter') && $user_id !== null) {
+            $sql .= " AND" . Catalog::get_user_filter("rating_$type", $user_id);
         }
         $sql .= ($allow_group_disks)
             ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC "
@@ -243,7 +247,7 @@ class Rating extends database_object
      * @param integer $offset
      * @return array
      */
-    public static function get_highest($type, $count = 0, $offset = 0)
+    public static function get_highest($type, $count = 0, $offset = 0, $user_id = null)
     {
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -251,7 +255,7 @@ class Rating extends database_object
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         // Select Top objects counting by # of rows
-        $sql = self::get_highest_sql($type);
+        $sql = self::get_highest_sql($type, $user_id);
         $sql .= " LIMIT $limit";
         //debug_event(self::class, 'get_highest ' . $sql, 5);
 

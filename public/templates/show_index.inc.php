@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 if ($user) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->load(Core::get_global('user'))) {
+        if ($plugin->load($user)) {
             $plugin->_plugin->display_home();
         }
     }
@@ -76,7 +76,7 @@ if (Art::is_enabled()) {
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
-        $data = Song::get_recently_played();
+        $data = Song::get_recently_played($user_id);
         Song::build_cache(array_keys($data));
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>

@@ -98,11 +98,11 @@ final class StatsMethod
         switch ($input['filter']) {
             case 'newest':
                 debug_event(self::class, 'stats newest', 5);
-                $results = Stats::get_newest($type, $limit, $offset);
+                $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
                 break;
             case 'highest':
                 debug_event(self::class, 'stats highest', 4);
-                $results = Rating::get_highest($type, $limit, $offset);
+                $results = Rating::get_highest($type, $limit, $offset, $user_id);
                 break;
             case 'frequent':
                 debug_event(self::class, 'stats frequent', 4);
@@ -136,7 +136,7 @@ final class StatsMethod
                         break;
                     case 'album':
                         $results = static::getAlbumRepository()->getRandom(
-                            $user->id,
+                            $user_id,
                             $limit
                         );
                 }

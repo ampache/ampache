@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
@@ -448,7 +449,9 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $catalogs = Catalog::get_catalogs('music');
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string)$username);
+        $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
         Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
         self::apiOutput($input, $response);
@@ -464,14 +467,16 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = $input['musicFolderId'];
-        $ifModifiedSince = $input['ifModifiedSince'];
+        $username         = self::check_parameter($input, 'username');
+        $user             = User::get_from_username((string)$username);
+        $musicFolderId    = $input['musicFolderId'];
+        $ifModifiedSince  = $input['ifModifiedSince'];
 
         $catalogs = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
-            $catalogs = Catalog::get_catalogs();
+            $catalogs = Catalog::get_catalogs('', $user->id);
         }
 
         $lastmodified = 0;
@@ -647,10 +652,14 @@ class Subsonic_Api
                 );
                 break;
             case "newest":
-                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
                 break;
             case "highest":
-                $albums = Rating::get_highest("album", $size, $offset);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Rating::get_highest("album", $size, $offset, $user->id);
                 break;
             case "frequent":
                 $albums = Stats::get_top("album", $size, 0, $offset);
@@ -1619,8 +1628,9 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
+        $user     = User::get_from_username($input['u']);
         $response = Subsonic_Xml_Data::createSuccessResponse('getshares');
-        $shares   = Share::get_share_list();
+        $shares   = Share::get_share_list($user);
         Subsonic_Xml_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
@@ -2309,10 +2319,12 @@ class Subsonic_Api
      */
     public static function createpodcastchannel($input)
     {
-        $url = self::check_parameter($input, 'url');
+        $url      = self::check_parameter($input, 'url');
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string)$username);
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $catalogs = Catalog::get_catalogs('podcast');
+            $catalogs = Catalog::get_catalogs('podcast', $user->id);
             if (count($catalogs) > 0) {
                 $data            = array();
                 $data['feed']    = $url;

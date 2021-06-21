@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
@@ -209,8 +210,9 @@ class AmpacheRss
      * into an xml document if we so wished
      * @return array
      */
-    public static function load_now_playing()
+    public static function load_now_playing($rsstoken = "")
     {
+        unset($rsstoken);
         $data = Stream::get_now_playing();
 
         $results    = array();
@@ -269,7 +271,7 @@ class AmpacheRss
     public static function load_recently_played($rsstoken = "")
     {
         $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
+        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played(Core::get_global('user')->id);
         $results = array();
 
 
@@ -302,9 +304,10 @@ class AmpacheRss
      * This loads in the latest added albums
      * @return array
      */
-    public static function load_latest_album()
+    public static function load_latest_album($rsstoken = "")
     {
-        $ids = Stats::get_newest('album', 10);
+        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $ids  = Stats::get_newest('album', 10, 0, 0, $user->id);
 
         $results = array();
 
@@ -331,9 +334,10 @@ class AmpacheRss
      * This loads in the latest added artists
      * @return array
      */
-    public static function load_latest_artist()
+    public static function load_latest_artist($rsstoken = "")
     {
-        $ids = Stats::get_newest('artist', 10);
+        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $ids  = Stats::get_newest('artist', 10, 0, 0, $user->id);
 
         $results = array();
 
@@ -360,9 +364,10 @@ class AmpacheRss
      * This loads in the latest added shouts
      * @return array
      */
-    public static function load_latest_shout()
+    public static function load_latest_shout($rsstoken = "")
     {
-        $ids = Shoutbox::get_top(10);
+        unset($rsstoken);
+        $ids  = Shoutbox::get_top(10);
 
         $results = array();
 
@@ -396,7 +401,7 @@ class AmpacheRss
      */
     public static function pubdate_recently_played()
     {
-        $data = Song::get_recently_played();
+        $data = Song::get_recently_played(Core::get_global('user')->id);
 
         $element = array_shift($data);
 

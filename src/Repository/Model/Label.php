@@ -420,6 +420,16 @@ class Label extends database_object implements library_item
         return false;
     }
 
+    /**
+     * garbage_collection
+     *
+     * This cleans out unused artists
+     */
+    public static function garbage_collection()
+    {
+        Dba::write('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+    }
+
     private static function getLabelRepository(): LabelRepositoryInterface
     {
         global $dic;

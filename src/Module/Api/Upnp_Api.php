@@ -595,7 +595,7 @@ class Upnp_Api
         }
 
         $meta   = null;
-        $counts = Catalog::get_server_counts();
+        $counts = Catalog::get_server_counts(0);
 
         switch ($pathreq[0]) {
             case 'artists':
@@ -805,7 +805,7 @@ class Upnp_Api
             array_shift($pathreq);
         }
         debug_event(self::class, 'MusicChilds4: [' . $pathreq[0] . ']', 5);
-        $counts = Catalog::get_server_counts();
+        $counts = Catalog::get_server_counts(0);
 
         switch ($pathreq[0]) {
             case 'artists':

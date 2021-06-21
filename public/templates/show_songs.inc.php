@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-$thcount      = 8;
+$thcount      = 9;
 $is_table     = $browse->is_grid_view();
 // hide columns you don't always need
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -61,21 +61,30 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
             <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
-            <?php if (!$hide_album) { ?>
+            <?php if (!$hide_album) {
+    ++$thcount; ?>
             <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
-            <?php } ?>
-            <?php if (!$hide_year) { ?>
+            <?php
+} ?>
+            <?php if (!$hide_year) {
+        ++$thcount; ?>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
-            <?php } ?>
+            <?php
+    } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
-            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) { ?>
+            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) {
+        ++$thcount; ?>
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <?php
+    } ?>
+            <?php if (AmpConfig::get('show_played_times')) {
+        ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('show_skipped_times')) { ?>
+            <?php
+    } ?>
+            <?php if (AmpConfig::get('show_skipped_times')) {
+        ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Skipped'); ?></th>
             <?php
     } ?>

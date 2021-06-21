@@ -248,6 +248,9 @@ class Update
         $update_string = "* Add a 'Browse' category to interface preferences<br />* Add option ('show_license') for hiding license column in song rows";
         $version[]     = array('version' => '500007', 'description' => $update_string);
 
+        $update_string = "* Add filter_user to catalog table<br />* Set a unique key on user_data";
+        $version[]     = array('version' => '500008', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1385,6 +1388,28 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_500008
+     *
+     * Add filter_user to catalog table, set unique on user_data
+     */
+    public static function update_500008()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;";
+        $retval &= Dba::write($sql);
+
+        $tables = ['podcast', 'live_stream'];
+        foreach ($tables as $type) {
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
+            $retval &= Dba::write($sql);
+        }
+        $sql    = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }

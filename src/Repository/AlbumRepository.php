@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 
 final class AlbumRepository implements AlbumRepositoryInterface
 {
@@ -53,6 +54,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
             ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' %s", $sort_disk)
             : "SELECT DISTINCT `album`.`id` FROM `album` " . str_replace("AND", "WHERE", $sort_disk);
 
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('album', $userId);
+        }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
             $sql .= sprintf(

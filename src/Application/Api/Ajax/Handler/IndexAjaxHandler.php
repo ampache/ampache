@@ -115,7 +115,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'random_videos':
-                $videos = $this->videoRepository->getRandom($moment);
+                $videos = $this->videoRepository->getRandom(
+                    $user->id,
+                    $moment
+                );
                 if (count($videos) && is_array($videos)) {
                     ob_start();
                     require_once Ui::find_template('show_random_videos.inc.php');
@@ -262,7 +265,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $data = Song::get_recently_played();
+                $data = Song::get_recently_played(Core::get_global('user')->id);
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();

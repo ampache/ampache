@@ -71,7 +71,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         } // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="7"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
+            <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
         </tr>
         <?php
         } ?>

@@ -76,6 +76,9 @@ final class ShowAction implements ApplicationActionInterface
             $ajax_url      = '?page=index&action=reloadnp';
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
+        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
+            ? Core::get_global('user')->id
+            : 0;
 
         require_once Ui::find_template('show_index.inc.php');
 

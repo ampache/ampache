@@ -586,6 +586,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (empty($song_ids)) {
             return false;
         }
+
         $idlist = '(' . implode(',', $song_ids) . ')';
         if ($idlist == '()') {
             return false;
@@ -697,7 +698,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album_mbid = ''
     ) {
         // by default require song, album, artist for any searches
-        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' . 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND (`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND (`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
+        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' . "WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND (`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND (`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
         if ($song_mbid) {
             $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
         }
@@ -840,7 +841,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function find_duplicates($search_type)
     {
         $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = 'SELECT `artist`, `album`, `title`, ' . 'COUNT(`title`) FROM `song` ' . $where_sql . ' GROUP BY `artist`, `album`, `title`';
+        $sql       = "SELECT `artist`, `album`, `title`, COUNT(`title`) FROM `song` $where_sql GROUP BY `artist`, `album`, `title`";
 
         if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
             $sql .= ',`artist`';
@@ -2076,14 +2077,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $personal_info_recent = 91;
         $personal_info_time   = 92;
         $personal_info_agent  = 93;
+        $catalog_filter       = AmpConfig::get('catalog_filter');
 
         $results = array();
+        $valid   = ($user_id > 0);
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` FROM `object_count`LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user`LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
-        if ($user_id > 0) {
+        if ($catalog_filter && $valid) {
+            $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
+        }
+        if ($valid && !$catalog_filter) {
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {

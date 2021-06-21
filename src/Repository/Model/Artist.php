@@ -878,6 +878,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Shoutbox::migrate('artist', $this->id, $artist_id);
                 Tag::migrate('artist', $this->id, $artist_id);
                 Userflag::migrate('artist', $this->id, $artist_id);
+                Label::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::duplicate('artist', $this->id, $artist_id);
                 Catalog::migrate_map('artist', $this->id, $artist_id);
@@ -889,6 +890,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
+                Label::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
                 self::update_artist_counts($current_id);
             } // if updated

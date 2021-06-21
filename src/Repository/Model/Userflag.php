@@ -299,6 +299,9 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
+        if (AmpConfig::get('catalog_filter') && $user_id !== null) {
+            $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
+        }
         $sql .= ($allow_group_disks)
             ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ORDER BY `count` DESC, `user_flag`.`date` DESC "
             : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `user_flag`.`date` DESC ";

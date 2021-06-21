@@ -109,7 +109,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $results['disk']  = Album::sanitize_disk($results['track'][0]);
             $results['track'] = substr($results['track'], 1);
         }
-        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $results['file'],
@@ -152,7 +152,7 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` ' . "WHERE `id` IN $idlist";
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` ' . "WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $artists = array();
@@ -180,7 +180,7 @@ class Song_Preview extends database_object implements Media, playable_item
             return parent::get_from_cache('song_preview', $preview_id);
         }
 
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($preview_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -439,7 +439,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `song_preview` USING `song_preview` ' . 'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' . 'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `song_preview` USING `song_preview` LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` WHERE `session`.`id` IS NULL';
 
         return Dba::write($sql);
     }
