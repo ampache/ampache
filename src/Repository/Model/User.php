@@ -694,78 +694,67 @@ class User extends database_object
     {
         $catalog_disable = AmpConfig::get('catalog_disable');
         $catalog_filter  = AmpConfig::get('catalog_filter');
-        $count_array     = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
-        $sql             = 'SELECT `id` FROM `user`';
+        $sql             = "SELECT `id` FROM `user`";
         $db_results      = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $user_id = (int)$results['id'];
-            if ($catalog_filter) {
-                // get counts per user (filtered catalogs aren't counted)
-                foreach ($count_array as $table) {
-                    $sql        = (in_array($table, array('search', 'user', 'license')))
-                        ? "SELECT COUNT(`id`) FROM `$table`"
-                        : "SELECT COUNT(`id`) FROM `$table` WHERE" . Catalog::get_user_filter($table, $user_id);
-                    $db_results = Dba::read($sql);
-                    $data       = Dba::fetch_row($db_results);
-
-                    self::set_count($user_id, $table, $data[0]);
-                }
-                // tables with media items to count, song-related tables and the rest
-                $media_tables = array('song', 'video', 'podcast_episode');
-                $items        = 0;
-                $time         = 0;
-                $size         = 0;
-                foreach ($media_tables as $table) {
-                    $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1' AND" : ' WHERE';
-                    $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
-                    $db_results  = Dba::read($sql);
-                    $data        = Dba::fetch_row($db_results);
-                    // save the object and add to the current size
-                    $items += $data[0];
-                    $time += $data[1];
-                    $size += $data[2];
-                    self::set_count($user_id, $table, $data[0]);
-                }
-                self::set_count($user_id, 'items', $items);
-                self::set_count($user_id, 'time', $time);
-                self::set_count($user_id, 'size', $size);
-                // grouped album counts
-                $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`) AND" . Catalog::get_user_filter('album', $user_id);
-                $db_results = Dba::read($sql);
-                $data       = Dba::fetch_row($db_results);
-                self::set_count($user_id, 'album_group', $data[0]);
-            } else {
-                // no filter means no need for filtering or counting
-                $counts = Catalog::get_server_counts(0);
-                foreach ($counts as $table) {
+        $user_list       = array();
+        while ($results  = Dba::fetch_assoc($db_results)) {
+            $user_list[] = (int)$results['id'];
+        }
+        if (!$catalog_filter) {
+            // no filter means no need for filtering or counting per user
+            $count_array   = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license', 'album_group', 'items', 'time', 'size');
+            $server_counts = Catalog::get_server_counts(0);
+            foreach ($user_list as $user_id) {
+                debug_event(self::class, 'Update counts for ' . $user_id, 5);
+                foreach ($server_counts as $table => $count) {
                     if (in_array($table, $count_array)) {
-                        self::set_count($user_id, $table, $counts[$table]);
+                        self::set_count($user_id, $table, $count);
                     }
                 }
-                // grouped album counts
-                $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`);";
+            }
+
+            return;
+        }
+
+        $count_array = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        foreach ($user_list as $user_id) {
+            debug_event(self::class, 'Update counts for ' . $user_id, 5);
+            // get counts per user (filtered catalogs aren't counted)
+            foreach ($count_array as $table) {
+                $sql        = (in_array($table, array('search', 'user', 'license')))
+                    ? "SELECT COUNT(`id`) FROM `$table`"
+                    : "SELECT COUNT(`id`) FROM `$table` WHERE" . Catalog::get_user_filter($table, $user_id);
                 $db_results = Dba::read($sql);
                 $data       = Dba::fetch_row($db_results);
-                self::set_count($user_id, 'album_group', $data[0]);// tables with media items to count, song-related tables and the rest
-                $media_tables = array('song', 'video', 'podcast_episode');
-                $items        = 0;
-                $time         = 0;
-                $size         = 0;
-                foreach ($media_tables as $table) {
-                    $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
-                    $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
-                    $db_results  = Dba::read($sql);
-                    $data        = Dba::fetch_row($db_results);
-                    // save the object and add to the current size
-                    $items += $data[0];
-                    $time += $data[1];
-                    $size += $data[2];
-                    self::set_count($user_id, $table, $data[0]);
-                }
-                self::set_count($user_id, 'items', $items);
-                self::set_count($user_id, 'time', $time);
-                self::set_count($user_id, 'size', $size);
+
+                self::set_count($user_id, $table, $data[0]);
             }
+            // tables with media items to count, song-related tables and the rest
+            $media_tables = array('song', 'video', 'podcast_episode');
+            $items        = 0;
+            $time         = 0;
+            $size         = 0;
+            foreach ($media_tables as $table) {
+                $enabled_sql = ($catalog_disable && $table !== 'podcast_episode')
+                    ? " WHERE `$table`.`enabled`='1' AND"
+                    : ' WHERE';
+                $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
+                $db_results  = Dba::read($sql);
+                $data        = Dba::fetch_row($db_results);
+                // save the object and add to the current size
+                $items += $data[0];
+                $time += $data[1];
+                $size += $data[2];
+                self::set_count($user_id, $table, $data[0]);
+            }
+            self::set_count($user_id, 'items', $items);
+            self::set_count($user_id, 'time', $time);
+            self::set_count($user_id, 'size', $size);
+            // grouped album counts
+            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`) AND" . Catalog::get_user_filter('album', $user_id);
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            self::set_count($user_id, 'album_group', $data[0]);
         }
     } // update_counts
 

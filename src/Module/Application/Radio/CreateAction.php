@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -72,6 +73,7 @@ final class CreateAction implements ApplicationActionInterface
         if (!$results) {
             require_once Ui::find_template('show_add_live_stream.inc.php');
         } else {
+            Catalog::update_mapping('live_stream');
             $body  = T_('Radio Station created');
             $title = '';
             $this->ui->showConfirmation(

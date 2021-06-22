@@ -427,6 +427,7 @@ class Podcast extends database_object implements library_item
                 $art = new Art((int)$podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
+            Catalog::update_map($catalog_id, 'podcast', (int)$podcast_id);
             if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
@@ -478,6 +479,7 @@ class Podcast extends database_object implements library_item
                 $episode->remove();
             }
         }
+        Catalog::update_mapping('podcast_episode');
         $this->update_lastsync(time());
     }
 
