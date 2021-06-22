@@ -161,7 +161,7 @@ abstract class Catalog extends database_object
      */
     public $enabled;
     /**
-     * @var integer $f_filter_user
+     * @var string $f_filter_user
      */
     public $f_filter_user;
 

@@ -105,7 +105,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
             Art::garbage_collection('artist', $artistId);
             Userflag::garbage_collection('artist', $artistId);
             Rating::garbage_collection('artist', $artistId);
-            Label::garbage_collection($artistId);
+            Label::garbage_collection();
             $this->shoutRepository->collectGarbage('artist', $artistId);
             $this->useractivityRepository->collectGarbage('artist', $artistId);
         }

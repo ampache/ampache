@@ -612,7 +612,7 @@ class Stats
      * get_recent_sql
      * This returns the get_recent sql
      * @param string $input_type
-     * @param string $user_id
+     * @param int $user_id
      * @param boolean $newest
      * @return string
      */
@@ -751,7 +751,7 @@ class Stats
      * This returns the get_newest sql
      * @param string $input_type
      * @param integer $catalog
-     * @return stringz
+     * @return string
      */
     public static function get_newest_sql($input_type, $catalog = 0, $user_id = null)
     {

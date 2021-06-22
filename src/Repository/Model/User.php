@@ -745,7 +745,6 @@ class User extends database_object
                 // grouped album counts
                 $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`);";
                 $db_results = Dba::read($sql);
-                $db_results = Dba::read($sql);
                 $data       = Dba::fetch_row($db_results);
                 self::set_count($user_id, 'album_group', $data[0]);// tables with media items to count, song-related tables and the rest
                 $media_tables = array('song', 'video', 'podcast_episode');
