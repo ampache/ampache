@@ -61,7 +61,7 @@ class Recommendation
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 604800)));
+        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 31556952)));
     }
 
     /**
