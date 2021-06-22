@@ -1661,6 +1661,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!strlen(trim((string)$value)) && $field != 'comment') {
             return false;
         }
+        // update time needs to be set for verify
+        self::update_utime($song_id);
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
 
