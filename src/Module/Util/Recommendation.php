@@ -274,7 +274,7 @@ class Recommendation
                             $searchname = Catalog::trim_prefix($name);
                             $searchname = Dba::escape($searchname['string']);
                             $sql        = ($catalog_disable)
-                                ? "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? AND " . $enable_filter
+                                ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
 
                             $db_result = Dba::read($sql, array($searchname, $searchname));
