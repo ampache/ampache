@@ -2387,16 +2387,6 @@ class Search extends playlist_object
         if ($join['playlist_data']) {
             $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }
-        /*
-        $sql = " SELECT `playlist`
-            FROM `playlist_data`
-        LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song'
-        LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song'  AND `catalog_map`.`object_id` = `song`.`id`
-        LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id`
-
-        WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`filter_user` IN (0, $user_id)
-        GROUP BY `playlist_data`.`playlist`) ";
-        */
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
@@ -2486,10 +2476,13 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['catalog_map']) {
+        if ($catalog_disable || $catalog_filter) {
             $table['0_label_asso']  = "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id`";
             $table['1_artist']      = "LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id`";
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id`=`artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
+        }
+
+        if ($join['catalog_map']) {
             if (!empty($where_sql)) {
                 $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
             } else {
