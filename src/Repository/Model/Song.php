@@ -2078,6 +2078,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $personal_info_time   = 92;
         $personal_info_agent  = 93;
         $catalog_filter       = AmpConfig::get('catalog_filter');
+        $user_id              = ($catalog_filter)
+            ? Core::get_global('user')->id
+            : $user_id;
 
         $results = array();
         $valid   = ($user_id > 0);
@@ -2102,6 +2105,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit . " ";
+        //debug_event(self::class, 'get_recently_played ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {

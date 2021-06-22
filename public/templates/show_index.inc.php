@@ -76,7 +76,7 @@ if (Art::is_enabled()) {
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
-        $data = Song::get_recently_played($user_id);
+        $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
