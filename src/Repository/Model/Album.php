@@ -913,6 +913,7 @@ class Album extends database_object implements library_item
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
+                Song::update_utime($song_id);
 
                 $this->getSongId3TagWriter()->write(new Song($song_id));
             }
