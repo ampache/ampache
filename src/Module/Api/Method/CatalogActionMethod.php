@@ -88,11 +88,13 @@ final class CatalogActionMethod
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
-                    Catalog::clean_empty_albums();
-                    Album::update_album_artist();
-                    Catalog::update_counts();
                     break;
             }
+            // clean up after the action
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_counts();
+
             Api::message('successfully started: ' . $task, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);

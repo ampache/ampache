@@ -574,7 +574,6 @@ class Catalog_local extends Catalog
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
-        Catalog::update_counts();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
@@ -629,7 +628,7 @@ class Catalog_local extends Catalog
             }
             $file_time = filemtime($row['file']);
             // check the modification time on the file to see if it's worth checking the tags.
-            if ($verify_by_time && ($this->last_update > $file_time || $row['update_time'] > $file_time)) {
+            if ($verify_by_time && ($this->last_update > $file_time && $row['update_time'] > $file_time)) {
                 continue;
             }
 
