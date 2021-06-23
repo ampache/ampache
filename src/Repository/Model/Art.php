@@ -1096,7 +1096,7 @@ class Art extends database_object
         if (Art::has_db($new_object_id, $object_type)) {
             return false;
         }
-        debug_event(self::class, "duplicate $object_type: {$old_object_id} to {$new_object_id}", 5);
+        debug_event(self::class, "duplicate $object_type: \{$old_object_id\} to \{$new_object_id\}", 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
