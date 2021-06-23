@@ -235,21 +235,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * Get time for an album disk by song.
-     */
-    public function getDuration(int $albumId): int
-    {
-        $db_results = Dba::read(
-            'SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?',
-            [$albumId]
-        );
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return (int) $results['time'];
-    }
-
-    /**
      * Get time for an album disk by album.
      */
     public function getAlbumDuration(int $albumId): int
@@ -307,27 +292,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $results = Dba::fetch_assoc($db_results);
 
         return (int) $results['artist_count'];
-    }
-
-    /**
-     * Get time for an album disk and set it.
-     */
-    public function updateTime(
-        Album $album
-    ): int {
-        $albumId = $album->getId();
-
-        $time = $this->getDuration($albumId);
-        if ($time !== $album->time && $albumId) {
-            Dba::write(
-                sprintf(
-                    "UPDATE `album` SET `time`=$time WHERE `id`=%d",
-                    $albumId
-                )
-            );
-        }
-
-        return $time;
     }
 
     /**

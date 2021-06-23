@@ -95,11 +95,6 @@ interface AlbumRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Get time for an album disk by song.
-     */
-    public function getDuration(int $albumId): int;
-
-    /**
      * Get time for an album disk by album.
      */
     public function getAlbumDuration(int $albumId): int;
@@ -118,13 +113,6 @@ interface AlbumRepositoryInterface
      * Get distinct artist count for an album disk by album id.
      */
     public function getArtistCount(int $albumId): int;
-
-    /**
-     * Get time for an album disk and set it.
-     */
-    public function updateTime(
-        Album $album
-    ): int;
 
     /**
      * gets the album ids that this artist is a part of

@@ -718,6 +718,26 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
+     * update_video_counts
+     *
+     * @param integer $video_id
+     */
+    public static function update_video_counts($video_id)
+    {
+        if ($video_id > 0) {
+            $params = array($video_id);
+            $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
+            Dba::write($sql, $params);
+            $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
+            Dba::write($sql, $params);
+            $sql = "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
+            Dba::write($sql, $params);
+            $sql = "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
+            Dba::write($sql, $params);
+        }
+    }
+
+    /**
      * Get release item art.
      * @return array
      */
