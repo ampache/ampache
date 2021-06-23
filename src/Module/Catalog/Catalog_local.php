@@ -565,7 +565,7 @@ class Catalog_local extends Catalog
             if ($total == 0) {
                 continue;
             }
-            $chunks = floor($total / 10000);
+            $chunks = (int)floor($total / 10000);
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
@@ -586,9 +586,9 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param $tableName
-     * @param $chunk
-     * @param $chunk_size
+     * @param string $tableName
+     * @param integer $chunk
+     * @param integer $chunk_size
      * @return integer
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
@@ -598,8 +598,8 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = ($tableName == 'song')
-            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND (`song`.`update_time` < `catalog`.`last_update` OR `song`.`addition_time` > `catalog`.`last_update`)) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
-            : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND (`song`.`update_time` < `catalog`.`last_update` OR `song`.`addition_time` > `catalog`.`last_update`)) ORDER BY `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+            : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
@@ -627,8 +627,9 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
-            // the file has not been modified since the last verify and you're wasting your time reading this again
-            if ($verify_by_time && filemtime($row['file']) < $this->last_update) {
+            $file_time = filemtime($row['file']);
+            // check the modification time on the file to see if it's worth checking the tags.
+            if ($verify_by_time && ($this->last_update > $file_time || filemtime($row['update_time']) > $file_time)) {
                 continue;
             }
 

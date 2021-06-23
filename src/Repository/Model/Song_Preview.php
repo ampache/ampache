@@ -152,7 +152,7 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` ' . "WHERE `id` IN $idlist";
+        $sql        = "SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $artists = array();
