@@ -714,15 +714,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!strlen((string) $tags_comma) > 0) {
             return self::remove_all_map($object_type, $object_id);
         }
-        debug_event(self::class, 'Updating tags for values {' . $tags_comma . '} type {' . $object_type . '} object_id {' . $object_id . '}', 5);
-
-        $ctags       = self::get_top_tags($object_type, $object_id);
+        debug_event(self::class, "update_tag_list $object_type: {$object_id}", 5);
+        // tags from your file can be in a terrible format
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_', ', ', $filterfolk);
         $filter      = str_replace(';', ', ', $filterunder);
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
+        $ctags = self::get_top_tags($object_type, $object_id);
         foreach ($ctags as $ctid => $ctv) {
             if ($ctv['id'] != '') {
                 $ctag  = new Tag($ctv['id']);
@@ -739,7 +739,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     unset($editedTags[$ctag->name]);
                 } else {
                     if ($overwrite && $ctv['user'] == 0) {
-                        debug_event(self::class, 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
+                        debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
                         $ctag->remove_map($object_type, $object_id, false);
                     }
                 }

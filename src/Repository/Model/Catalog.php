@@ -1517,10 +1517,10 @@ abstract class Catalog extends database_object
         $art = new Art($object_id, $type);
         // don't search for art when you already have it
         if ($art->has_db_info() && $db_art_first) {
-            debug_event(self::class, 'Blocking art search for ' . $type . '/' . $object_id . ' DB item exists', 5);
+            debug_event(self::class, "gather_art_item $type: {$object_id} blocked", 5);
             $results = array();
         } else {
-            debug_event(__CLASS__, 'Gathering art for ' . $type . '/' . $object_id . '...', 4);
+            debug_event(__CLASS__, "gather_art_item $type: {$object_id} searching", 4);
 
             global $dic;
             $results = $dic->get(ArtCollectorInterface::class)->collect(
@@ -3041,7 +3041,7 @@ abstract class Catalog extends database_object
      */
     public static function update_map($catalog, $object_type, $object_id)
     {
-        debug_event(self::class, "Updating catalog mapping for $object_type ($object_id)", 5);
+        debug_event(self::class, "update_map $object_type: {$object_id}", 5);
         if ($object_type == 'artist') {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
             Dba::write($sql, array($object_id));
@@ -3291,7 +3291,7 @@ abstract class Catalog extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         if ($old_object_id != $new_object_id) {
-            debug_event(__CLASS__, 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
+            debug_event(__CLASS__, "migrate $object_type: {$old_object_id} to {$new_object_id}", 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);

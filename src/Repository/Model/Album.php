@@ -509,7 +509,7 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event(self::class, 'Album check created new album id ' . $album_id, 4);
+        debug_event(self::class, "check album: created {$album_id}", 4);
         // map the new id
         Catalog::update_map($catalog, 'album', $album_id);
         // Remove from wanted album list if any request on it

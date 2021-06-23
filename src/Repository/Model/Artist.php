@@ -830,7 +830,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         $artist_id = (int) Dba::insert_id();
-        debug_event(self::class, 'Artist check created new artist id `' . $artist_id . '`.', 4);
+        debug_event(self::class, "check album: created {$artist_id}", 4);
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
