@@ -714,7 +714,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!strlen((string) $tags_comma) > 0) {
             return self::remove_all_map($object_type, $object_id);
         }
-        debug_event(self::class, "update_tag_list $object_type: \{$object_id\}", 5);
+        debug_event(self::class, "update_tag_list $object_type: {{$object_id}}", 5);
         // tags from your file can be in a terrible format
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_', ', ', $filterfolk);

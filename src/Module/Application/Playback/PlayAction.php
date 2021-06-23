@@ -192,7 +192,7 @@ final class PlayAction implements ApplicationActionInterface
             $type = 'song';
         }
 
-        debug_event('play/index', "Asked for type \{$type\}", 5);
+        debug_event('play/index', "Asked for type {{$type}}", 5);
 
         if ($type == 'playlist') {
             $playlist_type = scrub_in($_REQUEST['playlist_type']);
