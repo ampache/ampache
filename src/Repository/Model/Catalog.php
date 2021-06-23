@@ -1884,7 +1884,6 @@ abstract class Catalog extends database_object
 
         static::getAlbumRepository()->collectGarbage();
         Artist::garbage_collection();
-        self::update_counts($type);
 
         return $result;
     } // update_single_item
