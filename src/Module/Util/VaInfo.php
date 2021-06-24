@@ -1046,9 +1046,11 @@ final class VaInfo implements VaInfoInterface
                     $parsed['totaltracks'] = $data[0];
                     break;
                 case 'discnumber':
-                    $elements             = explode('/', $data[0]);
-                    $parsed['disk']       = $elements[0];
-                    $parsed['totaldisks'] = $elements[1];
+                    $parsed['disk']       = $data[0];
+                    break;
+                case 'totaldiscs':
+                case 'disctotal':
+                    $parsed['totaldisks'] = $data[0];
                     break;
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
