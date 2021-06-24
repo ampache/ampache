@@ -516,6 +516,7 @@ final class VaInfo implements VaInfoInterface
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid']       = $info['mb_trackid'] ?: trim((string)$tags['mb_trackid']);
+            $info['isrc']             = $info['isrc'] ?: trim((string)$tags['isrc']);
             $info['mb_albumid']       = $info['mb_albumid'] ?: trim((string)$tags['mb_albumid']);
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim((string)$tags['mb_albumid_group']);
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim((string)$tags['mb_artistid']);
@@ -1046,6 +1047,9 @@ final class VaInfo implements VaInfoInterface
                     $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1];
                     break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
+                    break;
                 case 'date':
                     $parsed['year'] = $data[0];
                     break;
@@ -1190,6 +1194,9 @@ final class VaInfo implements VaInfoInterface
                     } else {
                         $parsed['composer'] = reset($data);
                     }
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -1408,6 +1415,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'disc_number':
                     $parsed['disk'] = $data[0];
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
                     break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
