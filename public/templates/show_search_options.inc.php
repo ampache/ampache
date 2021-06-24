@@ -27,25 +27,30 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
-<?php Ui::show_box_top(T_('Options'), 'info-box'); ?>
+<?php Ui::show_box_top(T_('Options'), 'info-box');
+$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES); ?>
 <div id="information_actions">
 <ul>
-<li>
-    <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add Search Results'), 'add_search_results'); ?>
-</li>
+    <?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
+    <li>
+        <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id . '&object_type=' . $search_type, 'add', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
+    </li>
+    <li>
+        <?php echo Ajax::button_with_text('?action=basket&type=browse_set_random&browse_id=' . $browse->id . '&object_type=' . $search_type, 'random', T_('Random to Temporary Playlist'), 'add_search_results_random'); ?>
+    </li>
+    <?php } ?>
     <?php
     // @todo remove after refactoring
     global $dic;
     $zipHandler = $dic->get(ZipHandlerInterface::class);
-    if (Access::check_function('batch_download') && $zipHandler->isZipable((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) { ?>
+    if (Access::check_function('batch_download') && $zipHandler->isZipable($search_type)) { ?>
 <li>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>&amp;browse_id=<?php echo $browse->id; ?>">
         <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         <?php echo T_('Batch download'); ?>
     </a>
 </li>
-    <?php
-} ?>
+    <?php } ?>
 </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

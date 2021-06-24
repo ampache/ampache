@@ -88,9 +88,29 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 } else {
                     switch ($_REQUEST['type']) {
                         case 'browse_set':
+                        case 'browse_set_random':
+                            $songs   = array();
                             $browse  = new Browse($_REQUEST['browse_id']);
                             $objects = $browse->get_saved();
-                            foreach ($objects as $object_id) {
+                            switch ($_REQUEST['object_type']) {
+                                case 'album':
+                                    foreach ($objects as $object_id) {
+                                        $songs[] = static::getSongRepository()->getByAlbum($object_id);
+                                    }
+                                    break;
+                                case 'artist':
+                                    foreach ($objects as $object_id) {
+                                        $songs[] = static::getSongRepository()->getAllByArtist($object_id);
+                                    }
+                                    break;
+                                case 'song':
+                                    $songs = $objects;
+                                    break;
+                            } // end switch type
+                            if ($_REQUEST['type'] == 'browse_set_random') {
+                                shuffle($songs);
+                            }
+                            foreach ($songs as $object_id) {
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
@@ -184,5 +204,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
         // Go ahead and do the echo
         echo (string) xoutput_from_array($results);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }
