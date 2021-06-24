@@ -548,6 +548,7 @@ final class VaInfo implements VaInfoInterface
             $info['r128_album_gain']       = isset($info['r128_album_gain']) ? $info['r128_album_gain'] : (!is_null($tags['r128_album_gain']) ? (int) $tags['r128_album_gain'] : null);
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
+            $info['totaltracks']   = $info['totaltracks'] ?: (int) $tags['totaltracks'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
             $info['resolution_y']  = $info['resolution_y'] ?: (int) $tags['resolution_y'];
             $info['display_x']     = $info['display_x'] ?: (int) $tags['display_x'];
@@ -1037,6 +1038,9 @@ final class VaInfo implements VaInfoInterface
                 case 'track_number':
                     $parsed['track'] = $data[0];
                     break;
+                case 'tracktotal':
+                    $parsed['totaltracks'] = $data[0];
+                    break;
                 case 'discnumber':
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
@@ -1171,6 +1175,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
+                    break;
+                case 'totaltracks':
+                    $parsed['totaltracks'] = $data[0];
                     break;
                 case 'comment':
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
@@ -1394,7 +1401,10 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_status'] = $data[0];
                     break;
                 case 'track_number':
-                    $parsed['track'] = $data[0];
+                    //$parsed['track'] = $data[0];
+                    $elements              = explode('/', $data[0]);
+                    $parsed['track']       = $elements[0];
+                    $parsed['totaltracks'] = $elements[1];
                     break;
                 case 'disc_number':
                     $parsed['disk'] = $data[0];
