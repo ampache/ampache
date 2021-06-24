@@ -986,6 +986,9 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
                 default:
                     $parsed[$tagname] = $data[0];
                     break;
@@ -1224,6 +1227,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'label':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tag] = $data[0];
