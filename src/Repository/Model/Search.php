@@ -1326,8 +1326,8 @@ class Search extends playlist_object
                 $group[] = "`album`.`prefix`";
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
-                $group[] = "`album`.`album`.`release_type`";
-                $group[] = "`album`.`album`.`release_status`";
+                $group[] = "`album`.`release_type`";
+                $group[] = "`album`.`release_status`";
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
                 $group[] = "`album`.`original_year`";
