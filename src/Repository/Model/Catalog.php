@@ -2714,6 +2714,7 @@ abstract class Catalog extends database_object
         if (isset($files)) {
             foreach ($files as $file) {
                 $file = trim((string)$file);
+                debug_event(self::class, "import_playlist checking: {{$file}}", 5);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
                     $data       = Stream_Url::parse($file);
@@ -2721,9 +2722,10 @@ abstract class Catalog extends database_object
                     $db_results = Dba::read($sql, array($data['id']));
                     if (Dba::num_rows($db_results)) {
                         $songs[] = $data['id'];
+                    } else {
+                        debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
                     }
-                } // end if it's an http url
-                else {
+                } else {
                     // Remove file:// prefix if any
                     if (strpos($file, "file://") !== false) {
                         $file = urldecode(substr($file, 7));
@@ -2736,9 +2738,8 @@ abstract class Catalog extends database_object
                             $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
                         }
                     }
-                    debug_event(self::class, 'Add file ' . $file . ' to playlist.', 5);
 
-                    // First, try to found the file as absolute path
+                    // First, try to find the file as absolute path
                     $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
                     $db_results = Dba::read($sql, array($file));
                     $results    = Dba::fetch_assoc($db_results);
@@ -2757,6 +2758,8 @@ abstract class Catalog extends database_object
 
                             if (isset($results['id'])) {
                                 $songs[] = $results['id'];
+                            } else {
+                                debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
                             }
                         }
                     }
