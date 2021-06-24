@@ -1316,8 +1316,8 @@ final class VaInfo implements VaInfoInterface
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
-                        if ($enable_custom_metadata && !in_array($txxx['description'], $parsed)) {
-                            $parsed[$txxx['description']] = $id3v2['comments']['text'][$txxx['description']];
+                        if ($enable_custom_metadata && !in_array(strtolower($this->trimAscii($txxx['description'])), $parsed)) {
+                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']];
                         }
                         break;
                 }
@@ -1364,7 +1364,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['album'] = $data[0];
                     break;
                 default:
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
@@ -1458,7 +1458,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['tvshow'] = $data[0];
                     break;
                 default:
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
