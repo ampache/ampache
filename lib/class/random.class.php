@@ -234,7 +234,7 @@ class Random
             $where_sql = " " . $multi_where . " `song`.`album`='" . $data[0] . "' ";
         }
         if (AmpConfig::get('album_group')) {
-            $where_sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
+            $where_sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         //debug_event(self::class, 'get_album ' . $sql, 5);

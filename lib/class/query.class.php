@@ -1264,7 +1264,7 @@ class Query
         // filter albums when you have grouped disks!
         if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
             $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
-            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }

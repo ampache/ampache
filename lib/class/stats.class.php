@@ -492,7 +492,7 @@ class Stats
             }
             $sql .= " AND `count_type` = '" . $count_type . "'";
             if ($allow_group_disks && $type == 'album') {
-                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `object_count`.`object_type`, `object_count`.`count_type`";
             } else {
                 $sql .= " GROUP BY `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`count_type`";
             }
@@ -727,7 +727,7 @@ class Stats
             }
         }
         if ($allow_group_disks && $type == 'album') {
-            $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+            $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `real_atime` DESC ";
         } elseif ($type === 'song' || $base_type === 'video') {
             $sql .= "GROUP BY `$sql_type`, `real_atime` ORDER BY `real_atime` DESC ";
         } else {

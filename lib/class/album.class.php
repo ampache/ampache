@@ -391,7 +391,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`";
+            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `catalog_id`";
         } else {
             $sqlw .= "GROUP BY `song`.`album`, `catalog_id`";
         }
@@ -415,7 +415,7 @@ class Album extends database_object implements library_item
                    "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
                    "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE " .
                    $name_sql . $where_sql . ") " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year` " .
                    "LIMIT 1";
         } else {
             // album_artist is set
@@ -425,7 +425,7 @@ class Album extends database_object implements library_item
                    "FROM `album` " .
                    "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " .
                    $name_sql . $where_sql . " " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
         }
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));

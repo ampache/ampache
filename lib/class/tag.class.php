@@ -560,7 +560,7 @@ class Tag extends database_object implements library_item
         }
         if ($type == 'album') {
             if (AmpConfig::get('album_group')) {
-                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`";
+                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
             } else {
                 $sql .= "GROUP BY `album`.`id`, `album`.`disk`";
             }
