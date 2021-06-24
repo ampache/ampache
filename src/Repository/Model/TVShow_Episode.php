@@ -128,7 +128,7 @@ class TVShow_Episode extends Video
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array(
             $data['id'],
             $data['original_name'],

@@ -77,22 +77,16 @@ Ui::show_box_top($artist->f_name, 'info-box'); ?>
 </div>
 
 <?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) {
-        $rating = new Rating($artist->id, 'artist'); ?>
-    <div id="rating_<?php echo (int) ($artist->id); ?>_artist" style="display:inline;">
-        <?php echo Rating::show($artist->id, 'artist');
-        $average = $rating->get_average_rating();
-        if ($average > 0) {
-            /* HINT: Average rating. e.g. (average 3.7) */
-            echo '(' . T_('average') . ' ' . $average . ')';
-        } ?>
-    </div>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
+        <?php echo Rating::show($artist->id, 'artist', true); ?>
+    </span>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
-            <?php echo Userflag::show($artist->id, 'artist'); ?>
-    </div>
+    <span id="userflag_<?php echo $artist->id; ?>_artist">
+        <?php echo Userflag::show($artist->id, 'artist'); ?>
+    </span>
     <?php
     } ?>
 <?php

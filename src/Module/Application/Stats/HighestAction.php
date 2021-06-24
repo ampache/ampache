@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Video;
@@ -70,11 +71,14 @@ final class HighestAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $this->ui->showBoxTop(T_('Information'));
+        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
+            ? Core::get_global('user')->id
+            : null;
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'song',
-            Rating::get_highest_sql('song')
+            Rating::get_highest_sql('song', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -83,7 +87,7 @@ final class HighestAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'album',
-            Rating::get_highest_sql('album')
+            Rating::get_highest_sql('album', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -92,7 +96,7 @@ final class HighestAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'artist',
-            Rating::get_highest_sql('artist')
+            Rating::get_highest_sql('artist', $user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -102,7 +106,7 @@ final class HighestAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $sql    = Rating::get_highest_sql('video');
+            $sql    = Rating::get_highest_sql('video', $user_id);
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('video', $sql);
             $browse->set_simple_browse(true);

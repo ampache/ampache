@@ -61,6 +61,11 @@ class Query
     protected $_cache;
 
     /**
+     * @var int $user_id
+     */
+    private $user_id;
+
+    /**
      * @var array $allowed_filters
      */
     private static $allowed_filters;
@@ -244,6 +249,7 @@ class Query
 
             return true;
         }
+        $this->user_id = Core::get_global('user')->id;
 
         if ($query_id === null) {
             $this->reset();
@@ -277,7 +283,7 @@ class Query
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' . '`session` ON `session`.`id` = `tmp_browse`.`sid` ' . 'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN `session` ON `session`.`id` = `tmp_browse`.`sid` WHERE `session`.`id` IS NULL';
         Dba::write($sql);
     }
 
@@ -837,7 +843,7 @@ class Query
      */
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
     {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON  $source1 = $dest1  AND  $source2 = $dest2";
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2";
     } // set_join_and
 
     /**
@@ -923,7 +929,7 @@ class Query
         }
 
         if (!$this->is_simple()) {
-            $sql        = 'SELECT `object_data` FROM `tmp_browse` ' . 'WHERE `sid` = ? AND `id` = ?';
+            $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, array(session_id(), $this->id));
 
             $row = Dba::fetch_assoc($db_results);
@@ -1145,7 +1151,7 @@ class Query
             return '';
         }
 
-        $sql = "WHERE 1=1 AND ";
+        $sql = "WHERE";
 
         foreach ($this->_state['filter'] as $key => $value) {
             $sql .= $this->sql_filter($key, $value);
@@ -1163,11 +1169,37 @@ class Query
                     break;
             }
         }
+        if (AmpConfig::get('catalog_filter')) {
+            $type = $this->get_type();
+            // Add catalog user filter
+            switch ($type) {
+                case 'video':
+                case 'artist':
+                case 'album':
+                case 'song':
+                case 'podcast':
+                case 'podcast_episode':
+                case 'playlist':
+                case 'label':
+                case 'live_stream':
+                case 'tag':
+                case 'tvshow':
+                case 'tvshow_season':
+                case 'tvshow_episode':
+                case 'movie':
+                case 'personal_video':
+                case 'clip':
+                case 'share':
+                    $dis = Catalog::get_user_filter($type, $this->user_id);
+                    break;
+            }
+        }
         if (!empty($dis)) {
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim((string)$sql, 'AND ') . " ";
+        $sql = rtrim((string)$sql, " AND ") . " ";
+        $sql = rtrim((string)$sql, "WHERE ") . " ";
 
         return $sql;
     } // get_filter_sql
@@ -1267,9 +1299,9 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
+        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group') && $this->_state['sort']) {
             $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
-            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year` ";
+            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
@@ -1329,12 +1361,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                         break;
                     case 'exact_match':
                         $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1399,12 +1431,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ") AND ";
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                         break;
                     case 'exact_match':
                         $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1465,12 +1497,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                         break;
                     case 'exact_match':
                         $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1513,12 +1545,12 @@ class Query
                         break;
                     case 'catalog':
                         if ($value != 0) {
-                            $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', 'artist', 100);
+                            $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
                             $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', 'artist', 100);
+                        $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
                         $this->set_join('left', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
@@ -1635,12 +1667,12 @@ class Query
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
-                            $filter_sql .= " `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND') . ') AND ';
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                         break;
                     case 'alpha_match':
                         $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -1733,7 +1765,7 @@ class Query
             case 'user':
                 switch ($filter) {
                     case 'starts_with':
-                        $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%' ) AND ";
+                        $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
                         break;
                 } // end filter
                 break;
@@ -2301,7 +2333,7 @@ class Query
             if ($browse_id != 'nocache') {
                 $data = self::_serialize($this->_cache);
 
-                $sql = 'UPDATE `tmp_browse` SET `object_data` = ? ' . 'WHERE `sid` = ? AND `id` = ?';
+                $sql = 'UPDATE `tmp_browse` SET `object_data` = ? WHERE `sid` = ? AND `id` = ?';
                 Dba::write($sql, array($data, session_id(), $browse_id));
             }
         }

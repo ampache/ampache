@@ -43,6 +43,18 @@ interface UserRepositoryInterface
     public function getValid(bool $includeDisabled = false): array;
 
     /**
+     * This returns all valid users in an array (id => name).
+     *
+     * @return array
+     */
+    public function getValidArray(bool $includeDisabled = false): array;
+
+    /**
+     * This returns username for an id (or an empty string)
+     */
+    public function getUsernameById(int $user_id): string;
+
+    /**
      * This returns a built user from a email
      */
     public function findByEmail(string $email): ?User;

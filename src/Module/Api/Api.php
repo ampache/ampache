@@ -358,8 +358,8 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $counts      = Catalog::get_server_counts();
         $client      = static::getUserRepository()->findByApiKey(trim($token));
+        $counts      = Catalog::get_server_counts($client->id);
         $album_count = (Preference::get('album_group', $client->id))
             ? (int)$counts['album_group']
             : (int)$counts['album'];

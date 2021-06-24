@@ -142,6 +142,10 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         }
                     }
                 }
+                // update counts after adding/verifying
+                if ($type == 'song' && $media->id) {
+                    $media->update_parent_counts();
+                }
             }
         }
 

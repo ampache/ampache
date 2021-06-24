@@ -382,9 +382,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function get_album_group_count($artist_id)
     {
-        $params = array($artist_id);
-        $sql    = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` " .
-            "FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $params     = array($artist_id);
+        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -831,7 +830,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         $artist_id = (int) Dba::insert_id();
-        debug_event(self::class, 'Artist check created new artist id `' . $artist_id . '`.', 4);
+        debug_event(self::class, "check album: created {{$artist_id}}", 4);
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
@@ -879,6 +878,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Shoutbox::migrate('artist', $this->id, $artist_id);
                 Tag::migrate('artist', $this->id, $artist_id);
                 Userflag::migrate('artist', $this->id, $artist_id);
+                Label::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::duplicate('artist', $this->id, $artist_id);
                 Catalog::migrate_map('artist', $this->id, $artist_id);
@@ -890,6 +890,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
+                Label::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
                 self::update_artist_counts($current_id);
             } // if updated
@@ -960,8 +961,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
         $sql     = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret  = Dba::write($sql,
-            array($summary, $placeformed, $yearformed, time(), $manual ? 1 : 0, $this->id));
+        $sqlret  = Dba::write($sql, array($summary, $placeformed, $yearformed, time(), (int)$manual, $this->id));
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
@@ -990,10 +990,22 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function update_artist_counts($artist_id)
     {
         if ($artist_id > 0) {
-            $artist = new Artist($artist_id);
-            $artist->update_album_count();
-            $artist->update_song_count();
-            $artist->update_time();
+            $params = array($artist_id);
+            // artist.time
+            $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
+            Dba::write($sql, $params);
+            // artist.total_count
+            $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
+            Dba::write($sql, $params);
+            // artist.album_count
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+            Dba::write($sql, $params);
+            // artist.album_group_count
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+            Dba::write($sql, $params);
+            // artist.song_count
+            $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+            Dba::write($sql, $params);
         }
     }
 
@@ -1005,61 +1017,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(time(), $object_id));
-    }
-
-    /**
-     * update_time
-     *
-     * Get time for an artist and set it.
-     */
-    public function update_time()
-    {
-        $time = self::get_time((int) $this->id);
-        if ($time > 0 && $time !== $this->time && $this->id) {
-            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->time = $time;
-            self::set_last_update((int) $this->id);
-        }
-    }
-
-    /**
-     * update_album_count
-     *
-     * Get album_count, album_group_count for an artist and set it.
-     */
-    public function update_album_count()
-    {
-        $album_count = self::get_album_count((int) $this->id);
-        if ($album_count > 0 && $album_count !== $this->album_count && $this->id) {
-            $sql = "UPDATE `artist` SET `album_count`=$album_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->album_count = $album_count;
-            self::set_last_update((int) $this->id);
-        }
-        $group_count = self::get_album_group_count((int) $this->id);
-        if ($group_count > 0 && $group_count !== $this->album_group_count && $this->id) {
-            $sql = "UPDATE `artist` SET `album_group_count`=$group_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->album_group_count = $group_count;
-            self::set_last_update((int) $this->id);
-        }
-    }
-
-    /**
-     * update_song_count
-     *
-     * Get song_count for an artist and set it.
-     */
-    public function update_song_count()
-    {
-        $song_count = self::get_song_count((int) $this->id);
-        if ($song_count > 0 && $song_count !== $this->song_count && $this->id) {
-            $sql = "UPDATE `artist` SET `song_count`=$song_count WHERE `id`=" . $this->id;
-            Dba::write($sql);
-            $this->song_count = $song_count;
-            self::set_last_update((int) $this->id);
-        }
     }
 
     /**

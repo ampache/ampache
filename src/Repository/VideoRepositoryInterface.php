@@ -28,7 +28,10 @@ interface VideoRepositoryInterface
      *
      * @return int[]
      */
-    public function getRandom(int $count = 1): array;
+    public function getRandom(
+        int $userId,
+        ?int $count = 1
+    ): array;
 
     /**
      * Return the number of entries in the database...

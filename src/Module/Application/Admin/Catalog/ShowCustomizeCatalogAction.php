@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -56,11 +57,22 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
+        $users = array_merge(array(0 => T_('Public Catalog')), static::getUserRepository()->getValidArray());
         require_once Ui::find_template('show_edit_catalog.inc.php');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

@@ -54,7 +54,7 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type,
         ?int $userId
     ): bool {
-        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
+        $sql = 'SELECT `id` FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
         $params  = array(inet_pton($userIp), inet_pton($userIp), $level, $type);
 
@@ -87,7 +87,7 @@ final class AccessRepository implements AccessRepositoryInterface
         int $userId
     ): bool {
         $db_results = Dba::read(
-            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?',
+            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
             [$inAddrStart, $inAddrEnd, $type, $userId]
         );
 
@@ -139,7 +139,7 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type
     ): void {
         Dba::write(
-            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
+            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
             [$startIp, $endIp, $level, $userId, $name, $type, $accessId]
         );
     }

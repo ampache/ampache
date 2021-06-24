@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
@@ -38,8 +39,10 @@ final class VideoRepository implements VideoRepositoryInterface
      *
      * @return int[]
      */
-    public function getRandom(int $count = 1): array
-    {
+    public function getRandom(
+        int $userId,
+        ?int $count = 1
+    ): array {
         $results = [];
 
         if (!$count) {
@@ -54,6 +57,9 @@ final class VideoRepository implements VideoRepositoryInterface
         }
 
         $sql .= $where;
+        if (AmpConfig::get('catalog_filter') && $userId !== null) {
+            $sql .= " AND" . Catalog::get_user_filter('video', $userId);
+        }
         $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
 
@@ -75,7 +81,7 @@ final class VideoRepository implements VideoRepositoryInterface
     {
         $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
 
-        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
+        $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower((string) $type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
             if ($results['count']) {

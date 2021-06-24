@@ -41,24 +41,21 @@ use Ampache\Module\Util\Ui;
     <?php if (AmpConfig::get('ratings')) { ?>
         <dt><?php echo T_('Rating'); ?></dt>
         <dd>
-            <div id="rating_<?php echo $episode->id; ?>_podcast_episode"><?php echo Rating::show($episode->id,
-                    'podcast_episode'); ?>
+            <div id="rating_<?php echo $episode->id; ?>_podcast_episode">
+                <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php
-    } ?>
+    <?php } ?>
 
     <?php if (AmpConfig::get('userflags')) { ?>
         <dt><?php echo T_('Fav.'); ?></dt>
         <dd>
-            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode"><?php echo Userflag::show($episode->id,
-                    'podcast_episode'); ?>
+            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">
+                <?php echo Userflag::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php
-    } ?>
-<?php
-} ?>
+    <?php } ?>
+<?php } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (!empty($episode->file)) { ?>

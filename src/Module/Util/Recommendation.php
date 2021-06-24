@@ -61,7 +61,7 @@ class Recommendation
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 604800)));
+        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 31556952)));
     }
 
     /**
@@ -274,7 +274,7 @@ class Recommendation
                             $searchname = Catalog::trim_prefix($name);
                             $searchname = Dba::escape($searchname['string']);
                             $sql        = ($catalog_disable)
-                                ? "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? AND " . $enable_filter
+                                ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
 
                             $db_result = Dba::read($sql, array($searchname, $searchname));
@@ -421,6 +421,10 @@ class Recommendation
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
+        if ($object_type == 'artist') {
+            $sql = "UPDATE IGNORE `recommendation_item` SET `recommendation_id` = ? WHERE `recommendation_id` = ?";
+            Dba::write($sql, array($new_object_id, $old_object_id));
+        }
         $sql = "UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));

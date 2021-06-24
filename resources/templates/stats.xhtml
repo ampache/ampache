@@ -1,75 +1,78 @@
 <html>
-    <em i18n:translate="">Catalogs</em>
-    <table class="tabledata">
-        <thead>
-            <tr class="th-top">
-                <th i18n:translate="">Connected Users</th>
-                <th i18n:translate="">Total Users</th>
-                <th i18n:translate="">Albums</th>
-                <th i18n:translate="">Artists</th>
-                <th i18n:translate="">Songs</th>
-                <th i18n:translate="" tal:condition="STATS/displayVideo">Videos</th>
-                <tal:block tal:condition="STATS/displayPodcast">
-                    <th i18n:translate="">Podcasts</th>
-                    <th i18n:translate="">Podcast Episodes</th>
-                </tal:block>
-                <th i18n:translate="">Genres</th>
-                <th i18n:translate="">Catalog Size</th>
-                <th i18n:translate="">Catalog Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr tal:define="CATALOG_STATS STATS/getCatalogStats">
-                <td tal:content="CATALOG_STATS/getConnectedCount">CONNECTED COUNT</td>
-                <td tal:content="CATALOG_STATS/getUserCount">USER COUNT</td>
-                <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
-                <td tal:content="CATALOG_STATS/getArtistCount">ARTIST COUNT</td>
-                <td tal:content="CATALOG_STATS/getSongCount">SONG COUNT</td>
-                <td tal:condition="STATS/displayVideo" tal:content="CATALOG_STATS/getVideoCount">VIDEO COUNT</td>
-                <tal:block tal:condition="STATS/displayPodcast">
-                    <td tal:content="CATALOG_STATS/getPodcastCount">PODCAST COUNT</td>
-                    <td tal:content="CATALOG_STATS/getPodcastEpisodeCount">PODCAST EPISODE COUNT</td>
-                </tal:block>
-                <td tal:content="CATALOG_STATS/getGenreCount">GENRE COUNT</td>
-                <td tal:content="CATALOG_STATS/getCatalogSize">CATALOG SIZE</td>
-                <td tal:content="CATALOG_STATS/getPlayTime">PLAY TIME</td>
-            </tr>
-        </tbody>
-    </table>
-    <hr />
-    <table class="tabledata">
-        <colgroup>
-            <col id="col_catalog" />
-            <col id="col_path" />
-            <col id="col_lastverify" />
-            <col id="col_lastadd" />
-            <col id="col_lastclean" />
-            <col id="cel_items" />
-            <col id="col_total" />
-        </colgroup>
-        <thead>
-            <tr class="th-top">
-                <th class="cel_catalog" i18n:translate="">Name</th>
-                <th class="cel_path" i18n:translate="">Path</th>
-                <th class="cel_lastverify" i18n:translate="">Last Verify</th>
-                <th class="cel_lastadd" i18n:translate="">Last Add</th>
-                <th class="cel_lastclean" i18n:translate="">Last Clean</th>
-                <th class="cel_items" i18n:translate="">Item Count</th>
-                <th class="cel_total" i18n:translate="">Catalog Size</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr tal:repeat="CATALOG STATS/getCatalogDetails">
-                <td class="cel_catalog" tal:content="CATALOG/getName">CATALOG NAME</td>
-                <td class="cel_path" tal:content="structure CATALOG/getFullInfo">FULL INFO</td>
-                <td class="cel_lastverify" tal:content="structure CATALOG/getLastUpdateDate">LAST UPDATE DATE</td>
-                <td class="cel_lastadd" tal:content="structure CATALOG/getLastAddDate">LAST ADD DATE</td>
-                <td class="cel_lastclean" tal:content="structure CATALOG/getLastCleanDate">LAST CLEAN DATE</td>
-                <tal:block tal:define="CATALOG_STATS CATALOG/getCatalogStats">
-                    <td class="cel_items" tal:content="CATALOG_STATS/getItemCount">CATALOG ITEM COUNT</td>
-                    <td class="cel_total" tal:content="CATALOG_STATS/getCatalogSize">CATALOG SIZE</td>
-                </tal:block>
-            </tr>
-        </tbody>
-    </table>
+<em i18n:translate="">Catalogs</em>
+<table class="tabledata">
+    <thead>
+    <tr class="th-top">
+        <th i18n:translate="">Connected Users</th>
+        <th i18n:translate="">Total Users</th>
+        <th i18n:translate="">Albums</th>
+        <th i18n:translate="">Artists</th>
+        <th i18n:translate="">Songs</th>
+        <th i18n:translate="" tal:condition="STATS/displayVideo">Videos</th>
+        <tal:block tal:condition="STATS/displayPodcast">
+            <th i18n:translate="">Podcasts</th>
+            <th i18n:translate="">Podcast Episodes</th>
+        </tal:block>
+        <th i18n:translate="">Genres</th>
+        <th i18n:translate="">Catalog Size</th>
+        <th i18n:translate="">Catalog Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr tal:define="CATALOG_STATS STATS/getCatalogStats">
+        <td tal:content="CATALOG_STATS/getConnectedCount">CONNECTED COUNT</td>
+        <td tal:content="CATALOG_STATS/getUserCount">USER COUNT</td>
+        <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
+        <td tal:content="CATALOG_STATS/getArtistCount">ARTIST COUNT</td>
+        <td tal:content="CATALOG_STATS/getSongCount">SONG COUNT</td>
+        <td tal:condition="STATS/displayVideo" tal:content="CATALOG_STATS/getVideoCount">VIDEO COUNT</td>
+        <tal:block tal:condition="STATS/displayPodcast">
+            <td tal:content="CATALOG_STATS/getPodcastCount">PODCAST COUNT</td>
+            <td tal:content="CATALOG_STATS/getPodcastEpisodeCount">PODCAST EPISODE COUNT</td>
+        </tal:block>
+        <td tal:content="CATALOG_STATS/getGenreCount">GENRE COUNT</td>
+        <td tal:content="CATALOG_STATS/getCatalogSize">CATALOG SIZE</td>
+        <td tal:content="CATALOG_STATS/getPlayTime">PLAY TIME</td>
+    </tr>
+    </tbody>
+</table>
+<hr />
+<table class="tabledata">
+    <colgroup>
+        <col id="col_catalog" />
+        <col id="col_path" />
+        <col id="cel_filter" />
+        <col id="col_lastverify" />
+        <col id="col_lastadd" />
+        <col id="col_lastclean" />
+        <col id="cel_items" />
+        <col id="col_total" />
+    </colgroup>
+    <thead>
+    <tr class="th-top">
+        <th class="cel_catalog" i18n:translate="">Name</th>
+        <th class="cel_path" i18n:translate="">Path</th>
+        <th class="cel_filter" i18n:translate="">Catalog User</th>
+        <th class="cel_lastverify" i18n:translate="">Last Verify</th>
+        <th class="cel_lastadd" i18n:translate="">Last Add</th>
+        <th class="cel_lastclean" i18n:translate="">Last Clean</th>
+        <th class="cel_items" i18n:translate="">Item Count</th>
+        <th class="cel_total" i18n:translate="">Catalog Size</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr tal:repeat="CATALOG STATS/getCatalogDetails">
+        <td class="cel_catalog" tal:content="CATALOG/getName">CATALOG NAME</td>
+        <td class="cel_path" tal:content="structure CATALOG/getFullInfo">FULL INFO</td>
+        <td class="cel_filter" tal:content="structure CATALOG/getFilterUser">FULL INFO</td>
+        <td class="cel_lastverify" tal:content="structure CATALOG/getLastUpdateDate">LAST UPDATE DATE</td>
+        <td class="cel_lastadd" tal:content="structure CATALOG/getLastAddDate">LAST ADD DATE</td>
+        <td class="cel_lastclean" tal:content="structure CATALOG/getLastCleanDate">LAST CLEAN DATE</td>
+        <tal:block tal:define="CATALOG_STATS CATALOG/getCatalogStats">
+            <td class="cel_items" tal:content="CATALOG_STATS/getItemCount">CATALOG ITEM COUNT</td>
+            <td class="cel_total" tal:content="CATALOG_STATS/getCatalogSize">CATALOG SIZE</td>
+        </tal:block>
+    </tr>
+    </tbody>
+</table>
 </html>

@@ -278,7 +278,7 @@ final class InstallationHelper implements InstallationHelperInterface
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_grant .= "@'localhost'";
             }
-            $sql_grant .= "  WITH GRANT OPTION";
+            $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(

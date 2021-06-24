@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -70,11 +71,12 @@ final class NewestAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $this->ui->showBoxTop(T_('Information'));
+        $user = Core::get_global('user');
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'album',
-            Stats::get_newest_sql('album')
+            Stats::get_newest_sql('album', 0, $user->id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -83,7 +85,7 @@ final class NewestAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'artist',
-            Stats::get_newest_sql('artist')
+            Stats::get_newest_sql('artist', 0, $user->id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -96,7 +98,7 @@ final class NewestAction implements ApplicationActionInterface
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(
                 'video',
-                Stats::get_newest_sql('video')
+                Stats::get_newest_sql('video', 0, $user->id)
             );
             $browse->set_simple_browse(true);
             $browse->show_objects();
@@ -106,7 +108,7 @@ final class NewestAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'playlist',
-            Stats::get_newest_sql('playlist')
+            Stats::get_newest_sql('playlist', 0, $user->id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();

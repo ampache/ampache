@@ -435,7 +435,7 @@ class Xml_Data
                         $album->format();
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
-                            "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
+                            "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->f_album_artist_name . "]]></artist>\n" .
                             "</$object_type>\n";
                     }
                     break;
@@ -722,12 +722,12 @@ class Xml_Data
             $string .= "<album id=\"" . $album->id . "\">\n" . "\t<name><![CDATA[" . $album->f_name . "]]></name>\n";
 
             // Do a little check for artist stuff
-            if ($album->album_artist_name != "") {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->album_artist_name]]></artist>\n";
+            if ($album->f_album_artist_name != "") {
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->f_album_artist_name]]></artist>\n";
             } elseif ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->artist_name]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->f_artist_name]]></artist>\n";
             }
 
             // Handle includes

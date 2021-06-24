@@ -75,6 +75,21 @@ $default_sort   = "%a/%A"; ?>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
             <td><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
         </tr>
+        <?php if (AmpConfig::get('catalog_filter')) { ?>
+        <tr>
+            <td><?php echo T_('Catalog User'); ?>:<br /></td>
+            <td>
+                <?php
+                $options  = array();
+                if (!empty($users)) {
+                    foreach ($users as $user_id => $username) {
+                        $options[] = '<option value="' . $user_id . '">' . $username . '</option>';
+                    }
+                    echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
+                } ?>
+            </td>
+        </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('Gather Art'); ?>:</td>
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>

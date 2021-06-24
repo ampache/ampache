@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class CatalogsMethod
@@ -54,7 +55,8 @@ final class CatalogsMethod
     {
         // filter for specific catalog types
         $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = Catalog::get_catalogs($filter);
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $catalogs = Catalog::get_catalogs($filter, $user->id);
 
         if (empty($catalogs)) {
             Api::empty('catalog', $input['api_format']);

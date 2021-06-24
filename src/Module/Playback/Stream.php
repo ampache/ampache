@@ -107,15 +107,7 @@ class Stream
 
         // Are there site-wide constraints? (Dynamic downsampling.)
         if ($max_bitrate > 1) {
-            $sql = 'SELECT COUNT(*) FROM `now_playing` ' .
-                'WHERE `user` IN ' .
-                '(SELECT DISTINCT `user_preference`.`user` ' .
-                'FROM `preference` JOIN `user_preference` ' .
-                'ON `preference`.`id` = ' .
-                '`user_preference`.`preference` ' .
-                "WHERE `preference`.`name` = 'play_type' " .
-                "AND `user_preference`.`value` = 'downsample')";
-
+            $sql        = "SELECT COUNT(*) FROM `now_playing` WHERE `user` IN (SELECT DISTINCT `user_preference`.`user` FROM `preference` JOIN `user_preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` = 'play_type' AND `user_preference`.`value` = 'downsample')";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
@@ -393,9 +385,7 @@ class Stream
     public static function garbage_collection()
     {
         // Remove any Now Playing entries for sessions that have been GC'd
-        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-            "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
-            "WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
+        $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
         Dba::write($sql);
     }
 
@@ -416,9 +406,7 @@ class Stream
             $previous = time();
         }
         // Ensure that this client only has a single row
-        $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?)';
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
@@ -450,17 +438,10 @@ class Stream
      */
     public static function get_now_playing()
     {
-        $sql = 'SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` ';
-        $sql .= 'LEFT JOIN `session` ON `session`.`id` = `np`.`id` ';
+        $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
         if (AmpConfig::get('now_playing_per_user')) {
-            $sql .= 'INNER JOIN ( ' .
-                'SELECT MAX(`insertion`) AS `max_insertion`, `user` ' .
-                'FROM `now_playing` ' .
-                'GROUP BY `user`' .
-                ') `np2` ' .
-                'ON `np`.`user` = `np2`.`user` ' .
-                'AND `np`.`insertion` = `np2`.`max_insertion` ';
+            $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
@@ -472,7 +453,7 @@ class Stream
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
-        $sql .= 'ORDER BY `np`.`expire` DESC';
+        $sql .= "ORDER BY `np`.`expire` DESC";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -503,8 +484,7 @@ class Stream
      */
     public static function check_lock_media($media_id, $type)
     {
-        $sql = 'SELECT `object_id` FROM `now_playing` WHERE ' .
-            '`object_id` = ? AND `object_type` = ?';
+        $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($media_id, $type));
 
         if (Dba::num_rows($db_results)) {

@@ -347,7 +347,7 @@ class Label extends database_object implements library_item
         $active        = $data['active'];
         $creation_date = $data['creation_date'] ?: time();
 
-        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));
 
         return Dba::insert_id();
@@ -400,6 +400,35 @@ class Label extends database_object implements library_item
 
         return $results;
     } // get_display
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
+            $params = array($new_object_id, $old_object_id);
+
+            return Dba::write($sql, $params);
+        }
+
+        return false;
+    }
+
+    /**
+     * garbage_collection
+     *
+     * This cleans out unused artists
+     */
+    public static function garbage_collection()
+    {
+        Dba::write('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+    }
 
     private static function getLabelRepository(): LabelRepositoryInterface
     {

@@ -116,7 +116,7 @@ class Catalog_local extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -296,7 +296,7 @@ class Catalog_local extends Catalog
         } // end while reading directory
 
         if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "Finished reading $path , closing handle", 5);
+            debug_event('local.catalog', "Finished reading $path, closing handle", 5);
         }
 
         // This should only happen on the last run
@@ -565,7 +565,7 @@ class Catalog_local extends Catalog
             if ($total == 0) {
                 continue;
             }
-            $chunks = floor($total / 10000);
+            $chunks = (int)floor($total / 10000);
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
@@ -574,7 +574,6 @@ class Catalog_local extends Catalog
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
-        Catalog::update_counts();
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
@@ -586,9 +585,9 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param $tableName
-     * @param $chunk
-     * @param $chunk_size
+     * @param string $tableName
+     * @param integer $chunk
+     * @param integer $chunk_size
      * @return integer
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
@@ -598,8 +597,8 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = ($tableName == 'song')
-            ? "SELECT `song`.`id`, `song`.`file` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND `song`.`update_time` < `catalog`.`last_update`) ORDER BY `song`.`update_time` ASC, `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
-            : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog`='$this->id' AND (`song`.`update_time` < `catalog`.`last_update` OR `song`.`addition_time` > `catalog`.`last_update`)) ORDER BY `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+            : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog`='$this->id' AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
@@ -627,8 +626,9 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
-            // the file has not been modified since the last verify and you're wasting your time reading this again
-            if ($verify_by_time && filemtime($row['file']) < $this->last_update) {
+            $file_time = filemtime($row['file']);
+            // check the modification time on the file to see if it's worth checking the tags.
+            if ($verify_by_time && ($this->last_update > $file_time && $row['update_time'] > $file_time)) {
                 continue;
             }
 
@@ -686,7 +686,7 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
+                $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
                 Dba::write($sql);
             }
         }

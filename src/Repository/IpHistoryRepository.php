@@ -48,7 +48,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history` " . "WHERE `user`='$userId' " . "$group_sql ORDER BY `date` DESC$limit_sql";
+        $sql = "SELECT `ip`, `date` FROM `ip_history` WHERE `user`='$userId' $group_sql ORDER BY `date` DESC$limit_sql";
 
         $db_results = Dba::read($sql);
         $results    = array();

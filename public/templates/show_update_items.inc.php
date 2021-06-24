@@ -26,24 +26,22 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
-
 $return_id = Catalog::update_single_item($type, $object_id);
-
 //The target URL has changed so it needs to be updated
 if ($object_id != $return_id) {
     $object_id  = $return_id;
     $target_url = AmpConfig::get('web_path') . '/' . $type . 's.php?action=show&amp;' . $type . '=' . $object_id;
-}
-
+} ?>
+<br />
+<strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
+<a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
+<br />
+<?php
 //gather art for this item
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
     if (is_array($catalog_id) && $catalog_id[0] != '') {
         Catalog::gather_art_item($type, $object_id);
     }
-}
- ?>
-<br />
-<strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
-<a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
+} ?>
 <?php Ui::show_box_bottom(); ?>

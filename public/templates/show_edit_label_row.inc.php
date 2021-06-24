@@ -107,7 +107,7 @@ use Ampache\Module\Authorization\Access;
                 <td><input type="text" name="website" value="<?php echo scrub_out($libitem->website); ?>" /></td>
             </tr>
             <tr>
-                <td><?php echo  T_('Status'); ?></td>
+                <td><?php echo T_('Status'); ?></td>
                 <td>
                     <select name="active">
                         <option value="1" <?php if ($libitem->active === 1) {

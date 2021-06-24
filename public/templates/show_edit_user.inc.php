@@ -59,19 +59,19 @@ use Ampache\Module\Util\Ui;
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('Website'); ?>:</td>
+            <td><?php echo T_('Website'); ?>:</td>
             <td><input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('State'); ?>:</td>
+            <td><?php echo T_('State'); ?>:</td>
             <td><input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php echo AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('City'); ?>:</td>
+            <td><?php echo T_('City'); ?>:</td>
             <td><input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php echo AmpError::display('city'); ?>
             </td>
@@ -87,7 +87,7 @@ use Ampache\Module\Util\Ui;
             <td><input type="password" name="password_2" value="" autocomplete="off" /></td>
         </tr>
         <tr>
-            <td><?php echo  T_('User Access Level'); ?>:</td>
+            <td><?php echo T_('User Access Level'); ?>:</td>
             <td>
                 <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                 <select name="access">

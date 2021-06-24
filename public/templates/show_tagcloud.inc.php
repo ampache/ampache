@@ -20,12 +20,12 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 
 $tag_types = array(
     'artist' => T_('Artist'),
@@ -33,9 +33,14 @@ $tag_types = array(
     'song' => T_('Song'),
     'video' => T_('Video'),
 );
+
+/** @var UiInterface $ui */
+
 global $dic;
+$ui = $dic->get(UiInterface::class);
+
 ?>
-<?php UI::show('show_genre_browse_form.inc.php'); ?>
+<?php $ui->show('show_genre_browse_form.inc.php'); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">

@@ -67,7 +67,7 @@ class Clip extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " . "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -103,7 +103,7 @@ class Clip extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        debug_event(self::class, 'insert ' . print_r($data,true) , 5);
+        debug_event(self::class, 'insert ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
         if (empty($song_id)) {
@@ -111,7 +111,7 @@ class Clip extends Video
         }
         if ($artist_id || $song_id) {
             debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
-            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " . "VALUES (?, ?, ?)";
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
 
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
@@ -127,10 +127,10 @@ class Clip extends Video
      */
     public function update(array $data)
     {
-        debug_event(self::class, 'update ' . print_r($data,true) , 5);
+        debug_event(self::class, 'update ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
+        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));

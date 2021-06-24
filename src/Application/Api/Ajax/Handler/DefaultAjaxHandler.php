@@ -88,9 +88,29 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 } else {
                     switch ($_REQUEST['type']) {
                         case 'browse_set':
+                        case 'browse_set_random':
+                            $songs   = array();
                             $browse  = new Browse($_REQUEST['browse_id']);
                             $objects = $browse->get_saved();
-                            foreach ($objects as $object_id) {
+                            switch ($_REQUEST['object_type']) {
+                                case 'album':
+                                    foreach ($objects as $object_id) {
+                                        $songs[] = static::getSongRepository()->getByAlbum($object_id);
+                                    }
+                                    break;
+                                case 'artist':
+                                    foreach ($objects as $object_id) {
+                                        $songs[] = static::getSongRepository()->getAllByArtist($object_id);
+                                    }
+                                    break;
+                                case 'song':
+                                    $songs = $objects;
+                                    break;
+                            } // end switch type
+                            if ($_REQUEST['type'] == 'browse_set_random') {
+                                shuffle($songs);
+                            }
+                            foreach ($songs as $object_id) {
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
@@ -165,14 +185,14 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
             case 'action_buttons':
                 ob_start();
                 if (AmpConfig::get('ratings')) {
-                    echo " <div id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
+                    echo " <span id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
                     echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    echo "</div> |";
+                    echo "</span>";
                 }
                 if (AmpConfig::get('userflags')) {
-                    echo " <div id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
+                    echo " <span id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
                     echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    echo "</div>";
+                    echo "</span>";
                 }
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
@@ -184,5 +204,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
         // Go ahead and do the echo
         echo (string) xoutput_from_array($results);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

@@ -509,7 +509,7 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event(self::class, 'Album check created new album id ' . $album_id, 4);
+        debug_event(self::class, "check album: created {{$album_id}}", 4);
         // map the new id
         Catalog::update_map($catalog, 'album', $album_id);
         // Remove from wanted album list if any request on it
@@ -629,10 +629,6 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
-
-        if ($this->time == 0) {
-            $this->time = $this->getAlbumRepository()->updateTime($this);
-        }
     } // format
 
     /**
@@ -655,12 +651,17 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => (($this->artist_count < 2) ? $this->f_artist_name : '')
+            'value' => ($this->f_album_artist_name)
         );
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
             'value' => $this->f_name
+        );
+        $keywords['year'] = array(
+            'important' => false,
+            'label' => T_('Year'),
+            'value' => $this->year
         );
 
         return $keywords;
@@ -908,6 +909,7 @@ class Album extends database_object implements library_item
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
+                Song::update_utime($song_id);
 
                 $this->getSongId3TagWriter()->write(new Song($song_id));
             }
@@ -1057,6 +1059,33 @@ class Album extends database_object implements library_item
                 debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);
                 Album::update_field('album_artist', $artists[0], $album_id);
             }
+        }
+    }
+
+    /**
+     * update_album_counts
+     *
+     * @param integer $album_id
+     */
+    public static function update_album_counts($album_id)
+    {
+        if ($album_id > 0) {
+            $params = array($album_id);
+            // album.time
+            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+            Dba::write($sql, $params);
+            // album.total_count
+            $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
+            Dba::write($sql, $params);
+            // album.addition_time
+            $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+            Dba::write($sql, $params);
+            // album.song_count
+            $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+            Dba::write($sql, $params);
+            // album.artist_count
+            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+            Dba::write($sql, $params);
         }
     }
 

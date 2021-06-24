@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
@@ -72,6 +73,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
+        Label::garbage_collection();
         $this->useractivityRepository->collectGarbage();
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
