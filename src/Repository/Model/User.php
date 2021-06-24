@@ -751,7 +751,7 @@ class User extends database_object
             self::set_count($user_id, 'time', $time);
             self::set_count($user_id, 'size', $size);
             // grouped album counts
-            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`) AND" . Catalog::get_user_filter('album', $user_id);
+            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
             $data       = Dba::fetch_row($db_results);
             self::set_count($user_id, 'album_group', $data[0]);

@@ -1320,11 +1320,17 @@ class Search extends playlist_object
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
             if ($groupdisks) {
+                /* 'album_group' DEFAULT:
+                 * `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`
+                 */
                 $group[] = "`album`.`prefix`";
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
+                $group[] = "`album`.``album`.`release_type``";
+                $group[] = "`album`.``album`.`release_status``";
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
+                $group[] = "`album`.`original_year`";
             } else {
                 $group[] = "`album`.`id`";
                 $group[] = "`album`.`disk`";
