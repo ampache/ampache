@@ -519,7 +519,7 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = Core::get_global('user')->id ?: -1;
         }
         // check for duplicates
         $results    = array();
