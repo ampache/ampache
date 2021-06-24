@@ -3307,6 +3307,14 @@ abstract class Catalog extends database_object
             Wanted::migrate($object_type, $old_object_id, $new_object_id);
             Metadata::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
+            switch ($object_type) {
+                case 'artist':
+                    Artist::update_artist_counts($new_object_id);
+                    break;
+                case 'album':
+                    Album::update_album_counts($new_object_id);
+                    break;
+            }
 
             return true;
         }
