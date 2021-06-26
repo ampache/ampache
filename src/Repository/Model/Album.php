@@ -943,11 +943,19 @@ class Album extends database_object implements library_item
             }
         } else {
             // run updates on the single fields
-            if (!empty($name) && $name != $this->name) {
-                self::update_field('name', $name, $this->id);
+            if (!empty($name) && $name != $this->full_name) {
+                $trimmed                           = Catalog::trim_prefix(trim((string) $name));
+                $new_name                          = $trimmed['string'];
+                $prefix                            = $trimmed['prefix'];
+                $ndata['album']                    = $name;
+                -                $changed['album'] = 'album';
+
+                self::update_field('name', $new_name, $this->id);
+                self::update_field('prefix', $prefix, $this->id);
             }
+
             if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
-                self::update_field('album_artist', $album_artist, $this->id);
+                self::update_field('album_artist', $new_name, $this->id);
             }
             if (!empty($year) && $year != $this->year) {
                 self::update_field('year', $year, $this->id);
