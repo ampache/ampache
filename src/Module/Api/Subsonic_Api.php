@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
@@ -45,6 +46,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -53,7 +55,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Rating;
 use Requests;
 use Ampache\Repository\Model\Search;
@@ -292,13 +293,13 @@ class Subsonic_Api
                                      'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
                                      'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
                                      'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
-                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
+                                     'time', 'totalHits', 'track', 'userRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
             'keyReplace' => false, // replace values for above search values (as passed to str_replace())
-            'boolean' => true           // replace true and false string with boolean values
+            'boolean' => true // replace true and false string with boolean values
         );
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
@@ -312,7 +313,7 @@ class Subsonic_Api
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
                 $attributeKey = $options['attributePrefix'] . ($prefix ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
-                $strattr      = (string)$attribute;
+                $strattr      = trim((string)$attribute);
                 if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
                 } else {
@@ -448,7 +449,9 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $catalogs = Catalog::get_catalogs('music');
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string)$username);
+        $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
         Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
         self::apiOutput($input, $response);
@@ -464,14 +467,16 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = $input['musicFolderId'];
-        $ifModifiedSince = $input['ifModifiedSince'];
+        $username         = self::check_parameter($input, 'username');
+        $user             = User::get_from_username((string)$username);
+        $musicFolderId    = $input['musicFolderId'];
+        $ifModifiedSince  = $input['ifModifiedSince'];
 
         $catalogs = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
-            $catalogs = Catalog::get_catalogs();
+            $catalogs = Catalog::get_catalogs('', $user->id);
         }
 
         $lastmodified = 0;
@@ -505,7 +510,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
+            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified, $fcatalogs);
         }
         self::apiOutput($input, $response);
     }
@@ -647,10 +652,14 @@ class Subsonic_Api
                 );
                 break;
             case "newest":
-                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
                 break;
             case "highest":
-                $albums = Rating::get_highest("album", $size, $offset);
+                $username = self::check_parameter($input, 'u');
+                $user     = User::get_from_username((string)$username);
+                $albums   = Rating::get_highest("album", $size, $offset, $user->id);
                 break;
             case "frequent":
                 $albums = Stats::get_top("album", $size, 0, $offset);
@@ -659,7 +668,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums = Userflag::get_latest('album', 0, $size);
+                $albums   = Userflag::get_latest('album', 0, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -677,13 +686,14 @@ class Subsonic_Api
                 }
                 break;
             case "byGenre":
-                $genre = self::check_parameter($input, 'genre');
-
+                $genre  = self::check_parameter($input, 'genre');
                 $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
+            default:
+                $albums = false;
         }
 
         return $albums;
@@ -703,9 +713,8 @@ class Subsonic_Api
             $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
             $errorOccured = false;
             $albums       = self::_albumList($input, $type);
-            if (!$albums) {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC,
-                    "Invalid list type: " . scrub_out((string)$type), 'getAlbumList');
+            if ($albums === false) {
+                $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
             }
             if (!$errorOccured) {
@@ -770,13 +779,13 @@ class Subsonic_Api
         if ($musicFolderId) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
                 $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                $finput   = $artist->name;
+                $finput   = $artist->f_name;
                 $operator = 4;
                 $ftype    = "artist";
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->full_name;
+                    $finput   = $album->f_name;
                     $operator = 4;
                     $ftype    = "artist";
                 } else {
@@ -1268,7 +1277,7 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id'));
         $sub_id = str_replace('ar-', '', $sub_id);
         $sub_id = str_replace('pl-', '', $sub_id);
         $sub_id = str_replace('pod-', '', $sub_id);
@@ -1280,6 +1289,7 @@ class Subsonic_Api
         $size   = $input['size'];
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
+            self::setHeader($input['f']);
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1297,8 +1307,7 @@ class Subsonic_Api
         if (($type == 'song')) {
             $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
+                // in most cases the song doesn't have a picture, but the album does
                 $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $show_song_art = AmpConfig::get('show_song_art', false);
                 $art_object    = ($show_song_art) ? $song->id : $song->album;
@@ -1327,6 +1336,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
+            self::setHeader($input['f']);
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1618,8 +1628,9 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
+        $user     = User::get_from_username($input['u']);
         $response = Subsonic_Xml_Data::createSuccessResponse('getshares');
-        $shares   = Share::get_share_list();
+        $shares   = Share::get_share_list($user);
         Subsonic_Xml_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
@@ -1634,10 +1645,10 @@ class Subsonic_Api
     {
         $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
-
         if (AmpConfig::get('share')) {
-            $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = null;
+            $expire_days = (isset($input['expires']))
+                ? (int) $input['expires']
+                : Share::get_expiry($input['expires']);
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_Xml_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_Xml_Data::getAmpacheId($libitem_id[0]);
@@ -1645,7 +1656,7 @@ class Subsonic_Api
                 $object_id   = Subsonic_Xml_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
-                Subsonic_Xml_Data::getAmpacheId($libitem_id);
+                $object_id = Subsonic_Xml_Data::getAmpacheId($libitem_id);
                 if (Subsonic_Xml_Data::isAlbum($libitem_id)) {
                     $object_type = 'album';
                 }
@@ -1658,7 +1669,7 @@ class Subsonic_Api
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
-            if (!empty($object_type)) {
+            if (!empty($object_type) && !empty($object_id)) {
                 // @todo remove after refactoring
                 global $dic;
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
@@ -2113,7 +2124,6 @@ class Subsonic_Api
                 $search['rule_' . $count . '_input']    = $title;
                 $search['rule_' . $count . '_operator'] = 4;
                 $search['rule_' . $count . '']          = "title";
-                ++$count;
             }
 
             $songs    = Search::run($search);
@@ -2309,10 +2319,12 @@ class Subsonic_Api
      */
     public static function createpodcastchannel($input)
     {
-        $url = self::check_parameter($input, 'url');
+        $url      = self::check_parameter($input, 'url');
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string)$username);
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $catalogs = Catalog::get_catalogs('podcast');
+            $catalogs = Catalog::get_catalogs('podcast', $user->id);
             if (count($catalogs) > 0) {
                 $data            = array();
                 $data['feed']    = $url;
@@ -2559,32 +2571,40 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input)
     {
-        $current  = (int)$input['current'];
-        $position = (int) $input['position'] / 1000;
-        $username = (string) $input['u'];
-        $user_id  = User::get_from_username($username)->id;
-        $media    = Subsonic_Xml_Data::getAmpacheObject($current);
+        $current = (int)$input['current'];
+        $media   = Subsonic_Xml_Data::getAmpacheObject($current);
         if ($media->id) {
+            $response = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
+            $position = (int) $input['position'] / 1000;
+            $username = (string) $input['u'];
+            $client   = (string) $input['c'];
+            $user_id  = User::get_from_username($username)->id;
             $time     = time();
-            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $previous = Stats::get_last_play($user_id, $client);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             // long pauses might cause your now_playing to hide
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type);
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
             // track has just started. repeated plays aren't called by scrobble so make sure we call this too
             if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+                $media->set_played((int) $user_id, $client, array(), $time);
             }
             // paused or played after 5 seconds so shift the start time
             if ($position > 5 && $previous['object_id'] == $media->id) {
-                Stats::shift_last_play($user_id, (string) $input['c'], $previous['date'], ($time - $position));
+                Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
             }
+            $playQueue = new User_Playlist($user_id);
+            $sub_ids   = (is_array($input['id']))
+                ? $input['id']
+                : array($input['id']);
+            $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
+            $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
+        } else {
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         }
-        // continue to fail saving the queue
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
+        // we finally support this function
         self::apiOutput($input, $response);
     }
-    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getPlayQueue
@@ -2595,7 +2615,11 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
+        $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
+        $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
+
+        Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::apiOutput($input, $response);
     }
 

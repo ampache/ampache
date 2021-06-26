@@ -35,8 +35,14 @@ use Ampache\Module\Util\Ui;
         <?php echo AmpError::display('name'); ?>
     </td>
 </tr>
+    <tr>
+        <td><?php echo T_('MusicBrainz ID'); ?></td>
+        <td><input type="text" name="mbid" value="<?php echo scrub_out($_REQUEST['mbid']); ?>" />
+            <?php echo AmpError::display('mbid'); ?>
+        </td>
+    </tr>
 <tr>
-    <td><?php echo  T_('Category'); ?></td>
+    <td><?php echo T_('Category'); ?></td>
         <td>
             <select name="category">
                 <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
@@ -48,6 +54,33 @@ use Ampache\Module\Util\Ui;
                 <option value="company" <?php if (Core::get_request('category') === "company") {
     echo "selected";
 } ?>><?php echo T_('Company'); ?></option>
+                <option value="imprint" <?php if (Core::get_request('category') === "imprint") {
+    echo "selected";
+} ?>><?php echo T_('Imprint'); ?></option>
+                <option value="production" <?php if (Core::get_request('category') === "production") {
+    echo "selected";
+} ?>><?php echo T_('Production'); ?></option>
+                <option value="original production" <?php if (Core::get_request('category') === "original production") {
+    echo "selected";
+} ?>><?php echo T_('Original Production'); ?></option>
+                <option value="bootleg production" <?php if (Core::get_request('category') === "bootleg production") {
+    echo "selected";
+} ?>><?php echo T_('Bootleg Production'); ?></option>
+                <option value="reissue production" <?php if (Core::get_request('category') === "reissue production") {
+    echo "selected";
+} ?>><?php echo T_('Reissue Production'); ?></option>
+                <option value="distributor" <?php if (Core::get_request('category') === "distributor") {
+    echo "selected";
+} ?>><?php echo T_('Distributor'); ?></option>
+                <option value="holding" <?php if (Core::get_request('category') === "holding") {
+    echo "selected";
+} ?>><?php echo T_('Holding'); ?></option>
+                <option value="rights society" <?php if (Core::get_request('category') === "rights society") {
+    echo "selected";
+} ?>><?php echo T_('Rights Society'); ?></option>
+                <option value="tag_generated" <?php if (Core::get_request('category') === "tag_generated") {
+    echo "selected";
+} ?>><?php echo T_('Tag Generated'); ?></option>
             </select>
         </td>
 </tr>
@@ -64,6 +97,12 @@ use Ampache\Module\Util\Ui;
         <?php echo AmpError::display('address'); ?>
     </td>
 </tr>
+    <tr>
+        <td><?php echo T_('Country'); ?></td>
+        <td><input type="text" name="country" value="<?php echo scrub_out($_REQUEST['country']); ?>" />
+            <?php echo AmpError::display('country'); ?>
+        </td>
+    </tr>
 <tr>
     <td><?php echo T_('E-mail'); ?></td>
     <td><input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
@@ -74,6 +113,19 @@ use Ampache\Module\Util\Ui;
     <td><?php echo T_('Website'); ?></td>
     <td><input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
         <?php echo AmpError::display('website'); ?>
+    </td>
+</tr>
+<tr>
+    <td><?php echo T_('Status'); ?></td>
+    <td>
+        <select name="active">
+            <option value="1" <?php if ((int)$_REQUEST['active'] === 1) {
+    echo "selected";
+} ?>><?php echo T_('Active'); ?></option>
+            <option value="0" <?php if (empty($_REQUEST['active']) || (int)$_REQUEST['active'] === 0) {
+    echo "selected";
+} ?>><?php echo T_('Inactive'); ?></option>
+        </select>
     </td>
 </tr>
 </table>

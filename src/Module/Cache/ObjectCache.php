@@ -41,7 +41,7 @@ final class ObjectCache implements ObjectCacheInterface
 
     public function compute(): void
     {
-        $thresholds   = [0, $this->configContainer->get('stats_threshold'), AmpConfig::get('popular_threshold', 10)];
+        $thresholds   = [$this->configContainer->get('stats_threshold'), AmpConfig::get('popular_threshold', 10)];
         $count_types  = ['stream', 'download', 'skip'];
         // TODO fix playlist sql.
         $object_types = ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode'];
@@ -49,9 +49,9 @@ final class ObjectCache implements ObjectCacheInterface
         foreach ($thresholds as $threshold) {
             foreach ($count_types as $count_type) {
                 foreach ($object_types as $object_type) {
-                    $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
+                    $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) ";
                     $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null, false, true);
-                    $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
+                    $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES (`count`)";
                     Dba::write($sql);
                 }
             }

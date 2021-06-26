@@ -85,7 +85,7 @@ class TvShow extends database_object implements library_item
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` " . "WHERE `tvshow_season`.`id` IS NULL";
+        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` WHERE `tvshow_season`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -112,20 +112,13 @@ class TvShow extends database_object implements library_item
      */
     public function get_episodes()
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` ";
-        $sql .= "WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
+            : "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
         $sql .= "ORDER BY `tvshow_season`.`season_number`, `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -144,11 +137,11 @@ class TvShow extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
+            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
-            $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " . "WHERE `tvshow_season`.`tvshow` = ?";
+            $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` WHERE `tvshow_season`.`tvshow` = ?";
             $db_results          = Dba::read($sql, array($this->id));
             $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
@@ -398,7 +391,7 @@ class TvShow extends database_object implements library_item
                 Tag::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Userflag::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Rating::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Art::migrate('tvshow', $this->id, (int)$tvshow_id);
+                Art::duplicate('tvshow', $this->id, (int)$tvshow_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }

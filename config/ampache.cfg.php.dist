@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 50
+config_version = 52
 
 ;#########################################################
 ; Auto Update                                            #
@@ -312,11 +312,24 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: "false"
 ;catalog_disable = "true"
 
+; Catalog filter
+; This defines if catalog can be filtered per user.
+; The filters are set in the catalog management pages.
+; WARNING: this increase sensibly sql requests and slow down Ampache a lot
+; DEFAULT: false
+;catalog_filter = "true"
+
 ; Delete from disk
 ; This determines if catalog manager users can delete media from disk.
 ; DEFAULT: "false"
 ;delete_from_disk = "true"
 
+; Catalog verify by time
+; Only verify the files that have been modified since the last verify.
+; For large catalogs the verify process can be terribly long so this will help
+; speed things up by checking modification date using filemtime() before loading
+; DEFAULT: "false"
+;catalog_verify_by_time = "true"
 
 ;#########################################################
 ; Program Settings                                       #

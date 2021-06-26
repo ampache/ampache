@@ -161,7 +161,7 @@ final class ShowAction implements ApplicationActionInterface
             );
             $filename = $item->name ?: $item->title;
 
-            $art = new Art($item->id,  $type,  $kind);
+            $art = new Art($item->id, $type, $kind);
             $art->has_db_info();
             $etag = $art->id;
 

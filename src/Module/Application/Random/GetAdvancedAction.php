@@ -24,16 +24,30 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Random;
 
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class GetAdvancedAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'get_advanced';
+
+    private UiInterface $ui;
+
+    private VideoRepositoryInterface $videoRepository;
+
+    public function __construct(
+        UiInterface $ui,
+        VideoRepositoryInterface $videoRepository
+    ) {
+        $this->ui              = $ui;
+        $this->videoRepository = $videoRepository;
+    }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -45,6 +59,17 @@ final class GetAdvancedAction implements ApplicationActionInterface
                 Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
         }
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_random.inc.php',
+            [
+                'videoRepository' => $this->videoRepository,
+                'object_ids' => $objectIds
+            ]
+        );
+        $this->ui->showQueryStats();
+        $this->ui->showFooter();
 
         return null;
     }

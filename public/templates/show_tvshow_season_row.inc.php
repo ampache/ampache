@@ -25,7 +25,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TvShow;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -60,19 +59,23 @@ use Ampache\Module\Util\Ui;
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
-        <?php echo Rating::show($libitem->id, 'tvshow_season'); ?>
-    </td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
+                    <?php echo Rating::show($libitem->id, 'tvshow_season'); ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
+                    <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
-        <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
-    </td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
 <?php

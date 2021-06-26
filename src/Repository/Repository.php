@@ -33,9 +33,8 @@ class Repository
     protected $modelClassName;
 
     /**
-     *
-     * @var array Stores relation between SQL field name and class name so we
-     * can initialize objects the right way
+     * Stores relation between SQL field name and class name so we can initialize objects the right way
+     * @var array
      */
     protected $fieldClassRelations = array();
 
@@ -168,8 +167,7 @@ class Repository
      */
     protected function insertRecord($properties)
     {
-        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
-                . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
+        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ") VALUES(" . implode(',', array_fill(0, count($properties), '?')) . ")";
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))

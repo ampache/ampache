@@ -114,7 +114,7 @@ class Catalog_Seafile extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `" . self::$table_name . "` (" . "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`server_uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`api_key` VARCHAR( 100 ) COLLATE $collation NOT NULL , " . "`library_name` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`api_call_delay` INT NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `" . self::$table_name . "` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE $collation NOT NULL, `api_key` VARCHAR(100) COLLATE $collation NOT NULL, `library_name` VARCHAR(255) COLLATE $collation NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;

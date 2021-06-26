@@ -59,8 +59,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected $songs = array();
 
     /**
-     *
-     * @var string command which provides the list of all songs
+     * command which provides the list of all songs
+     * @var string $listCommand
      */
     protected $listCommand;
 
@@ -153,7 +153,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -279,7 +279,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
-        return $count;
+        return (int)$count;
     }
 
     /**
@@ -313,8 +313,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected function deleteSongs($songs)
     {
         $ids = implode(',', array_keys($songs));
-        $sql = "DELETE FROM `song` WHERE `id` IN " .
-                '(' . $ids . ')';
+        $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
         Dba::write($sql);
     }
 

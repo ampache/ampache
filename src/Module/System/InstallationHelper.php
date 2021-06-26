@@ -278,7 +278,7 @@ final class InstallationHelper implements InstallationHelperInterface
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_grant .= "@'localhost'";
             }
-            $sql_grant .= "  WITH GRANT OPTION";
+            $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(
@@ -629,7 +629,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * Write new configuration into the current configuration file by keeping old values.
-     * @param $current_file_path
+     * @param string $current_file_path
      * @throws Exception
      */
     public function write_config(string $current_file_path): void

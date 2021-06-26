@@ -30,6 +30,8 @@ interface CatalogDetailsInterface
 
     public function getFullInfo(): string;
 
+    public function getFilterUser(): string;
+
     public function getLastUpdateDate(): string;
 
     public function getLastAddDate(): string;

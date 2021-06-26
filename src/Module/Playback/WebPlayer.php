@@ -193,7 +193,7 @@ class WebPlayer
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                    debug_event("webplayer.class", "Forcing type to {" . $force_type . "}", 5);
+                    debug_event("webplayer.class", "Forcing type to {{$force_type}}", 5);
                     // Transcode only if excepted type available
                     $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                     if (!empty($transcode_settings)) {

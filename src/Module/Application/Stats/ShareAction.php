@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -81,8 +83,10 @@ final class ShareAction implements ApplicationActionInterface
             Ui::get_icon('clean', T_('Clean')),
             T_('Clean Expired Shared Objects')
         );
-
-        $object_ids = Share::get_share_list();
+        $user       = Core::get_global('user');
+        $object_ids = ($user->id)
+            ? Share::get_share_list($user)
+            : array();
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('share');

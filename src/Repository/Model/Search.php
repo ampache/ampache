@@ -66,7 +66,7 @@ class Search extends playlist_object
      */
     public function __construct($search_id = 0, $searchtype = 'song', ?User $user = null)
     {
-        if ($user) {
+        if ($user->id) {
             $this->search_user = $user;
         } else {
             $this->search_user = Core::get_global('user');
@@ -545,9 +545,9 @@ class Search extends playlist_object
         $this->type_text('artist_tag', T_('Artist Tag'));
 
         $users = array();
-        foreach ($this->getUserRepository()->getValid() as $userid) {
-            $user           = new User($userid);
-            $users[$userid] = $user->username;
+        foreach ($this->getUserRepository()->getValid() as $user_id) {
+            $user            = new User($user_id);
+            $users[$user_id] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
         $this->type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users);
@@ -611,12 +611,14 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
         }
-        $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+        if (!empty($catalogs)) {
+            $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+        }
 
         $this->type_text('mbid', T_('MusicBrainz ID'));
         $this->type_text('mbid_album', T_('MusicBrainz ID (Album)'));
@@ -672,13 +674,23 @@ class Search extends playlist_object
         $this->type_text('tag', T_('Genre'));
 
         $users = array();
-        foreach ($this->getUserRepository()->getValid() as $userid) {
-            $user           = new User($userid);
-            $users[$userid] = $user->username;
+        foreach ($this->getUserRepository()->getValid() as $user_id) {
+            $user            = new User($user_id);
+            $users[$user_id] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
+
+        $catalogs = array();
+        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
+            $catalog = Catalog::create_from_id($catid);
+            $catalog->format();
+            $catalogs[$catid] = $catalog->f_name;
+        }
+        if (!empty($catalogs)) {
+            $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+        }
 
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
@@ -702,11 +714,12 @@ class Search extends playlist_object
         $this->type_numeric('year', T_('Year'));
         $this->type_numeric('original_year', T_('Original Year'));
         $this->type_text('release_type', T_('Release Type'));
+        $this->type_text('release_status', T_('Release Status'));
 
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars);
-            $this->type_select('artistrating', T_('Rating (Artist)'), 'numeric', $this->stars);
+            $this->type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars);
         }
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
@@ -724,21 +737,23 @@ class Search extends playlist_object
         $this->type_text('tag', T_('Genre'));
 
         $users = array();
-        foreach ($this->getUserRepository()->getValid() as $userid) {
-            $user           = new User($userid);
-            $users[$userid] = $user->username;
+        foreach ($this->getUserRepository()->getValid() as $user_id) {
+            $user            = new User($user_id);
+            $users[$user_id] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
         }
-        $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+        if (!empty($catalogs)) {
+            $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+        }
 
         $this->type_text('mbid', T_('MusicBrainz ID'));
 
@@ -862,11 +877,10 @@ class Search extends playlist_object
      */
     public static function get_searches()
     {
-        $sql        = "SELECT `id` from `search` WHERE `type`='public' OR " . "`user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+        $sql = "SELECT `id` FROM `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1038,7 +1052,7 @@ class Search extends playlist_object
             } else {
                 $sql .= " AND ";
             }
-            $sql .= "`" . $this->searchtype . "`.`id` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = '" . $this->searchtype . "'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= "`" . $this->searchtype . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->searchtype . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
@@ -1047,8 +1061,10 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        $sql .= ' ORDER BY RAND()';
-        $sql .= ($limit) ? ' LIMIT ' . (string) ($limit) : ' ';
+        $sql .= " ORDER BY RAND()";
+        $sql .= ($limit)
+            ? " LIMIT " . (string) ($limit)
+            : "";
         //debug_event(self::class, 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
@@ -1079,10 +1095,10 @@ class Search extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $results = Dba::fetch_row($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_row($db_results);
 
         return (int)$results['0'];
     } // get_total_duration
@@ -1276,7 +1292,9 @@ class Search extends playlist_object
     private function album_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = $this->search_user->id;
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
 
         $where       = array();
         $table       = array();
@@ -1302,11 +1320,17 @@ class Search extends playlist_object
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
             if ($groupdisks) {
+                /* 'album_group' DEFAULT:
+                 * `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`
+                 */
                 $group[] = "`album`.`prefix`";
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
+                $group[] = "`album`.`release_type`";
+                $group[] = "`album`.`release_status`";
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
+                $group[] = "`album`.`original_year`";
             } else {
                 $group[] = "`album`.`id`";
                 $group[] = "`album`.`disk`";
@@ -1314,7 +1338,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[] = "(`album`.`name` $sql_match_operator '$input' " . " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) $sql_match_operator '$input')";
+                    $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input')";
                     break;
                 case 'year':
                     $where[] = "`album`.`" . $rule[0] . "` $sql_match_operator '$input'";
@@ -1324,23 +1348,20 @@ class Search extends playlist_object
                         "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
-                    $input          = $input * 60;
-                    $where[]        = "`alength`.`time` $sql_match_operator '$input'";
-                    $table['atime'] = "LEFT JOIN (SELECT `album`, SUM(`time`) AS `time` FROM `song` GROUP BY `album`) " . "AS `alength` ON `alength`.`album`=`album`.`id` ";
+                    $input   = $input * 60;
+                    $where[] = "`album`.`time` $sql_match_operator '$input'";
                     break;
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " . "`avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS " . "`average_rating` on `average_rating`.`object_id` = `album`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
-                    $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') " . "AND `favorite_album_$userid`.`user` = $userid " . "AND `favorite_album_$userid`.`object_type` = 'album'";
+                    $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$userid")) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " .
-                        "ON `album`.`id`=`favorite_album_$userid`.`object_id` " .
-                        "AND `favorite_album_$userid`.`object_type` = 'album' " : ' ';
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$user_id"))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_album_$user_id` ON `album`.`id`=`favorite_album_$user_id`.`object_id` AND `favorite_album_$user_id`.`object_type` = 'album'"
+                        : "";
                     break;
                 case 'myrating':
                 case 'artistrating':
@@ -1361,101 +1382,84 @@ class Search extends playlist_object
                         $sql_match_operator = '>=';
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
                     } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                        $where[] = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
                     } else {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
-                        "WHERE `user` = $userid AND `object_type`='$my_type') " .
-                        "AS `rating_" . $my_type . "_" . $userid . "` " .
-                        "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`album`.`$column` " : ' ';
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`album`.`$column`"
+                        : "";
                     break;
                 case 'myplayed':
                     $column       = 'id';
                     $my_type      = 'album';
                     $operator_sql = ((int)$sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
-                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
-                        "`myplayed_" . $my_type . "_" . $userid . "` " .
-                        "ON `album`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `album`.`$column`=`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'last_play':
                     $my_type = 'album';
-                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
-                        "ON `album`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `album`.`id`=`last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_skip':
                     $my_type = 'album';
-                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
-                    $where[]      = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['song'] = true;
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'album';
-                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
-                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " . "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " . "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'release_type':
-                    $where[] = "`album`.`release_type` $sql_match_operator '$input' ";
+                    $where[] = "`album`.`release_type` $sql_match_operator '$input'";
+                    break;
+                case 'release_status':
+                    $where[] = "`album`.`release_status` $sql_match_operator '$input'";
                     break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $where[] = "`favorite_album_$other_userid`.`user` = $other_userid " . " AND `favorite_album_$other_userid`.`object_type` = 'album'";
+                        $where[] = "`favorite_album_$other_userid`.`user` = $other_userid AND `favorite_album_$other_userid`.`object_type` = 'album'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$other_userid")) ?
-                            "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "from `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` " .
-                            "ON `song`.`album`=`favorite_album_$other_userid`.`object_id` " .
-                            "AND `favorite_album_$other_userid`.`object_type` = 'album' " : ' ';
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$other_userid"))
+                            ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` ON `song`.`album`=`favorite_album_$other_userid`.`object_id` AND `favorite_album_$other_userid`.`object_type` = 'album'"
+                            : "";
                     } else {
                         $column  = 'id';
                         $my_type = 'album';
-                        $where[] = "`rating_album_" . $other_userid . '`.' . $sql_match_operator . " AND `rating_album_$other_userid`.`user` = $other_userid " . " AND `rating_album_$other_userid`.`object_type` = 'album'";
+                        $where[] = "`rating_album_" . $other_userid . '`.' . $sql_match_operator . " AND `rating_album_$other_userid`.`user` = $other_userid AND `rating_album_$other_userid`.`object_type` = 'album'";
                         // rating once per user
-                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                            "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
+                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`$my_type`.`$column` AND `rating_" . $my_type . "_" . $user_id . "`.`user` = $user_id"
+                            : "";
                     }
                     break;
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
-                    $join['song'] = true;
+                    $where[] = "`album`.`catalog` $sql_match_operator '$input'";
                     break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
@@ -1469,7 +1473,7 @@ class Search extends playlist_object
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
+                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image_height':
                 case 'image_width':
@@ -1486,36 +1490,44 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate':
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
-                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
-                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 default:
                     break;
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $join['song']        = $join['song'] || $catalog_disable || $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='album' " . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `album`.`id`=`realtag_$key`.`object_id`";
+            $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`GROUP BY `object_id`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='album'";
         }
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
-
-            if ($join['catalog']) {
-                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-                } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-                }
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            }
+        }
+        if ($join['catalog_map']) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id`=`album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
         }
         if ($join['count']) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " . "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " . "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " . "`object_count` ON `object_count`.`object_id`=`album`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`user`='" . $user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
@@ -1548,7 +1560,9 @@ class Search extends playlist_object
     private function artist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = $this->search_user->id;
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
 
         $where       = array();
         $table       = array();
@@ -1576,13 +1590,17 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input' " . " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " . "' ', `artist`.`name`)) $sql_match_operator '$input')";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
                     break;
                 case 'yearformed':
                     $where[] = "`artist`.`yearformed` $sql_match_operator '$input'";
                     break;
                 case 'placeformed':
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
+                    break;
+                case 'time':
+                    $input   = $input * 60;
+                    $where[] = "`artist`.`time` $sql_match_operator '$input'";
                     break;
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
@@ -1597,20 +1615,18 @@ class Search extends playlist_object
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " . "`avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS " . "`average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[] = "(`artist`.`name` $sql_match_operator '$input'  OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$userid")) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
-                        "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
-                        "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$user_id"))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_artist_$user_id` ON `artist`.`id`=`favorite_artist_$user_id`.`object_id` AND `favorite_artist_$user_id`.`object_type` = 'artist'"
+                        : "";
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
+                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image_height':
                 case 'image_width':
@@ -1634,94 +1650,79 @@ class Search extends playlist_object
                         $sql_match_operator = '>=';
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
                     } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                        $where[] = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
                     } else {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
-                        "WHERE `user` = $userid AND `object_type`='$my_type') " .
-                        "AS `rating_" . $my_type . "_" . $userid . "` " .
-                        "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`artist`.`$column` " : ' ';
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`artist`.`$column`"
+                        : "";
                     break;
                 case 'myplayed':
                     $column       = 'id';
                     $my_type      = 'artist';
                     $operator_sql = ((int)$sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
-                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
-                        "`myplayed_" . $my_type . "_" . $userid . "` " .
-                        "ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'last_play':
                     $my_type = 'artist';
-                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
-                        "ON `artist`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `artist`.`id`=`last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_skip':
                     $my_type = 'artist';
-                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
-                    $where[]      = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['song'] = true;
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'artist';
-                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = 'song' " : ' ';
-                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                        : "";
+                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " . "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " . "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $where[] = "`favorite_artist_$other_userid`.`user` = $other_userid " . " AND `favorite_artist_$other_userid`.`object_type` = 'artist'";
+                        $where[] = "`favorite_artist_$other_userid`.`user` = $other_userid AND `favorite_artist_$other_userid`.`object_type` = 'artist'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$other_userid")) ?
-                            "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_artist_$other_userid` " .
-                            "ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` " .
-                            "AND `favorite_artist_$other_userid`.`object_type` = 'artist' " : ' ';
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$other_userid"))
+                            ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_artist_$other_userid` ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` AND `favorite_artist_$other_userid`.`object_type` = 'artist'"
+                            : "";
                     } else {
                         $column  = 'id';
                         $my_type = 'artist';
-                        $where[] = "`rating_artist_" . $other_userid . '`.' . $sql_match_operator . " AND `rating_artist_$other_userid`.`user` = $other_userid " . " AND `rating_artist_$other_userid`.`object_type` = 'artist'";
+                        $where[] = "`rating_artist_" . $other_userid . '`.' . $sql_match_operator . " AND `rating_artist_$other_userid`.`user` = $other_userid AND `rating_artist_$other_userid`.`object_type` = 'artist'";
                         // rating once per user
-                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                            "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
-                            "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
+                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`$my_type`.`$column` AND `rating_" . $my_type . "_" . $user_id . "`.`user` = $user_id"
+                            : "";
                     }
                     break;
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    break;
+                case 'catalog':
+                    $where[]                = "`artist_catalog`.`catalog_id` $sql_match_operator '$input'";
+                    $join['artist_catalog'] = true;
                     break;
                 case 'mbid':
                     $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
@@ -1733,42 +1734,53 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate_album':
                     $where[]                     = "(`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL)";
-                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
-                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
+                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
+                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
                     break;
                 default:
                     break;
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['song']        = $join['song'] || $catalog_disable || $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='artist' " . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `artist`.`id`=`realtag_$key`.`object_id`";
+            $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type` GROUP BY `object_id`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='artist'";
         }
 
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id`";
-
-            if ($join['catalog']) {
-                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-                } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
-                }
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            }
+        }
+        if ($join['catalog_map']) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id`=`artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
         }
         if ($join['count']) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " . "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " . "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " . "`object_count` ON `object_count`.`object_id`=`artist`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`user`='" . $user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
+        }
+        if ($join['artist_catalog']) {
+            $table['catalog_map'] = "LEFT JOIN `catalog_map` AS `artist_catalog` ON `artist_catalog`.`object_type` = 'artist' AND `artist_catalog`.`object_id`=`artist`.`id`";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -1776,7 +1788,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`',
+            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`",
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -1795,7 +1807,9 @@ class Search extends playlist_object
     private function song_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = $this->search_user->id;
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
 
         $where       = array();
         $table       = array();
@@ -1826,25 +1840,25 @@ class Search extends playlist_object
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
                         $tag_string        = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
                         $tag_string        = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($operator['description'] == 'is') {
                         $tag_string        = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } elseif ($operator['description'] == 'is not') {
                         $tag_string        = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } else {
                         $tag_string        = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
-                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
+                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0";
                     }
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
-                        $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR " . "(`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR " . "`song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR " . "`song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
+                        $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR (`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
                     } else {
-                        $where[] = "((`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') OR " . "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') OR " . "`song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR " . "`song`.`title` $sql_match_operator '$input' OR " . $tag_string . ')';
+                        $where[] = "((`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') OR (`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input' OR " . $tag_string . ')';
                     }
                     // join it all up
                     $table['album']    = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
@@ -1854,39 +1868,39 @@ class Search extends playlist_object
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
-                        $where[]           = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $where[]           = "`realtag_$key`.`name` IS NOT NULL";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
-                        $where[]           = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
+                        $where[]           = "`realtag_$key`.`name` IS NULL";
+                        $join['tag'][$key] = "AND `tag`.`name` LIKE '$input'";
                     } elseif ($operator['description'] == 'is') {
-                        $where[]           = "`realtag_$key`.`name` IS NOT NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $where[]           = "`realtag_$key`.`name` IS NOT NULL";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } elseif ($operator['description'] == 'is not') {
-                        $where[]           = "`realtag_$key`.`name` IS NULL ";
-                        $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
+                        $where[]           = "`realtag_$key`.`name` IS NULL";
+                        $join['tag'][$key] = "AND `tag`.`name` = '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
-                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0";
                     }
                     break;
                 case 'album_tag':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     $key            = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL";
                         $join['album_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                 = "`realtag_$key`.`name` IS NULL";
                         $join['album_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($operator['description'] == 'is') {
-                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL";
                         $join['album_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } elseif ($operator['description'] == 'is not') {
-                        $where[]                 = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                 = "`realtag_$key`.`name` IS NULL";
                         $join['album_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } else {
-                        $where[]                 = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
+                        $where[]                 = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['album_tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
                     }
                     break;
@@ -1894,19 +1908,19 @@ class Search extends playlist_object
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     $key             = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
-                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL";
                         $join['artist_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
-                        $where[]                  = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NULL";
                         $join['artist_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($operator['description'] == 'is') {
-                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL";
                         $join['artist_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } elseif ($operator['description'] == 'is not') {
-                        $where[]                  = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NULL";
                         $join['artist_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } else {
-                        $where[]                  = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
+                        $where[]                  = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['artist_tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
                     }
                     break;
@@ -1914,11 +1928,11 @@ class Search extends playlist_object
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                     break;
                 case 'album':
-                    $where[]        = "(`album`.`name` $sql_match_operator '$input' " . " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " . "' ', `album`.`name`)) $sql_match_operator '$input')";
+                    $where[]        = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input')";
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     break;
                 case 'artist':
-                    $where[]         = "(`artist`.`name` $sql_match_operator '$input' " . " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " . "' ', `artist`.`name`)) $sql_match_operator '$input')";
+                    $where[]         = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     break;
                 case 'album_artist':
@@ -1958,39 +1972,34 @@ class Search extends playlist_object
                     break;
                 case 'last_play':
                     $my_type = 'song';
-                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_skip':
                     $my_type = 'song';
-                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $userid)) ?
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
+                        ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `last_skip_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`last_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                        "AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` " .
+                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $user_id . "`.`object_id` " .
+                        "AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type' " : "";
+                    $where[] = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'song';
-                    $table['last_play_or_skip'] .= (!strpos((string) $table['play_or_skip'], "play_or_skip_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `play_or_skip_" . $my_type . "_" . $userid . "` " .
-                        "ON `song`.`id`=`play_or_skip_" . $my_type . "_" . $userid . "`.`object_id` " .
-                        "AND `play_or_skip_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                    $where[] = "`play_or_skip_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['play_or_skip'], "play_or_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `play_or_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " . "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " . "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'skipped_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " . "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " . "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'played_or_skipped_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
@@ -1998,7 +2007,7 @@ class Search extends playlist_object
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                     break;
                 case 'play_skip_ratio':
-                    $where[] = "`song`.`id` IN (SELECT `song`.`id` FROM `song` " . "LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` " . "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' " . "GROUP BY `object_id`, `count_type`) AS `stream_count` on `song`.`id` = `stream_count`.`object_id`" . "LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` " . "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'skip' " . "GROUP BY `object_id`, `count_type`) AS `skip_count` on `song`.`id` = `skip_count`.`object_id` " . "WHERE ((IFNULL(`stream_count`.`counting`, 0)/IFNULL(`skip_count`.`counting`, 0)) * 100) " . "$sql_match_operator '$input' GROUP BY `song`.`id`)";
+                    $where[] = "`song`.`id` IN (SELECT `song`.`id` FROM `song` LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' GROUP BY `object_id`, `count_type`) AS `stream_count` on `song`.`id` = `stream_count`.`object_id` LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'skip' GROUP BY `object_id`, `count_type`) AS `skip_count` on `song`.`id` = `skip_count`.`object_id` WHERE ((IFNULL(`stream_count`.`counting`, 0)/IFNULL(`skip_count`.`counting`, 0)) * 100) $sql_match_operator '$input' GROUP BY `song`.`id`)";
                     break;
                 case 'myplayed':
                 case 'myplayedalbum':
@@ -2009,14 +2018,10 @@ class Search extends playlist_object
                 $my_type      = ($looking == '') ? 'song' : $looking;
                 $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                 // played once per user
-                $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
-                    "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
-                    "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                    "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
-                    "`myplayed_" . $my_type . "_" . $userid . "` " .
-                    "ON `song`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
-                    "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
-                $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
+                $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
+                    ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `song`.`$column`=`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                    : "";
+                $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'bitrate':
                     $input   = $input * 1000;
@@ -2025,16 +2030,14 @@ class Search extends playlist_object
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " . "`avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS " . "`average_rating` on `average_rating`.`object_id` = `song`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `song`.`id` ";
                     break;
                 case 'favorite':
-                    $where[] = "`song`.`title` $sql_match_operator '$input' " . "AND `favorite_song_$userid`.`user` = $userid " . "AND `favorite_song_$userid`.`object_type` = 'song'";
+                    $where[] = "`song`.`title` $sql_match_operator '$input' AND `favorite_song_$user_id`.`user` = $user_id AND `favorite_song_$user_id`.`object_type` = 'song'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_$userid")) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_song_$userid` " .
-                        "ON `song`.`id`=`favorite_song_$userid`.`object_id` " .
-                        "AND `favorite_song_$userid`.`object_type` = 'song' " : ' ';
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_$user_id"))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_song_$user_id` ON `song`.`id`=`favorite_song_$user_id`.`object_id` AND `favorite_song_$user_id`.`object_type` = 'song'"
+                        : "";
                     break;
                 case 'myrating':
                 case 'albumrating':
@@ -2055,18 +2058,16 @@ class Search extends playlist_object
                         $sql_match_operator = '>=';
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
                     } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                        $where[] = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
                     } else {
-                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
-                        "WHERE `user` = $userid AND `object_type`='$my_type') " .
-                        "AS `rating_" . $my_type . "_" . $userid . "` " .
-                        "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`song`.`$column` " : ' ';
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`song`.`$column`"
+                        : "";
                     break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
@@ -2080,22 +2081,18 @@ class Search extends playlist_object
                     $my_type      = ($looking == 'other_user') ? 'song' : $looking;
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $where[] = "`favorite_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid " . " AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
+                        $where[] = "`favorite_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_" . $my_type . "_" . $other_userid . "")) ?
-                            "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "from `user_flag` WHERE `user` = $other_userid) AS `favorite_" . $my_type . "_" . $other_userid . "` " .
-                            "ON `song`.`$column`=`favorite_" . $my_type . "_" . $other_userid . "`.`object_id` " .
-                            "AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type' " : ' ';
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_" . $my_type . "_" . $other_userid . ""))
+                            ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_" . $my_type . "_" . $other_userid . "` ON `song`.`$column`=`favorite_" . $my_type . "_" . $other_userid . "`.`object_id` AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'"
+                            : "";
                     } else {
                         $unrated = ($sql_match_operator == 'unrated');
-                        $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $other_userid)" : "`rating_" . $my_type . "_" . $other_userid . "`.$sql_match_operator" . " AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid " . " AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
+                        $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $other_userid)" : "`rating_" . $my_type . "_" . $other_userid . "`.$sql_match_operator AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
                         // rating once per user
-                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $other_userid)) ?
-                            "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON " .
-                            "`rating_" . $my_type . "_" . $other_userid . "`.`object_type`='$my_type' AND " .
-                            "`rating_" . $my_type . "_" . $other_userid . "`.`object_id`=`song`.`$column` AND " .
-                            "`rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid " : ' ';
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $other_userid))
+                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON `rating_" . $my_type . "_" . $other_userid . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $other_userid . "`.`object_id`=`song`.`$column` AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid"
+                            : "";
                     }
                     break;
                 case 'playlist_name':
@@ -2116,10 +2113,9 @@ class Search extends playlist_object
                         foreach ($results as $item) {
                             $itemstring .= ' ' . $item['object_id'] . ',';
                         }
-                        $table['smart'] .= (!strpos((string) $table['smart'], "smart_" . $input)) ?
-                            "LEFT JOIN (SELECT `id` FROM `song` " .
-                            "WHERE `id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")) " .
-                            "AS `smartlist_$input` ON `smartlist_$input`.`id` = `song`.`id`" : ' ';
+                        $table['smart'] .= (!strpos((string) $table['smart'], "smart_" . $input))
+                            ? "LEFT JOIN (SELECT `id` FROM `song` WHERE `id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")) AS `smartlist_$input` ON `smartlist_$input`.`id` = `song`.`id`"
+                            : "";
                         $where[]  = "`smartlist_$input`.`id` IS NOT NULL";
                         // HACK: array_merge would potentially lose tags, since it
                         // overwrites. Save our merged tag joins in a temp variable,
@@ -2143,17 +2139,17 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` from `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'recent_updated':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
-                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
+                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
                     $where[] = "`song`.`mbid` $sql_match_operator '$input'";
@@ -2195,7 +2191,8 @@ class Search extends playlist_object
             $where[] = $metadata_sql . '))';
         }
 
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['catalog_map'] = $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -2205,17 +2202,17 @@ class Search extends playlist_object
         }
         if ($join['tag']) {
             foreach ($join['tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='song' " . "$value" . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `song`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='song' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `song`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='song'";
             }
         }
         if ($join['album_tag']) {
             foreach ($join['album_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='album' " . "$value" . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `album`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='album' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `album`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='album'";
             }
         }
         if ($join['artist_tag']) {
             foreach ($join['artist_tag'] as $key => $value) {
-                $table['tag_' . $key] = "LEFT JOIN (" . "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " . "FROM `tag` LEFT JOIN `tag_map` " . "ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`object_type`='artist' " . "$value" . "GROUP BY `object_id`" . ") AS `realtag_$key` " . "ON `artist`.`id`=`realtag_$key`.`object_id`";
+                $table['tag_' . $key] = "LEFT JOIN (SELECT `tag_map`.`object_type`, `tag_map`.`object_id`, `tag`.`name` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`object_type`='artist' AND `tag`.`is_hidden` = 0 AND `tag_map`.`tag_id` IS NOT NULL $value GROUP BY `tag`.`id`, `tag`.`name`, `object_id`, `object_type`) AS `realtag_$key` ON `artist`.`id`=`realtag_$key`.`object_id` AND `realtag_$key`.`object_type`='artist'";
             }
         }
         if ($join['playlist_data']) {
@@ -2225,11 +2222,19 @@ class Search extends playlist_object
             }
         }
         if ($join['catalog']) {
-            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
             if (!empty($where_sql)) {
                 $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
                 $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            }
+        }
+        if ($join['catalog_map']) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id`=`song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
         }
         ksort($table);
@@ -2258,6 +2263,9 @@ class Search extends playlist_object
     private function video_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
 
         $where  = array();
         $table  = array();
@@ -2290,16 +2298,25 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['catalog_map'] = $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         if ($join['catalog']) {
-            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql .= " `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+            }
+        }
+        if ($join['catalog_map']) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id`=`video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
         }
         ksort($table);
@@ -2328,11 +2345,15 @@ class Search extends playlist_object
     private function playlist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $where              = array();
-        $table              = array();
-        $join               = array();
-        $group              = array();
-        $having             = array();
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where  = array();
+        $table  = array();
+        $join   = array();
+        $group  = array();
+        $having = array();
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
@@ -2350,7 +2371,7 @@ class Search extends playlist_object
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
-            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $this->search_user->id . ")";
+            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . ")";
 
             switch ($rule[0]) {
                 case 'title':
@@ -2363,26 +2384,34 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['playlist_data'] = true;
-        $join['song']          = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog']       = AmpConfig::get('catalog_disable');
+        $join['song']          = $join['song'] || $catalog_disable || $catalog_filter;
+        $join['catalog']       = $catalog_disable || $catalog_filter;
+        $join['catalog_map']   = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         if ($join['playlist_data']) {
-            $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
+            $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }
-
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
-
-            if ($join['catalog']) {
-                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            if ($catalog_disable) {
                 if (!empty($where_sql)) {
                     $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
                     $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 }
+            }
+        }
+        if ($join['catalog_map']) {
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
         }
         ksort($table);
@@ -2411,9 +2440,13 @@ class Search extends playlist_object
     private function label_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $where              = array();
-        $table              = array();
-        $join               = array();
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where = array();
+        $table = array();
+        $join  = array();
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
@@ -2444,7 +2477,35 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
+        $join['catalog_map'] = $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+
         $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if ($catalog_disable || $catalog_filter) {
+            $table['0_label_asso']  = "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id`";
+            $table['1_artist']      = "LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id`";
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id`=`artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
+        }
+
+        if ($join['catalog_map']) {
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            }
+        }
+        if ($join['catalog']) {
+            $table['3_catalog'] = "LEFT JOIN `catalog`AS `catalog_se` ON `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
+            if ($catalog_disable) {
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
+            }
+        }
+        $table_sql = implode(' ', $table);
 
         return array(
             'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
@@ -2452,7 +2513,7 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => '',
+            'table_sql' => $table_sql,
             'group_sql' => '',
             'having_sql' => ''
         );
@@ -2468,9 +2529,13 @@ class Search extends playlist_object
     private function tag_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $where              = array();
-        $table              = array();
-        $join               = array();
+        $user_id            = $this->search_user->id;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where = array();
+        $table = array();
+        $join  = array();
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
@@ -2501,7 +2566,27 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
+        $join['catalog_map'] = $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+
         $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+            }
+        }
+        if ($join['catalog_map']) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id`=`album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+            } else {
+                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+            }
+        }
 
         return array(
             'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
@@ -2524,9 +2609,10 @@ class Search extends playlist_object
     private function user_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $where              = array();
-        $table              = array();
-        $join               = array();
+
+        $where = array();
+        $table = array();
+        $join  = array();
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);

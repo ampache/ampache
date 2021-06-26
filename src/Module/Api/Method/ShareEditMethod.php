@@ -63,8 +63,9 @@ final class ShareEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user     = User::get_from_username(Session::username($input['auth']));
         $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list())) {
+        if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);
             $description = isset($input['description']) ? $input['description'] : $share->description;
             $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;

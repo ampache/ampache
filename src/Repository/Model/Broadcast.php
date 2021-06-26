@@ -126,7 +126,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_listeners($listeners)
     {
-        $sql = "UPDATE `broadcast` SET `listeners` = ? " . "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
         $this->listeners = $listeners;
     }
@@ -137,7 +137,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_song($song_id)
     {
-        $sql = "UPDATE `broadcast` SET `song` = ? " . "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
         $this->song          = $song_id;
         $this->song_position = 0;
@@ -184,7 +184,7 @@ class Broadcast extends database_object implements library_item
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " . "WHERE `id` = ?";
+        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
         Dba::write($sql, $params);
 

@@ -40,7 +40,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->full_name) . '&nbsp;(' . $album->year . ')';
+$title = scrub_out($album->f_name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
@@ -74,26 +74,35 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     </div>
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php echo Rating::show($album->id, 'album'); ?>
-    </div>
+    <span id="rating_<?php echo $album->id; ?>_album">
+        <?php echo Rating::show($album->id, 'album'); ?>
+    </span>
     <?php
         } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-            <?php echo Userflag::show($album->id, 'album'); ?>
-    </div>
+    <span id="userflag_<?php echo $album->id; ?>_album">
+        <?php echo Userflag::show($album->id, 'album'); ?>
+    </span>
     <?php
         } ?>
 <?php
     } ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <br />
+    <div style="display:inline;">
+        <?php echo T_('Played') . ' ' .
+            /* HINT: Number of times an object has been played */
+            sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+    </div>
+<?php
+} ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
@@ -217,7 +226,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         $browse->set_filter('album', $album_id);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
-        $browse->show_objects(null, true); // true argument is set to show the reorder column
+        $browse->show_objects(null, array('hide' => array('cel_album', 'cel_year', 'cel_drag')));
         $browse->store(); ?>
     </div><br />
 <?php

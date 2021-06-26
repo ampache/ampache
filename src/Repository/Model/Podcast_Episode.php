@@ -75,6 +75,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
+    private $total_count;
 
     /**
      * Constructor
@@ -169,13 +170,12 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->catalog        = $podcast->catalog;
             $this->f_podcast      = $podcast->f_title;
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
         if (AmpConfig::get('show_played_times')) {
-            $this->object_cnt = Stats::get_object_count('podcast_episode', $this->id);
+            $this->object_cnt = (int) $this->total_count;
         }
 
         return true;

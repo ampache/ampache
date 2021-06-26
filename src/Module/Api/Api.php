@@ -29,6 +29,8 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * API Class
@@ -147,7 +149,7 @@ class Api
     ];
 
     /**
-     *  @var string $auth_version
+     * @var string $auth_version
      */
     public static $auth_version = '350001';
 
@@ -252,20 +254,20 @@ class Api
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    $browse->set_filter('add_lt', strtotime((string) $elements['1']));
-                    $browse->set_filter('add_gt', strtotime((string) $elements['0']));
+                    $browse->set_filter('add_lt', strtotime((string)$elements['1']));
+                    $browse->set_filter('add_gt', strtotime((string)$elements['0']));
                 } else {
-                    $browse->set_filter('add_gt', strtotime((string) $value));
+                    $browse->set_filter('add_gt', strtotime((string)$value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    $browse->set_filter('update_lt', strtotime((string) $elements['1']));
-                    $browse->set_filter('update_gt', strtotime((string) $elements['0']));
+                    $browse->set_filter('update_lt', strtotime((string)$elements['1']));
+                    $browse->set_filter('update_gt', strtotime((string)$elements['0']));
                 } else {
-                    $browse->set_filter('update_gt', strtotime((string) $value));
+                    $browse->set_filter('update_gt', strtotime((string)$value));
                 }
                 break;
             case 'alpha_match':
@@ -356,30 +358,44 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $counts    = Catalog::count_server(true);
+        $client      = static::getUserRepository()->findByApiKey(trim($token));
+        $counts      = Catalog::get_server_counts($client->id);
+        $album_count = (Preference::get('album_group', $client->id))
+            ? (int)$counts['album_group']
+            : (int)$counts['album'];
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
         $outarray = array('api' => Api::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-            'update' => date("c", (int) $details['update']),
-            'add' => date("c", (int) $details['add']),
-            'clean' => date("c", (int) $details['clean']),
-            'songs' => (int) $counts['song'],
-            'albums' => (int) $counts['album'],
-            'artists' => (int) $counts['artist'],
-            'genres' => (int) $counts['tag'],
-            'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-            'users' => ((int) $counts['user'] + (int) $counts['user']),
-            'catalogs' => (int) $counts['catalog'],
-            'videos' => (int) $counts['video'],
-            'podcasts' => (int) $counts['podcast'],
-            'podcast_episodes' => (int) $counts['podcast_episode'],
-            'shares' => (int) $counts['share'],
-            'licenses' => (int) $counts['license'],
-            'live_streams' => (int) $counts['live_stream'],
-            'labels' => (int) $counts['label']);
+            'update' => date("c", (int)$details['update']),
+            'add' => date("c", (int)$details['add']),
+            'clean' => date("c", (int)$details['clean']),
+            'songs' => (int)$counts['song'],
+            'albums' => $album_count,
+            'artists' => (int)$counts['artist'],
+            'genres' => (int)$counts['tag'],
+            'playlists' => ((int)$counts['playlist'] + (int)$counts['search']),
+            'users' => ((int)$counts['user'] + (int)$counts['user']),
+            'catalogs' => (int)$counts['catalog'],
+            'videos' => (int)$counts['video'],
+            'podcasts' => (int)$counts['podcast'],
+            'podcast_episodes' => (int)$counts['podcast_episode'],
+            'shares' => (int)$counts['share'],
+            'licenses' => (int)$counts['license'],
+            'live_streams' => (int)$counts['live_stream'],
+            'labels' => (int)$counts['label']);
 
         return array_merge($autharray, $outarray);
     } // server_details
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
 }

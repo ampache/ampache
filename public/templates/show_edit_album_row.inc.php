@@ -32,22 +32,7 @@ use Ampache\Module\Api\Ajax;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->full_name); ?>" autofocus /></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
-                <td>
-                    <?php
-                        if (Access::check('interface', 50)) {
-                            if ($libitem->artist_count == '1') {
-                                show_artist_select('artist', $libitem->artist_id);
-                            } else {
-                                echo T_('Various');
-                            }
-                        } else {
-                            echo $libitem->f_artist_name;
-                        } ?>
-                </td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_name); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
@@ -97,6 +82,10 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Type') ?></td>
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Status') ?></td>
+                <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>

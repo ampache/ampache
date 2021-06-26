@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -139,18 +140,29 @@ class AmpacheRatingMatch
      */
     public function save_rating($rating, $new_rating)
     {
-        if ($rating->type == 'song' && $new_rating >= $this->min_stars && $this->min_stars > 0) {
-            $song   = new Song($rating->id);
-            $artist = new Rating($song->artist, 'artist');
-            $album  = new Rating($song->album, 'album');
+        if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
+            if ($rating->type == 'song') {
+                $song   = new Song($rating->id);
+                $artist = new Rating($song->artist, 'artist');
+                $album  = new Rating($song->album, 'album');
 
-            $rating_artist = (int) $artist->get_user_rating($this->user_id);
-            $rating_album  = (int) $album->get_user_rating($this->user_id);
-            if ($rating_artist < $new_rating) {
-                $artist->set_rating($new_rating, $this->user_id);
+                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                $rating_album  = (int)$album->get_user_rating($this->user_id);
+                if ($rating_artist < $new_rating) {
+                    $artist->set_rating($new_rating, $this->user_id);
+                }
+                if ($rating_album < $new_rating) {
+                    $album->set_rating($new_rating, $this->user_id);
+                }
             }
-            if ($rating_album < $new_rating) {
-                $album->set_rating($new_rating, $this->user_id);
+            if ($rating->type == 'album') {
+                $album  = new Album($rating->id);
+                $artist = new Rating($album->album_artist, 'artist');
+
+                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                if ($rating_artist < $new_rating) {
+                    $artist->set_rating($new_rating, $this->user_id);
+                }
             }
         }
     }
@@ -193,9 +205,7 @@ class AmpacheRatingMatch
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS `counting` " .
-            "FROM object_count WHERE object_type = 'song' AND " .
-            "`count_type` = ? AND object_id = ? AND user = ?;";
+        $sql = "SELECT COUNT(*) AS `counting` FROM object_count WHERE object_type = 'song' AND `count_type` = ? AND object_id = ? AND user = ?;";
 
         // get the plays for your user
         $db_results  = Dba::read($sql, array('stream', $song->id, $this->user_id));

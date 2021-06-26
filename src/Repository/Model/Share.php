@@ -223,14 +223,19 @@ class Share extends database_object
 
     /**
      * get_share_list_sql
+     * @param User $user
      * @return string
      */
-    public static function get_share_list_sql()
+    public static function get_share_list_sql($user)
     {
-        $sql = "SELECT `id` FROM `share` ";
-
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . (string)Core::get_global('user')->id . "'";
+        $sql   = "SELECT `id` FROM `share` ";
+        $multi = 'WHERE ';
+        if (!$user->has_access('75')) {
+            $sql .= "WHERE `user` = '" . $user->id . "'";
+            $multi = ' AND ';
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= $multi . Catalog::get_user_filter('share', $user->id);
         }
 
         return $sql;
@@ -238,11 +243,12 @@ class Share extends database_object
 
     /**
      * get_share_list
+     * @param User $user
      * @return array
      */
-    public static function get_share_list()
+    public static function get_share_list($user)
     {
-        $sql        = self::get_share_list_sql();
+        $sql        = self::get_share_list_sql($user);
         $db_results = Dba::read($sql);
         $results    = array();
 
@@ -322,7 +328,7 @@ class Share extends database_object
         $this->allow_download = ($data['allow_download'] == '1');
         $this->description    = isset($data['description']) ? $data['description'] : $this->description;
 
-        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " . "WHERE `id` = ?";
+        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
         $params = array(
             $this->max_counter,
             $this->expire_days,

@@ -79,7 +79,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "WHERE `tvshow_episode`.`id` IS NULL";
+        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` WHERE `tvshow_episode`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -90,19 +90,13 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_episodes()
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
+            : "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` WHERE `tvshow_episode`.`season`='" . Dba::escape($this->id) . "' ";
         $sql .= "ORDER BY `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -121,7 +115,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_episode`.`season` = ?" . "GROUP BY `catalog_id`";
+            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_episode`.`season` = ?GROUP BY `catalog_id`";
 
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);

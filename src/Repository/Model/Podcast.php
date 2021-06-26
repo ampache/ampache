@@ -105,18 +105,18 @@ class Podcast extends database_object implements library_item
      */
     public function get_episodes($state_filter = '')
     {
-        $params = array();
-        $sql    = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` ";
+        $params          = array();
+        $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        if ($catalog_disable) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ";
         }
         $sql .= "WHERE `podcast_episode`.`podcast`='" . Dba::escape($this->id) . "' ";
         if (!empty($state_filter)) {
             $sql .= "AND `podcast_episode`.`state` = ? ";
             $params[] = $state_filter;
         }
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog_disable) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `podcast_episode`.`pubdate` DESC";
@@ -141,7 +141,7 @@ class Podcast extends database_object implements library_item
         if (parent::is_cached('podcast_extra', $this->id)) {
             $row = parent::get_from_cache('podcast_extra', $this->id);
         } else {
-            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` " . "WHERE `podcast_episode`.`podcast` = ?";
+            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -427,6 +427,7 @@ class Podcast extends database_object implements library_item
                 $art = new Art((int)$podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
+            Catalog::update_map($catalog_id, 'podcast', (int)$podcast_id);
             if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
@@ -455,7 +456,7 @@ class Podcast extends database_object implements library_item
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
         if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` " . "WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` " . "ORDER BY `podcast_episode`.`pubdate` DESC";
+            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` ORDER BY `podcast_episode`.`pubdate` DESC";
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
@@ -471,13 +472,14 @@ class Podcast extends database_object implements library_item
         // Remove items outside limit
         $keepnb = AmpConfig::get('podcast_keep');
         if ($keepnb > 0) {
-            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? " . "ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
+            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->remove();
             }
         }
+        Catalog::update_mapping('podcast_episode');
         $this->update_lastsync(time());
     }
 
@@ -528,9 +530,19 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        if (!$source) {
+            debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        if (self::get_id_from_source($source) > 0) {
+            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
+
+            return false;
+        }
 
         if ($pubdate > $afterdate) {
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
                 $title,
@@ -543,7 +555,8 @@ class Podcast extends database_object implements library_item
                 $category,
                 $time,
                 $pubdate,
-                time()
+                time(),
+                $this->catalog
             ));
         } else {
             debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
@@ -608,6 +621,25 @@ class Podcast extends database_object implements library_item
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_source($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
     /**
      * get_root_path
      * @return string

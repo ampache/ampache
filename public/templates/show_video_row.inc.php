@@ -96,15 +96,23 @@ if ($video_type != 'video') {
 } ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_video"><?php echo Rating::show($libitem->id, 'video') ?></td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_video">
+                    <?php echo Rating::show($libitem->id, 'video') ?>
+                </span>
+            <?php
+            } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_video">
+                    <?php echo Userflag::show($libitem->id, 'video') ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id ?>_video"><?php echo Userflag::show($libitem->id, 'video') ?></td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
 <a href="<?php echo $libitem->link; ?>"><?php echo Ui::get_icon('preferences', T_('Video Information')); ?></a>

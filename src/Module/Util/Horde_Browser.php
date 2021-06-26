@@ -138,9 +138,6 @@ class Horde_Browser
 
     /**
      * Creates a browser instance (Constructor).
-     *
-     * @param string $userAgent The browser string to parse.
-     * @param string $accept The HTTP_ACCEPT settings to use.
      */
     public function __construct()
     {
@@ -307,7 +304,6 @@ class Horde_Browser
                         $this->setFeature('dataurl', ($this->_majorVersion == 8) ? 32768 : true);
                     }
                     break;
-
                 case 6:
                     $this->setFeature('javascript', 1.4);
                     $this->setFeature('dom');
@@ -321,7 +317,6 @@ class Horde_Browser
                     $this->setQuirk('broken_multipart_form');
                     $this->setQuirk('windowed_controls');
                     break;
-
                 case 5:
                     if ($this->getPlatform() == 'mac') {
                         $this->setFeature('javascript', 1.2);
@@ -345,7 +340,6 @@ class Horde_Browser
                         $this->setQuirk('broken_multipart_form');
                     }
                     break;
-
                 case 4:
                     $this->setFeature('javascript', 1.2);
                     $this->setFeature('accesskey');
@@ -354,7 +348,6 @@ class Horde_Browser
                         $this->setFeature('utf');
                     }
                     break;
-
                 case 3:
                     $this->setFeature('javascript', 1.1);
                     $this->setQuirk('avoid_popup_windows');
@@ -497,12 +490,10 @@ class Horde_Browser
                         $this->_mobile = true;
                     }
                     break;
-
                 case 4:
                     $this->setFeature('javascript', 1.3);
                     $this->setQuirk('buggy_compression');
                     break;
-
                 case 3:
                 case 2:
                 case 1:

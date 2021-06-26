@@ -129,7 +129,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
+        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
 
         $db_results = Dba::read($sql);
 
@@ -294,7 +294,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if ($this->id != $merge_to) {
             debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " . "FROM `tag_map` AS `tm` " . "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" . "SELECT 1 FROM `tag_map` " . "WHERE `tag_map`.`tag_id` = " . $merge_to . " " . "AND `tag_map`.`object_id` = `tm`.`object_id` " . "AND `tag_map`.`object_type` = `tm`.`object_type` " . "AND `tag_map`.`user` = `tm`.`user`)";
+            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
             Dba::write($sql);
             if ($is_persistent) {
                 $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
@@ -310,7 +310,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public function get_merged_tags()
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`" . "FROM `tag_merge` " . "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` " . "WHERE `tag_merge`.`tag_id` = ? " . "ORDER BY `tag`.`name` ";
+        $sql = "SELECT `tag`.`id`, `tag`.`name`FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
 
         $db_results = Dba::read($sql, array($this->id));
 
@@ -358,7 +358,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
         }
         $insert_id = (int)Dba::insert_id();
@@ -377,21 +377,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
         Dba::write($sql);
 
         // Now nuke the tags themselves
-        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`id` IS NULL " . "AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
+        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
         Dba::write($sql);
 
         // delete duplicates
-        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " . "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " . "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
+        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
         Dba::write($sql);
     }
 
@@ -405,7 +405,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `tag_merge` " . "WHERE `tag_merge`.`tag_id` = ?";
+        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
@@ -457,7 +457,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
 
-        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " . "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
         $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -482,12 +482,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . "LIMIT $limit";
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' LIMIT $limit";
 
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
         }
@@ -509,7 +507,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $params = array($type);
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
@@ -558,7 +556,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
         if ($type == 'album') {
             if (AmpConfig::get('album_group')) {
-                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`";
+                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
             } else {
                 $sql .= "GROUP BY `album`.`id`, `album`.`disk`";
             }
@@ -598,7 +596,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $limit_sql .= (string)($count);
         }
 
-        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " . "WHERE `tag_map`.`object_type` = ? ";
+        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
@@ -625,27 +623,30 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event(self::class, 'Get tags list called...', 5);
         if (parent::is_cached('tags_list', 'no_name')) {
             //debug_event(self::class, 'Tags list found into cache memory!', 5);
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
-        $results = array();
+        $results  = array();
+        $type_sql = (!empty($type))
+            ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
+            : "";
+        $sql = (AmpConfig::get('catalog_filter'))
+            ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false AND" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " "
+            : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql WHERE `tag`.`is_hidden` = false ";
 
-        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " . "FROM `tag_map` " . "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag`.`is_hidden` = false " . "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
-        if (!empty($type)) {
-            $sql .= ", `tag_map`.`object_type` = '" . (string)scrub_in($type) . "' ";
-        }
         $order = "`" . $order . "`";
         if ($order == 'count') {
             $order .= " DESC";
         }
+        $sql .= " GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         $sql .= "ORDER BY " . $order;
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
         }
+        //debug_event(self::class, 'get_tags ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -703,25 +704,25 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * Update the tags list based on a comma-separated list
      *  (ex. tag1,tag2,tag3,..)
      * @param string $tags_comma
-     * @param string $type
+     * @param string $object_type
      * @param integer $object_id
      * @param boolean $overwrite
      * @return boolean
      */
-    public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
+    public static function update_tag_list($tags_comma, $object_type, $object_id, $overwrite)
     {
         if (!strlen((string) $tags_comma) > 0) {
-            return false;
+            return self::remove_all_map($object_type, $object_id);
         }
-        debug_event(self::class, 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
-
-        $ctags       = self::get_top_tags($type, $object_id);
+        debug_event(self::class, "update_tag_list $object_type: {{$object_id}}", 5);
+        // tags from your file can be in a terrible format
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_', ', ', $filterfolk);
         $filter      = str_replace(';', ', ', $filterunder);
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
+        $ctags = self::get_top_tags($object_type, $object_id);
         foreach ($ctags as $ctid => $ctv) {
             if ($ctv['id'] != '') {
                 $ctag  = new Tag($ctv['id']);
@@ -738,8 +739,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     unset($editedTags[$ctag->name]);
                 } else {
                     if ($overwrite && $ctv['user'] == 0) {
-                        debug_event(self::class, 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
-                        $ctag->remove_map($type, $object_id, false);
+                        debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
+                        $ctag->remove_map($object_type, $object_id, false);
                     }
                 }
             }
@@ -747,7 +748,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Look if we need to add some new tags
         foreach ($editedTags as $tk => $tv) {
             if ($tv != '') {
-                self::add($type, $object_id, $tv, false);
+                self::add($object_type, $object_id, $tv, false);
             }
         }
 
@@ -844,6 +845,25 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         return true;
     } // remove_map
+
+    /**
+     * remove_all_map
+     * Clear all the tags from an object when there isn't anything there
+     * @param string $object_type
+     * @param integer $object_id
+     * @return boolean
+     */
+    public static function remove_all_map($object_type, $object_id)
+    {
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
+            return false;
+        }
+
+        $sql = "DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?";
+        Dba::write($sql, array($object_type, $object_id));
+
+        return true;
+    } // remove_all_map
 
     /**
      * @param boolean $details

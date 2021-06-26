@@ -129,10 +129,11 @@ final class DefaultAction implements ApplicationActionInterface
                     (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth['success']                 = true;
-                    $auth['info']['username']        = 'Admin - DEMO';
-                    $auth['info']['fullname']        = 'Administrative User';
-                    $auth['info']['offset_limit']    = 25;
+                    $auth                         = array();
+                    $auth['success']              = true;
+                    $auth['info']['username']     = 'Admin - DEMO';
+                    $auth['info']['fullname']     = 'Administrative User';
+                    $auth['info']['offset_limit'] = 25;
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string) scrub_in(Core::get_post('username'));
@@ -226,11 +227,11 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && ! $user->username) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
-                $fullname = array_key_exists('name', $auth) ? $auth['name']    : '';
-                $email    = array_key_exists('email', $auth) ? $auth['email']   : '';
+                $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
+                $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
-                $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
-                $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
+                $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
+                $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
 
                 // Attempt to create the user
                 if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {

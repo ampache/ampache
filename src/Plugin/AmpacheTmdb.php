@@ -149,7 +149,7 @@ class AmpacheTmdb
                         if (!empty($release['release_date'])) {
                             $results['release_date'] = strtotime($release['release_date']);
                             $results['year']         = date("Y",
-                                $results['release_date']);  // Production year shouldn't be the release date
+                                $results['release_date']); // Production year shouldn't be the release date
                         }
                         if ($release['poster_path']) {
                             $results['art'] = $imageHelper->getUrl($release['poster_path']);

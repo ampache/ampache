@@ -52,7 +52,7 @@ class JsonHandler extends Handler
 
     /**
      * Defines the differences between beets and ampache fields
-     * @var array Defines the differences between beets and ampache fields
+     * @var array
      */
     protected $fieldMapping = array(
         'disc' => array('disk', '%d'),

@@ -7,6 +7,16 @@ submitting bug reports and feature requests or writing code which can be incorpo
 Anyone can take part in our community and it there are no rules or requirements stopping you from joining.
 Hopefully this document will help you make the jump!
 
+Please read [Development section](https://github.com/ampache/ampache/wiki#development).
+
+## Bug report
+
+Anyone can take part in our community and it there are no rules or requirements stopping you from joining.
+Hopefully this document will help you make the jump!
+
+Be sure the bug is not already fixed in `develop` branch or already reported in current open issues.
+Please add [some logs](https://github.com/ampache/ampache/wiki/Troubleshooting#enable-logging) with your new issue.
+
 ## Translations
 
 The official way to send in translations is via [Transifex](https://www.transifex.com/ampache/ampache/dashboard/).
@@ -86,6 +96,11 @@ Following these tips prior to raising a pull request will speed up the review cy
 * Add the appropriate [license headers](#license-headers) to any new files
 * Make your own branch for your changes based on the develop branch. (e.g. my-patch-branch)
 
+### Coding standards and principles ###
+
+* We use PSR2 code style
+* We follow the [`SOLID`](https://en.wikipedia.org/wiki/SOLID) principles
+
 ### Submitting your changes
 
 Once your changes are ready to submit for review you need to:
@@ -93,10 +108,10 @@ Once your changes are ready to submit for review you need to:
 #### Test your changes
 
 Run the test scripts to make sure that nothing is broken.
+Please consider adding unit-tests for you newly written code.
 
 ```bash
-bash ./resources/scripts/tests/codestyle.sh
-bash ./resources/scripts/tests/syntax.sh
+bash composer qa
 ```
 
 #### Rebase your changes
@@ -150,7 +165,7 @@ This repository is split into many top level directories.
 
 #### `bin`
 
-Contains the server CLI application's
+Contains the server CLI applications
 
 #### `config`
 
@@ -170,22 +185,41 @@ This is the public web root for Amapche and where your webserver should point to
 
 #### `resources`
 
-Fonts, scripts and non-code resources that are required by Ampache.
+Fonts, scripts, templates and non-code resources that are required by Ampache.
 
 #### `src`
 
-@TODO finish this section in **A LOT** more detail
+Most of the logic resides within the Module folder. The model-files (in `Repository`) may also
+contain application logic, this logic fragments will be migrated into their corresponding domains in `Module`
 
-Application
-Config
-Gui
-Module
-Plugin
-Repository
+##### Application (deprecated) #####
+
+Api-related code which didn't fit into existing domains within the Module folder yet.
+
+##### Config #####
+
+Application bootstrapping and config initialization related code.
+
+##### Gui (deprecated) #####
+
+Contains code related to the upcoming templating system. This namespace is deprecated, the code
+will be merged into domains within the Module folder.
+
+##### Module #####
+
+Contains the complete business logic of Ampache, divided into separate domains.
+
+##### Plugin #####
+
+Ampache plugins are placed here.
+
+##### Repository #####
+
+Contains repository classes for database access as well as the ORM model classes.
 
 #### `tests`
 
-Tests for Ampache using phpunit.
+Tests for Ampache using phpunit. The folder structure mirrors the structures within `src`.
 
 #### `vendor`
 

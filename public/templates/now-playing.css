@@ -52,7 +52,7 @@ label {
 .cel_username,
 .cel_tags,
 .similars,
-.cel_rating,
+.cel_ratings,
 .cel_userflag {
     display: none;
 }

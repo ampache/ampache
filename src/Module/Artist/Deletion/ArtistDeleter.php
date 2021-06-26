@@ -23,6 +23,7 @@ namespace Ampache\Module\Artist\Deletion;
 
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Useractivity;
@@ -104,6 +105,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
             Art::garbage_collection('artist', $artistId);
             Userflag::garbage_collection('artist', $artistId);
             Rating::garbage_collection('artist', $artistId);
+            Label::garbage_collection();
             $this->shoutRepository->collectGarbage('artist', $artistId);
             $this->useractivityRepository->collectGarbage('artist', $artistId);
         }

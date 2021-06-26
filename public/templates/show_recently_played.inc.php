@@ -30,7 +30,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 $my_id    = (isset($client)) ? $user_id : $user->id;
-$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) :  '';
+$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) : '';
 $is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata striped-rows">
@@ -149,7 +149,7 @@ foreach ($data as $row) {
 } ?>
 <?php if (!count($data)) { ?>
     <tr>
-        <td colspan="8"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
+        <td colspan="9"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
     </tr>
 <?php
 } ?>

@@ -124,7 +124,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
             $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
@@ -184,7 +184,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
             $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
         }
         $sql .= "ORDER BY `name`";
@@ -253,7 +253,7 @@ class Playlist extends playlist_object
 
         $limit_sql = $limit ? 'LIMIT ' . (string)($limit) : '';
 
-        $sql        = "SELECT `object_id`, `object_type` FROM `playlist_data` " . "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
+        $sql        = "SELECT `object_id`, `object_type` FROM `playlist_data` WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -321,8 +321,7 @@ class Playlist extends playlist_object
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_row($db_results);
+        $results    = Dba::fetch_row($db_results);
 
         return (int) $results['0'];
     } // get_total_duration
@@ -520,11 +519,11 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = Core::get_global('user')->id ?: -1;
         }
         // check for duplicates
         $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" . " AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "' AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -642,7 +641,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track)
     {
-        $sql = "UPDATE `playlist_data` SET `object_id` = ? " . "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
+        $sql = "UPDATE `playlist_data` SET `object_id` = ? WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
         debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
@@ -703,23 +702,12 @@ class Playlist extends playlist_object
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT `list`.`id`
-                FROM `playlist_data` AS `list`
-           LEFT JOIN `song` ON `list`.`object_id` = `song`.`id`
-           LEFT JOIN `album` ON `song`.`album` = `album`.`id`
-           LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id`
-               WHERE `list`.`playlist` = ?
-            ORDER BY `artist`.`name` ASC,
-                     `album`.`name` ASC,
-                     `album`.`year` ASC,
-                     `album`.`disk` ASC,
-                     `song`.`track` ASC,
-                     `song`.`title` ASC,
-                     `song`.`track` ASC";
-        $db_results = Dba::query($sql, array($this->id));
+        $sql = "SELECT `list`.`id` FROM `playlist_data` AS `list` LEFT JOIN `song` ON `list`.`object_id` = `song`.`id` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` WHERE `list`.`playlist` = ? ORDER BY `artist`.`name` ASC, `album`.`name` ASC, `album`.`year` ASC, `album`.`disk` ASC, `song`.`track` ASC, `song`.`title` ASC, `song`.`track` ASC";
 
-        $count   = 1;
-        $results = array();
+
+        $count      = 1;
+        $db_results = Dba::query($sql, array($this->id));
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $new_data          = array();
@@ -735,7 +723,7 @@ class Playlist extends playlist_object
             } // foreach re-ordered results
 
             //replace the last comma
-            $sql = substr_replace($sql ,"", -2);
+            $sql = substr_replace($sql, "", -2);
             $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
             // do this in one go
@@ -745,4 +733,19 @@ class Playlist extends playlist_object
 
         return true;
     } // sort_tracks
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?";
+        $params = array($new_object_id, $old_object_id, $object_type);
+
+        return Dba::write($sql, $params);
+    }
 }

@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
 /** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
-$title = scrub_out($album->full_name);
+$title = scrub_out($album->f_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
@@ -79,31 +79,25 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) {
-            $rating = new Rating($album->id, 'album'); ?>
-    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php echo Rating::show($album->id, 'album');
-            $average = $rating->get_average_rating();
-            if ($average > 0) {
-                /* HINT: Average rating. e.g. (average 3.7) */
-                echo '(' . T_('average') . ' ' . $average . ')';
-            } ?>
-    </div></p>
-    <?php
-        } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-            <?php echo Userflag::show($album->id, 'album'); ?>
-    </div>
-    <?php
-        } ?>
-<?php
+    <?php if (AmpConfig::get('ratings')) { ?>
+        <span id="rating_<?php echo $album->id; ?>_album">
+            <?php echo Rating::show($album->id, 'album', true); ?>
+        </span>
+        <?php
     } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+        <span id="userflag_<?php echo $album->id; ?>_album">
+            <?php echo Userflag::show($album->id, 'album'); ?>
+        </span>
+        <?php
+    } ?>
+    <?php
+} ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
@@ -281,6 +275,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $browse->set_filter('album', $album->id);
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
-    $browse->show_objects(null, true); // true argument is set to show the reorder column
+    $browse->show_objects(null, array('hide' => array('cel_album', 'cel_year', 'cel_drag')));
     $browse->store(); ?>
 </div>

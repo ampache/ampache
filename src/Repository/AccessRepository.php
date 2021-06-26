@@ -34,11 +34,10 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function getAccessLists(): array
     {
-        $sql        = 'SELECT `id` FROM `access_list`';
+        $sql = 'SELECT `id` FROM `access_list`';
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
@@ -55,7 +54,7 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type,
         ?int $userId
     ): bool {
-        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
+        $sql = 'SELECT `id` FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
         $params  = array(inet_pton($userIp), inet_pton($userIp), $level, $type);
 
@@ -88,7 +87,7 @@ final class AccessRepository implements AccessRepositoryInterface
         int $userId
     ): bool {
         $db_results = Dba::read(
-            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?',
+            'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
             [$inAddrStart, $inAddrEnd, $type, $userId]
         );
 
@@ -101,8 +100,8 @@ final class AccessRepository implements AccessRepositoryInterface
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function create(
@@ -122,12 +121,12 @@ final class AccessRepository implements AccessRepositoryInterface
     /**
      * Updates the data of a certain acl item
      *
-     * @param int $accessId Id of an existing acl item
+     * @param integer $accessId Id of an existing acl item
      * @param string $startIp The startip in in-addr notation
      * @param string $endIp The end ip in in-addr notation
      * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
+     * @param integer $userId Designated user id (or -1 if none)
+     * @param integer $level Access level
      * @param string $type Access type
      */
     public function update(
@@ -140,7 +139,7 @@ final class AccessRepository implements AccessRepositoryInterface
         string $type
     ): void {
         Dba::write(
-            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
+            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
             [$startIp, $endIp, $level, $userId, $name, $type, $accessId]
         );
     }

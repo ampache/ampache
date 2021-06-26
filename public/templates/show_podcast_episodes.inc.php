@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$thcount  = 7;
-$is_table = $browse->is_grid_view();
+$thcount      = 7;
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_flag    = ($is_table) ? "cel_userflag" : 'grid_userflag';
 $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
@@ -48,22 +48,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_podcast optional"><?php echo T_('Podcast'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
-                <?php
-            } ?>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
             <th class="cel_pubdate optional"><?php echo T_('Publication Date'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) {
-                ++$thcount; ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
-            } ?>
-                <?php if (AmpConfig::get('userflags')) {
-                ++$thcount; ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
+            <?php if ($show_ratings) {
+    ++$thcount; ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -105,27 +96,20 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
-                <?php
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
+            <?php
             } ?>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>
             <th class="cel_state"><?php echo T_('State'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php
-            } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
-        } ?>
+            } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>

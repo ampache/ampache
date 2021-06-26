@@ -55,6 +55,11 @@ final class ConfigViewAdapter implements ConfigViewAdapterInterface
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING);
     }
 
+    public function isShowLicenseEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LICENSE);
+    }
+
     public function isShowSkippedTimesEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES);

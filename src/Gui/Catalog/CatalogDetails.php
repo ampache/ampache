@@ -52,6 +52,11 @@ final class CatalogDetails implements CatalogDetailsInterface
         return scrub_out($this->catalog->f_full_info);
     }
 
+    public function getFilterUser(): string
+    {
+        return scrub_out($this->catalog->f_filter_user);
+    }
+
     public function getLastUpdateDate(): string
     {
         return scrub_out($this->catalog->f_update);

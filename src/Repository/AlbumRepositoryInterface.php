@@ -37,13 +37,6 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * Get the add date of first added song
-     */
-    public function getFirstSongAddTime(
-        int $albumId
-    ): int;
-
-    /**
      * gets songs from this album
      *
      * @return int[] Album ids
@@ -102,16 +95,24 @@ interface AlbumRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Get time for an album disk.
+     * Get time for an album disk by album.
      */
-    public function getDuration(int $albumId): int;
+    public function getAlbumDuration(int $albumId): int;
 
     /**
-     * Get time for an album disk and set it.
+     * Get play count for an album disk by album id.
      */
-    public function updateTime(
-        Album $album
-    ): int;
+    public function getAlbumPlayCount(int $albumId): int;
+
+    /**
+     * Get song count for an album disk by album id.
+     */
+    public function getSongCount(int $albumId): int;
+
+    /**
+     * Get distinct artist count for an album disk by album id.
+     */
+    public function getArtistCount(int $albumId): int;
 
     /**
      * gets the album ids that this artist is a part of

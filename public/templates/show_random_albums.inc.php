@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -74,11 +75,15 @@ if ($albums) {
         <?php
             } ?>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
-            echo "<div id=\"rating_" . $album->id . "_album\">";
-            echo Rating::show($album->id, 'album');
-            echo "</div>";
-        } ?>
+        if (Access::check('interface', 25)) { ?>
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php echo Rating::show($album->id, 'album'); ?></span>
+            <?php } ?>
+
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <span class="cel_rating" id="userflag_<?php echo $album->id; ?>_album"><?php echo Userflag::show($album->id, 'album'); ?></span>
+            <?php } ?>
+        <?php } ?>
     </div>
     <?php
     } ?>

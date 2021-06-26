@@ -33,8 +33,7 @@ $web_path = AmpConfig::get('web_path');
 $thcount  = 6;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -50,17 +49,9 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
             <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_tvshow'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) {
+            <?php if ($show_ratings) {
         ++$thcount; ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
-    } ?>
-                <?php if (AmpConfig::get('userflags')) {
-        ++$thcount; ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-    } ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -100,22 +91,15 @@ $cel_flag  = ($is_table) ? "cel_userflag" : 'grid_userflag'; ?>
             <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_name_bottom'); ?></th>
             <th class="cel_tvshow"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_artist_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+            <?php if ($show_ratings) { ?>
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
             } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
-            <?php
-        } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+                require Ui::find_template('list_header.inc.php');
+            } ?>
