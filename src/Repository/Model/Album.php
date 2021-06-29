@@ -899,6 +899,8 @@ class Album extends database_object implements library_item
 
         $current_id = $this->id;
         $updated    = false;
+        $ndata      = array();
+        $changed    = array();
         $songs      = $this->getSongRepository()->getByAlbum($this->getId());
         // run an album check on the current object READONLY means that it won't insert a new album
         $album_id   = self::check($this->catalog, $name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $release_status, $original_year, $barcode, $catalog_number, true);
@@ -930,15 +932,15 @@ class Album extends database_object implements library_item
             }
         } else {
             // run updates on the single fields
-            if (!empty($name) && $name != $this->full_name) {
-                $trimmed                           = Catalog::trim_prefix(trim((string) $name));
-                $new_name                          = $trimmed['string'];
-                $prefix                            = $trimmed['prefix'];
-                $ndata['album']                    = $name;
-                -                $changed['album'] = 'album';
+            if (!empty($name) && $name != $this->f_name) {
+                $trimmed          = Catalog::trim_prefix(trim((string) $name));
+                $new_name         = $trimmed['string'];
+                $aPrefix          = $trimmed['prefix'];
+                $ndata['album']   = $name;
+                $changed['album'] = 'album';
 
                 self::update_field('name', $new_name, $this->id);
-                self::update_field('prefix', $prefix, $this->id);
+                self::update_field('prefix', $aPrefix, $this->id);
             }
 
             if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
