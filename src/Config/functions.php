@@ -1455,6 +1455,22 @@ function pGraph_Yformat_bytes($value)
     return Ui::format_bytes($value);
 }
 
+function get_mime_from_image($data): string
+{
+    switch ($data) {
+        case substr($data, 0, 4) == 'ffd8':
+            return "image/jpeg";
+        case '89504E47':
+            return "image/png";
+        case '47494638':
+            return "image/gif";
+        case substr($data,0, 4) == '424d':
+            return 'image/bmp';
+        default:
+            return 'image/jpeg';
+    }
+}
+    
 /**
  * @deprecated Will be removed
  */
