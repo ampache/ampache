@@ -1411,6 +1411,7 @@ div.box.box_rules {
 
 .cel_counter,
 .cel_songs,
+.cel_albums,
 .cel_year {
     width: 60px;
     white-space: normal !important;
