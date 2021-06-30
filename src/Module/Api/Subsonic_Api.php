@@ -449,7 +449,7 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $username = self::check_parameter($input, 'username');
+        $username = $input['u'];
         $user     = User::get_from_username((string)$username);
         $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
