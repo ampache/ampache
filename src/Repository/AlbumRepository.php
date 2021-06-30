@@ -319,24 +319,26 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
-        $allow_group_disks = (AmpConfig::get('album_group'));
+        $display_year      = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $allow_group_disks = AmpConfig::get('album_group');
         $sort_type         = AmpConfig::get('album_sort');
         $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
+        //$sql_sort          = (AmpConfig::get('album_release_type')) ? "IFNULL(`album`.`release_type`, 'album'), " : "";
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC' . $sort_disk;
+                $sql_sort = "$display_year ASC" . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC' . $sort_disk;
+                $sql_sort = "$display_year DESC" . $sort_disk;
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC' . $sort_disk;
+                $sql_sort = "`album`.`name` ASC" . $sort_disk;
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC' . $sort_disk;
+                $sql_sort = "`album`.`name` DESC" . $sort_disk;
                 break;
             default:
-                $sql_sort = '`album`.`name`' . $sort_disk . ', `album`.`year`';
+                $sql_sort = "`album`.`name`" . $sort_disk . ', $display_year';
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";

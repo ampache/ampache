@@ -667,7 +667,8 @@ class Preference extends database_object
                "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
                "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'), " .
                "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
-               "(158, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse');";
+               "(158, 'show_license', '0', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
+               "(159, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse');";
         Dba::write($sql);
     } // set_defaults
 

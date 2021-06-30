@@ -86,7 +86,10 @@ class Query
             'name',
             'album',
             'placeformed',
-            'yearformed'
+            'yearformed',
+            'song_count',
+            'album_count',
+            'total_count'
         ),
         'tag' => array(
             'tag',
@@ -95,9 +98,13 @@ class Query
         'album' => array(
             'name',
             'year',
+            'original_year',
             'artist',
             'album_artist',
-            'generic_artist'
+            'generic_artist',
+            'song_count',
+            'total_count',
+            'release_type'
         ),
         'playlist' => array(
             'name',
@@ -1957,7 +1964,11 @@ class Query
                         $this->set_join('left', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                         break;
                     case 'year':
-                        $sql = "`album`.`year`";
+                    case 'original_year':
+                    case 'song_count':
+                    case 'total_count':
+                    case 'release_type':
+                        $sql = "`album`.`$field`";
                         break;
                 } // end switch
                 break;
@@ -1966,6 +1977,9 @@ class Query
                     case 'name':
                     case 'placeformed':
                     case 'yearformed':
+                    case 'song_count':
+                    case 'album_count':
+                    case 'total_count':
                         $sql = "`artist`.`$field`";
                         break;
                 } // end switch

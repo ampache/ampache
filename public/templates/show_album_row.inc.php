@@ -34,6 +34,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
+/** @var mixed|null $original_year */
+
+$display_year = ($original_year && $libitem->original_year)
+    ? $libitem->original_year
+    : $libitem->year;
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -80,8 +85,8 @@ if (Art::is_enabled()) {
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
-<td class="cel_year"><?php if ($libitem->year > 0) {
-                echo $libitem->year;
+<td class="cel_year"><?php if ($display_year > 0) {
+                echo $display_year;
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>

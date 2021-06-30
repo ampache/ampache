@@ -42,6 +42,8 @@ $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 /** @var Artist $artist */
+/** @var string $object_type */
+/** @var array $object_ids */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 if ($directplay_limit > 0) {

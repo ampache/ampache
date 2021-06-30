@@ -689,8 +689,13 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->album_artist));
         $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
-        if ($album->year > 0) {
-            $xalbum->addAttribute('year', (string)$album->year);
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $xalbum->addAttribute('year', (string)$year);
         }
         if (count($album->tags) > 0) {
             $tag_values = array_values($album->tags);

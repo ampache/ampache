@@ -705,6 +705,8 @@ class Xml_Data
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
 
         Rating::build_cache('album', $albums);
 
@@ -715,6 +717,9 @@ class Xml_Data
             $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
+            $year   = ($original_year && $album->original_year)
+                ? $album->original_year
+                : $album->year;
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
@@ -741,7 +746,7 @@ class Xml_Data
             }
 
             $string .= "\t<time>" . $album->total_duration . "</time>\n" .
-                    "\t<year>" . $album->year . "</year>\n" .
+                    "\t<year>" . $year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<songcount>" . $album->song_count . "</songcount>\n" .
                     "\t<diskcount>" . $disk . "</diskcount>\n" .

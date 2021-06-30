@@ -251,6 +251,9 @@ class Update
         $update_string = "* Add filter_user to catalog table<br />* Set a unique key on user_data";
         $version[]     = array('version' => '500008', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)";
+        $version[]     = array('version' => '500009', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1410,6 +1413,23 @@ class Update
         }
         $sql    = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500009
+     *
+     * Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)
+     */
+    public static function update_500009()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
     }

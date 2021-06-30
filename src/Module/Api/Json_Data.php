@@ -451,6 +451,8 @@ class Json_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
 
         Rating::build_cache('album', $albums);
 
@@ -462,6 +464,9 @@ class Json_Data
             $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
+            $year   = ($original_year && $album->original_year)
+                ? $album->original_year
+                : $album->year;
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -500,7 +505,7 @@ class Json_Data
             }
 
             $theArray['time']          = (int) $album->total_duration;
-            $theArray['year']          = (int) $album->year;
+            $theArray['year']          = (int) $year;
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
             $theArray['diskcount']     = (int) $disk;
