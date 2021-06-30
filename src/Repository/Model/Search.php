@@ -1814,16 +1814,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $key = md5($input . $sql_match_operator);
-                    if ($sql_match_operator == 'LIKE') {
-                        $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE '$input'))";
-                    } elseif ($sql_match_operator == 'NOT LIKE') {
-                        $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` NOT LIKE '$input'))";
-                    } elseif ($operator['description'] == 'is') {
-                        $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` = '$input'))";
-                    } elseif ($operator['description'] == 'is not') {
-                        $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` != '$input'))";
-                    }
+                    $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
                         $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR (`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
@@ -2028,7 +2019,6 @@ class Search extends playlist_object
                     break;
                 case 'smartplaylist':
                     $subsearch  = new Search($input, 'song', $this->search_user);
-                    $subsql     = $subsearch->to_sql();
                     $results    = $subsearch->get_items();
                     $itemstring = '';
                     if (count($results) > 0) {
