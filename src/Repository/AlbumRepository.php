@@ -182,10 +182,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($f_name == '') {
             return array();
         }
-        $album_artist = "is null";
-        $release_type = "is null";
-        $mbid         = "is null";
-        $year         = (string)$album->year;
+        $album_artist   = "is null";
+        $release_type   = "is null";
+        $release_status = "is null";
+        $mbid           = "is null";
+        $original_year  = "is null";
+        $year           = (string)$album->year;
 
         if ($album->album_artist) {
             $album_artist = "= '" . ucwords((string) $album->album_artist) . "'";
@@ -193,21 +195,26 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($album->release_type) {
             $release_type = "= '" . ucwords((string) $album->release_type) . "'";
         }
+        if ($album->release_status) {
+            $release_status = "= '" . ucwords((string) $album->release_status) . "'";
+        }
         if ($album->mbid) {
             $mbid = "= '$album->mbid'";
         }
+        if ($album->original_year) {
+            $original_year = "= '$album->original_year'";
+        }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
-            "(`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') " .
-            "AND `album`.`year` = $year ";
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') AND `album`.`year` = $year AND `album`.`original_year` = $original_year ";
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
+        $catalog_join  = "";
 
         if ($catalogId) {
             $catalog_where .= " AND `catalog`.`id` = '$catalogId'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
+            $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
         }
 
         $db_results = Dba::read(
