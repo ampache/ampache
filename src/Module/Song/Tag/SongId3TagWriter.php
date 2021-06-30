@@ -142,7 +142,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
             }
             $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
-
+            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
             $file_has_pics = isset($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
