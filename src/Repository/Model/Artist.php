@@ -520,17 +520,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if ($details) {
-            // Get the counts
-            $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
-
-            // Format the new time thingy that we just got
-            $min = sprintf("%02d", (floor($this->time / 60) % 60));
-
+            $min   = sprintf("%02d", (floor($this->time / 60) % 60));
             $sec   = sprintf("%02d", ($this->time % 60));
             $hours = floor($this->time / 3600);
 
             $this->f_time = ltrim((string)$hours . ':' . $min . ':' . $sec, '0:');
-
             $this->tags   = Tag::get_top_tags('artist', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
@@ -538,8 +532,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->labels   = $this->getLabelRepository()->getByArtist((int) $this->id);
                 $this->f_labels = Label::get_display($this->labels, true);
             }
-
-            $this->object_cnt = $extra_info['object_cnt'];
         }
 
         return true;
