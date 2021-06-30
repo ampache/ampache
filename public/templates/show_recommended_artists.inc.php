@@ -29,7 +29,14 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-$thcount      = 8; ?>
+$thcount      = 8;
+//mashup and grid view need different css
+$cel_cover   = "cel_cover";
+$cel_album   = "cel_album";
+$cel_artist  = "cel_artist";
+$cel_tags    = "cel_tags";
+$cel_time    = "cel_time";
+$cel_counter = "cel_counter"; ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -40,12 +47,16 @@ $thcount      = 8; ?>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
-            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played') ?></th>
+                <?php
+            } ?>
+            <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php if ($show_ratings) {
         ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
@@ -94,15 +105,15 @@ $thcount      = 8; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <?php
             } ?>
-            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
-            <th class="cel_time"> <?php echo T_('Time'); ?> </th>
-            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_time; ?>"> <?php echo T_('Time'); ?> </th>
+            <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
