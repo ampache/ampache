@@ -31,7 +31,6 @@ use Ampache\Module\Util\Ui;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $thcount      = 8; ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
-<?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
