@@ -75,4 +75,3 @@ while ($count <= $rows) {
 } // end while?>
 </table>
 <?php Ui::show_box_bottom(); ?>
-

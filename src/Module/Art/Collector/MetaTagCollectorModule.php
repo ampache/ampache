@@ -147,7 +147,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             );
         }
 
-        // stop collecting dupes for each album/track
+        // stop collecting dupes for each album/]/
         $raw_array = array();
         foreach ($data as $image) {
             $raw_array[] = $image['raw'];
@@ -185,6 +185,26 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             }
         }
 
+        if (isset($id3['flac']["PICTURE"])) {
+            // Foreach in case they have more than one
+            foreach ($id3['flac']["PICTURE"] as $image) {
+                if ($art_type == 'artist' && !in_array((int)$image['typeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    $this->logger->debug(
+                        'Skipping picture id ' . $image['typeid'] . ' for artist search',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                } elseif (isset($image['typeid']) && !in_array($image['data'], $raw_array)) {
+                    $type   = self::getPictureType((int)$image['typeid']);
+                    $data[] = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $type
+                    ];
+                }
+            }
+        }
+
         return $data;
     }
 
@@ -207,14 +227,26 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $data;
     }
 
+    public function gatherTagsDirectFromSong($song_id, $type)
+    {
+        // get song object directly from id, not by loop through album
+        $song = new Song($song_id);
+        $data = $this->gatherMediaTags($song, $type, array());
+
+        return $data;
+    }
+
+
+
     /**
-     * Get the type of id3 picture being returned (https://exiftool.org/TagNames/ID3.html)
-     * @param int $id3_type
+     * Get the type of picture being returned (https://id3.org/id3v2.3.0#Attached_picture)
+     * Flac also uses the id3.org specs.
+     * @param int $picture_type
      * @return string
      */
-    public static function getPictureType(int $id3_type)
+    public static function getPictureType(int $picture_type)
     {
-        switch ($id3_type) {
+        switch ($picture_type) {
             case 1:
                 return '32x32 PNG Icon';
             case 2:
