@@ -118,7 +118,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $album->link,
                             'label' => $a_title,
                             'value' => $album->f_title,
-                            'rels' => $album->f_artist,
+                            'rels' => $album->f_album_artist_name,
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
                     }

@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Update;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\AutoUpdate;
@@ -49,7 +50,8 @@ final class SystemUpdateMethod
      */
     public static function system_update(array $input)
     {
-        $user = User::get_from_username(Session::username($input['auth']));
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $updated = false;
 
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -65,6 +67,15 @@ final class SystemUpdateMethod
 
                 return false;
             }
+            $updated = true;
+        }
+        // update the database
+        if (Update::need_update()) {
+            if (Update::run_update()) {
+                $updated = true;
+            }
+        }
+        if ($updated) {
             // there was an update and it was successful
             Api::message('update successful', $input['api_format']);
             Session::extend($input['auth']);
