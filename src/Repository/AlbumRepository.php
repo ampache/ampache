@@ -205,7 +205,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $original_year = "= '$album->original_year'";
         }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') AND `album`.`year` = $year AND `album`.`original_year` = $original_year ";
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
         $catalog_where = "";
         $catalog_join  = "";
 
