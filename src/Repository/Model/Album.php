@@ -944,7 +944,7 @@ class Album extends database_object implements library_item
             }
 
             if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
-                self::update_field('album_artist', $new_name, $this->id);
+                self::update_field('album_artist', $album_artist, $this->id);
             }
             if (!empty($year) && $year != $this->year) {
                 self::update_field('year', $year, $this->id);
