@@ -56,7 +56,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         ?Art $art = null,
         ?int $picturetypeid = null
     ): void {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_FILE_TAGS) === false) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
             return;
         }
         
