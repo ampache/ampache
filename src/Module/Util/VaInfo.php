@@ -1190,7 +1190,6 @@ final class VaInfo implements VaInfoInterface
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
                     break;
-                case 'recording_time':
                 case 'original_release_time':
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
