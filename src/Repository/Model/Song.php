@@ -1297,7 +1297,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $this->format();
 
-        $this->getId3SongTagWriter()->write(
+        $this->getSongId3TagWriter()->write(
             $this,
             $data,
             $changed

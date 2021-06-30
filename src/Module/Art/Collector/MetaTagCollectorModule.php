@@ -227,7 +227,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $data;
     }
 
-    public function gatherTagsDirectFromSong($song_id, $type, $limit = 5)
+    public function gatherTagsDirectFromSong($song_id, $type)
     {
         // get song object directly from id, not by loop through album
         $song = new Song($song_id);
