@@ -58,10 +58,10 @@ $cel_counter = "cel_counter"; ?>
             } ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-    } ?>
+            } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </thead>
