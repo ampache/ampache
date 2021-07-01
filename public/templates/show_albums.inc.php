@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 
 $web_path      = AmpConfig::get('web_path');
-$thcount       = 8;
+$thcount       = 9;
 $show_ratings  = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table      = $browse->is_grid_view();
 $original_year = AmpConfig::get('use_original_year');

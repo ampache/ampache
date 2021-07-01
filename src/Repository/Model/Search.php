@@ -521,6 +521,8 @@ class Search extends playlist_object
         }
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
+            $this->type_text('favorite_album', T_('Favorites (Album)'));
+            $this->type_text('favorite_artist', T_('Favorites (Artist)'));
         }
 
         /* HINT: Number of times object has been played */
@@ -1952,6 +1954,22 @@ class Search extends playlist_object
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_song_$user_id` ON `song`.`id`=`favorite_song_$user_id`.`object_id` AND `favorite_song_$user_id`.`object_type` = 'song'"
                         : "";
                     break;
+                case 'favorite_album':
+                    $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
+                    // flag once per user
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$user_id"))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_album_$user_id` ON `album`.`id`=`favorite_album_$user_id`.`object_id` AND `favorite_album_$user_id`.`object_type` = 'album'"
+                        : "";
+                    $join['album'] = true;
+                    break;
+                case 'favorite_artist':
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
+                    // flag once per user
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$user_id"))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_artist_$user_id` ON `artist`.`id`=`favorite_artist_$user_id`.`object_id` AND `favorite_artist_$user_id`.`object_type` = 'artist'"
+                        : "";
+                    $join['artist'] = true;
+                    break;
                 case 'myrating':
                 case 'albumrating':
                 case 'artistrating':
@@ -2124,6 +2142,12 @@ class Search extends playlist_object
             } else {
                 $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
             }
+        }
+        if ($join['album']) {
+            $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+        }
+        if ($join['artist']) {
+            $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
