@@ -2071,22 +2071,26 @@ class Subsonic_Api
             $rid[]      = $object_ids;
             $object_ids = $rid;
         }
+        $get_time = User::get_user_data($user->id, 'playqueue_time');
+        $now_time = time();
+        // don't scrobble after setting the play queue too quickly
+        if ($get_time < $now_time - 2) {
+            foreach ($object_ids as $subsonic_id) {
+                $time     = isset($input['time']) ? (int)$input['time'] / 1000 : $now_time;
+                $previous = Stats::get_last_play($user->id, $client, $time);
+                $media    = Subsonic_Xml_Data::getAmpacheObject($subsonic_id);
+                $media->format();
 
-        foreach ($object_ids as $subsonic_id) {
-            $time     = isset($input['time']) ? (int) $input['time'] / 1000 : time();
-            $previous = Stats::get_last_play($user->id, $client, $time);
-            $media    = Subsonic_Xml_Data::getAmpacheObject($subsonic_id);
-            $media->format();
-
-            // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if ($submission && get_class($media) == Song::class && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
-                // stream has finished
-                debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                User::save_mediaplay($user, $media);
-            }
-            // Submission is false and not a repeat. let repeats go though to saveplayqueue
-            if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
-                $media->set_played($user->id, $client, array(), $time);
+                // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
+                if ($submission && get_class($media) == Song::class && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
+                    // stream has finished
+                    debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
+                    User::save_mediaplay($user, $media);
+                }
+                // Submission is false and not a repeat. let repeats go though to saveplayqueue
+                if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
+                    $media->set_played($user->id, $client, array(), $time);
+                }
             }
         }
 
@@ -2579,30 +2583,34 @@ class Subsonic_Api
             $username = (string) $input['u'];
             $client   = (string) $input['c'];
             $user_id  = User::get_from_username($username)->id;
+            $get_time = User::get_user_data($user_id, 'playqueue_time');
             $time     = time();
-            $previous = Stats::get_last_play($user_id, $client);
-            $type     = Subsonic_Xml_Data::getAmpacheType($current);
-            // long pauses might cause your now_playing to hide
-            Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
-            // track has just started. repeated plays aren't called by scrobble so make sure we call this too
-            if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                $media->set_played((int) $user_id, $client, array(), $time);
+            // wait a few seconds before smashing out play times
+            if ($get_time < $time - 2) {
+                $previous = Stats::get_last_play($user_id, $client);
+                $type     = Subsonic_Xml_Data::getAmpacheType($current);
+                // long pauses might cause your now_playing to hide
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
+                // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+                if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                    $media->set_played((int) $user_id, $client, array(), $time);
+                }
+                // paused or played after 5 seconds so shift the start time
+                if ($position > 5 && $previous['object_id'] == $media->id) {
+                    Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                }
+                $playQueue = new User_Playlist($user_id);
+                $sub_ids   = (is_array($input['id']))
+                    ? $input['id']
+                    : array($input['id']);
+                $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
+                $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
             }
-            // paused or played after 5 seconds so shift the start time
-            if ($position > 5 && $previous['object_id'] == $media->id) {
-                Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
-            }
-            $playQueue = new User_Playlist($user_id);
-            $sub_ids   = (is_array($input['id']))
-                ? $input['id']
-                : array($input['id']);
-            $playlist  = Subsonic_Xml_Data::getAmpacheIdArrays($sub_ids);
-            $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         }
-        // we finally support this function
+
         self::apiOutput($input, $response);
     }
 
@@ -2618,6 +2626,7 @@ class Subsonic_Api
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
+        User::set_user_data($user_id, 'playqueue_time', time());
 
         Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::apiOutput($input, $response);
