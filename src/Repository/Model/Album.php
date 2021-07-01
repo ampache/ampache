@@ -604,6 +604,10 @@ class Album extends database_object implements library_item
         $this->link   = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
 
+        // Looking if we need to display the release year
+        if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+            $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
+        }
         // Looking if we need to combine or display disks
         if ($this->disk && !$this->allow_group_disks && count($this->getAlbumRepository()->getAlbumSuite($this)) > 1) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
