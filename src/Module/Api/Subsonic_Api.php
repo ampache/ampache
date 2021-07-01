@@ -467,7 +467,7 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $username         = self::check_parameter($input, 'username');
+        $username         = self::check_parameter($input, 'u');
         $user             = User::get_from_username((string)$username);
         $musicFolderId    = $input['musicFolderId'];
         $ifModifiedSince  = $input['ifModifiedSince'];
@@ -1704,7 +1704,7 @@ class Subsonic_Api
      */
     public static function deleteshare($input)
     {
-        $username = self::check_parameter($input, 'username');
+        $username = self::check_parameter($input, 'u');
         $user     = User::get_from_username((string)$username);
         $id       = self::check_parameter($input, 'id');
         if (AmpConfig::get('share')) {
@@ -1728,7 +1728,7 @@ class Subsonic_Api
      */
     public static function updateshare($input)
     {
-        $username    = self::check_parameter($input, 'username');
+        $username    = self::check_parameter($input, 'u');
         $share_id    = self::check_parameter($input, 'id');
         $user        = User::get_from_username((string)$username);
         $description = $input['description'];
@@ -2324,7 +2324,7 @@ class Subsonic_Api
     public static function createpodcastchannel($input)
     {
         $url      = self::check_parameter($input, 'url');
-        $username = self::check_parameter($input, 'username');
+        $username = self::check_parameter($input, 'u');
         $user     = User::get_from_username((string)$username);
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
