@@ -94,8 +94,18 @@ class Stats
         $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = array($new_object_id, $object_type, $old_object_id);
         if (in_array($object_type, array('artist', 'album'))) {
-            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$object_type` = ?));";
-            $params[] = $new_object_id;
+            $date_sql   = "SELECT `date` FROM `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$object_type` = ?)";
+            $db_results = Dba::read($date_sql, array($old_object_id));
+            $dates      = array();
+            while ($row = Dba::fetch_row($db_results)) {
+                $dates[] = (int) $row[0];
+            } // end while results
+
+            if (empty($dates)) {
+                return false;
+            }
+            $idlist = '(' . implode(',', $dates) . ')';
+            $sql .= " AND `date` IN $idlist;";
         }
 
         return Dba::write($sql, $params);
