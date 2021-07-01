@@ -219,7 +219,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         $db_results = Dba::read(
             sprintf(
-                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC',
+                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
                 $catalog_join,
                 $where,
                 $catalog_where
