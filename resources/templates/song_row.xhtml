@@ -1,7 +1,7 @@
 <html>
     <td class="cel_play">
         <span class="cel_play_content">
-            <b tal:condition="BROWSE_ARGUMENT" tal:content="SONG/getTrackNumber">TRACK NUMBER</b>
+            <b tal:condition="IS_SHOW_TRACK" tal:content="SONG/getTrackNumber">TRACK NUMBER</b>
         </span>
         <div class="cel_play_hover">
             <tal:block tal:condition="CONFIG/isDirectplayEnabled">
@@ -86,7 +86,7 @@
                 tal:content="structure SONG/getDeletionIcon"
         >DELETION</a>
     </td>
-    <tal:block tal:condition="BROWSE_ARGUMENT">
+    <tal:block tal:condition="not:IS_HIDE_DRAG">
         <td class="cel_drag" tal:condition="SONG/canBeReordered" tal:content="structure SONG/getReorderIcon">
             REORDER
         </td>

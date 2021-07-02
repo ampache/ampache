@@ -122,14 +122,15 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 <?php
                 if ($libitem->enabled || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
-                        ->setContext('BROWSE_ARGUMENT', (isset($argument) && !$hide_drag) ? $argument : '')
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
                         ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_HIDE_ALBUM', $hide_album)
                         ->setContext('IS_HIDE_YEAR', $hide_year)
+                        ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
                         ->setTemplate('song_row.xhtml')
                         ->render();
 
