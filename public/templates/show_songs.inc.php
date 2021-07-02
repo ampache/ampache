@@ -43,6 +43,7 @@ $is_table     = $browse->is_grid_view();
 $hide_album   = in_array('cel_album', $hide_columns);
 $hide_year    = in_array('cel_year', $hide_columns);
 $hide_drag    = in_array('cel_drag', $hide_columns);
+$show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
 //mashup and grid view need different css
 $cel_song    = ($is_table) ? "cel_song" : 'grid_song';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
@@ -73,7 +74,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     } ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
-            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) {
+            <?php if ($show_license) {
         ++$thcount; ?>
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
             <?php
@@ -127,6 +128,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                         ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                         ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                        ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_HIDE_ALBUM', $hide_album)
                         ->setContext('IS_HIDE_YEAR', $hide_year)
@@ -158,7 +160,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php } ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
-            <?php if (AmpConfig::get('licensing') && AmpConfig::get('show_license')) { ?>
+            <?php if ($show_license) { ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
