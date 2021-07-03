@@ -29,13 +29,14 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\AlbumRepositoryInterface;
 
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
-final class SongId3TagWriter implements SongId3TagWriterInterface
+final class SongTagWriter implements SongTagWriterInterface
 {
     private ConfigContainerInterface $configContainer;
     private LoggerInterface $logger;
@@ -52,11 +53,9 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song,
-        ?Art $art = null,
-        ?int $picturetypeid = null
+        Song $song
     ): void {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_FILE_TAGS) === false) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
             return;
         }
         
@@ -85,7 +84,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
             $song->format();
             if ($fileformat == 'mp3') {
-                $songMeta  = $this->getMetadata($song);
+                $songMeta  = $this->getId3Metadata($song);
                 $txxxData  = $result['id3v2']['comments']['text'];
                 $id3v2Data = $result['tags']['id3v2'];
                 $apics     = $result['id3v2']['APIC'];
@@ -142,7 +141,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
             }
             $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
-
+            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
             $file_has_pics = isset($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
@@ -244,7 +243,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['label']                         = $song->f_publisher;
         $meta['tracknumber']                   = $song->f_track;
         $meta['discnumber']                    = $song->disk;
-        $meta['musicbrainz_releasetrackid']    = $song->mbid;
+        $meta['musicbrainz_trackid']           = $song->mbid;
         $meta['musicbrainz_albumid']           = $song->album_mbid;
         $meta['license']                       = $song->license;
         $res                                   = $song->_get_ext_info('label');
@@ -253,18 +252,15 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
+                $meta['genre'][] = $tag['name'];
             }
         }
-        $meta['genre'] = implode(',', $meta['genre']);
+        $meta['genre'] = implode(', ', $meta['genre']);
         
         $album = new Album($song->album);
         $album->format(true);
-        global $dic;
-        $albumRepo                              = $dic->get(AlbumRepositoryInterface::class);
-        $meta['musicbrainz_albumartistid']      = $albumRepo->getAlbumArtistMbid($album->album_artist);
+
+        $meta['musicbrainz_albumartistid']      = $song->albumartist_mbid;
         $meta['musicbrainz_releasegroupid']     = $album->mbid_group;
      
         if (isset($album->release_type)) {
@@ -272,7 +268,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             if (count($release_type) == 2) {
                 $release_type[1]        =trim($release_type[1]);
             }
-            $meta['releasetype']        = $release_type;
+            $meta['releasetype']                = $release_type;
         }
 
         if (isset($album->release_status)) {
@@ -287,19 +283,12 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['original_year']                  = $album->original_year;
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) === true) {
-            $user        = $GLOBALS['user'];
+            $user = $this->get_user_from_rating('song', $song->id);
             if (!empty($user->email)) {
-                $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
-                $db_results  = Dba::read($sql, array($user->id, $song->id, 'song'));
-                $rating      = 0;
-                if ($results = Dba::fetch_assoc($db_results)) {
-                    $rating  = $results['rating'];
-                }
-                $rating         = $rating * (255 / 5);
-                $meta['rating'] = (string)$rating;
+                $meta['rating'] = $this->prepareRating($user->id, $song->id);
             } else {
                 $this->logger->debug(
-                    'User must have an email address on record.',
+                    'Rating user must have an email address on record.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
@@ -311,7 +300,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
     /**
      * Get an array of metadata for writing id3 file tags.
      */
-    private function getMetadata(
+    private function getId3Metadata(
         Song $song
     ): array {
         $meta = [];
@@ -331,20 +320,14 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             $meta['unique_file_identifier']   = ['data' => $song->mbid, 'ownerid' => "http://musicbrainz.org"];
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) === true) {
-            $user        = $GLOBALS['user'];
-            $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
-            $db_results  = Dba::read($sql, array($user->id, $song->id, 'song'));
-            $rating      = 0;
-            if ($results = Dba::fetch_assoc($db_results)) {
-                $rating  = $results['rating'];
-            }
-            $rating = $rating * (255 / 5);
+            $user = $this->get_user_from_rating('song', $song->id);
             if (!empty($user->email)) {
+                $rating                = $this->prepareRating($user->id, $song->id);
                 $meta['Popularimeter'] = ["email" => $user->email, "rating" => $rating,
-                                         "data" => $song->played];
+                    "data" => $song->get_totalcount()];
             } else {
                 $this->logger->debug(
-                    'User must have an email address on record.',
+                    'Rating user must have an email address on record.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
@@ -357,20 +340,18 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
+                $meta['genre'][] = $tag['name'];
             }
         }
-        $meta['genre'] = implode(',', $meta['genre']);
+        $meta['genre'] = implode(', ', $meta['genre']);
         
         $album = new Album($song->album);
         $album->format(true);
-        global $dic;
-        $albumRepo                      = $dic->get(AlbumRepositoryInterface::class);
         $meta['original_year']          = $album->original_year;  //TORY
 
-        $meta['text'][]     = ['data' => $albumRepo->getAlbumArtistMbid($album->album_artist), 'description' => 'MusicBrainz Album Artist Id',
+        $meta['text'][]     = ['data' => $song->albumartist_mbid, 'description' => 'MusicBrainz Album Artist Id',
+                                'encodingid' => 0];
+        $meta['text'][]     = ['data' => $song->albumartist_mbid, 'description' => 'MusicBrainz Album Artist Id',
                                 'encodingid' => 0];
         $meta['text'][]     = ['data' => $album->release_status, 'description' => 'MusicBrainz Album Status',
                                 'encodingid' => 0];
@@ -381,5 +362,31 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['text'][]     = ['data' => $album->catalog_number, 'description' => 'CATALOGNUMBER', 'encodingid' => 0];
 
         return $meta;
+    }
+    
+    private function get_user_from_rating($type, $id)
+    {
+        $sql         = "SELECT `user` FROM `rating` WHERE `object_type` = ? " . "AND `object_id` = ?";
+        $db_results  = Dba::read($sql, array($type, $id));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = $results['user'];
+
+            return new User($user_id);
+        }
+       
+        return null;
+    }
+    
+    private function prepareRating($user_id, $song_id)
+    {
+        $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
+        $db_results  = Dba::read($sql, array($user_id, $song_id, 'song'));
+        $rating      = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $rating  = $results['rating'];
+        }
+        $rating      = $rating * (255 / 5);
+
+        return (string)$rating;
     }
 }

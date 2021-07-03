@@ -38,7 +38,7 @@ use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -3258,7 +3258,7 @@ abstract class Catalog extends database_object
                 AmpConfig::set_by_array(['write_id3' => 'true'], true);
                 AmpConfig::set_by_array(['write_id3_art' => 'true'], true);
 
-                $id3Writer = static::getSongId3TagWriter();
+                $id3Writer = static::getSongTagWriter();
                 set_time_limit(0);
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
@@ -3409,11 +3409,11 @@ abstract class Catalog extends database_object
     /**
      * @deprecated
      */
-    private static function getSongId3TagWriter(): SongId3TagWriterInterface
+    private static function getSongTagWriter(): SongTagWriterInterface
     {
         global $dic;
 
-        return $dic->get(SongId3TagWriterInterface::class);
+        return $dic->get(SongTagWriterInterface::class);
     }
 
     /**

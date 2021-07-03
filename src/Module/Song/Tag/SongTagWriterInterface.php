@@ -23,14 +23,12 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Repository\Model\Song;
 
-interface SongId3TagWriterInterface
+interface SongTagWriterInterface
 {
     /**
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song,
-        ?array $data = null,
-        ?array $changed = null
+        Song $song
     ): void;
 }

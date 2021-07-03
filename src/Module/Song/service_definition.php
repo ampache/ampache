@@ -29,6 +29,6 @@ use function DI\autowire;
 return [
     SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
     SongSorterInterface::class => autowire(SongSorter::class),
-    Tag\SongId3TagWriterInterface::class => autowire(Tag\SongId3TagWriter::class),
+    Tag\SongTagWriterInterface::class => autowire(Tag\SongTagWriter::class),
     Deletion\SongDeleterInterface::class => autowire(Deletion\SongDeleter::class),
 ];

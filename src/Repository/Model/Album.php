@@ -24,7 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
-use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
@@ -913,7 +913,7 @@ class Album extends database_object implements library_item
                 Song::update_year($year, $song_id);
                 Song::update_utime($song_id);
 
-                $this->getSongId3TagWriter()->write(new Song($song_id));
+                $this->getSongTagWriter()->write(new Song($song_id));
             }
             $current_id = $album_id;
             $updated    = true;
@@ -951,7 +951,7 @@ class Album extends database_object implements library_item
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
 
-                    $this->getSongId3TagWriter()->write(new Song($song_id));
+                    $this->getSongTagWriter()->write(new Song($song_id));
                 }
             }
             if (!empty($disk) && $disk != $this->disk) {
@@ -1149,11 +1149,11 @@ class Album extends database_object implements library_item
     /**
      * @deprecated
      */
-    private function getSongId3TagWriter(): SongId3TagWriterInterface
+    private function getSongTagWriter(): SongTagWriterInterface
     {
         global $dic;
 
-        return $dic->get(SongId3TagWriterInterface::class);
+        return $dic->get(SongTagWriterInterface::class);
     }
 
     /**
