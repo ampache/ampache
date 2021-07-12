@@ -1401,7 +1401,6 @@ final class VaInfo implements VaInfoInterface
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                     break;
-                case 'creation_date':
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
