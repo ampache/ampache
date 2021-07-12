@@ -579,7 +579,8 @@ class Album extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = '')
     {
-        $web_path = AmpConfig::get('web_path');
+        $web_path  = AmpConfig::get('web_path');
+        $show_year = $this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year;
 
         $this->f_release_type = ucwords((string)$this->release_type);
 
@@ -601,21 +602,21 @@ class Album extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-        $this->link   = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
+        $this->f_title = $this->f_name;
+        $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to display the release year
-        if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+        if ($show_year) {
+            $this->f_title .= " (" . $this->year . ")";
             $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
         }
         // Looking if we need to combine or display disks
         if ($this->disk && !$this->allow_group_disks && count($this->getAlbumRepository()->getAlbumSuite($this)) > 1) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
-
         $this->f_link .= "</a>";
 
-        $this->f_title = $this->f_name;
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
             $this->f_artist_name = $artist;
