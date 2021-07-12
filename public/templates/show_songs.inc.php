@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-$thcount      = 9;
+$thcount      = 8;
 $is_table     = $browse->is_grid_view();
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
@@ -62,12 +62,16 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
-            <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
-            <?php if (!$hide_album) {
+            <?php if (!$hide_artist) {
     ++$thcount; ?>
-            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
+            <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
             <?php
 } ?>
+            <?php if (!$hide_album) {
+        ++$thcount; ?>
+            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
+            <?php
+    } ?>
             <?php if (!$hide_year) {
         ++$thcount; ?>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
@@ -148,15 +152,16 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
         </tr>
-    <?php
-            } ?>
+    <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_song; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add"></th>
+            <?php if (!$hide_artist) { ?>
             <th class="<?php echo $cel_artist; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
+            <?php } ?>
             <?php if (!$hide_album) { ?>
                 <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
             <?php } ?>
