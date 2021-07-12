@@ -27,7 +27,7 @@
         </span>
     </td>
     <tal:block tal:condition="IS_TABLE_VIEW">
-        <td class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td tal:condition="not:IS_HIDE_ARTIST" class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
         <td tal:condition="not:IS_HIDE_ALBUM" class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
     </tal:block>
     <tal:block tal:condition="not:IS_TABLE_VIEW">

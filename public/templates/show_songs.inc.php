@@ -40,6 +40,7 @@ $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig
 $thcount      = 9;
 $is_table     = $browse->is_grid_view();
 // hide columns you don't always need
+$hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
 $hide_year    = in_array('cel_year', $hide_columns);
 $hide_drag    = in_array('cel_drag', $hide_columns);
@@ -130,6 +131,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                         ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_TABLE_VIEW', $is_table)
+                        ->setContext('IS_HIDE_ARTIST', $hide_artist)
                         ->setContext('IS_HIDE_ALBUM', $hide_album)
                         ->setContext('IS_HIDE_YEAR', $hide_year)
                         ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))

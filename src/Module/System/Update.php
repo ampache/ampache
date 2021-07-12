@@ -254,6 +254,9 @@ class Update
         $update_string = "* Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)";
         $version[]     = array('version' => '500009', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist";
+        $version[]     = array('version' => '500010', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1426,6 +1429,23 @@ class Update
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_500010
+     *
+     * Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist
+     */
+    public static function update_500010()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
