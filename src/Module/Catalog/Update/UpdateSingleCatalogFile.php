@@ -55,9 +55,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog = Catalog::create_from_id($row['id']);
-            $artist  = 0;
-            $album   = 0;
+            $catalog   = Catalog::create_from_id($row['id']);
+            $artist_id = 0;
+            $album_id  = 0;
             ob_flush();
             if (!$catalog->id) {
                 $interactor->error(sprintf(T_('Catalog `%s` not found'), $catname), true);
@@ -81,11 +81,11 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
                 case 'music':
                 default:
-                    $type    = 'song';
-                    $file_id = Catalog::get_id_from_file($filePath, $type);
-                    $media   = new Song($file_id);
-                    $artist  = $media->artist;
-                    $album   = $media->album;
+                    $type      = 'song';
+                    $file_id   = Catalog::get_id_from_file($filePath, $type);
+                    $media     = new Song($file_id);
+                    $artist_id = $media->artist;
+                    $album_id  = $media->album;
                     break;
             }
             $file_test = is_file($filePath);
@@ -97,8 +97,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     true
                 );
                 // update counts after cleaning a missing file
-                Album::update_album_counts($album);
-                Artist::update_artist_counts($artist);
+                Album::update_album_counts($album_id);
+                Artist::update_artist_counts($artist_id);
 
                 return;
             }
@@ -145,8 +145,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     }
                 }
                 // update counts after adding/verifying
-                Album::update_album_counts($album);
-                Artist::update_artist_counts($artist);
+                Album::update_album_counts($album_id);
+                Artist::update_artist_counts($artist_id);
             }
         }
 
