@@ -178,7 +178,7 @@ class User_Playlist extends database_object
 
     /**
      * set_items
-     * This function resets the User_Playlist while optionally setting the update clietn and time for that user
+     * This function resets the User_Playlist while optionally setting the update client and time for that user
      * @param array $playlist
      * @param string $current_type
      * @param int $current_id
@@ -202,7 +202,7 @@ class User_Playlist extends database_object
 
             // subsonic cares about queue dates so set them (and set them together)
             if ($time && $client) {
-                User::set_user_data($this->user, 'playqueue_date', $time);
+                User::set_user_data($this->user, 'playqueue_time', $time);
                 User::set_user_data($this->user, 'playqueue_client', $client);
             }
         }

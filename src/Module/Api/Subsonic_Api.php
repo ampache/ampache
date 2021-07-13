@@ -2063,8 +2063,9 @@ class Subsonic_Api
     {
         $object_ids = self::check_parameter($input, 'id');
         $submission = ($input['submission'] === 'true' || $input['submission'] === '1');
-        $user       = User::get_from_username($input['u']);
+        $username   = (string) $input['u'];
         $client     = (string) $input['c'];
+        $user       = User::get_from_username($username);
 
         if (!is_array($object_ids)) {
             $rid        = array();
@@ -2617,16 +2618,17 @@ class Subsonic_Api
     /**
      * getPlayQueue
      * Returns the state of the play queue for the authenticated user.
-     * Takes no parameter.
-     * Not supported.
+     * Takes no additional parameters
      * @param array $input
      */
     public static function getplayqueue($input)
     {
         $username = (string) $input['u'];
+        $client   = (string) $input['c'];
         $user_id  = User::get_from_username($username)->id;
         $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
         User::set_user_data($user_id, 'playqueue_time', time());
+        User::set_user_data($user_id, 'playqueue_client', $client);
 
         Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::apiOutput($input, $response);
