@@ -2071,10 +2071,10 @@ class Subsonic_Api
             $rid[]      = $object_ids;
             $object_ids = $rid;
         }
-        $get_time = User::get_user_data($user->id, 'playqueue_time');
-        $now_time = time();
+        $user_data = User::get_user_data($user->id, 'playqueue_time');
+        $now_time  = time();
         // don't scrobble after setting the play queue too quickly
-        if ($get_time < $now_time - 2) {
+        if ($user_data['playqueue_time'] < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
                 $time     = isset($input['time']) ? (int)$input['time'] / 1000 : $now_time;
                 $previous = Stats::get_last_play($user->id, $client, $time);
@@ -2578,15 +2578,15 @@ class Subsonic_Api
         $current = (int)$input['current'];
         $media   = Subsonic_Xml_Data::getAmpacheObject($current);
         if ($media->id) {
-            $response = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
-            $position = (int) $input['position'] / 1000;
-            $username = (string) $input['u'];
-            $client   = (string) $input['c'];
-            $user_id  = User::get_from_username($username)->id;
-            $get_time = User::get_user_data($user_id, 'playqueue_time');
-            $time     = time();
+            $response  = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
+            $position  = (int) $input['position'] / 1000;
+            $username  = (string) $input['u'];
+            $client    = (string) $input['c'];
+            $user_id   = User::get_from_username($username)->id;
+            $user_data = User::get_user_data($user_id, 'playqueue_time');
+            $time      = time();
             // wait a few seconds before smashing out play times
-            if ($get_time < $time - 2) {
+            if ($user_data['playqueue_time'] < ($time - 2)) {
                 $previous = Stats::get_last_play($user_id, $client);
                 $type     = Subsonic_Xml_Data::getAmpacheType($current);
                 // long pauses might cause your now_playing to hide
