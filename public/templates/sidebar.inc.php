@@ -26,7 +26,44 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-?>
+// strings for the main page and templates
+$t_browse             = T_('Browse');
+$t_preferences        = T_('Preferences');
+$t_expander           = T_('Expand/Collapse');
+$t_songs              = T_('Songs');
+$t_artists            = T_('Artists');
+$t_albums             = T_('Albums');
+$t_labels             = T_('Labels');
+$t_channels           = T_('Channels');
+$t_broadcasts         = T_('Broadcasts');
+$t_radioStations      = T_('Radio Stations');
+$t_radio              = T_('Radio');
+$t_podcasts           = T_('Podcasts');
+$t_videos             = T_('Videos');
+$t_musicClips         = T_('Music Clips');
+$t_tvShows            = T_('TV Shows');
+$t_movies             = T_('Movies');
+$t_personalVideos     = T_('Personal Videos');
+$t_genres             = T_('Genres');
+$t_uploads            = T_('Uploads');
+$t_dashboards         = T_('Dashboards');
+$t_podcastEpisodes    = T_('Podcast Episodes');
+$t_playlists          = T_('Playlists');
+$t_smartPlaylists     = T_('Smart Playlists');
+$t_smartlists         = T_('Smartlists');
+$t_democratic         = T_('Democratic');
+$t_random             = T_('Random');
+$t_localplay          = T_('Localplay');
+$t_search             = T_('Search');
+$t_information        = T_('Information');
+$t_recent             = T_('Recent');
+$t_newest             = T_('Newest');
+$t_popular            = T_('Popular');
+$t_topRated           = T_('Top Rated');
+$t_favorites          = T_('Favorites');
+$t_wanted             = T_('Wanted');
+$t_shares             = T_('Shares');
+$t_statistics         = T_('Statistics'); ?>
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {

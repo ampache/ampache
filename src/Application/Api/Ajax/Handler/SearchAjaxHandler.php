@@ -105,7 +105,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     foreach ($sres as $albumid) {
                         $album = new Album($albumid);
                         $album->format(true);
-                        $a_title = $album->f_title;
+                        $a_title   = $album->f_title;
                         $results[] = array(
                             'type' => T_('Albums'),
                             'link' => $album->link,
