@@ -21,10 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -49,6 +49,16 @@ use Ampache\Module\Util\Ui;
         } ?>
     </div>
 </td>
+<?php
+if (Art::is_enabled() && $browse->is_mashup()) {
+            $name = scrub_out($libitem->f_full_title); ?>
+    <td class="<?php echo $cel_cover; ?>">
+        <?php
+        $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+            Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&podcast=' . $libitem->podcast); ?>
+    </td>
+<?php
+        } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -68,8 +78,8 @@ use Ampache\Module\Util\Ui;
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
     <?php
 } ?>
-<td class="cel_pubdate"><?php echo $libitem->f_pubdate; ?></td>
-<td class="cel_state"><?php echo $libitem->f_state; ?></td>
+<td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
+<td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
 <?php
     if ($show_ratings) { ?>
         <td class="cel_ratings">
