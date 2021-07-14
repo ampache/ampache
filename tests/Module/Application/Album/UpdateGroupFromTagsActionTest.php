@@ -81,10 +81,10 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
 
-        $albumId    = 666;
-        $catalogIds = [42];
-        $albumSuite = [33];
-        $webPath    = 'some-path';
+        $albumId            = 666;
+        $catalogIds         = [42];
+        $webPath            = 'some-path';
+        $album->album_suite = [1, 2, 3];
 
         $album->shouldReceive('format')
             ->withNoArgs()
@@ -124,7 +124,7 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
                 [
                     'catalog_id' => $catalogIds,
                     'type' => 'album',
-                    'objects' => $albumSuite,
+                    'objects' => $album->album_suite,
                     'target_url' => sprintf(
                         '%s/albums.php?action=show&amp;album=%d',
                         $webPath,
