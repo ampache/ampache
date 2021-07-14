@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <?php
-if (Art::is_enabled() && $browse->is_mashup()) {
+if ($browse->is_mashup()) {
             $name = scrub_out($libitem->f_full_title); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php

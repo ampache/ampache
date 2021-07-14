@@ -106,7 +106,7 @@ if (!Core::is_session_started()) {
     <?php
     } ?>
     <?php if (in_array('show_art', $allowed_filters)) { ?>
-        <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" <?php echo Art::is_enabled() ? 'checked="checked"' : ''; ?>/>
+        <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" checked="checked"/>
         <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>
     <?php
     } // if show_art?>

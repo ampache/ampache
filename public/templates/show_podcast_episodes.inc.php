@@ -87,10 +87,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-        } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>

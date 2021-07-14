@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 session_start();
 
 $web_path     = AmpConfig::get('web_path');
-$thcount      = 8;
+$thcount      = 9;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();
 // mashup and grid view need different css
@@ -50,11 +50,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
-                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-            <?php
-} ?>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', T_('Songs'), 'artist_sort_song_count'); ?></th>
@@ -113,10 +109,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
-            <?php if (Art::is_enabled()) { ?>
-                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <?php
-        } ?>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>

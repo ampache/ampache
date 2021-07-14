@@ -144,18 +144,6 @@ class Art extends database_object
     } // build_cache
 
     /**
-     * @deprecated There was no way to explicitly deactivate the art - so I assume, it's not needed in the first place
-     *
-     * is_enabled
-     * Checks whether the user currently wants art
-     * @return boolean
-     */
-    public static function is_enabled()
-    {
-        return true;
-    }
-
-    /**
      * extension
      * This returns the file extension for the currently loaded art
      * @param string $mime

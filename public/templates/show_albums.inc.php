@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 
 $web_path      = AmpConfig::get('web_path');
-$thcount       = 9;
+$thcount       = 10;
 $show_ratings  = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table      = $browse->is_grid_view();
 $original_year = AmpConfig::get('use_original_year');
@@ -53,11 +53,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr class="th-top">
         <div class="libitem_menu">
             <th class="cel_play essential"></th>
-        <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-        <?php
-} ?>
 </div>
             <th class="<?php echo $cel_album; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -116,10 +112,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <?php if (Art::is_enabled()) { ?>
-                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <?php
-        } ?>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="<?php echo $cel_artist; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_artist', T_('Album Artist'), 'album_sort_artist_bottom'); ?></th>

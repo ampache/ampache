@@ -42,11 +42,7 @@ $cel_counter = "cel_counter"; ?>
     <thead>
         <tr class="th-top">
             <th class="cel_play"></th>
-            <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-            <?php
-} ?>
             <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"><?php echo T_('Songs');  ?></th>
@@ -104,10 +100,7 @@ $cel_counter = "cel_counter"; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <?php
-            } ?>
             <th class="<?php echo $cel_artist; ?>"><?php echo T_('Artist'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>

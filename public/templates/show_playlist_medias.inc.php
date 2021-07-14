@@ -45,10 +45,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
-                <?php if (Art::is_enabled()) { ?>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
-                <?php
-} ?>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
@@ -81,10 +78,7 @@ $cel_time  = ($is_table) ? "cel_time" : 'grid_time'; ?>
         <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
-                <?php if (Art::is_enabled()) { ?>
                 <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
-                <?php
-                } ?>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
                 <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>

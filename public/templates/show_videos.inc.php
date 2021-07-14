@@ -42,10 +42,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-        <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-} ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add essential"></th>
 <?php
@@ -94,10 +91,7 @@ if (isset($video_type) && $video_type != 'video') {
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-        } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add"></th>
 <?php

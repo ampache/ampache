@@ -41,20 +41,12 @@ if ($albums) {
         $show_play = true; ?>
     <div class="random_album">
         <div id="album_<?php echo $album_id ?>" class="art_album libitem_menu">
-            <?php
-            if (Art::is_enabled()) {
-                $thumb = 1;
-                if (!Ui::is_grid_view('album')) {
-                    $thumb     = 11;
-                    $show_play = false;
-                }
-                $album->display_art($thumb, true);
-            } else { ?>
-            <a href="<?php echo $album->link; ?>">
-                <?php echo '[' . $album->f_album_artist_name . '] ' . $album->f_name; ?>
-            </a>
-            <?php
-            } ?>
+            <?php $thumb = 1;
+        if (!Ui::is_grid_view('album')) {
+            $thumb     = 11;
+            $show_play = false;
+        }
+        $album->display_art($thumb, true); ?>
         </div>
         <?php if ($show_play) { ?>
         <div class="play_album">

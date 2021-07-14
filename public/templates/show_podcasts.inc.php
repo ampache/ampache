@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$thcount      = 5;
+$thcount      = 6;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
@@ -55,18 +55,14 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-        <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-} ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+    ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
-    } ?>
+} ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -97,10 +93,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <?php
-            } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if ($show_ratings) { ?>

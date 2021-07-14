@@ -47,12 +47,9 @@ use Ampache\Module\Util\Ui;
         } ?>
     </div>
 </td>
-<?php if (Art::is_enabled()) { ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('podcast', $libitem->id, $libitem->f_name, 2, $libitem->link); ?>
 </td>
-<?php
-    } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php

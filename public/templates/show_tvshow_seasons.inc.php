@@ -30,7 +30,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 6;
+$thcount  = 7;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
@@ -41,19 +41,15 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-        <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-} ?>
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
             <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_tvshow'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+    ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
-    } ?>
+} ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -84,10 +80,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-        } ?>
             <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_name_bottom'); ?></th>
             <th class="cel_tvshow"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_artist_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>

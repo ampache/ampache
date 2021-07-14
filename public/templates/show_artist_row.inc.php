@@ -52,16 +52,11 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
         } ?>
     </div>
 </td>
-<?php
-if (Art::is_enabled()) {
-            $name = scrub_out($libitem->f_name); ?>
+<?php $name = scrub_out($libitem->f_name); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php
-    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-            Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
+    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
-<?php
-        } ?>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
