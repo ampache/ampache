@@ -741,7 +741,7 @@ class Stats
         switch ($type) {
             case 'artist':
             case 'album':
-            case 'genre':
+            case 'tag':
             case 'song':
             case 'video':
             case 'tvshow':
@@ -751,6 +751,8 @@ class Stats
             case 'playlist':
             case 'podcast_episode':
                 return $type;
+            case 'genre':
+                return 'tag';
             default:
                 return 'song';
         } // end switch
@@ -780,11 +782,11 @@ class Stats
         $base_type         = 'song';
         $multi_where       = 'WHERE';
         $allow_group_disks = AmpConfig::get('album_group');
-        $sql_type          = "`song`.`" . $type . "`";
         $filter_type       = $type;
         // everything else
         if ($type === 'song') {
-            $sql = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+            $sql      = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+            $sql_type = "`song`.`id`";
         } elseif ($type === 'album') {
             $base_type = 'album';
             $sql       = "SELECT MIN(`album`.`id`) as `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` ";
@@ -797,9 +799,14 @@ class Stats
             $sql         = "SELECT MIN(`song`.`artist`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
             $sql_type    = "`song`.`artist`";
             $filter_type = 'song_artist';
+        } elseif ($type === 'podcast_episode') {
+            $base_type = 'podcast_episode';
+            $sql       = "SELECT MIN(`podcast_episode`.`id`) as `id`, MIN(`podcast_episode`.`addition_time`) AS `real_atime` FROM `podcast_episode` ";
+            $sql_type  = "`podcast_episode`.`id`";
         } else {
             // what else?
-            $sql = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+            $sql      = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+            $sql_type = "`song`.`" . $type . "`";
         }
         // join catalogs
         $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
