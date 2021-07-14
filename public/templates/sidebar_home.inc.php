@@ -48,7 +48,6 @@ $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_labels    = T_('Labels');
 $t_playlists = T_('Playlists');
-$t_playlist  = T_('Playlist');
 $t_videos    = T_('Videos');
 $t_tagcloud  = T_('Genres');
 $t_expander  = T_('Expand/Collapse');
@@ -152,7 +151,7 @@ $t_search    = T_('Search'); ?>
     </li>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
-    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlist; ?></span><?php echo Ui::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlists; ?></span><?php echo Ui::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
