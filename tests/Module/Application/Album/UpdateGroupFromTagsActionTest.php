@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,9 +45,6 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
     /** @var MockInterface|UiInterface|null */
     private MockInterface $ui;
 
-    /** @var MockInterface|AlbumRepositoryInterface|null */
-    private MockInterface $albumRepository;
-
     private ?UpdateGroupFromTagsAction $subject;
 
     public function setUp(): void
@@ -56,13 +52,11 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
-        $this->albumRepository = $this->mock(AlbumRepositoryInterface::class);
 
         $this->subject = new UpdateGroupFromTagsAction(
             $this->configContainer,
             $this->modelFactory,
-            $this->ui,
-            $this->albumRepository
+            $this->ui
         );
     }
 

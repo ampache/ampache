@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,18 +44,14 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        AlbumRepositoryInterface $albumRepository
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
-        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
