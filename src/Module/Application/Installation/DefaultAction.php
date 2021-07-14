@@ -183,6 +183,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                 // Now that it's inserted save the lang preference
                 Preference::update('lang', -1, AmpConfig::get('lang'));
+                // Intentional break fall-through
             case 'show_create_config':
                 require_once __DIR__ . '/../../../../public/templates/show_install_config.inc.php';
                 break;
@@ -216,7 +217,7 @@ final class DefaultAction implements ApplicationActionInterface
                         }
                     }
                 }
-            // No break on purpose
+                // Intentional break fall-through
             case 'show_create_account':
                 $results = parse_ini_file($configfile);
                 if (!isset($created_config)) {

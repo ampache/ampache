@@ -332,7 +332,6 @@ class Art extends database_object
      * @param string $mime
      * @return boolean
      */
-
     public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
@@ -422,7 +421,6 @@ class Art extends database_object
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
-                                ;
                             }
                             
                             break;

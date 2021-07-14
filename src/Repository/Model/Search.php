@@ -62,7 +62,7 @@ class Search extends playlist_object
      * constructor
      * @param integer $search_id
      * @param string $searchtype
-     * @param User $user
+     * @param User|null $user
      */
     public function __construct($search_id = 0, $searchtype = 'song', ?User $user = null)
     {
@@ -1242,7 +1242,7 @@ class Search extends playlist_object
      * update
      *
      * This function updates the saved version with the current settings.
-     * @param array $data
+     * @param array|null $data
      * @return integer
      */
     public function update(array $data = null)

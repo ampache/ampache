@@ -411,16 +411,6 @@ class AmpacheRss
     /**
      * @deprecated Inject by constructor
      */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getUserRepository(): UserRepositoryInterface
     {
         global $dic;

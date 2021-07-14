@@ -395,7 +395,6 @@ class User extends database_object
                 $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
                 $data->format();
-                $data->f_link;
                 $items[] = $data;
             } elseif ($type == 'album') {
                 // If its an album
@@ -849,13 +848,10 @@ class User extends database_object
      */
     public function insert_ip_history()
     {
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
-            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
-        } else {
-            $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
-            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
-        }
+        $sip = (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR'))
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
 
         // Remove port information if any
         if (!empty($sip)) {
@@ -1392,7 +1388,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user
+     * @param User|null $user
      * @return boolean
      */
     public static function stream_control($media_ids, User $user = null)

@@ -1033,13 +1033,11 @@ class Album extends database_object implements library_item
      * @param string $field
      * @param $value
      * @param integer $album_id
-     * @return PDOStatement|boolean
      */
     private static function update_field($field, $value, $album_id)
     {
         $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array($value, $album_id));
+        Dba::write($sql, array($value, $album_id));
     }
 
     /**

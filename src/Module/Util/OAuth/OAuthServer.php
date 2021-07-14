@@ -86,7 +86,7 @@ class OAuthServer
      * process an access_token request
      * returns the access token on success
      * @param $request
-     * @return
+     * @return mixed
      * @throws OAuthException
      */
     public function fetch_access_token(&$request)

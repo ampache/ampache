@@ -510,14 +510,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
-
-        if ($this->catalog_id) {
-            $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
-        } else {
-            $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
-        }
+        $this->link   = ($this->catalog_id)
+            ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
+            : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
 
         if ($details) {
             $min   = sprintf("%02d", (floor($this->time / 60) % 60));
@@ -778,7 +774,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                     $matches = VaInfo::get_mbid_array($mbid);
                     foreach ($matches as $mbid_string) {
                         // reverse search artist id if it's still not found for some reason
-                        if (isset($id_array[$mbid_string]) && !$exists) {
+                        if (isset($id_array[$mbid_string])) {
                             $artist_id = (int)$id_array[$mbid_string];
                             $exists    = ($artist_id > 0);
                             $mbid      = ($exists)

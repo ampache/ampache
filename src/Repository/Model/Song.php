@@ -1034,6 +1034,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($artist->id) {
             return $artist->f_name;
         }
+
+        return '';
     } // get_artist_name
 
     /**
@@ -1051,6 +1053,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($album_artist->id) {
             return (string)$album_artist->f_name;
         }
+
+        return '';
     } // get_album_artist_name
 
     /**

@@ -53,15 +53,14 @@ final class UserRepository implements UserRepositoryInterface
             [$username]
         );
 
-        $data = Dba::fetch_assoc($db_results);
-
+        $data   = Dba::fetch_assoc($db_results);
         $result = $data['id'] ?? null;
 
         if ($result !== null) {
             return (int) $result;
         }
 
-        return $result;
+        return null;
     }
 
     /**
@@ -87,6 +86,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * This returns all valid users in an array (id => name).
      *
+     * @param bool $includeDisabled
      * @return array
      */
     public function getValidArray(bool $includeDisabled = false): array

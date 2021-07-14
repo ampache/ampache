@@ -1851,13 +1851,12 @@ abstract class Catalog extends database_object
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
                 echo "</td>\n</tr>\n";
-                flush();
             } else {
                 if (!$api) {
                     echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
-                flush();
             }
+            flush();
         } // foreach songs
         if (!$api) {
             echo "</tbody></table>\n";
