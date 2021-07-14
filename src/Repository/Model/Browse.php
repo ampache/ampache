@@ -480,6 +480,24 @@ class Browse extends Query
 
     /**
      *
+     * @param boolean $mashup
+     */
+    public function set_mashup($mashup)
+    {
+        $this->_state['mashup'] = $mashup;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_mashup()
+    {
+        return make_bool($this->_state['mashup']);
+    }
+
+    /**
+     *
      * @param boolean $grid_view
      * @param boolean $savecookie
      */
