@@ -781,6 +781,10 @@ div#autoupdate > span {
     order: 10;
 }
 
+.sb2_dashboard {
+    order: 15;
+}
+
 .sb2_video {
     order: 20;
 }

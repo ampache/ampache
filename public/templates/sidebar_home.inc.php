@@ -37,6 +37,10 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class);
+$allowDemocratic = AmpConfig::get('allow_democratic_playback');
+$allowLabel      = AmpConfig::get('label');
+$allowPodcast    = AmpConfig::get('podcast');
+$access50        = Access::check('interface', 50);
 
 // strings for the main page and templates
 $t_songs     = T_('Songs');
@@ -66,7 +70,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo $t_albums; ?></a></li>
             <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_artists; ?></a></li>
-            <?php if (AmpConfig::get('label')) { ?>
+            <?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php } ?>
             <?php if (AmpConfig::get('channel')) { ?>
@@ -78,7 +82,7 @@ $t_search    = T_('Search'); ?>
             <?php if (AmpConfig::get('live_stream')) { ?>
                 <li id="sb_home_browse_music_radioStation"><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations') ?></a></li>
             <?php } ?>
-            <?php if (AmpConfig::get('podcast')) { ?>
+            <?php if ($allowPodcast) { ?>
                 <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php } ?>
             <?php if ($allowVideo) { ?>
@@ -91,6 +95,24 @@ $t_search    = T_('Search'); ?>
         } ?>
         </ul>
     </li>
+    <?php if (User::is_registered()) { ?>
+    <li class="sb2_dashboard">
+        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Dashboards'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'dashboard', 'header-img ' . (($_COOKIE['sb_dashboard'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <ul class="sb3" id="sb_home_dash" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_dashboard'))) {
+            echo 'display: none;';
+        } ?>">
+            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
+            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
+            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
+            <?php if ($allowPodcast) { ?>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=podcast_episode"><?php echo T_('Podcast Episodes') ?></a></li>
+            <?php } ?>
+            <?php if ($allowVideo) { ?>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=video"><?php echo $t_videos ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
     <?php if ($allowVideo) { ?>
         <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo Ui::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
@@ -118,7 +140,7 @@ $t_search    = T_('Search'); ?>
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
-          <?php if (AmpConfig::get('label')) { ?>
+          <?php if ($allowLabel) { ?>
               <li id="sb_home_search_label"><a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo $t_labels; ?></a></li>
           <?php } ?>
               <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
@@ -131,11 +153,11 @@ $t_search    = T_('Search'); ?>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
     <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlist; ?></span><?php echo Ui::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
-        <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', 50)) { ?>
+        <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_browse_music_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
-            <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
+            <?php if ($allowDemocratic) { ?>
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic') ?></a></li>
             <?php } ?>
             <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', 5))) { ?>
@@ -160,9 +182,6 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
             <?php if (User::is_registered()) { ?>
-                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
-                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
-                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
                 <?php if (AmpConfig::get('ratings')) { ?>
                 <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/stats.php?action=highest"><?php echo T_('Top Rated') ?></a></li>
                 <?php } ?>
@@ -175,7 +194,7 @@ $t_search    = T_('Search'); ?>
                 <?php if (AmpConfig::get('share')) { ?>
                 <li id="sb_home_info_share"><a href="<?php echo $web_path ?>/stats.php?action=share"><?php echo T_('Shares') ?></a></li>
                 <?php } ?>
-                <?php if (Access::check('interface', 50)) { ?>
+                <?php if ($access50) { ?>
                     <li id="sb_home_info_statistic"><a href="<?php echo $web_path ?>/stats.php?action=show"><?php echo T_('Statistics') ?></a></li>
                 <?php } ?>
             <?php } ?>
