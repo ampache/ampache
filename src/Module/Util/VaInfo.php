@@ -516,6 +516,7 @@ final class VaInfo implements VaInfoInterface
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid']       = $info['mb_trackid'] ?: trim((string)$tags['mb_trackid']);
+            $info['isrc']             = $info['isrc'] ?: trim((string)$tags['isrc']);
             $info['mb_albumid']       = $info['mb_albumid'] ?: trim((string)$tags['mb_albumid']);
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim((string)$tags['mb_albumid_group']);
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim((string)$tags['mb_artistid']);
@@ -548,6 +549,7 @@ final class VaInfo implements VaInfoInterface
             $info['r128_album_gain']       = isset($info['r128_album_gain']) ? $info['r128_album_gain'] : (!is_null($tags['r128_album_gain']) ? (int) $tags['r128_album_gain'] : null);
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
+            $info['totaltracks']   = $info['totaltracks'] ?: (int) $tags['totaltracks'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
             $info['resolution_y']  = $info['resolution_y'] ?: (int) $tags['resolution_y'];
             $info['display_x']     = $info['display_x'] ?: (int) $tags['display_x'];
@@ -626,7 +628,7 @@ final class VaInfo implements VaInfoInterface
      */
     public static function get_mbid_array($mbid)
     {
-        $mbid_match_string = '/[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9]-[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]/';
+        $mbid_match_string = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
         if (preg_match($mbid_match_string, $mbid, $matches)) {
             return $matches;
         }
@@ -984,6 +986,9 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
                         array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
                 default:
                     $parsed[$tagname] = $data[0];
                     break;
@@ -1037,10 +1042,18 @@ final class VaInfo implements VaInfoInterface
                 case 'track_number':
                     $parsed['track'] = $data[0];
                     break;
+                case 'tracktotal':
+                    $parsed['totaltracks'] = $data[0];
+                    break;
                 case 'discnumber':
-                    $elements             = explode('/', $data[0]);
-                    $parsed['disk']       = $elements[0];
-                    $parsed['totaldisks'] = $elements[1];
+                    $parsed['disk']       = $data[0];
+                    break;
+                case 'totaldiscs':
+                case 'disctotal':
+                    $parsed['totaldisks'] = $data[0];
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
                     break;
                 case 'date':
                     $parsed['year'] = $data[0];
@@ -1172,6 +1185,9 @@ final class VaInfo implements VaInfoInterface
                 case 'track_number':
                     $parsed['track'] = $data[0];
                     break;
+                case 'totaltracks':
+                    $parsed['totaltracks'] = $data[0];
+                    break;
                 case 'comment':
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
                     $parsed['comment'] = reset($data);
@@ -1183,6 +1199,9 @@ final class VaInfo implements VaInfoInterface
                     } else {
                         $parsed['composer'] = reset($data);
                     }
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
@@ -1209,6 +1228,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'label':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tag] = $data[0];
@@ -1295,8 +1317,8 @@ final class VaInfo implements VaInfoInterface
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
-                        if ($enable_custom_metadata && !in_array($txxx['description'], $parsed)) {
-                            $parsed[$txxx['description']] = $id3v2['comments']['text'][$txxx['description']];
+                        if ($enable_custom_metadata && !in_array(strtolower($this->trimAscii($txxx['description'])), $parsed)) {
+                            $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']];
                         }
                         break;
                 }
@@ -1343,7 +1365,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['album'] = $data[0];
                     break;
                 default:
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
@@ -1393,10 +1415,18 @@ final class VaInfo implements VaInfoInterface
                     $parsed['release_status'] = $data[0];
                     break;
                 case 'track_number':
-                    $parsed['track'] = $data[0];
+                    //$parsed['track'] = $data[0];
+                    $elements              = explode('/', $data[0]);
+                    $parsed['track']       = $elements[0];
+                    $parsed['totaltracks'] = $elements[1];
                     break;
                 case 'disc_number':
-                    $parsed['disk'] = $data[0];
+                    $elements             = explode('/', $data[0]);
+                    $parsed['disk']       = $elements[0];
+                    $parsed['totaldisks'] = $elements[1];
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = $data[0];
                     break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
@@ -1430,7 +1460,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['tvshow'] = $data[0];
                     break;
                 default:
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
