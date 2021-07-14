@@ -106,14 +106,6 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $album = new Album($albumid);
                         $album->format(true);
                         $a_title = $album->f_title;
-                        // Looking if we need to display the release year
-                        if ($album->original_year && AmpConfig::get('use_original_year') && $album->original_year != $album->year) {
-                            $a_title .= " (" . $album->year . ")";
-                        }
-                        // ungrouped albums need a disk number to differentiate them
-                        if ($album->disk && !$album->allow_group_disks && count($album->album_suite) > 1) {
-                            $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
-                        }
                         $results[] = array(
                             'type' => T_('Albums'),
                             'link' => $album->link,
