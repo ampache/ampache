@@ -928,7 +928,12 @@ class Subsonic_Xml_Data
     private static function formatAlbum($album)
     {
         $name = $album->f_name;
-        if ($album->disk && !$album->allow_group_disks && count(static::getAlbumRepository()->getAlbumSuite($album)) > 1) {
+        // Looking if we need to display the release year
+        if ($album->original_year && AmpConfig::get('use_original_year') && $album->original_year != $album->year) {
+            $name .= " (" . $album->year . ")";
+        }
+        // ungrouped albums need a disk number to differentiate them
+        if ($album->disk && !$album->allow_group_disks && count($album->album_suite) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 

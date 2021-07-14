@@ -77,7 +77,7 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
             [
                 'catalog_id' => $album->get_catalogs(),
                 'type' => 'album',
-                'objects' => $this->albumRepository->getAlbumSuite($album),
+                'objects' => $album->album_suite,
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&amp;album=%d',
                     $this->configContainer->getWebPath(),

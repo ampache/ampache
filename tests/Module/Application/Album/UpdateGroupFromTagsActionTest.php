@@ -116,11 +116,6 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
             ->once()
             ->andReturn($catalogIds);
 
-        $this->albumRepository->shouldReceive('getAlbumSuite')
-            ->with($album)
-            ->once()
-            ->andReturn($albumSuite);
-
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
