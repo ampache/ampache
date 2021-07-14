@@ -31,6 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 
 $web_path      = AmpConfig::get('web_path');
 $thcount       = 10;

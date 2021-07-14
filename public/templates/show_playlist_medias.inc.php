@@ -28,6 +28,10 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Playlist $playlist */
+/** @var array $object_ids */
+
 $web_path     = AmpConfig::get('web_path');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);

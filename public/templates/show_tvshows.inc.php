@@ -29,6 +29,9 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 session_start();
 
 $web_path = AmpConfig::get('web_path');

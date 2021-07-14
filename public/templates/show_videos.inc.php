@@ -28,6 +28,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();

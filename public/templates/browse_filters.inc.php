@@ -26,6 +26,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 if (!Core::is_session_started()) {
     session_start();
 } ?>

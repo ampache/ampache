@@ -28,6 +28,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 $is_table     = $browse->is_grid_view();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 //mashup and grid view need different css

@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 /** @var array $hide_columns */
 
 $web_path     = AmpConfig::get('web_path');
