@@ -123,6 +123,11 @@ class Search extends playlist_object
                 $this->user_types();
                 $this->order_by = '`user`.`username`';
                 break;
+            case 'tag':
+            case 'genre':
+                $this->tag_types();
+                $this->order_by = '`tag`.`name`';
+                break;
         } // end switch on searchtype
     } // end constructor
 
@@ -804,6 +809,16 @@ class Search extends playlist_object
     private function user_types()
     {
         $this->type_text('username', T_('Username'));
+    }
+
+    /**
+     * tagtypes
+     *
+     * this is where all the searchtypes for Genres are defined
+     */
+    private function tag_types()
+    {
+        $this->type_text('name', T_('Genre'));
     }
 
     /**
