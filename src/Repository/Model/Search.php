@@ -38,7 +38,7 @@ class Search extends playlist_object
     protected const DB_TABLENAME = 'search';
 
     public $searchtype;
-    public $rules;
+    public $rules          = array();
     public $logic_operator = 'AND';
     public $type           = 'public';
     public $random         = 0;
