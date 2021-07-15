@@ -1164,7 +1164,7 @@ table.tabledata .cel_drag img:hover {
 }
 
 table.tabledata .cel_agent {
-    text-align: right;
+    text-align: left;
     width: 45px;
 }
 
