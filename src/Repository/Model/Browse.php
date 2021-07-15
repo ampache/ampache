@@ -210,7 +210,8 @@ class Browse extends Query
         debug_event(self::class, 'Show objects called for type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
-        $hide_columns = array();
+        $hide_columns   = array();
+        $argument_param = '';
         if (is_array($argument)) {
             if (is_array($argument['hide'])) {
                 $hide_columns = $argument['hide'];

@@ -86,7 +86,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         }
         // hide some of the useless columns in a browse
         if ($_REQUEST['hide']) {
-            $argument = array('hide' => explode(',', scrub_in($_REQUEST['hide'])));
+            $argument = array('hide' => explode(',', scrub_in((string)$_REQUEST['hide'])));
         }
 
         $results = array();
