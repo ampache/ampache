@@ -30,27 +30,27 @@ use Ampache\Module\Util\Ui;
 global $dic;
 
 $environment = $dic->get(EnvironmentInterface::class);
-?>
+$web_path    = AmpConfig::get('web_path'); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo Ui::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
+                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo Ui::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=write_config"><?php echo Ui::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo Ui::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
         </ul>
     </div>
@@ -61,7 +61,7 @@ $environment = $dic->get(EnvironmentInterface::class);
         <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
     ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
 } ?>
-        <div><a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+        <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
         <?php
         if (AutoUpdate::is_update_available()) {
             AutoUpdate::show_new_version();

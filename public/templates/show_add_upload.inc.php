@@ -29,9 +29,10 @@ use Ampache\Module\Util\Ui;
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
-$ajaxfs = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
-$artist = (int) (Core::get_request('artist'));
-$album  = (int) (Core::get_request('album')); ?>
+$ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
+$artist   = (int) (Core::get_request('artist'));
+$album    = (int) (Core::get_request('album'));
+$web_path = AmpConfig::get('web_path'); ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -41,7 +42,7 @@ $album  = (int) (Core::get_request('album')); ?>
         <div class="treecontent default" style="text-align:center;"><?php echo T_('Target folder'); ?></div>
     </div>
 </div>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jstree/dist/jstree.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/components/jstree/dist/jstree.min.js"></script>
 <script>
 $(window).resize(function () {
     var h = Math.max($(window).height() - 0, 420);
@@ -162,7 +163,7 @@ $(function () {
 });
 </script>
 
-<form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/upload.php">
+<form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/upload.php">
 <input type="hidden" name="upload_action" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
 <?php

@@ -39,7 +39,10 @@ use Ampache\Module\Util\ZipHandlerInterface;
 $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
+$show_similar      = AmpConfig::get('show_similar');
 $directplay_limit  = AmpConfig::get('direct_play_limit');
+$use_label         = AmpConfig::get('label');
+$use_wanted        = AmpConfig::get('wanted');
 
 /** @var Artist $artist */
 /** @var string $object_type */
@@ -178,7 +181,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
+            <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('comment', $postshout); ?>
                 <?php echo $postshout; ?>
             </a>
@@ -204,7 +207,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
+                    <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
                         <?php echo T_('Graphs'); ?>
                     </a>
@@ -236,7 +239,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($artist)) {
         $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
+            <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>
@@ -250,15 +253,15 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#albums"><?php echo T_('Albums'); ?></a></li>
-<?php if (AmpConfig::get('wanted')) { ?>
+<?php if ($use_wanted) { ?>
             <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
 <?php
     } ?>
-<?php if (AmpConfig::get('show_similar')) { ?>
+<?php if ($show_similar) { ?>
             <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
 <?php
     } ?>
-<?php if (AmpConfig::get('label')) { ?>
+<?php if ($use_label) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
 <?php
     } ?>
@@ -286,7 +289,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         </div>
 <?php
-if (AmpConfig::get('wanted')) {
+if ($use_wanted) {
         echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
         <div id="missing_albums" class="tab_content">
         <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
@@ -296,7 +299,7 @@ if (AmpConfig::get('wanted')) {
 <?php
     } ?>
 <?php
-if (AmpConfig::get('show_similar')) {
+if ($show_similar) {
         echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
         <div id="similar_artist" class="tab_content">
         <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
@@ -306,7 +309,7 @@ if (AmpConfig::get('show_similar')) {
 <?php
     } ?>
 <?php
-if (AmpConfig::get('label')) {
+if ($use_label) {
         echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
         <div id="labels" class="tab_content">
         <?php Ui::show_box_top(T_('Labels'), 'info-box');
