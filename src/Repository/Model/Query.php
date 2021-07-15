@@ -79,21 +79,11 @@ class Query
             'year',
             'track',
             'time',
+            'composer',
+            'total_count',
+            'total_skip',
             'album',
             'artist'
-        ),
-        'artist' => array(
-            'name',
-            'album',
-            'placeformed',
-            'yearformed',
-            'song_count',
-            'album_count',
-            'total_count'
-        ),
-        'tag' => array(
-            'tag',
-            'name'
         ),
         'album' => array(
             'name',
@@ -105,6 +95,15 @@ class Query
             'song_count',
             'total_count',
             'release_type'
+        ),
+        'artist' => array(
+            'name',
+            'album',
+            'placeformed',
+            'yearformed',
+            'song_count',
+            'album_count',
+            'total_count'
         ),
         'playlist' => array(
             'name',
@@ -125,17 +124,21 @@ class Query
             'call_sign',
             'frequency'
         ),
-        'video' => array(
-            'title',
-            'resolution',
-            'length',
-            'codec'
+        'tag' => array(
+            'tag',
+            'name'
         ),
         'user' => array(
             'fullname',
             'username',
             'last_seen',
             'create_date'
+        ),
+        'video' => array(
+            'title',
+            'resolution',
+            'length',
+            'codec'
         ),
         'wanted' => array(
             'user',
@@ -1926,9 +1929,11 @@ class Query
                 switch ($field) {
                     case 'title':
                     case 'year':
-                    case 'time':
                     case 'track':
+                    case 'time':
                     case 'composer':
+                    case 'total_count':
+                    case 'total_skip':
                         $sql = "`song`.`$field`";
                         break;
                     case 'album':
