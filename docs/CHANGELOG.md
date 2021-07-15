@@ -20,7 +20,11 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
-* Search: Add 'possible_duplicate' to song, artist and album searches
+* Search
+  * Add 'possible_duplicate', 'recently_played' to song, artist and album search
+  * Add 'catalog' to artist and album search
+  * Add 'favorite_album', 'favorite_artist' to song search
+  * Add 'release_status' to album search
 * Database 5.0.0 Build 10:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table

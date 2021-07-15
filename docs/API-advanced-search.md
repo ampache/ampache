@@ -37,11 +37,14 @@ Select the type of search based on the type of data you are searching for. (song
 | yearformed         | Year                    | numeric           |              artist              |
 | placeformed        | Place                   | text              |              artist              |
 | release_type       | Release Type            | text              |              album               |
+| release_status     | Release Status          | text              |              album               |
 | myrating           | My Rating               | numeric           |        song,album,artist         |
 | rating             | Rating (Average)        | numeric           |        song,album,artist         |
 | albumrating        | My Rating (Album)       | numeric           |               song               |
 | artistrating       | My Rating (Artist)      | numeric           |            song,album            |
 | favorite           | Favorites               | text              |        song,album,artist         |
+| favorite_album     | Favorites (Album)       | text              |               song               |
+| favorite_artist    | Favorites (Artist)      | text              |               song               |
 | played_times       | # Played                | numeric           |        song,album,artist         |
 | skipped_times      | # Skipped               | numeric           |               song               |
 | play_skip_ratio    | Played/Skipped ratio    | numeric           |               song               |
@@ -71,7 +74,7 @@ Select the type of search based on the type of data you are searching for. (song
 | recent_played      | Recently Played         | numeric_limit     |        song,album,artist         |
 | recent_added       | Recently Added          | numeric_limit     |               song               |
 | recent_updated     | Recently Updated        | numeric_limit     |               song               |
-| catalog            | Catalog                 | boolean_numeric   |            song,album            |
+| catalog            | Catalog                 | boolean_numeric   |        song,album,artist         |
 | mbid               | MusicBrainz ID          | text              |        song,album,artist         |
 | mbid_album         | MusicBrainz ID (Album)  | text              |               song               |
 | mbid_artist        | MusicBrainz ID (Artist) | text              |               song               |
