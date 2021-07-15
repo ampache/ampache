@@ -5,6 +5,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
+
 $videoRepository  = $dic->get(VideoRepositoryInterface::class);
 $web_path         = AmpConfig::get('web_path'); ?>
 <?php $filter_str = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?>
