@@ -43,6 +43,7 @@ use Ampache\Module\Util\Ui;
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
+$web_path    = AmpConfig::get('web_path');
 $client->format(); ?>
 <?php Ui::show_box_top($client->f_name); ?>
 <div class="user_avatar">
@@ -75,22 +76,22 @@ if ($client->f_avatar) {
     <dd>
         <?php echo $client->f_name; ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
     } ?>
         <?php if (Access::check('interface', 100)) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
         <?php
     } elseif ($client->id == Core::get_global('user')->id) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
 
         <?php
     }
     if (AmpConfig::get('use_now_playing_embedded')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
+        <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
  <?php
     } ?>
 
@@ -104,7 +105,7 @@ if ($client->f_avatar) {
     <dd><?php echo $client->f_usage; ?></dd>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
         ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+            <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
         <?php
     } ?>
     </dd>

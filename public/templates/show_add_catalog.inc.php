@@ -27,7 +27,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 $default_rename = "%T - %t";
-$default_sort   = "%a/%A"; ?>
+$default_sort   = "%a/%A";
+$allow_video    = AmpConfig::get('allow_video'); ?>
 <?php Ui::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 &nbsp;
@@ -53,7 +54,7 @@ $default_sort   = "%a/%A"; ?>
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <?php if (AmpConfig::get('allow_video')) { ?>
+                <?php if ($allow_video) { ?>
                     <strong><?php echo T_('TV Shows'); ?>:</strong><br />
                     <span class="format-specifier">%S</span> = <?php echo T_('TV Show'); ?><br />
                     <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
@@ -104,7 +105,7 @@ $default_sort   = "%a/%A"; ?>
 
                 <select name="gather_media">
                     <option value="music"><?php echo T_('Music'); ?></option>
-            <?php if (AmpConfig::get('allow_video')) { ?>
+            <?php if ($allow_video) { ?>
                     <option value="clip"><?php echo T_('Music Clip'); ?></option>
                     <option value="tvshow"><?php echo T_('TV Show'); ?></option>
                     <option value="movie"><?php echo T_('Movie'); ?></option>
