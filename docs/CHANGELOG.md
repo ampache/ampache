@@ -20,7 +20,11 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
-* Search
+* Added %R (Release Status) to catalog pattern matching
+* Add ability to hide the Song Artist column for Albums with one Artist
+* Add ability to browse albums by Original Year
+* Add ability to hide the licence column on song pages
+* Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
   * Add 'favorite_album', 'favorite_artist' to song search
@@ -38,6 +42,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * NEW database options
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
+  * show_license: Hiding the license column in song rows
 * Config version 52
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
@@ -52,6 +57,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Moved sidebar mashup pages into their own 'Dashboards' section
 * Move artist counts (song, album) to a DB column
 
 ### Removed
@@ -62,6 +68,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Fixed
 
 * Delete duplicates from song table
+* Mashup page for podcast_episodes
 
 ### API develop
 
