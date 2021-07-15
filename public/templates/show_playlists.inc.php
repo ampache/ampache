@@ -32,6 +32,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 
 $is_table     = $browse->is_grid_view();
+$show_art     = AmpConfig::get('playlist_art') || $browse->is_mashup();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
@@ -42,7 +43,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <?php if (AmpConfig::get('playlist_art')) { ?>
+            <?php if ($show_art) { ?>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
             <?php } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
@@ -82,7 +83,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
-            <?php if (AmpConfig::get('playlist_art')) { ?>
+            <?php if ($show_art) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <?php
             } ?>
