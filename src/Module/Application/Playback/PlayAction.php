@@ -789,7 +789,8 @@ final class PlayAction implements ApplicationActionInterface
                         Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
                     }
                 } elseif ($share_id) {
-                    Stats::insert($type, $media->id, $uid, 'share.php', array(), 'stream', $time);
+                    // shares are people too
+                    $media->set_played(0, 'share.php', array(), $time);
                 }
             }
         }
