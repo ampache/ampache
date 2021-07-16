@@ -23,6 +23,7 @@ namespace Ampache\Repository\Model\Metadata\Repository;
 
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Repository;
+use PDOStatement;
 
 class Metadata extends Repository
 {

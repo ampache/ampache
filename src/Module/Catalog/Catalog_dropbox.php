@@ -116,7 +116,7 @@ class Catalog_dropbox extends Catalog
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
@@ -516,7 +516,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      * @throws ReflectionException
      */
     public function verify_catalog_proc()

@@ -21,6 +21,7 @@
 
 namespace Ampache\Module\Song\Tag;
 
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 
 interface SongId3TagWriterInterface
@@ -30,7 +31,7 @@ interface SongId3TagWriterInterface
      */
     public function write(
         Song $song,
-        ?array $data = null,
-        ?array $changed = null
+        ?Art $art = null,
+        ?int $picturetypeid = null
     ): void;
 }

@@ -3154,6 +3154,7 @@ abstract class Catalog extends database_object
      * @param string $action
      * @param $catalogs
      * @param array $options
+     * @noinspection PhpMissingBreakStatementInspection
      */
     public static function process_action($action, $catalogs, $options = null)
     {

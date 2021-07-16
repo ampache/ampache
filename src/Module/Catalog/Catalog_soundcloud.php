@@ -114,7 +114,7 @@ class Catalog_soundcloud extends Catalog
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
@@ -356,7 +356,7 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function verify_catalog_proc()
     {

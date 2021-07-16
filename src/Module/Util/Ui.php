@@ -211,6 +211,7 @@ class Ui implements UiInterface
      * Parses a human-readable size
      * @param $value
      * @return string
+     * @noinspection PhpMissingBreakStatementInspection
      */
     public static function unformat_bytes($value)
     {

@@ -238,7 +238,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {

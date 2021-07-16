@@ -123,7 +123,7 @@ class Catalog_local extends Catalog
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {

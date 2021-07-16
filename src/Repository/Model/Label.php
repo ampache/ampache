@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use PDOStatement;
 
 /**
  * This is the class responsible for handling the Label object

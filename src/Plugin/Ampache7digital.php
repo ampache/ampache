@@ -100,7 +100,7 @@ class Ampache7digital
      */
     public function get_song_preview($track_mbid, $artist_name, $title)
     {
-        return null;
+        return array();
     }
 
     /**

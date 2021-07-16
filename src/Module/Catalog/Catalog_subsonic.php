@@ -109,7 +109,7 @@ class Catalog_subsonic extends Catalog
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
@@ -306,7 +306,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function verify_catalog_proc()
     {

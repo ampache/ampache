@@ -87,7 +87,7 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
