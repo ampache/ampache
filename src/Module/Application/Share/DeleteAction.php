@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -40,14 +41,18 @@ final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
@@ -63,7 +68,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $share_id = Core::get_request('id');
+        $share_id = $this->requestParser->getFromRequest('id');
         if (Share::delete_share($share_id, Core::get_global('user'))) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
             $this->ui->showConfirmation(

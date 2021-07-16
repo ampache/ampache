@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -45,6 +46,8 @@ final class ConsumeAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'consume';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private NetworkCheckerInterface $networkChecker;
@@ -52,10 +55,12 @@ final class ConsumeAction implements ApplicationActionInterface
     private ContainerInterface $dic;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
@@ -87,7 +92,7 @@ final class ConsumeAction implements ApplicationActionInterface
             }
         } // access_control is enabled
 
-        $share_id = Core::get_request('id');
+        $share_id = $this->requestParser->getFromRequest('id');
         $secret   = $_REQUEST['secret'];
 
         $share = new Share($share_id);

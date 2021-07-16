@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -48,6 +49,8 @@ final class ExternalShareAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'external_share';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -59,12 +62,14 @@ final class ExternalShareAction implements ApplicationActionInterface
     private FunctionCheckerInterface $functionChecker;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory,
         FunctionCheckerInterface $functionChecker
     ) {
+        $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
@@ -88,8 +93,8 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
         $plugin->load(Core::get_global('user'));
 
-        $type           = Core::get_request('type');
-        $share_id       = Core::get_request('id');
+        $type           = $this->requestParser->getFromRequest('type');
+        $share_id       = $this->requestParser->getFromRequest('id');
         $secret         = $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH);
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
