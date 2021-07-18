@@ -776,7 +776,7 @@ final class PlayAction implements ApplicationActionInterface
                 $location   = Session::get_geolocation($sessionkey);
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
                         if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) === Song::class) {
                             // scrobble plugins
