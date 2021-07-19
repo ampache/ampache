@@ -1958,15 +1958,17 @@ abstract class Catalog extends database_object
         // info for the song table. This is all the primary file data that is song related
         $new_song       = new Song();
         $new_song->file = $results['file'];
-        $new_song->year = (strlen((string)$results['year']) > 4) ? (int)substr($results['year'], -4,
-            4) : (int)($results['year']);
+        $new_song->year = (strlen((string)$results['year']) > 4)
+            ? (int)substr($results['year'], -4, 4)
+            : (int)($results['year']);
         $new_song->title   = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate = $results['bitrate'];
         $new_song->rate    = $results['rate'];
         $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size    = $results['size'];
-        $new_song->time    = (strlen((string)$results['time']) > 5) ? (int)substr($results['time'], -5,
-            5) : (int)($results['time']);
+        $new_song->time    = (strlen((string)$results['time']) > 5)
+            ? (int)substr($results['time'], -5, 5)
+            : (int)($results['time']);
         if ($new_song->time < 0) {
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
@@ -2050,11 +2052,6 @@ abstract class Catalog extends database_object
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
-        // set `song`.`update_time` when artist or album details change
-        $update_time = time();
-        if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album, $new_song->album)) {
-            Song::update_utime($song->id, $update_time);
-        }
 
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
@@ -2117,9 +2114,14 @@ abstract class Catalog extends database_object
         if ($info['change']) {
             debug_event(self::class, "$song->file : differences found, updating database", 4);
 
-            // Update song_data table
+            // Update the song and song_data table
             Song::update_song($song->id, $new_song);
 
+            // If you've migrated the album/artist you need to migrate their data here
+            if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album, $new_song->album)) {
+                $update_time = time();
+                Song::update_utime($song->id, $update_time);
+            }
             if ($song->tags != $new_song->tags) {
                 // we do still care if there are no tags on your object
                 $tag_comma = (empty($new_song->tags))
@@ -2132,15 +2134,6 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
-            // update counts after adding/verifying
-            if ($song->album != $new_song->album) {
-                Album::update_album_counts($new_song->album);
-            }
-            if ($song->artist != $new_song->artist) {
-                Artist::update_artist_counts($new_song->artist);
-            }
-            // Refine our reference
-            //$song = $new_song;
         } else {
             debug_event(self::class, "$song->file : no differences found", 5);
         }
