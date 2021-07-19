@@ -19,6 +19,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
 * Added %R (Release Status) to catalog pattern matching
 * Add ability to hide the Song Artist column for Albums with one Artist
@@ -65,6 +66,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
 * 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
+* Missing Artists search removed from the top search bar
 
 ### Fixed
 

@@ -8,9 +8,7 @@
 **News:**
 
 * Keep an eye on the incoming changes to develop branch at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* The Ampache kodi plugin has merged into the official Kodi addons repo!
-  * Make sure you enable **hide_search** in your config to enable playlists in this initial version.
-* Develop changes
+  * Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
   * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
   * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
   * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](https://ampache.org/api/) website!

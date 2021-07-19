@@ -147,7 +147,7 @@ class Tmp_Playlist extends database_object
     public function get_items()
     {
         /* Select all objects from this playlist */
-        $sql        = "SELECT `object_type`, `id`, `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id` ASC";
+        $sql        = "SELECT `object_type`, `id`, `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id`";
         $db_results = Dba::read($sql, array($this->id));
 
         /* Define the array */

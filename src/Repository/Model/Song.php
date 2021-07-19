@@ -452,8 +452,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $license = null;
         }
 
-        $catalog_number = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'],
-            64) : null;
+        $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
@@ -2326,9 +2325,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * remove
      * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         return $this->getSongDeleter()->delete($this);
     }
