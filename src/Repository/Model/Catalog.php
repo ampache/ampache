@@ -2132,6 +2132,13 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
+            // update counts after adding/verifying
+            if ($song->album != $new_song->album) {
+                Album::update_album_counts($new_song->album);
+            }
+            if ($song->artist != $new_song->artist) {
+                Artist::update_artist_counts($new_song->artist);
+            }
             // Refine our reference
             //$song = $new_song;
         } else {
