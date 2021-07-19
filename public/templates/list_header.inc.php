@@ -98,7 +98,7 @@ if ($limit > 0 && $total > $limit) {
         if ($browse->get_filter('regex_match') == $filter) {
             $value = '<b>' . $value . '</b>';
         }
-        echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter . $argument_param, $value, 'browse_' . $uid . '_alpha_' . $key, '');
+        echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter . $argument_param, $value, 'browse_' . $uid . '_alpha_' . $key);
     } ?>
     </div>
 <?php

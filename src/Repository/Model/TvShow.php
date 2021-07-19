@@ -92,7 +92,6 @@ class TvShow extends database_object implements library_item
     /**
      * get_seasons
      * gets the tv show seasons
-     * of
      */
     public function get_seasons()
     {

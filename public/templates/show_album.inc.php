@@ -51,7 +51,7 @@ if ($album->year > 0) {
 if ($album->disk && !AmpConfig::get('album_group') && count($album->album_suite) > 1) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
@@ -223,7 +223,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (AmpConfig::get('allow_upload')) {
             $t_upload = T_('Upload'); ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->artist_id); ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>

@@ -404,7 +404,7 @@ class Broadcast extends database_object implements library_item
 
         $broadcasts = array();
         while ($results = Dba::fetch_assoc($db_results)) {
-            $broadcasts[] = $results['id'];
+            $broadcasts[] = (int)$results['id'];
         }
 
         return $broadcasts;

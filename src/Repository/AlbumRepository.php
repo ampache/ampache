@@ -72,7 +72,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -356,7 +356,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = array();
                 }
-                $results[$rtype][] = $row['id'];
+                $results[$rtype][] = (int)$row['id'];
 
                 $sort = (string)AmpConfig::get('album_release_type_sort');
                 if ($sort) {
@@ -373,7 +373,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                     $results = array_merge($results_sort, $results);
                 }
             } else {
-                $results[] = (int) $row['id'];
+                $results[] = (int)$row['id'];
             }
         }
 

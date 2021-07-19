@@ -154,7 +154,7 @@ class UPnPDevice
 
         foreach ($tmp as $key => $value) {
             if (substr($value, 0, 8) == 'HTTP/1.1') {
-                $headers[] = $tmp[$key];
+                $headers[] = $value;
                 unset($tmp[$key]);
             }
         }

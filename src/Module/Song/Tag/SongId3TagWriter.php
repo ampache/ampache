@@ -100,10 +100,10 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
                 unset($id3v2Data['text']);
                 foreach ($id3v2Data as $key => $value) {
-                    if (isset($songMeta[$key]) && $id3v2Data[$key][0] !== $songMeta[$key]) {
+                    if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
                         $ndata[$key][] = $songMeta[$key];
                     } else {
-                        $ndata[$key][] = $id3v2Data[$key][0];
+                        $ndata[$key][] = $value[0];
                     }
                 }
                 
@@ -126,17 +126,17 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                             $ndata[$key][] = $songMeta[$key];
                         }
                     } else {
-                        $ndata[$key] = $vorbiscomments[$key];
+                        $ndata[$key] = $value;
                     }
                 }
                 
                 /* Insert vorbiscomments that might not be in file.  */
                 foreach ($songMeta as $key => $value) {
-                    if (!isset($vorbiscomments[$key]) && isset($songMeta[$key])) {
+                    if (!isset($vorbiscomments[$key]) && isset($value)) {
                         if ($key == 'releasetype' || $key == 'releasestatus') {
-                            $ndata[$key] = $songMeta[$key];
+                            $ndata[$key] = $value;
                         } else {
-                            $ndata[$key][] = $songMeta[$key];
+                            $ndata[$key][] = $value;
                         }
                     }
                 }

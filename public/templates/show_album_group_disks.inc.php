@@ -44,7 +44,7 @@ $title = scrub_out($album->f_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $show_playlist_add    = Access::check('interface', 25);

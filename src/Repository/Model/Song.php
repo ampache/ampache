@@ -947,7 +947,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $db_results = Dba::read($sql);
 
             while ($item = Dba::fetch_assoc($db_results)) {
-                $results[] = $item['id'];
+                $results[] = (int)$item['id'];
             } // end while
         }
 
@@ -1945,7 +1945,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $songs = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
+            $songs[] = (int)$row['id'];
         }
 
         return $songs;

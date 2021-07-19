@@ -58,7 +58,7 @@ var currentAudioElement = undefined;
             cssSelectorAncestor: "#jp_container_1"
         }, [], {
             playlistOptions: {
-                autoPlay: <?php echo $autoplay ? 'true' : 'false'; ?>,
+                autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
                 loopOnPrevious: false,
                 shuffleOnLoop: true,
                 enableRemoveControls: true,

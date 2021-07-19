@@ -733,7 +733,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -992,7 +992,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return array_reverse($results);
@@ -1017,7 +1017,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1089,7 +1089,7 @@ abstract class Catalog extends database_object
 
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1401,7 +1401,7 @@ abstract class Catalog extends database_object
         $sql .= 'WHERE `podcast`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1447,7 +1447,7 @@ abstract class Catalog extends database_object
         }
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -1713,7 +1713,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
+            $songs[] = (int)$row['id'];
         }
 
         if (AmpConfig::get('memory_cache')) {
@@ -1741,7 +1741,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
+            $songs[] = (int)$row['id'];
         }
 
         return $songs;

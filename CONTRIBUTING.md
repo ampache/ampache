@@ -96,7 +96,7 @@ Following these tips prior to raising a pull request will speed up the review cy
 * Add the appropriate [license headers](#license-headers) to any new files
 * Make your own branch for your changes based on the develop branch. (e.g. my-patch-branch)
 
-### Coding standards and principles ###
+### Coding standards and principles
 
 * We use PSR2 code style
 * We follow the [`SOLID`](https://en.wikipedia.org/wiki/SOLID) principles
@@ -192,28 +192,28 @@ Fonts, scripts, templates and non-code resources that are required by Ampache.
 Most of the logic resides within the Module folder. The model-files (in `Repository`) may also
 contain application logic, this logic fragments will be migrated into their corresponding domains in `Module`
 
-##### Application (deprecated) #####
+##### src->Application (deprecated)
 
 Api-related code which didn't fit into existing domains within the Module folder yet.
 
-##### Config #####
+##### src->Config
 
 Application bootstrapping and config initialization related code.
 
-##### Gui (deprecated) #####
+##### src->Gui (deprecated)
 
 Contains code related to the upcoming templating system. This namespace is deprecated, the code
 will be merged into domains within the Module folder.
 
-##### Module #####
+##### src->Module
 
 Contains the complete business logic of Ampache, divided into separate domains.
 
-##### Plugin #####
+##### src->Plugin
 
 Ampache plugins are placed here.
 
-##### Repository #####
+##### src->Repository
 
 Contains repository classes for database access as well as the ORM model classes.
 

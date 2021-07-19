@@ -117,7 +117,7 @@ class Shoutbox
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $shouts[] = $row['id'];
+            $shouts[] = (int)$row['id'];
         }
 
         return $shouts;
