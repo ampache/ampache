@@ -2080,8 +2080,12 @@ class Subsonic_Api
                 $time     = isset($input['time']) ? (int)$input['time'] / 1000 : $now_time;
                 $previous = Stats::get_last_play($user->id, $client, $time);
                 $media    = Subsonic_Xml_Data::getAmpacheObject($subsonic_id);
+                $type     = Subsonic_Xml_Data::getAmpacheType($subsonic_id);
                 $media->format();
 
+                // long pauses might cause your now_playing to hide
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int) $media->id, (int) $user->id, ((int)$media->time), $username, $type, ((int)$time));
                 // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
                 if ($submission && get_class($media) == Song::class && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                     // stream has finished
