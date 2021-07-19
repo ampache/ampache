@@ -84,6 +84,9 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         <td>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
+                    <option value="1" <?php if ((int) $_REQUEST['limit'] == 1) {
+            echo "selected=\"selected\"";
+        }?>>1</option>
                         <option value="5" <?php if ((int) $_REQUEST['limit'] == 5) {
             echo "selected=\"selected\"";
         }?>>5</option>
