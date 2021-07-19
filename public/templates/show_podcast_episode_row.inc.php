@@ -55,7 +55,7 @@ if ($browse->is_mashup()) {
     <td class="<?php echo $cel_cover; ?>">
         <?php
         $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-            Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&podcast=' . $libitem->podcast); ?>
+            Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $libitem->podcast); ?>
     </td>
 <?php
         } ?>
