@@ -653,7 +653,7 @@ if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             ? $maxbitrate
             : floor($media->bitrate / 1000);
         $stream_size = ($media->time * $stream_rate * 1000) / 8;
-} else {
+    } else {
         $stream_size = null;
         $maxbitrate  = 0;
     }
