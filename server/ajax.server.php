@@ -134,21 +134,9 @@ switch ($action) {
         } else {
             switch ($_REQUEST['type']) {
                 case 'browse_set':
-                    $songs   = array();
                     $browse  = new Browse($_REQUEST['browse_id']);
                     $objects = $browse->get_saved();
-                    switch ($_REQUEST['object_type']) {
-                        case 'album':
-                            $songs[] = Album::get_songs_grouped($objects);
-                            break;
-                        case 'artist':
-                            $songs[] = Artist::get_songs_grouped($objects);
-                            break;
-                        case 'song':
-                            $songs = $objects;
-                            break;
-                    } // end switch type
-                    foreach ($songs as $object_id) {
+                    foreach ($objects as $object_id) {
                         Core::get_global('user')->playlist->add_object($object_id, 'song');
                     }
                     break;
