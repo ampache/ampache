@@ -381,6 +381,23 @@ class Artist extends database_object implements library_item
     } // get_songs
 
     /**
+     * gets songs from this album group
+     *
+     * @param array $artist_list
+     * @return int[] Song ids
+     */
+    public static function get_songs_grouped($artist_list)
+    {
+        $results = array();
+        foreach ($artist_list as $artist_id) {
+            $artist  = new Album((int) $artist_id);
+            $results = array_merge($results, $artist->get_songs());
+        }
+
+        return $results;
+    }
+
+    /**
      * get_top_songs
      * gets the songs for this artist
      * @param integer $artist
