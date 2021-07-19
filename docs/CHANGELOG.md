@@ -29,6 +29,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Add 'catalog' to artist and album search
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
+  * Add 5 and 10 to the Maximum Results limit
 * Database 5.0.0 Build 10:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table

@@ -204,8 +204,8 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = $element['object_type'];
                     $mediaid = $element['object_id'];
                 } else {
-                    $type      = array_shift($element);
-                    $mediaid   = array_shift($element);
+                    $type    = array_shift($element);
+                    $mediaid = array_shift($element);
                 }
                 $class_name = ObjectTypeToClassNameMapper::map($type);
                 $media      = new $class_name($mediaid);

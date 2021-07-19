@@ -38,6 +38,7 @@ robots.txt
 web.config
 phpcbf*
 phpcs*
+error_log
 *#
 *.log
 *.phpproj

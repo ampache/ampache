@@ -69,8 +69,8 @@ if (!Core::is_session_started()) {
     <?php
     } // if playlist_type?>
     <?php if (in_array('object_type', $allowed_filters)) { ?>
-        <?php $string     = 'otype_' . $browse->get_filter('object_type');
-        ${$string}        = 'selected="selected"'; ?>
+        <?php $string = 'otype_' . $browse->get_filter('object_type');
+        ${$string}    = 'selected="selected"'; ?>
         <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
         <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
         <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
@@ -88,9 +88,8 @@ if (!Core::is_session_started()) {
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php
-                    $sql     = 'SELECT `id`, `name` FROM `catalog`';
-        $db_results          = Dba::read($sql);
+                <?php $sql = 'SELECT `id`, `name` FROM `catalog`';
+        $db_results        = Dba::read($sql);
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
         }
