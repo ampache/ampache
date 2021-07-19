@@ -18,17 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);  ?>
 <?php UI::show_box_top(T_('Options'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-    <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add Search Results'), 'add_search_results'); ?>
+    <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id . '&object_type=' . $search_type, 'add', T_('Add Search Results'), 'add_search_results'); ?>
     <?php echo T_('Add Search Results'); ?>
 </li>
-    <?php if (Access::check_function('batch_download') && check_can_zip((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) { ?>
+    <?php if (Access::check_function('batch_download') && check_can_zip($search_type)) { ?>
 <li>
-    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($search_type); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
     <?php echo T_('Batch Download'); ?>
 </li>
     <?php
