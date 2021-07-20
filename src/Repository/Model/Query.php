@@ -837,7 +837,7 @@ class Query
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest;
+        $this->_state['join'][$priority][$table] = "$type JOIN $table ON $source = $dest";
     } // set_join
 
     /**
@@ -1045,7 +1045,7 @@ class Query
                     break;
                 case 'tag':
                     $this->set_select("`tag`.`id`");
-                    $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
+                    $this->set_join('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                     break;
                 case 'wanted':
@@ -1370,7 +1370,7 @@ class Query
             case 'song':
                 switch ($filter) {
                     case 'tag':
-                        $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
+                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
                         $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
@@ -1427,7 +1427,7 @@ class Query
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'enabled':
@@ -1440,7 +1440,7 @@ class Query
             case 'album':
                 switch ($filter) {
                     case 'tag':
-                        $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
                         $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
@@ -1465,7 +1465,7 @@ class Query
                         }
                         break;
                     case 'starts_with':
-                        $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
+                        $this->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                         $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         if ($this->catalog != 0) {
                             $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
@@ -1475,19 +1475,19 @@ class Query
                         $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'add_lt':
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'add_gt':
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'update_lt':
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'update_gt':
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'catalog':
@@ -1496,7 +1496,7 @@ class Query
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     default:
@@ -1506,7 +1506,7 @@ class Query
             case 'artist':
                 switch ($filter) {
                     case 'tag':
-                        $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
                         $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
@@ -1531,41 +1531,41 @@ class Query
                         }
                         break;
                     case 'starts_with':
-                        $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
+                        $this->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                         $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         if ($this->catalog != 0) {
                             $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
                         }
                         break;
                     case 'add_lt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                         $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'add_gt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                         $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'update_lt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                         $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'update_gt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'catalog':
                         if ($value != 0) {
-                            $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
                             $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join_and('left', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
+                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':
-                        $this->set_join('left', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
                         $filter_sql = " `album`.`album_artist` IS NOT NULL AND ";
                         break;
                     default:
@@ -1591,7 +1591,7 @@ class Query
                         $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'catalog_enabled':
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     default:
@@ -1676,7 +1676,7 @@ class Query
             case 'video':
                 switch ($filter) {
                     case 'tag':
-                        $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
+                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
                         $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                         foreach ($value as $tag_id) {
@@ -1939,7 +1939,7 @@ class Query
                     case 'album':
                     case 'artist':
                         $sql = "`$field`.`name`";
-                        $this->set_join('left', "`$field`", "`$field`.`id`", "`song`.`$field`", 100);
+                        $this->set_join('LEFT', "`$field`", "`$field`.`id`", "`song`.`$field`", 100);
                         break;
                     default:
                         break;
@@ -1955,18 +1955,18 @@ class Query
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)',
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)',
                             '`artist`.`id`', 100);
                         break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                         break;
                     case 'artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                         break;
                     case 'year':
                     case 'original_year':
@@ -2111,7 +2111,7 @@ class Query
                         break;
                     case 'tvshow':
                         $sql = "`tvshow`.`name`";
-                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
+                        $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                 }
                 break;
@@ -2122,14 +2122,14 @@ class Query
                         break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
-                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
+                        $this->set_join('LEFT', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
                             100);
                         break;
                     case 'tvshow':
                         $sql = "`tvshow`.`name`";
-                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
+                        $this->set_join('LEFT', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`',
                             100);
-                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
+                        $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                     default:
                         $sql = $this->sql_sort_video($field, 'tvshow_episode');
@@ -2245,7 +2245,7 @@ class Query
 
         if (!empty($sql)) {
             if ($table != 'video') {
-                $this->set_join('left', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 100);
+                $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 100);
             }
         }
 

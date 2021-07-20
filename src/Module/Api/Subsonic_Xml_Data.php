@@ -821,7 +821,7 @@ class Subsonic_Xml_Data
         $db_results  = Dba::read($sqllook, [$catalogId]);
         $resultcheck = Dba::fetch_assoc($db_results);
         if (!empty($resultcheck)) {
-            $sql             = 'SELECT `path` FROM catalog_' . $resultcheck['catalog_type'] . ' WHERE `catalog_id` = ?';
+            $sql             = 'SELECT `path` FROM `catalog_' . $resultcheck['catalog_type'] . '` WHERE `catalog_id` = ?';
             $db_results      = Dba::read($sql, [$catalogId]);
             $result          = Dba::fetch_assoc($db_results);
             $catalog_path    = rtrim((string)$result['path'], "/");

@@ -458,7 +458,7 @@ abstract class Catalog extends database_object
         $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
-        $sql        = "SELECT `id` FROM $table WHERE `catalog_id` = ?";
+        $sql        = "SELECT `id` FROM `$table` WHERE `catalog_id` = ?";
         $db_results = Dba::read($sql, array($object_id));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -643,7 +643,7 @@ abstract class Catalog extends database_object
      */
     public static function set_count(string $table, string $value)
     {
-        Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $value);
+        Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $value . ";");
     } // set_count
 
     /**
@@ -1243,7 +1243,7 @@ abstract class Catalog extends database_object
      */
     public static function get_id_from_file($file_path, $media_type)
     {
-        $sql        = "SELECT `id` FROM $media_type WHERE `file` = ?";
+        $sql        = "SELECT `id` FROM `$media_type` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($file_path));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -2240,7 +2240,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, `song`.`id` as `songid`, `song`.`album`, `album_count`.`object_id` as `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` as `song_count` on `song_count`.`object_type` = 'song' and `song_count`.`count_type` = 'stream' and `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` as `album_count` on `album_count`.`object_type` = 'album' and `album_count`.`count_type` = 'stream' and `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
         Dba::write($sql);
         // object_count.artist
-        $sql = "UPDATE `object_count`, (SELECT song_count.date, MIN(song.id) as songid, MIN(song.artist) AS artist, `artist_count`.`object_id` as `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM song LEFT JOIN `object_count` as `song_count` on `song_count`.`object_type` = 'song' and `song_count`.`count_type` = 'stream' and `song_count`.`object_id` = `song`.`id` LEFT JOIN object_count as `artist_count` on `artist_count`.`object_type` = 'artist' and `artist_count`.`count_type` = 'stream' and `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`,`user`,`agent`,`count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
+        $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) as `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` as `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` as `song_count` on `song_count`.`object_type` = 'song' and `song_count`.`count_type` = 'stream' and `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` as `artist_count` on `artist_count`.`object_type` = 'artist' and `artist_count`.`count_type` = 'stream' and `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`,`user`,`agent`,`count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
         Dba::write($sql);
         // song.played might have had issues
         $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";

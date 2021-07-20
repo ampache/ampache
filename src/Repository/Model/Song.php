@@ -413,7 +413,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $title            = Catalog::check_length(Catalog::check_title($results['title'], $file));
         $artist           = Catalog::check_length($results['artist']);
         $album            = Catalog::check_length($results['album']);
-        $albumartist      = Catalog::check_length($results['albumartist'] ?: $results['band']);
+        $albumartist      = Catalog::check_length($results['albumartist']);
         $albumartist      = $albumartist ?: null;
         $bitrate          = $results['bitrate'] ?: 0;
         $rate             = $results['rate'] ?: 0;
@@ -567,9 +567,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // delete duplicates
         Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
         // clean up missing catalogs
-        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
+        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // delete the rest
-        Dba::write('DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`)');
+        Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
     }
 
     /**
@@ -793,6 +793,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             case 'aac':
             case 'mp4':
             case 'm4a':
+            case 'm4b':
                 return 'audio/mp4';
             case 'aacp':
                 return 'audio/aacp';

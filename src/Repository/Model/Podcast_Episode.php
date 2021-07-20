@@ -122,7 +122,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
+        Dba::write("DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL;");
     }
 
     /**

@@ -197,8 +197,8 @@ class Repository
      */
     protected function deleteRecord($object_id)
     {
-        $sql = 'DELETE FROM ' . $this->getTableName()
-                . ' WHERE id = ?';
+        $sql = 'DELETE FROM `' . $this->getTableName()
+                . '` WHERE id = ?';
         Dba::write($sql, array($object_id));
     }
 
@@ -256,9 +256,9 @@ class Repository
      */
     public function assembleQuery($table, $fields)
     {
-        $sql = 'SELECT * FROM ' . $table;
+        $sql = 'SELECT * FROM `' . $table;
         if (!empty($fields)) {
-            $sql .= ' WHERE ';
+            $sql .= '` WHERE ';
             $sqlParts = array();
             foreach ($fields as $field) {
                 $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';

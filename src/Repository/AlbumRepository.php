@@ -238,7 +238,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        Dba::write('DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);');
+        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);");
+        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
     }
 
     /**

@@ -767,7 +767,7 @@ class User extends database_object
      */
     public static function set_count(int $user_id, string $key, string $value)
     {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?", array($user_id, $key, $value));
+        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?;", array($user_id, $key, $value));
     } // set_count
 
     /**

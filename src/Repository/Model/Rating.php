@@ -98,7 +98,7 @@ class Rating extends database_object
             }
         }
         // delete 'empty' ratings
-        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0");
+        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0;");
     }
 
     /**
