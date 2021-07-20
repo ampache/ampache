@@ -901,7 +901,7 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
+            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
             $row        = Dba::fetch_assoc($db_results);
 

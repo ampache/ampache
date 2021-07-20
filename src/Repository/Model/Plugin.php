@@ -268,10 +268,10 @@ class Plugin
     public function set_plugin_version($version)
     {
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version = Dba::escape($version);
+        $version = (int)Dba::escape($version);
 
-        $sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
-        Dba::write($sql);
+        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value`= ?";
+        Dba::write($sql, array($name, $version));
 
         return true;
     } // set_plugin_version

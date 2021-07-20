@@ -639,11 +639,11 @@ abstract class Catalog extends database_object
      *
      * write the total_counts to update_info
      * @param string $table
-     * @param string $value
+     * @param int $value
      */
-    public static function set_count(string $table, string $value)
+    public static function set_count(string $table, int $value)
     {
-        Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $value . ";");
+        Dba::write("REPLACE INTO `update_info` SET `key`= ?, `value`= ?;", array($table, $value));
     } // set_count
 
     /**
@@ -889,7 +889,7 @@ abstract class Catalog extends database_object
         }
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = $row['value'];
+            $results[$row['key']] = (int)$row['value'];
         }
 
         return $results;
@@ -908,7 +908,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $data       = Dba::fetch_row($db_results);
 
-        self::set_count($table, $data[0]);
+        self::set_count($table, (int)$data[0]);
 
         return $data;
     } // count_table
@@ -2332,10 +2332,10 @@ abstract class Catalog extends database_object
             $db_results  = Dba::read($sql);
             $data        = Dba::fetch_row($db_results);
             // save the object and add to the current size
-            $items += $data[0];
-            $time += $data[1];
-            $size += $data[2];
-            self::set_count($table, $data[0]);
+            $items += (int)$data[0];
+            $time += (int)$data[1];
+            $size += (int)$data[2];
+            self::set_count($table, (int)$data[0]);
         }
         self::set_count('items', $items);
         self::set_count('time', $time);
@@ -2346,20 +2346,20 @@ abstract class Catalog extends database_object
             $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
             $db_results = Dba::read($sql);
             $data       = Dba::fetch_row($db_results);
-            self::set_count($table, $data[0]);
+            self::set_count($table, (int)$data[0]);
         }
         // grouped album counts
         $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`);";
         $db_results = Dba::read($sql);
         $data       = Dba::fetch_row($db_results);
-        self::set_count('album_group', $data[0]);
+        self::set_count('album_group', (int)$data[0]);
 
         $list_tables = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($list_tables as $table) {
             $sql        = "SELECT COUNT(`id`) FROM `$table`";
             $db_results = Dba::read($sql);
             $data       = Dba::fetch_row($db_results);
-            self::set_count($table, $data[0]);
+            self::set_count($table, (int)$data[0]);
         }
         // user accounts may have different items to return based on catalog_filter so lets set those too
         User::update_counts();
