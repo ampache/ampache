@@ -1272,6 +1272,9 @@ final class VaInfo implements VaInfoInterface
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
+                    case 'album artist':
+                        $parsed['albumartist'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
                     case 'musicbrainz release group id':
                         $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
