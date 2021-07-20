@@ -2124,7 +2124,7 @@ abstract class Catalog extends database_object
             }
             if ($song->tags != $new_song->tags) {
                 // we do still care if there are no tags on your object
-                $tag_comma = (empty($new_song->tags))
+                $tag_comma = (!empty($new_song->tags))
                     ? implode(',', $new_song->tags)
                     : '';
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true);
