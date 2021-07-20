@@ -509,7 +509,6 @@ final class VaInfo implements VaInfoInterface
 
             $info['album'] = $info['album'] ?: trim((string)$tags['album']);
 
-            $info['band']      = $info['band'] ?: trim((string)$tags['band']);
             $info['composer']  = $info['composer'] ?: trim((string)$tags['composer']);
             $info['publisher'] = $info['publisher'] ?: trim((string)$tags['publisher']);
 
@@ -1052,6 +1051,10 @@ final class VaInfo implements VaInfoInterface
                 case 'disctotal':
                     $parsed['totaldisks'] = $data[0];
                     break;
+                case 'albumartist':
+                case 'album artist':
+                    $parsed['albumartist'] = $data[0];
+                    break;
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
                     break;
@@ -1191,6 +1194,9 @@ final class VaInfo implements VaInfoInterface
                 case 'comment':
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
                     $parsed['comment'] = reset($data);
+                    break;
+                case 'band':
+                    $parsed['albumartist'] = $data[0];
                     break;
                 case 'composer':
                     $BOM = chr(0xff) . chr(0xfe);

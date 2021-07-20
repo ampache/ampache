@@ -2029,7 +2029,7 @@ abstract class Catalog extends database_object
         $album_mbid_group = $results['mb_albumid_group'];
         $release_type     = self::check_length($results['release_type'], 32);
         $release_status   = $results['release_status'];
-        $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
+        $albumartist      = self::check_length($results['albumartist']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
