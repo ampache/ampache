@@ -430,9 +430,10 @@ class Album extends database_object implements library_item
         if (!$name) {
             $name          = T_('Unknown (Orphaned)');
             $year          = 0;
-            $original_year = 0;
+            $original_year = null;
             $disk          = 1;
-            $album_artist  = null;
+            $album_artist  = Artist::check(T_('Unknown (Orphaned)'));
+            $catalog       = 0;
         }
         if (isset(self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist])) {
             return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
