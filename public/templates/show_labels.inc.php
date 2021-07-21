@@ -27,7 +27,10 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$thcount = 7;
+/** @var Ampache\Repository\Model\Browse $browse */
+
+$thcount  = 7;
+$is_table = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
