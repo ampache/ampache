@@ -1076,7 +1076,7 @@ class Xml_Data
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
-                    "\t<playcount>" . $song->played . "</playcount>\n" .
+                    "\t<playcount>" . $song->object_cnt . "</playcount>\n" .
                     "\t<catalog>" . $song->catalog . "</catalog>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .

@@ -958,7 +958,7 @@ class Json_Data
             $ourSong['preciserating']         = ($rating->get_user_rating() ?: null);
             $ourSong['rating']                = ($rating->get_user_rating() ?: null);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
-            $ourSong['playcount']             = (int)$song->played;
+            $ourSong['playcount']             = (int)$song->object_cnt;
             $ourSong['catalog']               = (int)$song->catalog;
             $ourSong['composer']              = $song->composer;
             $ourSong['channels']              = $song->channels;
