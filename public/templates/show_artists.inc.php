@@ -41,8 +41,8 @@ $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig
 $is_table     = $browse->is_grid_view();
 // translate depending on the browse type
 $artist_text  = ($browse->is_album_artist())
-    ? T_('Album Artists')
-    : T_('Artists');
+    ? T_('Album Artist')
+    : T_('Artist');
 // mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
