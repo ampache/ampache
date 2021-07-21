@@ -2268,6 +2268,9 @@ abstract class Catalog extends database_object
             // podcast_episode.total_count
             $sql = "UPDATE `podcast_episode`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `podcast_episode`.`total_count` = `object_count`.`total_count` WHERE `podcast_episode`.`total_count` != `object_count`.`total_count` AND `podcast_episode`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
+            // podcast.total_count
+            $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
+            Dba::write($sql);
         }
         if (AmpConfig::get('allow_video')) {
             $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";

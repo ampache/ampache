@@ -46,6 +46,7 @@ class Podcast extends database_object implements library_item
     public $generator;
     public $lastbuilddate;
     public $lastsync;
+    public $total_count;
 
     public $episodes;
     public $f_title;
@@ -640,6 +641,7 @@ class Podcast extends database_object implements library_item
 
         return 0;
     }
+
     /**
      * get_root_path
      * @return string

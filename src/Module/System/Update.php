@@ -257,6 +257,9 @@ class Update
         $update_string = "* Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist";
         $version[]     = array('version' => '500010', 'description' => $update_string);
 
+        $update_string = "* Add `total_count` to podcast table and fill counts into the column";
+        $version[]     = array('version' => '500011', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1260,6 +1263,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_500002
      *
@@ -1450,6 +1454,22 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_500011
+     *
+     * Add `total_count` to podcast table and fill counts into the column
+     */
+    public static function update_500011()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }

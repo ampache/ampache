@@ -36,8 +36,13 @@ use Ampache\Module\Util\Ui;
 $thcount      = 6;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();
+// translate once
+$count_text  = T_('# Played');
+$rating_text = T_('Rating');
+$action_text = T_('Actions');
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
+$cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check('interface', 75)) { ?>
@@ -61,12 +66,17 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
-            <?php if ($show_ratings) {
+            <?php if (AmpConfig::get('show_played_times')) {
     ++$thcount; ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+                <?php
 } ?>
-            <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
+            <?php if ($show_ratings) {
+        ++$thcount; ?>
+            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+            <?php
+    } ?>
+            <th class="cel_action essential"><?php echo $action_text; ?></th>
         </tr>
     </thead>
     <tbody>
@@ -99,11 +109,14 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+            <?php } ?>
             <?php if ($show_ratings) { ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
             <?php
             } ?>
-            <th class="cel_action"><?php echo T_('Actions'); ?></th>
+            <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
     <tfoot>
 </table>

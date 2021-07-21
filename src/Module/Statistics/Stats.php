@@ -749,6 +749,7 @@ class Stats
             case 'tvshow_episode':
             case 'movie':
             case 'playlist':
+            case 'podcast':
             case 'podcast_episode':
                 return $type;
             case 'genre':
