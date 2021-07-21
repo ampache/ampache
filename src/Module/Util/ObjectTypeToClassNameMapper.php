@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -69,6 +70,7 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'label' => Label::class,
         'podcast' => Podcast::class,
+        'tag' => Tag::class,
     ];
 
     public const VIDEO_TYPES = [
