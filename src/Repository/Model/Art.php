@@ -1044,7 +1044,8 @@ class Art extends database_object
             'tvshow_season',
             'video',
             'user',
-            'live_stream'
+            'live_stream',
+            'song'
         );
 
         if ($object_type !== null) {
