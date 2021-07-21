@@ -45,7 +45,7 @@ $web_path         = AmpConfig::get('web_path'); ?>
         <td><?php if ($filter_str !== 'artist' && $filter_str !== 'album_artist') {
         ?><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo T_('Album Artists'); ?></a><?php
     } else {
-        echo T_('Artists');
+        echo T_('Album Artists');
     } ?></td>
     <?php if (AmpConfig::get('label')) { ?>
         <td><?php if ($filter_str != 'label') { ?>
