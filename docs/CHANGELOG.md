@@ -19,12 +19,16 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* Private catalogs! You can now set a public or per user catalog for your music folders
 * Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
 * Added %R (Release Status) to catalog pattern matching
 * Add ability to hide the Song Artist column for Albums with one Artist
 * Add ability to browse albums by Original Year
 * Add ability to hide the licence column on song pages
+* A helper index.php has been added to the old project root with directions to help
+* Show the country and Active status (Generated tags are assumed active) on label rows
+* Podcast_Episode show episode art for podcast mashup allow sort by date
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -62,17 +66,46 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Changed sidebar back to browse for artist/album
 * Moved sidebar mashup pages into their own 'Dashboards' section
 * Move artist counts (song, album) to a DB column
+* Global counts are calculated after catalog changes instead of dynamically
+* Display userflag with star ratings
+* Always put year in Spotify art search if available
+* Imported playslists don't add the extension to the title
+* Visually crop images from the centre instead of resizing into a square
+* Subsonic: wait a few seconds before allowing scrobbles to avoid collisions
+* Display release year if it doesn't macth original_year. e.g. 'Back in Black (2010)'
 
 ### Removed
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
 * 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
-* Missing Artists search removed from the top search bar
+* 'Genre' and 'Missing Artists' removed from the top search bar
+* Take out the info icon from the song row; just click the song link
+* Take song artist out of the album edit popup
+* File tag reading for Band/Album Artist
+* Corrected albumartist collection and added missing tags to vorbis, aac and id3v2
+* Removed links from album list headers when split by release type
 
 ### Fixed
 
 * Delete duplicates from song table
 * Mashup page for podcast_episodes
+* Searching by Genre needed a query overhaul
+* Album groupings are the same everyhwere when album_group is enabled
+* Unknown (Orphaned) groups all unkown files into one artist and album
+* Album groups for ratings and userflags
+* Subsonic: Support a global user playqueue with getplayqueue, saveplayqueue
+* Subsonic: Incorrect header being set on art requests
+* SQL queries regarding rating order and grouping of mutliple users
+* Ensure valid media is found before inserting into a playlist
+* Searching by Genre needed a lot of updates to speed up and correct
+* Bump phpmailer/phpmailer from 6.4.1 to 6.5.0 (#2957)
+* Groupings for albums and add original_year to grouping
+* Editing album titles with prefixes
+* CSS fixes for light theme
+* Shares didn't insert into object_count correctly
+* Repair missing rows in object_count after catalog updates
+* Browse / Mashup by podcast_episode
+* Sorting for a lot of browse pages that used arguments
 
 ### API develop
 
@@ -126,6 +159,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * localplay
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * Plugins: Use only https for building gravatar urls
+* API::system_update: update the database if required as well
 
 ## Ampache 4.4.3-release
 
