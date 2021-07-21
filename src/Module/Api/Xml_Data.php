@@ -999,6 +999,7 @@ class Xml_Data
                 "\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                 "\t\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                 "\t\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t\t<playcount>" . $episode->object_cnt . "</playcount>\n" .
                 "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach
@@ -1141,6 +1142,7 @@ class Xml_Data
                 "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                 "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t<playcount>" . $video->object_cnt . "</playcount>\n" .
                 "</video>\n";
         } // end foreach
 
@@ -1195,6 +1197,7 @@ class Xml_Data
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "<playcount>" . $song->object_cnt . "</playcount>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";
         } // end foreach

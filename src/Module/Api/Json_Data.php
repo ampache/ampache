@@ -872,6 +872,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating($user_id) ?: null),
                 "rating" => ($rating->get_user_rating($user_id) ?: null),
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "playcount" => (int) $episode->object_cnt,
                 "played" => $episode->played]);
         }
         if (!$encode) {
@@ -948,7 +949,7 @@ class Json_Data
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $song->mime;
             $ourSong['url']                   = $song->play_url('', 'api', false, $user_id);
-            $ourSong['size']                  = (int) $song->size;
+            $ourSong['size']                  = (int)$song->size;
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->album_mbid;
             $ourSong['artist_mbid']           = $song->artist_mbid;
@@ -1029,7 +1030,8 @@ class Json_Data
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
                 "preciserating" => ($rating->get_user_rating($user_id) ?: null),
                 "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null)
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "playcount" => (int) $video->object_cnt
             ));
         } // end foreach
         $output = ($object) ? array("video" => $JSON) : $JSON[0];
@@ -1081,6 +1083,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating() ?: null),
                 "rating" => ($rating->get_user_rating() ?: null),
                 "averagerating" => ($rating->get_average_rating() ?: null),
+                "playcount" => (int) $song->object_cnt,
                 "vote" => $democratic->get_vote($row_id)
             ));
         } // end foreach

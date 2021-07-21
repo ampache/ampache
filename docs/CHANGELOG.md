@@ -38,6 +38,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Add `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
   * Add `catalog` to podcast_episode table
   * Add `filter_user` to catalog table
+  * Add `total_count` to podcast table
   * Create catalog_map table (map catalog location for media objects)
   * Create user_playlist table (Global play queue)
   * Create user_data table (One shot info for user actions)
@@ -79,6 +80,7 @@ All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
 
+* Add global playcount to podcast_episode and video responses
 * NEW API functions
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)
