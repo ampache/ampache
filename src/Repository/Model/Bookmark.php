@@ -135,6 +135,20 @@ class Bookmark extends database_object
         return Dba::write($sql, array($data['position'], $updateDate, $userId, scrub_in($data['comment']),  $data['object_type'], $data['object_id']));
     }
 
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
+
+        return Dba::write($sql, array($new_object_id, $old_object_id, ucfirst($object_type)));
+    }
+
     public function getUserName(): string
     {
         $user = new User($this->user);
