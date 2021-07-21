@@ -257,7 +257,9 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_users.inc.php');
                 break;
             case 'artist':
-                $box_title = T_('Artists') . $match;
+                $box_title = ($this->is_album_artist())
+                    ? T_('Album Artists') . $match
+                    : T_('Artists') . $match;
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
@@ -503,6 +505,24 @@ class Browse extends Query
     public function is_mashup()
     {
         return make_bool($this->_state['mashup']);
+    }
+
+    /**
+     *
+     * @param boolean $album_artist
+     */
+    public function set_album_artist($album_artist)
+    {
+        $this->_state['album_artist'] = $album_artist;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_album_artist()
+    {
+        return make_bool($this->_state['album_artist']);
     }
 
     /**

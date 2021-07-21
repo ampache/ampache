@@ -33,6 +33,7 @@ $t_preferences     = T_('Preferences');
 $t_expander        = T_('Expand/Collapse');
 $t_songs           = T_('Songs');
 $t_artists         = T_('Artists');
+$t_a_artists       = T_('Album Artists');
 $t_albums          = T_('Albums');
 $t_labels          = T_('Labels');
 $t_channels        = T_('Channels');
