@@ -305,16 +305,15 @@ class Album extends database_object implements library_item
             $this->allow_group_disks = true;
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
-                $this->total_duration    = 0;
-                $this->object_cnt        = 0;
-                $this->song_count        = 0;
-                $this->artist_count      = 0;
+                $this->total_duration = 0;
+                $this->object_cnt     = 0;
+                $this->song_count     = 0;
+                $this->artist_count   = $albumRepository->getArtistCountGroup($this->album_suite);
 
                 foreach ($this->album_suite as $albumId) {
                     $this->total_duration += $albumRepository->getAlbumDuration((int)$albumId);
                     $this->object_cnt += $albumRepository->getAlbumPlayCount((int)$albumId);
                     $this->song_count += $albumRepository->getSongCount((int)$albumId);
-                    $this->artist_count += $albumRepository->getArtistCount((int)$albumId);
                 }
             }
         }
