@@ -195,18 +195,21 @@ class Rating extends database_object
      */
     public function get_average_rating()
     {
-        if (parent::is_cached('rating_' . $this->type . '_all', $this->id)) {
-            return (double)parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
+        $key = 'rating_' . $this->type . '_all';
+        if (parent::is_cached($key, $this->id)) {
+            return (double)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
-        $results = Dba::fetch_assoc($db_results);
+        $rating = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $rating = (double)$results['rating'];
+        }
+        parent::add_to_cache($key, $this->id, array((int)$rating));
 
-        parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results);
-
-        return (double)$results['rating'];
+        return $rating;
     } // get_average_rating
 
     /**
