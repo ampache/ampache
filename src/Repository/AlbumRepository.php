@@ -308,7 +308,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getArtistCountGroup(array $albumArray): int
     {
         $idlist     = '(' . implode(',', $albumArray) . ')';
-        $sql        = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`album` IN $idlist;";
+        $sql        = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`album` IN $idlist;";
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
