@@ -81,27 +81,34 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         // Make sure we have a unique name
         $playlist_name = ($search->name) ?: Core::get_global('user')->username . ' - ' . get_datetime(time());
         // create the playlist
-        $playlist_id = Playlist::create($playlist_name, $search->type);
+        $playlist_id = (int)Playlist::create($playlist_name, $search->type);
         $playlist    = new Playlist($playlist_id);
-        // Add media
-        $playlist->add_medias($search->get_items());
+        if ($playlist->id) {
+            $playlist->add_medias($search->get_items());
 
-
-
-        $this->ui->showConfirmation(
-            T_('No Problem'),
-            /* HINT: playlist name */
-            sprintf(
-                T_('Your search has been saved as a Playlist with the name %s'),
-                $playlist_name
-            ),
-            sprintf(
-                '%1$s/playlist.php?action=show_playlist&playlist_id=%2$s',
-                $this->configContainer->getWebPath(),
-                $playlist_id
-            )
-        );
-
+            $this->ui->showConfirmation(
+                T_('No Problem'),
+                /* HINT: playlist name */
+                sprintf(
+                    T_('Your search has been saved as a Playlist with the name %s'),
+                    $playlist_name
+                ),
+                sprintf(
+                    '%1$s/playlist.php?action=show_playlist&playlist_id=%2$s',
+                    $this->configContainer->getWebPath(),
+                    $playlist_id
+                )
+            );
+        } else {
+            $this->ui->showConfirmation(
+                T_("There Was a Problem"),
+                T_("Failed to create playlist"),
+                sprintf(
+                    '%s/index.php',
+                    $this->configContainer->getWebPath()
+                )
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
