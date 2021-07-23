@@ -466,7 +466,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public static function garbage_collection()
     {
         // clean up missing catalogs
-        Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
+        Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // clean up sub-tables of videos
         Movie::garbage_collection();
         TVShow_Episode::garbage_collection();
@@ -494,7 +494,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $player
      * @param boolean $local
      * @param integer|bool $uid
-     * @param boolean $original
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)

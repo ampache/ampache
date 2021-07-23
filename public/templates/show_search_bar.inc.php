@@ -41,21 +41,15 @@ $t_search = T_('Search'); ?>
             <option value="album"><?php echo $t_albums?></option>
             <option value="artist"><?php echo $t_artists?></option>
             <option value="playlist_name"><?php echo $t_playlists?></option>
-            <option value="tag"><?php echo T_('Genres')?></option>
             <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
-            <?php
-} ?>
-            <?php if (AmpConfig::get('wanted')) { ?>
-                <option value="missing_artist"><?php echo T_('Missing Artists')?></option>
-            <?php
-    } ?>
+            <?php } ?>
         </select>
         <?php if ($environment->isMobile()) {
-        echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
-    } else {
-        echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
-    } ?>
+    echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
+} else {
+    echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
+} ?>
     </form>
 </div>
 

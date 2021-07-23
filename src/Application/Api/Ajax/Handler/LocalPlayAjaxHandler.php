@@ -50,7 +50,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $type = $_REQUEST['instance'] ? 'localplay' : 'stream';
+                $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->set_active_instance($_REQUEST['instance']);

@@ -673,24 +673,29 @@ class Subsonic_Xml_Data
      */
     public static function addAlbum($xml, $album, $songs = false, $addAmpacheInfo = false, $elementName = "album")
     {
+        $album->format();
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', (string)self::getAlbumId($album->id));
         $xalbum->addAttribute('parent', (string) self::getArtistId($album->album_artist));
         $xalbum->addAttribute('album', (string)self::checkName($album->f_name));
-        $xalbum->addAttribute('title', (string)self::formatAlbum($album));
+        $xalbum->addAttribute('title', (string)self::checkName($album->f_title));
         $xalbum->addAttribute('name', (string)self::checkName($album->f_name));
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', (string)$album->disk);
 
-        $album->format();
         $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->album_artist));
         $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
-        if ($album->year > 0) {
-            $xalbum->addAttribute('year', (string)$album->year);
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $xalbum->addAttribute('year', (string)$year);
         }
         if (count($album->tags) > 0) {
             $tag_values = array_values($album->tags);
@@ -816,7 +821,7 @@ class Subsonic_Xml_Data
         $db_results  = Dba::read($sqllook, [$catalogId]);
         $resultcheck = Dba::fetch_assoc($db_results);
         if (!empty($resultcheck)) {
-            $sql             = 'SELECT `path` FROM catalog_' . $resultcheck['catalog_type'] . ' WHERE `catalog_id` = ?';
+            $sql             = 'SELECT `path` FROM `catalog_' . $resultcheck['catalog_type'] . '` WHERE `catalog_id` = ?';
             $db_results      = Dba::read($sql, [$catalogId]);
             $result          = Dba::fetch_assoc($db_results);
             $catalog_path    = rtrim((string)$result['path'], "/");
@@ -916,34 +921,17 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * formatAlbum
-     * @param Album $album
-     * @return string|null
-     */
-    private static function formatAlbum($album)
-    {
-        $name = $album->f_name;
-        if ($album->disk && !$album->allow_group_disks && count(static::getAlbumRepository()->getAlbumSuite($album)) > 1) {
-            $name .= " [" . T_('Disk') . " " . $album->disk . "]";
-        }
-
-        return self::checkName($name);
-    }
-
-    /**
      * checkName
+     * This to fix xml=>json which can result to wrong type parsing
      * @param string $name
      * @return string|null
      */
     private static function checkName($name)
     {
         // Ensure to have always a string type
-        // This to fix xml=>json which can result to wrong type parsing
-
         if (self::$enable_json_checks && !empty($name)) {
             if (is_numeric($name)) {
                 // Add space character to fail numeric test
-                // Yes, it is a trick but visually acceptable
                 $name = $name .= " ";
             }
         }
@@ -1008,7 +996,7 @@ class Subsonic_Xml_Data
         } else {
             $xdir->addAttribute('parent', (string)$album->catalog);
         }
-        $xdir->addAttribute('name', (string)self::formatAlbum($album));
+        $xdir->addAttribute('name', (string)self::checkName($album->f_title));
 
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);

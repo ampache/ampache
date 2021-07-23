@@ -395,7 +395,6 @@ class User extends database_object
                 $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
                 $data->format();
-                $data->f_link;
                 $items[] = $data;
             } elseif ($type == 'album') {
                 // If its an album
@@ -727,7 +726,7 @@ class User extends database_object
                 $db_results = Dba::read($sql);
                 $data       = Dba::fetch_row($db_results);
 
-                self::set_count($user_id, $table, $data[0]);
+                self::set_count($user_id, $table, (int)$data[0]);
             }
             // tables with media items to count, song-related tables and the rest
             $media_tables = array('song', 'video', 'podcast_episode');
@@ -742,10 +741,10 @@ class User extends database_object
                 $db_results  = Dba::read($sql);
                 $data        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
-                $items += $data[0];
-                $time += $data[1];
-                $size += $data[2];
-                self::set_count($user_id, $table, $data[0]);
+                $items += (int)$data[0];
+                $time += (int)$data[1];
+                $size += (int)$data[2];
+                self::set_count($user_id, $table, (int)$data[0]);
             }
             self::set_count($user_id, 'items', $items);
             self::set_count($user_id, 'time', $time);
@@ -754,7 +753,7 @@ class User extends database_object
             $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
             $data       = Dba::fetch_row($db_results);
-            self::set_count($user_id, 'album_group', $data[0]);
+            self::set_count($user_id, 'album_group', (int)$data[0]);
         }
     } // update_counts
 
@@ -764,11 +763,11 @@ class User extends database_object
      * write the total_counts to update_info
      * @param int $user_id
      * @param string $key
-     * @param string $value
+     * @param int $value
      */
-    public static function set_count(int $user_id, string $key, string $value)
+    public static function set_count(int $user_id, string $key, int $value)
     {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?", array($user_id, $key, $value));
+        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?;", array($user_id, $key, $value));
     } // set_count
 
     /**
@@ -849,13 +848,10 @@ class User extends database_object
      */
     public function insert_ip_history()
     {
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
-            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
-        } else {
-            $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
-            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
-        }
+        $sip = (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR'))
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
 
         // Remove port information if any
         if (!empty($sip)) {
@@ -1392,7 +1388,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user
+     * @param User|null $user
      * @return boolean
      */
     public static function stream_control($media_ids, User $user = null)

@@ -115,6 +115,11 @@ interface AlbumRepositoryInterface
     public function getArtistCount(int $albumId): int;
 
     /**
+     * Get distinct artist count for an album array.
+     */
+    public function getArtistCountGroup(array $albumArray): int;
+
+    /**
      * gets the album ids that this artist is a part of
      *
      * @return int[]

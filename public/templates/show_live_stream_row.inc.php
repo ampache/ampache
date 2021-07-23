@@ -38,8 +38,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php
-    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->f_link; ?></td>

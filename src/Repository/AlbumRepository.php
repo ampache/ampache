@@ -72,7 +72,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -182,10 +182,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($f_name == '') {
             return array();
         }
-        $album_artist = "is null";
-        $release_type = "is null";
-        $mbid         = "is null";
-        $year         = (string)$album->year;
+        $album_artist   = "is null";
+        $release_type   = "is null";
+        $release_status = "is null";
+        $mbid           = "is null";
+        $original_year  = "is null";
+        $year           = (string)$album->year;
 
         if ($album->album_artist) {
             $album_artist = "= '" . ucwords((string) $album->album_artist) . "'";
@@ -193,26 +195,31 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($album->release_type) {
             $release_type = "= '" . ucwords((string) $album->release_type) . "'";
         }
+        if ($album->release_status) {
+            $release_status = "= '" . ucwords((string) $album->release_status) . "'";
+        }
         if ($album->mbid) {
             $mbid = "= '$album->mbid'";
         }
+        if ($album->original_year) {
+            $original_year = "= '$album->original_year'";
+        }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
-            "(`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') " .
-            "AND `album`.`year` = $year ";
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
+        $catalog_join  = "";
 
         if ($catalogId) {
             $catalog_where .= " AND `catalog`.`id` = '$catalogId'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
+            $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
 
         $db_results = Dba::read(
             sprintf(
-                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC',
+                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
                 $catalog_join,
                 $where,
                 $catalog_where
@@ -231,7 +238,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        Dba::write('DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);');
+        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);");
+        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
     }
 
     /**
@@ -295,6 +303,19 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * Get distinct artist count for an album array.
+     */
+    public function getArtistCountGroup(array $albumArray): int
+    {
+        $idlist     = '(' . implode(',', $albumArray) . ')';
+        $sql        = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`album` IN $idlist;";
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['artist_count'];
+    }
+
+    /**
      * gets the album ids that the artist is a part of
      *
      * @return int[]
@@ -305,38 +326,40 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog !== null) {
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
-        $allow_group_disks = (AmpConfig::get('album_group'));
+        $display_year      = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $allow_group_disks = AmpConfig::get('album_group');
         $sort_type         = AmpConfig::get('album_sort');
         $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
+        //$sql_sort          = (AmpConfig::get('album_release_type')) ? "IFNULL(`album`.`release_type`, 'album'), " : "";
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC' . $sort_disk;
+                $sql_sort = "$display_year ASC" . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC' . $sort_disk;
+                $sql_sort = "$display_year DESC" . $sort_disk;
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC' . $sort_disk;
+                $sql_sort = "`album`.`name` ASC" . $sort_disk;
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC' . $sort_disk;
+                $sql_sort = "`album`.`name` DESC" . $sort_disk;
                 break;
             default:
-                $sql_sort = '`album`.`name`' . $sort_disk . ', `album`.`year`';
+                $sql_sort = "`album`.`name`" . $sort_disk . ", $display_year";
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
-
         if ($allow_group_disks) {
             $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY $sql_sort";
         }
+        //debug_event(self::class, 'getByArtist ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -347,7 +370,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = array();
                 }
-                $results[$rtype][] = $row['id'];
+                $results[$rtype][] = (int)$row['id'];
 
                 $sort = (string)AmpConfig::get('album_release_type_sort');
                 if ($sort) {
@@ -364,7 +387,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                     $results = array_merge($results_sort, $results);
                 }
             } else {
-                $results[] = (int) $row['id'];
+                $results[] = (int)$row['id'];
             }
         }
 

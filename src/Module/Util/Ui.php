@@ -211,6 +211,7 @@ class Ui implements UiInterface
      * Parses a human-readable size
      * @param $value
      * @return string
+     * @noinspection PhpMissingBreakStatementInspection
      */
     public static function unformat_bytes($value)
     {
@@ -702,6 +703,8 @@ class Ui implements UiInterface
             case 'ajax_load':
             case 'now_playing_per_user':
             case 'show_played_times':
+            case 'use_original_year':
+            case 'hide_single_artist':
             case 'show_skipped_times':
             case 'show_license':
             case 'song_page_title':

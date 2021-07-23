@@ -73,7 +73,7 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function delete(int $accessId): void
     {
-        Dba::write('DELETE FROM `access_list` WHERE `id` = ?', [$accessId]);
+        Dba::write("DELETE FROM `access_list` WHERE `id` = ?;", [$accessId]);
     }
 
     /**

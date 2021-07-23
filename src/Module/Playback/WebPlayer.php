@@ -274,7 +274,8 @@ class WebPlayer
     {
         $transcode_cfg = AmpConfig::get('transcode');
         $addjs         = "";
-        foreach ($playlist->urls as $item) {
+        // play next for groups of items needs to be reversed to be in correct order
+        foreach (array_reverse($playlist->urls) as $item) {
             if ($item->type == 'broadcast') {
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;

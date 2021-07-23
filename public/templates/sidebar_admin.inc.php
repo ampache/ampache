@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
     echo "</li>";
 } ?>
   <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Catalogs'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Catalogs'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_catalogs">
       <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
       <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
   </li>
   <?php if (Access::check('interface', 100)) { ?>
     <li>
-      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
+      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_ut">
         <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
         <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
@@ -67,7 +67,7 @@ use Ampache\Module\Util\Ui;
       </ul>
     </li>
     <li>
-      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Access Control'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'access_control', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_access_control')) ? $_COOKIE['sb_access_control'] : 'expanded')); ?></h4>
+      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Access Control'); ?></span><?php echo Ui::get_icon('all', $t_expander, 'access_control', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_access_control')) ? $_COOKIE['sb_access_control'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_acl">
         <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
         <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
@@ -76,7 +76,7 @@ use Ampache\Module\Util\Ui;
     <li>
       <ul class="sb2" id="sb_modules">
         <li>
-          <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Modules'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_modules')) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+          <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Modules'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_modules')) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
           <ul class="sb3" id="sb_Modules">
             <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
             <li id="sb_preferences_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
@@ -85,7 +85,7 @@ use Ampache\Module\Util\Ui;
         </li>
     </li>
     <li>
-      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
       <ul class="sb3" id="sb_preferences_sc">
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
         <?php

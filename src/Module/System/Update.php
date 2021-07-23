@@ -251,6 +251,15 @@ class Update
         $update_string = "* Add filter_user to catalog table<br />* Set a unique key on user_data";
         $version[]     = array('version' => '500008', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)";
+        $version[]     = array('version' => '500009', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist";
+        $version[]     = array('version' => '500010', 'description' => $update_string);
+
+        $update_string = "* Add `total_count` to podcast table and fill counts into the column";
+        $version[]     = array('version' => '500011', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1254,6 +1263,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_500002
      *
@@ -1409,6 +1419,56 @@ class Update
             $retval &= Dba::write($sql);
         }
         $sql    = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500009
+     *
+     * Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)
+     */
+    public static function update_500009()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_500010
+     *
+     * Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist
+     */
+    public static function update_500010()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_500011
+     *
+     * Add `total_count` to podcast table and fill counts into the column
+     */
+    public static function update_500011()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
         $retval &= Dba::write($sql);
 
         return $retval;

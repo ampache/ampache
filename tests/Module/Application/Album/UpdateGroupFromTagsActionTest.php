@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,9 +45,6 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
     /** @var MockInterface|UiInterface|null */
     private MockInterface $ui;
 
-    /** @var MockInterface|AlbumRepositoryInterface|null */
-    private MockInterface $albumRepository;
-
     private ?UpdateGroupFromTagsAction $subject;
 
     public function setUp(): void
@@ -56,13 +52,11 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
-        $this->albumRepository = $this->mock(AlbumRepositoryInterface::class);
 
         $this->subject = new UpdateGroupFromTagsAction(
             $this->configContainer,
             $this->modelFactory,
-            $this->ui,
-            $this->albumRepository
+            $this->ui
         );
     }
 
@@ -87,10 +81,10 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
 
-        $albumId    = 666;
-        $catalogIds = [42];
-        $albumSuite = [33];
-        $webPath    = 'some-path';
+        $albumId            = 666;
+        $catalogIds         = [42];
+        $webPath            = 'some-path';
+        $album->album_suite = [1, 2, 3];
 
         $album->shouldReceive('format')
             ->withNoArgs()
@@ -116,11 +110,6 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
             ->once()
             ->andReturn($catalogIds);
 
-        $this->albumRepository->shouldReceive('getAlbumSuite')
-            ->with($album)
-            ->once()
-            ->andReturn($albumSuite);
-
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -135,7 +124,7 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
                 [
                     'catalog_id' => $catalogIds,
                     'type' => 'album',
-                    'objects' => $albumSuite,
+                    'objects' => $album->album_suite,
                     'target_url' => sprintf(
                         '%s/albums.php?action=show&amp;album=%d',
                         $webPath,

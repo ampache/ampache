@@ -29,6 +29,9 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();
@@ -50,7 +53,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php } ?>
-            <th class="cel_pubdate optional"><?php echo T_('Publication Date'); ?></th>
+            <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubDate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <?php if ($show_ratings) {
     ++$thcount; ?>
@@ -87,10 +90,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-        <?php
-        } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_episode_sort_title_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>

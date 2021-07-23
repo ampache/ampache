@@ -413,7 +413,7 @@ class Xml_Data
                     } else {
                         $artist = new Artist($object_id);
                         $artist->format();
-                        $albums = static::getAlbumRepository()->getByArtist($object_id, null, true);
+                        $albums = static::getAlbumRepository()->getByArtist($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
@@ -705,6 +705,8 @@ class Xml_Data
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
 
         Rating::build_cache('album', $albums);
 
@@ -715,6 +717,9 @@ class Xml_Data
             $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
+            $year   = ($original_year && $album->original_year)
+                ? $album->original_year
+                : $album->year;
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
@@ -741,7 +746,7 @@ class Xml_Data
             }
 
             $string .= "\t<time>" . $album->total_duration . "</time>\n" .
-                    "\t<year>" . $album->year . "</year>\n" .
+                    "\t<year>" . $year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<songcount>" . $album->song_count . "</songcount>\n" .
                     "\t<diskcount>" . $disk . "</diskcount>\n" .
@@ -994,6 +999,7 @@ class Xml_Data
                 "\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                 "\t\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                 "\t\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t\t<playcount>" . $episode->object_cnt . "</playcount>\n" .
                 "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach
@@ -1071,7 +1077,7 @@ class Xml_Data
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
-                    "\t<playcount>" . $song->played . "</playcount>\n" .
+                    "\t<playcount>" . $song->object_cnt . "</playcount>\n" .
                     "\t<catalog>" . $song->catalog . "</catalog>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
@@ -1136,6 +1142,7 @@ class Xml_Data
                 "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                 "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t<playcount>" . $video->object_cnt . "</playcount>\n" .
                 "</video>\n";
         } // end foreach
 
@@ -1190,6 +1197,7 @@ class Xml_Data
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "<playcount>" . $song->object_cnt . "</playcount>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";
         } // end foreach

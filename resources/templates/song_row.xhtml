@@ -1,7 +1,7 @@
 <html>
     <td class="cel_play">
         <span class="cel_play_content">
-            <b tal:condition="BROWSE_ARGUMENT" tal:content="SONG/getTrackNumber">TRACK NUMBER</b>
+            <b tal:condition="IS_SHOW_TRACK" tal:content="SONG/getTrackNumber">TRACK NUMBER</b>
         </span>
         <div class="cel_play_hover">
             <tal:block tal:condition="CONFIG/isDirectplayEnabled">
@@ -27,7 +27,7 @@
         </span>
     </td>
     <tal:block tal:condition="IS_TABLE_VIEW">
-        <td class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td tal:condition="not:IS_HIDE_ARTIST" class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
         <td tal:condition="not:IS_HIDE_ALBUM" class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
     </tal:block>
     <tal:block tal:condition="not:IS_TABLE_VIEW">
@@ -38,14 +38,14 @@
     <tal:block tal:condition="IS_TABLE_VIEW">
         <td class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
         <td class="cel_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
-        <td tal:condition="CONFIG/isShowLicenseEnabled" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="IS_SHOW_LICENSE" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
         <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
         <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
     </tal:block>
     <tal:block tal:condition="not:IS_TABLE_VIEW">
         <td class="mash_tags" tal:content="structure SONG/getGenre">GENRE</td>
         <td class="mash_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
-        <td tal:condition="CONFIG/isShowLicenseEnabled" class="mash_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="IS_SHOW_LICENSE" class="mash_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
         <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
         <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
     </tal:block>
@@ -86,7 +86,7 @@
                 tal:content="structure SONG/getDeletionIcon"
         >DELETION</a>
     </td>
-    <tal:block tal:condition="BROWSE_ARGUMENT">
+    <tal:block tal:condition="not:IS_HIDE_DRAG">
         <td class="cel_drag" tal:condition="SONG/canBeReordered" tal:content="structure SONG/getReorderIcon">
             REORDER
         </td>

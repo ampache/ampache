@@ -90,7 +90,6 @@ final class FindArtAction extends AbstractArtAction
 
         $art       = $this->modelFactory->createArt($object_id, $object_type);
         $cover_url = [];
-
         $limit     = 0;
 
         if (isset($_REQUEST['artist_filter'])) {

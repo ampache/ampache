@@ -259,7 +259,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song`) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album`) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted`) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip`)');
+        Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL);");
     }
 
     /**
@@ -510,27 +510,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
-
-        if ($this->catalog_id) {
-            $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
-        } else {
-            $this->link   = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-            $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
-        }
+        $this->link   = ($this->catalog_id)
+            ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
+            : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
 
         if ($details) {
-            // Get the counts
-            $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
-
-            // Format the new time thingy that we just got
-            $min = sprintf("%02d", (floor($this->time / 60) % 60));
-
+            $min   = sprintf("%02d", (floor($this->time / 60) % 60));
             $sec   = sprintf("%02d", ($this->time % 60));
             $hours = floor($this->time / 3600);
 
             $this->f_time = ltrim((string)$hours . ':' . $min . ':' . $sec, '0:');
-
             $this->tags   = Tag::get_top_tags('artist', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
@@ -538,8 +528,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->labels   = $this->getLabelRepository()->getByArtist((int) $this->id);
                 $this->f_labels = Label::get_display($this->labels, true);
             }
-
-            $this->object_cnt = $extra_info['object_cnt'];
         }
 
         return true;
@@ -786,7 +774,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                     $matches = VaInfo::get_mbid_array($mbid);
                     foreach ($matches as $mbid_string) {
                         // reverse search artist id if it's still not found for some reason
-                        if (isset($id_array[$mbid_string]) && !$exists) {
+                        if (isset($id_array[$mbid_string])) {
                             $artist_id = (int)$id_array[$mbid_string];
                             $exists    = ($artist_id > 0);
                             $mbid      = ($exists)
@@ -881,6 +869,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Label::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::duplicate('artist', $this->id, $artist_id);
+                Wanted::migrate('artist', $this->id, $artist_id);
                 Catalog::migrate_map('artist', $this->id, $artist_id);
             } // end if it changed
 
@@ -992,19 +981,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($artist_id > 0) {
             $params = array($artist_id);
             // artist.time
-            $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
+            $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
             // artist.total_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`id` = `object_count`.`object_id`;";
             Dba::write($sql, $params);
             // artist.album_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql, $params);
             // artist.album_group_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql, $params);
             // artist.song_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
         }
     }

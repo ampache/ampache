@@ -70,6 +70,11 @@ final class SharesMethod
         Api::set_filter('update', $input['update']);
 
         $shares = $browse->get_objects();
+        if (empty($shares)) {
+            Api::empty('shares', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

@@ -63,11 +63,11 @@ class Stats
     public static function clear($user = 0)
     {
         if ($user > 0) {
-            Dba::write("DELETE FROM `object_count` WHERE `user` = ?", array($user));
+            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", array($user));
         } else {
-            Dba::write("TRUNCATE `object_count`");
+            Dba::write("TRUNCATE `object_count`;");
         }
-        Dba::write("UPDATE `song` SET `played` = 0");
+        Dba::write("UPDATE `song` SET `played` = 0;");
     }
 
     /**
@@ -94,8 +94,18 @@ class Stats
         $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = array($new_object_id, $object_type, $old_object_id);
         if (in_array($object_type, array('artist', 'album'))) {
-            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$object_type` = ?));";
-            $params[] = $new_object_id;
+            $date_sql   = "SELECT `date` FROM `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'song' AND `object_id` IN (SELECT `id` FROM `song` WHERE `song`.`$object_type` = ?)";
+            $db_results = Dba::read($date_sql, array($old_object_id));
+            $dates      = array();
+            while ($row = Dba::fetch_row($db_results)) {
+                $dates[] = (int) $row[0];
+            } // end while results
+
+            if (empty($dates)) {
+                return false;
+            }
+            $idlist = '(' . implode(',', $dates) . ')';
+            $sql .= " AND `date` IN $idlist;";
         }
 
         return Dba::write($sql, $params);
@@ -731,7 +741,7 @@ class Stats
         switch ($type) {
             case 'artist':
             case 'album':
-            case 'genre':
+            case 'tag':
             case 'song':
             case 'video':
             case 'tvshow':
@@ -739,8 +749,11 @@ class Stats
             case 'tvshow_episode':
             case 'movie':
             case 'playlist':
+            case 'podcast':
             case 'podcast_episode':
                 return $type;
+            case 'genre':
+                return 'tag';
             default:
                 return 'song';
         } // end switch
@@ -770,11 +783,11 @@ class Stats
         $base_type         = 'song';
         $multi_where       = 'WHERE';
         $allow_group_disks = AmpConfig::get('album_group');
-        $sql_type          = "`song`.`" . $type . "`";
         $filter_type       = $type;
         // everything else
         if ($type === 'song') {
-            $sql = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+            $sql      = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+            $sql_type = "`song`.`id`";
         } elseif ($type === 'album') {
             $base_type = 'album';
             $sql       = "SELECT MIN(`album`.`id`) as `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` ";
@@ -787,9 +800,14 @@ class Stats
             $sql         = "SELECT MIN(`song`.`artist`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
             $sql_type    = "`song`.`artist`";
             $filter_type = 'song_artist';
+        } elseif ($type === 'podcast_episode') {
+            $base_type = 'podcast_episode';
+            $sql       = "SELECT MIN(`podcast_episode`.`id`) as `id`, MIN(`podcast_episode`.`addition_time`) AS `real_atime` FROM `podcast_episode` ";
+            $sql_type  = "`podcast_episode`.`id`";
         } else {
             // what else?
-            $sql = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+            $sql      = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+            $sql_type = "`song`.`" . $type . "`";
         }
         // join catalogs
         $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";

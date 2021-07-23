@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -43,6 +44,8 @@ final class ShowCreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_create';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -52,11 +55,13 @@ final class ShowCreateAction implements ApplicationActionInterface
     private PasswordGeneratorInterface $passwordGenerator;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger,
         PasswordGeneratorInterface $passwordGenerator
     ) {
+        $this->requestParser     = $requestParser;
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->logger            = $logger;
@@ -71,9 +76,9 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = Share::format_type(Core::get_request('type'));
+        $type = Share::format_type($this->requestParser->getFromRequest('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object_id = Core::get_request('id');
+            $object_id = $this->requestParser->getFromRequest('id');
             if (is_array($object_id)) {
                 $object_id = $object_id[0];
             }

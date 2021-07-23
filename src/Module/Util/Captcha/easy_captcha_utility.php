@@ -272,6 +272,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
                         array_pop($path);
                         break;
                     }
+                    // Intentional break fall-through
                 default:
                     $path[] = $comp;
                     $ncomp++;

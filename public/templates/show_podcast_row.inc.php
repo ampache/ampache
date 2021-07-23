@@ -47,16 +47,15 @@ use Ampache\Module\Util\Ui;
         } ?>
     </div>
 </td>
-<?php if (Art::is_enabled()) { ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->id, $libitem->f_name, 2, $libitem->link); ?>
+    <?php Art::display('podcast', $libitem->id, $libitem->f_title, 2, $libitem->link); ?>
 </td>
-<?php
-    } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
-<?php
-    if ($show_ratings) { ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
+<?php } ?>
+<?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast"><?php echo Rating::show($libitem->id, 'podcast'); ?></span>
@@ -68,8 +67,7 @@ use Ampache\Module\Util\Ui;
             <?php
             } ?>
         </td>
-    <?php
-    } ?>
+    <?php } ?>
 <td class="cel_action">
 <?php
     echo " <a href=\"" . $libitem->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>";

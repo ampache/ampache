@@ -98,7 +98,7 @@ class Rating extends database_object
             }
         }
         // delete 'empty' ratings
-        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0");
+        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0;");
     }
 
     /**
@@ -195,18 +195,21 @@ class Rating extends database_object
      */
     public function get_average_rating()
     {
-        if (parent::is_cached('rating_' . $this->type . '_all', $this->id)) {
-            return (double)parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
+        $key = 'rating_' . $this->type . '_all';
+        if (parent::is_cached($key, $this->id)) {
+            return (double)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
-        $results = Dba::fetch_assoc($db_results);
+        $rating = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $rating = (double)$results['rating'];
+        }
+        parent::add_to_cache($key, $this->id, array((int)$rating));
 
-        parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results);
-
-        return (double)$results['rating'];
+        return $rating;
     } // get_average_rating
 
     /**
@@ -232,8 +235,8 @@ class Rating extends database_object
             $sql .= " AND" . Catalog::get_user_filter("rating_$type", $user_id);
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC "
-            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `rating`.`object_id` DESC ";
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `rating` DESC, `count` DESC, `id` DESC "
+            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;

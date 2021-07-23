@@ -54,11 +54,8 @@ if (!isset($video_type)) {
         } ?>
     </div>
 </td>
-<?php
-if (Art::is_enabled()) { ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php
-    $art_showed = false;
+    <?php $art_showed = false;
         if ($libitem->get_default_art_kind() == 'preview') {
             $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
         }
@@ -67,8 +64,6 @@ if (Art::is_enabled()) { ?>
             Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
         } ?>
 </td>
-<?php
-    } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">

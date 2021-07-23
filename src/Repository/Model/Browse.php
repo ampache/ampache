@@ -207,20 +207,29 @@ class Browse extends Query
 
         // Set the correct classes based on type
         $class = "box browse_" . $type;
-
-        $argument_param = ($argument ? '&argument=' . scrub_in((string)$argument) : '');
-
         debug_event(self::class, 'Show objects called for type {' . $type . '}', 5);
 
-        $limit_threshold = $this->get_threshold();
         // hide some of the useless columns in a browse
-        $hide_columns = array();
+        $hide_columns   = array();
+        $argument_param = '';
         if (is_array($argument)) {
             if (is_array($argument['hide'])) {
                 $hide_columns = $argument['hide'];
             }
+            if (!empty($hide_columns)) {
+                $argument_param = '&hide=';
+                foreach ($hide_columns as $column) {
+                    $argument_param .= scrub_in((string)$column) . ',';
+                }
+                $argument_param = rtrim($argument_param, ',');
+            }
+        } else {
+            $argument_param = ($argument)
+                ? '&argument=' . scrub_in((string)$argument)
+                : '';
         }
 
+        $limit_threshold = $this->get_threshold();
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
@@ -248,7 +257,9 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_users.inc.php');
                 break;
             case 'artist':
-                $box_title = T_('Artists') . $match;
+                $box_title = ($this->is_album_artist())
+                    ? T_('Album Artists') . $match
+                    : T_('Artists') . $match;
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
@@ -476,6 +487,42 @@ class Browse extends Query
     public function is_use_pages()
     {
         return make_bool($this->_state['use_pages']);
+    }
+
+    /**
+     *
+     * @param boolean $mashup
+     */
+    public function set_mashup($mashup)
+    {
+        $this->_state['mashup'] = $mashup;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_mashup()
+    {
+        return make_bool($this->_state['mashup']);
+    }
+
+    /**
+     *
+     * @param boolean $album_artist
+     */
+    public function set_album_artist($album_artist)
+    {
+        $this->_state['album_artist'] = $album_artist;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_album_artist()
+    {
+        return make_bool($this->_state['album_artist']);
     }
 
     /**

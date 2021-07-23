@@ -25,36 +25,36 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update__all_file_tags"><?php echo T_('Update All File Tags'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=update__all_file_tags"><?php echo T_('Update All File Tags'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show Disabled Songs'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show Disabled Songs'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
-    <form style="padding-left: 250px;" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
+    <form style="padding-left: 250px;" method="post" action="<?php echo $web_path; ?>/admin/catalog.php?action=update_from">
         <table class="tabledata2">
             <tr>
                 <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>

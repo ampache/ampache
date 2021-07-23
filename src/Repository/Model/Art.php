@@ -144,18 +144,6 @@ class Art extends database_object
     } // build_cache
 
     /**
-     * @deprecated There was no way to explicitly deactivate the art - so I assume, it's not needed in the first place
-     *
-     * is_enabled
-     * Checks whether the user currently wants art
-     * @return boolean
-     */
-    public static function is_enabled()
-    {
-        return true;
-    }
-
-    /**
      * extension
      * This returns the file extension for the currently loaded art
      * @param string $mime
@@ -332,7 +320,6 @@ class Art extends database_object
      * @param string $mime
      * @return boolean
      */
-
     public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
@@ -422,7 +409,6 @@ class Art extends database_object
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
-                                ;
                             }
                             
                             break;
@@ -818,7 +804,24 @@ class Art extends database_object
         // Create a new blank image of the correct size
         $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
+        if ($source_size['width'] > $source_size['height']) { // landscape
+            $new_height = $size['height'];
+            $new_width  = floor($source_size['width'] * ($new_height / $source_size['height']));
+            $crop_x     = ceil(($source_size['width'] - $source_size['height']) / 2);
+            $crop_y     = 0;
+        } elseif ($source_size['height'] > $source_size['width']) { // portrait
+            $new_width  = $size['width'];
+            $new_height = floor($source_size['height'] * ($new_width / $source_size['width']));
+            $crop_x     = 0;
+            $crop_y     = ceil(($source_size['height'] - $source_size['width']) / 3); // assuming most portrait images would have faces closer to the top
+        } else { // square
+            $new_width  = $size['width'];
+            $new_height = $size['height'];
+            $crop_x     = 0;
+            $crop_y     = 0;
+        }
+
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, $crop_x, $crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
             debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
@@ -898,7 +901,7 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
+            $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -1041,7 +1044,8 @@ class Art extends database_object
             'tvshow_season',
             'video',
             'user',
-            'live_stream'
+            'live_stream',
+            'song'
         );
 
         if ($object_type !== null) {
@@ -1093,6 +1097,10 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
+        if (Art::has_db($new_object_id, $object_type)) {
+            return false;
+        }
+
         debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";

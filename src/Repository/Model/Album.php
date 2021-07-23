@@ -305,16 +305,15 @@ class Album extends database_object implements library_item
             $this->allow_group_disks = true;
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
-                $this->total_duration    = 0;
-                $this->object_cnt        = 0;
-                $this->song_count        = 0;
-                $this->artist_count      = 0;
+                $this->total_duration = 0;
+                $this->object_cnt     = 0;
+                $this->song_count     = 0;
+                $this->artist_count   = $albumRepository->getArtistCountGroup($this->album_suite);
 
                 foreach ($this->album_suite as $albumId) {
                     $this->total_duration += $albumRepository->getAlbumDuration((int)$albumId);
                     $this->object_cnt += $albumRepository->getAlbumPlayCount((int)$albumId);
                     $this->song_count += $albumRepository->getSongCount((int)$albumId);
-                    $this->artist_count += $albumRepository->getArtistCount((int)$albumId);
                 }
             }
         }
@@ -430,9 +429,10 @@ class Album extends database_object implements library_item
         if (!$name) {
             $name          = T_('Unknown (Orphaned)');
             $year          = 0;
-            $original_year = 0;
+            $original_year = null;
             $disk          = 1;
-            $album_artist  = null;
+            $album_artist  = Artist::check(T_('Unknown (Orphaned)'));
+            $catalog       = 0;
         }
         if (isset(self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist])) {
             return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
@@ -579,7 +579,8 @@ class Album extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = '')
     {
-        $web_path = AmpConfig::get('web_path');
+        $web_path  = AmpConfig::get('web_path');
+        $show_year = $this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year;
 
         $this->f_release_type = ucwords((string)$this->release_type);
 
@@ -601,17 +602,22 @@ class Album extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-        $this->link   = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
+        $this->f_title = $this->f_name;
+        $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
 
+        // Looking if we need to display the release year
+        if ($show_year) {
+            $this->f_title .= " (" . $this->year . ")";
+            $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
+        }
         // Looking if we need to combine or display disks
-        if ($this->disk && !$this->allow_group_disks && count($this->getAlbumRepository()->getAlbumSuite($this)) > 1) {
+        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
+            $this->f_title .= " [" . T_('Disk') . " " . $this->disk . "]";
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
-
         $this->f_link .= "</a>";
 
-        $this->f_title = $this->f_name;
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
             $this->f_artist_name = $artist;
@@ -1028,13 +1034,11 @@ class Album extends database_object implements library_item
      * @param string $field
      * @param $value
      * @param integer $album_id
-     * @return PDOStatement|boolean
      */
     private static function update_field($field, $value, $album_id)
     {
         $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array($value, $album_id));
+        Dba::write($sql, array($value, $album_id));
     }
 
     /**
@@ -1082,19 +1086,19 @@ class Album extends database_object implements library_item
         if ($album_id > 0) {
             $params = array($album_id);
             // album.time
-            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.total_count
-            $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`id` = `object_count`.`object_id`;";
             Dba::write($sql, $params);
             // album.addition_time
-            $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+            $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `song`.`album` = `album`.`id`;";
             Dba::write($sql, $params);
             // album.song_count
-            $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.artist_count
-            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
         }
     }

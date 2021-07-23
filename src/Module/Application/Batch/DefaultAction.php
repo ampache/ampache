@@ -88,8 +88,11 @@ final class DefaultAction implements ApplicationActionInterface
         set_time_limit(0);
 
         $media_ids    = [];
-        $default_name = 'Unknown.zip';
-        $object_type  = (string) scrub_in(Core::get_request('action'));
+        $default_name = 'Unknown';
+        $action       = (string) scrub_in(Core::get_request('action'));
+        $object_type  = ($action == 'browse')
+            ? (string) scrub_in(Core::get_request('action'))
+            : $action;
         $name         = $default_name;
 
         if ($object_type == 'browse') {
@@ -125,7 +128,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
         } else {
             // Switch on the actions
-            switch ($object_type) {
+            switch ($action) {
                 case 'tmp_playlist':
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
@@ -141,7 +144,7 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                     break;
                 case 'browse':
-                    $object_id        = (int) scrub_in(Core::get_post('browse_id'));
+                    $object_id        = (int)Core::get_request('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media_id) {
@@ -204,8 +207,8 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = $element['object_type'];
                     $mediaid = $element['object_id'];
                 } else {
-                    $type      = array_shift($element);
-                    $mediaid   = array_shift($element);
+                    $type    = array_shift($element);
+                    $mediaid = array_shift($element);
                 }
                 $class_name = ObjectTypeToClassNameMapper::map($type);
                 $media      = new $class_name($mediaid);

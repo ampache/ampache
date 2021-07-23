@@ -48,12 +48,11 @@ use Ampache\Module\Util\ZipHandlerInterface;
         } ?>
     </div>
 </td>
-<?php if (AmpConfig::get('playlist_art')) { ?>
+<?php if ($show_art) { ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $libitem->display_art(2); ?>
+    <?php $libitem->display_art(2, true); ?>
 </td>
-<?php
-    } ?>
+<?php } ?>
 <td class="cel_playlist"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">

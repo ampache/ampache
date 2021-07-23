@@ -70,7 +70,7 @@ abstract class playlist_object extends database_object implements library_item
     public $f_user;
 
     /**
-     * @return mixed
+     * @return array
      */
     abstract public function get_items();
 
@@ -117,7 +117,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -218,9 +218,8 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        if (AmpConfig::get('playlist_art')) {
+        if (AmpConfig::get('playlist_art') || $force) {
             $medias     = $this->get_medias();
-            $media_arts = array();
             shuffle($medias);
             foreach ($medias as $media) {
                 if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
@@ -236,18 +235,11 @@ abstract class playlist_object extends database_object implements library_item
                     }
 
                     if ($media !== null) {
-                        if (!in_array($media, $media_arts)) {
-                            $media_arts[] = $media;
-                            if (count($media_arts) >= 1) {
-                                break;
-                            }
-                        }
+                        Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
+
+                        return;
                     }
                 }
-            }
-
-            foreach ($media_arts as $media) {
-                Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
             }
         }
     }

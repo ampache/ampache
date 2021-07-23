@@ -34,6 +34,12 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
+/** @var mixed|null $original_year */
+
+$web_path     = AmpConfig::get('web_path');
+$display_year = ($original_year && $libitem->original_year)
+    ? $libitem->original_year
+    : $libitem->year;
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -50,16 +56,11 @@ use Ampache\Module\Util\ZipHandlerInterface;
             } ?>
     </div>
 </td>
-<?php
-if (Art::is_enabled()) {
-                $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->f_name); ?>
+<?php $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->f_name); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php
-    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-                Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id); ?>
+    <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+    Art::display('album', $libitem->id, $name, $thumb, $web_path . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
-<?php
-            } ?>
 <td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -80,8 +81,8 @@ if (Art::is_enabled()) {
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
-<td class="cel_year"><?php if ($libitem->year > 0) {
-                echo $libitem->year;
+<td class="cel_year"><?php if ($display_year > 0) {
+                echo $display_year;
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
@@ -111,7 +112,7 @@ if (Art::is_enabled()) {
 <td class="cel_action">
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
         </a>
     <?php
@@ -125,7 +126,7 @@ if (Art::is_enabled()) {
         global $dic;
         $zipHandler = $dic->get(ZipHandlerInterface::class);
         if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
+            <a class="nohtml" href="<?php echo $web_path ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
             </a>
     <?php
@@ -137,7 +138,7 @@ if (Art::is_enabled()) {
     <?php
     }
         if (Catalog::can_remove($libitem)) { ?>
-            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
+            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo $web_path ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
     <?php

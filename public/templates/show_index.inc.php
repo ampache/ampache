@@ -50,17 +50,15 @@ if ($user->id) {
 <?php
 } ?>
 <!-- Randomly selected Albums of the Moment -->
-<?php
-if (Art::is_enabled()) {
-    if (AmpConfig::get('home_moment_albums')) {
-        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
+<?php if (AmpConfig::get('home_moment_albums')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
 <div id="random_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Albums of the Moment'));
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
 </div>
 <?php
-    }
+}
     if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
         echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
 <div id="random_video_selection" class="random_selection">
@@ -70,8 +68,6 @@ if (Art::is_enabled()) {
 </div>
     <?php
     } ?>
-<?php
-} ?>
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">

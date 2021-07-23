@@ -291,8 +291,8 @@ class Userflag extends database_object
         $user_id           = (int)($user_id);
         $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
         $sql               = ($allow_group_disks)
-            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
-            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
+            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
+            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag`";
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
@@ -303,8 +303,8 @@ class Userflag extends database_object
             $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `count` DESC, `user_flag`.`date` DESC "
-            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `user_flag`.`date` DESC ";
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `count` DESC, `date` DESC "
+            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql;

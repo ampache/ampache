@@ -422,6 +422,7 @@ class Broadcast_Server implements MessageComponentInterface
      * onError
      * @param ConnectionInterface $conn
      * @param Exception $error
+     * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function onError(ConnectionInterface $conn, Exception $error)
     {

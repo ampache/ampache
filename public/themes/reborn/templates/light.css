@@ -387,6 +387,10 @@ table.tabledata tfoot .th-bottom {
     border-top-color: #0f0f0f;
 }
 
+table.tabledata .followbtn a {
+    color: #fff;
+}
+
 table.tabledata th a {
     color: #000;
 }
@@ -649,6 +653,7 @@ div.jp-playlist li {
     background: #ccc;
 }
 
+.followbtn a,
 .list-header-navmenu-border {
     border-color: #fff;
 }

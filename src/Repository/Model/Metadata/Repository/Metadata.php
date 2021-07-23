@@ -23,6 +23,7 @@ namespace Ampache\Repository\Model\Metadata\Repository;
 
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Repository;
+use PDOStatement;
 
 class Metadata extends Repository
 {
@@ -30,7 +31,7 @@ class Metadata extends Repository
 
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL');
+        Dba::write("DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL;");
     }
 
     /**

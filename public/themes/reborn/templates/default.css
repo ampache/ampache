@@ -781,6 +781,10 @@ div#autoupdate > span {
     order: 10;
 }
 
+.sb2_dashboard {
+    order: 15;
+}
+
 .sb2_video {
     order: 20;
 }
@@ -1160,7 +1164,7 @@ table.tabledata .cel_drag img:hover {
 }
 
 table.tabledata .cel_agent {
-    text-align: right;
+    text-align: left;
     width: 45px;
 }
 
@@ -1411,6 +1415,7 @@ div.box.box_rules {
 
 .cel_counter,
 .cel_songs,
+.cel_albums,
 .cel_year {
     width: 60px;
     white-space: normal !important;

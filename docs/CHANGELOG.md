@@ -19,20 +19,93 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* Private catalogs! You can now set a public or per user catalog for your music folders
+* Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
-* Search: Add 'possible_duplicate' to song, artist and album searches
+* Added %R (Release Status) to catalog pattern matching
+* Add ability to hide the Song Artist column for Albums with one Artist
+* Add ability to browse albums by Original Year
+* Add ability to hide the licence column on song pages
+* A helper index.php has been added to the old project root with directions to help
+* Show the country and Active status (Generated tags are assumed active) on label rows
+* Podcast_Episode show episode art for podcast mashup allow sort by date
+* Search changes
+  * Add 'possible_duplicate', 'recently_played' to song, artist and album search
+  * Add 'catalog' to artist and album search
+  * Add 'favorite_album', 'favorite_artist' to song search
+  * Add 'release_status' to album search
+  * Add 1, 5 and 10 to the Maximum Results limit
+* Database 5.0.0 Build 10:
+  * Add `song_count`, `album_count`, `album_group_count` to artist table
+  * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
+  * Add `mbid`, `country`, `active` to label table
+  * Add `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
+  * Add `catalog` to podcast_episode table
+  * Add `filter_user` to catalog table
+  * Add `total_count` to podcast table
+  * Create catalog_map table (map catalog location for media objects)
+  * Create user_playlist table (Global play queue)
+  * Create user_data table (One shot info for user actions)
+* NEW database options
+  * use_original_year: Browse by Original Year for albums (falls back to Year)
+  * hide_single_artist: Hide the Song Artist column for Albums with one Artist
+  * show_license: Hiding the license column in song rows
+* Config version 52
+* NEW config options
+  * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
+  * write_id3: Write tage changes to file
+  * write_id3_art: Write art to files
+  * art_zip_add: Include Album Art for zip downlaods
+  * catalog_filter: Allow filtering catalogs to specific users
+  * catalog_verify_by_time: Only verify the files that have been modified since the last verify
 
 ### Changed
 
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Moved sidebar mashup pages into their own 'Dashboards' section
 * Move artist counts (song, album) to a DB column
+* Global counts are calculated after catalog changes instead of dynamically
+* Display userflag with star ratings
+* Always put year in Spotify art search if available
+* Imported playslists don't add the extension to the title
+* Visually crop images from the centre instead of resizing into a square
+* Subsonic: wait a few seconds before allowing scrobbles to avoid collisions
+* Display release year if it doesn't macth original_year. e.g. 'Back in Black (2010)'
 
 ### Removed
 
 * Take out the random items (except random search) from the main sidebar (use the playlist on the rightbar instead)
 * 'Find Duplicates' and related pages have been removed. Use 'Possible Duplicate' searches instead
+* 'Genre' and 'Missing Artists' removed from the top search bar
+* Take out the info icon from the song row; just click the song link
+* Take song artist out of the album edit popup
+* File tag reading for Band/Album Artist
+* Corrected albumartist collection and added missing tags to vorbis, aac and id3v2
+* Removed links from album list headers when split by release type
+
+### Fixed
+
+* Delete duplicates from song table
+* Mashup page for podcast_episodes
+* Searching by Genre needed a query overhaul
+* Album groupings are the same everyhwere when album_group is enabled
+* Unknown (Orphaned) groups all unkown files into one artist and album
+* Album groups for ratings and userflags
+* Subsonic: Support a global user playqueue with getplayqueue, saveplayqueue
+* Subsonic: Incorrect header being set on art requests
+* SQL queries regarding rating order and grouping of mutliple users
+* Ensure valid media is found before inserting into a playlist
+* Searching by Genre needed a lot of updates to speed up and correct
+* Bump phpmailer/phpmailer from 6.4.1 to 6.5.0 (#2957)
+* Groupings for albums and add original_year to grouping
+* Editing album titles with prefixes
+* CSS fixes for light theme
+* Shares didn't insert into object_count correctly
+* Repair missing rows in object_count after catalog updates
+* Browse / Mashup by podcast_episode
+* Sorting for a lot of browse pages that used arguments
 
 ### API develop
 
@@ -40,6 +113,7 @@ All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
 
+* Add global playcount to podcast_episode and video responses
 * NEW API functions
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)
@@ -85,6 +159,39 @@ All API code that used 'Tag' now references 'Genre' instead
 * localplay
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * Plugins: Use only https for building gravatar urls
+* API::system_update: update the database if required as well
+
+## Ampache 4.4.3-release
+
+### Added
+
+* Catalog::update_counts to manage catalog changes
+* Gather more art files from your tags
+* Allow RatingMatch plugin to rate Album->Artist (Originally Song->Album->Artist)
+
+### Changed
+
+* Calculate MP3 stream length on transcode to avoid cutting it off early
+
+### Removed
+
+* Don't apply an album artist when it isn't distinct
+
+### Fixed
+
+* CVE-2021-32644
+* Identifying a distinct album_artist query wasn't great
+* Don't return duplicate art while searching file tags
+* SQL query in random::advanced_sql was ambiguous
+* Filtering random and search page type element
+* NowPlaying stats would be overwritten when they didn't need to be
+* SubSonic:
+  * getNowPlaying was unable to return playing media or the correct time
+  * createShare would not set the object_id correctly and ignored expires value
+
+### API 4.4.3
+
+**NO CHANGE**
 
 ## Ampache 4.4.2-release
 
@@ -611,7 +718,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
-  * Refer to the wiki for information about search rules. (<https://ampache.org/api/api-advanced-search>)
+  * Refer to the wiki for information about search rules. (<http://ampache.org/api/api-advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
 * Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
@@ -850,7 +957,7 @@ Bump API version to 400003 (4.0.0 build 003)
 
 #### Added
 
-* user_numeric searches also available in the API. ([<https://ampache.org/api/api-xml-methods>])
+* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
 
 #### Changed
 
@@ -1040,7 +1147,7 @@ Notes about this release that can't be summed up in a log line
 
 #### Added
 
-* Documented the Ampache API [<https://ampache.org/api/api-xml-methods>]
+* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)

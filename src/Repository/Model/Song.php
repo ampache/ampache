@@ -413,7 +413,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $title            = Catalog::check_length(Catalog::check_title($results['title'], $file));
         $artist           = Catalog::check_length($results['artist']);
         $album            = Catalog::check_length($results['album']);
-        $albumartist      = Catalog::check_length($results['albumartist'] ?: $results['band']);
+        $albumartist      = Catalog::check_length($results['albumartist']);
         $albumartist      = $albumartist ?: null;
         $bitrate          = $results['bitrate'] ?: 0;
         $rate             = $results['rate'] ?: 0;
@@ -452,8 +452,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $license = null;
         }
 
-        $catalog_number = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'],
-            64) : null;
+        $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
@@ -528,6 +527,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_id = (int)Dba::insert_id();
 
         Catalog::update_map((int)$catalog, 'song', $song_id);
+        Album::update_album_counts($album_id);
+        Artist::update_artist_counts($artist_id);
 
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
@@ -566,9 +567,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // delete duplicates
         Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
         // clean up missing catalogs
-        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
+        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // delete the rest
-        Dba::write('DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`)');
+        Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
     }
 
     /**
@@ -792,6 +793,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             case 'aac':
             case 'mp4':
             case 'm4a':
+            case 'm4b':
                 return 'audio/mp4';
             case 'aacp':
                 return 'audio/aacp';
@@ -946,7 +948,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $db_results = Dba::read($sql);
 
             while ($item = Dba::fetch_assoc($db_results)) {
-                $results[] = $item['id'];
+                $results[] = (int)$item['id'];
             } // end while
         }
 
@@ -1032,6 +1034,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($artist->id) {
             return $artist->f_name;
         }
+
+        return '';
     } // get_artist_name
 
     /**
@@ -1049,6 +1053,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($album_artist->id) {
             return (string)$album_artist->f_name;
         }
+
+        return '';
     } // get_album_artist_name
 
     /**
@@ -1523,6 +1529,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Userflag::migrate('artist', $old_artist, $new_artist);
         Rating::migrate('artist', $old_artist, $new_artist);
         Art::duplicate('artist', $old_artist, $new_artist);
+        Wanted::migrate('artist', $old_artist, $new_artist);
         Catalog::migrate_map('artist', $old_artist, $new_artist);
         Artist::update_artist_counts($new_artist);
     } // update_artist
@@ -1550,45 +1557,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Art::duplicate('album', $old_album, $new_album);
         Catalog::migrate_map('album', $old_album, $new_album);
         Album::update_album_counts($new_album);
-    } // update_album
-
-    /**
-     * update_parent_counts
-     * updates the counts on the album and artist
-     */
-    public function update_parent_counts()
-    {
-        // artist.album_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
-        Dba::write($sql, array($this->artist));
-        // artist.album_group_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
-        Dba::write($sql, array($this->artist));
-        // artist.song_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = 1240 AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
-        Dba::write($sql, array($this->artist));
-        // artist.total_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = 1240 AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
-        Dba::write($sql, array($this->artist));
-        // artist.time
-        $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = 1240 GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist` AND `artist`.`time` != `song`.`time`;";
-        Dba::write($sql, array($this->artist));
-
-        // album.artist_count
-        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = 81509 AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
-        Dba::write($sql, array($this->album));
-        // album.song_count
-        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = 81509 AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
-        Dba::write($sql, array($this->album));
-        // album.total_count
-        $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = 81509 AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
-        Dba::write($sql, array($this->album));
-        // album.time
-        $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = 81509 GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
-        Dba::write($sql, array($this->album));
-        // album.addition_time
-        $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = 81509 GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
-        Dba::write($sql, array($this->album));
     } // update_album
 
     /**
@@ -1988,7 +1956,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $songs = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = $row['id'];
+            $songs[] = (int)$row['id'];
         }
 
         return $songs;
@@ -2368,9 +2336,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * remove
      * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * @return bool
      */
-    public function remove()
+    public function remove(): bool
     {
         return $this->getSongDeleter()->delete($this);
     }

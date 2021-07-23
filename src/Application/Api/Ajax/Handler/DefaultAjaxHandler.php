@@ -92,15 +92,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             $songs   = array();
                             $browse  = new Browse($_REQUEST['browse_id']);
                             $objects = $browse->get_saved();
-                            switch ($_REQUEST['object_type']) {
+                            switch ($browse->get_type()) {
                                 case 'album':
                                     foreach ($objects as $object_id) {
-                                        $songs[] = static::getSongRepository()->getByAlbum($object_id);
+                                        $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
                                     }
                                     break;
                                 case 'artist':
                                     foreach ($objects as $object_id) {
-                                        $songs[] = static::getSongRepository()->getAllByArtist($object_id);
+                                        $songs = array_merge($songs, static::getSongRepository()->getAllByArtist($object_id));
                                     }
                                     break;
                                 case 'song':

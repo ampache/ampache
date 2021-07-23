@@ -21,6 +21,7 @@
 
 namespace Ampache\Module\Song\Tag;
 
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 
 interface SongTagWriterInterface

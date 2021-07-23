@@ -109,7 +109,7 @@ class Catalog_remote extends Catalog
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
@@ -313,7 +313,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function verify_catalog_proc()
     {
@@ -418,7 +418,7 @@ class Catalog_remote extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return boolean|Media|null
+     * @return boolean|null
      * @throws Exception
      */
     public function prepare_media($media)

@@ -42,21 +42,23 @@ use Ampache\Repository\AlbumRepositoryInterface;
 $web_path = AmpConfig::get('web_path');
 
 /** @var Album $album */
-/** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
 $title = scrub_out($album->f_name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
-if ($album->disk && !AmpConfig::get('album_group') && count($albumRepository->getAlbumSuite($album)) > 1) {
+if ($album->disk && !AmpConfig::get('album_group') && count($album->album_suite) > 1) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
+$hide_array        = (AmpConfig::get('hide_single_artist') && $album->artist_count == 1)
+    ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
+    : array('cel_album', 'cel_year', 'cel_drag');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -96,8 +98,7 @@ if ($directplay_limit > 0) {
         </span>
         <?php
     } ?>
-    <?php
-} ?>
+    <?php } ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
@@ -222,7 +223,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (AmpConfig::get('allow_upload')) {
             $t_upload = T_('Upload'); ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->artist_id); ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>
@@ -275,6 +276,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $browse->set_filter('album', $album->id);
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
-    $browse->show_objects(null, array('hide' => array('cel_album', 'cel_year', 'cel_drag')));
+    $browse->show_objects(null, array('hide' => $hide_array));
     $browse->store(); ?>
 </div>

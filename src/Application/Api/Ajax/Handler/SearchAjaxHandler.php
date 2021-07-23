@@ -39,15 +39,11 @@ use Ampache\Repository\AlbumRepositoryInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
-        $this->albumRepository     = $albumRepository;
         $this->missingArtistFinder = $missingArtistFinder;
     }
 
@@ -109,10 +105,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     foreach ($sres as $albumid) {
                         $album = new Album($albumid);
                         $album->format(true);
-                        $a_title = $album->f_title;
-                        if ($album->disk && !$album->allow_group_disks && count($this->albumRepository->getAlbumSuite($album)) > 1) {
-                            $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
-                        }
+                        $a_title   = $album->f_title;
                         $results[] = array(
                             'type' => T_('Albums'),
                             'link' => $album->link,

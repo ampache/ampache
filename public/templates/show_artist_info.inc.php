@@ -46,7 +46,7 @@ use Ampache\Module\Util\Ui;
 </div>
 <div id="item_summary">
     <?php if (!empty(trim($biography['summary']))) { ?>
-        <?php echo nl2br($biography['summary'], true); ?>
+        <?php echo nl2br($biography['summary']); ?>
     <?php
         }?>
 </div>

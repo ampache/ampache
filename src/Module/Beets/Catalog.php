@@ -65,6 +65,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected $listCommand;
 
     /**
+     * Counter used for cleaning actions
+     */
+    private int $cleanCounter = 0;
+
+    /**
      * Constructor
      *
      * Catalog class constructor, pulls catalog information

@@ -293,7 +293,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {

@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var User $client */
 
-?>
+$max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>
 <?php echo AmpError::display('general'); ?>
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
@@ -81,9 +81,9 @@ use Ampache\Module\Util\Ui;
                 </td>
         </tr>
         <tr>
-            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes($max_upload_size); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_upload_size; ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

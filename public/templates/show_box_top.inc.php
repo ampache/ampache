@@ -20,7 +20,7 @@
  *
  */
 
-$class = $class ? $class : 'box'; ?>
+$class = $class ?: 'box'; ?>
 
 <div class="<?php echo $class; ?>">
   <div class="box-inside">

@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use PDOStatement;
 
 /**
  * This is the class responsible for handling the Label object
@@ -214,7 +215,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -427,7 +428,7 @@ class Label extends database_object implements library_item
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+        Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
     }
 
     private static function getLabelRepository(): LabelRepositoryInterface

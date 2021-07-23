@@ -33,6 +33,7 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
+use PDOStatement;
 
 class Wanted extends database_object
 {
@@ -469,6 +470,16 @@ class Wanted extends database_object
         }
 
         return false;
+    }
+
+    /**
+     * garbage_collection
+     *
+     * This cleans out unused artists
+     */
+    public static function garbage_collection()
+    {
+        Dba::write("DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
     }
 
     private static function getAlbumRepository(): AlbumRepositoryInterface

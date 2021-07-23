@@ -111,8 +111,7 @@ class easy_captcha
      */
     public function is_valid()
     {
-        return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid",
-                "EXPIRED", "and deleted") && false;
+        return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
     }
 
 

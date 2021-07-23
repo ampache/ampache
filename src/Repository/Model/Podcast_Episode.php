@@ -122,7 +122,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
+        Dba::write("DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL;");
     }
 
     /**
@@ -238,7 +238,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -341,9 +341,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public function set_played($user, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if ($this->check_play_history($user, $agent, $date)) {
-            Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
+        if (!$this->check_play_history($user, $agent, $date)) {
+            return false;
         }
+        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
 
         if (!$this->played) {
             self::update_played(true, $this->id);

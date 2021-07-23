@@ -117,7 +117,7 @@ class Shoutbox
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $shouts[] = $row['id'];
+            $shouts[] = (int)$row['id'];
         }
 
         return $shouts;
@@ -189,6 +189,7 @@ class Shoutbox
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      * @param array $data
      * @return boolean|string|null
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public static function create(array $data)
     {

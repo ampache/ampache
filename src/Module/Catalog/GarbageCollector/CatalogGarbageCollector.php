@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -67,8 +68,9 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
     {
         Song::garbage_collection();
         $this->albumRepository->collectGarbage();
-        Artist::garbage_collection();
         Video::garbage_collection();
+        Wanted::garbage_collection();
+        Artist::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
         Rating::garbage_collection();

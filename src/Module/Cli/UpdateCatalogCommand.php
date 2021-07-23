@@ -39,9 +39,9 @@ final class UpdateCatalogCommand extends Command
         $this->updateCatalog   = $updateCatalog;
 
         $this
-            ->option('-c|--cleanup', T_('Cleans Catalogs from orphaned entries'), 'boolval', false)
-            ->option('-e|--verify', T_('Verifies Catalog entries and updates them if related files have new information'), 'boolval', false)
-            ->option('-a|--add', T_('Adds new media to Catalogs'), 'boolval', false)
+            ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
+            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
+            ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
             ->option('-i|--import', T_('Imports playlists'),  'boolval',false)

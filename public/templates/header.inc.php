@@ -40,9 +40,10 @@ $_SESSION['login'] = false;
 $t_home      = T_('Home');
 $t_play      = T_('Play');
 $t_artists   = T_('Artists');
+$t_a_artists = T_('Album Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Genres');
+$t_genres    = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
 $t_logout    = T_('Log out');
@@ -421,8 +422,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=tag&type=song">
-                        <?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?>
-                        <span><?php echo $t_tagcloud ?></span>
+                        <?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?>
+                        <span><?php echo $t_genres ?></span>
                     </a>
                 </div>
 

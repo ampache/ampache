@@ -40,13 +40,19 @@ $web_path = AmpConfig::get('web_path');
 /** @var Album $album */
 $album->allow_group_disks = true;
 // Title for this album
-$title = scrub_out($album->f_name) . '&nbsp;(' . $album->year . ')';
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
+$title = scrub_out($album->f_name);
+if ($album->year > 0) {
+    $title .= '&nbsp;(' . $album->year . ')';
+}
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $show_playlist_add    = Access::check('interface', 25);
 $show_direct_play     = $show_direct_play_cfg;
 $directplay_limit     = AmpConfig::get('direct_play_limit');
+$hide_array           = (AmpConfig::get('hide_single_artist') && $album->artist_count == 1)
+    ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
+    : array('cel_album', 'cel_year', 'cel_drag');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -101,8 +107,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
             /* HINT: Number of times an object has been played */
             sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
     </div>
-<?php
-} ?>
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
@@ -226,7 +231,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         $browse->set_filter('album', $album_id);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
-        $browse->show_objects(null, array('hide' => array('cel_album', 'cel_year', 'cel_drag')));
+        $browse->show_objects(null, array('hide' => $hide_array));
         $browse->store(); ?>
     </div><br />
 <?php
