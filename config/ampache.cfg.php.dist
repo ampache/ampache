@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 52
+config_version = 53
 
 ;#########################################################
 ; Auto Update                                            #
