@@ -452,10 +452,9 @@ class Playlist extends playlist_object
     /**
      * add_songs
      * @param array $song_ids
-     * @param boolean $unique
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array(), $unique = false)
+    public function add_songs($song_ids = array())
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -464,16 +463,15 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias, $unique);
+        $this->add_medias($medias);
     } // add_songs
 
     /**
      * add_medias
      * @param array $medias
-     * @param bool $unique
      * @return bool
      */
-    public function add_medias($medias, $unique)
+    public function add_medias($medias)
     {
         if (empty($medias)) {
             return false;
@@ -483,6 +481,7 @@ class Playlist extends playlist_object
          * $song->track add one to make sure it really is 'next'
          */
         debug_event(self::class, "add_medias to: " . $this->id, 5);
+        $unique     = (bool) AmpConfig::get('unique_playlist');
         $track_data = $this->get_songs();
         $base_track = count($track_data);
         $count      = 0;

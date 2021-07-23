@@ -2823,7 +2823,7 @@ abstract class Catalog extends database_object
                 $new_songs = array_diff($songs, $current_songs);
                 debug_event(__CLASS__, "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
             }
-            $playlist->add_songs($new_songs, (bool) AmpConfig::get('unique_playlist'));
+            $playlist->add_songs($new_songs);
 
             return array(
                 'success' => true,

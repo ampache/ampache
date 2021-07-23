@@ -72,7 +72,7 @@ final class PlaylistAddSongMethod
 
             return false;
         }
-        $playlist->add_songs(array($song), (bool) AmpConfig::get('unique_playlist'));
+        $playlist->add_songs(array($song));
         Api::message('song added to playlist', $input['api_format']);
         Session::extend($input['auth']);
 

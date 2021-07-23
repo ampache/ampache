@@ -111,7 +111,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                 if (count($medias) > 0) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
+                    $playlist->add_medias($medias);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
