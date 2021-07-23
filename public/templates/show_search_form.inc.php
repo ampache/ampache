@@ -122,12 +122,12 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <?php require Ui::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
-            <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
+    <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
 <?php if ($currentType == 'song' && Access::check('interface', 25)) { ?>
-        <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
-<?php
-    } ?>
-            <input type="hidden" id="hiddenaction" name="action" value="search" />
+    <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
+    <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
+<?php } ?>
+    <input type="hidden" id="hiddenaction" name="action" value="search" />
 </div>
 </form>
 <script>

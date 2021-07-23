@@ -73,10 +73,15 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
     <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
-        <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
+        <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" onClick="$('#hiddenaction').val('update_playlist');" />&nbsp;&nbsp;
+        <input class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
+        <input type="hidden" id="hiddenaction" name="action" value="search" />
+        <input type="hidden" name="limit" value="<?php echo $playlist->limit; ?>" />
+        <input type="hidden" name="random" value="<?php echo $playlist->random; ?>" />
+        <input type="hidden" name="name" value="<?php echo $playlist->name; ?>" />
     </div>
 </form>
 

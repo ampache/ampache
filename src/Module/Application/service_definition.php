@@ -63,6 +63,7 @@ return [
     Waveform\ShowAction::class => autowire(Waveform\ShowAction::class),
     Search\SearchAction::class => autowire(Search\SearchAction::class),
     Search\SaveAsSmartPlaylistAction::class => autowire(Search\SaveAsSmartPlaylistAction::class),
+    Search\SaveAsPlaylistAction::class => autowire(Search\SaveAsPlaylistAction::class),
     Search\DescriptorAction::class => autowire(Search\DescriptorAction::class),
     Search\ShowAction::class => autowire(Search\ShowAction::class),
     CookieDisclaimer\ShowAction::class => autowire(CookieDisclaimer\ShowAction::class),
