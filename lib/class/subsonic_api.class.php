@@ -250,7 +250,7 @@ class Subsonic_Api
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
             'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
             'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
-            'alwaysDouble' => array('AverageRating'),
+            'alwaysDouble' => array('averageRating'),
             'alwaysInteger' => array('albumCount', 'audioTrackId', 'bitRate', 'bookmarkPosition', 'code',
                                      'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
                                      'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
