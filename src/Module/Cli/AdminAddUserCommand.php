@@ -40,7 +40,7 @@ final class AdminAddUserCommand extends Command
         $this->configContainer = $configContainer;
 
         $this
-            ->option('-p|--password', T_('Password'), 'strval', mt_rand())
+            ->option('-p|--password', T_('Password'), 'strval', bin2hex(random_bytes(20)))
             ->option('-e|--email', T_('E-mail'), 'strval', '')
             ->option('-w|--website', T_('Website'), 'strval', '')
             ->option('-n|--name', T_('Name'), 'strval', '')

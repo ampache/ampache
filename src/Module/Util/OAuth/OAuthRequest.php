@@ -337,7 +337,7 @@ class OAuthRequest
     private static function generate_nonce()
     {
         $mtime = microtime();
-        $rand  = mt_rand();
+        $rand  = bin2hex(random_bytes(20));
 
         return md5($mtime . $rand); // md5s look nicer than numbers
     }
