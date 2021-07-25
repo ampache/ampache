@@ -576,7 +576,7 @@ class Upnp_Api
         $ndTotMatches = $doc->createElement('TotalMatches', $prmTotMatches);
         $ndBrowseResp->appendChild($ndTotMatches);
         $ndUpdateID = $doc->createElement('UpdateID', $prmUpdateID); // seems to be ignored by the WDTVL
-        //$ndUpdateID = $doc->createElement('UpdateID', (string) mt_rand(); // seems to be ignored by the WDTVL
+        //$ndUpdateID = $doc->createElement('UpdateID', (string) bin2hex(random_bytes(20); // seems to be ignored by the WDTVL
         $ndBrowseResp->appendChild($ndUpdateID);
 
         return $doc;

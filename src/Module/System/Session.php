@@ -643,7 +643,7 @@ final class Session implements SessionInterface
      */
     public static function generateRandomToken()
     {
-        return md5(uniqid((string)mt_rand(), true));
+        return md5(uniqid((string)bin2hex(random_bytes(20), true));
     }
 
     /**
