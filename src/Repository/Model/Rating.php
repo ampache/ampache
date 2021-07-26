@@ -142,7 +142,7 @@ class Rating extends database_object
             } else {
                 $rating = (int)$user_ratings[$object_id];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array((int)$rating));
+            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array($rating));
 
             // Then store the average
             if (!isset($ratings[$object_id])) {
@@ -161,7 +161,7 @@ class Rating extends database_object
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.
      * @param integer $user_id
-     * @return double
+     * @return integer
      */
     public function get_user_rating($user_id = null)
     {
@@ -171,7 +171,7 @@ class Rating extends database_object
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return (double)parent::get_from_cache($key, $this->id)[0];
+            return (int)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
@@ -184,13 +184,12 @@ class Rating extends database_object
 
         parent::add_to_cache($key, $this->id, array((int)$rating));
 
-        return (double)$rating;
+        return (int)$rating;
     } // get_user_rating
 
     /**
      * get_average_rating
-     * Get the floored average rating of what everyone has rated this object
-     * as. This is shown if there is no personal rating.
+     * Get the floored average rating of what everyone has rated this object as.
      * @return double
      */
     public function get_average_rating()
@@ -207,9 +206,9 @@ class Rating extends database_object
         if ($results = Dba::fetch_assoc($db_results)) {
             $rating = (double)$results['rating'];
         }
-        parent::add_to_cache($key, $this->id, array((int)$rating));
+        parent::add_to_cache($key, $this->id, array((double)$rating));
 
-        return $rating;
+        return (double)$rating;
     } // get_average_rating
 
     /**
