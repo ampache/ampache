@@ -84,6 +84,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         $playlist_id = (int)Playlist::create($playlist_name, $search->type);
         $playlist    = new Playlist($playlist_id);
         if ($playlist->id) {
+            $playlist->delete_all();
             $playlist->add_medias($search->get_items());
 
             $this->ui->showConfirmation(
