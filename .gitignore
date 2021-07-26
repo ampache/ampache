@@ -48,3 +48,4 @@ error_log
 *.swp
 *.v11.suo
 *~
+.phpunit.result.cache
