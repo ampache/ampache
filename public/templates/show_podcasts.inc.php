@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$thcount      = 6;
+$thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
 $is_table     = $browse->is_grid_view();
 // translate once
@@ -65,6 +65,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
+            <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
     ++$thcount; ?>
@@ -108,6 +109,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title_bottom'); ?></th>
+            <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
                 <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>

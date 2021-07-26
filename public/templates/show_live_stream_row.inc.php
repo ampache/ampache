@@ -42,7 +42,7 @@ use Ampache\Module\Util\Ui;
     $libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
-<td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
+<td class="cel_siteurl"><?php echo $libitem->f_site_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php

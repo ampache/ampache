@@ -59,6 +59,7 @@ class Podcast extends database_object implements library_item
     public $f_lastsync;
     public $link;
     public $f_link;
+    public $f_website_link;
 
     /**
      * Podcast
@@ -173,6 +174,7 @@ class Podcast extends database_object implements library_item
         $this->f_lastsync      = get_datetime((int)$this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
+        $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         if ($details) {
             $this->_get_extra_info();

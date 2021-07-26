@@ -51,6 +51,7 @@ use Ampache\Module\Util\Ui;
     <?php Art::display('podcast', $libitem->id, $libitem->f_title, 2, $libitem->link); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<th class="cel_siteurl"><?php echo $libitem->f_website_link; ?></th>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
