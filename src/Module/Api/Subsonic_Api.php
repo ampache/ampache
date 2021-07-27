@@ -2584,7 +2584,7 @@ class Subsonic_Api
         $media   = Subsonic_Xml_Data::getAmpacheObject($current);
         if ($media->id) {
             $response  = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
-            $position  = (int) $input['position'] / 1000;
+            $position  = (int)((int)$input['position'] / 1000);
             $username  = (string) $input['u'];
             $client    = (string) $input['c'];
             $user_id   = User::get_from_username($username)->id;
@@ -2596,14 +2596,19 @@ class Subsonic_Api
                 $type     = Subsonic_Xml_Data::getAmpacheType($current);
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user_id, ((int)$media->time - $position), $username, $type, ((int)$time - $position));
-                // track has just started. repeated plays aren't called by scrobble so make sure we call this too
-                if ($position < 1 && $previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
-                    $media->set_played((int) $user_id, $client, array(), $time);
-                }
-                // paused or played after 5 seconds so shift the start time
-                if ($position > 5 && $previous['object_id'] == $media->id) {
-                    Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), $username, $type, ($time - $position));
+
+                if ($previous['object_id'] == $media->id) {
+                    $time_diff = $time - $previous['date'];
+                    $old_play  = $time_diff > $media->time * 5;
+                    // shift the start time if it's an old play or has been pause/played
+                    if ($position >= 1 || $old_play) {
+                        Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                    }
+                    // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+                    if (($position < 1 && $time_diff > 5) && !$old_play) {
+                        $media->set_played((int)$user_id, $client, array(), $time);
+                    }
                 }
                 $playQueue = new User_Playlist($user_id);
                 $sub_ids   = (is_array($input['id']))
