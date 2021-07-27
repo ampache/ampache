@@ -885,7 +885,7 @@ class Subsonic_Xml_Data
         }
         $avg_rating = $rating->get_average_rating();
         if ($avg_rating > 0) {
-            $xsong->addAttribute('averageRating', (string)ceil($avg_rating));
+            $xsong->addAttribute('averageRating', (string)$avg_rating);
         }
         self::setIfStarred($xsong, 'song', $songData['id']);
         if ($songData['track'] > 0) {
