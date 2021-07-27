@@ -64,9 +64,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $browse = $this->modelFactory->createBrowse((int)$_REQUEST['browse_id']);
-        debug_event(self::class, "browse->id " . $browse->id, 5);
         $objects = $browse->get_saved();
-        debug_event(self::class, "browse objects " . print_r($objects, true), 5);
 
         // Make sure we have a unique name
         $playlist_name = (filter_has_var(INPUT_POST, 'browse_name'))
