@@ -2456,7 +2456,7 @@ class Subsonic_Api
         }
 
         Subsonic_Xml_Data::addBookmarks($response, $bookmarks);
-        self::apiOutput($input, $response);
+        self::apiOutput($input, $response, array('bookmark'));
     }
 
     /**
