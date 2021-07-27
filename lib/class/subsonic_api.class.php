@@ -2333,7 +2333,7 @@ class Subsonic_Api
         $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
         $bookmarks = Bookmark::get_bookmarks($user);
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
-        self::apiOutput($input, $response);
+        self::apiOutput($input, $response, array('bookmark'));
     }
 
     /**
