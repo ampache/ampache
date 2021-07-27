@@ -34,7 +34,11 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <?php
 ob_start();
 require Ui::find_template('show_search_title.inc.php');
-$title = ob_get_contents();
+$title  = ob_get_contents();
+$browse = new Browse();
+$browse->set_type('playlist_media');
+$browse->add_supplemental_object('search', $playlist->id);
+$browse->set_static_content(false);
 ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <div id="information_actions">
@@ -79,9 +83,9 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" onClick="$('#hiddenaction').val('update_playlist');" />&nbsp;&nbsp;
         <input class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
         <input type="hidden" id="hiddenaction" name="action" value="search" />
-        <input type="hidden" name="limit" value="<?php echo $playlist->limit; ?>" />
-        <input type="hidden" name="random" value="<?php echo $playlist->random; ?>" />
-        <input type="hidden" name="name" value="<?php echo $playlist->name; ?>" />
+        <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
+        <input type="hidden" name="browse_type" value="<?php echo $playlist->type; ?>" />
+        <input type="hidden" name="browse_name" value="<?php echo $playlist->name; ?>" />
     </div>
 </form>
 
@@ -89,10 +93,6 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 
 <div>
 <?php
-    $browse = new Browse();
-    $browse->set_type('playlist_media');
-    $browse->add_supplemental_object('search', $playlist->id);
-    $browse->set_static_content(false);
     $browse->duration = Search::get_total_duration($object_ids);
     $browse->show_objects($object_ids);
     $browse->store(); ?>

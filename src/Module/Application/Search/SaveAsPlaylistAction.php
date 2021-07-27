@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
@@ -64,28 +65,31 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        // load the search
-        $search = $this->modelFactory->createSearch();
-        $search->parse_rules(Search::clean_request($_REQUEST));
-        $search->limit  = (filter_has_var(INPUT_POST, 'limit'))
-            ? (int) Core::get_request('limit')
-            : $search->limit;
-        $search->random = (filter_has_var(INPUT_POST, 'random'))
-            ? (int) Core::get_request('random')
-            : $search->limit;
-        $search->name = (filter_has_var(INPUT_POST, 'name'))
-            ? (string) Core::get_request('name')
-            : $search->name;
+        $browse = new Browse((int)$_REQUEST['browse_id']);
+        debug_event(self::class, "browse->id " . $browse->id, 5);
+        $objects = $browse->get_saved();
+        debug_event(self::class, "browse objects " . print_r($objects, true), 5);
 
         // Make sure we have a unique name
-        $playlist_name = ($search->name) ?: Core::get_global('user')->username . ' - ' . get_datetime(time());
-        // create the playlist
-        $playlist_id = (int)Playlist::create($playlist_name, $search->type);
-        $playlist    = new Playlist($playlist_id);
-        if ($playlist->id) {
+        $playlist_name = (filter_has_var(INPUT_POST, 'browse_name'))
+            ? (string) Core::get_request('browse_name')
+            : Core::get_global('user')->username . ' - ' . get_datetime(time());
+        // keep the same public/private type as the search
+        $playlist_type = (filter_has_var(INPUT_POST, 'browse_type'))
+            ? (string) Core::get_request('browse_type')
+            : 'public';
+
+        if (!empty($objects)) {
+            // create the playlist
+            $playlist_id = (int)Playlist::create($playlist_name, $playlist_type);
+            $playlist    = new Playlist($playlist_id);
             $playlist->delete_all();
-            $playlist->add_medias($search->get_items());
+            // different browses could store objects in different ways
+            if (is_array($objects[0])) {
+                $playlist->add_medias($objects);
+            } else {
+                $playlist->add_songs($objects);
+            }
 
             $this->ui->showConfirmation(
                 T_('No Problem'),

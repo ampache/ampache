@@ -128,6 +128,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
 <?php } ?>
     <input type="hidden" id="hiddenaction" name="action" value="search" />
+    <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
 </div>
 </form>
 <script>
