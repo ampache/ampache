@@ -25,10 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -65,7 +63,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse = new Browse((int)$_REQUEST['browse_id']);
+        $browse = $this->modelFactory->createBrowse((int)$_REQUEST['browse_id']);
         debug_event(self::class, "browse->id " . $browse->id, 5);
         $objects = $browse->get_saved();
         debug_event(self::class, "browse objects " . print_r($objects, true), 5);
@@ -82,7 +80,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
         if (!empty($objects)) {
             // create the playlist
             $playlist_id = (int)Playlist::create($playlist_name, $playlist_type);
-            $playlist    = new Playlist($playlist_id);
+            $playlist    = $this->modelFactory->createPlaylist($playlist_id);
             $playlist->delete_all();
             // different browses could store objects in different ways
             if (is_array($objects[0])) {

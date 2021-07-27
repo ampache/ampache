@@ -55,16 +55,13 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <span id="rating_<?php echo $playlist->id; ?>_playlist">
         <?php echo Rating::show($playlist->id, 'playlist'); ?>
     </span>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $playlist->id; ?>_playlist">
         <?php echo Userflag::show($playlist->id, 'playlist'); ?>
     </span>
-    <?php
-    } ?>
-<?php
-} ?>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <ul>
     <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
@@ -87,8 +84,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 <?php echo T_('Remove Duplicates'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php
     // @todo remove after refactoring
     global $dic;
@@ -100,33 +96,28 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
                 <?php echo UI::get_icon('share', T_('Share playlist')); ?>
         &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
         </a>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play All'), 'directplay_full_' . $playlist->id); ?>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_playlist_' . $playlist->id); ?>
         </li>
-        <?php
-    } ?>
+    <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
         </li>
@@ -140,9 +131,17 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 <?php echo T_('Create Channel'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
+        <?php $search_id = $playlist->has_search();
+        if ($search_id > 0) { ?>
+            <li>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
+                    <?php echo Ui::get_icon('file_refresh'); ?>
+                    <?php echo T_('Refresh from Smartlist'); ?>
+                </a>
+            </li>
+        <?php } ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo T_('Playlist Edit') ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
@@ -155,8 +154,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

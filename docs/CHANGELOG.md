@@ -29,6 +29,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * A helper index.php has been added to the old project root with directions to help
 * Show the country and Active status (Generated tags are assumed active) on label rows
 * Podcast_Episode show episode art for podcast mashup allow sort by date
+* Save a search or Smartlist as a regular playlist
+* New option to refresh a Playlist from Searches with the same name
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search

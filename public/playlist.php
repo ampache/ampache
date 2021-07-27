@@ -27,6 +27,7 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Playlist\AddSongAction;
 use Ampache\Module\Application\Playlist\CreatePlaylistAction;
 use Ampache\Module\Application\Playlist\DeletePlaylistAction;
+use Ampache\Module\Application\Playlist\RefreshPlaylistAction;
 use Ampache\Module\Application\Playlist\ImportPlaylistAction;
 use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
 use Ampache\Module\Application\Playlist\SetTrackNumbersAction;
@@ -52,6 +53,7 @@ $dic->get(ApplicationRunner::class)->run(
         ShowImportPlaylistAction::REQUEST_KEY => ShowImportPlaylistAction::class,
         ShowPlaylistAction::REQUEST_KEY => ShowPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
+        RefreshPlaylistAction::REQUEST_KEY => RefreshPlaylistAction::class,
         CreatePlaylistAction::REQUEST_KEY => CreatePlaylistAction::class,
     ],
     ShowAction::REQUEST_KEY

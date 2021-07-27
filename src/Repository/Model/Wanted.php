@@ -263,7 +263,7 @@ class Wanted extends database_object
         $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
         $db_results = Dba::read($sql, array($mbid));
         if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['id'];
+            return (int)$row['id'];
         }
 
         return 0;

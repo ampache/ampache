@@ -675,7 +675,25 @@ class Playlist extends playlist_object
         }
 
         return false;
-    } // delete_track_number
+    } // has_item
+
+    /**
+     * has_search
+     * Look for a saved smartlist with the same name as this playlist that the user can access
+     * @return int
+     */
+    public function has_search()
+    {
+        $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
+        $db_results = Dba::read($sql, array(Core::get_global('user')->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['name'] == $this->name) {
+                return (int)$row['id'];
+            }
+        }
+
+        return 0;
+    } // has_search
 
     /**
      * delete

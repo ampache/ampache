@@ -164,6 +164,7 @@ return [
     Playlist\ShowImportPlaylistAction::class => autowire(Playlist\ShowImportPlaylistAction::class),
     Playlist\ShowPlaylistAction::class => autowire(Playlist\ShowPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
+    Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
     Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),
     Installation\DefaultAction::class => autowire(Installation\DefaultAction::class),
     Preferences\UpdateUserAction::class => autowire(Preferences\UpdateUserAction::class),
