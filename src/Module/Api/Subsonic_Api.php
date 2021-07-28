@@ -2006,7 +2006,7 @@ class Subsonic_Api
 
                             if (Subsonic_Xml_Data::isSong($song_id)) {
                                 $media = new Song(Subsonic_Xml_Data::getAmpacheId($song_id));
-                                $url   = $media->play_url('&name=' . $localplay->type, 'api', function_exists('curl_version'), $user->id);
+                                $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id);
                             }
 
                             if ($url !== null) {

@@ -96,7 +96,7 @@ final class LocalplayMethod
                     'object_id' => $object_id,
                 );
                 $playlist = new Stream_Playlist();
-                $playlist->add(array($media), '&name=' . $localplay->type);
+                $playlist->add(array($media), '&client=' . $localplay->type);
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }

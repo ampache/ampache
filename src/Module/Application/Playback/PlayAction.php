@@ -120,7 +120,7 @@ final class PlayAction implements ApplicationActionInterface
         $uid          = scrub_in($_REQUEST['uid']);
         $object_id    = (int) scrub_in($_REQUEST['oid']);
         $session_id   = (string) scrub_in($_REQUEST['ssid']);
-        $client       = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
+        $client       = (string) scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = scrub_in($_REQUEST['cache']);
         $format       = scrub_in($_REQUEST['format']);
