@@ -656,6 +656,7 @@ div.jp-playlist li {
 .followbtn a,
 .list-header-navmenu-border {
     border-color: #fff;
+    color: #fff;
 }
 
 span.item-count,
