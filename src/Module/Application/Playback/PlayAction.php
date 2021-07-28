@@ -120,7 +120,7 @@ final class PlayAction implements ApplicationActionInterface
         $uid          = scrub_in($_REQUEST['uid']);
         $object_id    = (int) scrub_in($_REQUEST['oid']);
         $session_id   = (string) scrub_in($_REQUEST['ssid']);
-        $name         = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
+        $client       = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = scrub_in($_REQUEST['cache']);
         $format       = scrub_in($_REQUEST['format']);
@@ -504,6 +504,12 @@ final class PlayAction implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
+        $sessionkey = $session_id ?: Stream::get_session();
+        $agent      = (!empty($client))
+            ? $client
+            : Session::agent($sessionkey);
+        $location   = Session::get_geolocation($sessionkey);
+
         /* If they are just trying to download make sure they have rights
          * and then present them with the download file
          */
@@ -512,9 +518,6 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    $sessionkey = $session_id ?: Stream::get_session();
-                    $agent      = Session::agent($sessionkey);
-                    $location   = Session::get_geolocation($sessionkey);
                     Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
                 }
             }
@@ -542,9 +545,6 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    $sessionkey = $session_id ?: Stream::get_session();
-                    $agent      = Session::agent($sessionkey);
-                    $location   = Session::get_geolocation($sessionkey);
                     Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
                 }
             } else {
@@ -771,9 +771,6 @@ final class PlayAction implements ApplicationActionInterface
                 if (($action != 'download') && $record_stats) {
                     Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
-                $sessionkey = $session_id ?: Stream::get_session();
-                $agent      = Session::agent($sessionkey);
-                $location   = Session::get_geolocation($sessionkey);
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                         debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
