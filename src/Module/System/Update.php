@@ -1484,7 +1484,7 @@ class Update
      */
     public static function update_500012()
     {
-        $retval = true;
+        $retval          = true;
         $sql             = "SELECT `id` FROM `user`";
         $db_users        = Dba::read($sql);
         $user_list       = array();
