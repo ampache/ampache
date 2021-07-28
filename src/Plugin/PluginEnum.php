@@ -55,7 +55,7 @@ final class PluginEnum
         'piwik' => AmpachePiwik::class,
         'rssview' => AmpacheRSSView::class,
         'shouthome' => AmpacheShoutHome::class,
-        'streambandwith' => AmpacheStreamBandwidth::class,
+        'streambandwidth' => AmpacheStreamBandwidth::class,
         'streamhits' => AmpacheStreamHits::class,
         'streamtime' => AmpacheStreamTime::class,
         'theaudiodb' => AmpacheTheaudiodb::class,

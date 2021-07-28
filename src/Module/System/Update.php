@@ -260,6 +260,9 @@ class Update
         $update_string = "* Add `total_count` to podcast table and fill counts into the column";
         $version[]     = array('version' => '500011', 'description' => $update_string);
 
+        $update_string = "* Move user bandwidth calculations out of the user format function into the user_data table";
+        $version[]     = array('version' => '500012', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1250,7 +1253,7 @@ class Update
         $retval &= Dba::write($sql);
         $sql    = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
         $retval &= Dba::write($sql);
-        $sql    = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        $sql    = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
         $retval &= Dba::write($sql);
         $sql    = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
         $retval &= Dba::write($sql);
@@ -1470,6 +1473,45 @@ class Update
         $retval &= Dba::write($sql);
         $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500012
+     *
+     * Move user bandwidth calculations out of the user format function into the user_data table
+     */
+    public static function update_500012()
+    {
+        $retval = true;
+        $sql             = "SELECT `id` FROM `user`";
+        $db_users        = Dba::read($sql);
+        $user_list       = array();
+        while ($results  = Dba::fetch_assoc($db_users)) {
+            $user_list[] = (int)$results['id'];
+        }
+        // Calculate their total Bandwidth Usage
+        foreach ($user_list as $user_id) {
+            $params = array($user_id);
+            $total  = 0;
+            $sql_s  = "SELECT SUM(`song`.`size`) as `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `object_count`.`user` = ?;";
+            $db_s   = Dba::read($sql_s, $params);
+            while ($results  = Dba::fetch_assoc($db_s)) {
+                $total = $total + (int)$results['size'];
+            }
+            $sql_v = "SELECT SUM(`video`.`size`) as `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+            $db_v  = Dba::read($sql_v, $params);
+            while ($results  = Dba::fetch_assoc($db_v)) {
+                $total = $total + (int)$results['size'];
+            }
+            $sql_p = "SELECT SUM(`podcast_episode`.`size`) as `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+            $db_p  = Dba::read($sql_p, $params);
+            while ($results  = Dba::fetch_assoc($db_p)) {
+                $total = $total + (int)$results['size'];
+            }
+            $retval &= Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total));
+        }
 
         return $retval;
     }

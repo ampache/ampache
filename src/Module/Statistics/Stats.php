@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -392,13 +393,14 @@ class Stats
      * @param string $agent
      * @param integer $user_id
      * @param integer $object_id
+     * @param string $object_type
      * @return PDOStatement|boolean
      */
-    public static function skip_last_play($date, $agent, $user_id, $object_id)
+    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type)
     {
         // change from a stream to a skip
-        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') ORDER BY `object_count`.`date` DESC";
-        Dba::write($sql, array($date, $agent, $user_id));
+        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
+        Dba::write($sql, array($date, $agent, $user_id, $object_type));
 
         // update the total counts as well
         if ($user_id > 0 && $agent !== 'debug') {
@@ -409,6 +411,10 @@ class Stats
             Dba::write($sql, array($song->album));
             $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` = ?";
             Dba::write($sql, array($song->artist));
+            if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
+                $sql  = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
+                Dba::write($sql, array($object_id, $object_id));
+            }
         }
 
         // To remove associated album and artist entries
@@ -452,7 +458,7 @@ class Stats
         // when the difference between recordings is too short, the previous object has been skipped, so note that
         if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
             debug_event(self::class, 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id']);
+            self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id'], $previous['object_type']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
             static::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
         }

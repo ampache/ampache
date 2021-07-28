@@ -482,8 +482,7 @@ class User extends database_object
      */
     public static function set_user_data($user_id, $key, $value)
     {
-        $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?";
-        Dba::write($sql, array($user_id, $key, $value));
+        Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, $key, $value));
     } // set_user_data
 
     /**
@@ -491,6 +490,7 @@ class User extends database_object
      * This updates some background data for user specific function
      * @param string $user_id
      * @param string $key
+     * @return array
      */
     public static function get_user_data($user_id, $key = null)
     {
@@ -1016,16 +1016,20 @@ class User extends database_object
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
         if ($details) {
-            /* Calculate their total Bandwidth Usage */
-            $sql        = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
-            $db_results = Dba::read($sql);
+            $user_data = self::get_user_data($this->id);
+            if (!isset($user_data['play_size'])) {
+                // Calculate their total Bandwidth Usage
+                $sql        = "SELECT SUM(`song`.`size`) as `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
+                $db_results = Dba::read($sql, array($this->id));
+                $result     = Dba::fetch_assoc($db_results);
+                // set the value for next time
+                self::set_user_data($this->id, 'play_size', (int)$result['play_size']);
+                $user_data['play_size'] = $result['play_size'];
+            }
 
-            $result = Dba::fetch_assoc($db_results);
-            $total  = $result['size'];
+            $this->f_usage = Ui::format_bytes((int)$user_data['play_size']);
 
-            $this->f_usage = Ui::format_bytes($total);
-
-            /* Get Users Last ip */
+            // Get Users Last ip
             if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId()))) {
                 $user_ip          = inet_ntop($data['0']['ip']);
                 $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
