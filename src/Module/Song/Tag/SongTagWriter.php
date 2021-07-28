@@ -55,7 +55,7 @@ final class SongTagWriter implements SongTagWriterInterface
     public function write(
         Song $song
     ): void {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_TAGS) === false) {
             return;
         }
         

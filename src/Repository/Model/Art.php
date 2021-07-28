@@ -349,7 +349,7 @@ class Art extends database_object
         $this->reset();
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
         
-        if (AmpConfig::get('write_id3_art', false)) {
+        if (AmpConfig::get('write_tags', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
