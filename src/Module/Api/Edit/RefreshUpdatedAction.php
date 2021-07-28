@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Edit;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -75,10 +76,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
         int $object_id
     ): ?ResponseInterface {
         /**
-         * @todo Every editable itemtype will need some sort of special handling here
+         * @todo Every editable item type will need some sort of special handling here
          */
         if ($object_type === 'song_row') {
-            $results = preg_replace(
+            $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+            $results      = preg_replace(
                 '/<\/?html(.|\s)*?>/',
                 '',
                 $this->talFactory->createTalView()
@@ -87,6 +89,12 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                     ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                     ->setContext('IS_TABLE_VIEW', true)
+                    ->setContext('IS_SHOW_TRACK', false)
+                    ->setContext('IS_SHOW_LICENSE', $show_license)
+                    ->setContext('IS_HIDE_ARTIST', false)
+                    ->setContext('IS_HIDE_ALBUM', false)
+                    ->setContext('IS_HIDE_YEAR', false)
+                    ->setContext('IS_HIDE_DRAG', true)
                     ->setTemplate('song_row.xhtml')
                     ->render()
             );
