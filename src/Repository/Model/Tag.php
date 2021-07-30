@@ -550,15 +550,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = ($type == 'album')
             ? "SELECT DISTINCT MIN(`tag_map`.`object_id`) as `object_id` FROM `tag_map` LEFT JOIN `album` ON `tag_map`.`object_id` = `album`.`id` "
             : "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` ";
-        $sql .= "WHERE $tag_sql `tag_map`.`object_type` = ? ";
+        $sql .= "WHERE $tag_sql `tag_map`.`object_type` = ?";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
         if ($type == 'album') {
             if (AmpConfig::get('album_group')) {
-                $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`";
             } else {
-                $sql .= "GROUP BY `album`.`id`, `album`.`disk`";
+                $sql .= " GROUP BY `album`.`id`, `album`.`disk`";
             }
         }
         $sql .= $limit_sql;
