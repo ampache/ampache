@@ -363,6 +363,9 @@ class Api
         $album_count = (Preference::get('album_group', $client->id))
             ? (int)$counts['album_group']
             : (int)$counts['album'];
+        $playlists = (AmpConfig::get('hide_search', false))
+            ? ((int)$counts['playlist'])
+            : ((int)$counts['playlist'] + (int)$counts['search']);
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
@@ -375,7 +378,8 @@ class Api
             'albums' => $album_count,
             'artists' => (int)$counts['artist'],
             'genres' => (int)$counts['tag'],
-            'playlists' => ((int)$counts['playlist'] + (int)$counts['search']),
+            'playlists' => $playlists,
+            'searches' => ((int)$counts['search']),
             'users' => ((int)$counts['user'] + (int)$counts['user']),
             'catalogs' => (int)$counts['catalog'],
             'videos' => (int)$counts['video'],
