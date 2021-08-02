@@ -594,11 +594,9 @@ div.jp-playlist {
     background-color: #f8f8f8 !important;
 }
 
-div.playing_title a {
-    color: #000;
-}
-
-div.playing_artist a {
+div.playing_title a,
+div.playing_artist a,
+div.playing_lyrics a {
     color: #000;
 }
 
