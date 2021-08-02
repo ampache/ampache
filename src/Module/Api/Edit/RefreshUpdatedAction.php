@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -80,8 +81,14 @@ final class RefreshUpdatedAction extends AbstractEditAction
          * @todo Every editable item type will need some sort of special handling here
          */
         if ($object_type === 'song_row') {
-            $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
-            $results      = preg_replace(
+            $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+            $argument_param = '&hide=' . Core::get_request('hide');
+            $argument       = explode(',', Core::get_request('hide'));
+            $hide_artist    = in_array('cel_artist', $argument);
+            $hide_album     = in_array('cel_album', $argument);
+            $hide_year      = in_array('cel_year', $argument);
+            $hide_drag      = in_array('cel_drag', $argument);
+            $results        = preg_replace(
                 '/<\/?html(.|\s)*?>/',
                 '',
                 $this->talFactory->createTalView()
@@ -90,13 +97,14 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
                     ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                     ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                    ->setContext('ARGUMENT_PARAM', $argument_param)
                     ->setContext('IS_TABLE_VIEW', true)
-                    ->setContext('IS_SHOW_TRACK', false)
+                    ->setContext('IS_SHOW_TRACK', (!empty($argument)))
                     ->setContext('IS_SHOW_LICENSE', $show_license)
-                    ->setContext('IS_HIDE_ARTIST', false)
-                    ->setContext('IS_HIDE_ALBUM', false)
-                    ->setContext('IS_HIDE_YEAR', false)
-                    ->setContext('IS_HIDE_DRAG', true)
+                    ->setContext('IS_HIDE_ARTIST', $hide_artist)
+                    ->setContext('IS_HIDE_ALBUM', $hide_album)
+                    ->setContext('IS_HIDE_YEAR', $hide_year)
+                    ->setContext('IS_HIDE_DRAG', $hide_drag)
                     ->setTemplate('song_row.xhtml')
                     ->render()
             );

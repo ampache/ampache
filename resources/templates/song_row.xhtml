@@ -71,7 +71,7 @@
         <a
                 tal:condition="SONG/isEditable"
                 id="edit_song_${SONG/getId}"
-                onclick="showEditDialog('song_row', '${SONG/getId}', 'edit_song_${SONG/getId}', '${SONG/getEditButtonTitle}', 'song_')"
+                onclick="showEditDialog('song_row', '${SONG/getId}', 'edit_song_${SONG/getId}', '${SONG/getEditButtonTitle}', 'song_', '${ARGUMENT_PARAM}')"
                 tal:content="structure SONG/getEditIcon"
         >EDIT</a>
         <span

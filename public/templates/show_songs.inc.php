@@ -35,6 +35,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 /** @var array $hide_columns */
+/** @var string $argument_param */
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
@@ -133,6 +134,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
                         ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                        ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
                         ->setContext('IS_SHOW_LICENSE', $show_license)

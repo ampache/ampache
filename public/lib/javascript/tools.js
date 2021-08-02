@@ -218,7 +218,7 @@ function handleShareAction(url) {
 var tag_choices;
 var label_choices;
 
-function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_row_prefix) {
+function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_row_prefix, argument_string) {
     var parent = this;
     parent.editFormId = "form#" + edit_form_id;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_object&id=" + edit_id + "&type=" + edit_type;
@@ -263,7 +263,7 @@ function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_ro
                             new_id = parent.editId;
                         }
 
-                        var url = jsAjaxServer + "/edit.server.php?action=refresh_updated&type=" + parent.editType + "&id=" + new_id;
+                        var url = jsAjaxServer + "/edit.server.php?action=refresh_updated&type=" + parent.editType + "&id=" + new_id + argument_string;
                         // Reload only table
                         $("#" + parent.refreshRowPrefix + parent.editId).load(url, function() {
                             // Update the current row identifier with new id
