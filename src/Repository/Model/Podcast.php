@@ -47,8 +47,8 @@ class Podcast extends database_object implements library_item
     public $lastbuilddate;
     public $lastsync;
     public $total_count;
-
     public $episodes;
+
     public $f_title;
     public $f_website;
     public $f_description;
@@ -133,30 +133,6 @@ class Podcast extends database_object implements library_item
     } // get_episodes
 
     /**
-     * _get_extra info
-     * This returns the extra information for the podcast, this means totals etc
-     * @return array
-     */
-    private function _get_extra_info()
-    {
-        // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('podcast_extra', $this->id)) {
-            $row = parent::get_from_cache('podcast_extra', $this->id);
-        } else {
-            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $row        = Dba::fetch_assoc($db_results);
-
-            parent::add_to_cache('podcast_extra', $this->id, $row);
-        }
-
-        /* Set Object Vars */
-        $this->episodes = $row['episode_count'];
-
-        return $row;
-    } // _get_extra_info
-
-    /**
      * format
      * this function takes the object and formats some values
      * @param boolean $details
@@ -175,10 +151,6 @@ class Podcast extends database_object implements library_item
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
-
-        if ($details) {
-            $this->_get_extra_info();
-        }
 
         return true;
     }
@@ -455,6 +427,8 @@ class Podcast extends database_object implements library_item
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $afterdate);
         }
+        $time   = time();
+        $params = array($this->id);
 
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
@@ -463,7 +437,7 @@ class Podcast extends database_object implements library_item
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->change_state('pending');
@@ -476,14 +450,17 @@ class Podcast extends database_object implements library_item
         $keepnb = AmpConfig::get('podcast_keep');
         if ($keepnb > 0) {
             $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->remove();
             }
         }
+        // update the episode count after adding / removing episodes
+        $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
+        Dba::write($sql, $params);
         Catalog::update_mapping('podcast_episode');
-        $this->update_lastsync(time());
+        $this->update_lastsync($time);
     }
 
     /**

@@ -264,6 +264,9 @@ class Update
         $update_string = "* Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)<br />* Add username to the playlist table to stop pulling user all the time";
         $version[]     = array('version' => '500013', 'description' => $update_string);
 
+        $update_string = "* Add `episodes` to podcast table to track episode count";
+        $version[]     = array('version' => '500014', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1556,6 +1559,22 @@ class Update
         $retval &= Dba::write($sql, array(T_('System')));
         $sql = "UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;";
         $retval &= Dba::write($sql, array(T_('System')));
+
+        return $retval;
+    }
+
+    /**
+     * update_500014
+     *
+     * Add `episodes` to podcast table to track episode count
+     */
+    public static function update_500014()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast` ADD `episodes` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
