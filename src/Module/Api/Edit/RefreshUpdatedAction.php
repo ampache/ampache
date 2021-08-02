@@ -31,6 +31,7 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -86,6 +87,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $this->talFactory->createTalView()
                     ->setContext('BROWSE_ARGUMENT', '')
                     ->setContext('USER_IS_REGISTERED', true)
+                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
                     ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                     ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                     ->setContext('IS_TABLE_VIEW', true)
