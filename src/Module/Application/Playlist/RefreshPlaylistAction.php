@@ -71,7 +71,7 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
             $objects  = $search->get_items();
             if ($playlist->has_access() && !empty($objects)) {
                 $playlist->delete_all();
-                debug_event(self::class, 'Refreshing playlist {' . $playlist->id . '} from search {' . $search->id . '}', 5);
+                debug_event(self::class, 'Refreshing playlist {' . $playlist->id . '} from search {' . $search->id . '} for user {' . $user->id . '}', 5);
                 $playlist->add_medias($objects);
             }
         }
