@@ -169,11 +169,11 @@ class easy_captcha
             }
         }
 
-        #-- remove if done
         if (!$this->is_valid() /*&& !$this->delete()*/) {
+            #-- remove if done
             $this->generate(); // ensure object instance can be reused - for quirky form processing logic
-        } #-- store state/result
-        else {
+        } else {
+            #-- store state/result
             $this->save();
         }
 

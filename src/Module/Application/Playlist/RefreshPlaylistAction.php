@@ -60,12 +60,14 @@ final class RefreshPlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $userId     = $request->getQueryParams()['user_id'] ?? null;
         $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
         $searchId   = $request->getQueryParams()['search_id'] ?? null;
         if ($playlistId !== null && $searchId !== null) {
             // Check rights
+            $user     = $this->modelFactory->createUser((int)$userId);
             $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
-            $search   = $this->modelFactory->createSearch((int)$searchId);
+            $search   = $this->modelFactory->createSearch((int)$searchId, 'song', $user);
             $objects  = $search->get_items();
             if ($playlist->has_access() && !empty($objects)) {
                 $playlist->delete_all();

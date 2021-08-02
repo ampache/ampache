@@ -509,8 +509,7 @@ class AmpacheHttpq extends localplay_controller
                                 $data['link'] = $media->site_url;
                                 break;
                         } // end switch on type
-                    } // end if results
-                    else {
+                    } else {
                         $data['name'] = basename($data['raw']);
                         $data['link'] = basename($data['raw']);
                     }

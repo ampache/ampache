@@ -94,9 +94,8 @@ final class UploadArtAction extends AbstractArtAction
                     $burl
                 );
             }
-        }
-        // Else it failed
-        else {
+        } else {
+            // Else it failed
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'),

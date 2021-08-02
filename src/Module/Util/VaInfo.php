@@ -1713,8 +1713,7 @@ final class VaInfo implements VaInfoInterface
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
-    }
-    // set_broken
+    } // set_broken
 
     /**
      *

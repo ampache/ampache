@@ -89,8 +89,7 @@ class AmpConfig
         }
 
         return 0;
-    }
-    // get_rating_filter
+    } // get_rating_filter
 
     /**
      * set

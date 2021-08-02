@@ -155,8 +155,7 @@ $(document).ready(function() {
             result[temp[0].substring(3)] = temp[1];
         }
     }
-    // Finds the elements and if the cookie is collapsed, it
-    // collapsed the found element.
+    // Finds the elements and if the cookie is collapsed, it collapsed the found element.
     for (var key in result) {
         if ($("#" + key).length && result[key] == "collapsed") {
             $("#" + key).removeClass("expanded");

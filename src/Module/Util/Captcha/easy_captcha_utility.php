@@ -86,8 +86,8 @@ class easy_captcha_utility
 
                     #-- sendresult
                     easy_captcha_utility::js_rpc($okay);
-                } #-- generate and send image file
-                else {
+                } else {
+                    #-- generate and send image file
                     if ($expired) {
                         $type = "image/png";
                         $bin  = easy_captcha_utility::expired_png();

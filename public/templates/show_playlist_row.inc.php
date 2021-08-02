@@ -70,7 +70,6 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_last_update"><?php echo $libitem->f_last_update ?></td>
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
 <td class="cel_medias"><?php echo $libitem->get_media_count(); ?></td>
-<td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <?php
     if ($show_ratings) { ?>
         <td class="cel_ratings">
@@ -109,7 +108,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     if ($libitem->has_access()) {
         $search_id = $libitem->has_search();
         if ($search_id > 0) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&id=<?php echo $libitem->id; ?>&search_id=<?php echo $search_id; ?>">
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&id=<?php echo $libitem->id; ?>&search_id=<?php echo $search_id; ?>&user_id=<?php echo $playlist->user; ?>">
                 <?php echo Ui::get_icon('file_refresh', T_('Refresh from Smartlist')); ?>
             </a>
         <?php } ?>

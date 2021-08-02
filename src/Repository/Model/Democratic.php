@@ -171,8 +171,7 @@ class Democratic extends Tmp_Playlist
 
     /**
      * get_playlists
-     * This returns all of the current valid 'Democratic' Playlists
-     * that have been created.
+     * This returns all of the current valid 'Democratic' Playlists that have been created.
      */
     public static function get_playlists()
     {

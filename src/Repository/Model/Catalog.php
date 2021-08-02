@@ -703,7 +703,7 @@ abstract class Catalog extends database_object
         $this->f_clean       = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
         $this->f_filter_user = ($this->filter_user == 0)
             ? T_('Public Catalog')
-            : static::getUserRepository()->getUsernameById($this->filter_user);
+            : User::get_username($this->filter_user);
     }
 
     /**
@@ -1243,7 +1243,7 @@ abstract class Catalog extends database_object
      */
     public static function get_id_from_file($file_path, $media_type)
     {
-        $sql        = "SELECT `id` FROM `$media_type` WHERE `file` = ?";
+        $sql        = "SELECT `id` FROM `$media_type` WHERE `file` = ?;";
         $db_results = Dba::read($sql, array($file_path));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -3033,8 +3033,7 @@ abstract class Catalog extends database_object
                 }
                 break;
         } // end switch
-    }
-    // export
+    } // export
 
     /**
      * Update the catalog mapping for various types
@@ -3480,15 +3479,5 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

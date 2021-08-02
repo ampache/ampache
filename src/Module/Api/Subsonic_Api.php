@@ -981,8 +981,7 @@ class Subsonic_Api
         $user     = User::get_from_username((string)$username);
 
         // Don't allow playlist listing for another user
-        Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($user->id),
-            Playlist::get_smartlists($user->id));
+        Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
         self::apiOutput($input, $response);
     }
 

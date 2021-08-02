@@ -136,7 +136,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <?php $search_id = $playlist->has_search();
         if ($search_id > 0) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>&user_id=<?php echo $playlist->user; ?>">
                     <?php echo Ui::get_icon('file_refresh'); ?>
                     <?php echo T_('Refresh from Smartlist'); ?>
                 </a>

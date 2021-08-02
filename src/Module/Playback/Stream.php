@@ -131,8 +131,7 @@ class Stream
             if ($bit_rate > $user_bit_rate) {
                 $bit_rate = $user_bit_rate;
             }
-        } // end if we've got bitrates
-        else {
+        } else {
             $bit_rate = $user_bit_rate;
         }
 

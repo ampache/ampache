@@ -278,8 +278,8 @@ class AmazonSearch
             foreach ($asin as $key => $value) {
                 $this->runSearchAsin($key);
             }
-        } // if array of asin's
-        else {
+        } else {
+            // if array of asin's
             $this->runSearchAsin($asin);
         } // else
 

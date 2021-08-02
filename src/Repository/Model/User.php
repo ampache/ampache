@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -1132,8 +1133,8 @@ class User extends database_object
                 $row['value'] = Dba::escape($row['value']);
                 $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND `value`='" . Dba::escape($row['value']) . "'";
                 Dba::write($sql);
-            } // if its set
-            else {
+            } else {
+                // if its set
                 $results[$pref_id] = 1;
             }
         } // end while
@@ -1274,6 +1275,21 @@ class User extends database_object
     public function get_fullname()
     {
         return $this->f_name;
+    }
+
+    /**
+     * Get item name based on whether they allow public fullname access.
+     * @param int $user_id
+     * @return string
+     */
+    public static function get_username($user_id)
+    {
+        $users    = static::getUserRepository()->getValidArray(true);
+        $username = (isset($users[$user_id]))
+            ? $users[$user_id]
+            : T_('System');
+
+        return $username;
     }
 
     /**
@@ -1421,5 +1437,15 @@ class User extends database_object
         global $dic;
 
         return $dic->get(IpHistoryRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

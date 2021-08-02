@@ -570,12 +570,10 @@ class AmpacheVlc extends localplay_controller
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album']  = $song->get_album_name();
-        } // if not a known format
-        else {
-            $array['track_title'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'],
-                0, 25));
-            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'],
-                0, 20));
+        } else {
+            // if not a known format
+            $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
 
         return $array;

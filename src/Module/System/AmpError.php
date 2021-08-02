@@ -66,8 +66,8 @@ class AmpError
             AmpError::$state           = true;
             AmpError::$errors[$name]   = $message;
             $_SESSION['errors'][$name] = $message;
-        } // They want us to append the error, add a BR\n and then the message
-        else {
+        } else {
+            // They want us to append the error, add a BR\n and then the message
             AmpError::$state = true;
             AmpError::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .= "<br />\n" . $message;

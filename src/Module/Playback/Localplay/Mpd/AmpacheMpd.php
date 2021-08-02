@@ -507,9 +507,7 @@ class AmpacheMpd extends localplay_controller
                                 $data['link'] = $media->site_url;
                                 break;
                         } // end switch on type
-                    } // end if results
-
-                    else {
+                    } else {
                         $title_string = ($entry['Title'] && $entry['Album'] && $entry['Artist']) ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist'] : T_('Unknown');
                         $data['name'] = $title_string;
                         $data['link'] = '';

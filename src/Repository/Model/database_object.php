@@ -78,6 +78,11 @@ abstract class database_object
         return $row;
     } // get_info
 
+    /**
+     * getTableName
+     * @param $table_name
+     * @return string
+     */
     private function getTableName($table_name): string
     {
         if (!$table_name) {
@@ -163,8 +168,7 @@ abstract class database_object
         self::$object_cache[$index][$object_id] = $value;
 
         return true;
-    }
-    // add_to_cache
+    } // add_to_cache
 
     /**
      * remove_from_cache

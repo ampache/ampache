@@ -134,8 +134,8 @@ class Waveform
                         } else {
                             debug_event(self::class, 'tmp_dir_path setting required for waveform.', 3);
                         }
-                    } // Already wav file, no transcode required
-                    else {
+                    } else {
+                        // Already wav file, no transcode required
                         $waveform = self::create_waveform($song->file);
                     }
                 }

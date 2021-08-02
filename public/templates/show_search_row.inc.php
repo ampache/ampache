@@ -58,7 +58,6 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
-<td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php
             // @todo remove after refactoring
