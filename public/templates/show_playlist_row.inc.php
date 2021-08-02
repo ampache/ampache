@@ -108,7 +108,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     if ($libitem->has_access()) {
         $search_id = $libitem->has_search();
         if ($search_id > 0) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&playlist_id=<?php echo $libitem->id; ?>&search_id=<?php echo $search_id; ?>&user_id=<?php echo $playlist->user; ?>">
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $libitem->user; ?>&playlist_id=<?php echo $libitem->id; ?>&search_id=<?php echo $search_id; ?>">
                 <?php echo Ui::get_icon('file_refresh', T_('Refresh from Smartlist')); ?>
             </a>
         <?php } ?>
