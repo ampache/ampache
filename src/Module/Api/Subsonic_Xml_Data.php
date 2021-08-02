@@ -1108,9 +1108,8 @@ class Subsonic_Xml_Data
         $duration    = ($songcount > 0) ? $playlist->get_total_duration() : 0;
         $xplaylist   = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', $playlist_id);
-        $xplaylist->addAttribute('name', (string)self::checkName($playlist->name));
-        $user = new User($playlist->user);
-        $xplaylist->addAttribute('owner', (string)$user->username);
+        $xplaylist->addAttribute('name', (string)self::checkName($playlist->get_fullname()));
+        $xplaylist->addAttribute('owner', (string)$playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", (int)$playlist->date));
         $xplaylist->addAttribute('changed', date("c", (int)$playlist->last_update));
@@ -1168,9 +1167,8 @@ class Subsonic_Xml_Data
         $xplaylist   = $xml->addChild('playlist');
         debug_event(self::class, 'addsmartplaylist ' . $playlist->id, 5);
         $xplaylist->addAttribute('id', $playlist_id);
-        $xplaylist->addAttribute('name', (string) self::checkName($playlist->name));
-        $user = new User($playlist->user);
-        $xplaylist->addAttribute('owner', (string)$user->username);
+        $xplaylist->addAttribute('name', (string) self::checkName($playlist->get_fullname()));
+        $xplaylist->addAttribute('owner', (string)$playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", (int)$playlist->date));
         $xplaylist->addAttribute('changed', date("c", time()));

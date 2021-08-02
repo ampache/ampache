@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
@@ -551,11 +552,7 @@ class Search extends playlist_object
         $this->type_text('album_tag', T_('Album Genre'));
         $this->type_text('artist_tag', T_('Artist Genre'));
 
-        $users = array();
-        foreach ($this->getUserRepository()->getValid() as $user_id) {
-            $user            = new User($user_id);
-            $users[$user_id] = $user->username;
-        }
+        $users = $this->getUserRepository()->getValidArray();
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
         $this->type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users);
         $this->type_select('other_user_artist', T_('Another User (Artist)'), 'user_numeric', $users);
@@ -570,21 +567,14 @@ class Search extends playlist_object
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
         }
 
-        $playlists = array();
-        foreach (Playlist::get_playlists() as $playlistid) {
-            $playlist = new Playlist($playlistid);
-            $playlist->format(false);
-            $playlists[$playlistid] = $playlist->f_name;
+        $playlists = Playlist::get_playlist_array((int)$this->search_user);
+        if (!empty($playlists)) {
+            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists);
         }
-        $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists);
-
-        $playlists = array();
-        $searches  = self::get_searches();
-        foreach ($searches as $playlistid) {
-            // Slightly different from the above so we don't instigate a vicious loop.
-            $playlists[$playlistid] = self::get_name_byid($playlistid);
+        $playlists = self::get_search_array((int)$this->search_user);
+        if (!empty($playlists)) {
+            $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists);
         }
-        $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists);
 
         $this->type_text('playlist_name', T_('Playlist Name'));
 
@@ -680,11 +670,7 @@ class Search extends playlist_object
 
         $this->type_text('tag', T_('Genre'));
 
-        $users = array();
-        foreach ($this->getUserRepository()->getValid() as $user_id) {
-            $user            = new User($user_id);
-            $users[$user_id] = $user->username;
-        }
+        $users = $this->getUserRepository()->getValidArray();
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
@@ -743,11 +729,7 @@ class Search extends playlist_object
 
         $this->type_text('tag', T_('Genre'));
 
-        $users = array();
-        foreach ($this->getUserRepository()->getValid() as $user_id) {
-            $user            = new User($user_id);
-            $users[$user_id] = $user->username;
-        }
+        $users = $this->getUserRepository()->getValidArray();
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
@@ -890,20 +872,73 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
+     * @param integer $user_id
      * @return array
      */
-    public static function get_searches()
+    public static function get_searches($user_id = null)
     {
-        $sql = "SELECT `id` FROM `search` WHERE `type`='public' OR `user`='" . Core::get_global('user')->id . "' ORDER BY `name`";
+        $user_id = Core::get_global('user')->id;
+        $key     = 'searches';
+        if (parent::is_cached($key, $user_id)) {
+            return parent::get_from_cache($key, $user_id);
+        }
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $sql      = "SELECT `id` FROM `search` ";
+        $params   = array();
 
-        $db_results = Dba::read($sql);
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
+            $params[] = $user_id;
+        }
+        $sql .= "ORDER BY `name`";
+
+        $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[$row['id']] = $row['name'];
         }
+
+        parent::add_to_cache($key, $user_id, $results);
 
         return $results;
     }
+
+    /**
+     * get_search_array
+     * Returns a list of searches accessible by the user with formatted name.
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get_search_array($user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
+        }
+        $key = 'searcharray';
+        if (parent::is_cached($key, $user_id)) {
+            return parent::get_from_cache($key, $user_id);
+        }
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `search` ";
+        $params   = array($user_id);
+
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
+            $params[] = $user_id;
+        }
+        $sql .= "ORDER BY `name`";
+        //debug_event(self::class, 'get_searches query: ' . $sql, 5);
+
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        parent::add_to_cache($key, $user_id, $results);
+
+        return $results;
+    } // get_smartlist_array
 
     /**
      * run
@@ -980,7 +1015,7 @@ class Search extends playlist_object
      */
     public function format($details = true)
     {
-        parent::format($details);
+        parent::format();
 
         $this->link   = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
@@ -1185,21 +1220,23 @@ class Search extends playlist_object
      */
     public function save()
     {
+        $user = Core::get_global('user');
         // Make sure we have a unique name
         if (!$this->name) {
-            $this->name = Core::get_global('user')->username . ' - ' . get_datetime(time());
+            $this->name = $user->username . ' - ' . get_datetime(time());
         }
-        $sql        = "SELECT `id` FROM `search` WHERE `name` = ?";
-        $db_results = Dba::read($sql, array($this->name));
+        $sql        = "SELECT `id` FROM `search`  WHERE `name` = ? AND `user` = ? AND `type` = ?;";
+        $db_results = Dba::read($sql, array($this->name, $user->id, $this->type));
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array(
             $this->name,
             $this->type,
-            Core::get_global('user')->id,
+            $user->id,
+            $user->username,
             json_encode($this->rules),
             $this->logic_operator,
             ($this->random > 0) ? 1 : 0,

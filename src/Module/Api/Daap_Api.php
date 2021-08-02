@@ -407,13 +407,11 @@ class Daap_Api
                 $library = self::base_library();
                 foreach ($playlists as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
-                    $playlist->format();
                     $library .= self::tlv_playlist($playlist);
                 }
-                foreach ($searches as $search_id) {
-                    $playlist = new Search($search_id, 'song');
-                    $playlist->format();
-                    $library .= self::tlv_playlist($playlist);
+                foreach ($searches as $search) {
+                    $playlist = new Search($search['id'], 'song');
+                    $library .= self::tlv_playlist($playlist, true);
                 }
                 $output .= self::tlv('dmap.listing', $library);
 
@@ -597,18 +595,15 @@ class Daap_Api
 
     /**
      * @param Playlist|Search $playlist
+     * @param bool $isSmart
      * @return string
      */
-    public static function tlv_playlist($playlist)
+    public static function tlv_playlist($playlist, $isSmart = false)
     {
-        $isSmart = false;
-        if (get_class($playlist) == Search::class) {
-            $isSmart = true;
-        }
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist = self::tlv('dmap.itemid', $pl_id);
         $plist .= self::tlv('dmap.persistentid', $pl_id);
-        $plist .= self::tlv('dmap.itemname', $playlist->f_name);
+        $plist .= self::tlv('dmap.itemname', $playlist->name);
         $plist .= self::tlv('dmap.itemcount', count($playlist->get_items()));
         if ($isSmart) {
             $plist .= self::tlv('com.apple.itunes.smart-playlist', 1);

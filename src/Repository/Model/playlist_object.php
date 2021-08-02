@@ -49,6 +49,10 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $user;
     /**
+     * @var string $user
+     */
+    public $username;
+    /**
      * @var string $type
      */
     public $type;
@@ -64,10 +68,6 @@ abstract class playlist_object extends database_object implements library_item
      * @var string $f_name
      */
     public $f_name;
-    /**
-     * @var string $f_user
-     */
-    public $f_user;
 
     /**
      * @return array
@@ -76,20 +76,16 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * format
-     * This takes the current playlist object and gussies it up a little
-     * bit so it is presentable to the users
+     * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
      * @param boolean $details
      */
     public function format($details = true)
     {
-        $this->f_name = $this->name;
+        // format shared lists using the username
+        $this->f_name = (($this->user == Core::get_global('user')->id))
+            ? $this->name
+            : $this->name . " (" . $this->username . ")";
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
-
-        if ($details) {
-            $client = new User($this->user);
-            $client->format();
-            $this->f_user = $client->f_name;
-        }
     } // format
 
     /**
@@ -148,6 +144,12 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = (($this->user == Core::get_global('user')->id))
+                ? $this->name
+                : $this->name . " (" . $this->username . ")";
+        }
+
         return $this->f_name;
     }
 

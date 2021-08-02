@@ -189,6 +189,12 @@ final class SongRepository implements SongRepositoryInterface
 
     public function delete(int $songId): bool
     {
+        // keep details about deletions
+        Dba::write(
+            'REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;',
+            [$songId]
+        );
+
         $deleted = Dba::write(
             'DELETE FROM `song` WHERE `id` = ?',
             [$songId]

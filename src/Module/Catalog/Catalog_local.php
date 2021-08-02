@@ -417,23 +417,23 @@ class Catalog_local extends Catalog
             } // end if iconv
 
             if ($is_playlist) {
+                // if it's a playlist
                 debug_event('local.catalog', 'Found playlist file to import: ' . $full_file, 5);
                 $this->_playlists[] = $full_file;
-            } // if it's a playlist
-
-            else {
+            } else {
                 if (count($this->get_gather_types('music')) > 0) {
                     if ($is_audio_file) {
+                        debug_event('local.catalog', 'Found song file to import: ' . $full_file, 5);
                         $this->insert_local_song($full_file, $options);
                     } else {
-                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.",
-                            5);
+                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.", 5);
 
                         return false;
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
                         if ($is_video_file) {
+                            debug_event('local.catalog', 'Found video file to import: ' . $full_file, 5);
                             $this->insert_local_video($full_file, $options);
                         } else {
                             debug_event('local.catalog',
@@ -453,8 +453,8 @@ class Catalog_local extends Catalog
             } // if it's not an m3u
 
             return true;
-        } // if it matches the pattern
-        else {
+        } else {
+            // if it matches the pattern
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
             }
@@ -699,8 +699,7 @@ class Catalog_local extends Catalog
 
     /**
      * _clean_chunk
-     * This is the clean function, its broken into
-     * said chunks to try to save a little memory
+     * This is the clean function and is broken into chunks to try to save a little memory
      * @param $media_type
      * @param $chunk
      * @param $chunk_size
@@ -714,8 +713,8 @@ class Catalog_local extends Catalog
 
         $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
@@ -727,15 +726,14 @@ class Catalog_local extends Catalog
             }
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if ($file_info < 1) {
-                debug_event('local.catalog', 'File not found or empty: ' . $results['file'], 5);
+                debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
 
-
                 // Store it in an array we'll delete it later...
                 $dead[] = $results['id'];
-            } // if error
-            else {
+            } else {
+                // if error
                 if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
                     debug_event('local.catalog', $results['file'] . ' is not readable, but does exist', 1);
                 }
@@ -757,13 +755,29 @@ class Catalog_local extends Catalog
     {
         $file_info = Core::get_filesize(Core::conv_lc_file($file));
         if ($file_info < 1) {
-            debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
+            $object_id = Catalog::get_id_from_file($file, $media_type);
+            debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
-            Dba::write($sql);
+            $params    = array($object_id);
+            switch ($media_type) {
+                case 'song':
+                    $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;";
+                    Dba::write($sql, $params);
+                    break;
+                case 'video':
+                    $sql = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
+                    Dba::write($sql, $params);
+                    break;
+                case 'podcast_episode':
+                    $sql = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` = ?;";
+                    Dba::write($sql, $params);
+                    break;
+            }
+            $sql = "DELETE FROM `$media_type` WHERE `id` = ?";
+            Dba::write($sql, $params);
         } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
-            debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
+            debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
     } // clean_file
 

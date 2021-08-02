@@ -70,15 +70,23 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function getValid(bool $includeDisabled = false): array
     {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'users_all'
+            : 'users_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
         $users = array();
         $sql   = ($includeDisabled)
-            ? 'SELECT `id` FROM `user`'
-            : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\'';
+            ? 'SELECT `id` FROM `user`;'
+            : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\';';
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[] = (int) $results['id'];
         }
+        User::add_to_cache($key, $value, $users);
 
         return $users;
     }
@@ -91,32 +99,25 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function getValidArray(bool $includeDisabled = false): array
     {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'userarray_all'
+            : 'userarray_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
         $users = array();
         $sql   = ($includeDisabled)
-            ? 'SELECT `id`, `username` FROM `user`'
-            : 'SELECT `id`, `username` FROM `user` WHERE `disabled` = \'0\'';
+            ? 'SELECT `id`, `username` FROM `user`;'
+            : 'SELECT `id`, `username` FROM `user` WHERE `disabled` = \'0\';';
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[(int) $results['id']] = $results['username'];
         }
+        User::add_to_cache($key, $value, $users);
 
         return $users;
-    }
-
-    /**
-     * This returns username for an id (or an empty string)
-     */
-    public function getUsernameById(int $user_id): string
-    {
-        $db_results = Dba::read(
-            'SELECT `username` FROM `user` WHERE `id`= ?',
-            [$user_id]
-        );
-
-        $data = Dba::fetch_assoc($db_results);
-
-        return (string)$data['username'];
     }
 
     /**

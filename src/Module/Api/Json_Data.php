@@ -557,29 +557,19 @@ class Json_Data
              * playlist  = 1000000
              */
             if ((int) $playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
-                $playlist->format();
-
-                $playlist_name = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
-                $playlist_user = ($playlist->type !== 'public')
-                    ? $playlist->f_user
-                    : $playlist->type;
-
-                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playlist       = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
-                $playlist_type  = $playlist->type;
                 $object_type    = 'search';
             } else {
-                $playlist    = new Playlist($playlist_id);
-                $playlist_id = $playlist->id;
-                $playlist->format();
-
-                $playlist_name  = $playlist->name;
-                $playlist_user  = $playlist->f_user;
+                $playlist       = new Playlist($playlist_id);
+                $playlist_id    = $playlist->id;
                 $playitem_total = $playlist->get_media_count('song');
-                $playlist_type  = $playlist->type;
                 $object_type    = 'playlist';
             }
+            $playlist_name = $playlist->get_fullname();
+            $playlist_user = $playlist->username;
+            $playlist_type = $playlist->type;
 
             if ($songs) {
                 $items          = array();

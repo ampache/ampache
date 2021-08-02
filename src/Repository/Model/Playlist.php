@@ -115,6 +115,12 @@ class Playlist extends playlist_object
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
+        $key = 'playlistids';
+        if (empty($playlist_name)) {
+            if (parent::is_cached($key, $user_id)) {
+                return parent::get_from_cache($key, $user_id);
+            }
+        }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = array();
@@ -136,8 +142,49 @@ class Playlist extends playlist_object
             $results[] = (int)$row['id'];
         }
 
+        if (empty($playlist_name)) {
+            parent::add_to_cache($key, $user_id, $results);
+        }
+
         return $results;
     } // get_playlists
+
+    /**
+     * get_playlist_array
+     * Returns a list of playlists accessible by the user with formatted name.
+     * @param integer $user_id
+     * @return integer[]
+     */
+    public static function get_playlist_array($user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
+        }
+        $key = 'playlistarray';
+        if (parent::is_cached($key, $user_id)) {
+            return parent::get_from_cache($key, $user_id);
+        }
+        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+        $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `playlist` ";
+        $params   = array($user_id);
+
+        if (!$is_admin) {
+            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
+            $params[] = $user_id;
+        }
+        $sql .= "ORDER BY `name`";
+        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
+
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        parent::add_to_cache($key, $user_id, $results);
+
+        return $results;
+    } // get_playlist_array
 
     /**
      * get_details
@@ -164,7 +211,7 @@ class Playlist extends playlist_object
 
     /**
      * get_smartlists
-     * Returns a list of playlists accessible by the user.
+     * Returns a list of searches accessible by the user.
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
@@ -174,6 +221,12 @@ class Playlist extends playlist_object
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
+        }
+        $key = 'smartlists';
+        if (empty($playlist_name)) {
+            if (parent::is_cached($key, $user_id)) {
+                return parent::get_from_cache($key, $user_id);
+            }
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
         $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
@@ -194,6 +247,10 @@ class Playlist extends playlist_object
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
+        }
+
+        if (empty($playlist_name)) {
+            parent::add_to_cache($key, $user_id, $results);
         }
 
         return $results;
@@ -520,10 +577,12 @@ class Playlist extends playlist_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id ?: -1;
         }
+        // get the public_name/username
+        $username = User::get_username($user_id);
         // check for duplicates
         $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "' AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = ? AND `user` = ? AND `type` = ?";
+        $db_results = Dba::read($sql, array($name, $user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -534,8 +593,8 @@ class Playlist extends playlist_object
         }
 
         $date = time();
-        $sql  = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $user_id, $type, $date, $date));
+        $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
 
         return Dba::insert_id();
     } // create

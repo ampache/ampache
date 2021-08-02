@@ -1061,8 +1061,13 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $deleted = true;
         }
         if ($deleted === true) {
+            // keep details about deletions
+            $params = array($this->id);
+            $sql    = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
+            Dba::write($sql, $params);
+
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = Dba::write($sql, $params);
             if ($deleted) {
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);

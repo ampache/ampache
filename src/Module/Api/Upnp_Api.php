@@ -903,11 +903,10 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
-                        $pl_ids              = Search::get_searches();
-                        [$maxCount, $pl_ids] = self::_slice($pl_ids, $start, $count);
-                        foreach ($pl_ids as $pl_id) {
-                            $playlist = new Search($pl_id, 'song');
-                            $playlist->format();
+                        $searches              = Search::get_searches();
+                        [$maxCount, $searches] = self::_slice($searches, $start, $count);
+                        foreach ($searches as $search) {
+                            $playlist     = new Search($search['id'], 'song');
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
                         break;
@@ -1653,7 +1652,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => count($playlist->get_items()),
-            'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container', // object.container.playlistContainer
         );
     }
@@ -1670,7 +1669,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => count($playlist->get_items()),
-            'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container',
         );
     }

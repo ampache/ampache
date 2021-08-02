@@ -166,7 +166,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($sres as $playlistid) {
                         $playlist = new Playlist($playlistid);
-                        $playlist->format(false);
+                        $playlist->format();
                         $results[] = array(
                             'type' => T_('Playlists'),
                             'link' => $playlist->link,

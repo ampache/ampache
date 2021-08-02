@@ -81,15 +81,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * Constructor
      *
      * Podcast Episode class
-     * @param integer $podcastep_id
+     * @param integer $episode_id
      */
-    public function __construct($podcastep_id = null)
+    public function __construct($episode_id = null)
     {
-        if ($podcastep_id === null) {
+        if ($episode_id === null) {
             return false;
         }
 
-        $this->id = (int)$podcastep_id;
+        $this->id = (int)$episode_id;
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -491,9 +491,14 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             }
         }
 
+        // keep details about deletions
+        $params = array($this->id);
+        $sql    = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` = ?;";
+        Dba::write($sql, $params);
+
         $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
 
-        return Dba::write($sql, array($this->id));
+        return Dba::write($sql, $params);
     }
 
     /**

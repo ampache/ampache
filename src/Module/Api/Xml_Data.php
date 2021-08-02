@@ -454,23 +454,16 @@ class Xml_Data
                     break;
                 case 'playlist':
                     if ((int) $object_id === 0) {
-                        $playlist = new Search((int) str_replace('smart_', '', (string) $object_id));
-                        $playlist->format();
-
-                        $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                        $playlist_user  = ($playlist->type !== 'public')
-                            ? $playlist->f_user
-                            : $playlist->type;
+                        $playlist       = new Search((int) str_replace('smart_', '', (string) $object_id));
                         $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                     } else {
-                        $playlist = new Playlist($object_id);
-                        $playlist->format();
-
-                        $playlist_name  = $playlist->name;
-                        $playlist_user  = $playlist->f_user;
+                        $playlist       = new Playlist($object_id);
                         $playitem_total = $playlist->get_media_count('song');
                     }
+                    $playlist_name = $playlist->get_fullname();
+                    $playlist_user = $playlist->username;
+
                     $songs = ($include) ? $playlist->get_items() : array();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
@@ -789,25 +782,21 @@ class Xml_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
-                $playlist->format();
 
-                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
-                $playlist_user  = ($playlist->type !== 'public') ? $playlist->f_user : $playlist->type;
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
-                $playlist_type  = $playlist->type;
                 $object_type    = 'search';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
-                $playlist->format();
 
-                $playlist_name  = $playlist->name;
-                $playlist_user  = $playlist->f_user;
                 $playitem_total = $playlist->get_media_count('song');
-                $playlist_type  = $playlist->type;
                 $object_type    = 'playlist';
             }
+            $playlist_name = $playlist->get_fullname();
+            $playlist_user = $playlist->username;
+            $playlist_type = $playlist->type;
+
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
             $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
