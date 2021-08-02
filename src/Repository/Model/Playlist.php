@@ -744,8 +744,17 @@ class Playlist extends playlist_object
      */
     public function has_search($playlist_user): int
     {
+        // search for your own playlist
         $sql        = "SELECT `id`, `name` FROM `search` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($playlist_user));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['name'] == $this->name) {
+                return (int)$row['id'];
+            }
+        }
+        // look for public ones
+        $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
+        $db_results = Dba::read($sql, array(Core::get_global('user')->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['name'] == $this->name) {
                 return (int)$row['id'];
