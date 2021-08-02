@@ -71,7 +71,6 @@ use Ampache\Module\Util\Ui;
     <?php } ?>
 <td class="cel_action">
 <?php
-    echo " <a href=\"" . $libitem->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>";
     if (Access::check('interface', 50)) { ?>
     <a id="<?php echo 'edit_podcast_' . $libitem->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_' . $libitem->id ?>', '<?php echo T_('Podcast Edit') ?>', 'podcast_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>

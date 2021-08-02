@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Live_Stream;
                 <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Homepage') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
                 <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->site_url); ?>" /></td>
             </tr>
             <tr>
