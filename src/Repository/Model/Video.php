@@ -1124,6 +1124,23 @@ class Video extends database_object implements Media, library_item, GarbageColle
     } // _update_item
 
     /**
+     * get_deleted
+     * get items from the deleted_videos table
+     * @return int[]
+     */
+    public static function get_deleted()
+    {
+        $deleted    = array();
+        $sql        = "SELECT * FROM `deleted_video`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $deleted[] = $row;
+        }
+
+        return $deleted;
+    } // get_deleted
+
+    /**
      * compare_video_information
      * this compares the new ID3 tags of a file against
      * the ones in the database to see if they have changed

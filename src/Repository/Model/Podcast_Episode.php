@@ -553,6 +553,23 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
+     * get_deleted
+     * get items from the deleted_podcast_episodes table
+     * @return int[]
+     */
+    public static function get_deleted()
+    {
+        $deleted    = array();
+        $sql        = "SELECT * FROM `deleted_podcast_episode`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $deleted[] = $row;
+        }
+
+        return $deleted;
+    } // get_deleted
+
+    /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type

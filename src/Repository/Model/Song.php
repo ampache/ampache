@@ -2331,6 +2331,23 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
+     * get_deleted
+     * get items from the deleted_songs table
+     * @return int[]
+     */
+    public static function get_deleted()
+    {
+        $deleted    = array();
+        $sql        = "SELECT * FROM `deleted_song`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $deleted[] = $row;
+        }
+
+        return $deleted;
+    } // get_deleted
+
+    /**
      * remove
      * Remove the song from disk.
      * @return bool

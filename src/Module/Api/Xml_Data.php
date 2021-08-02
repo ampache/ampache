@@ -1352,6 +1352,70 @@ class Xml_Data
     } // rss_feed
 
     /**
+     * deleted
+     *
+     * This takes an array of deleted objects and return XML based on the type of object
+     * we want
+     *
+     * @param  string  $object_type ('song', 'podcast_episode', 'video')
+     * @param  array   $objects deleted object list
+     * @return string  return xml
+     */
+    public static function deleted($object_type, $objects)
+    {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
+        // here is where we call the object type
+        foreach ($objects as $row) {
+            switch ($object_type) {
+                case 'song':
+                    // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, update_time, album, artist
+                    $string .= "<deleted_song id=\"" . $row['id'] . "\">\n" .
+                        "\t<addition_time>" . $row['addition_time'] . "</addition_time>\n" .
+                        "\t<delete_time>" . $row['delete_time'] . "</delete_time>\n" .
+                        "\t<title><![CDATA[" . $row['title'] . "]]></title>\n" .
+                        "\t<file><![CDATA[" . $row['file'] . "]]></file>\n" .
+                        "\t<catalog>" . $row['catalog'] . "</albumartist>\n" .
+                        "\t<total_count>" . $row['total_count'] . "</track>\n" .
+                        "\t<total_skip>" . $row['total_skip'] . "</track>\n" .
+                        "\t<update_time>" . $row['update_time'] . "</update_time>\n" .
+                        "\t<album>" . $row['album'] . "</album>\n" .
+                        "\t<artist>" . $row['artist'] . "</artist>\n" .
+                        "</deleted_song>\n";
+                    break;
+                case 'podcast_episode':
+                    // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, podcast
+                    $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n" .
+                        "\t<addition_time>" . $row['addition_time'] . "</addition_time>\n" .
+                        "\t<delete_time>" . $row['delete_time'] . "</delete_time>\n" .
+                        "\t<title><![CDATA[" . $row['title'] . "]]></title>\n" .
+                        "\t<file><![CDATA[" . $row['file'] . "]]></file>\n" .
+                        "\t<catalog>" . $row['catalog'] . "</albumartist>\n" .
+                        "\t<total_count>" . $row['total_count'] . "</track>\n" .
+                        "\t<total_skip>" . $row['total_skip'] . "</track>\n" .
+                        "\t<played>" . $row['podcast'] . "</played>\n";
+                    $string .= "\t</deleted_podcast_episode>\n";
+                    break;
+                case 'video':
+                    // id, addition_time, delete_time, title, file, catalog, total_count, total_skip
+                    $string .= "<deleted_video id=\"" . $row['id'] . "\">\n" .
+                        "\t<addition_time>" . $row['addition_time'] . "</addition_time>\n" .
+                        "\t<delete_time>" . $row['delete_time'] . "</delete_time>\n" .
+                        "\t<title><![CDATA[" . $row['title'] . "]]></title>\n" .
+                        "\t<file><![CDATA[" . $row['file'] . "]]></file>\n" .
+                        "\t<catalog>" . $row['catalog'] . "</albumartist>\n" .
+                        "\t<total_count>" . $row['total_count'] . "</track>\n" .
+                        "\t<total_skip>" . $row['total_skip'] . "</track>\n" .
+                        "</deleted_video>\n";
+            }
+        } // end foreach objects
+
+        return self::output_xml($string, $full_xml);
+    } // deleted
+
+    /**
      * _header
      *
      * this returns a standard header, there are a few types

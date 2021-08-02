@@ -1219,6 +1219,72 @@ class Json_Data
     } // timeline
 
     /**
+     * deleted
+     *
+     * This handles creating a JSON document for deleted items
+     *
+     * @param  string $object_type ('song', 'podcast_episode', 'video')
+     * @param  array  $objects deleted object list
+     * @return string JSON Object "deleted"
+     */
+    public static function deleted($object_type, $objects)
+    {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+        $JSON = array();
+        foreach ($objects as $row) {
+            switch ($object_type) {
+                case 'song':
+                    $ourArray = array(
+                        "id" => (string)$row['id'],
+                        "addition_time" => $row['addition_time'],
+                        "delete_time" => $row['delete_time'],
+                        "title" => $row['title'],
+                        "file" => $row['file'],
+                        "catalog" => $row['catalog'],
+                        "total_count" => $row['total_count'],
+                        "total_skip" => $row['total_skip'],
+                        "update_time" => $row['update_time'],
+                        "album" => (string)$row['album'],
+                        "artist" => (string)$row['artist']
+                    );
+                    $JSON[] = $ourArray;
+                    break;
+                case 'podcast_episode':
+                    $ourArray = array(
+                        "id" => (string)$row['id'],
+                        "addition_time" => $row['addition_time'],
+                        "delete_time" => $row['delete_time'],
+                        "title" => $row['title'],
+                        "file" => $row['file'],
+                        "catalog" => $row['catalog'],
+                        "total_count" => $row['total_count'],
+                        "total_skip" => $row['total_skip'],
+                        "podcast" => (string)$row['podcast']
+                    );
+                    $JSON[] = $ourArray;
+                    break;
+                case 'video':
+                    $ourArray = array(
+                        "id" => (string)$row['id'],
+                        "addition_time" => $row['addition_time'],
+                        "delete_time" => $row['delete_time'],
+                        "title" => $row['title'],
+                        "file" => $row['file'],
+                        "catalog" => $row['catalog'],
+                        "total_count" => $row['total_count'],
+                        "total_skip" => $row['total_skip']
+                    );
+                    $JSON[] = $ourArray;
+            }
+        }
+        $output = array("deleted_" . $object_type => $JSON);
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    } // deleted
+
+    /**
      * @deprecated Inject by constructor
      */
     private static function getSongRepository(): SongRepositoryInterface

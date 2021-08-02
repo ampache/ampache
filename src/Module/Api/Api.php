@@ -146,6 +146,9 @@ class Api
         'preference_create' => Method\PreferenceCreateMethod::class,
         'preference_edit' => Method\PreferenceEditMethod::class,
         'preference_delete' => Method\PreferenceDeleteMethod::class,
+        'deleted_songs' => Method\DeletedSongsMethod::class,
+        'deleted_videos' => Method\DeletedVideosMethod::class,
+        'deleted_podcast_episodes' => Method\DeletedPodcastEpisodesMethod::class,
     ];
 
     /**
