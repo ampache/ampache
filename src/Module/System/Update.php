@@ -64,9 +64,7 @@ class Update
         if (!Dba::num_rows($db_results)) {
             // They can't upgrade, they are too old
             header("Location: test.php");
-        } // if table isn't found
-
-        else {
+        } else {
             // If we've found the update_info table, let's get the version from it
             $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
             $db_results = Dba::read($sql);
@@ -262,6 +260,9 @@ class Update
 
         $update_string = "* Move user bandwidth calculations out of the user format function into the user_data table";
         $version[]     = array('version' => '500012', 'description' => $update_string);
+
+        $update_string = "* Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)<br />* Add username to the playlist table to stop pulling user all the time";
+        $version[]     = array('version' => '500013', 'description' => $update_string);
 
         return $version;
     }
@@ -1049,8 +1050,7 @@ class Update
         $retval &= Dba::write($sql);
 
         return $retval;
-    }
-    //
+    } //
 
     /**
      * update_400015
@@ -1512,6 +1512,50 @@ class Update
             }
             $retval &= Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total));
         }
+
+        return $retval;
+    }
+
+    /**
+     * update_500013
+     *
+     * Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)
+     * Add username to the playlist table to stop pulling user all the time
+     */
+    public static function update_500013()
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        // deleted_song (id, addition_time, delete_time, title, file, catalog, total_count, total_skip, album, artist)
+        $sql = "CREATE TABLE IF NOT EXISTS `deleted_song` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED DEFAULT '0', `delete_time` int(11) UNSIGNED DEFAULT '0', `title` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `file` varchar(4096) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0', `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0', `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0', `update_time` int(11) UNSIGNED DEFAULT '0', `album` int(11) UNSIGNED NOT NULL DEFAULT '0', `artist` int(11) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= Dba::write($sql);
+
+        // deleted_video (id, addition_time, delete_time, title, file, catalog, total_count, total_skip)
+        $sql = "CREATE TABLE IF NOT EXISTS `deleted_video` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `file` varchar(4096) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0', `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= Dba::write($sql);
+
+        // deleted_podcast_episode (id, addition_time, delete_time, title, file, catalog, total_count, total_skip, podcast)
+        $sql = "CREATE TABLE IF NOT EXISTS `deleted_podcast_episode` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `file` varchar(4096) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0', `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0', `podcast` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= Dba::write($sql);
+
+        // add username to playlist and searches to stop calling the objects all the time
+        $sql = "ALTER TABLE `playlist` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+        $sql = "ALTER TABLE `search` ADD `username` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+
+        // fill the data
+        $sql = "UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;";
+        $retval &= Dba::write($sql);
+        $sql = "UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;";
+        $retval &= Dba::write($sql);
+        // system playlists are also possible
+        $sql = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;";
+        $retval &= Dba::write($sql, array(T_('System')));
+        $sql = "UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;";
+        $retval &= Dba::write($sql, array(T_('System')));
 
         return $retval;
     }
