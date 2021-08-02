@@ -133,7 +133,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <?php $search_id = $playlist->has_search();
+        <?php $search_id = $playlist->has_search($playlist->user);
         if ($search_id > 0) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">

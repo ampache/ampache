@@ -739,12 +739,13 @@ class Playlist extends playlist_object
     /**
      * has_search
      * Look for a saved smartlist with the same name as this playlist that the user can access
+     * @param int $playlist_user
      * @return int
      */
-    public function has_search()
+    public function has_search($playlist_user): int
     {
         $sql        = "SELECT `id`, `name` FROM `search` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array(Core::get_global('user')->id));
+        $db_results = Dba::read($sql, array($playlist_user));
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['name'] == $this->name) {
                 return (int)$row['id'];
