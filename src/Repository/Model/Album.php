@@ -48,7 +48,7 @@ class Album extends database_object implements library_item
     /**
      * @var integer $id
      */
-    public $id;
+    public int $id;
 
     /**
      * @var string $name
@@ -680,6 +680,21 @@ class Album extends database_object implements library_item
     public function get_fullname()
     {
         return $this->f_name;
+    }
+
+    /**
+     * Get item album_artist fullname.
+     * @return string
+     */
+    public function get_album_artist_name()
+    {
+        if ($this->album_artist) {
+            $album_artist = new Artist($this->album_artist);
+
+            return $album_artist->f_name;
+        }
+
+        return '';
     }
 
     /**
