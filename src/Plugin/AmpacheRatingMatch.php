@@ -160,7 +160,7 @@ class AmpacheRatingMatch
                 $artist = new Rating($album->album_artist, 'artist');
 
                 $rating_artist = (int)$artist->get_user_rating($this->user_id);
-                if ($rating_artist < $new_rating) {
+                if ($rating_artist <= $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }
             }

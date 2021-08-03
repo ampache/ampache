@@ -266,7 +266,7 @@ class Userflag extends database_object
                 $sql = "DELETE FROM `user_flag` WHERE `object_id` = " . $album_id . " AND `object_type` = 'album' AND `user` = " . $user_id;
                 Dba::write($sql);
             } else {
-                $sql    = "INSERT INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
+                $sql    = "INSERT IGNORE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
                 Dba::write($sql, $params);
 
