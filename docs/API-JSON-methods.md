@@ -2531,6 +2531,81 @@ Delete an existing bookmark. (if it exists)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmark_delete)
 
+### deleted_songs
+
+* **NEW** in develop
+
+Returns songs that have been deleted from the server
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return array
+
+```JSON
+"deleted_song": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/deleted_songs.json)
+
+### deleted_podcast_episodes
+
+* **NEW** in develop
+
+This returns the episodes for a podcast that have been deleted
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return array
+
+```JSON
+"deleted_podcast_episode": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/deleted_podcast_episodes.json)
+
+### deleted_videos
+
+* **NEW** in develop
+
+This returns video objects that have been deleted
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return array
+
+```JSON
+"deleted_video": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/deleted_videos.json)
+
 ## Binary Data Methods
 
 Binary data methods are used for returning raw data to the user such as a image or stream.

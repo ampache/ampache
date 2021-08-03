@@ -20,7 +20,7 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 The current stable release is documented under it's own version page.
 Refer to the taged versions if you just want to follow the stable releases.
 
-* [Ampache 4.4.2-release](https://github.com/ampache/ampache/releases/tag/4.4.2)
+* [Ampache 4.4.3-release](https://github.com/ampache/ampache/releases/tag/4.4.3)
 * [API 4 Documentation](https://ampache.org/api/api-4)
 
 ## Archived Version Documentation
@@ -265,6 +265,9 @@ All Data methods return HTTP 200 responses
 * bookmark_create **(develop only)**
 * bookmark_edit **(develop only)**
 * bookmark_delete **(develop only)**
+* deleted_songs **(develop only)**
+* deleted_podcast_episodes **(develop only)**
+* deleted_videos **(develop only)**
 
 ### Binary Data Methods
 

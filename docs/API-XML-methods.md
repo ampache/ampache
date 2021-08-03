@@ -2583,6 +2583,87 @@ Delete an existing bookmark. (if it exists)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_delete)
 
+### deleted_songs
+
+* **NEW** in develop
+
+Returns songs that have been deleted from the server
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return
+
+```XML
+<root>
+    <deleted_song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/deleted_songs.xml)
+
+### deleted_podcast_episodes
+
+* **NEW** in develop
+
+This returns the episodes for a podcast that have been deleted
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return
+
+```XML
+<root>
+    <deleted_podcast_episode>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/deleted_podcast_episodes.xml)
+
+### deleted_videos
+
+* **NEW** in develop
+
+This returns video objects that have been deleted
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|----------|
+| 'offset' | integer | Return results starting from this index position | YES      |
+| 'limit'  | integer | Maximum number of results to return              | YES      |
+
+* return
+
+```XML
+<root>
+    <deleted_video>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/deleted_videos.xml)
+
 ## Binary Data Methods
 
 Binary data methods are used for returning raw data to the user such as a image or stream.
