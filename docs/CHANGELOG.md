@@ -37,26 +37,27 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
   * Add 1, 5 and 10 to the Maximum Results limit
-* Database 5.0.0 Build 10:
+* Database 5.0.0 Build 14:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
   * Add `mbid`, `country`, `active` to label table
   * Add `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
   * Add `catalog` to podcast_episode table
   * Add `filter_user` to catalog table
-  * Add `total_count` to podcast table
+  * Add `total_count`, `episodes` to podcast table
+  * Add `username` to playlist table
   * Create catalog_map table (map catalog location for media objects)
   * Create user_playlist table (Global play queue)
   * Create user_data table (One shot info for user actions)
+  * Create deleted_song, deleted_video and deleted_podcast_episode tables for tracking deleted files
 * NEW database options
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
   * show_license: Hiding the license column in song rows
-* Config version 52
+* Config version 53
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
-  * write_id3: Write tage changes to file
-  * write_id3_art: Write art to files
+  * write_tags: Write tag changes to file (including art if available)
   * art_zip_add: Include Album Art for zip downlaods
   * catalog_filter: Allow filtering catalogs to specific users
   * catalog_verify_by_time: Only verify the files that have been modified since the last verify
@@ -73,8 +74,14 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Always put year in Spotify art search if available
 * Imported playslists don't add the extension to the title
 * Visually crop images from the centre instead of resizing into a square
-* Subsonic: wait a few seconds before allowing scrobbles to avoid collisions
 * Display release year if it doesn't macth original_year. e.g. 'Back in Black (2010)'
+* Don't round the average rating to an integer
+* Replace mt_rand with random_bytes for random token generation
+* Move user bandwidth calculations out of the user format function into the user_data table
+* All localplay links use the type (e.g. mpd/upnp) as the agent to fix muti-client access
+* Subsonic
+  * Wait a few seconds before allowing scrobbles to avoid collisions
+  * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
 
 ### Removed
 
@@ -86,17 +93,18 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * File tag reading for Band/Album Artist
 * Corrected albumartist collection and added missing tags to vorbis, aac and id3v2
 * Removed links from album list headers when split by release type
+* REMOVED config options
+  * write_id3: Use write_tags
+  * write_id3_art: Use write_tags
 
 ### Fixed
 
 * Delete duplicates from song table
 * Mashup page for podcast_episodes
 * Searching by Genre needed a query overhaul
-* Album groupings are the same everyhwere when album_group is enabled
+* Album groupings are the same everywhere when album_group is enabled
 * Unknown (Orphaned) groups all unkown files into one artist and album
 * Album groups for ratings and userflags
-* Subsonic: Support a global user playqueue with getplayqueue, saveplayqueue
-* Subsonic: Incorrect header being set on art requests
 * SQL queries regarding rating order and grouping of mutliple users
 * Ensure valid media is found before inserting into a playlist
 * Searching by Genre needed a lot of updates to speed up and correct
@@ -108,6 +116,15 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Repair missing rows in object_count after catalog updates
 * Browse / Mashup by podcast_episode
 * Sorting for a lot of browse pages that used arguments
+* Refreshing the details after editing an object didn't include browse aruments
+* Get the correct total artist_count for albums when grouped
+* Some buttons and links in the light theme needed extra CSS
+* updated the inotifywait.sh example to stop it trying to add the same file multiple times
+* Subsonic
+  * Support a global user playqueue with getplayqueue, saveplayqueue
+  * Incorrect header being set on art requests
+  * averageRating wasn't correctly cast for json
+  * bookmark JSON was not correctly converted
 
 ### API develop
 
@@ -116,6 +133,7 @@ All API code that used 'Tag' now references 'Genre' instead
 ### Added
 
 * Add global playcount to podcast_episode and video responses
+* searches (the number of saved smartlists) added to the handshake/ping response
 * NEW API functions
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)
@@ -135,6 +153,9 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::bookmark_edit (Edit a bookmark)
   * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
   * Api::localplay_songs (Get the list of songs in your localplay instance)
+  * API::deleted_songs
+  * API::deleted_podcast_episodes
+  * API::deleted_videos
 
 ### Changed
 

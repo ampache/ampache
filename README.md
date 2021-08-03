@@ -4,8 +4,17 @@
 
 [www.ampache.org](https://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
+[Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
+[Telegram](https://t.me/ampache)
+[Reddit](https://www.reddit.com/r/ampache/)
+[Twitter](https://twitter.com/ampache)
+[Mastodon](https://fosstodon.org/@ampache)
 
 **News:**
+
+**Ampache5 is getting close!** the develop branch is close to release now.
+A lot of work has been put into speeding up everything we can!
+This release is shaping up to be a great one and we can't wait to show you.
 
 * Keep an eye on the incoming changes to develop branch at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
   * Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
