@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 52
+config_version = 53
 
 ;#########################################################
 ; Auto Update                                            #
@@ -261,14 +261,9 @@ additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 ; File Tags                                             #
 ;#########################################################
 
-; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
+; This determines if we write metadata to files when modifying metadata, or only keep them in Ampache (the default).
 ; DEFAULT: "false"
-;write_id3 = "true"
-
-; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
-; as id3 metadata when updated.
-; DEFAULT: "false"
-;write_id3_art = "true"
+;write_tags = "true"
 
 ; Overwrite tags
 ; This switch allows removal of id3v1 tags from the files.

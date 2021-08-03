@@ -29,13 +29,14 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\AlbumRepositoryInterface;
 
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;
 
-final class SongId3TagWriter implements SongId3TagWriterInterface
+final class SongTagWriter implements SongTagWriterInterface
 {
     private ConfigContainerInterface $configContainer;
     private LoggerInterface $logger;
@@ -52,11 +53,9 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
      * Write the current song id3 metadata to the file
      */
     public function write(
-        Song $song,
-        ?Art $art = null,
-        ?int $picturetypeid = null
+        Song $song
     ): void {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_ID3) === false) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_TAGS) === false) {
             return;
         }
         
@@ -85,28 +84,44 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
             $song->format();
             if ($fileformat == 'mp3') {
-                $songMeta  = $this->getMetadata($song);
-                $txxxData  = $result['id3v2']['comments']['text'];
-                $id3v2Data = $result['tags']['id3v2'];
+                $songMeta  = $this->getId3Metadata($song);
+                $txxxData  = $result['id3v2']['comments']['text'] ?? array();
+                $id3v2Data = $result['tags']['id3v2'] ?? array();
                 $apics     = $result['id3v2']['APIC'];
                 // Update existing file frames.
-                foreach ($txxxData as $key => $value) {
-                    $idx = $this->search_txxx($key, $songMeta['text']);
-                    if ($idx) {
-                        $ndata['text'][] = array('data' => $songMeta['text'][$idx]['data'], 'description' => $key, 'encodingid' => 0);
-                    } else {
-                        $ndata['text'][] = array('data' => $value, 'description' => $key, 'encodingid' => 0);
+                if (!empty($txxxData)) {
+                    foreach ($txxxData as $key => $value) {
+                        $idx = $this->search_txxx($key, $songMeta['text']);
+                        if ($idx) {
+                            $ndata['text'][] = array('data' => $songMeta['text'][$idx]['data'], 'description' => $key, 'encodingid' => 0);
+                        } else {
+                            $ndata['text'][] = array('data' => $value, 'description' => $key, 'encodingid' => 0);
+                        }
+                    }
+                } else {
+                    // Assumes file originally had no TXXX frames
+                    $metatext = $songMeta['text'];
+                    if (!empty($metatext)) {
+                        foreach ($metatext as $key => $value) {
+                            $ndata['text'][$key] = $value;
+                        }
                     }
                 }
-                unset($id3v2Data['text']);
-                foreach ($id3v2Data as $key => $value) {
-                    if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
-                        $ndata[$key][] = $songMeta[$key];
-                    } else {
-                        $ndata[$key][] = $value[0];
+                if (!empty($id3v2Data)) {
+                    unset($id3v2Data['text']);
+                    foreach ($id3v2Data as $key => $value) {
+                        if (isset($songMeta[$key]) && $id3v2Data[$key][0] !== $songMeta[$key]) {
+                            $ndata[$key][] = $songMeta[$key];
+                        } else {
+                            $ndata[$key][] = $id3v2Data[$key][0];
+                        }
+                    }
+                } else {
+                    unset($songMeta['text']);
+                    foreach ($songMeta as $key => $value) {
+                        $ndata[$key][] = $somgMeta;
                     }
                 }
-                
                 if (isset($songMeta['unique_file_identifier'])) {
                     $ndata['unique_file_identifier'] = $songMeta['unique_file_identifier'];
                 }
@@ -115,28 +130,30 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
                 }
             } else {
                 $songMeta           = $this->getVorbisMetadata($song);
-                $vorbiscomments     = $result['tags']['vorbiscomment'];
+                $vorbiscomments     = $result['tags']['vorbiscomment'] ?? array();
                 $apics              = $result['flac']['PICTURE'];
                 /*  Update existing vorbiscomments */
-                foreach ($vorbiscomments as $key => $value) {
-                    if (isset($songMeta[$key])) {
-                        if ($key == 'releasetype' || $key == 'releasestatus') {
-                            $ndata[$key] = $songMeta[$key];
+                if (!empty($vorbiscomments)) {
+                    foreach ($vorbiscomments as $key => $value) {
+                        if (isset($songMeta[$key])) {
+                            if ($key == 'releasetype' || $key == 'releasestatus') {
+                                $ndata[$key] = $songMeta[$key];
+                            } else {
+                                $ndata[$key][] = $songMeta[$key];
+                            }
                         } else {
-                            $ndata[$key][] = $songMeta[$key];
+                            $ndata[$key] = $vorbiscomments[$key];
                         }
-                    } else {
-                        $ndata[$key] = $value;
                     }
                 }
                 
                 /* Insert vorbiscomments that might not be in file.  */
                 foreach ($songMeta as $key => $value) {
-                    if (!isset($vorbiscomments[$key]) && isset($value)) {
+                    if (!isset($vorbiscomments[$key]) && isset($songMeta[$key])) {
                         if ($key == 'releasetype' || $key == 'releasestatus') {
-                            $ndata[$key] = $value;
+                            $ndata[$key] = $songMeta[$key];
                         } else {
-                            $ndata[$key][] = $value;
+                            $ndata[$key][] = $songMeta[$key];
                         }
                     }
                 }
@@ -244,7 +261,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['label']                         = $song->f_publisher;
         $meta['tracknumber']                   = $song->f_track;
         $meta['discnumber']                    = $song->disk;
-        $meta['musicbrainz_releasetrackid']    = $song->mbid;
+        $meta['musicbrainz_trackid']           = $song->mbid;
         $meta['musicbrainz_albumid']           = $song->album_mbid;
         $meta['license']                       = $song->license;
         $res                                   = $song->_get_ext_info('label');
@@ -253,18 +270,15 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
+                $meta['genre'][] = $tag['name'];
             }
         }
-        $meta['genre'] = implode(',', $meta['genre']);
+        $meta['genre'] = implode(', ', $meta['genre']);
         
         $album = new Album($song->album);
         $album->format(true);
-        global $dic;
-        $albumRepo                              = $dic->get(AlbumRepositoryInterface::class);
-        $meta['musicbrainz_albumartistid']      = $albumRepo->getAlbumArtistMbid($album->album_artist);
+
+        $meta['musicbrainz_albumartistid']      = $song->albumartist_mbid;
         $meta['musicbrainz_releasegroupid']     = $album->mbid_group;
      
         if (isset($album->release_type)) {
@@ -272,7 +286,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             if (count($release_type) == 2) {
                 $release_type[1]        =trim($release_type[1]);
             }
-            $meta['releasetype']        = $release_type;
+            $meta['releasetype']                = $release_type;
         }
 
         if (isset($album->release_status)) {
@@ -287,19 +301,12 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
         $meta['original_year']                  = $album->original_year;
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) === true) {
-            $user        = $GLOBALS['user'];
+            $user = $this->get_user_from_rating('song', $song->id);
             if (!empty($user->email)) {
-                $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
-                $db_results  = Dba::read($sql, array($user->id, $song->id, 'song'));
-                $rating      = 0;
-                if ($results = Dba::fetch_assoc($db_results)) {
-                    $rating  = $results['rating'];
-                }
-                $rating         = $rating * (255 / 5);
-                $meta['rating'] = (string)$rating;
+                $meta['rating'] = $this->prepareRating($user->id, $song->id);
             } else {
                 $this->logger->debug(
-                    'User must have an email address on record.',
+                    'Rating user must have an email address on record.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
@@ -311,7 +318,7 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
     /**
      * Get an array of metadata for writing id3 file tags.
      */
-    private function getMetadata(
+    private function getId3Metadata(
         Song $song
     ): array {
         $meta = [];
@@ -331,55 +338,86 @@ final class SongId3TagWriter implements SongId3TagWriterInterface
             $meta['unique_file_identifier']   = ['data' => $song->mbid, 'ownerid' => "http://musicbrainz.org"];
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) === true) {
-            $user        = $GLOBALS['user'];
-            $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
-            $db_results  = Dba::read($sql, array($user->id, $song->id, 'song'));
-            $rating      = 0;
-            if ($results = Dba::fetch_assoc($db_results)) {
-                $rating  = $results['rating'];
-            }
-            $rating = $rating * (255 / 5);
+            $user = $this->get_user_from_rating('song', $song->id);
             if (!empty($user->email)) {
+                $rating                = $this->prepareRating($user->id, $song->id);
                 $meta['Popularimeter'] = ["email" => $user->email, "rating" => $rating,
-                                         "data" => $song->played];
+                    "data" => $song->get_totalcount()];
             } else {
                 $this->logger->debug(
-                    'User must have an email address on record.',
+                    'Rating user must have an email address on record.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
         }
 
-        $meta['text'][] = ['data' => $song->album_mbid, 'description' => 'MusicBrainz Album Id',
-                            'encodingid' => 0];
-
         $meta['genre']  = [];
 
         if (!empty($song->tags)) {
             foreach ($song->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
+                $meta['genre'][] = $tag['name'];
             }
         }
-        $meta['genre'] = implode(',', $meta['genre']);
+        $meta['genre'] = implode(', ', $meta['genre']);
         
         $album = new Album($song->album);
         $album->format(true);
-        global $dic;
-        $albumRepo                      = $dic->get(AlbumRepositoryInterface::class);
         $meta['original_year']          = $album->original_year;  //TORY
 
-        $meta['text'][]     = ['data' => $albumRepo->getAlbumArtistMbid($album->album_artist), 'description' => 'MusicBrainz Album Artist Id',
+        $meta['text'] = array();
+        if ($song->album_mbid) {
+            $meta['text'][] = ['data' => $song->album_mbid, 'description' => 'MusicBrainz Album Id',
+                            'encodingid' => 0];
+        }
+        if ($song->albumartist_mbid) {
+            $meta['text'][]     = ['data' => $song->albumartist_mbid, 'description' => 'MusicBrainz Album Artist Id',
                                 'encodingid' => 0];
-        $meta['text'][]     = ['data' => $album->release_status, 'description' => 'MusicBrainz Album Status',
+        }
+        if ($song->albumartist_mbid) {
+            $meta['text'][]     = ['data' => $song->albumartist_mbid, 'description' => 'MusicBrainz Album Artist Id',
                                 'encodingid' => 0];
-        $meta['text'][]     = ['data' => $album->release_type, 'description' => 'MusicBrainz Album Type',
+        }
+        if ($song->release_status) {
+            $meta['text'][]     = ['data' => $album->release_status, 'description' => 'MusicBrainz Album Status',
                                 'encodingid' => 0];
-        $meta['text'][]     = ['data' => $album->barcode, 'description' => 'BARCODE', 'encodingid' => 0];
-
-        $meta['text'][]     = ['data' => $album->catalog_number, 'description' => 'CATALOGNUMBER', 'encodingid' => 0];
+        }
+        if ($album->release_type) {
+            $meta['text'][]     = ['data' => $album->release_type, 'description' => 'MusicBrainz Album Type',
+                                'encodingid' => 0];
+        }
+        if ($album->barcode) {
+            $meta['text'][]     = ['data' => $album->barcode, 'description' => 'BARCODE', 'encodingid' => 0];
+        }
+        if ($album->catalog_number) {
+            $meta['text'][]     = ['data' => $album->catalog_number, 'description' => 'CATALOGNUMBER', 'encodingid' => 0];
+        }
 
         return $meta;
+    }
+    
+    private function get_user_from_rating($type, $id)
+    {
+        $sql         = "SELECT `user` FROM `rating` WHERE `object_type` = ? " . "AND `object_id` = ?";
+        $db_results  = Dba::read($sql, array($type, $id));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = $results['user'];
+
+            return new User($user_id);
+        }
+       
+        return null;
+    }
+    
+    private function prepareRating($user_id, $song_id)
+    {
+        $sql         = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
+        $db_results  = Dba::read($sql, array($user_id, $song_id, 'song'));
+        $rating      = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $rating  = $results['rating'];
+        }
+        $rating      = $rating * (255 / 5);
+
+        return (string)$rating;
     }
 }

@@ -26,7 +26,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
@@ -1307,9 +1307,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             } // end whitelist
         } // end foreach
 
-        $this->format();
-
-        $this->getSongId3TagWriter()->write($this);
+        $this->getSongTagWriter()->write(
+            $this
+        );
 
         return $this->id;
     } // update
@@ -1777,6 +1777,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         );
 
         return $keywords;
+    }
+    
+    /**
+     * Get total count
+     * @return integer
+     */
+    public function get_totalcount()
+    {
+        return $this->total_count;
     }
 
     /**
@@ -2360,11 +2369,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * @deprecated
      */
-    private function getSongId3TagWriter(): SongId3TagWriterInterface
+    private function getSongTagWriter(): SongTagWriterInterface
     {
         global $dic;
 
-        return $dic->get(SongId3TagWriterInterface::class);
+        return $dic->get(SongTagWriterInterface::class);
     }
 
     /**
