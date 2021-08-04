@@ -2733,21 +2733,24 @@ abstract class Catalog extends database_object
             $files = self::parse_xspf($data);
         }
 
-        $songs = array();
-        $pinfo = pathinfo($playlist);
+        $songs    = array();
+        $pinfo    = pathinfo($playlist);
+        $track    = 1;
+        $web_path = AmpConfig::get('web_path');
         if (isset($files)) {
             foreach ($files as $file) {
-                $file = trim((string)$file);
-                debug_event(self::class, "import_playlist checking: {{$file}}", 5);
+                $found = false;
+                $file  = trim((string)$file);
                 // Check to see if it's a url from this ampache instance
-                if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
+                if (!empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
                     $data       = Stream_Url::parse($file);
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, array($data['id']));
-                    if (Dba::num_rows($db_results)) {
-                        $songs[] = $data['id'];
-                    } else {
-                        debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
+                    if (Dba::num_rows($db_results) && (int)$data['id'] > 0) {
+                        debug_event(self::class, "import_playlist identified: {" . $data['id'] . "}", 5);
+                        $songs[$track] = $data['id'];
+                        $track++;
+                        $found = true;
                     }
                 } else {
                     // Remove file:// prefix if any
@@ -2768,8 +2771,11 @@ abstract class Catalog extends database_object
                     $db_results = Dba::read($sql, array($file));
                     $results    = Dba::fetch_assoc($db_results);
 
-                    if (isset($results['id'])) {
-                        $songs[] = $results['id'];
+                    if ((int)$results['id'] > 0) {
+                        debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
+                        $songs[$track] = (int)$results['id'];
+                        $track++;
+                        $found = true;
                     } else {
                         // Not found in absolute path, create it from relative path
                         $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
@@ -2780,14 +2786,18 @@ abstract class Catalog extends database_object
                             $db_results = Dba::read($sql, array($file));
                             $results    = Dba::fetch_assoc($db_results);
 
-                            if (isset($results['id'])) {
-                                $songs[] = $results['id'];
-                            } else {
-                                debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
+                            if ((int)$results['id'] > 0) {
+                                debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
+                                $songs[$track] = (int)$results['id'];
+                                $track++;
+                                $found = true;
                             }
                         }
                     }
                 } // if it's a file
+                if (!$found){
+                    debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
+                }
             }
         }
 
