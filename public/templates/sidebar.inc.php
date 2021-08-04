@@ -26,6 +26,10 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
+    ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
+    : "expires: 30, path: '/', samesite: 'Strict'";
+
 // strings for the main page and templates
 $t_home            = T_('Home');
 $t_browse          = T_('Browse');
@@ -134,7 +138,7 @@ $(function() {
             if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/', samesite: 'Strict'});
+            Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string ?>});
         });
 
     });

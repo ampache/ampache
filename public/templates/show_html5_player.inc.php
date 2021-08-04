@@ -10,13 +10,16 @@ use Ampache\Module\Util\Ui;
 
 // TODO remove me
 global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
-$web_path    = AmpConfig::get('web_path');
+$environment   = $dic->get(EnvironmentInterface::class);
+$web_path      = AmpConfig::get('web_path');
+$cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
+    ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
+    : "expires: 7, path: '/', samesite: 'Strict'";
+
 $autoplay    = true;
 if ($is_share) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');
 }
-
 if (!$iframed) {
     require_once Ui::find_template('show_html5_player_headers.inc.php');
 }
@@ -258,7 +261,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-        Cookies.set('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/', samesite: 'Strict'});
+        Cookies.set('jp_volume', event.jPlayer.options.volume, {<?php echo $cookie_string ?>});
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {

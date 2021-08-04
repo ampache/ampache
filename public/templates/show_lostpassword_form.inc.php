@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
+if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800)) {
     $remember_disabled = 'disabled="disabled"';
 }
 $htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));

@@ -36,6 +36,9 @@ $web_path          = AmpConfig::get('web_path');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
 $location          = get_location();
 $_SESSION['login'] = false;
+$cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
+    ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
+    : "expires: 30, path: '/', samesite: 'Strict'";
 // strings for the main page and templates
 $t_home      = T_('Home');
 $t_play      = T_('Play');
@@ -494,7 +497,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     $('#sidebar').show(500);
                 });
 
-                Cookies.set('sidebar_state', newstate, { expires: 30, path: '/', samesite: 'Strict'});
+                Cookies.set('sidebar_state', newstate, {<?php echo $cookie_string ?>});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">

@@ -373,7 +373,7 @@ class Api
 
         // send the totals
         $outarray = array('api' => Api::$version,
-            'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+            'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),

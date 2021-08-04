@@ -151,7 +151,7 @@ final class Session implements SessionInterface
             return true;
         }
 
-        $expire = time() + AmpConfig::get('session_length');
+        $expire = time() + AmpConfig::get('session_length', 3600);
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
@@ -315,7 +315,7 @@ final class Session implements SessionInterface
         }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
 
-        $expire = time() + AmpConfig::get('session_length');
+        $expire = time() + AmpConfig::get('session_length', 3600);
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
         }
@@ -455,7 +455,7 @@ final class Session implements SessionInterface
         if ($type == 'stream') {
             $expire = $time + AmpConfig::get('stream_length');
         } else {
-            $expire = $time + AmpConfig::get('session_length');
+            $expire = $time + AmpConfig::get('session_length', 3600);
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
@@ -522,6 +522,9 @@ final class Session implements SessionInterface
 
     public function setup(): void
     {
+        // enforce strict cookies. you don't need these elsewhere
+        ini_set('session.cookie_samesite', 'Strict');
+
         session_set_save_handler(
             static function (): bool {
                 return true;
@@ -598,9 +601,9 @@ final class Session implements SessionInterface
     {
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
-            'expires' => AmpConfig::get('cookie_life'),
-            'path' => AmpConfig::get('cookie_path'),
-            'domain' => AmpConfig::get('cookie_domain'),
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
         ];
@@ -618,7 +621,7 @@ final class Session implements SessionInterface
     public static function create_remember_cookie($username)
     {
         $session_name    = AmpConfig::get('session_name');
-        $remember_length = time() + AmpConfig::get('remember_length');
+        $remember_length = time() + AmpConfig::get('remember_length', 604800);
         $cookie_options  = [
             'expires' => $remember_length,
             'path' => AmpConfig::get('cookie_path'),

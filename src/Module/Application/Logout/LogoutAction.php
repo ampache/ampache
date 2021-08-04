@@ -22,6 +22,7 @@
 
 namespace Ampache\Module\Application\Logout;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -47,8 +48,15 @@ final class LogoutAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $cookie_options = [
+            'expires' => -1,
+            'path' => AmpConfig::get('cookie_path'),
+            'domain' => AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
         // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, ['expires' => -1, 'samesite' => 'Strict']);
+        setcookie($this->configContainer->getSessionName() . '_remember', null, $cookie_options);
 
         $this->authenticationManager->logout('', false);
 

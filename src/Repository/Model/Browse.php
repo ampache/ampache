@@ -463,7 +463,15 @@ class Browse extends Query
     public function save_cookie_params($option, $value)
     {
         if ($this->get_type()) {
-            setcookie('browse_' . $this->get_type() . '_' . $option, $value, ['expires' => time() + 31536000, 'path' => "/", 'samesite' => 'Strict']);
+            $remember_length = time() + 31536000;
+            $cookie_options  = [
+                'expires' => $remember_length,
+                'path' => AmpConfig::get('cookie_path'),
+                'domain' => AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Strict'
+            ];
+            setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);
         }
     }
 

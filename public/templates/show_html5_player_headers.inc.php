@@ -9,6 +9,9 @@ use Ampache\Module\Util\Ui;
 global $dic;
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $web_path         = AmpConfig::get('web_path');
+$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
+    ? "path: '/', secure: true, samesite: 'Strict'"
+    : "path: '/', samesite: 'Strict'";
 
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
@@ -305,7 +308,7 @@ function ToggleReplayGain()
 
     if (replaygainNode != null) {
         replaygainEnabled = !replaygainEnabled;
-        Cookies.set('replaygain', replaygainEnabled, {path: '/', samesite: 'Strict'});
+        Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string ?>});
         ApplyReplayGain();
 
         if (replaygainEnabled) {

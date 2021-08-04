@@ -196,7 +196,7 @@ class Core
     {
         // Make ourselves a nice little sid
         $sid    = md5(uniqid((string)rand(), true));
-        $window = AmpConfig::get('session_length');
+        $window = AmpConfig::get('session_length', 3600);
         $expire = time() + $window;
 
         // Register it
