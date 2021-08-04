@@ -151,6 +151,12 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
+        $out_file = false;
+        if ($player == 'cache_catalog_proc') {
+            $out_file = $options[0];
+            $player   = 'api';
+            $options  = array();
+        }
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings === false) {
@@ -204,6 +210,14 @@ class Stream
             if ($ret === null) {
                 debug_event(self::class, "$search not in transcode command", 5);
             }
+        }
+        if ($out_file) {
+            // when running cache_catalog_proc redirect to the file path instead of piping
+            $command = str_replace("pipe:1", $out_file, $command);
+            debug_event(self::class, 'Final command is ' . $command, 4);
+            shell_exec($command);
+
+            return array();
         }
 
         return self::start_process($command, array('format' => $transcode_settings['format']));

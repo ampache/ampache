@@ -20,6 +20,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * Private catalogs! You can now set a public or per user catalog for your music folders
+* Cache transcoded files before a user requests them with [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
 * Added a CONTRIBUTING.md file
 * php-intl is now required for translation of date formats into your locale
 * Added %R (Release Status) to catalog pattern matching
@@ -54,13 +55,15 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
   * show_license: Hiding the license column in song rows
-* Config version 53
+* Config version 54
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
   * write_tags: Write tag changes to file (including art if available)
   * art_zip_add: Include Album Art for zip downlaods
   * catalog_filter: Allow filtering catalogs to specific users
   * catalog_verify_by_time: Only verify the files that have been modified since the last verify
+  * cache_path: The folder where the pre-transcoded files will be stored
+  * cache_target: Target audio format for the cache
 
 ### Changed
 
@@ -79,6 +82,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Replace mt_rand with random_bytes for random token generation
 * Move user bandwidth calculations out of the user format function into the user_data table
 * All localplay links use the type (e.g. mpd/upnp) as the agent to fix muti-client access
+* updateCatalog now implies add when using -i / --import by itself
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
@@ -121,6 +125,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Some buttons and links in the light theme needed extra CSS
 * Updated the inotifywait.sh example to stop it trying to add the same file multiple times
 * Translations could break JS with apostrophes
+* Playlist imports with an empty web_path would never work
+* Playlist imports were importing nothing
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests

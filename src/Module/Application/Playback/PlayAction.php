@@ -598,9 +598,26 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode_to) {
             debug_event('play/index', 'Transcode to {' . (string) $transcode_to . '}', 5);
         }
+        // have you pre-cached?
+        $cache_file = false;
+        $cache_path = AmpConfig::get('cache_path', '');
+        if (is_dir($cache_path)) {
+            debug_event('play/index', 'Checking cache_path {' . $cache_path . '}', 5);
+            if (AmpConfig::get('cache_' . $media->type)) {
+                $cache_target = AmpConfig::get('cache_target', '');
+                $file_target  = rtrim(trim($cache_path), '/') . '/' . $media->id . '.' . $cache_target;
+                if (is_file($file_target)) {
+                    debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
+                    $record_stats = false;
+                    $cache_file   = true;
+                    $media->file  = $file_target;
+                    $media->size  = Core::get_filesize($file_target);
+                }
+            }
+        }
 
-        // If custom play action, do not try to transcode
-        if (!$cpaction && !$original) {
+        // If custom play action or already cached, do not try to transcode
+        if (!$cpaction && !$original && !$cache_file) {
             $transcode_cfg = AmpConfig::get('transcode');
             $valid_types   = $media->get_stream_types($player);
             if (!is_array($valid_types)) {

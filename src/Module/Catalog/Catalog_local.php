@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
@@ -1083,6 +1084,108 @@ class Catalog_local extends Catalog
 
         return true;
     } // move_catalog_proc
+
+    /**
+     * cache_catalog_proc
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        $m4a    = AmpConfig::get('cache_m4a');
+        $flac   = AmpConfig::get('cache_flac');
+        $mpc    = AmpConfig::get('cache_mpc');
+        $ogg    = AmpConfig::get('cache_ogg');
+        $oga    = AmpConfig::get('cache_oga');
+        $opus   = AmpConfig::get('cache_opus');
+        $wav    = AmpConfig::get('cache_wav');
+        $wma    = AmpConfig::get('cache_wma');
+        $aif    = AmpConfig::get('cache_aif');
+        $aiff   = AmpConfig::get('cache_aiff');
+        $ape    = AmpConfig::get('cache_ape');
+        $shn    = AmpConfig::get('cache_shn');
+        $mp3    = AmpConfig::get('cache_mp3');
+        $target = AmpConfig::get('cache_target');
+        $path   = AmpConfig::get('cache_path', '');
+        // need a destination and target filetype
+        if ((!is_dir($path) || !$target)) {
+            debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
+
+            return false;
+        }
+        // need at least one type to transcode
+        if ($m4a && !$flac && !$mpc && !$ogg && !$oga && !$opus && !$wav && !$wma && !$aif && !$aiff && !$ape && !$shn && !$mp3) {
+            debug_event('local.catalog', 'You need to pick at least 1 file format to cache', 5);
+
+            return false;
+        }
+        $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
+        $params = array($this->id);
+        $join   = 'AND (';
+        if ($m4a) {
+            $sql .= "$join `file` LIKE '%.m4a' ";
+            $join = 'OR';
+        }
+        if ($flac) {
+            $sql .= "$join `file` LIKE '%.flac' ";
+            $join = 'OR';
+        }
+        if ($mpc) {
+            $sql .= "$join `file` LIKE '%.mpc' ";
+            $join = 'OR';
+        }
+        if ($ogg) {
+            $sql .= "$join `file` LIKE '%.ogg' ";
+            $join = 'OR';
+        }
+        if ($oga) {
+            $sql .= "$join `file` LIKE '%.oga' ";
+            $join = 'OR';
+        }
+        if ($opus) {
+            $sql .= "$join `file` LIKE '%.opus' ";
+            $join = 'OR';
+        }
+        if ($wav) {
+            $sql .= "$join `file` LIKE '%.wav' ";
+            $join = 'OR';
+        }
+        if ($wma) {
+            $sql .= "$join `file` LIKE '%.wma' ";
+            $join = 'OR';
+        }
+        if ($aif) {
+            $sql .= "$join `file` LIKE '%.aif' ";
+            $join = 'OR';
+        }
+        if ($aiff) {
+            $sql .= "$join `file` LIKE '%.aiff' ";
+            $join = 'OR';
+        }
+        if ($ape) {
+            $sql .= "$join `file` LIKE '%.ape' ";
+            $join = 'OR';
+        }
+        if ($shn) {
+            $sql .= "$join `file` LIKE '%.shn' ";
+        }
+        $sql .= ');';
+        $results    = array();
+        $db_results = Dba::read($sql, $params);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+        foreach ($results as $song_id) {
+            $target_file = rtrim(trim($path), '/') . '/' . $song_id . '.' . $target;
+            if (!is_file($target_file)) {
+                debug_event('local.catalog', 'Cache needed for: ' . $target_file, 5);
+                $song = new Song($song_id);
+                Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
+            }
+        }
+
+        return true;
+    }
 
     /**
      * @deprecated Inject by constructor

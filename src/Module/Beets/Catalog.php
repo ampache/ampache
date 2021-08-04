@@ -299,6 +299,14 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        return false;
+    }
+
+    /**
      * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */

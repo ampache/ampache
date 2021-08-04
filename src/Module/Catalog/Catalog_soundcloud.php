@@ -429,6 +429,14 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        return false;
+    }
+
+    /**
      * @param $url
      * @return integer
      */

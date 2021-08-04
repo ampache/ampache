@@ -244,6 +244,11 @@ abstract class Catalog extends database_object
     abstract public function move_catalog_proc($new_path);
 
     /**
+     * @return boolean
+     */
+    abstract public function cache_catalog_proc();
+
+    /**
      * @return array
      */
     abstract public function catalog_fields();
@@ -737,6 +742,21 @@ abstract class Catalog extends database_object
         }
 
         return $results;
+    }
+
+    /**
+     * Run the cache_catalog_proc() on music catalogs.
+     * @param integer[]|null $catalogs
+     * @return integer
+     */
+    public static function cache_catalogs()
+    {
+        $catalogs = self::get_catalogs('music');
+        foreach ($catalogs as $catalogid) {
+            debug_event(__CLASS__, 'cache_catalogs: ' . $catalogid, 5);
+            $catalog = self::create_from_id($catalogid);
+            $catalog->cache_catalog_proc();
+        }
     }
 
     /**
@@ -2795,7 +2815,7 @@ abstract class Catalog extends database_object
                         }
                     }
                 } // if it's a file
-                if (!$found){
+                if (!$found) {
                     debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
                 }
             }

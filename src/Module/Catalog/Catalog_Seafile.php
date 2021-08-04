@@ -533,6 +533,14 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        return false;
+    }
+
+    /**
      * check_remote_song
      *
      * checks to see if a remote song exists in the database or not

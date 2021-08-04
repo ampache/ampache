@@ -41,6 +41,7 @@ $app = new Ahc\Cli\Application(
 $app->add($dic->get(Cli\BroadcastCommand::class));
 $app->add($dic->get(Cli\ComputeCacheCommand::class));
 $app->add($dic->get(Cli\CronProcessCommand::class));
+$app->add($dic->get(Cli\CacheProcessCommand::class));
 $app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
 $app->add($dic->get(Cli\RunChannelCommand::class));
 $app->add($dic->get(Cli\PrintTagsCommand::class));
