@@ -44,7 +44,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
-            ->option('-i|--import', T_('Imports playlists'),  'boolval',false)
+            ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))

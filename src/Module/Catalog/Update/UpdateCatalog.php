@@ -100,7 +100,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $interactor->info('------------------', true);
             }
-            if ($addNew === true) {
+            if ($addNew === true || $importPlaylists === true) {
                 ob_start();
 
                 // Look for new files
