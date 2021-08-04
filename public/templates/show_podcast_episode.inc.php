@@ -100,7 +100,7 @@ use Ampache\Module\Util\Ui;
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
-            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', '')">
+            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php

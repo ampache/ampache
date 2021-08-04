@@ -104,7 +104,7 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
             </a>
         </li>
         <li>
-            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
+            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo addslashes(T_('Podcast Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Podcast'); ?>
             </a>

@@ -132,7 +132,7 @@ $display_year = ($original_year && $libitem->original_year)
     <?php
     }
         if (Access::check('interface', 50) && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
-            <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album Edit') ?>', 'album_')">
+            <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', 'album_')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
     <?php

@@ -119,7 +119,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Refreshing the details after editing an object didn't include browse aruments
 * Get the correct total artist_count for albums when grouped
 * Some buttons and links in the light theme needed extra CSS
-* updated the inotifywait.sh example to stop it trying to add the same file multiple times
+* Updated the inotifywait.sh example to stop it trying to add the same file multiple times
+* Translations could break JS with apostrophes
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests

@@ -216,7 +216,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
-            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album Edit') ?>', '')">
+            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php

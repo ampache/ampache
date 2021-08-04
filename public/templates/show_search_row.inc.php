@@ -70,7 +70,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
         <?php
             }
             if ($libitem->has_access()) { ?>
-                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist Edit') ?>', 'smartplaylist_row_')">
+                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php

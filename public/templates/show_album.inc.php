@@ -219,19 +219,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
     } ?>
         <?php if ($isAlbumEditable) {
-        $albumedit  = T_('Album Edit'); ?>
-        <?php if (AmpConfig::get('allow_upload')) {
-            $t_upload = T_('Upload'); ?>
+        $t_upload = T_('Upload');
+        if (AmpConfig::get('allow_upload')) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->album_artist); ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>
                 </li>
-            <?php
-        } ?>
+            <?php } ?>
         <li>
-            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Album'); ?>
             </a>

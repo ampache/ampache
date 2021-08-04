@@ -109,7 +109,7 @@ if ($browse->is_mashup()) {
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
-    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', 'podcast_episode_')">
+    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', 'podcast_episode_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php

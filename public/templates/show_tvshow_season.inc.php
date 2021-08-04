@@ -81,7 +81,7 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
-            <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo T_('Season Edit') ?>', '')">
+            <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo addslashes(T_('Season Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Season'); ?>
             </a>

@@ -143,7 +143,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </li>
         <?php } ?>
         <li>
-            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo T_('Playlist Edit') ?>', '')">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Playlist Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>

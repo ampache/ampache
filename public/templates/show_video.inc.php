@@ -128,7 +128,7 @@ $subtitles = $video->get_subtitles();
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
-            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Video Edit') ?>', '')">
+            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php

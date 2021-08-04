@@ -74,7 +74,7 @@ use Ampache\Module\Util\Ui;
 <td class="cel_action">
 <?php
     if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo T_('TV Show Edit') ?>', 'tvshow_')">
+    <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', 'tvshow_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php

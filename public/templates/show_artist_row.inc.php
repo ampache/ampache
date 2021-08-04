@@ -107,7 +107,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     <?php
     }
         if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist Edit') ?>', 'artist_')">
+        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', 'artist_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php

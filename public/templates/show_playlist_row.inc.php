@@ -112,7 +112,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
                 <?php echo Ui::get_icon('file_refresh', T_('Refresh from Smartlist')); ?>
             </a>
         <?php } ?>
-    <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist Edit') ?>', 'playlist_row_')">
+    <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo addslashes(T_('Playlist Edit')) ?>', 'playlist_row_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete this Playlist?'));
