@@ -61,12 +61,12 @@ final class ChannelRunner implements ChannelRunnerInterface
             true
         );
 
+        $address = '127.0.0.1';
         if ($portNumber === null) {
             if ($channel->fixed_endpoint) {
                 $address       = $channel->interface;
                 $portNumber    = (int) $channel->port;
             } else {
-                $address = '127.0.0.1';
                 // Try to find an available port
                 for ($p = 8200; $p < 8300; ++$p) {
                     $connection = fsockopen($address, $p);

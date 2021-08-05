@@ -54,10 +54,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $action = Core::get_request('action');
+        $results = array();
 
         // Switch on the actions
-        switch ($action) {
+        switch ($_REQUEST['action']) {
             case 'refresh_rightbar':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;

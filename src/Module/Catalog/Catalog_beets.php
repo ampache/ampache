@@ -91,6 +91,8 @@ class Catalog_beets extends Catalog
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
 
         return $fields;

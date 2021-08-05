@@ -82,6 +82,8 @@ class HttpQPlayer
      */
     public function add($name, $url)
     {
+        $args = array();
+
         $args['name'] = urlencode($name);
         $args['url']  = urlencode($url);
 

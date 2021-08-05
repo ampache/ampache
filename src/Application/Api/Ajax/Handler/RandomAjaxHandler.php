@@ -53,7 +53,6 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {

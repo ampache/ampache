@@ -102,14 +102,20 @@ final class PlayAction implements ApplicationActionInterface
             // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
             $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
             $new_request = array();
+            $key         = null;
             $i           = 0;
+            // alternate key and value through the split array e.g:
+            // array('ssid', '3ca112fff23376ef7c74f018497dd39d', 'type', 'song', 'oid', '280', 'uid', 'player', 'api', 'name', 'Glad.mp3))
             foreach ($new_arr as $v) {
                 if ($i == 0) {
+                    // key name
                     $key = $v;
                     $i   = 1;
                 } else {
-                    $value             = $v;
-                    $i                 = 0;
+                    // key value
+                    $value = $v;
+                    $i     = 0;
+                    // set it now that you've set both
                     $new_request[$key] = $value;
                 }
             }
@@ -148,13 +154,14 @@ final class PlayAction implements ApplicationActionInterface
             $record_stats = false;
         }
 
-        $transcode_to = null;
-        $player       = null;
-        $bitrate      = 0;
-        $maxbitrate   = 0;
-        $resolution   = '';
-        $quality      = 0;
-        $time         = time();
+        $transcode_to  = null;
+        $player        = null;
+        $bitrate       = 0;
+        $maxbitrate    = 0;
+        $media_bitrate = 0;
+        $resolution    = '';
+        $quality       = 0;
+        $time          = time();
 
         if (isset($_REQUEST['player'])) {
             $player = $_REQUEST['player'];
@@ -219,6 +226,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         $apikey = $_REQUEST['apikey'];
 
+        $user = null;
         // If explicit user authentication was passed
         $user_authenticated = false;
         if (!empty($apikey)) {

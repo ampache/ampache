@@ -35,8 +35,6 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
-        debug_event('stream.ajax', 'Called for action {' . Core::get_request('action') . '}', 5);
-
         $results = array();
 
         // Switch on the actions

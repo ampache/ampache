@@ -86,23 +86,25 @@ final class ShowMissingAction implements ApplicationActionInterface
             'info-box missing'
         );
 
-        // Attempt to find the art.
-        $art = $this->modelFactory->createArt((int) $walbum->mbid);
+        // you might not send an artist name
+        $options = (isset($artist))
+            ? array('artist' => $artist->f_name, 'album_name' => $walbum->name, 'keyword' => $artist->f_name . " " . $walbum->name)
+            : array('album_name' => $walbum->name, 'keyword' => $walbum->name);
 
+        // Attempt to find the art.
+        $art    = $this->modelFactory->createArt((int) $walbum->mbid);
         $images = $this->artCollector->collect(
             $art,
-            [
-                'artist' => $artist->f_name,
-                'album_name' => $walbum->name,
-                'keyword' => $artist->f_name . " " . $walbum->name,
-            ],
+            $options,
             1
         );
 
         $imageList = '';
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
-            $name = '[' . $artist->f_name . '] ' . scrub_out($walbum->name);
+            $name = (isset($artist))
+                ? '[' . $artist->f_name . '] ' . scrub_out($walbum->name)
+                : scrub_out($walbum->name);
 
             $image = $images[0]['url'];
 

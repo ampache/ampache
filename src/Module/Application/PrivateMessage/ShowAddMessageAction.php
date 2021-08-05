@@ -89,6 +89,7 @@ final class ShowAddMessageAction implements ApplicationActionInterface
                     $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $message->getMessage());
                 }
             } catch (ItemNotFoundException $e) {
+                // ignore errors
             }
         }
 

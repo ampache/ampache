@@ -128,6 +128,8 @@ class Catalog_Seafile extends Catalog
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['server_uri'] = array(
             'description' => T_('Server URI'),
             'type' => 'text',

@@ -58,6 +58,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
                     $button     = 'enable';
                     $buttontext = T_('Enable');
                 }
+                $results      = array();
                 $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
 
                 break;

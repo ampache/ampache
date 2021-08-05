@@ -120,6 +120,8 @@ class Catalog_dropbox extends Catalog
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['apikey']    = array('description' => T_('API key'), 'type' => 'text');
         $fields['secret']    = array('description' => T_('Secret'), 'type' => 'password');
         $fields['authtoken'] = array('description' => T_('Access Token'), 'type' => 'text');

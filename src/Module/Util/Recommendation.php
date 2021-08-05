@@ -200,6 +200,7 @@ class Recommendation
                     self::update_recommendation_cache('song', $song_id, $similars);
                 }
             } catch (LastFmQueryFailedException $e) {
+                // Ignore request errors here
             }
         }
 
@@ -304,6 +305,7 @@ class Recommendation
                     }
                 }
             } catch (LastFmQueryFailedException $e) {
+                // Ignore request errors here
             }
         }
 
