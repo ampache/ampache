@@ -130,6 +130,59 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
+            case 'album_row':
+                $original_year    = AmpConfig::get('use_original_year');
+                $show_ratings     = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                $show_direct_play = AmpConfig::get('directplay');
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'original_year' => $original_year,
+                        'show_ratings' => $show_ratings,
+                        'show_direct_play' => $show_direct_play,
+                        'show_playlist_add' => true,
+                        'cel_cover' => 'cel_cover',
+                        'cel_album' => 'cel_album',
+                        'cel_artist' => 'cel_artist',
+                        'cel_counter' => 'cel_counter',
+                        'cel_tags' => 'cel_tags',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
+            case 'artist_row':
+                $show_ratings      = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                $show_direct_play  = AmpConfig::get('directplay');
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'show_direct_play' => $show_direct_play,
+                        'cel_cover' => 'cel_cover',
+                        'cel_artist' => 'cel_artist',
+                        'cel_time' => 'cel_time',
+                        'cel_counter' => 'cel_counter',
+                        'cel_tags' => 'cel_tags',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
             default:
                 ob_start();
 
