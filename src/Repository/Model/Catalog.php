@@ -2737,24 +2737,26 @@ abstract class Catalog extends database_object
     /**
      * playlist_import
      * Attempts to create a Public Playlist based on the playlist file
-     * @param string $playlist
+     * @param string $playlist_file
+     * @param int $user_id
+     * @param string $playlist_type (public|private)
      * @return array
      */
-    public static function import_playlist($playlist)
+    public static function import_playlist($playlist_file, $user_id, $playlist_type)
     {
-        $data = file_get_contents($playlist);
-        if (substr($playlist, -3, 3) == 'm3u' || substr($playlist, -4, 4) == 'm3u8') {
+        $data = file_get_contents($playlist_file);
+        if (substr($playlist_file, -3, 3) == 'm3u' || substr($playlist_file, -4, 4) == 'm3u8') {
             $files = self::parse_m3u($data);
-        } elseif (substr($playlist, -3, 3) == 'pls') {
+        } elseif (substr($playlist_file, -3, 3) == 'pls') {
             $files = self::parse_pls($data);
-        } elseif (substr($playlist, -3, 3) == 'asx') {
+        } elseif (substr($playlist_file, -3, 3) == 'asx') {
             $files = self::parse_asx($data);
-        } elseif (substr($playlist, -4, 4) == 'xspf') {
+        } elseif (substr($playlist_file, -4, 4) == 'xspf') {
             $files = self::parse_xspf($data);
         }
 
         $songs    = array();
-        $pinfo    = pathinfo($playlist);
+        $pinfo    = pathinfo($playlist_file);
         $track    = 1;
         $web_path = AmpConfig::get('web_path');
         if (isset($files)) {
@@ -2821,44 +2823,27 @@ abstract class Catalog extends database_object
             }
         }
 
-        debug_event(self::class, "import_playlist Parsed " . $playlist . ", found " . count($songs) . " songs", 5);
+        debug_event(self::class, "import_playlist Parsed " . $playlist_file . ", found " . count($songs) . " songs", 5);
 
         if (count($songs)) {
-            $name = $pinfo['filename'];
-            // Search for existing playlist
-            $playlist_search = Playlist::get_playlists(null, $name);
-            if (empty($playlist_search)) {
-                // New playlist
-                $playlist_id   = Playlist::create($name, 'public');
-                $current_songs = array();
-                $playlist      = ((int)$playlist_id > 0) ? new Playlist((int)$playlist_id) : null;
-            } else {
-                // Existing playlist
-                $playlist_id   = $playlist_search[0];
-                $playlist      = new Playlist($playlist_id);
-                $current_songs = $playlist->get_songs();
-                debug_event(__CLASS__, "import_playlist playlist has " . (string)count($current_songs) . " songs", 5);
-            }
+            $name        = $pinfo['filename'];
+            $playlist_id = (int)Playlist::create($name, $playlist_type, $user_id);
 
-            if (!$playlist_id) {
+            if ($playlist_id < 1) {
                 return array(
                     'success' => false,
                     'error' => T_('Failed to create playlist'),
                 );
             }
 
-            /* Recreate the Playlist; checking for current items. */
-            $new_songs = $songs;
-            if (count($current_songs)) {
-                $new_songs = array_diff($songs, $current_songs);
-                debug_event(__CLASS__, "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
-            }
-            $playlist->add_songs($new_songs);
+            $playlist = new Playlist($playlist_id);
+            $playlist->delete_all();
+            $playlist->add_songs($songs);
 
             return array(
                 'success' => true,
                 'id' => $playlist_id,
-                'count' => count($new_songs)
+                'count' => count($songs)
             );
         }
 

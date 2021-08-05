@@ -32,7 +32,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Podcast_Episode show episode art for podcast mashup allow sort by date
 * Save a search or Smartlist as a regular playlist
 * New option to refresh a Playlist from Searches with the same name
-* Option to change the playlist owner when editing
+* Option to change the playlist owner when editing OR importing
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -84,6 +84,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Move user bandwidth calculations out of the user format function into the user_data table
 * All localplay links use the type (e.g. mpd/upnp) as the agent to fix muti-client access
 * updateCatalog now implies add when using -i / --import by itself
+* Playlist Import checks for playlists by your user only in the UI (System for the cli)
 * Plugins: Use only https for building gravatar urls
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions

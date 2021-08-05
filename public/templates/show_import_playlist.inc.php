@@ -34,6 +34,15 @@ use Ampache\Module\Util\Ui;
             </td>
             <td><input type="file" name="filename" value="<?php echo scrub_out(Core::get_request('filename')); ?>" /></td>
         </tr>
+        <tr>
+            <td><?php echo T_('Type'); ?>:</td>
+            <td>
+                <select name="default_type">
+                    <option value="private"><?php echo T_("Private"); ?></option>
+                    <option value="public" selected="selected"><?php echo T_("Public"); ?></option>
+                </select>
+            </td>
+        </tr>
     </table>
     <div class="formValidation">
         <input type="hidden" name="action" value="import_playlist" />
