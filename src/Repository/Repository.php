@@ -256,14 +256,14 @@ class Repository
      */
     public function assembleQuery($table, $fields)
     {
-        $sql = 'SELECT * FROM `' . $table;
+        $sql = "SELECT * FROM `$table`";
         if (!empty($fields)) {
-            $sql .= '` WHERE ';
+            $sql .= ' WHERE ';
             $sqlParts = array();
             foreach ($fields as $field) {
                 $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';
             }
-            $sql .= implode(' and ', $sqlParts);
+            $sql .= implode(' AND ', $sqlParts);
         }
         if ($table == 'metadata_field') {
             $sql .= ' ORDER BY `metadata_field`.`name`';
