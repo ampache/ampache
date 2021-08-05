@@ -541,7 +541,7 @@ class Subsonic_Api
             $response = Subsonic_XML_Data::createSuccessResponse('getartist');
             Subsonic_XML_Data::addArtist($response, $artist, true, true);
         }
-        self::apiOutput($input, $response);
+        self::apiOutput($input, $response, array('album'));
     }
 
     /**
@@ -557,14 +557,14 @@ class Subsonic_Api
         $addAmpacheInfo = ($input['ampache'] == "1");
 
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
-        if (!$album->id) {
+        if (!isset($album->id)) {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.", 'getalbum');
         } else {
             $response = Subsonic_XML_Data::createSuccessResponse('getalbum');
             Subsonic_XML_Data::addAlbum($response, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $response);
+        self::apiOutput($input, $response, array('song'));
     }
 
     /**
@@ -762,7 +762,7 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getsong');
         $song     = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($response, $song);
-        self::apiOutput($input, $response);
+        self::apiOutput($input, $response, array());
     }
 
     /**
