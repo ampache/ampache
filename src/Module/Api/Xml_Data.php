@@ -1367,6 +1367,7 @@ class Xml_Data
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
 
+        $string = '';
         // here is where we call the object type
         foreach ($objects as $row) {
             switch ($object_type) {
@@ -1412,7 +1413,7 @@ class Xml_Data
             }
         } // end foreach objects
 
-        return self::output_xml($string, $full_xml);
+        return self::output_xml($string);
     } // deleted
 
     /**

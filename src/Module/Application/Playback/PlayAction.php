@@ -600,7 +600,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         // have you pre-cached?
         $cache_file = false;
-        $cache_path = AmpConfig::get('cache_path', '');
+        $cache_path = (string)AmpConfig::get('cache_path', '');
         if (is_dir($cache_path)) {
             debug_event('play/index', 'Checking cache_path {' . $cache_path . '}', 5);
             if (AmpConfig::get('cache_' . $media->type)) {

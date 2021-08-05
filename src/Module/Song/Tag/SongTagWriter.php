@@ -119,7 +119,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 } else {
                     unset($songMeta['text']);
                     foreach ($songMeta as $key => $value) {
-                        $ndata[$key][] = $somgMeta;
+                        $ndata[$key][] = $songMeta;
                     }
                 }
                 if (isset($songMeta['unique_file_identifier'])) {
@@ -167,11 +167,12 @@ final class SongTagWriter implements SongTagWriterInterface
                         'picturetypeid' => $apic[$apic_typeid], 'description' => $apic['description'], 'encodingid' => $apic['encodingid']);
                 }
             }
-               
-            if (isset($art) == true) {
+
+            $art = new Art($song->artist, 'artist');
+            if ($art->has_db_info()) {
                 $image        = $art->get(true);
                 $new_pic      = array('data' => $image, 'mime' => $art->raw_mime,
-                    'picturetypeid' => $picturetypeid, 'description' => $song->f_artist_full, 'encodingid' => 0);
+                    'picturetypeid' => 8, 'description' => $song->f_artist_full, 'encodingid' => 0);
                 if ($file_has_pics) {
                     $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
                     if (is_null($idx)) {
@@ -180,34 +181,19 @@ final class SongTagWriter implements SongTagWriterInterface
                 } else {
                     $ndata['attached_picture'][] = $new_pic;
                 }
-            } else {
-                $art = new Art($song->artist, 'artist');
-                if ($art->has_db_info()) {
-                    $image        = $art->get(true);
-                    $new_pic      = array('data' => $image, 'mime' => $art->raw_mime,
-                        'picturetypeid' => 8, 'description' => $song->f_artist_full, 'encodingid' => 0);
-                    if ($file_has_pics) {
-                        $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
-                        if (is_null($idx)) {
-                            $ndata['attached_picture'][] = $new_pic;
-                        }
-                    } else {
+            }
+            $art = new Art($song->album, 'album');
+            if ($art->has_db_info()) {
+                $image        = $art->get(true);
+                $new_pic      = array('data' => $image, 'mime' => $art->raw_mime,
+                    'picturetypeid' => 3, 'description' => $song->f_album, 'encodingid' => 0);
+                if ($file_has_pics) {
+                    $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
+                    if (is_null($idx)) {
                         $ndata['attached_picture'][] = $new_pic;
                     }
-                }
-                $art = new Art($song->album, 'album');
-                if ($art->has_db_info()) {
-                    $image        = $art->get(true);
-                    $new_pic      = array('data' => $image, 'mime' => $art->raw_mime,
-                        'picturetypeid' => 3, 'description' => $song->f_album, 'encodingid' => 0);
-                    if ($file_has_pics) {
-                        $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
-                        if (is_null($idx)) {
-                            $ndata['attached_picture'][] = $new_pic;
-                        }
-                    } else {
-                        $ndata['attached_picture'][] = $new_pic;
-                    }
+                } else {
+                    $ndata['attached_picture'][] = $new_pic;
                 }
             }
             $vainfo->write_id3($ndata);
@@ -377,7 +363,7 @@ final class SongTagWriter implements SongTagWriterInterface
             $meta['text'][]     = ['data' => $song->albumartist_mbid, 'description' => 'MusicBrainz Album Artist Id',
                                 'encodingid' => 0];
         }
-        if ($song->release_status) {
+        if ($album->release_status) {
             $meta['text'][]     = ['data' => $album->release_status, 'description' => 'MusicBrainz Album Status',
                                 'encodingid' => 0];
         }

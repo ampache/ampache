@@ -1105,7 +1105,7 @@ class Catalog_local extends Catalog
         $shn    = AmpConfig::get('cache_shn');
         $mp3    = AmpConfig::get('cache_mp3');
         $target = AmpConfig::get('cache_target');
-        $path   = AmpConfig::get('cache_path', '');
+        $path   = (string)AmpConfig::get('cache_path', '');
         // need a destination and target filetype
         if ((!is_dir($path) || !$target)) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
