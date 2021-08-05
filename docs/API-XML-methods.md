@@ -920,6 +920,7 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 | 'filter' | string | UID of Playlist                                                   | NO       |
 | 'name'   | string | Playlist name                                                     | YES      |
 | 'type'   | string | Playlist type 'public', 'private'                                 | YES      |
+| 'owner'  | string | Change playlist owner to the user id (-1 = System playlist)       | YES      |
 | 'items'  | string | comma-separated song_id's (replaces existing items with a new id) | YES      |
 | 'tracks' | string | comma-separated playlisttrack numbers matched to 'items' in order | YES      |
 

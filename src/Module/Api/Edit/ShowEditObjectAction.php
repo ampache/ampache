@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,6 +62,8 @@ final class ShowEditObjectAction extends AbstractEditAction
         int $object_id
     ): ?ResponseInterface {
         ob_start();
+        $users     = static::getUserRepository()->getValidArray();
+        $users[-1] = T_('System');
 
         require Ui::find_template('show_edit_' . $object_type . '.inc.php');
 
@@ -72,5 +75,15 @@ final class ShowEditObjectAction extends AbstractEditAction
             ->withBody(
                 $this->streamFactory->createStream($results)
             );
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

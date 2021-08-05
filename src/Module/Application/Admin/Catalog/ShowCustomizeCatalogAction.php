@@ -57,7 +57,9 @@ final class ShowCustomizeCatalogAction implements ApplicationActionInterface
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
-        $users = array_merge(array(0 => T_('Public Catalog')), static::getUserRepository()->getValidArray());
+        $users    = static::getUserRepository()->getValidArray();
+        $users[0] = T_('Public Catalog');
+
         require_once Ui::find_template('show_edit_catalog.inc.php');
 
         $this->ui->showQueryStats();

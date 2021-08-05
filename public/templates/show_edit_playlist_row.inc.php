@@ -42,6 +42,22 @@ use Ampache\Repository\Model\Playlist;
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <?php echo T_('Owner'); ?>:<br />
+                </td>
+                <td>
+                    <?php
+                    $options   = array();
+                    if (!empty($users)) {
+                        foreach ($users as $user_id => $username) {
+                            $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
+                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+                        }
+                        echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
+                    } ?>
+                </td>
+            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="playlist_row" />

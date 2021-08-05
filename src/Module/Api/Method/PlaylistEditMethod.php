@@ -51,6 +51,7 @@ final class PlaylistEditMethod
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
+     * owner  = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
@@ -63,6 +64,7 @@ final class PlaylistEditMethod
         }
         $name  = $input['name'];
         $type  = $input['type'];
+        $owner = $input['owner'];
         $items = explode(',', (string) $input['items']);
         $order = explode(',', (string) $input['tracks']);
         $sort  = (int) $input['sort'];
@@ -83,10 +85,11 @@ final class PlaylistEditMethod
             return false;
         }
         // update name/type
-        if ($name || $type) {
+        if ($name || $type || $owner) {
             $array = [
                 "name" => $name,
                 "pl_type" => $type,
+                "pl_user" => $owner,
             ];
             $playlist->update($array);
         }

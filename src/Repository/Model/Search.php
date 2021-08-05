@@ -1287,24 +1287,29 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
+            $this->user   = $data['pl_user'];
             $this->random = ((int)$data['random'] > 0 || $this->random) ? 1 : 0;
             $this->limit  = $data['limit'];
         }
+        $this->username = User::get_username($this->user);
 
         if (!$this->id) {
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
         Dba::write($sql, array(
             $this->name,
             $this->type,
+            $this->username,
             json_encode($this->rules),
             $this->logic_operator,
             $this->random,
             $this->limit,
             $this->id
         ));
+        // reformat after an update
+        $this->format();
 
         return $this->id;
     }

@@ -80,15 +80,16 @@ final class RefreshUpdatedAction extends AbstractEditAction
         /**
          * @todo Every editable item type will need some sort of special handling here
          */
-        if ($object_type === 'song_row') {
-            $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
-            $argument_param = '&hide=' . Core::get_request('hide');
-            $argument       = explode(',', Core::get_request('hide'));
-            $hide_artist    = in_array('cel_artist', $argument);
-            $hide_album     = in_array('cel_album', $argument);
-            $hide_year      = in_array('cel_year', $argument);
-            $hide_drag      = in_array('cel_drag', $argument);
-            $results        = preg_replace(
+        switch ($object_type) {
+            case 'song_row':
+                $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+                $argument_param = '&hide=' . Core::get_request('hide');
+                $argument       = explode(',', Core::get_request('hide'));
+                $hide_artist    = in_array('cel_artist', $argument);
+                $hide_album     = in_array('cel_album', $argument);
+                $hide_year      = in_array('cel_year', $argument);
+                $hide_drag      = in_array('cel_drag', $argument);
+                $results        = preg_replace(
                 '/<\/?html(.|\s)*?>/',
                 '',
                 $this->talFactory->createTalView()
@@ -107,23 +108,44 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     ->setContext('IS_HIDE_DRAG', $hide_drag)
                     ->setTemplate('song_row.xhtml')
                     ->render()
-            );
-        } else {
-            ob_start();
+                );
+                break;
+            case 'playlist_row':
+                $show_art     = AmpConfig::get('playlist_art');
+                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                ob_start();
 
-            $this->ui->show(
-                'show_' . $object_type . '.inc.php',
-                [
-                    'libitem' => $libitem,
-                    'object_type' => $object_type,
-                    'object_id' => $object_id,
-                ]
-            );
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_art' => $show_art,
+                        'show_ratings' => $show_ratings,
+                    ]
+                );
 
-            $results = ob_get_contents();
+                $results = ob_get_contents();
 
-            ob_end_clean();
-        }
+                ob_end_clean();
+                break;
+            default:
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+    }
 
         return $this->responseFactory->createResponse()
             ->withBody(

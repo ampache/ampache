@@ -419,6 +419,11 @@ class Playlist extends playlist_object
         if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
             $this->update_type($data['pl_type']);
         }
+        if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
+            $this->update_user($data['pl_user']);
+        }
+        // reformat after an update
+        $this->format();
 
         return $this->id;
     } // update
@@ -432,6 +437,21 @@ class Playlist extends playlist_object
     {
         if ($this->_update_item('type', $new_type, 50)) {
             $this->type = $new_type;
+        }
+    } // update_type
+
+    /**
+     * update_user
+     * This updates the playlist type, it calls the generic update_item function
+     * @param int $new_user
+     */
+    private function update_user($new_user)
+    {
+        if ($this->_update_item('user', $new_user, 50)) {
+            $this->type     = $new_user;
+            $this->username = User::get_username($new_user);
+            $sql            = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = ?;";
+            Dba::write($sql, array($this->username, $new_user));
         }
     } // update_type
 

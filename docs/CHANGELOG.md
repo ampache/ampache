@@ -32,6 +32,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Podcast_Episode show episode art for podcast mashup allow sort by date
 * Save a search or Smartlist as a regular playlist
 * New option to refresh a Playlist from Searches with the same name
+* Option to change the playlist owner when editing
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -83,6 +84,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Move user bandwidth calculations out of the user format function into the user_data table
 * All localplay links use the type (e.g. mpd/upnp) as the agent to fix muti-client access
 * updateCatalog now implies add when using -i / --import by itself
+* Plugins: Use only https for building gravatar urls
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
@@ -188,8 +190,8 @@ All API code that used 'Tag' now references 'Genre' instead
 * Don't transcode podcast_episodes
 * localplay
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
-* Plugins: Use only https for building gravatar urls
-* API::system_update: update the database if required as well
+* system_update: update the database if required as well
+* playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
 
 ## Ampache 4.4.3-release
 
