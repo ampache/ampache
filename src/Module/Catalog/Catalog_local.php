@@ -831,7 +831,7 @@ class Catalog_local extends Catalog
         if ((int)$options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
-            if ($album->id) {
+            if (isset($album->id)) {
                 $results['album'] = $album->name;
             }
         }

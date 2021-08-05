@@ -633,7 +633,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $album = new Album($pathreq[1]);
-                        if ($album->id) {
+                        if ($isset($album->id)) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
@@ -845,7 +845,7 @@ class Upnp_Api
                         break;
                     case 2: // Get album's songs list
                         $album = new Album($pathreq[1]);
-                        if ($album->id) {
+                        if (isset($album->id)) {
                             $song_ids              = static::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
