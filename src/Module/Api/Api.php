@@ -255,8 +255,8 @@ class Api
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
-                    $elements = explode('/', $value);
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
                     $browse->set_filter('add_lt', strtotime((string)$elements['1']));
                     $browse->set_filter('add_gt', strtotime((string)$elements['0']));
                 } else {
@@ -265,8 +265,8 @@ class Api
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
-                    $elements = explode('/', $value);
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
                     $browse->set_filter('update_lt', strtotime((string)$elements['1']));
                     $browse->set_filter('update_gt', strtotime((string)$elements['0']));
                 } else {

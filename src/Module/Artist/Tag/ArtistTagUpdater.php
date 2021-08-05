@@ -54,7 +54,7 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
         Artist $artist,
         string $tags_comma,
         bool $override_childs,
-        ?int $add_to_childs,
+        bool $add_to_childs = false,
         bool $force_update = false
     ): void {
         Tag::update_tag_list($tags_comma, 'artist', $artist->getId(), $force_update ? true : $override_childs);

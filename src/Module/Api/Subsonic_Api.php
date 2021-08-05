@@ -705,11 +705,11 @@ class Subsonic_Api
      */
     public static function getalbumlist($input, $elementName = "albumList")
     {
-        $type = self::check_parameter($input, 'type');
+        $type     = self::check_parameter($input, 'type');
+        $response = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
         if ($type) {
-            $response     = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
             $errorOccured = false;
-            $albums       = self::_albumList($input, $type);
+            $albums       = self::_albumList($input, (string)$type);
             if ($albums === false) {
                 $response     = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out((string)$type), $elementName);
                 $errorOccured = true;
@@ -839,7 +839,7 @@ class Subsonic_Api
         }
         if ($artist) {
             $songs = static::getSongRepository()->getTopSongsByArtist(
-                Artist::get_from_name(urldecode($artist)),
+                Artist::get_from_name(urldecode((string)$artist)),
                 $count
             );
         }
@@ -901,7 +901,7 @@ class Subsonic_Api
         $operator = 0;
 
         if (strlen((string)$query) > 1) {
-            if (substr($query, -1) == "*") {
+            if (substr((string)$query, -1) == "*") {
                 $query    = substr((string)$query, 0, -1);
                 $operator = 2; // Start with
             }

@@ -72,7 +72,7 @@ final class Init
             if ($this->environment->isCli()) {
                 throw $e;
             }
-            $this->redirect($redirectionUrl);
+            $this->redirect((string)$redirectionUrl);
         }
     }
 

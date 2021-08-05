@@ -442,7 +442,8 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
-     * @return array<array{
+     * @return array
+     * <array{
      *  media: \Ampache\Repository\Model\library_item,
      *  client: \Ampache\Repository\Model\User,
      *  agent: string,
@@ -572,9 +573,9 @@ class Stream
         $http_port = AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", $web_path, $matches)) {
-                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
+                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
             } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, $web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
         }
 

@@ -453,46 +453,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * _get_extra info
-     * This returns the extra information for the artist, this means totals etc
-     * @param integer $catalog
-     * @param string $limit_threshold
-     * @return array
-     */
-    private function _get_extra_info($catalog = 0, $limit_threshold = '')
-    {
-        // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('artist_extra', $this->id)) {
-            $row = parent::get_from_cache('artist_extra', $this->id);
-        } else {
-            $params = array($this->id);
-            // Get associated information from first song only
-            $sql  = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id`, `artist`.`total_count` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ";
-            $sqlw = "WHERE `song`.`artist` = ? ";
-            if ($catalog) {
-                $params[] = $catalog;
-                $sqlw .= "AND (`song`.`catalog` = ?) ";
-            }
-            $sql .= $sqlw . "LIMIT 1";
-
-            $db_results = Dba::read($sql, $params);
-            $row        = Dba::fetch_assoc($db_results);
-
-            if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = (!empty($limit_threshold))
-                    ? Stats::get_object_count('artist', $row['artist'], $limit_threshold)
-                    : $row['total_count'];
-            }
-            parent::add_to_cache('artist_extra', $row['artist'], $row);
-        }
-
-        /* Set Object Vars */
-        $this->catalog_id = $row['catalog_id'];
-
-        return $row;
-    } // _get_extra_info
-
-    /**
      * format
      * this function takes an array of artist
      * information and formats the relevant values

@@ -358,10 +358,9 @@ class Album extends database_object implements library_item
      * _get_extra_info
      * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
      * do it
-     * @param string $limit_threshold
      * @return array
      */
-    private function _get_extra_info($limit_threshold = '')
+    private function _get_extra_info()
     {
         if (!$this->id) {
             return array();
@@ -586,7 +585,7 @@ class Album extends database_object implements library_item
 
         if ($details) {
             /* Pull the advanced information */
-            $data = $this->_get_extra_info($limit_threshold);
+            $data = $this->_get_extra_info();
             foreach ($data as $key => $value) {
                 $this->$key = $value;
             }

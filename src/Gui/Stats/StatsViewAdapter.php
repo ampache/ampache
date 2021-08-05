@@ -76,9 +76,10 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $catalog->format();
-
-            $result[] = $this->guiFactory->createCatalogDetails($catalog);
+            if ($catalog) {
+                $catalog->format();
+                $result[] = $this->guiFactory->createCatalogDetails($catalog);
+            }
         }
 
         return $result;
