@@ -416,21 +416,18 @@ final class PlayAction implements ApplicationActionInterface
         if ($type == 'song') {
             /* Base Checks passed create the song object */
             $media = new Song($object_id);
-            $media->format();
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview($object_id);
-            $media->format();
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode($object_id);
-            $media->format();
         } else {
             $type  = 'video';
             $media = new Video($object_id);
             if (isset($_REQUEST['subtitle'])) {
                 $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
             }
-            $media->format();
         }
+        $media->format();
 
         if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
             throw new AccessDeniedException(
@@ -825,7 +822,9 @@ final class PlayAction implements ApplicationActionInterface
 
         $mime = $media->mime;
         if ($transcode && isset($transcoder)) {
-            $mime = $media->type_to_mime($transcoder['format']);
+            $mime = ($type == 'video')
+                ? Video::type_to_mime($transcoder['format'])
+                : Song::type_to_mime($transcoder['format']);
             // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
             // We don't want to wait indefinitely for a potential error so we just ignore it.
             // https://bugs.php.net/bug.php?id=47918
@@ -902,12 +901,9 @@ final class PlayAction implements ApplicationActionInterface
             $bytes_streamed = $stream_size;
         }
 
+        fclose($filepointer);
         if ($transcode && isset($transcoder)) {
-            fclose($filepointer);
-
             Stream::kill_process($transcoder);
-        } else {
-            fclose($filepointer);
         }
 
         debug_event('play/index', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);

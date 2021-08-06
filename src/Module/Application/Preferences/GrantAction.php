@@ -75,18 +75,14 @@ final class GrantAction implements ApplicationActionInterface
                 if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
                     $title    = T_('No Problem');
                     $text     = T_('Your account has been updated') . ' : ' . $pluginName;
-                    $next_url = sprintf(
-                        '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
-                    );
                 } else {
-                    $title    = T_("There Was a Problem");
+                    $title    = T_('There Was a Problem');
                     $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
-                    $next_url = sprintf(
-                        '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
-                    );
                 }
+                $next_url = sprintf(
+                    '%s/preferences.php?tab=plugins',
+                    $this->configContainer->getWebPath()
+                );
 
                 $this->ui->showConfirmation($title, $text, $next_url);
             }

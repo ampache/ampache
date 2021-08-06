@@ -1131,11 +1131,10 @@ class Subsonic_Api
 
         if (Subsonic_Xml_Data::isSmartPlaylist($playlistId)) {
             $playlist = new Search(Subsonic_Xml_Data::getAmpacheId($playlistId), 'song');
-            $playlist->delete();
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlistId));
-            $playlist->delete();
         }
+        $playlist->delete();
 
         $response = Subsonic_Xml_Data::createSuccessResponse('deleteplaylist');
         self::apiOutput($input, $response);

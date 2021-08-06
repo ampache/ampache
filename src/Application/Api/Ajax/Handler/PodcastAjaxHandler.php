@@ -59,12 +59,8 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
                         debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
                     }
                 }
-                $results['rfc3514'] = '0x1';
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         }
+        $results['rfc3514'] = '0x1';
 
         // We always do this
         echo (string) xoutput_from_array($results);
