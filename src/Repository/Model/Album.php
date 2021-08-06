@@ -48,7 +48,7 @@ class Album extends database_object implements library_item
     /**
      * @var integer $id
      */
-    public int $id;
+    public $id;
 
     /**
      * @var string $name
