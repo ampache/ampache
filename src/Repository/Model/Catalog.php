@@ -2820,7 +2820,7 @@ abstract class Catalog extends database_object
                     }
                 } // if it's a file
                 if (!$found) {
-                    debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
+                    debug_event(self::class, "import_playlist skipped: {{$orig}}", 5);
                 }
                 // add the results to an array to display after
                 $import[] = array(
