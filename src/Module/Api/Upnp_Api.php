@@ -1500,7 +1500,7 @@ class Upnp_Api
         $type         = self::parse_upnp_filter($filter);
         $search_terms = self::parse_upnp_searchcriteria($criteria, $type);
         debug_event(self::class, 'Dumping $search_terms: ' . var_export($search_terms, true), 5);
-        $ids = Search::run($search_terms);// return a list of IDs
+        $ids = Search::run($search_terms); // return a list of IDs
         if (count($ids) == 0) {
             debug_event(self::class, 'Search returned no hits', 5);
 
