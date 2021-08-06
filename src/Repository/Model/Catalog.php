@@ -2756,6 +2756,7 @@ abstract class Catalog extends database_object
         }
 
         $songs    = array();
+        $import   = array();
         $pinfo    = pathinfo($playlist_file);
         $track    = 1;
         $web_path = AmpConfig::get('web_path');
@@ -2763,6 +2764,7 @@ abstract class Catalog extends database_object
             foreach ($files as $file) {
                 $found = false;
                 $file  = trim((string)$file);
+                $orig  = $file;
                 // Check to see if it's a url from this ampache instance
                 if (!empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
                     $data       = Stream_Url::parse($file);
@@ -2820,6 +2822,12 @@ abstract class Catalog extends database_object
                 if (!$found) {
                     debug_event(self::class, "import_playlist skipped: {{$file}}", 5);
                 }
+                // add the results to an array to display after
+                $import[] = array(
+                    'track' => $track - 1,
+                    'file' => $orig,
+                    'found' => (int)$found
+                );
             }
         }
 
@@ -2843,13 +2851,15 @@ abstract class Catalog extends database_object
             return array(
                 'success' => true,
                 'id' => $playlist_id,
-                'count' => count($songs)
+                'count' => count($songs),
+                'results' => $import
             );
         }
 
         return array(
             'success' => false,
-            'error' => T_('No valid songs found in playlist file')
+            'error' => T_('No valid songs found in playlist file'),
+            'results' => $import
         );
     }
 

@@ -69,10 +69,22 @@ final class ImportPlaylistAction implements ApplicationActionInterface
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
                 /* HINT: Number of songs */
-                sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
+                sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);
+            if (!empty($result['results'])) {
+                $body .= "<table class=\"tabledata striped-rows\">\n<thead><tr class=\"th-top\">\n<th>" . T_('Track') . "</th><th>" . T_('File') . "</th><th>" . T_('Status') . "</th>\n<tbody>\n";
+                foreach ($result['results'] as $file) {
+                    if ($file['found']) {
+                        $body .= "<tr>\n<td>" . scrub_out($file['track']) . "</td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Success') . "</td>\n</tr>\n";
+                    } else {
+                        $body .= "<tr><td></td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Failure') . "</td></tr>\n";
+                    }
+                    flush();
+                } // foreach songs
+                $body .= "</tbody></table>\n";
+            }
         } else {
             $url   = 'show_import_playlist';
-            $title = T_("There Was a Problem");
+            $title = T_('There Was a Problem');
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         $this->ui->showConfirmation(
