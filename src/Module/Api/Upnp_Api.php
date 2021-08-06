@@ -633,7 +633,7 @@ class Upnp_Api
                         break;
                     case 2:
                         $album = new Album($pathreq[1]);
-                        if ($isset($album->id)) {
+                        if (isset($album->id)) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
