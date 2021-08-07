@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 04.04.2021 12:53:04 CEST 
+ # Last Update: 07.08.2021 20:43:00 CEST 
 
  #######################################################################
 
@@ -395,6 +395,18 @@ msgstr ""
 msgid "Custom URL - Login page background"
 msgstr ""
 
+#: Database preference table id 177
+msgid "Show Licence"
+msgstr ""
+
+#: Database preference table id 178
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Database preference table id 179
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
 #: Database preference subcategory table id 1
 msgid "feature"
 msgstr ""
@@ -433,6 +445,10 @@ msgstr ""
 
 #: Database preference subcategory table id 83
 msgid "library"
+msgstr ""
+
+#: Database preference subcategory table id 84
+msgid "browse"
 msgstr ""
 
 #: Database preference subcategory table id 86
