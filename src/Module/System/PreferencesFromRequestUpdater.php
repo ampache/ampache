@@ -46,7 +46,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
     public function update(int $user_id = 0): void
     {
         // Get current keys
-        $sql = "SELECT `id`, `name`, `type`, `value` FROM `preference`";
+        $sql = "SELECT `id`, `name`, `type` FROM `preference`";
 
         // If it isn't the System Account's preferences
         if ($user_id != '-1') {
@@ -57,7 +57,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
         $results    = array();
         // Collect the current possible keys
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type'], 'value' => $row['value']);
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
         } // end collecting keys
 
         // Foreach through possible keys and assign them
@@ -67,9 +67,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
             $pref_id      = $data['id'];
-            $value        = (isset($_REQUEST[$name]))
-                ? scrub_in($_REQUEST[$name])
-                : $data['value'];
+            $value        = scrub_in($_REQUEST[$name]);
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -90,7 +88,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 }
             }
 
-            Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
+            // Run the update for this preference only if it's set
+            if (isset($_REQUEST[$name])) {
+                Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
+            }
 
             if (
                 $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) &&
