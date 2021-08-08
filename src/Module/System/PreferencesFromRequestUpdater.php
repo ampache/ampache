@@ -52,6 +52,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
         if ($user_id != '-1') {
             $sql .= " WHERE `catagory` != 'system'";
         }
+        $null_allowed = array('personalfav_playlist', 'personalfav_smartlist');
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -89,7 +90,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             // Run the update for this preference only if it's set
-            if (isset($_REQUEST[$name])) {
+            if (isset($_REQUEST[$name]) || in_array($name, $null_allowed)) {
                 Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
             }
 

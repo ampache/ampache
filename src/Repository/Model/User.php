@@ -366,10 +366,9 @@ class User extends database_object
      */
     public function set_preferences()
     {
-        $user_id = Dba::escape($this->id);
-
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
-        $db_results = Dba::read($sql);
+        $user_id    = Dba::escape($this->id);
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
+        $db_results = Dba::read($sql, array($user_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $key               = $row['name'];

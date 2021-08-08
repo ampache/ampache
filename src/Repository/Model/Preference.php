@@ -201,27 +201,26 @@ class Preference extends database_object
             $pref_id = $preference;
             $name    = self::name_from_id($preference);
         }
-        if ($applytoall && Access::check('interface', 100)) {
-            $user_check = "";
-        } else {
-            $user_check = " AND `user`='$user_id'";
-        }
-
         if (is_array($value)) {
             $value = implode(',', $value);
         }
+        $params = array($value, $pref_id);
 
-        if ($applytodefault && Access::check('interface', 100)) {
-            $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$pref_id'";
-            Dba::write($sql);
+        if ($applytoall && Access::check('interface', 100)) {
+            $user_check = "";
+        } else {
+            $user_check = "AND `user` = ?";
+            $params[]   = $user_id;
         }
 
-        $value = Dba::escape($value);
+        if ($applytodefault && Access::check('interface', 100)) {
+            $sql = "UPDATE `preference` SET `value` = ? WHERE `id`= ?";
+            Dba::write($sql, $params);
+        }
 
         if (self::has_access($name)) {
-            $user_id = (int)Dba::escape($user_id);
-            $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'$user_check";
-            Dba::write($sql);
+            $sql = "UPDATE `user_preference` SET `value` = ?  WHERE `preference` = ? $user_check";
+            Dba::write($sql, $params);
             self::clear_from_session();
 
             parent::remove_from_cache('get_by_user', $user_id);
