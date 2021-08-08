@@ -514,6 +514,18 @@ class Catalog_local extends Catalog
                     $result = self::import_playlist($full_file, -1, 'public');
                     if ($result['success']) {
                         $file = basename($full_file);
+                        echo "\n$full_file\n";
+                        if (!empty($result['results'])) {
+                            foreach ($result['results'] as $file) {
+                                if ($file['found']) {
+                                    echo scrub_out($file['track']) . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
+                                } else {
+                                    echo scrub_out($file['track']) . ": " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
+                                }
+                                flush();
+                            } // foreach songs
+                            echo "\n";
+                        }
                     } // end if import worked
                 } // end foreach playlist files
             }
