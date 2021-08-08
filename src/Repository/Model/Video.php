@@ -799,7 +799,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function check_play_history($user, $agent, $date)
     {
-        return Stats::has_played_history($this, $user, $agent, $date);
+        return Stats::has_played_history('video', $this, $user, $agent, $date);
     }
 
     /**

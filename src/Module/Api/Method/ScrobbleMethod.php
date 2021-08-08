@@ -107,7 +107,7 @@ final class ScrobbleMethod
 
                 return false;
             }
-            debug_event(self::class, 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . $date, 5);
 
             // internal scrobbling (user_activity and object_count tables)
             if ($media->set_played($user_id, $agent, array(), $date)) {

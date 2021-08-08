@@ -1103,7 +1103,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function check_play_history($user, $agent, $date)
     {
-        return Stats::has_played_history($this, $user, $agent, $date);
+        return Stats::has_played_history('song', $this, $user, $agent, $date);
     }
 
     /**

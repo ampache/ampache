@@ -192,12 +192,15 @@ class Stats
      * @param integer $user
      * @param string $agent
      * @param integer $time
+     * @param bool $exact
      * @return boolean
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent, $time)
+    public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false)
     {
         $agent = Dba::escape($agent);
-        $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
+        $sql   = ($exact)
+            ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` = $time AND `object_count`.`date` = $time "
+            : "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -426,15 +429,20 @@ class Stats
     /**
      * has_played_history
      * this checks to see if the current object has been played recently by the user
+     * @param string $object_type
      * @param Song|Podcast_Episode|Video $object
      * @param integer $user
      * @param string $agent
      * @param integer $date
      * @return boolean
      */
-    public static function has_played_history($object, $user, $agent, $date)
+    public static function has_played_history($object_type, $object, $user, $agent, $date)
     {
         if ($user == -1) {
+            return false;
+        }
+        // if it's already recorded (but from a different agent), don't do it again
+        if (self::is_already_inserted($object_type, $object->id, $user, '', $date, true)) {
             return false;
         }
         $previous  = self::get_last_play($user, $agent, $date);

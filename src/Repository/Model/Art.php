@@ -273,7 +273,7 @@ class Art extends database_object
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
-                debug_event(self::class, 'Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id, 1);
+                debug_event(self::class, 'Art id {' . $this->id . '} Unable to generate thumbnail for ' . $this->type . ': ' . $this->uid, 1);
             }
         } // if no thumb, but art and we want to resize
 
