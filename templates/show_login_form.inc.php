@@ -40,7 +40,9 @@ $user_agent     = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
-} ?>
+}
+header("X-Frame-Options: SAMEORIGIN");
+$_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 
@@ -99,4 +101,4 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     echo '<h1 id="headerlogo"></h1>';
     echo '</div>';
 }
-    UI::show_footer(); ?>
+    UI::show_footer();
