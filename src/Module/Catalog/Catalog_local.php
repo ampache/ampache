@@ -520,7 +520,7 @@ class Catalog_local extends Catalog
                                 if ($file['found']) {
                                     echo scrub_out($file['track']) . ": " . T_('Success') . ":\t" . scrub_out($file['file']) . "\n";
                                 } else {
-                                    echo scrub_out($file['track']) . ": " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
+                                    echo "-: " . T_('Failure') . ":\t" . scrub_out($file['file']) . "\n";
                                 }
                                 flush();
                             } // foreach songs
