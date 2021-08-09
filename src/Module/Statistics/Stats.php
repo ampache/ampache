@@ -208,20 +208,14 @@ class Stats
 
         $db_results = Dba::read($sql, array($user, $type));
         while ($row = Dba::fetch_assoc($db_results)) {
-            // Stop double ups within 20s
+            // Stop double ups
             if ($row['object_id'] == $object_id) {
                 debug_event(self::class, 'Object already inserted {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;
             }
-            // if you've skipped recently it's also not needed!
-            if (($row['date'] < $time && $row['date'] > ($time - 20)) && $row['count_type'] == 'skip') {
-                debug_event(self::class, 'Recent skip inserted {' . (string) $row['object_id'] . '} date: ' . (string) $row['date'], 5);
-
-                return true;
-            }
             // if you've recorded in less than 5 seconds i don't believe you
-            if (($row['date'] < $time && $row['date'] > ($time - 5)) && $row['count_type'] !== 'download') {
+            if (($row['date'] <= $time && $row['date'] > ($time - 5))) {
                 debug_event(self::class, 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;

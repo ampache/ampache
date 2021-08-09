@@ -132,7 +132,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Translations could break JS with apostrophes
 * Playlist imports with an empty web_path would never work
 * Playlist imports were importing nothing
-* list preferences didn't reset allow null values after being set (Personal Favorites plugin)
+* List preferences didn't allow null values after being set (Personal Favorites plugin)
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests
