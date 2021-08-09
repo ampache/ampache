@@ -67,7 +67,7 @@ final class PrintTagsCommand extends Command
         $dir_pattern  = $catalog->sort_pattern;
         $file_pattern = $catalog->rename_pattern;
 
-        $info = $this->utilityFactory->createVaInfo(
+        $vainfo = $this->utilityFactory->createVaInfo(
             $filename,
             ['music'],
             '',
@@ -83,8 +83,8 @@ final class PrintTagsCommand extends Command
             );
         }
         try {
-            $info->get_info();
-            $results         = $info->tags;
+            $vainfo->get_info();
+            $results         = $vainfo->tags;
             $keys            = VaInfo::get_tag_type($results);
             $ampache_results = VaInfo::clean_tag_info($results, $keys, $filename);
 
@@ -94,7 +94,7 @@ final class PrintTagsCommand extends Command
             );
             $io->eol(2);
 
-            print_r($info);
+            print_r($vainfo);
 
             $io->eol();
             $io->info('------------------------------------------------------------------', true);

@@ -33,6 +33,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Save a search or Smartlist as a regular playlist
 * New option to refresh a Playlist from Searches with the same name
 * Option to change the playlist owner when editing OR importing
+* Set "X-Frame-Options: SAMEORIGIN" on login page
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -86,6 +87,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * updateCatalog now implies add when using -i / --import by itself
 * Playlist Import checks for playlists by your user only in the UI (System for the cli)
 * Plugins: Use only https for building gravatar urls
+* Scrobble actions now check for the exact time as well (different agents or scripts would insert)
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
@@ -98,7 +100,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Take out the info icon from the song row; just click the song link
 * Take song artist out of the album edit popup
 * File tag reading for Band/Album Artist
-* Corrected albumartist collection and added missing tags to vorbis, aac and id3v2
+* Corrected album_artist collection and added missing tags to vorbis, aac and id3v2
 * Removed links from album list headers when split by release type
 * REMOVED config options
   * write_id3: Use write_tags
@@ -130,6 +132,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Translations could break JS with apostrophes
 * Playlist imports with an empty web_path would never work
 * Playlist imports were importing nothing
+* list preferences didn't reset allow null values after being set (Personal Favorites plugin)
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests
