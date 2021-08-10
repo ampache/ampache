@@ -45,14 +45,19 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
      */
     public function update(int $user_id = 0): void
     {
-        // Get current keys
-        $sql = "SELECT `id`, `name`, `type` FROM `preference`";
-
-        // If it isn't the System Account's preferences
-        if ($user_id != '-1') {
-            $sql .= " WHERE `catagory` != 'system'";
+        // allow replacing empty values when not set on your tab
+        switch ($_REQUEST['tab']) {
+            case 'plugins':
+                $null_allowed = array('personalfav_playlist', 'personalfav_smartlist');
+                break;
+            default:
+                $null_allowed = array();
         }
-        $null_allowed = array('personalfav_playlist', 'personalfav_smartlist');
+
+        // Get current keys
+        $sql = ($user_id == '-1')
+            ? "SELECT `id`, `name`, `type` FROM `preference`"
+            : "SELECT `id`, `name`, `type` FROM `preference` WHERE `catagory` != 'system'";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -94,10 +99,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
             }
 
-            if (
-                $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) &&
-                $_REQUEST[$new_level]
-            ) {
+            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && $_REQUEST[$new_level]) {
                 Preference::update_level($pref_id, $_REQUEST[$new_level]);
             }
         } // end foreach preferences
