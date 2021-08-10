@@ -1186,6 +1186,9 @@ class Catalog_local extends Catalog
         if ($shn) {
             $sql .= "$join `file` LIKE '%.shn' ";
         }
+        if ($sql == "SELECT `id` FROM `song` WHERE `catalog` = ? ") {
+            return false;
+        }
         $sql .= ');';
         $results    = array();
         $db_results = Dba::read($sql, $params);
