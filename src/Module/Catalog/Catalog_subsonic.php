@@ -362,13 +362,13 @@ class Catalog_subsonic extends Catalog
                     $remove = true;
                 }
             } catch (Exception $error) {
-                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5);
             }
 
             if (!$remove) {
-                debug_event('subsonic.catalog', 'keeping song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'keeping song', 5);
             } else {
-                debug_event('subsonic.catalog', 'removing song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'removing song', 5);
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -393,7 +393,60 @@ class Catalog_subsonic extends Catalog
      */
     public function cache_catalog_proc()
     {
-        return false;
+        $remote = AmpConfig::get('cache_remote');
+        $path   = (string)AmpConfig::get('cache_path', '');
+        $target = AmpConfig::get('cache_target');
+        // need a destination
+        if (!is_dir($path) || !$remote || !$target) {
+            debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+
+            return false;
+        }
+        // make a folder per catalog
+        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
+            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
+        }
+        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+
+        // If the user's crazy, that's no skin off our back
+        if ($user_bit_rate > $max_bitrate) {
+            $max_bitrate = $user_bit_rate;
+        }
+        $options    = array(
+            'format' => $target,
+            'maxBitRate' => $max_bitrate
+        );
+        $subsonic   = $this->createClient();
+        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
+            $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
+            if (!is_file($target_file)) {
+                debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
+                try {
+                    $filehandle = fopen($target_file, 'w');
+                    $options    = array(
+                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_FILE => $filehandle,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_PIPEWAIT => 1,
+                        CURLOPT_URL => $remote_url,
+                    );
+                    $curl = curl_init();
+                    curl_setopt_array($curl, $options);
+                    curl_exec($curl);
+                    curl_close($curl);
+                    fclose($filehandle);
+                    debug_event('subsonic.catalog', 'Cached: ' . $row['id'], 5);
+                } catch (Exception $error) {
+                    debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -1132,6 +1132,10 @@ class Catalog_local extends Catalog
 
             return false;
         }
+        // make a folder per catalog
+        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
+            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
+        }
         $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
         $params = array($this->id);
         $join   = 'AND (';
@@ -1190,7 +1194,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file = rtrim(trim($path), '/') . '/' . $song_id . '.' . $target;
+            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
             if (!is_file($target_file)) {
                 debug_event('local.catalog', 'Cache needed for: ' . $target_file, 5);
                 $song = new Song($song_id);

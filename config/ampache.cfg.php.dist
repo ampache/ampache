@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 54
+config_version = 55
 
 ;#########################################################
 ; Auto Update                                            #
@@ -1217,7 +1217,7 @@ send_full_stream = "webplayer"
 ; DEFAULT: none
 ;cache_target = "mp3"
 
-; Look in your catalogs for these file extensions and pre-cache to the
+; Look in your local catalogs for these file extensions and pre-cache to the
 ; 'cache_path'. This could be helpful to reduce space needed on your
 ; web server or to make sure that clients get files quickly.
 ; Execute "bin/cli run:cacheProcess" to process these files.
@@ -1235,6 +1235,11 @@ send_full_stream = "webplayer"
 ;cache_ape  = "true"
 ;cache_shn  = "true"
 ;cache_mp3  = "true"
+
+; REMOTE CATALOGS ONLY
+; Enabling cache_remote on remote catalogs will cache every file on the remote server
+; DEFAULT: "false"
+;cache_remote  = "true"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #

@@ -57,7 +57,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
   * show_license: Hiding the license column in song rows
-* Config version 54
+* Config version 55
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
   * write_tags: Write tag changes to file (including art if available)
@@ -66,6 +66,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * catalog_verify_by_time: Only verify the files that have been modified since the last verify
   * cache_path: The folder where the pre-transcoded files will be stored
   * cache_target: Target audio format for the cache
+  * cache_remote: Remote catalogs will cache every file so this is handled separately
 
 ### Changed
 
@@ -88,6 +89,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Playlist Import checks for playlists by your user only in the UI (System for the cli)
 * Plugins: Use only https for building gravatar urls
 * Scrobble actions now check for the exact time as well (different agents or scripts would insert)
+* If you call a play url without an action we assume stream
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)

@@ -378,7 +378,59 @@ class Catalog_remote extends Catalog
      */
     public function cache_catalog_proc()
     {
-        return false;
+        $remote_handle = $this->connect();
+
+        // If we don't get anything back we failed and should bail now
+        if (!$remote_handle) {
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
+
+            return false;
+        }
+
+        $remote = AmpConfig::get('cache_remote');
+        $path   = (string)AmpConfig::get('cache_path', '');
+        // need a destination
+        if (!is_dir($path) || !$remote) {
+            debug_event('local.catalog', 'Check your cache_path and cache_remote settings', 5);
+
+            return false;
+        }
+        // make a folder per catalog
+        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
+            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
+        }
+        $handshake  = $remote_handle->info();
+        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) as `extension` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
+            $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'];
+            if (!is_file($target_file)) {
+                debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
+                try {
+                    $filehandle = fopen($target_file, 'w');
+                    $options    = array(
+                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_FILE => $filehandle,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_PIPEWAIT => 1,
+                        CURLOPT_URL => $remote_url,
+                    );
+                    $curl = curl_init();
+                    curl_setopt_array($curl, $options);
+                    curl_exec($curl);
+                    curl_close($curl);
+                    fclose($filehandle);
+                    debug_event('subsonic.catalog', 'Cached: ' . $row['id'], 5, 'ampache-catalog');
+                } catch (Exception $error) {
+                    debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                }
+                // keep alive just in case
+                $remote_handle->send_command('ping');
+            }
+        }
+
+        return true;
     }
 
     /**

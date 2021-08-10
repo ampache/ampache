@@ -146,6 +146,9 @@ final class PlayAction implements ApplicationActionInterface
         // democratic play url doesn't include these
         if ($demo_id !== '') {
             $type   = 'song';
+        }
+        // if you don't specify, assume stream
+        if (empty($action)) {
             $action = 'stream';
         }
         // allow disabling stat recording from the play url
@@ -281,26 +284,19 @@ final class PlayAction implements ApplicationActionInterface
 
                 // If require session is set then we need to make sure we're legit
                 if ($use_auth && AmpConfig::get('require_session')) {
-                    if (
-                        !AmpConfig::get('require_localnet_session') &&
-                        $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)
-                    ) {
+                    if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
                         debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
-                    } else {
-                        if (!Session::exists('stream', $session_id)) {
-                            // No valid session id given, try with cookie session from web interface
-                            $session_id = $_COOKIE[AmpConfig::get('session_name')];
-                            if (!Session::exists('interface', $session_id)) {
-                                debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
-                                header('HTTP/1.1 403 Session Expired');
+                    } elseif (!Session::exists('stream', $session_id)) {
+                        // No valid session id given, try with cookie session from web interface
+                        $session_id = $_COOKIE[AmpConfig::get('session_name')];
+                        if (!Session::exists('interface', $session_id)) {
+                            debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
+                            header('HTTP/1.1 403 Session Expired');
 
-                                return null;
-                            }
+                            return null;
                         }
                     }
-
-                    // Now that we've confirmed the session is valid
-                    // extend it
+                    // Now that we've confirmed the session is valid extend it
                     Session::extend($session_id, 'stream');
                 }
             }
@@ -439,6 +435,9 @@ final class PlayAction implements ApplicationActionInterface
             );
         }
 
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = AmpConfig::get('cache_target', '');
+        $cache_file   = false;
         if ($media->catalog) {
             // Build up the catalog for our current object
             $catalog = Catalog::create_from_id($media->catalog);
@@ -461,8 +460,15 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
             }
-
-            $media = $catalog->prepare_media($media);
+            $file_target = rtrim(trim($cache_path), '/') . '/' . $media->catalog . '/' . $media->id . '.' . $cache_target;
+            if (is_file($file_target)) {
+                debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
+                $cache_file  = true;
+                $media->file = $file_target;
+                $media->size = Core::get_filesize($file_target);
+            } else {
+                $media = $catalog->prepare_media($media);
+            }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
 
@@ -603,23 +609,6 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode_to) {
             debug_event('play/index', 'Transcode to {' . (string) $transcode_to . '}', 5);
         }
-        // have you pre-cached?
-        $cache_file = false;
-        $cache_path = (string)AmpConfig::get('cache_path', '');
-        if (is_dir($cache_path)) {
-            debug_event('play/index', 'Checking cache_path {' . $cache_path . '}', 5);
-            if (AmpConfig::get('cache_' . $media->type)) {
-                $cache_target = AmpConfig::get('cache_target', '');
-                $file_target  = rtrim(trim($cache_path), '/') . '/' . $media->id . '.' . $cache_target;
-                if (is_file($file_target)) {
-                    debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
-                    $record_stats = false;
-                    $cache_file   = true;
-                    $media->file  = $file_target;
-                    $media->size  = Core::get_filesize($file_target);
-                }
-            }
-        }
 
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
@@ -632,32 +621,24 @@ final class PlayAction implements ApplicationActionInterface
                 if ($transcode_to) {
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to explicit request for ' . (string) $transcode_to, 5);
+                } elseif ($transcode_cfg == 'always') {
+                    $transcode = true;
+                    debug_event('play/index', 'Transcoding due to always', 5);
+                } elseif ($force_downsample) {
+                    $transcode = true;
+                    debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
-                    if ($transcode_cfg == 'always') {
+                    $media_bitrate = floor($media->bitrate / 1000);
+                    // debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
+                    if (($bitrate > 0 && ($bitrate) < $media_bitrate) || ($maxbitrate > 0 && ($maxbitrate) < $media_bitrate)) {
                         $transcode = true;
-                        debug_event('play/index', 'Transcoding due to always', 5);
-                    } else {
-                        if ($force_downsample) {
-                            $transcode = true;
-                            debug_event('play/index', 'Transcoding due to downsample_remote', 5);
-                        } else {
-                            $media_bitrate = floor($media->bitrate / 1000);
-                            // debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
-                            if (($bitrate > 0 && ($bitrate) < $media_bitrate) || ($maxbitrate > 0 && ($maxbitrate) < $media_bitrate)) {
-                                $transcode = true;
-                                debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
-                            } else {
-                                if (!in_array('native', $valid_types) && $action != 'download') {
-                                    $transcode = true;
-                                    debug_event('play/index', 'Transcoding because native streaming is unavailable', 5);
-                                } else {
-                                    if (!empty($subtitle)) {
-                                        $transcode = true;
-                                        debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                                    }
-                                }
-                            }
-                        }
+                        debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
+                    } elseif (!in_array('native', $valid_types) && $action != 'download') {
+                        $transcode = true;
+                        debug_event('play/index', 'Transcoding because native streaming is unavailable', 5);
+                    } elseif (!empty($subtitle)) {
+                        $transcode = true;
+                        debug_event('play/index', 'Transcoding because subtitle requested', 5);
                     }
                 }
             } else {
@@ -692,28 +673,24 @@ final class PlayAction implements ApplicationActionInterface
                 if (isset($_REQUEST['duration'])) {
                     $troptions['duration'] = (float) $_REQUEST['duration'];
                 }
-            } else {
-                if (isset($_REQUEST['segment'])) {
-                    // 10 seconds segment. Should it be an option?
-                    $ssize            = 10;
-                    $send_all_in_once = true; // Should we use temporary folder instead?
-                    debug_event('play/index', 'Sending all data in one piece.', 5);
-                    $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
-                    $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
-                }
+            } elseif (isset($_REQUEST['segment'])) {
+                // 10 seconds segment. Should it be an option?
+                $ssize            = 10;
+                $send_all_in_once = true; // Should we use temporary folder instead?
+                debug_event('play/index', 'Sending all data in one piece.', 5);
+                $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
+                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
 
             $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
             $filepointer = $transcoder['handle'];
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
+        } elseif ($cpaction) {
+            $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
+            $filepointer = $transcoder['handle'];
+            $transcode   = true;
         } else {
-            if ($cpaction) {
-                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
-                $filepointer = $transcoder['handle'];
-                $transcode   = true;
-            } else {
-                $filepointer = fopen(Core::conv_lc_file($media->file), 'rb');
-            }
+            $filepointer = fopen(Core::conv_lc_file($media->file), 'rb');
         }
 
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
@@ -768,15 +745,13 @@ final class PlayAction implements ApplicationActionInterface
 
             if ($stream_size == null) {
                 debug_event('play/index', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
-            } else {
-                if (!$transcode) {
-                    debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
-                    fseek($filepointer, $start);
+            } elseif (!$transcode) {
+                debug_event('play/index', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
+                fseek($filepointer, $start);
 
-                    $range = $start . '-' . $end . '/' . $media->size;
-                    header('HTTP/1.1 206 Partial Content');
-                    header('Content-Range: bytes ' . $range);
-                }
+                $range = $start . '-' . $end . '/' . $media->size;
+                header('HTTP/1.1 206 Partial Content');
+                header('Content-Range: bytes ' . $range);
             }
         }
 
@@ -872,16 +847,14 @@ final class PlayAction implements ApplicationActionInterface
                 if ($buf = fread($filepointer, $read_size)) {
                     if ($send_all_in_once) {
                         $buf_all .= $buf;
-                    } else {
-                        if (!empty($buf)) {
-                            print($buf);
-                            if (ob_get_length()) {
-                                ob_flush();
-                                flush();
-                                ob_end_flush();
-                            }
-                            ob_start();
+                    } elseif (!empty($buf)) {
+                        print($buf);
+                        if (ob_get_length()) {
+                            ob_flush();
+                            flush();
+                            ob_end_flush();
                         }
+                        ob_start();
                     }
                     $bytes_streamed += strlen($buf);
                 }
