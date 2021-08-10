@@ -118,7 +118,7 @@ final class FindArtAction extends AbstractArtAction
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data != '') {
-                if ($art->insert($image_data['raw'], $image_data['mime'])) {
+                if ($art->insert($image_data, $upload['mime'])) {
                     $this->ui->showConfirmation(
                         T_('No Problem'),
                         T_('Art has been added'),
