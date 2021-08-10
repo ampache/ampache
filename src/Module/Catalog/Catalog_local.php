@@ -1198,7 +1198,7 @@ class Catalog_local extends Catalog
         }
         foreach ($results as $song_id) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
-            if (!is_file($target_file)) {
+            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
                 debug_event('local.catalog', 'Cache needed for: ' . $target_file, 5);
                 $song = new Song($song_id);
                 Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));

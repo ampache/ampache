@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
@@ -423,7 +424,7 @@ class Catalog_subsonic extends Catalog
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
-            if (!is_file($target_file)) {
+            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
                 debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
                     $filehandle = fopen($target_file, 'w');
