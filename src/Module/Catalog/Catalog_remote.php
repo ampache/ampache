@@ -389,9 +389,10 @@ class Catalog_remote extends Catalog
 
         $remote = AmpConfig::get('cache_remote');
         $path   = (string)AmpConfig::get('cache_path', '');
-        // need a destination
-        if (!is_dir($path) || !$remote) {
-            debug_event('local.catalog', 'Check your cache_path and cache_remote settings', 5);
+        $target = AmpConfig::get('cache_target');
+        // need a destination, source and target format
+        if (!is_dir($path) || !$remote || !$target) {
+            debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
 
             return false;
         }
@@ -399,12 +400,19 @@ class Catalog_remote extends Catalog
         if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
             mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
         }
+        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+
+        // If the user's crazy, that's no skin off our back
+        if ($user_bit_rate > $max_bitrate) {
+            $max_bitrate = $user_bit_rate;
+        }
         $handshake  = $remote_handle->info();
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) as `extension` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
-            $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'];
+            $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
             if (!is_file($target_file)) {
                 debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
