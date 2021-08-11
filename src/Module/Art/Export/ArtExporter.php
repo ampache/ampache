@@ -55,7 +55,7 @@ final class ArtExporter implements ArtExporterInterface
         Writer\MetadataWriterInterface $metadataWriter,
         bool $clearData
     ): void {
-        if ($clearData && $this->configContainer->get('album_art_store_disk')) {
+        if ($clearData && !$this->configContainer->get('album_art_store_disk')) {
             $clearData = false;
             $interactor->info(
                 T_('Set album_art_store_disk to remove art from the database'),
