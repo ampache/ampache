@@ -1092,7 +1092,7 @@ class Catalog_local extends Catalog
         $params = array($new_path, $this->id);
         Dba::write($sql, $params);
 
-        $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', ' " . Dba::escape($new_path) . "') WHERE `catalog` = ?";
+        $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', '" . Dba::escape($new_path) . "') WHERE `catalog` = ?";
         $params = array($this->id);
         Dba::write($sql, $params);
 

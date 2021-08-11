@@ -233,10 +233,17 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ?string $catalogName,
         ?string $newPath
     ): void {
-        $result = $this->lookupCatalogs(
+        // argument may be incorrect when not setting a type
+        if (is_dir($catalogType) && !$newPath) {
+            $newPath     = $catalogType;
+            $catalogType = 'local';
+        }
+        $result  = $this->lookupCatalogs(
             $catalogType,
             $catalogName
         );
+        // trim everything
+        $newPath = rtrim(trim((string)$newPath), "/");
 
         if ($newPath === null || !is_dir($newPath)) {
             $interactor->error('The new path is invalid', true);
