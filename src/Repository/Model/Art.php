@@ -420,7 +420,7 @@ class Art extends database_object
         } // write_id3
 
         if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
+            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
             $source = null;
         }
         // Insert it!
@@ -576,13 +576,13 @@ class Art extends database_object
      * @param $kind
      * @return boolean
      */
-    private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
+    private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
             return false;
         }
-        $path .= "art-" . $sizetext . ".jpg";
+        $path .= "art-" . $sizetext . "." . self::extension($mime);
         if (Core::is_readable($path)) {
             unlink($path);
         }
@@ -700,7 +700,7 @@ class Art extends database_object
         Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
 
         if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
+            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
             $source = null;
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1123,7 +1123,7 @@ class Art extends database_object
             while ($row = Dba::fetch_assoc($db_results)) {
                 $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
-                    self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind']);
+                    self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind'], $row['mime']);
                 }
             }
         }
