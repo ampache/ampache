@@ -1186,6 +1186,9 @@ class Catalog_local extends Catalog
         if ($shn) {
             $sql .= "$join `file` LIKE '%.shn' ";
         }
+        if ($mp3) {
+            $sql .= "$join `file` LIKE '%.mp3' ";
+        }
         if ($sql == "SELECT `id` FROM `song` WHERE `catalog` = ? ") {
             return false;
         }
