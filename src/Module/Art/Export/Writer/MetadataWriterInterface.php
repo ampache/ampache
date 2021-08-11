@@ -17,22 +17,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Art\Export\Writer;
 
-namespace Ampache\Module\Art;
+use Ampache\Repository\Model\Art;
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use Ampache\Module\Art\Export\ArtExporter;
-use Ampache\Module\Art\Export\ArtExporterInterface;
-use function DI\autowire;
-
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-    ArtExporterInterface::class => autowire(ArtExporter::class),
-    Export\Writer\MetadataWriter::class => autowire(),
-];
+interface MetadataWriterInterface
+{
+    public function write(
+        Art $Art,
+        string $dirName,
+        string $fileName
+    ): void;
+}

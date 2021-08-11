@@ -34,6 +34,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * New option to refresh a Playlist from Searches with the same name
 * Option to change the playlist owner when editing OR importing
 * Set "X-Frame-Options: SAMEORIGIN" on login page
+* Added the ability to export database art when local_metadata_dir is enabled
+* Save more types of thumb to the local_metadata_dir when enabled
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -67,6 +69,10 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * cache_path: The folder where the pre-transcoded files will be stored
   * cache_target: Target audio format for the cache
   * cache_remote: Remote catalogs will cache every file so this is handled separately
+* NEW cli commands
+  * `run:moveCatalogPath`: Change a Catalog path
+  * `run:cacheProcess`: Run the [cache process](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+  * `export:databaseArt`: Export all database art to local_metadata_dir
 
 ### Changed
 
@@ -135,6 +141,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Playlist imports with an empty web_path would never work
 * Playlist imports were importing nothing
 * List preferences didn't allow null values after being set (Personal Favorites plugin)
+* When using album_art_store_disk the art lookup was hardcoded for jpg
+* Generating thumbnails wouldn't work with album_art_store_disk enabled
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests

@@ -241,20 +241,18 @@ class Art extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
                 if (AmpConfig::get('album_art_store_disk')) {
-                    $this->raw = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
+                    $this->raw = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } else {
                     $this->raw = $results['image'];
                 }
                 $this->raw_mime = $results['mime'];
-            } else {
-                if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
-                    if (AmpConfig::get('album_art_store_disk')) {
-                        $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
-                    } else {
-                        $this->thumb = $results['image'];
-                    }
-                    $this->raw_mime = $results['mime'];
+            } elseif (AmpConfig::get('resize_images')) {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
+                } elseif ($results['size'] == '275x275') {
+                    $this->thumb = $results['image'];
                 }
+                $this->raw_mime = $results['mime'];
             }
             $this->id = (int)$results['id'];
         }
@@ -515,6 +513,16 @@ class Art extends database_object
     }
 
     /**
+     * clear_image
+     * Clear the image column (if you have the image on disk)
+     */
+    public static function clear_image($image_id)
+    {
+        $sql = "UPDATE `image` SET `image` = NULL WHERE `id` = ?";
+        Dba::write($sql, array($image_id));
+    } // clear_image
+
+    /**
      * get_dir_on_disk
      * @param string $type
      * @param string $uid
@@ -590,16 +598,16 @@ class Art extends database_object
      * @param $sizetext
      * @param string $type
      * @param integer $uid
-     * @param $kind
+     * @param string $kind
      * @return string|null
      */
-    private static function read_from_dir($sizetext, $type, $uid, $kind)
+    private static function read_from_dir($sizetext, $type, $uid, $kind, $mime)
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
         if ($path === false) {
             return null;
         }
-        $path .= "art-" . $sizetext . ".jpg";
+        $path .= "art-" . $sizetext . '.' . self::extension($mime);
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'Local image art ' . $path . ' cannot be read.', 1);
 
@@ -717,15 +725,16 @@ class Art extends database_object
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
             if (AmpConfig::get('album_art_store_disk')) {
-                $image = self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind);
+                $image = self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind, $results['mime']);
             } else {
                 $image = $results['image'];
             }
 
             if ($image != null) {
                 return array(
-                    'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type,
-                        $this->uid, $this->kind) : $results['image'],
+                    'thumb' => (AmpConfig::get('album_art_store_disk'))
+                        ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind, $results['mime'])
+                        : $results['image'],
                     'thumb_mime' => $results['mime']
                 );
             } else {
@@ -733,8 +742,14 @@ class Art extends database_object
             }
         }
 
-        // If we didn't get a result
-        $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
+        // If we didn't get a result try again
+        $results = array();
+        if (!$this->raw && $this->thumb) {
+            $results = $this->generate_thumb($this->thumb, $size, $this->raw_mime);
+        }
+        if ($this->raw) {
+            $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
+        }
         if (!empty($results)) {
             $this->save_thumb($results['thumb'], $results['thumb_mime'], $size);
         }
@@ -1103,10 +1118,10 @@ class Art extends database_object
 
         debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
-            $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind']);
+                $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
                     self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind']);
                 }
@@ -1386,6 +1401,37 @@ class Art extends database_object
         return true;
     }
 
+    /**
+     * Get the object details for the art table
+     * @return array
+     */
+    public static function get_art_array()
+    {
+        $results    = array();
+        $sql        = "SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL;";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get the object details for the art table
+     * @param  array $data
+     * @return string
+     */
+    public static function get_raw_image($data)
+    {
+        $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
+        $db_results = Dba::read($sql, $data);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            return (string)$row['image'];
+        }
+    }
     /**
      * @deprecated
      */
