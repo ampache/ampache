@@ -52,19 +52,12 @@ final class CatalogFileMethod
      *
      * @param array $input
      * file    = (string) urlencode(FULL path to local file)
-     * task    = (string) 'add', 'clean', 'verify', 'remove'
+     * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
     public static function catalog_file(array $input)
     {
-        $task = (string) $input['task'];
-        if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            Api::error(T_('Enable: delete_from_disk'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
         if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
@@ -72,18 +65,30 @@ final class CatalogFileMethod
             return false;
         }
         $file = (string) html_entity_decode($input['file']);
-        // confirm the correct data
-        if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
+        $task = explode(',', (string)$input['task']);
+        if (!$task) {
+            $task = array();
+        }
+
+        // confirm that a valid task is going to happen
+        if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
+            Api::error(T_('Enable: delete_from_disk'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!file_exists($file) && $task !== 'clean') {
+        if (!file_exists($file) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
 
             return false;
+        }
+        foreach ($task as $item) {
+            if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $item), '4710', self::ACTION, 'task', $input['api_format']);
+
+                return false;
+            }
         }
         $catalog_id = (int) $input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
@@ -113,21 +118,31 @@ final class CatalogFileMethod
         }
 
         if ($catalog->catalog_type == 'local') {
-            define('API', true);
-            unset($SSE_OUTPUT);
-            switch ($task) {
-                case 'clean':
-                    $catalog->clean_file($file, $type);
-                    break;
-                case 'verify':
-                    Catalog::update_media_from_tags($media, array($type));
-                    break;
-                case 'add':
-                    $catalog->add_file($file);
-                    break;
-                case 'remove':
-                    $media->remove();
-                    break;
+            foreach ($task as $item) {
+                define('API', true);
+                unset($SSE_OUTPUT);
+                switch ($item) {
+                    case 'clean':
+                        if ($media->id) {
+                            $catalog->clean_file($file, $type);
+                        }
+                        break;
+                    case 'verify':
+                        if ($media->id) {
+                            Catalog::update_media_from_tags($media, array($type));
+                        }
+                        break;
+                    case 'add':
+                        if (!$media->id) {
+                            $catalog->add_file($file, array());
+                        }
+                        break;
+                    case 'remove':
+                        if ($media->id) {
+                            $media->remove();
+                        }
+                        break;
+                }
             }
             Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
         } else {

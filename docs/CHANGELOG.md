@@ -206,6 +206,11 @@ All API code that used 'Tag' now references 'Genre' instead
   * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * system_update: update the database if required as well
 * playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
+* catalog_file: Allow comma-separate task values. (good for API inotify scripts)
+
+### Fixed
+
+* catalog_file: Couldn't add files
 
 ## Ampache 4.4.3-release
 

@@ -2141,11 +2141,12 @@ Make sure you remember to urlencode those file names!
 
 **ACCESS REQUIRED:** 50 (Content Manager)
 
-| Input     | Type    | Description                      | Optional |
-|-----------|---------|----------------------------------|----------|
-| 'file'    | string  | FULL path to local file          | NO       |
-| 'task'    | string  | 'add','clean','verify', 'remove' | NO       |
-| 'catalog' | integer | $catalog_id                      | NO       |
+| Input     | Type    | Description                          | Optional |
+|-----------|---------|--------------------------------------|----------|
+| 'file'    | string  | FULL path to local file              | NO       |
+| 'task'    | string  | 'add','clean','verify', 'remove'     | NO       |
+|           |         | (can include comma-separated values) | NO       |
+| 'catalog' | integer | $catalog_id                          | NO       |
 
 * return
 
@@ -2780,5 +2781,7 @@ This is for controlling democratic play (Songs only)
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(play\).xml)
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(vote\).xml)
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(playlist\).xml)
