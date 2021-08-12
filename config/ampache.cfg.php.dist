@@ -647,12 +647,12 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 ;  POSSIBLE VALUES:  artist,(year:1991 or year:1991-2000)
 ; POSSIBLE  VALUES: empty string("") or commented out for no filter
 ; DEFAULT: none;
-;spotify_art_filter="artist"
+;spotify_art_filter = "artist"
 
 ; Art search limit
 ;  Limit the total images returned
 ;  DEFAULT: 5
-;art_search_limit="15"
+;art_search_limit = 15
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums

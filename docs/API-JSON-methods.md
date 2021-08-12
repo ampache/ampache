@@ -2125,7 +2125,7 @@ Make sure you remember to urlencode those file names!
 | Input     | Type    | Description                          | Optional |
 |-----------|---------|--------------------------------------|----------|
 | 'file'    | string  | FULL path to local file              | NO       |
-| 'task'    | string  | 'add','clean','verify', 'remove'     | NO       |
+| 'task'    | string  | 'add','clean','verify','remove'      | NO       |
 |           |         | (can include comma-separated values) | NO       |
 | 'catalog' | integer | $catalog_id                          | NO       |
 
