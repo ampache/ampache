@@ -121,7 +121,10 @@ final class ShowAction implements ApplicationActionInterface
 
         $type = Core::get_get('object_type');
         if (!Art::is_valid_type($type)) {
-            debug_event('image', 'INVALID TYPE: ' . $type, 4);
+            $this->logger->notice(
+                sprintf('INVALID TYPE: %d', $type),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return $response;
         }

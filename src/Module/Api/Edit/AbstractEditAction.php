@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -55,7 +56,10 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        debug_event(__CLASS__, 'Called for action: {' . Core::get_request('action') . '}', 5);
+        $this->logger->debug(
+            sprintf('Called for action: {%d}', Core::get_request('action')),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         // Post first
         $object_type = $_POST['type'];
@@ -78,14 +82,23 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         }
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share' && $object_type != 'channel' && $object_type != 'tag') {
-            debug_event(__CLASS__, 'Type `' . $object_type . '` is not based on an item library.', 3);
+            $this->logger->warning(
+                sprintf('Type `%d` is not based on an item library.', $object_type),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return null;
         }
 
         $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        debug_event(__CLASS__, $class_name, 3);
-        debug_event(__CLASS__, $object_id, 3);
+        $this->logger->warning(
+            $class_name,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+        $this->logger->warning(
+            $object_id,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
         $libitem    = new $class_name($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();
