@@ -36,6 +36,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Set "X-Frame-Options: SAMEORIGIN" on login page
 * Added the ability to export database art when local_metadata_dir is enabled
 * Save more types of thumb to the local_metadata_dir when enabled
+* Inform with a "Not Found: podcast" when you haven't created a podcast catalog
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search
@@ -120,7 +121,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Mashup page for podcast_episodes
 * Searching by Genre needed a query overhaul
 * Album groupings are the same everywhere when album_group is enabled
-* Unknown (Orphaned) groups all unkown files into one artist and album
+* Unknown (Orphaned) groups all unknown files into one artist and album
 * Album groups for ratings and userflags
 * SQL queries regarding rating order and grouping of mutliple users
 * Ensure valid media is found before inserting into a playlist

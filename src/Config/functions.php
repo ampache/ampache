@@ -1084,12 +1084,17 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
+    $results    = Dba::fetch_assoc($db_results);
 
     if ($allow_none) {
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
+    if (empty($results && !empty($filter_type))) {
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        echo "\t<option value=\"\"selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
+    }
 
-    while ($row = Dba::fetch_assoc($db_results)) {
+    foreach ($results as $row) {
         $selected = '';
         if ($row['id'] == (string) $catalog_id) {
             $selected = "selected=\"selected\"";
