@@ -31,22 +31,26 @@ use Ampache\Module\Art\Export\ArtExporterInterface;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 final class ExportArtCommand extends Command
 {
+    private LoggerInterface $logger;
+
     private ArtExporterInterface $artExporter;
 
     private ContainerInterface $dic;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger,
         ArtExporterInterface $artExporter,
         ContainerInterface $dic
     ) {
         parent::__construct('export:databaseArt', T_('Export all database art to local_metadata_dir'));
 
-        $this->artExporter     = $artExporter;
-        $this->dic             = $dic;
+        $this->logger      = $logger;
+        $this->artExporter = $artExporter;
+        $this->dic         = $dic;
 
         $this
             ->option('-c|--clear', T_('Clear the database image when the local file exists'), 'boolval', false)

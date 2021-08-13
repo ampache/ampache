@@ -3,10 +3,9 @@
 ; General Config                                         #
 ;#########################################################
 
-; This value is used to detect quickly
-; if this config file is up to date
-; this is compared against a value hard-coded
-; into the init script
+; This value is used to detect if this config file is up to date
+; this is compared against a constant called CONFIG_VERSION
+; that is located in src/Config/Init/InitializationHandlerConfig.php
 config_version = 55
 
 ;#########################################################
@@ -64,7 +63,6 @@ config_version = 55
 ; DEFAULT: none
 ;local_web_path = "http://localhost/ampache"
 
-
 ;#########################################################
 ; Database                                               #
 ;#########################################################
@@ -108,7 +106,6 @@ database_password = password
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
 ; DEFAULT: "utf8mb4_unicode_ci"
 ;database_collation = "utf8mb4_unicode_ci"
-
 
 ;#########################################################
 ; Session and Security                                   #
@@ -205,7 +202,6 @@ require_localnet_session = "true"
 ; IP address at any one time, this is to prevent sharing of accounts
 ; DEFAULT: "false"
 ;prevent_multiple_logins = "true"
-
 
 ;#########################################################
 ; Metadata                                               #
@@ -838,7 +834,6 @@ log_path = "/var/log/ampache"
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
 
-
 ;#########################################################
 ; Encoding Settings                                      #
 ;#########################################################
@@ -863,7 +858,6 @@ site_charset = UTF-8
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
 
-
 ;#########################################################
 ; Custom actions (optional)                              #
 ;#########################################################
@@ -884,7 +878,6 @@ site_charset = UTF-8
 ;custom_play_action_title_0 = "Karaoke"
 ;custom_play_action_icon_0 = "microphone"
 ;custom_play_action_run_0 = "sox \"%f\" -p oops | ffmpeg -i pipe:0 -f %c pipe:1"
-
 
 ;#########################################################
 ; LDAP login info (optional)                             #
@@ -950,7 +943,6 @@ site_charset = UTF-8
 ;ldap_member_attribute = "member"
 ;ldap_member_attribute = "memberuid"
 
-
 ;#########################################################
 ; OpenID login info (optional)                           #
 ;#########################################################
@@ -959,7 +951,6 @@ site_charset = UTF-8
 ; DEFAULT: none
 ; VALUES: PAPE_AUTH_MULTI_FACTOR_PHYSICAL,PAPE_AUTH_MULTI_FACTOR,PAPE_AUTH_PHISHING_RESISTANT
 ;openid_required_pape = ""
-
 
 ;#########################################################
 ; Public Registration settings, defaults to disabled     #
@@ -1038,12 +1029,11 @@ registration_display_fields = "fullname,website"
 ; DEFAULT: fullname
 registration_mandatory_fields = "fullname"
 
-
-;########################################################
-; These options control the dynamic downsampling based  #
-; on current usage                                      #
-; *Note* Transcoding must be enabled and working        #
-;########################################################
+;#########################################################
+; These options control the dynamic downsampling based   #
+; on current usage                                       #
+; *Note* Transcoding must be enabled and working         #
+;#########################################################
 
 ; Attempt to optimize bandwidth by dynamically lowering the bit rate of new
 ; streams. Since the bit rate is only adjusted at the beginning of a song, the
@@ -1061,6 +1051,7 @@ registration_mandatory_fields = "fullname"
 ;#########################################################
 ; Transcode Settings                                     #
 ;#########################################################
+
 ; These are commands used to transcode non-streaming
 ; formats to the target file type for streaming.
 ; This can be useful in re-encoding file types that don't stream
@@ -1204,6 +1195,7 @@ send_full_stream = "webplayer"
 ;#########################################################
 ; Transcode Caching                                      #
 ;#########################################################
+
 ; These are commands used to pre-cache a file format for streaming.
 ; This helps avoid waiting for transcodes to finish and makes
 ; files immediately available to the client.
@@ -1257,7 +1249,6 @@ send_full_stream = "webplayer"
 ; DEFAULT: "false"
 ;force_ssl = "true"
 
-
 ;#########################################################
 ;  Mail Settings                                         #
 ;#########################################################
@@ -1294,14 +1285,12 @@ send_full_stream = "webplayer"
 ; DEFAULT: strict
 ;mail_check = "strict"
 
-
 ;#########################################################
 ;  sendmail Settings                                     #
 ;#########################################################
 
 ; DEFAULT: /usr/sbin/sendmail
 ;sendmail_path = "/usr/sbin/sendmail"
-
 
 ;#########################################################
 ;  SMTP Settings                                         #
@@ -1332,9 +1321,10 @@ send_full_stream = "webplayer"
 ; your mail auth password.
 ;mail_auth_pass = ""
 
-;#############################
-;   Abbreviation Filter      #
-;#############################
+;#########################################################
+;   Abbreviation Filter                                  #
+;#########################################################
+
 ; For file name parsing. Any unnecessary abbreviations in file names can be removed during parsing
 ; by adding them to the list below so that they will be removed during the parsing process.
 common_abbr = "divx,xvid,dvdrip,hdtv,lol,axxo,repack,xor,pdtv,real,vtv,caph,2hd,proper,fqm,uncut,topaz,tvt,notv,fpn,fov,orenji,0tv,omicron,dsr,ws,sys,crimson,wat,hiqt,internal,brrip,boheme,vost,vostfr,fastsub,addiction,x264,LOL,720p,1080p,YIFY,evolve,fihtv,first,bokutox,bluray,tvboom,info"

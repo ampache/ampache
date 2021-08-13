@@ -657,8 +657,7 @@ final class InstallationHelper implements InstallationHelperInterface
         $dist     = fread($handle, filesize($distfile));
         fclose($handle);
 
-        $data = explode("\n", (string) $dist);
-
+        $data  = explode("\n", (string) $dist);
         $final = "";
         foreach ($data as $line) {
             if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
