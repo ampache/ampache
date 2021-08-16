@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 55
+config_version = 56
 
 ;#########################################################
 ; Auto Update                                            #
@@ -272,8 +272,7 @@ additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 
 ; File Pattern
 ; This defines which file types Ampache will attempt to catalog
-; You can specify any file extension you want in here separating them
-; with a |
+; You can specify any file extension you want in here separating them with a |
 ; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
 catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
 
@@ -296,6 +295,12 @@ catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
 ; your music. You may add any prefix you want separating them with a |
 ; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
 catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
+
+; Ignore Pattern
+; Ignore files that match this pattern
+; You can specify any file extension you want in here separating them with a |
+; DEFAULT: None
+; catalog_ignore_pattern = "\(HTOA\)"
 
 ; Catalog disable
 ; This defines if catalog can be disabled without removing database entries

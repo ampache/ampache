@@ -60,7 +60,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
   * show_license: Hiding the license column in song rows
-* Config version 55
+* Config version 56
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions
   * write_tags: Write tag changes to file (including art if available)
@@ -70,6 +70,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * cache_path: The folder where the pre-transcoded files will be stored
   * cache_target: Target audio format for the cache
   * cache_remote: Remote catalogs will cache every file so this is handled separately
+  * catalog_ignore_pattern: Allow you to ignore audio, video and playlist files with a regex
 * NEW cli commands
   * `run:moveCatalogPath`: Change a Catalog path
   * `run:cacheProcess`: Run the [cache process](https://github.com/ampache/ampache/wiki/Transcode-Caching)

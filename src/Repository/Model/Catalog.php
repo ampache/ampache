@@ -423,9 +423,12 @@ abstract class Catalog extends database_object
      */
     public static function is_audio_file($file)
     {
-        $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern') . ")$/i";
+        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
+        $ignore_check   = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;
+        $file_pattern   = AmpConfig::get('catalog_file_pattern');
+        $pattern        = "/\.(" . $file_pattern . ")$/i";
 
-        return (preg_match($pattern, $file) === 1);
+        return ($ignore_check && preg_match($pattern, $file));
     }
 
     /**
@@ -435,9 +438,11 @@ abstract class Catalog extends database_object
      */
     public static function is_video_file($file)
     {
-        $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
+        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
+        $ignore_check   = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;
+        $video_pattern  = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
 
-        return (preg_match($video_pattern, $file) === 1);
+        return ($ignore_check && preg_match($video_pattern, $file));
     }
 
     /**
@@ -447,9 +452,11 @@ abstract class Catalog extends database_object
      */
     public static function is_playlist_file($file)
     {
+        $ignore_pattern   = AmpConfig::get('catalog_ignore_pattern');
+        $ignore_check     = !($ignore_pattern) || preg_match("/(" . $ignore_pattern . ")/i", $file) === 0;
         $playlist_pattern = "/\.(" . AmpConfig::get('catalog_playlist_pattern') . ")$/i";
 
-        return preg_match($playlist_pattern, $file);
+        return ($ignore_check && preg_match($playlist_pattern, $file));
     }
 
     /**
