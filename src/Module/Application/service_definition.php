@@ -240,6 +240,7 @@ return [
     Admin\Catalog\UpdateFileTagsAction::class => autowire(),
     Admin\Catalog\UpdateAllFileTagsActions::class => autowire(),
     Admin\Catalog\GatherMediaArtAction::class => autowire(),
+    Admin\Catalog\ImportToCatalogAction::class => autowire(),
     Admin\Catalog\AddCatalogAction::class => autowire(),
     Admin\Catalog\UpdateFromAction::class => autowire(),
     Admin\Catalog\UpdateAllCatalogsAction::class => autowire(),

@@ -37,6 +37,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Added the ability to export database art when local_metadata_dir is enabled
 * Save more types of thumb to the local_metadata_dir when enabled
 * Inform with a "Not Found: podcast" when you haven't created a podcast catalog
+* Added CatalogUpdate import command to the WebUI (Import = Add + playlist imports)
 * Search changes
   * Add 'possible_duplicate', 'recently_played' to song, artist and album search
   * Add 'catalog' to artist and album search

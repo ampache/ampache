@@ -34,6 +34,7 @@ use Ampache\Module\Application\Admin\Catalog\DeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\EnableDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\FullServiceAction;
 use Ampache\Module\Application\Admin\Catalog\GatherMediaArtAction;
+use Ampache\Module\Application\Admin\Catalog\ImportToCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCatalogsAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
@@ -72,6 +73,7 @@ $dic->get(ApplicationRunner::class)->run(
         UpdateFileTagsAction::REQUEST_KEY => UpdateFileTagsAction::class,
         UpdateAllFileTagsActions::REQUEST_KEY => UpdateAllFileTagsActions::class,
         GatherMediaArtAction::REQUEST_KEY => GatherMediaArtAction::class,
+        ImportToCatalogAction::REQUEST_KEY => ImportToCatalogAction::class,
         AddCatalogAction::REQUEST_KEY => AddCatalogAction::class,
         UpdateFromAction::REQUEST_KEY => UpdateFromAction::class,
         UpdateAllCatalogsAction::REQUEST_KEY => UpdateAllCatalogsAction::class,
