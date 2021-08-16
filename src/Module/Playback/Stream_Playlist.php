@@ -251,8 +251,9 @@ class Stream_Playlist
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
                     $show_song_art    = AmpConfig::get('show_song_art', false);
-                    $art_object       = ($show_song_art) ? $object->id : $object->album;
-                    $art_type         = ($show_song_art) ? 'song' : 'album';
+                    $has_art          = Art::has_db($object->id, 'song');
+                    $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
+                    $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
                     $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['codec']     = $object->type;

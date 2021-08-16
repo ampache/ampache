@@ -133,8 +133,9 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($sres as $songid) {
                         $song       = new Song($songid);
-                        $art_object = ($show_song_art) ? $song->id : $song->album;
-                        $art_type   = ($show_song_art) ? 'song' : 'album';
+                        $has_art    = Art::has_db($song->id, 'song');
+                        $art_object = ($show_song_art && $has_art) ? $song->id : $song->album;
+                        $art_type   = ($show_song_art && $has_art) ? 'song' : 'album';
                         $results[]  = array(
                             'type' => T_('Songs'),
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,

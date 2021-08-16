@@ -1032,8 +1032,9 @@ class Xml_Data
             $rating        = new Rating($song_id, 'song');
             $flag          = new Userflag($song_id, 'song');
             $show_song_art = AmpConfig::get('show_song_art', false);
-            $art_object    = ($show_song_art) ? $song->id : $song->album;
-            $art_type      = ($show_song_art) ? 'song' : 'album';
+            $has_art       = Art::has_db($song->id, 'song');
+            $art_object    = ($show_song_art && $has_art) ? $song->id : $song->album;
+            $art_type      = ($show_song_art && $has_art) ? 'song' : 'album';
             $art_url       = Art::url($art_object, $art_type, Core::get_request('auth'));
             $playlist_track++;
 

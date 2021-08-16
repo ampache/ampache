@@ -1304,8 +1304,9 @@ class Subsonic_Api
                 // in most cases the song doesn't have a picture, but the album does
                 $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $show_song_art = AmpConfig::get('show_song_art', false);
-                $art_object    = ($show_song_art) ? $song->id : $song->album;
-                $art_type      = ($show_song_art) ? 'song' : 'album';
+                $has_art       = Art::has_db($song->id, 'song');
+                $art_object    = ($show_song_art && $has_art) ? $song->id : $song->album;
+                $art_type      = ($show_song_art && $has_art) ? 'song' : 'album';
                 $art           = new Art($art_object, $art_type);
             }
         }
