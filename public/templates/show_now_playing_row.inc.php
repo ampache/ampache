@@ -75,7 +75,7 @@ use Ampache\Module\Api\Ajax;
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
-      $playing = (AmpConfig::get('show_song_art')) ? new Song($media->id) : new Album($media->album);
+      $playing = (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) ? new Song($media->id) : new Album($media->album);
       if ($playing->id) {
           $playing->format();
           $playing->display_art(1);
