@@ -564,6 +564,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function garbage_collection()
     {
+        // delete files matching catalog_ignore_pattern
+        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
+        if ($ignore_pattern) {
+            Dba::write("DELETE FROM `song` WHERE `file` REGEXP ?;", array($ignore_pattern));
+        }
         // delete duplicates
         Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
         // clean up missing catalogs

@@ -465,6 +465,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public static function garbage_collection()
     {
+        // delete files matching catalog_ignore_pattern
+        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
+        if ($ignore_pattern) {
+            Dba::write("DELETE FROM `video` WHERE `file` REGEXP ?;", array($ignore_pattern));
+        }
         // clean up missing catalogs
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // clean up sub-tables of videos
