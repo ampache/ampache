@@ -643,7 +643,7 @@ class Catalog_local extends Catalog
             }
             $file_time = filemtime($row['file']);
             // check the modification time on the file to see if it's worth checking the tags.
-            if ($verify_by_time && ($this->last_update > $file_time && $row['update_time'] > $file_time)) {
+            if ($verify_by_time && ($this->last_update > $file_time || $row['update_time'] > $file_time)) {
                 continue;
             }
 
@@ -1200,10 +1200,25 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
+            $song        = new Song($song_id);
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
-            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
-                debug_event('local.catalog', 'Cache needed for: ' . $target_file, 5);
-                $song = new Song($song_id);
+            $file_exists = is_file($target_file);
+            if ($file_exists) {
+                // get the time for the cached file and compare
+                $vainfo = $this->getUtilityFactory()->createVaInfo(
+                    $target_file,
+                    $this->get_gather_types('music'),
+                    '',
+                    '',
+                    $this->sort_pattern,
+                    $this->rename_pattern
+                );
+                if ($song->time > 0 && !$vainfo->check_time($song->time)) {
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->file, 5);
+                }
+            }
+            if (!$file_exists) {
+                debug_event('local.catalog', 'Cache needed for: ' . $song->file, 5);
                 Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
             }
         }

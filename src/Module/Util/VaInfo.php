@@ -289,6 +289,25 @@ final class VaInfo implements VaInfoInterface
     } // get_info
 
     /**
+     * check_time
+     * check a cached file is close to the expected time
+     * @param int $time
+     * @return bool
+     */
+    public function check_time($time)
+    {
+        $this->get_info();
+        foreach ($this->tags as $results) {
+            if (isset($results['time'])) {
+                return ($time >= $results['time'] - 2);
+            }
+        }
+
+
+        return false;
+    } // check_time
+
+    /**
      * write_id3
      * This function runs the various steps to gathering the metadata
      * @param $tagData
