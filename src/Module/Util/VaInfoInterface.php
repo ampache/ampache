@@ -40,6 +40,14 @@ interface VaInfoInterface
     public function get_info();
 
     /**
+     * check_time
+     * check a cached file is close to the expected time
+     * @param int $time
+     * @return bool
+     */
+    public function check_time($time);
+
+    /**
      * write_id3
      * This function runs the various steps to gathering the metadata
      * @param $tagData
