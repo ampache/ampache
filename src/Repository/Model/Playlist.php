@@ -108,14 +108,17 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
+     * @param boolean $includePublic
      * @return integer[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true)
+    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
-        $key = 'playlistids';
+        $key = ($includePublic)
+            ? 'playlistids'
+            : 'accessibleplaylistids';
         if (empty($playlist_name)) {
             if (parent::is_cached($key, $user_id)) {
                 return parent::get_from_cache($key, $user_id);
@@ -126,7 +129,9 @@ class Playlist extends playlist_object
         $params   = array();
 
         if (!$is_admin) {
-            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
+            $sql .= ($includePublic)
+                ? "WHERE (`user` = ? OR `type` = 'public') "
+                : "WHERE (`user` = ?) ";
             $params[] = $user_id;
         }
         if ($playlist_name !== '') {
@@ -382,28 +387,6 @@ class Playlist extends playlist_object
 
         return (int) $results['0'];
     } // get_total_duration
-
-    /**
-     * get_users
-     * This returns the specified users playlists as an array of playlist ids
-     * @param integer $user_id
-     * @return array
-     *
-     * @deprecated Use PlaylistLoader::getByUserId
-     */
-    public static function get_users($user_id)
-    {
-        $results = array();
-
-        $sql        = "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`";
-        $db_results = Dba::read($sql, array($user_id));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_users
 
     /**
      * update

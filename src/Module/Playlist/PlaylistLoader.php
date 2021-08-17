@@ -38,7 +38,7 @@ final class PlaylistLoader implements PlaylistLoaderInterface
 
     public function loadByUserId(int $userId): array
     {
-        $playlists = Playlist::get_users($userId);
+        $playlists = Playlist::get_playlists($userId, '', true, false);
         Playlist::build_cache($playlists);
 
         $result = [];
