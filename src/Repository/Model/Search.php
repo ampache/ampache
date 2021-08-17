@@ -567,11 +567,11 @@ class Search extends playlist_object
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
         }
 
-        $playlists = Playlist::get_playlist_array((int)$this->search_user);
+        $playlists = Playlist::get_playlist_array($this->search_user->id);
         if (!empty($playlists)) {
             $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists);
         }
-        $playlists = self::get_search_array((int)$this->search_user);
+        $playlists = self::get_search_array($this->search_user->id);
         if (!empty($playlists)) {
             $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists);
         }
@@ -608,7 +608,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -676,7 +676,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -735,7 +735,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', (int)$this->search_user) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
