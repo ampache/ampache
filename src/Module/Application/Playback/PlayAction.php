@@ -465,9 +465,11 @@ final class PlayAction implements ApplicationActionInterface
             $file_target = rtrim(trim($cache_path), '/') . '/' . $media->catalog . '/' . $media->id . '.' . $cache_target;
             if (is_file($file_target)) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
-                $cache_file  = true;
-                $media->file = $file_target;
-                $media->size = Core::get_filesize($file_target);
+                $cache_file   = true;
+                $media->file  = $file_target;
+                $media->size  = Core::get_filesize($file_target);
+                $media->type  = $cache_target;
+                $transcode_to = $cache_target;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($media->catalog);
