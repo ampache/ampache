@@ -1046,7 +1046,7 @@ class Album extends database_object implements library_item
     /**
      * Update an album field.
      * @param string $field
-     * @param $value
+     * @param string|int $value
      * @param integer $album_id
      */
     private static function update_field($field, $value, $album_id)
@@ -1073,19 +1073,19 @@ class Album extends database_object implements library_item
             }
         }
         foreach ($results as $album_id) {
-            $artists    = array();
-            $sql        = "SELECT MIN(`artist`) FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
+            $artist     = 0;
+            $sql        = "SELECT MIN(`artist`) AS `artist` FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, array($album_id));
 
             // these are albums that only have 1 artist
             while ($row = Dba::fetch_assoc($db_results)) {
-                $artists[] = (int) $row['artist'];
+                $artist = (int)$row['artist'];
             }
 
             // Update the album
-            if (!empty($artists)) {
-                debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);
-                Album::update_field('album_artist', $artists[0], $album_id);
+            if ($artist > 0) {
+                debug_event(self::class, 'Found album_artist {' . $artist . '} for: ' . $album_id, 5);
+                Album::update_field('album_artist', $artist, $album_id);
             }
         }
     }
