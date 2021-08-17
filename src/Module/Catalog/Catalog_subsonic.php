@@ -425,7 +425,6 @@ class Catalog_subsonic extends Catalog
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
-                debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
                     $filehandle = fopen($target_file, 'w');
                     $options    = array(
@@ -440,7 +439,7 @@ class Catalog_subsonic extends Catalog
                     curl_exec($curl);
                     curl_close($curl);
                     fclose($filehandle);
-                    debug_event('subsonic.catalog', 'Cached: ' . $row['id'], 5);
+                    debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
                 } catch (Exception $error) {
                     debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
                 }

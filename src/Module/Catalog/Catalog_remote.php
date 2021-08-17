@@ -393,7 +393,7 @@ class Catalog_remote extends Catalog
         $target = AmpConfig::get('cache_target');
         // need a destination, source and target format
         if (!is_dir($path) || !$remote || !$target) {
-            debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+            debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
 
             return false;
         }
@@ -415,7 +415,7 @@ class Catalog_remote extends Catalog
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
             $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
             if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
-                debug_event('subsonic.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
+                debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
                     $filehandle = fopen($target_file, 'w');
                     $options    = array(
@@ -430,9 +430,9 @@ class Catalog_remote extends Catalog
                     curl_exec($curl);
                     curl_close($curl);
                     fclose($filehandle);
-                    debug_event('subsonic.catalog', 'Cached: ' . $row['id'], 5, 'ampache-catalog');
+                    debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
                 } catch (Exception $error) {
-                    debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
                 }
                 // keep alive just in case
                 $remote_handle->send_command('ping');

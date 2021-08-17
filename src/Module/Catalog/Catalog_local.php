@@ -1218,8 +1218,8 @@ class Catalog_local extends Catalog
                 }
             }
             if (!$file_exists) {
-                debug_event('local.catalog', 'Cache needed for: ' . $song->file, 5);
                 Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
+                debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }
         }
 
