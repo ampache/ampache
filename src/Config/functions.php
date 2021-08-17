@@ -1084,7 +1084,10 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
-    $results    = Dba::fetch_assoc($db_results);
+    $results    = array();
+    while ($row = Dba::fetch_assoc($db_results)) {
+        $results[] = $row;
+    }
 
     if ($allow_none) {
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
