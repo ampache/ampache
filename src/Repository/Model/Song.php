@@ -838,36 +838,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
-     * find_duplicates
-     *
-     * This function takes a search type and returns a list of probable
-     * duplicates
-     * @param string $search_type
-     * @return array
-     */
-    public static function find_duplicates($search_type)
-    {
-        $where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-        $sql       = "SELECT `artist`, `album`, `title`, COUNT(`title`) FROM `song` $where_sql GROUP BY `artist`, `album`, `title`";
-
-        if ($search_type == 'artist_title' || $search_type == 'artist_album_title') {
-            $sql .= ',`artist`';
-        }
-        if ($search_type == 'artist_album_title') {
-            $sql .= ',`album`';
-        }
-        $sql .= ' HAVING COUNT(`title`) > 1 ORDER BY `title`';
-
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($item = Dba::fetch_assoc($db_results)) {
-            $results[] = $item;
-        } // end while
-
-        return $results;
-    }
-
-    /**
      * find
      * @param array $data
      * @return boolean
