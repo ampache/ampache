@@ -898,6 +898,32 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * has_access
+     *
+     * When filtering catalogs you shouldn't be able to play the files
+     * @param int $catalog_id
+     * @param int $user_id
+     * @return bool
+     */
+    public static function has_access($catalog_id, $user_id)
+    {
+        if (!AmpConfig::get('catalog_filter')) {
+            return true;
+        }
+        $params = array($catalog_id);
+        $sql    = "SELECT `filter_user` FROM `catalog` WHERE `id` = ?";
+
+        $db_results = Dba::read($sql, $params);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ((int)$row['filter_user'] == 0 || (int)$row['filter_user'] == $user_id) {
+                return true;
+            }
+        }
+
+        return false;
+    } // has_access
+
+    /**
      * get_server_counts
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server

@@ -439,10 +439,7 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target = AmpConfig::get('cache_target', '');
         $cache_file   = false;
         if ($media->catalog) {
-            // Build up the catalog for our current object
-            $catalog = Catalog::create_from_id($media->catalog);
-
-            /* If the media is disabled */
+            // The media is disabled
             if (isset($media->enabled) && !make_bool($media->enabled)) {
                 debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
                 // Check to see if this is a democratic playlist, if so remove it completely
@@ -453,7 +450,12 @@ final class PlayAction implements ApplicationActionInterface
 
                 return null;
             }
+            // The media catalog is restricted
+            if (!Catalog::has_access($media->catalog, $user->id)) {
+                debug_event('play/index', "Error: You are not allowed to play $media->file", 3);
 
+                return null;
+            }
             // If we are running in Legalize mode, don't play medias already playing
             if (AmpConfig::get('lock_songs')) {
                 if (!Stream::check_lock_media($media->id, $type)) {
@@ -467,11 +469,12 @@ final class PlayAction implements ApplicationActionInterface
                 $media->file = $file_target;
                 $media->size = Core::get_filesize($file_target);
             } else {
-                $media = $catalog->prepare_media($media);
+                // Build up the catalog for our current object
+                $catalog = Catalog::create_from_id($media->catalog);
+                $media   = $catalog->prepare_media($media);
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
-
             if ($type == "song_preview") {
                 $media->stream();
             } else {

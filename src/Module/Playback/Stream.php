@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -474,15 +475,17 @@ class Stream
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            $media->format();
-            $client = new User($row['user']);
-            $client->format();
-            $results[] = array(
-                'media' => $media,
-                'client' => $client,
-                'agent' => $row['agent'],
-                'expire' => $row['expire']
-            );
+            if (Catalog::has_access($media->catalog, $media->id)) {
+                $media->format();
+                $client = new User($row['user']);
+                $client->format();
+                $results[] = array(
+                    'media' => $media,
+                    'client' => $client,
+                    'agent' => $row['agent'],
+                    'expire' => $row['expire']
+                );
+            }
         } // end while
 
         return $results;
