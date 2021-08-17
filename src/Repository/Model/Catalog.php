@@ -2171,10 +2171,9 @@ abstract class Catalog extends database_object
             Song::update_song($song->id, $new_song);
 
             // If you've migrated the album/artist you need to migrate their data here
-            if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album, $new_song->album)) {
-                $update_time = time();
-                Song::update_utime($song->id, $update_time);
-            }
+            self::migrate('artist', $song->artist, $new_song->artist);
+            self::migrate('album', $song->album, $new_song->album);
+
             if ($song->tags != $new_song->tags) {
                 // we do still care if there are no tags on your object
                 $tag_comma = (!empty($new_song->tags))
@@ -2187,6 +2186,8 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
+            $update_time = time();
+            Song::update_utime($song->id, $update_time);
         } else {
             debug_event(self::class, "$song->file : no differences found", 5);
         }
