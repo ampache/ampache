@@ -704,78 +704,48 @@ final class VaInfo implements VaInfoInterface
                     case 'avi':
                     case 'flv':
                     case 'matroska':
-                        $this->logger->debug(
-                            'Cleaning ' . $key,
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning ' . $key, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'vorbiscomment':
-                        $this->logger->debug(
-                            'Cleaning vorbis',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v1':
-                        $this->logger->debug(
-                            'Cleaning id3v1',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
-                        $this->logger->debug(
-                            'Cleaning id3v2',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        $this->logger->debug(
-                            'Cleaning quicktime',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning quicktime', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        $this->logger->debug(
-                            'Cleaning riff',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning riff', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_riff($tag_array);
                         break;
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        $this->logger->debug(
-                            'Cleaning MPEG',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning MPEG', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'asf':
                     case 'wmv':
                     case 'wma':
                         $key = 'asf';
-                        $this->logger->debug(
-                            'Cleaning WMV/WMA/ASF',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'lyrics3':
-                        $this->logger->debug(
-                            'Cleaning lyrics3',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     default:
-                        $this->logger->debug(
-                            'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename,
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
+                        //$this->logger->debug('Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -1650,10 +1620,7 @@ final class VaInfo implements VaInfoInterface
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        $logger->debug(
-            'Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-        );
+        //$logger->debug('Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);
