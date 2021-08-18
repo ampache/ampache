@@ -635,7 +635,7 @@ class Art extends database_object
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
             if ($path !== false) {
-                self::delete_rec_dir($path);
+                self::delete_rec_dir(rtrim($path, '/'));
             }
         }
     }
@@ -653,7 +653,7 @@ class Art extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
-                    self::delete_rec_dir($path . '/' . $file);
+                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file);
                 } else {
                     unlink($path . '/' . $file);
                 }
