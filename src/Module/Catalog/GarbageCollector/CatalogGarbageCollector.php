@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -30,6 +31,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -69,6 +71,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Song::garbage_collection();
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
+        Podcast_Episode::garbage_collection();
         Wanted::garbage_collection();
         Artist::garbage_collection();
         Art::garbage_collection();
@@ -76,6 +79,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Rating::garbage_collection();
         Userflag::garbage_collection();
         Label::garbage_collection();
+        Recommendation::garbage_collection();
         $this->useractivityRepository->collectGarbage();
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();

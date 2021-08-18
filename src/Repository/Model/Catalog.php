@@ -3003,10 +3003,11 @@ abstract class Catalog extends database_object
     {
         // Large catalog deletion can take time
         set_time_limit(0);
+        $params = array($catalog_id);
 
         // First remove the songs in this catalog
         $sql        = "DELETE FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::write($sql, array($catalog_id));
+        $db_results = Dba::write($sql, $params);
 
         // Only if the previous one works do we go on
         if (!$db_results) {
@@ -3015,11 +3016,26 @@ abstract class Catalog extends database_object
         self::clean_empty_albums();
 
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
-        $db_results = Dba::write($sql, array($catalog_id));
+        $db_results = Dba::write($sql, $params);
 
         if (!$db_results) {
             return false;
         }
+
+        $sql        = "DELETE FROM `podcast` WHERE `catalog` = ?";
+        $db_results = Dba::write($sql, $params);
+
+        if (!$db_results) {
+            return false;
+        }
+
+        $sql        = "DELETE FROM `live_stream` WHERE `catalog` = ?";
+        $db_results = Dba::write($sql, $params);
+
+        if (!$db_results) {
+            return false;
+        }
+
         $catalog = self::create_from_id($catalog_id);
 
         if (!$catalog->id) {
@@ -3027,7 +3043,7 @@ abstract class Catalog extends database_object
         }
 
         $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
-        $db_results = Dba::write($sql, array($catalog_id));
+        $db_results = Dba::write($sql, $params);
 
         if (!$db_results) {
             return false;
@@ -3035,7 +3051,7 @@ abstract class Catalog extends database_object
 
         // Next Remove the Catalog Entry it's self
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
-        Dba::write($sql, array($catalog_id));
+        Dba::write($sql, $params);
 
         // run garbage collection
         static::getCatalogGarbageCollector()->collect();

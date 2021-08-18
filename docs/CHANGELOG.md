@@ -148,6 +148,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * When using album_art_store_disk the art lookup was hardcoded for jpg
 * Generating thumbnails wouldn't work with album_art_store_disk enabled
 * Updating config values for spotify_art_filter and art_search_limit would not keep your value
+* Delete podcasts and radio streams when deleting a catalog
+* Collect recommendation garbage correctly
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests

@@ -61,7 +61,8 @@ class Recommendation
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 31556952)));
+        Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` from `song`)) OR (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` from `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` from `album`)))", array((time() - 31556952)));
+        Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` from `recommendation`);");
     }
 
     /**
