@@ -1961,6 +1961,11 @@ abstract class Catalog extends database_object
 
             return array();
         }
+        if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
+            debug_event(self::class, 'update_media_from_tags: Error loading file ' . $media->file, 2);
+
+            return array();
+        }
 
         $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         // Figure out what type of object this is and call the right  function
