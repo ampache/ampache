@@ -705,6 +705,7 @@ class Ui implements UiInterface
             case 'show_played_times':
             case 'use_original_year':
             case 'hide_single_artist':
+            case 'hide_genres':
             case 'show_skipped_times':
             case 'show_license':
             case 'song_page_title':

@@ -267,6 +267,9 @@ class Update
         $update_string = "* Add `episodes` to podcast table to track episode count";
         $version[]     = array('version' => '500014', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('hide_genres') Hide the Genre column in browse table rows";
+        $version[]     = array('version' => '500015', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1575,6 +1578,23 @@ class Update
         $retval &= Dba::write($sql);
         $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_500015
+     *
+     * Add ui option ('hide_genres') Hide the Genre column in browse table rows
+     */
+    public static function update_500015()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
     }

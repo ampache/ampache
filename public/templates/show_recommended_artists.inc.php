@@ -29,7 +29,8 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-$thcount      = 8;
+$hide_genres  = AmpConfig::get('hide_genres');
+$thcount      = 7;
 //mashup and grid view need different css
 $cel_cover   = "cel_cover";
 $cel_album   = "cel_album";
@@ -50,14 +51,17 @@ $cel_counter = "cel_counter"; ?>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
                 <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played') ?></th>
-                <?php
-            } ?>
+                <?php } ?>
+            <?php if (!$hide_genres) {
+    ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
+            <?php
+} ?>
             <?php if ($show_ratings) {
-                ++$thcount; ?>
+        ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-            } ?>
+    } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </thead>
@@ -106,11 +110,12 @@ $cel_counter = "cel_counter"; ?>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="<?php echo $cel_time; ?>"> <?php echo T_('Time'); ?> </th>
+            <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
+            <?php } ?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

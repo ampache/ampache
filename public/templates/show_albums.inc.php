@@ -34,8 +34,9 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 
 $web_path      = AmpConfig::get('web_path');
-$thcount       = 10;
+$thcount       = 9;
 $show_ratings  = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$hide_genres   = AmpConfig::get('hide_genres');
 $is_table      = $browse->is_grid_view();
 $group_release = AmpConfig::get('album_release_type');
 $original_year = AmpConfig::get('use_original_year');
@@ -79,9 +80,12 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             <th class="cel_year essential"><?php echo $year_link; ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
-            <?php
-    } ?>
+            <?php } ?>
+            <?php if (!$hide_genres) {
+    ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo $genres_text; ?></th>
+            <?php
+} ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
@@ -91,10 +95,9 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
         </tr>
     </thead>
     <tbody>
-        <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-        }
+        <?php if (AmpConfig::get('ratings')) {
+        Rating::build_cache('album', $object_ids);
+    }
         if (AmpConfig::get('userflags')) {
             Userflag::build_cache('album', $object_ids);
         }
@@ -123,8 +126,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Album found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -137,13 +139,13 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             <th class="cel_year"><?php echo $year_text; ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
-            <?php
-        } ?>
+            <?php } ?>
+            <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo $genres_text; ?></th>
+            <?php } ?>
             <?php if ($show_ratings) { ?>
                 <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-                <?php
-            } ?>
+                <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
     <tfoot>
@@ -151,5 +153,5 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+            require Ui::find_template('list_header.inc.php');
+        } ?>

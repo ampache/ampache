@@ -36,8 +36,9 @@ use Ampache\Module\Util\Ui;
 session_start();
 
 $web_path     = AmpConfig::get('web_path');
-$thcount      = 9;
+$thcount      = 8;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
 // translate depending on the browse type
 $artist_text  = ($browse->is_album_artist())
@@ -67,7 +68,11 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('# Played'), 'artist_sort_total_count'); ?></th>
             <?php
     } ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php if (!$hide_genres) {
+        ++$thcount; ?>
+                <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php
+    } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
@@ -126,7 +131,9 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php if (!$hide_genres) { ?>
+                <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php } ?>
             <?php if ($show_ratings) { ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php

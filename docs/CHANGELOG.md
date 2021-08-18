@@ -44,7 +44,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
   * Add 1, 5 and 10 to the Maximum Results limit
-* Database 5.0.0 Build 14:
+* Database 5.0.0 Build 15:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
   * Add `mbid`, `country`, `active` to label table
@@ -61,6 +61,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * use_original_year: Browse by Original Year for albums (falls back to Year)
   * hide_single_artist: Hide the Song Artist column for Albums with one Artist
   * show_license: Hiding the license column in song rows
+  * hide_genres: Hide the Genre column in all browse table rows
 * Config version 56
 * NEW config options
   * composer_binary_path: Override the composer binary path to distinguish between multiple composer versions

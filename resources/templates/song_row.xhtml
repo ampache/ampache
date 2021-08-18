@@ -36,14 +36,14 @@
     </tal:block>
     <td tal:condition="not:IS_HIDE_YEAR" class="cel_year" tal:content="SONG/getYear">YEAR</td>
     <tal:block tal:condition="IS_TABLE_VIEW">
-        <td class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td tal:condition="not:IS_HIDE_GENRE" class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
         <td class="cel_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
         <td tal:condition="IS_SHOW_LICENSE" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
         <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
         <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
     </tal:block>
     <tal:block tal:condition="not:IS_TABLE_VIEW">
-        <td class="mash_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td tal:condition="not:IS_HIDE_GENRE" class="mash_tags" tal:content="structure SONG/getGenre">GENRE</td>
         <td class="mash_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
         <td tal:condition="IS_SHOW_LICENSE" class="mash_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
         <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>

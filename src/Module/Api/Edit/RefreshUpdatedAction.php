@@ -82,6 +82,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
          */
         switch ($object_type) {
             case 'song_row':
+                $hide_genres    = AmpConfig::get('hide_genres');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $argument_param = '&hide=' . Core::get_request('hide');
                 $argument       = explode(',', Core::get_request('hide'));
@@ -102,6 +103,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     ->setContext('IS_TABLE_VIEW', true)
                     ->setContext('IS_SHOW_TRACK', (!empty($argument)))
                     ->setContext('IS_SHOW_LICENSE', $show_license)
+                    ->setContext('IS_HIDE_GENRE', $hide_genres)
                     ->setContext('IS_HIDE_ARTIST', $hide_artist)
                     ->setContext('IS_HIDE_ALBUM', $hide_album)
                     ->setContext('IS_HIDE_YEAR', $hide_year)
@@ -133,6 +135,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'album_row':
                 $original_year    = AmpConfig::get('use_original_year');
                 $show_ratings     = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                $hide_genres      = AmpConfig::get('hide_genres');
                 $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
 
@@ -144,6 +147,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'object_id' => $object_id,
                         'original_year' => $original_year,
                         'show_ratings' => $show_ratings,
+                        'hide_genres' => $hide_genres,
                         'show_direct_play' => $show_direct_play,
                         'show_playlist_add' => true,
                         'cel_cover' => 'cel_cover',
@@ -160,6 +164,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 break;
             case 'artist_row':
                 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                $hide_genres       = AmpConfig::get('hide_genres');
                 $show_direct_play  = AmpConfig::get('directplay');
                 ob_start();
 
@@ -170,6 +175,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'show_ratings' => $show_ratings,
+                        'hide_genres' => $hide_genres,
                         'show_direct_play' => $show_direct_play,
                         'cel_cover' => 'cel_cover',
                         'cel_artist' => 'cel_artist',

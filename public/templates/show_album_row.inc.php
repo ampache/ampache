@@ -87,11 +87,13 @@ $display_year = ($original_year && $libitem->original_year)
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
         <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
-    <?php
-    } ?>
+    <?php } ?>
+<?php if (!$hide_genres) {
+        ++$thcount; ?>
 <td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>
 <?php
-    if ($show_ratings) { ?>
+    } ?>
+<?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album">

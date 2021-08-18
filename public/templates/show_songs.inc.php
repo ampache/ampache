@@ -39,7 +39,8 @@ use Ampache\Module\Util\Ui;
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-$thcount      = 8;
+$hide_genres  = AmpConfig::get('hide_genres');
+$thcount      = 7;
 $is_table     = $browse->is_grid_view();
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
@@ -79,7 +80,11 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <?php
     } ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php if (!$hide_genres) {
+        ++$thcount; ?>
+                <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php
+    } ?>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if ($show_license) {
         ++$thcount; ?>
@@ -117,8 +122,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
-        <?php
-            global $dic;
+        <?php global $dic;
             $talFactory = $dic->get(TalFactoryInterface::class);
             $guiFactory = $dic->get(GuiFactoryInterface::class);
             $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
@@ -138,6 +142,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
                         ->setContext('IS_SHOW_LICENSE', $show_license)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)
                         ->setContext('IS_HIDE_ALBUM', $hide_album)
                         ->setContext('IS_HIDE_YEAR', $hide_year)
@@ -168,7 +173,9 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php if (!$hide_album) { ?>
                 <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
             <?php } ?>
+            <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
+            <?php } ?>
             <th class="<?php echo $cel_time; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if ($show_license) { ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>

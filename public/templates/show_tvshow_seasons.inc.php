@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$web_path = AmpConfig::get('web_path');
-$thcount  = 7;
-$is_table = $browse->is_grid_view();
+$web_path     = AmpConfig::get('web_path');
+$thcount      = 7;
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 <?php if ($browse->is_show_header()) {

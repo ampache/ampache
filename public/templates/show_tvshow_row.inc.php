@@ -55,9 +55,10 @@ use Ampache\Module\Util\Ui;
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
+<?php if (!$hide_genres) { ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
-<?php
-    if ($show_ratings) { ?>
+<?php } ?>
+<?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow"><?php echo Rating::show($libitem->id, 'tvshow'); ?></span>
@@ -66,24 +67,18 @@ use Ampache\Module\Util\Ui;
 
             <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php echo Userflag::show($libitem->id, 'tvshow'); ?></span>
-            <?php
-            } ?>
+            <?php } ?>
         </td>
-    <?php
-    } ?>
+    <?php } ?>
 <td class="cel_action">
-<?php
-    if (Access::check('interface', 50)) { ?>
+<?php if (Access::check('interface', 50)) { ?>
     <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', 'tvshow_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
-<?php
-    } ?>
-<?php
-    if (Catalog::can_remove($libitem)) { ?>
+<?php } ?>
+<?php if (Catalog::can_remove($libitem)) { ?>
     <a id="<?php echo 'delete_tvshow_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
-<?php
-    } ?>
+<?php } ?>
 </td>
