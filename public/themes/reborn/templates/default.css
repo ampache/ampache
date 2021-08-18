@@ -1164,7 +1164,7 @@ table.tabledata .cel_drag img:hover {
 }
 
 table.tabledata .cel_agent {
-    text-align: left;
+    text-align: center;
     width: 45px;
 }
 
@@ -1408,9 +1408,6 @@ div.box.box_rules {
 .cel_album,
 .cel_artist {
     width: 15%;
-    white-space: normal !important;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 .cel_counter,
@@ -1418,9 +1415,19 @@ div.box.box_rules {
 .cel_albums,
 .cel_year {
     width: 60px;
+}
+
+.cel_song,
+.cel_album,
+.cel_artist,
+.cel_counter,
+.cel_songs,
+.cel_albums,
+.cel_year {
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;
+    text-align: center;
 }
 
 /* --------------------------
