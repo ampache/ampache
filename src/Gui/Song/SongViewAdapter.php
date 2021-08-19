@@ -286,7 +286,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canToggleState(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) && (
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) || (
             $this->song->get_user_owner() == Core::get_global('user')->id &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         );
