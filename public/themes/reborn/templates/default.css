@@ -1408,6 +1408,7 @@ div.box.box_rules {
 .cel_album,
 .cel_artist {
     width: 15%;
+    text-align: left;
 }
 
 .cel_counter,
@@ -1415,6 +1416,7 @@ div.box.box_rules {
 .cel_albums,
 .cel_year {
     width: 60px;
+    text-align: center;
 }
 
 .cel_song,
@@ -1427,7 +1429,6 @@ div.box.box_rules {
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;
-    text-align: center;
 }
 
 /* --------------------------
