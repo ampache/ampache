@@ -121,6 +121,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'show_' . $object_type . '.inc.php',
                     [
                         'libitem' => $libitem,
+                        'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'show_art' => $show_art,
@@ -143,6 +144,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'show_' . $object_type . '.inc.php',
                     [
                         'libitem' => $libitem,
+                        'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'original_year' => $original_year,
@@ -172,6 +174,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'show_' . $object_type . '.inc.php',
                     [
                         'libitem' => $libitem,
+                        'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'show_ratings' => $show_ratings,
@@ -189,15 +192,41 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
-            default:
+            case 'podcast_episode_row':
+                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
                 ob_start();
 
                 $this->ui->show(
                     'show_' . $object_type . '.inc.php',
                     [
                         'libitem' => $libitem,
+                        'is_mashup' => false,
+                        'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'cel_cover' => 'cel_cover',
+                        'cel_time' => 'cel_time',
+                        'cel_counter' => 'cel_counter',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
+            default:
+                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'is_table' => true,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
                     ]
                 );
 

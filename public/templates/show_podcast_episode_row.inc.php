@@ -32,6 +32,13 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Podcast_Episode $libitem */
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var bool $is_mashup */
+/** @var bool $is_table */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_time */
+/** @var string $cel_counter */
 
 ?>
 <td class="cel_play">
@@ -50,11 +57,10 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <?php
-if ($browse->is_mashup()) {
+if ($is_mashup) {
             $name = scrub_out($libitem->f_full_title); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php
-        $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
+        <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
             Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $libitem->podcast); ?>
     </td>
 <?php
@@ -72,12 +78,13 @@ if ($browse->is_mashup()) {
     } ?>
     </span>
 </td>
+<?php if (!$is_table) { ?>
 <td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
+<?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
-    <?php
-} ?>
+    <?php } ?>
 <td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
 <td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
 <?php
