@@ -687,23 +687,30 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function update(array $data)
     {
+        $sql    = "UPDATE `video` SET `title` = ?";
+        $title  = isset($data['title'])
+            ? $data['title']
+            : $this->title;
+        $params = array($title);
+        // don't require a release date when updating a video
+        $release_date = false;
         if (isset($data['release_date'])) {
-            $f_release_date = (string) $data['release_date'];
-            $release_date   = strtotime($f_release_date);
-        } else {
-            $release_date = $this->release_date;
+            $f_release_date     = (string) $data['release_date'];
+            $release_date       = strtotime($f_release_date);
+            $this->release_date = $release_date;
+            $sql .= ", `release_date` = ?";
+            $params[] = $release_date;
         }
-        $title = isset($data['title']) ? $data['title'] : $this->title;
+        $sql .= " WHERE `id` = ?";
+        $params[] = $this->id;
 
-        $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
-        Dba::write($sql, array($title, $release_date, $this->id));
+        Dba::write($sql, $params);
 
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
-        $this->title        = $title;
-        $this->release_date = $release_date;
+        $this->title = $title;
 
         return $this->id;
     } // update

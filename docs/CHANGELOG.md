@@ -150,6 +150,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Updating config values for spotify_art_filter and art_search_limit would not keep your value
 * Delete podcasts and radio streams when deleting a catalog
 * Collect recommendation garbage correctly
+* Empty release date when updating a video would fail
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests
