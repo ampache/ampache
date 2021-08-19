@@ -217,6 +217,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
 * catalog_file: Allow comma-separate task values. (good for API inotify scripts)
 * podcast_episode object "pubdate" has been changed to ISO 8601 date (2004-02-12T15:19:21+00:00)
+* podcast object "build_date" and "sync_date" have also been changed to ISO 8601 date
 
 ### Fixed
 
