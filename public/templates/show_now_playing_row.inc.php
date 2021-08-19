@@ -49,25 +49,25 @@ use Ampache\Module\Api\Ajax;
 </div>
 
 <div class="np_group" id="np_group_2">
-    <div class="np_cell cel_song">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Song'); ?></label>
         <?php echo $media->f_link; ?>
     </div>
-    <div class="np_cell cel_album">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Album'); ?></label>
         <?php echo $media->f_album_link; ?>
     </div>
-    <div class="np_cell cel_artist">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
         <?php echo $media->f_artist_link; ?>
     </div>
-    <div class="np_cell cel_year">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Year'); ?></label>
         <?php echo $media->f_year_link; ?>
     </div>
     <?php
         if (!empty($media->f_tags)) { ?>
-            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
+            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_left">
                 <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>

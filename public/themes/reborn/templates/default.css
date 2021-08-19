@@ -1411,6 +1411,9 @@ div.box.box_rules {
     text-align: left;
 }
 
+.cel_left {
+    text-align: left;
+}
 .cel_counter,
 .cel_songs,
 .cel_albums,
