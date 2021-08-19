@@ -233,6 +233,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     'show_' . $object_type . '.inc.php',
                     [
                         'libitem' => $libitem,
+                        'is_mashup' => false,
+                        'is_table' => true,
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'show_ratings' => $show_ratings,
