@@ -71,14 +71,12 @@ use Ampache\Module\Api\Ajax;
                 <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
-        <?php
-        } ?>
+        <?php } ?>
 </div>
 
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
-      <?php
-      $playing = (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) ? new Song($media->id) : new Album($media->album);
+      <?php $playing = (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) ? new Song($media->id) : new Album($media->album);
       if ($playing->id) {
           $playing->format();
           $playing->display_art(1);
@@ -106,25 +104,19 @@ $(document).ready(function(){
     <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });
 </script>
-<?php
-    } ?>
+<?php } ?>
 
-<?php
-    if (Access::check('interface', 25)) { ?>
+<?php if (Access::check('interface', 25)) { ?>
         <div class="np_group" id="np_group_4">
-    <?php
-        if (AmpConfig::get('ratings')) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
             <span id="rating_<?php echo $media->id; ?>_song">
                 <?php echo Rating::show($media->id, 'song'); ?>
             </span>
-        <?php
-        }
+        <?php }
         if (AmpConfig::get('userflags')) { ?>
             <span id="userflag_<?php echo $media->id; ?>_song">
                 <?php echo Userflag::show($media->id, 'song'); ?>
             </span>
-        <?php
-        } ?>
+        <?php } ?>
         </div>
-    <?php
-    } ?>
+    <?php } ?>

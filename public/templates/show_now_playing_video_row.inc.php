@@ -37,8 +37,7 @@ $media->format(); ?>
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
         <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
-        <?php
-            echo scrub_out($np_user->fullname);
+        <?php echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
                 echo '<div>' . $np_user->f_avatar_medium . '</div>';
             } ?>
@@ -54,7 +53,7 @@ $media->format(); ?>
 </div>
 
 <div class="np_group" id="np_group_3">
-    <div class="np_cell cel_albumart">
+    <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
     $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->link, false, 'preview');
@@ -66,14 +65,12 @@ if (!$art_showed) {
 </div>
 
 <div class="np_group" id="np_group_4">
-<?php
-    if (AmpConfig::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
         <span id="rating_<?php echo $media->id; ?>_video">
             <?php echo Rating::show($media->id, 'video'); ?>
         </span>
         <span id="userflag_<?php echo $media->id; ?>_video">
             <?php echo Userflag::show($media->id, 'video'); ?>
         </span>
-    <?php
-    } ?>
+    <?php } ?>
 </div>
