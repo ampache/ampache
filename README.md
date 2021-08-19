@@ -10,7 +10,7 @@
 [Twitter](https://twitter.com/ampache)
 [Mastodon](https://fosstodon.org/@ampache)
 
-**News:**
+## News
 
 **Ampache5 is getting close!** the develop branch is close to release now.
 A lot of work has been put into speeding up everything we can!

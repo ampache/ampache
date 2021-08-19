@@ -693,7 +693,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
             : $this->title;
         $params = array($title);
         // don't require a release date when updating a video
-        $release_date = false;
         if (isset($data['release_date'])) {
             $f_release_date     = (string) $data['release_date'];
             $release_date       = strtotime($f_release_date);
