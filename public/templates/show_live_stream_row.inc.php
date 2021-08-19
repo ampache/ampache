@@ -27,6 +27,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Live_Stream $libitem */
+/** @var string $cel_cover */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

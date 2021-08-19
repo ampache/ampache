@@ -24,6 +24,7 @@ use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
 /** @var License $libitem */
+/** @var string $web_path */
 
 ?>
 <tr id="license_<?php echo $libitem->id; ?>">

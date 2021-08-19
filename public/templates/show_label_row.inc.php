@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 /** @var Label $libitem */
+/** @var string $cel_cover */
 ?>
 <?php $name = scrub_out($libitem->f_name); ?>
 <td class="<?php echo $cel_cover; ?>">

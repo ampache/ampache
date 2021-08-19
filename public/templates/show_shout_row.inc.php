@@ -21,11 +21,10 @@
  */
 
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $libitem */
-/** @var User $client */
+/** @var Ampache\Repository\Model\User $client */
 ?>
 <tr id="flagged_<?php echo $libitem->id; ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>

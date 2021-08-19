@@ -25,6 +25,8 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Video $libitem */
+
 $libitem = Video::create_from_id($libitem->id);
 $libitem->format();
 $video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem)); ?>

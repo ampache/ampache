@@ -31,6 +31,9 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Podcast $libitem */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_counter */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

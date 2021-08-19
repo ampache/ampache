@@ -30,6 +30,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 
 /** @var Song $media */
+/** @var Ampache\Repository\Model\User $np_user */
+/** @var string $web_path */
+/** @var string $agent */
 
 ?>
 <div class="np_group" id="np_group_1">

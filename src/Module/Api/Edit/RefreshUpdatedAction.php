@@ -70,6 +70,20 @@ final class RefreshUpdatedAction extends AbstractEditAction
         $this->ui              = $ui;
     }
 
+    /**
+     * handle
+     *
+     * Templates that aren't edited
+     * * catalog_row
+     * * now_playing_row
+     * * now_playing_video_row
+     * * playlist_media_row
+     *
+     * Templates that redirect and are not refreshed here
+     * * license_row
+     * * shout_row
+     * * user_row
+     */
     protected function handle(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
@@ -77,6 +91,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         database_object $libitem,
         int $object_id
     ): ?ResponseInterface {
+        $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
         /**
          * @todo Every editable item type will need some sort of special handling here
          */
@@ -113,8 +128,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'playlist_row':
-                $show_art     = AmpConfig::get('playlist_art');
-                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                $show_art = AmpConfig::get('playlist_art');
                 ob_start();
 
                 $this->ui->show(
@@ -135,7 +149,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 break;
             case 'album_row':
                 $original_year    = AmpConfig::get('use_original_year');
-                $show_ratings     = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
                 $hide_genres      = AmpConfig::get('hide_genres');
                 $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
@@ -165,9 +178,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'artist_row':
-                $show_ratings      = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
-                $hide_genres       = AmpConfig::get('hide_genres');
-                $show_direct_play  = AmpConfig::get('directplay');
+                $hide_genres      = AmpConfig::get('hide_genres');
+                $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
 
                 $this->ui->show(
@@ -192,8 +204,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
-            case 'podcast_episode_row':
-                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+            case 'podcast_row':
                 ob_start();
 
                 $this->ui->show(
@@ -215,8 +226,104 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
+            case 'podcast_episode_row':
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'cel_cover' => 'cel_cover',
+                        'cel_counter' => 'cel_counter',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
+            case 'video_row':
+                $hide_genres = AmpConfig::get('hide_genres');
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'is_table' => true,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'hide_genres' => $hide_genres,
+                        'cel_cover' => 'cel_cover',
+                        'cel_counter' => 'cel_counter',
+                        'cel_tags' => 'cel_tags',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
+            case 'tvshow_row':
+                $hide_genres = AmpConfig::get('hide_genres');
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'is_table' => true,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'hide_genres' => $hide_genres,
+                        'cel_cover' => 'cel_cover',
+                        'cel_tags' => 'cel_tags',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
+            case 'tvshow_season_row':
+                ob_start();
+
+                $this->ui->show(
+                    'show_' . $object_type . '.inc.php',
+                    [
+                        'libitem' => $libitem,
+                        'is_table' => true,
+                        'object_type' => $object_type,
+                        'object_id' => $object_id,
+                        'show_ratings' => $show_ratings,
+                        'cel_cover' => 'cel_cover',
+                    ]
+                );
+
+                $results = ob_get_contents();
+
+                ob_end_clean();
+                break;
             default:
-                $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+                /*
+                 * Templates that don't need anything special
+                 *
+                 * broadcast_row
+                 * channel_row
+                 * label_row
+                 * live_stream_row
+                 * pvmsg_row
+                 * search_row
+                 * share_row
+                 * song_preview_row
+                 * tag_row
+                 * wanted_album_row
+                 */
                 ob_start();
 
                 $this->ui->show(

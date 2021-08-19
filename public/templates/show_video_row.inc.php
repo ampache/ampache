@@ -34,10 +34,17 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Video $libitem */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
+
 if (!isset($video_type)) {
     $libitem = Video::create_from_id($libitem->id);
     $libitem->format();
-    $video_type = ObjectTypeToClassNameMapper::reverseMap($libitem);
+    $video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
 } ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

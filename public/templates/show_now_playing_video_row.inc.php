@@ -26,6 +26,11 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 
+/** @var Video $media */
+/** @var Ampache\Repository\Model\User $np_user */
+/** @var string $web_path */
+/** @var string $agent */
+
 $media = Video::create_from_id($media->id);
 $media->format(); ?>
 <div class="np_group" id="np_group_1">

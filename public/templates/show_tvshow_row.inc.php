@@ -32,6 +32,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var TvShow $libitem */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_tags */
 
 ?>
 <td class="cel_play">
