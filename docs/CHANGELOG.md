@@ -100,6 +100,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Plugins: Use only https for building gravatar urls
 * Scrobble actions now check for the exact time as well (different agents or scripts would insert)
 * If you call a play url without an action we assume stream
+* Use ISO 8601 date for podcast episode pubdate display
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
@@ -215,6 +216,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * system_update: update the database if required as well
 * playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
 * catalog_file: Allow comma-separate task values. (good for API inotify scripts)
+* podcast_episode object "pubdate" has been changed to ISO 8601 date (2004-02-12T15:19:21+00:00)
 
 ### Fixed
 

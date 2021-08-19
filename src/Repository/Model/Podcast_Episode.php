@@ -150,7 +150,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = get_datetime((int)$this->pubdate);
+        $this->f_pubdate     = date("c", (int)$this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time

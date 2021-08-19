@@ -1589,7 +1589,7 @@ class Subsonic_Xml_Data
         $xepisode->addAttribute('duration', (string)$episode->time);
         $xepisode->addAttribute('genre', "Podcast");
         $xepisode->addAttribute('isDir', "false");
-        $xepisode->addAttribute('publishDate', date("c", (int)$episode->pubdate));
+        $xepisode->addAttribute('publishDate', $episode->f_pubdate);
         $xepisode->addAttribute('status', (string)$episode->state);
         $xepisode->addAttribute('parent', (string)self::getPodcastId($episode->podcast));
         if (Art::has_db($episode->podcast, 'podcast')) {
