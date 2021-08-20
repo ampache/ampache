@@ -627,8 +627,8 @@ class Json_Data
             $share_user           = $share->getUserName();
             $share_allow_stream   = (int) $share->allow_stream;
             $share_allow_download = (int) $share->allow_download;
-            $share_creation_date  = $share->getCreationDateFormatted();
-            $share_lastvisit_date = $share->getLastVisitDateFormatted();
+            $share_creation_date  = $share->creation_date;
+            $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
             $share_object_id      = $share->object_id;
             $share_expire_days    = (int) $share->expire_days;
