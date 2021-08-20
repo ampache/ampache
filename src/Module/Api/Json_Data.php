@@ -725,9 +725,9 @@ class Json_Data
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
             $catalog_enabled        = (int) $catalog->enabled;
-            $catalog_last_add       = $catalog->f_add;
-            $catalog_last_clean     = $catalog->f_clean;
-            $catalog_last_update    = $catalog->f_update;
+            $catalog_last_add       = $catalog->last_add;
+            $catalog_last_clean     = $catalog->last_clean;
+            $catalog_last_update    = $catalog->last_update;
             $catalog_path           = $catalog->f_info;
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
