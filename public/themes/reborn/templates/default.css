@@ -1444,6 +1444,7 @@ div.box.box_rules {
 
 #now_playing .np_group {
     float: left;
+    padding-right: 8px;
 }
 
 #now_playing .np_row {
@@ -1502,9 +1503,6 @@ div.box.box_rules {
 
 #now_playing .similars {
     margin-right: 10px;
-    padding-right: 5px;
-    margin-left: 10px;
-    padding-left: 5px;
 }
 
 #recent_more {
