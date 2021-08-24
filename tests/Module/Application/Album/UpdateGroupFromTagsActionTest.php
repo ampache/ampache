@@ -68,7 +68,7 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -101,7 +101,7 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
             ->andReturn($album);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
             ->andReturnTrue();
 
