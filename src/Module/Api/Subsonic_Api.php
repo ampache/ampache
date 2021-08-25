@@ -2269,7 +2269,7 @@ class Subsonic_Api
                 Subsonic_Xml_Data::addPodcasts($response, $podcasts, $includeEpisodes);
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'getpodcasts');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getpodcasts');
         }
         self::apiOutput($input, $response);
     }
@@ -2289,8 +2289,7 @@ class Subsonic_Api
             $episodes = Catalog::get_newest_podcasts($count);
             Subsonic_Xml_Data::addNewestPodcastEpisodes($response, $episodes);
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'getnewestpodcasts');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getnewestpodcasts');
         }
         self::apiOutput($input, $response);
     }
