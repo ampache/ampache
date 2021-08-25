@@ -2167,7 +2167,7 @@ class Subsonic_Api
                 Subsonic_XML_Data::addPodcasts($response, $podcasts, $includeEpisodes);
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', 'getpodcasts');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getpodcasts');
         }
         self::apiOutput($input, $response);
     }
