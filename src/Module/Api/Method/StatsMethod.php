@@ -72,7 +72,7 @@ final class StatsMethod
         $offset = (int) $input['offset'];
         $limit  = (int) $input['limit'];
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = (int)AmpConfig::get('popular_threshold', 10);
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
@@ -106,7 +106,7 @@ final class StatsMethod
                 break;
             case 'frequent':
                 debug_event(self::class, 'stats frequent', 4);
-                $threshold = AmpConfig::get('stats_threshold');
+                $threshold = (int)AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':

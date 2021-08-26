@@ -606,9 +606,6 @@ class Stats
      */
     public static function get_top($type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
     {
-        if ($count < 1) {
-            $count = AmpConfig::get('popular_threshold', 10);
-        }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
         $sql   = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
 
@@ -721,7 +718,7 @@ class Stats
         $type = self::validate_type($input_type);
 
         // If full then don't limit on date
-        $date = ($full > 0) ? '0' : time() - (86400 * AmpConfig::get('stats_threshold'));
+        $date = ($full > 0) ? '0' : time() - (86400 * (int)AmpConfig::get('stats_threshold', 7));
 
         // Select Objects based on user
         // FIXME:: Requires table scan, look at improving

@@ -627,9 +627,9 @@ class Subsonic_Api
      */
     private static function _albumList($input, $type)
     {
-        $size          = $input['size'] ?: 10;
-        $offset        = $input['offset'] ?: 0;
-        $musicFolderId = $input['musicFolderId'] ?: 0;
+        $size          = $input['size'] ? (int)$input['size'] : 10;
+        $offset        = $input['offset'] ? (int)$input['offset'] : 0;
+        $musicFolderId = $input['musicFolderId'] ? (int)$input['musicFolderId'] : 0;
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
         $catalogs = null;

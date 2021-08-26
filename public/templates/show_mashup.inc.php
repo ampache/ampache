@@ -26,8 +26,10 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
+/** @var string $object_type */
+
 $threshold      = AmpConfig::get('stats_threshold');
-$limit          = AmpConfig::get('popular_threshold', 10);
+$limit          = (int)AmpConfig::get('popular_threshold', 10);
 $catalog_filter = AmpConfig::get('catalog_filter');
 $user_id        = ($catalog_filter)
     ? Core::get_global('user')->id
