@@ -12,7 +12,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 **IMPORTANT** Default Database Collation has changed from utf8 to utf8mb4
 
-* Run `bin/cli run:updateDb` if you have been using plain utf8 and want to change
+* Run `php bin/cli run:updateDb` if you have been using plain utf8 and want to change
 * To keep the current collation/charset update your config file
   * Set `database_charset = "utf8"`
   * Set `database_collation = "utf8_unicode_ci"`

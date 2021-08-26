@@ -36,6 +36,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
+/** @var string $limit_threshold */
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));

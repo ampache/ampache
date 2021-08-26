@@ -32,6 +32,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
+/** @var string $limit_threshold */
 
 $web_path      = AmpConfig::get('web_path');
 $thcount       = 9;
