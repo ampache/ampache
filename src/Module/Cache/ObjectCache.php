@@ -41,7 +41,7 @@ final class ObjectCache implements ObjectCacheInterface
 
     public function compute(): void
     {
-        $thresholds   = [$this->configContainer->get('stats_threshold'), AmpConfig::get('popular_threshold', 10)];
+        $thresholds   = [0, $this->configContainer->get('stats_threshold'), AmpConfig::get('popular_threshold', 10)];
         $count_types  = ['stream', 'download', 'skip'];
         // TODO fix playlist sql.
         $object_types = ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode'];
