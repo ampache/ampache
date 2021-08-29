@@ -30,7 +30,7 @@ public/foam
 public/ample
 storage/
 tmp/
-vendor/
+/vendor/
 composer.phar
 cs_fixer_tmp_*
 error_log
