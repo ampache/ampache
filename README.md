@@ -62,7 +62,9 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * nginx
   * IIS
 
-* PHP 7.1 or greater. (Currently tested on php7.4-fpm)
+* PHP 7.1-7.4 (Ampache 4.x.x)
+* PHP 7.4 (Ampache 5.0.x)
+* PHP 8.0 (TBC Ampache 5.1.x)
 
 * PHP modules:
   * PDO
@@ -70,14 +72,14 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * hash
   * session
   * json
-  * intl (Ampache develop)
+  * intl
   * simplexml (optional)
   * curl (optional)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
-  * php-intl (Ampache develop)
+  * php-intl
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 
