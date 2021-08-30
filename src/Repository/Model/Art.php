@@ -819,17 +819,20 @@ class Art extends database_object
         // Create a new blank image of the correct size
         $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
-        if ($source_size['width'] > $source_size['height']) { // landscape
+        if ($source_size['width'] > $source_size['height']) {
+            // landscape
             $new_height = $size['height'];
             $new_width  = floor($source_size['width'] * ($new_height / $source_size['height']));
             $crop_x     = ceil(($source_size['width'] - $source_size['height']) / 2);
             $crop_y     = 0;
-        } elseif ($source_size['height'] > $source_size['width']) { // portrait
+        } elseif ($source_size['height'] > $source_size['width']) {
+            // portrait
             $new_width  = $size['width'];
             $new_height = floor($source_size['height'] * ($new_width / $source_size['width']));
             $crop_x     = 0;
             $crop_y     = ceil(($source_size['height'] - $source_size['width']) / 3); // assuming most portrait images would have faces closer to the top
-        } else { // square
+        } else {
+            // square
             $new_width  = $size['width'];
             $new_height = $size['height'];
             $crop_x     = 0;

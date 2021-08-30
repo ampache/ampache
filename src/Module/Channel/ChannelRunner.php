@@ -182,8 +182,10 @@ final class ChannelRunner implements ChannelRunnerInterface
                 $chunk_buffer .= $chunk;
 
                 //buffer maintenance
-                while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) { // buffer 15 seconds
-                    if (strtolower($channel->stream_type) == "ogg" && $this->strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
+                while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) {
+                    // buffer 15 seconds
+                    if (strtolower($channel->stream_type) == "ogg" && $this->strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") {
+                        //maintain ogg chunk alignment --- "4F676753" == "OggS"
                         // read OggS segment length
                         $hex                = $this->strtohex(substr($chunk_buffer, 0, 27));
                         $ogg_nr_of_segments = (int) hexdec(substr($hex, 26 * 2, 2));
@@ -200,7 +202,8 @@ final class ChannelRunner implements ChannelRunnerInterface
                         debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
                         $manual_search = strpos($chunk_buffer, 'OggS');
                         $chunk_buffer  = substr($chunk_buffer, $manual_search);
-                    } else { // no chunk alignment required
+                    } else {
+                        // no chunk alignment required
                         $chunk_buffer = substr($chunk_buffer, $chunklen);
                     }
                     //debug_event('channel_run', 'removed chunk from buffer ', 5);
@@ -221,7 +224,8 @@ final class ChannelRunner implements ChannelRunnerInterface
                             //fwrite($sock, $channel->header_chunk);
                             //debug_event('channel_run', 'IS NEW' . $channel->header_chunk, 5);
                             $clchunk_buffer = $channel->header_chunk . $chunk_buffer;
-                            if ($client['metadata']) { //stub
+                            if ($client['metadata']) {
+                                //stub
                                 //if (strtolower($channel->stream_type) == "ogg")
                                 while (strlen($clchunk_buffer) > $metadata_interval) {
                                     fwrite($sock, substr($clchunk_buffer, 0, $metadata_interval) . chr(0x00));

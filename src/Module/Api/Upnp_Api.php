@@ -380,7 +380,9 @@ class Upnp_Api
         if ($filterValue == null || $filterValue == '') {
             return true;
         }
-        if ($filterValue == "*") { // genuine wildcard
+        if ($filterValue == "*") {
+            // genuine wildcard
+
             return true;
         }
         if ($keyisRes) {
@@ -1305,7 +1307,8 @@ class Upnp_Api
         debug_event(self::class, 'Token ' . var_export($tok, true), 5);
 
         $term = array();
-        if (sizeof($tok) == 3) { // tuple, we understand
+        if (sizeof($tok) == 3) {
+            // tuple, we understand
             switch ($tok[0]) {
                 case 'dc:title':
                     $term['ruletype'] = 'title';
@@ -1414,16 +1417,17 @@ class Upnp_Api
         // they supply after the search term.
         // Start with assuming a search type of "song" in the case where the first search term
         // is actually a term rather than a type
-       if (str_word_count($tokens[0]) > 1) { // first token is not a type, need to work out one
-           if ($type == '') {
-               $data['type'] = 'song';
-           } else {
-               $data['type'] = $type;
-           }
-       } else {
-           $data['type'] = $tokens[0];
-           $tokens[0]    = '';
-       }
+        if (str_word_count($tokens[0]) > 1) {
+            // first token is not a type, need to work out one
+            if ($type == '') {
+                $data['type'] = 'song';
+            } else {
+                $data['type'] = $type;
+            }
+        } else {
+            $data['type'] = $tokens[0];
+            $tokens[0]    = '';
+        }
 
         // Construct the operator type. The first one is likely to be 'and' (if present),
         // and the remainder should be 'and' or 'or'
