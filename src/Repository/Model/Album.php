@@ -595,7 +595,7 @@ class Album extends database_object implements library_item
                 $album_artist->format();
                 $this->album_artist_name   = $album_artist->name;
                 $this->f_album_artist_name = $album_artist->f_name;
-                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
+                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
             }
 
             $this->tags   = Tag::get_top_tags('album', $this->id);
@@ -620,7 +620,7 @@ class Album extends database_object implements library_item
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
             $this->f_artist_name = $artist;
-            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
+            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->artist_name) . "\">" . scrub_out($artist) . "</a>";
             $this->f_artist      = $artist;
         } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";

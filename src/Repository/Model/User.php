@@ -1013,7 +1013,7 @@ class User extends database_object
 
         // Base link
         $this->link   = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
+        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
 
         if ($details) {
             $user_data = self::get_user_data($this->id);
