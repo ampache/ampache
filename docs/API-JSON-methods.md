@@ -139,7 +139,7 @@ These methods take no parameters beyond your auth key to return information
 
 ### system_update
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Check Ampache for updates and run the update if there is one.
 
@@ -161,7 +161,7 @@ Check Ampache for updates and run the update if there is one.
 
 ### system_preferences
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get your server preferences
 
@@ -183,7 +183,7 @@ Get your server preferences
 
 ### users
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get ids and usernames for your site
 
@@ -203,7 +203,7 @@ Get ids and usernames for your site
 
 ### user_preferences
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get your user preferences
 
@@ -223,7 +223,7 @@ Get your user preferences
 
 ### bookmarks
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get information about bookmarked media this user is allowed to manage.
 
@@ -763,7 +763,7 @@ returns a single song
 
 ### song_delete
 
-* **NEW** in Develop
+* **NEW** in 5.0.0-develop
 
 Delete an existing song. (if you are allowed to)
 
@@ -1744,7 +1744,7 @@ This returns the songs for a license
 
 ### labels
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 This returns labels based on the specified filter
 
@@ -1775,7 +1775,7 @@ This returns labels based on the specified filter
 
 ### label
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 This returns a single label
 
@@ -1808,7 +1808,7 @@ This returns a single label
 
 ### label_artists
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 This returns the artists for a label
 
@@ -2291,7 +2291,7 @@ Sync and download new podcast episodes
 
 ### user_preference
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get your user preference by name
 
@@ -2315,7 +2315,7 @@ Get your user preference by name
 
 ### system_preference
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get your server preference by name
 
@@ -2341,7 +2341,7 @@ Get your server preference by name
 
 ### preference_create
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Add a new preference to your server
 
@@ -2374,7 +2374,7 @@ Add a new preference to your server
 
 ### preference_edit
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Edit a preference value and apply to all users if allowed
 
@@ -2402,7 +2402,7 @@ Edit a preference value and apply to all users if allowed
 
 ### preference_delete
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Delete a non-system preference by name
 
@@ -2428,7 +2428,7 @@ Delete a non-system preference by name
 
 ### get_bookmark
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Get the bookmark from it's object_id and object_type.
 
@@ -2453,7 +2453,7 @@ Get the bookmark from it's object_id and object_type.
 
 ### bookmark_create
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Create a placeholder for the current media that you can return to later.
 
@@ -2481,7 +2481,7 @@ Create a placeholder for the current media that you can return to later.
 
 ### bookmark_edit
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Edit a placeholder for the current media that you can return to later.
 
@@ -2509,7 +2509,7 @@ Edit a placeholder for the current media that you can return to later.
 
 ### bookmark_delete
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Delete an existing bookmark. (if it exists)
 
@@ -2535,7 +2535,7 @@ Delete an existing bookmark. (if it exists)
 
 ### deleted_songs
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 Returns songs that have been deleted from the server
 
@@ -2560,7 +2560,7 @@ Returns songs that have been deleted from the server
 
 ### deleted_podcast_episodes
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 This returns the episodes for a podcast that have been deleted
 
@@ -2585,7 +2585,7 @@ This returns the episodes for a podcast that have been deleted
 
 ### deleted_videos
 
-* **NEW** in develop
+* **NEW** in 5.0.0-develop
 
 This returns video objects that have been deleted
 

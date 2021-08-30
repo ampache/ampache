@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 5.0.0-develop
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 
@@ -158,7 +158,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * averageRating wasn't correctly cast for json
   * bookmark JSON was not correctly converted
 
-### API develop
+### API 5.0.0-develop
 
 All API code that used 'Tag' now references 'Genre' instead
 

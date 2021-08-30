@@ -32,7 +32,7 @@ Note that API 4.1 docs cover all previous versions.
 * [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
 * [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
 
-## Changelog API develop
+## Changelog API 5.0.0-develop
 
 Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to keep an eye on changes between versions
 
@@ -173,10 +173,10 @@ All Auth methods return HTTP 200 responses
 
 All Non-Data methods return HTTP 200 responses
 
-* system_update **(develop only)**
-* users **(develop only)**
-* user_preferences **(develop only)**
-* bookmarks **(develop only)**
+* system_update
+* users
+* user_preferences
+* bookmarks
 
 ### Data Methods
 
@@ -191,14 +191,14 @@ All Data methods return HTTP 200 responses
 * albums
 * album
 * album_songs
-* genres **(develop only)**
-* genre **(develop only)**
-* genre_artists **(develop only)**
-* genre_albums **(develop only)**
-* genre_songs **(develop only)**
+* genres
+* genre
+* genre_artists
+* genre_albums
+* genre_songs
 * songs
 * song
-* song_delete **(develop only)**
+* song_delete
 * url_to_song
 * playlists
 * playlist
@@ -233,9 +233,9 @@ All Data methods return HTTP 200 responses
 * licenses
 * license
 * license_songs
-* labels **(develop only)**
-* label **(develop only)**
-* label_artists **(develop only)**
+* labels
+* label
+* label_artists
 * user
 * user_create
 * user_update
@@ -255,19 +255,19 @@ All Data methods return HTTP 200 responses
 * update_artist_info
 * update_art
 * update_podcast
-* user_preference **(develop only)**
-* system_preferences **(develop only)**
-* system_preference **(develop only)**
-* preference_create **(develop only)**
-* preference_edit **(develop only)**
-* preference_delete **(develop only)**
-* get_bookmark **(develop only)**
-* bookmark_create **(develop only)**
-* bookmark_edit **(develop only)**
-* bookmark_delete **(develop only)**
-* deleted_songs **(develop only)**
-* deleted_podcast_episodes **(develop only)**
-* deleted_videos **(develop only)**
+* user_preference
+* system_preferences
+* system_preference
+* preference_create
+* preference_edit
+* preference_delete
+* get_bookmark
+* bookmark_create
+* bookmark_edit
+* bookmark_delete
+* deleted_songs
+* deleted_podcast_episodes
+* deleted_videos
 
 ### Binary Data Methods
 
