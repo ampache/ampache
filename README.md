@@ -1,19 +1,26 @@
 # Ampache
 
-![Logo](http://ampache.org/img/logo/ampache-logo_x64.png)
+![Logo](https://ampache.org/img/logo/ampache-logo_x64.png)
 
-[www.ampache.org](http://ampache.org/) |
+[www.ampache.org](https://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
+[Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
+[Telegram](https://t.me/ampache)
+[Reddit](https://www.reddit.com/r/ampache/)
+[Twitter](https://twitter.com/ampache)
+[Mastodon](https://fosstodon.org/@ampache)
 
-**News:**
+## News
+
+**Ampache5 is getting close!** the develop branch is close to release now.
+A lot of work has been put into speeding up everything we can!
+This release is shaping up to be a great one and we can't wait to show you.
 
 * Keep an eye on the incoming changes to develop branch at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* The Ampache kodi plugin has merged into the official Kodi addons repo!
- * Make sure you enable **hide_search** in your config to enable playlists in this initial version.
-* Develop changes
+  * Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
   * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
   * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
-  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](http://ampache.org/api/) website!
+  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](https://ampache.org/api/) website!
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
@@ -39,6 +46,7 @@ The recommended and most stable version is [git HEAD](https://github.com/ampache
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=source-changes)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=source-changes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 

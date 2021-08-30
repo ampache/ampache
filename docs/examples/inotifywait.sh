@@ -29,13 +29,13 @@
 declare -a arr=("mp3" "mpc" "m4p" "m4a" "aac" "ogg" "oga" "wav" "aif" "aiff" "rm" "wma" "asf" "flac" "opus" "spx" "ra" "ape" "shn" "wv")
 
 # monitor your media folder for updates
-inotifywait -m -r --event modify --event moved_to --event create --event delete --format '%w%f' /media |
+inotifywait -m -r --event close_write --event moved_to --event create --event delete --format '%w%f' /media |
     while read file; do
         for i in "${arr[@]}"
         do
             if [[ "$file" =~ .*$i$ ]]; then
                 echo "$file"
-                php /var/www/bin/update_file.inc -n music -f "$file" -cavg
+                php /var/www/bin/cli run:updateCatalogFile -n music -f "$file" -cavg
             fi
         done
     done

@@ -1,0 +1,89 @@
+<html>
+<dl class="media_details" tal:define="song_id SONG/getId">
+    <dt i18n:translate="">Rating</dt>
+    <dd>
+        <div id="rating_${song_id}_song" tal:define="average_rating SONG/getAverageRating">
+            <div tal:replace="structure SONG/getRating">RATING</div>
+            <tal:block tal:condition="average_rating">
+                (<span i18n:translate="">average</span> ${average_rating})
+            </tal:block>
+        </div>
+    </dd>
+    <dt i18n:translate="">Fav</dt>
+    <dd>
+        <div id="userflag_${song_id}_song" tal:content="structure SONG/getUserFlags">FLAGS</div>
+    </dd>
+    <tal:block tal:condition="CONFIG/isWaveformEnabled">
+        <dt i18n:translate="">Waveform</dt>
+        <dd>
+            <div id="waveform_${song_id}">
+                <img tal:attributes="src SONG/getWaveformUrl" />
+            </div>
+        </dd>
+    </tal:block>
+    <dt>Action</dt>
+    <dd>
+        <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+            <tal:block tal:replace="structure SONG/getDirectPlayButton">DIRECTPLAY BUTTON</tal:block>
+            <tal:block tal:condition="SONG/canAutoplayNext">
+                <tal:block tal:replace="structure SONG/getAutoplayNextButton">AUTOPLAY NEXT BUTTON</tal:block>
+            </tal:block>
+            <tal:block tal:condition="SONG/canAppendNext">
+                <tal:block tal:replace="structure SONG/getAppendNextButton">APPEND NEXT BUTTON</tal:block>
+            </tal:block>
+        </tal:block>
+        <tal:block tal:replace="structure SONG/getCustomPlayActions">
+            CUSTOM PLAY ACTIONS
+        </tal:block>
+        <tal:block tal:replace="structure SONG/getTemporaryPlaylistButton">
+            TEMPORARY PLAYLIST BUTTON
+        </tal:block>
+        <a
+            tal:condition="SONG/canPostShout"
+            tal:attributes="href SONG/getPostShoutUrl"
+            tal:content="structure SONG/getPostShoutIcon"
+        >ICON</a>
+        <tal:block tal:condition="SONG/canShare" tal:content="structure SONG/getShareUi">
+            SHARE
+        </tal:block>
+        <tal:block tal:condition="SONG/canDownload">
+            <a
+                class="nohtml"
+                tal:attributes="href SONG/getExternalPlayUrl"
+                tal:content="structure SONG/getExternalPlayIcon"
+            >EXTERNAL PLAY</a>
+            <a
+                class="nohtml"
+                tal:attributes="href SONG/getDownloadUrl"
+                tal:content="structure SONG/getDownloadIcon"
+            >DOWNLOAD</a>
+        </tal:block>
+        <a
+            tal:condition="SONG/canDisplayStats"
+            tal:attributes="href SONG/getDisplayStatsUrl"
+            tal:content="structure SONG/getDisplayStatsIcon"
+            >STATISTICAL GRAPH</a>
+        <a
+            tal:condition="SONG/isEditable"
+            onclick="showEditDialog('song_row', '${song_id}', 'edit_song_${song_id}', '${SONG/getEditButtonTitle}', '')"
+            tal:content="structure SONG/getEditIcon"
+            >EDIT</a>
+        <span id="button_flip_state_${song_id}" tal:content="structure SONG/getToggleStateButton" tal:condition="SONG/canToggleState">
+            DISABLE BUTTON
+        </span>
+        <a
+            tal:condition="SONG/canBeDeleted"
+            tal:attributes="href SONG/getDeletionUrl"
+            tal:content="structure SONG/getDeletionIcon"
+            >DELETE BUTTON</a>
+    </dd>
+    <tal:block tal:repeat="prop SONG/getProperties">
+        <tal:block tal:condition="prop">
+            <tal:block>
+                <dt tal:content="repeat/prop/key"></dt>
+                <dd tal:content="structure prop"></dd>
+            </tal:block>
+        </tal:block>
+    </tal:block>
+</dl>
+</html>
