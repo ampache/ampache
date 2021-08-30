@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2021-08-07 20:36+0200\n"
-"PO-Revision-Date: 2021-04-04 11:29+0000\n"
-"Last-Translator: Transifex Bot <>\n"
+"POT-Creation-Date: 2021-08-30 22:44+0200\n"
+"PO-Revision-Date: 2021-08-22 13:12+0000\n"
+"Last-Translator: Dotan Mazor\n"
 "Language-Team: Hebrew (Israel) (http://www.transifex.com/ampache/ampache/"
 "language/he_IL/)\n"
 "Language: he_IL\n"
@@ -35,7 +35,7 @@ msgstr ""
 
 #: ../../public/templates/browse_filters.inc.php:56
 msgid "Rated"
-msgstr ""
+msgstr "דירוג"
 
 #: ../../public/templates/browse_filters.inc.php:62
 msgid "Unplayed"
@@ -43,22 +43,22 @@ msgstr ""
 
 #: ../../public/templates/browse_filters.inc.php:67
 msgid "All Playlists"
-msgstr ""
+msgstr "כל רשימות ההשמעה"
 
 #: ../../public/templates/browse_filters.inc.php:75
 #: ../../public/templates/show_add_catalog.inc.php:51
 #: ../../public/templates/show_edit_catalog.inc.php:42
 #: ../../public/templates/show_song_previews.inc.php:29
-#: ../../public/templates/show_songs.inc.php:65
-#: ../../public/templates/show_songs.inc.php:163
+#: ../../public/templates/show_songs.inc.php:67
+#: ../../public/templates/show_songs.inc.php:169
 msgid "Song Title"
-msgstr ""
+msgstr "כותרת השיר"
 
 #: ../../public/templates/browse_filters.inc.php:78
 #: ../../public/templates/header.inc.php:47
 #: ../../public/templates/show_artist.inc.php:238
-#: ../../public/templates/show_artists.inc.php:64
-#: ../../public/templates/show_artists.inc.php:123
+#: ../../public/templates/show_artists.inc.php:66
+#: ../../public/templates/show_artists.inc.php:129
 #: ../../public/templates/show_browse_form.inc.php:41
 #: ../../public/templates/show_browse_form.inc.php:43
 #: ../../public/templates/show_genre_browse_form.inc.php:20
@@ -66,13 +66,13 @@ msgstr ""
 #: ../../public/templates/show_mashup_browse_form.inc.php:14
 #: ../../public/templates/show_random.inc.php:50
 #: ../../public/templates/show_random.inc.php:52
-#: ../../public/templates/show_recommended_artists.inc.php:49
-#: ../../public/templates/show_recommended_artists.inc.php:107
+#: ../../public/templates/show_recommended_artists.inc.php:50
+#: ../../public/templates/show_recommended_artists.inc.php:111
 #: ../../public/templates/show_search_form.inc.php:51
 #: ../../public/templates/show_search_form.inc.php:53
 #: ../../public/templates/sidebar.inc.php:41
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:108
-#: ../../src/Config/functions.php:827 ../../src/Module/Api/Upnp_Api.php:630
+#: ../../src/Config/functions.php:827 ../../src/Module/Api/Upnp_Api.php:632
 #: ../../src/Repository/Model/Browse.php:242
 msgid "Albums"
 msgstr "אלבומים"
@@ -80,8 +80,8 @@ msgstr "אלבומים"
 #: ../../public/templates/browse_filters.inc.php:81
 #: ../../public/templates/show_add_catalog.inc.php:45
 #: ../../public/templates/show_add_upload.inc.php:184
-#: ../../public/templates/show_artists.inc.php:45
-#: ../../public/templates/show_artists.inc.php:120
+#: ../../public/templates/show_artists.inc.php:47
+#: ../../public/templates/show_artists.inc.php:126
 #: ../../public/templates/show_democratic_playlist.inc.php:64
 #: ../../public/templates/show_democratic_playlist.inc.php:114
 #: ../../public/templates/show_disabled_songs.inc.php:34
@@ -92,19 +92,19 @@ msgstr "אלבומים"
 #: ../../public/templates/show_lyrics.inc.php:55
 #: ../../public/templates/show_missing_albums.inc.php:31
 #: ../../public/templates/show_missing_artists.inc.php:31
-#: ../../public/templates/show_now_playing_row.inc.php:58
+#: ../../public/templates/show_now_playing_row.inc.php:61
 #: ../../public/templates/show_partial_clip.inc.php:23
 #: ../../public/templates/show_partial_clips.inc.php:26
 #: ../../public/templates/show_partial_edit_clip_row.inc.php:23
-#: ../../public/templates/show_recommended_artists.inc.php:46
-#: ../../public/templates/show_recommended_artists.inc.php:104
+#: ../../public/templates/show_recommended_artists.inc.php:47
+#: ../../public/templates/show_recommended_artists.inc.php:108
 #: ../../public/templates/show_song_previews.inc.php:30
 #: ../../public/templates/show_tagcloud.inc.php:31
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Repository/Model/Album.php:658
 #: ../../src/Repository/Model/Artist.php:510
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1770
+#: ../../src/Repository/Model/Song.php:1745
 msgid "Artist"
 msgstr "אמן"
 
@@ -125,7 +125,7 @@ msgstr "קטלוג"
 #: ../../public/templates/show_export.inc.php:40
 #: ../../public/templates/show_mail_users.inc.php:36
 #: ../../public/templates/show_random.inc.php:81
-#: ../../src/Config/functions.php:1160
+#: ../../src/Config/functions.php:1168
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:52
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:75
 msgid "All"
@@ -308,7 +308,7 @@ msgstr "בית"
 #: ../../public/templates/show_album_group_disks.inc.php:184
 #: ../../public/templates/show_album.inc.php:128
 #: ../../public/templates/show_album_row.inc.php:49
-#: ../../public/templates/show_artist_row.inc.php:45
+#: ../../public/templates/show_artist_row.inc.php:44
 #: ../../public/templates/show_broadcast_row.inc.php:33
 #: ../../public/templates/show_channel_row.inc.php:35
 #: ../../public/templates/show_democratic.inc.php:49
@@ -317,23 +317,23 @@ msgstr "בית"
 #: ../../public/templates/show_localplay_control.inc.php:30
 #: ../../public/templates/show_manage_democratic.inc.php:54
 #: ../../public/templates/show_playlist_media_row.inc.php:41
-#: ../../public/templates/show_playlist_medias.inc.php:84
+#: ../../public/templates/show_playlist_medias.inc.php:85
 #: ../../public/templates/show_playlist_row.inc.php:41
 #: ../../public/templates/show_podcast_episode.inc.php:63
-#: ../../public/templates/show_podcast_episode_row.inc.php:42
-#: ../../public/templates/show_podcast_row.inc.php:40
+#: ../../public/templates/show_podcast_episode_row.inc.php:49
+#: ../../public/templates/show_podcast_row.inc.php:43
 #: ../../public/templates/show_random_albums.inc.php:54
 #: ../../public/templates/show_random_videos.inc.php:54
 #: ../../public/templates/show_recently_played.inc.php:105
 #: ../../public/templates/show_search_row.inc.php:39
-#: ../../public/templates/show_tvshow_row.inc.php:42
-#: ../../public/templates/show_tvshow_season_row.inc.php:42
+#: ../../public/templates/show_tvshow_row.inc.php:46
+#: ../../public/templates/show_tvshow_season_row.inc.php:44
 #: ../../public/templates/show_video.inc.php:95
-#: ../../public/templates/show_video_row.inc.php:47
+#: ../../public/templates/show_video_row.inc.php:54
 #: ../../src/Gui/Song/SongViewAdapter.php:116
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:136
 #: ../../src/Plugin/AmpachePersonalFavorites.php:143
-#: ../../src/Repository/Model/Art.php:1362
+#: ../../src/Repository/Model/Art.php:1380
 #: ../../src/Repository/Model/Shoutbox.php:301
 msgid "Play"
 msgstr "השמעה"
@@ -352,7 +352,7 @@ msgstr "השמעה"
 #: ../../public/templates/show_user.inc.php:132
 #: ../../public/templates/sidebar.inc.php:39
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:80
-#: ../../src/Config/functions.php:831 ../../src/Module/Api/Upnp_Api.php:609
+#: ../../src/Config/functions.php:831 ../../src/Module/Api/Upnp_Api.php:611
 #: ../../src/Repository/Model/Album.php:626
 #: ../../src/Repository/Model/Browse.php:262
 msgid "Artists"
@@ -363,9 +363,8 @@ msgstr "אמנים"
 #: ../../public/templates/show_browse_form.inc.php:48
 #: ../../public/templates/sidebar.inc.php:40
 #: ../../src/Repository/Model/Browse.php:261
-#, fuzzy
 msgid "Album Artists"
-msgstr "אמן האלבום"
+msgstr "אמני האלבום"
 
 #: ../../public/templates/header.inc.php:48
 #: ../../public/templates/show_mashup_browse_form.inc.php:20
@@ -373,31 +372,31 @@ msgstr "אמן האלבום"
 #: ../../public/templates/show_search_form.inc.php:70
 #: ../../public/templates/show_user.inc.php:135
 #: ../../public/templates/sidebar.inc.php:57
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:167
-#: ../../src/Module/Api/Upnp_Api.php:672
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:168
+#: ../../src/Module/Api/Upnp_Api.php:674
 #: ../../src/Repository/Model/Browse.php:272
 msgid "Playlists"
 msgstr "רשימות השמעה"
 
 #: ../../public/templates/header.inc.php:49
-#: ../../public/templates/show_albums.inc.php:49
-#: ../../public/templates/show_artists.inc.php:70
-#: ../../public/templates/show_artists.inc.php:129
+#: ../../public/templates/show_albums.inc.php:51
+#: ../../public/templates/show_artists.inc.php:74
+#: ../../public/templates/show_artists.inc.php:136
 #: ../../public/templates/show_edit_album_row.inc.php:103
 #: ../../public/templates/show_edit_artist_row.inc.php:62
 #: ../../public/templates/show_edit_channel_row.inc.php:91
 #: ../../public/templates/show_edit_song_row.inc.php:94
 #: ../../public/templates/show_edit_tvshow_row.inc.php:45
-#: ../../public/templates/show_edit_video_row.inc.php:47
-#: ../../public/templates/show_now_playing_row.inc.php:68
-#: ../../public/templates/show_recommended_artists.inc.php:55
-#: ../../public/templates/show_recommended_artists.inc.php:109
-#: ../../public/templates/show_songs.inc.php:82
-#: ../../public/templates/show_songs.inc.php:171
-#: ../../public/templates/show_tvshows.inc.php:54
-#: ../../public/templates/show_tvshows.inc.php:96
+#: ../../public/templates/show_edit_video_row.inc.php:49
+#: ../../public/templates/show_now_playing_row.inc.php:71
+#: ../../public/templates/show_recommended_artists.inc.php:57
+#: ../../public/templates/show_recommended_artists.inc.php:114
+#: ../../public/templates/show_songs.inc.php:86
+#: ../../public/templates/show_songs.inc.php:178
+#: ../../public/templates/show_tvshows.inc.php:58
+#: ../../public/templates/show_tvshows.inc.php:103
 #: ../../public/templates/show_videos.inc.php:63
-#: ../../public/templates/show_videos.inc.php:112
+#: ../../public/templates/show_videos.inc.php:108
 #: ../../public/templates/sidebar.inc.php:53
 #: ../../src/Gui/Song/SongViewAdapter.php:346
 #: ../../src/Module/Application/Browse/TagAction.php:75
@@ -430,7 +429,7 @@ msgstr "יציאה"
 
 #: ../../public/templates/header.inc.php:65
 #: ../../public/templates/show_localplay_status.inc.php:34
-#: ../../public/templates/show_now_playing.inc.php:38
+#: ../../public/templates/show_now_playing.inc.php:40
 #: ../../public/templates/show_user.inc.php:94
 #: ../../src/Module/Playback/Localplay/LocalPlay.php:618
 #: ../../src/Module/Util/AmpacheRss.php:120
@@ -474,48 +473,48 @@ msgstr "ביטול"
 #: ../../public/templates/show_album_group_disks.inc.php:186
 #: ../../public/templates/show_album.inc.php:129
 #: ../../public/templates/show_album_row.inc.php:51
-#: ../../public/templates/show_artist_row.inc.php:47
+#: ../../public/templates/show_artist_row.inc.php:46
 #: ../../public/templates/show_live_stream.inc.php:43
 #: ../../public/templates/show_playlist_media_row.inc.php:43
 #: ../../public/templates/show_playlist_row.inc.php:43
 #: ../../public/templates/show_podcast_episode.inc.php:65
-#: ../../public/templates/show_podcast_episode_row.inc.php:44
-#: ../../public/templates/show_podcast_row.inc.php:42
+#: ../../public/templates/show_podcast_episode_row.inc.php:51
+#: ../../public/templates/show_podcast_row.inc.php:45
 #: ../../public/templates/show_random_albums.inc.php:56
 #: ../../public/templates/show_random_videos.inc.php:56
 #: ../../public/templates/show_recently_played.inc.php:107
 #: ../../public/templates/show_search_row.inc.php:41
-#: ../../public/templates/show_tvshow_row.inc.php:44
-#: ../../public/templates/show_tvshow_season_row.inc.php:44
+#: ../../public/templates/show_tvshow_row.inc.php:48
+#: ../../public/templates/show_tvshow_season_row.inc.php:46
 #: ../../public/templates/show_video.inc.php:97
-#: ../../public/templates/show_video_row.inc.php:49
+#: ../../public/templates/show_video_row.inc.php:56
 #: ../../src/Application/Api/Upnp/PlayStatusApplication.php:65
 #: ../../src/Gui/Song/SongViewAdapter.php:128
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:139
 #: ../../src/Plugin/AmpachePersonalFavorites.php:146
 msgid "Play next"
-msgstr ""
+msgstr "ניגון הבא"
 
 #: ../../public/templates/header.inc.php:350
 #: ../../public/templates/show_album_group_disks.inc.php:126
 #: ../../public/templates/show_album_group_disks.inc.php:189
 #: ../../public/templates/show_album.inc.php:130
 #: ../../public/templates/show_album_row.inc.php:54
-#: ../../public/templates/show_artist_row.inc.php:50
+#: ../../public/templates/show_artist_row.inc.php:49
 #: ../../public/templates/show_live_stream.inc.php:47
 #: ../../public/templates/show_playlist_media_row.inc.php:46
 #: ../../public/templates/show_playlist_row.inc.php:46
 #: ../../public/templates/show_podcast_episode.inc.php:69
-#: ../../public/templates/show_podcast_episode_row.inc.php:47
-#: ../../public/templates/show_podcast_row.inc.php:45
+#: ../../public/templates/show_podcast_episode_row.inc.php:54
+#: ../../public/templates/show_podcast_row.inc.php:48
 #: ../../public/templates/show_random_albums.inc.php:60
 #: ../../public/templates/show_random_videos.inc.php:60
 #: ../../public/templates/show_recently_played.inc.php:111
 #: ../../public/templates/show_search_row.inc.php:44
-#: ../../public/templates/show_tvshow_row.inc.php:47
-#: ../../public/templates/show_tvshow_season_row.inc.php:47
+#: ../../public/templates/show_tvshow_row.inc.php:51
+#: ../../public/templates/show_tvshow_season_row.inc.php:49
 #: ../../public/templates/show_video.inc.php:101
-#: ../../public/templates/show_video_row.inc.php:52
+#: ../../public/templates/show_video_row.inc.php:59
 #: ../../src/Gui/Song/SongViewAdapter.php:140
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:144
 #: ../../src/Plugin/AmpachePersonalFavorites.php:150
@@ -527,18 +526,18 @@ msgstr "הוספה לסוף רשימת ההשמעה"
 #: ../../public/templates/show_album_group_disks.inc.php:193
 #: ../../public/templates/show_album.inc.php:150
 #: ../../public/templates/show_album_row.inc.php:69
-#: ../../public/templates/show_artist_row.inc.php:65
+#: ../../public/templates/show_artist_row.inc.php:63
 #: ../../public/templates/show_live_stream.inc.php:52
 #: ../../public/templates/show_playlist_media_row.inc.php:60
 #: ../../public/templates/show_playlist_row.inc.php:60
 #: ../../public/templates/show_podcast_episode.inc.php:74
-#: ../../public/templates/show_podcast_episode_row.inc.php:66
+#: ../../public/templates/show_podcast_episode_row.inc.php:72
 #: ../../public/templates/show_random_albums.inc.php:65
 #: ../../public/templates/show_recently_played.inc.php:121
 #: ../../public/templates/show_search_options.inc.php:36
 #: ../../public/templates/show_search_row.inc.php:52
 #: ../../public/templates/show_video.inc.php:106
-#: ../../public/templates/show_video_row.inc.php:71
+#: ../../public/templates/show_video_row.inc.php:78
 #: ../../src/Gui/Song/SongViewAdapter.php:169
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:148
 #: ../../src/Plugin/AmpachePersonalFavorites.php:154
@@ -549,13 +548,13 @@ msgstr "הוספה לרשימת השמעה זמנית"
 #: ../../public/templates/rightbar.inc.php:50
 #: ../../public/templates/show_album.inc.php:152
 #: ../../public/templates/show_album_row.inc.php:76
-#: ../../public/templates/show_artist_row.inc.php:68
+#: ../../public/templates/show_artist_row.inc.php:66
 #: ../../public/templates/show_playlist_media_row.inc.php:63
 #: ../../public/templates/show_playlist_row.inc.php:64
-#: ../../public/templates/show_podcast_episode_row.inc.php:69
+#: ../../public/templates/show_podcast_episode_row.inc.php:75
 #: ../../public/templates/show_recently_played.inc.php:123
 #: ../../public/templates/show_search_row.inc.php:54
-#: ../../public/templates/show_video_row.inc.php:74
+#: ../../public/templates/show_video_row.inc.php:81
 #: ../../src/Gui/Song/SongViewAdapter.php:417
 msgid "Add to playlist"
 msgstr "הוספה לרשימת השמעה"
@@ -576,13 +575,13 @@ msgid "New messages"
 msgstr "הודעות חדשות"
 
 #: ../../public/templates/header.inc.php:387
-#: ../../public/templates/show_login_form.inc.php:87
+#: ../../public/templates/show_login_form.inc.php:86
 #: ../../public/templates/show_user_activate.inc.php:52
 msgid "Login"
 msgstr "כניסה"
 
 #: ../../public/templates/header.inc.php:390
-#: ../../public/templates/show_login_form.inc.php:95
+#: ../../public/templates/show_login_form.inc.php:94
 #: ../../public/templates/show_user_registration.inc.php:167
 msgid "Register"
 msgstr "רישום"
@@ -673,7 +672,7 @@ msgid "Add to New Playlist"
 msgstr "הוספה לרשימת השמעה חדשה"
 
 #: ../../public/templates/rightbar.inc.php:78
-#: ../../public/templates/show_album_row.inc.php:130
+#: ../../public/templates/show_album_row.inc.php:132
 #: ../../public/templates/show_playlist.inc.php:95
 #: ../../public/templates/show_playlist.inc.php:96
 #: ../../public/templates/show_playlist_row.inc.php:99
@@ -715,17 +714,17 @@ msgstr "רשימת השמעה אקראית"
 #: ../../public/templates/show_access_list.inc.php:81
 #: ../../public/templates/show_account.inc.php:90
 #: ../../public/templates/show_album.inc.php:254
-#: ../../public/templates/show_album_row.inc.php:142
+#: ../../public/templates/show_album_row.inc.php:144
 #: ../../public/templates/show_artist.inc.php:223
-#: ../../public/templates/show_artist_row.inc.php:117
-#: ../../public/templates/show_catalog_row.inc.php:60
+#: ../../public/templates/show_artist_row.inc.php:110
+#: ../../public/templates/show_catalog_row.inc.php:61
 #: ../../public/templates/show_democratic_playlist.inc.php:100
 #: ../../public/templates/show_edit_user.inc.php:114
 #: ../../public/templates/show_label.inc.php:96
 #: ../../public/templates/show_label.inc.php:97
-#: ../../public/templates/show_label_row.inc.php:55
-#: ../../public/templates/show_license_row.inc.php:37
-#: ../../public/templates/show_live_stream_row.inc.php:56
+#: ../../public/templates/show_label_row.inc.php:56
+#: ../../public/templates/show_license_row.inc.php:38
+#: ../../public/templates/show_live_stream_row.inc.php:57
 #: ../../public/templates/show_localplay_instances.inc.php:53
 #: ../../public/templates/show_localplay_playlist.inc.php:57
 #: ../../public/templates/show_manage_democratic.inc.php:55
@@ -733,25 +732,25 @@ msgstr "רשימת השמעה אקראית"
 #: ../../public/templates/show_playlist_media_row.inc.php:102
 #: ../../public/templates/show_playlist_row.inc.php:118
 #: ../../public/templates/show_podcast_episode.inc.php:110
-#: ../../public/templates/show_podcast_episode_row.inc.php:119
+#: ../../public/templates/show_podcast_episode_row.inc.php:126
 #: ../../public/templates/show_podcast.inc.php:120
 #: ../../public/templates/show_podcast.inc.php:121
-#: ../../public/templates/show_podcast_row.inc.php:85
+#: ../../public/templates/show_podcast_row.inc.php:88
 #: ../../public/templates/show_pvmsg_row.inc.php:39
 #: ../../public/templates/show_pvmsgs.inc.php:44
 #: ../../public/templates/show_search.inc.php:72
 #: ../../public/templates/show_search_row.inc.php:77
-#: ../../public/templates/show_shout_row.inc.php:41
+#: ../../public/templates/show_shout_row.inc.php:40
 #: ../../public/templates/show_tagcloud.inc.php:60
 #: ../../public/templates/show_tvshow.inc.php:100
 #: ../../public/templates/show_tvshow.inc.php:101
 #: ../../public/templates/show_tvshow_row.inc.php:85
 #: ../../public/templates/show_tvshow_season.inc.php:94
 #: ../../public/templates/show_tvshow_season.inc.php:95
-#: ../../public/templates/show_tvshow_season_row.inc.php:87
+#: ../../public/templates/show_tvshow_season_row.inc.php:89
 #: ../../public/templates/show_user_row.inc.php:88
 #: ../../public/templates/show_video.inc.php:138
-#: ../../public/templates/show_video_row.inc.php:137
+#: ../../public/templates/show_video_row.inc.php:144
 #: ../../src/Gui/Song/SongViewAdapter.php:327
 #: ../../src/Repository/Model/Broadcast.php:360
 #: ../../src/Repository/Model/Channel.php:314
@@ -827,9 +826,9 @@ msgstr ""
 #: ../../public/templates/show_shared_objects.inc.php:33
 #: ../../public/templates/show_wanted_albums.inc.php:34
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:130
-#: ../../src/Module/Util/Ui.php:886 ../../src/Plugin/AmpacheFlattr.php:101
+#: ../../src/Module/Util/Ui.php:887 ../../src/Plugin/AmpacheFlattr.php:101
 #: ../../src/Plugin/AmpachePaypal.php:105
-#: ../../src/Repository/Model/User.php:1095
+#: ../../src/Repository/Model/User.php:1094
 msgid "User"
 msgstr "משתמש"
 
@@ -842,16 +841,16 @@ msgstr "משתמש"
 #: ../../public/templates/show_edit_playlist_row.inc.php:35
 #: ../../public/templates/show_edit_search_row.inc.php:35
 #: ../../public/templates/show_import_playlist.inc.php:38
-#: ../../public/templates/show_playlists.inc.php:52
-#: ../../public/templates/show_playlists.inc.php:92
+#: ../../public/templates/show_playlists.inc.php:53
+#: ../../public/templates/show_playlists.inc.php:93
 #: ../../public/templates/show_searches.inc.php:52
 #: ../../public/templates/show_searches.inc.php:80
 msgid "Type"
 msgstr "סוג"
 
 #: ../../public/templates/show_access_list.inc.php:63
-#: ../../public/templates/show_artists.inc.php:76
-#: ../../public/templates/show_artists.inc.php:134
+#: ../../public/templates/show_artists.inc.php:82
+#: ../../public/templates/show_artists.inc.php:142
 #: ../../public/templates/show_catalog_types.inc.php:34
 #: ../../public/templates/show_catalog_types.inc.php:71
 #: ../../public/templates/show_democratic_playlist.inc.php:60
@@ -871,57 +870,57 @@ msgstr "סוג"
 #: ../../public/templates/show_manage_license.inc.php:61
 #: ../../public/templates/show_manage_shoutbox.inc.php:37
 #: ../../public/templates/show_manage_shoutbox.inc.php:66
-#: ../../public/templates/show_playlist_medias.inc.php:60
-#: ../../public/templates/show_playlist_medias.inc.php:93
+#: ../../public/templates/show_playlist_medias.inc.php:61
+#: ../../public/templates/show_playlist_medias.inc.php:94
 #: ../../public/templates/show_plugins.inc.php:35
 #: ../../public/templates/show_plugins.inc.php:76
 #: ../../public/templates/show_podcast_episode.inc.php:59
 #: ../../public/templates/show_pvmsgs.inc.php:58
 #: ../../public/templates/show_pvmsgs.inc.php:85
-#: ../../public/templates/show_recommended_artists.inc.php:61
-#: ../../public/templates/show_recommended_artists.inc.php:114
-#: ../../public/templates/show_songs.inc.php:110
-#: ../../public/templates/show_tvshows.inc.php:60
-#: ../../public/templates/show_tvshows.inc.php:101
+#: ../../public/templates/show_recommended_artists.inc.php:65
+#: ../../public/templates/show_recommended_artists.inc.php:119
+#: ../../public/templates/show_songs.inc.php:116
+#: ../../public/templates/show_tvshows.inc.php:66
+#: ../../public/templates/show_tvshows.inc.php:109
 #: ../../public/templates/show_users.inc.php:67
 #: ../../public/templates/show_users.inc.php:105
 #: ../../public/templates/show_video.inc.php:92
 #: ../../public/templates/show_videos.inc.php:68
-#: ../../public/templates/show_videos.inc.php:117
+#: ../../public/templates/show_videos.inc.php:113
 msgid "Action"
 msgstr "פעולה"
 
 #: ../../public/templates/show_access_list.inc.php:80
 #: ../../public/templates/show_album_group_disks.inc.php:220
 #: ../../public/templates/show_album.inc.php:233
-#: ../../public/templates/show_album_row.inc.php:136
+#: ../../public/templates/show_album_row.inc.php:138
 #: ../../public/templates/show_artist.inc.php:216
-#: ../../public/templates/show_artist_row.inc.php:111
+#: ../../public/templates/show_artist_row.inc.php:105
 #: ../../public/templates/show_label.inc.php:87
-#: ../../public/templates/show_license_row.inc.php:34
-#: ../../public/templates/show_live_stream_row.inc.php:51
+#: ../../public/templates/show_license_row.inc.php:35
+#: ../../public/templates/show_live_stream_row.inc.php:52
 #: ../../public/templates/show_playlist.inc.php:147
 #: ../../public/templates/show_playlist.inc.php:148
 #: ../../public/templates/show_playlist_row.inc.php:116
 #: ../../public/templates/show_podcast_episode.inc.php:104
-#: ../../public/templates/show_podcast_episode_row.inc.php:113
+#: ../../public/templates/show_podcast_episode_row.inc.php:120
 #: ../../public/templates/show_podcast.inc.php:108
-#: ../../public/templates/show_podcast_row.inc.php:76
+#: ../../public/templates/show_podcast_row.inc.php:79
 #: ../../public/templates/show_search.inc.php:65
 #: ../../public/templates/show_search.inc.php:66
 #: ../../public/templates/show_search_row.inc.php:74
-#: ../../public/templates/show_shout_row.inc.php:38
+#: ../../public/templates/show_shout_row.inc.php:37
 #: ../../public/templates/show_tagcloud.inc.php:55
 #: ../../public/templates/show_tagcloud.inc.php:56
 #: ../../public/templates/show_tvshow.inc.php:91
-#: ../../public/templates/show_tvshow_row.inc.php:78
+#: ../../public/templates/show_tvshow_row.inc.php:80
 #: ../../public/templates/show_tvshow_season.inc.php:85
-#: ../../public/templates/show_tvshow_season_row.inc.php:81
+#: ../../public/templates/show_tvshow_season_row.inc.php:83
 #: ../../public/templates/show_user.inc.php:85
 #: ../../public/templates/show_user.inc.php:89
 #: ../../public/templates/show_user_row.inc.php:75
 #: ../../public/templates/show_video.inc.php:132
-#: ../../public/templates/show_video_row.inc.php:131
+#: ../../public/templates/show_video_row.inc.php:138
 #: ../../src/Gui/Song/SongViewAdapter.php:284
 #: ../../src/Repository/Model/Broadcast.php:358
 #: ../../src/Repository/Model/Channel.php:312
@@ -937,7 +936,7 @@ msgstr "עריכה"
 #: ../../public/templates/show_users.inc.php:52
 #: ../../public/templates/show_users.inc.php:90
 msgid "Full Name"
-msgstr ""
+msgstr "שם מלא"
 
 #: ../../public/templates/show_account.inc.php:46
 #: ../../public/templates/show_account_simple.inc.php:41
@@ -981,22 +980,22 @@ msgstr "אתר"
 #: ../../public/templates/show_channels.inc.php:47
 #: ../../public/templates/show_edit_user.inc.php:68
 #: ../../public/templates/show_podcast_episode.inc.php:121
-#: ../../public/templates/show_podcast_episodes.inc.php:57
-#: ../../public/templates/show_podcast_episodes.inc.php:103
+#: ../../public/templates/show_podcast_episodes.inc.php:62
+#: ../../public/templates/show_podcast_episodes.inc.php:109
 #: ../../public/templates/show_user_registration.inc.php:125
 msgid "State"
-msgstr ""
+msgstr "מדינה"
 
 #: ../../public/templates/show_account.inc.php:65
 #: ../../public/templates/show_account_simple.inc.php:59
 #: ../../public/templates/show_edit_user.inc.php:74
 #: ../../public/templates/show_user_registration.inc.php:135
 msgid "City"
-msgstr ""
+msgstr "עיר"
 
 #: ../../public/templates/show_account.inc.php:71
 msgid "New Password"
-msgstr ""
+msgstr "סיסמה חדשה"
 
 #: ../../public/templates/show_account.inc.php:75
 #: ../../public/templates/show_add_user.inc.php:49
@@ -1005,7 +1004,7 @@ msgstr ""
 #: ../../public/templates/show_install_account.inc.php:66
 #: ../../public/templates/show_user_registration.inc.php:149
 msgid "Confirm Password"
-msgstr ""
+msgstr "אישור סיסמה"
 
 #: ../../public/templates/show_account.inc.php:79
 #: ../../public/templates/show_account_simple.inc.php:66
@@ -1043,7 +1042,7 @@ msgstr ""
 #: ../../public/templates/show_edit_user.inc.php:175
 #: ../../public/templates/show_manage_catalogs.inc.php:54
 msgid "Clear Stats"
-msgstr ""
+msgstr "ניקוי סטטיסטיקה"
 
 #: ../../public/templates/show_account.inc.php:139
 msgid "Update Account"
@@ -1097,12 +1096,12 @@ msgstr ""
 #: ../../public/templates/show_add_access.inc.php:99
 #: ../../public/templates/show_edit_access.inc.php:81
 msgid "Start"
-msgstr ""
+msgstr "התחלה"
 
 #: ../../public/templates/show_add_access.inc.php:108
 #: ../../public/templates/show_edit_access.inc.php:85
 msgid "End"
-msgstr ""
+msgstr "סיום"
 
 #: ../../public/templates/show_add_access.inc.php:120
 msgid "Create ACL"
@@ -1112,7 +1111,7 @@ msgstr ""
 #: ../../public/templates/show_add_catalog.inc.php:128
 #: ../../public/templates/sidebar_admin.inc.php:42
 msgid "Add Catalog"
-msgstr ""
+msgstr "הוספת קטלוג"
 
 #: ../../public/templates/show_add_catalog.inc.php:33
 msgid ""
@@ -1132,7 +1131,7 @@ msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:44
 #: ../../public/templates/show_add_upload.inc.php:193
-#: ../../public/templates/show_albums.inc.php:44
+#: ../../public/templates/show_albums.inc.php:46
 #: ../../public/templates/show_democratic_playlist.inc.php:63
 #: ../../public/templates/show_democratic_playlist.inc.php:113
 #: ../../public/templates/show_disabled_songs.inc.php:33
@@ -1141,12 +1140,12 @@ msgstr ""
 #: ../../public/templates/show_edit_song_row.inc.php:51
 #: ../../public/templates/show_lyrics.inc.php:48
 #: ../../public/templates/show_missing_albums.inc.php:30
-#: ../../public/templates/show_now_playing_row.inc.php:54
+#: ../../public/templates/show_now_playing_row.inc.php:57
 #: ../../public/templates/show_recently_played.inc.php:42
 #: ../../public/templates/show_recently_played.inc.php:162
 #: ../../public/templates/show_song_previews.inc.php:31
-#: ../../public/templates/show_songs.inc.php:74
-#: ../../public/templates/show_songs.inc.php:169
+#: ../../public/templates/show_songs.inc.php:76
+#: ../../public/templates/show_songs.inc.php:175
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:31
 #: ../../src/Gui/Song/SongViewAdapter.php:344
@@ -1171,7 +1170,7 @@ msgstr "הערה"
 #: ../../public/templates/show_edit_catalog.inc.php:38
 #: ../../src/Gui/Song/SongViewAdapter.php:365
 msgid "Catalog Number"
-msgstr ""
+msgstr "מספר קטלוג"
 
 #: ../../public/templates/show_add_catalog.inc.php:48
 #: ../../public/templates/show_edit_catalog.inc.php:39
@@ -1202,7 +1201,7 @@ msgid "Genre"
 msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:52
-#: ../../public/templates/show_albums.inc.php:47
+#: ../../public/templates/show_albums.inc.php:49
 #: ../../public/templates/show_edit_album_row.inc.php:53
 #: ../../public/templates/show_edit_catalog.inc.php:43
 #: ../../public/templates/show_edit_song_row.inc.php:90
@@ -1210,13 +1209,13 @@ msgstr ""
 #: ../../public/templates/show_get_art.inc.php:98
 #: ../../public/templates/show_graphs.inc.php:63
 #: ../../public/templates/show_missing_albums.inc.php:32
-#: ../../public/templates/show_now_playing_row.inc.php:62
+#: ../../public/templates/show_now_playing_row.inc.php:65
 #: ../../public/templates/show_partial_edit_movie_row.inc.php:31
 #: ../../public/templates/show_partial_movie.inc.php:23
 #: ../../public/templates/show_partial_movies.inc.php:26
 #: ../../public/templates/show_recently_played.inc.php:44
 #: ../../public/templates/show_recently_played.inc.php:164
-#: ../../public/templates/show_songs.inc.php:79
+#: ../../public/templates/show_songs.inc.php:81
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:347
 #: ../../src/Repository/Model/Album.php:668
@@ -1245,9 +1244,8 @@ msgstr ""
 #: ../../public/templates/show_edit_album_row.inc.php:87
 #: ../../public/templates/show_edit_catalog.inc.php:46
 #: ../../src/Repository/Model/Search.php:710
-#, fuzzy
 msgid "Release Status"
-msgstr "תאריך שחרור"
+msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:56
 #: ../../public/templates/show_edit_album_row.inc.php:95
@@ -1259,7 +1257,7 @@ msgstr ""
 #: ../../public/templates/show_add_catalog.inc.php:58
 #: ../../public/templates/show_edit_catalog.inc.php:49
 #: ../../public/templates/sidebar.inc.php:50
-#: ../../src/Module/Api/Upnp_Api.php:1012
+#: ../../src/Module/Api/Upnp_Api.php:1014
 #: ../../src/Repository/Model/Browse.php:336
 msgid "TV Shows"
 msgstr "תוכניות טלויזיה"
@@ -1270,10 +1268,10 @@ msgstr "תוכניות טלויזיה"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:35
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:23
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:28
-#: ../../public/templates/show_tvshow_seasons.inc.php:49
-#: ../../public/templates/show_tvshow_seasons.inc.php:88
-#: ../../public/templates/show_tvshows.inc.php:51
-#: ../../public/templates/show_tvshows.inc.php:93
+#: ../../public/templates/show_tvshow_seasons.inc.php:50
+#: ../../public/templates/show_tvshow_seasons.inc.php:89
+#: ../../public/templates/show_tvshows.inc.php:53
+#: ../../public/templates/show_tvshows.inc.php:99
 #: ../../src/Repository/Model/TVShow_Episode.php:209
 #: ../../src/Repository/Model/TvShow.php:189
 #: ../../src/Repository/Model/TVShow_Season.php:166
@@ -1285,8 +1283,8 @@ msgstr "תוכנית טלויזיה"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:24
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:27
-#: ../../public/templates/show_tvshow_seasons.inc.php:48
-#: ../../public/templates/show_tvshow_seasons.inc.php:87
+#: ../../public/templates/show_tvshow_seasons.inc.php:49
+#: ../../public/templates/show_tvshow_seasons.inc.php:88
 #: ../../src/Repository/Model/TVShow_Episode.php:214
 #: ../../src/Repository/Model/TVShow_Season.php:140
 #: ../../src/Repository/Model/TVShow_Season.php:171
@@ -1310,22 +1308,22 @@ msgstr "פרק"
 #: ../../public/templates/show_edit_podcast_episode_row.inc.php:31
 #: ../../public/templates/show_edit_podcast_row.inc.php:35
 #: ../../public/templates/show_edit_song_row.inc.php:36
-#: ../../public/templates/show_edit_video_row.inc.php:35
-#: ../../public/templates/show_playlist_medias.inc.php:53
-#: ../../public/templates/show_playlist_medias.inc.php:86
+#: ../../public/templates/show_edit_video_row.inc.php:37
+#: ../../public/templates/show_playlist_medias.inc.php:54
+#: ../../public/templates/show_playlist_medias.inc.php:87
 #: ../../public/templates/show_podcast_episode.inc.php:116
-#: ../../public/templates/show_podcast_episodes.inc.php:49
-#: ../../public/templates/show_podcast_episodes.inc.php:94
+#: ../../public/templates/show_podcast_episodes.inc.php:50
+#: ../../public/templates/show_podcast_episodes.inc.php:99
 #: ../../public/templates/show_podcasts.inc.php:67
 #: ../../public/templates/show_podcasts.inc.php:111
 #: ../../public/templates/show_video.inc.php:144
-#: ../../public/templates/show_videos.inc.php:49
-#: ../../public/templates/show_videos.inc.php:98
+#: ../../public/templates/show_videos.inc.php:50
+#: ../../public/templates/show_videos.inc.php:95
 #: ../../src/Gui/Song/SongViewAdapter.php:339
 #: ../../src/Repository/Model/Podcast_Episode.php:197
 #: ../../src/Repository/Model/Search.php:514
 #: ../../src/Repository/Model/Search.php:704
-#: ../../src/Repository/Model/Song.php:1775
+#: ../../src/Repository/Model/Song.php:1750
 #: ../../src/Repository/Model/Video.php:349
 msgid "Title"
 msgstr "כותרת"
@@ -1357,9 +1355,8 @@ msgstr "(אין לשים '/' בהתחלה או בסוף)"
 
 #: ../../public/templates/show_add_catalog.inc.php:81
 #: ../../public/templates/show_edit_catalog.inc.php:73
-#, fuzzy
 msgid "Catalog User"
-msgstr "קטלוגים"
+msgstr "משתמש קטלוג"
 
 #: ../../public/templates/show_add_catalog.inc.php:95
 #: ../../public/templates/show_catalog_row.inc.php:55
@@ -1375,7 +1372,7 @@ msgid "Catalog Media Type"
 msgstr "סוגי מדיה לקטלוגים"
 
 #: ../../public/templates/show_add_catalog.inc.php:107
-#: ../../src/Module/Api/Upnp_Api.php:762
+#: ../../src/Module/Api/Upnp_Api.php:764
 msgid "Music"
 msgstr "מוסיקה"
 
@@ -1392,8 +1389,8 @@ msgid "Personal Video"
 msgstr "וידאו פרטי"
 
 #: ../../public/templates/show_add_catalog.inc.php:116
-#: ../../public/templates/show_podcast_episodes.inc.php:51
-#: ../../public/templates/show_podcast_episodes.inc.php:96
+#: ../../public/templates/show_podcast_episodes.inc.php:54
+#: ../../public/templates/show_podcast_episodes.inc.php:102
 #: ../../src/Repository/Model/Podcast_Episode.php:192
 #: ../../src/Repository/Model/Podcast.php:167
 msgid "Podcast"
@@ -1553,15 +1550,13 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:62
 #: ../../public/templates/show_edit_label_row.inc.php:64
-#, fuzzy
 msgid "Production"
-msgstr "מיקום"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:65
 #: ../../public/templates/show_edit_label_row.inc.php:67
-#, fuzzy
 msgid "Original Production"
-msgstr "שנה מקורית"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:68
 #: ../../public/templates/show_edit_label_row.inc.php:70
@@ -1570,9 +1565,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:71
 #: ../../public/templates/show_edit_label_row.inc.php:73
-#, fuzzy
 msgid "Reissue Production"
-msgstr "רזולוציה"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:74
 #: ../../public/templates/show_edit_label_row.inc.php:76
@@ -1581,9 +1575,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:77
 #: ../../public/templates/show_edit_label_row.inc.php:79
-#, fuzzy
 msgid "Holding"
-msgstr "נטען"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:80
 #: ../../public/templates/show_edit_label_row.inc.php:82
@@ -1592,9 +1585,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:83
 #: ../../public/templates/show_edit_label_row.inc.php:85
-#, fuzzy
 msgid "Tag Generated"
-msgstr "לא דירגו"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:88
 #: ../../public/templates/show_edit_artist_row.inc.php:50
@@ -1618,9 +1610,8 @@ msgstr "כתובת"
 #: ../../public/templates/show_edit_label_row.inc.php:98
 #: ../../public/templates/show_labels.inc.php:59
 #: ../../public/templates/show_labels.inc.php:88
-#, fuzzy
 msgid "Country"
-msgstr "מונה"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:119
 #: ../../public/templates/show_edit_label_row.inc.php:110
@@ -1630,24 +1621,22 @@ msgstr "מונה"
 #: ../../public/templates/show_test.inc.php:63
 #: ../../public/templates/show_user.inc.php:114
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:1857
+#: ../../src/Repository/Model/Catalog.php:1890
 #: ../../src/Repository/Model/Channel.php:310
 msgid "Status"
 msgstr "סטטוס"
 
 #: ../../public/templates/show_add_label.inc.php:124
 #: ../../public/templates/show_edit_label_row.inc.php:115
-#: ../../public/templates/show_label_row.inc.php:41
-#, fuzzy
+#: ../../public/templates/show_label_row.inc.php:42
 msgid "Active"
-msgstr "הפעלה"
+msgstr "פעיל"
 
 #: ../../public/templates/show_add_label.inc.php:127
 #: ../../public/templates/show_edit_label_row.inc.php:118
-#: ../../public/templates/show_label_row.inc.php:43
-#, fuzzy
+#: ../../public/templates/show_label_row.inc.php:44
 msgid "Inactive"
-msgstr "משתמשים לא פעילים"
+msgstr "לא פעיל"
 
 #: ../../public/templates/show_add_label.inc.php:134
 #: ../../public/templates/show_add_live_stream.inc.php:63
@@ -1679,7 +1668,7 @@ msgstr ""
 #: ../../public/templates/show_live_streams.inc.php:87
 #: ../../public/templates/show_video.inc.php:150
 #: ../../public/templates/show_videos.inc.php:56
-#: ../../public/templates/show_videos.inc.php:105
+#: ../../public/templates/show_videos.inc.php:101
 msgid "Codec"
 msgstr ""
 
@@ -1765,8 +1754,8 @@ msgstr ""
 #: ../../public/templates/show_search_row.inc.php:60
 #: ../../public/templates/show_video.inc.php:54
 #: ../../public/templates/sidebar_localplay.inc.php:62
-#: ../../src/Config/functions.php:1089 ../../src/Module/Util/Ui.php:794
-#: ../../src/Module/Util/Ui.php:831
+#: ../../src/Config/functions.php:1093 ../../src/Module/Util/Ui.php:795
+#: ../../src/Module/Util/Ui.php:832
 msgid "None"
 msgstr "ללא"
 
@@ -1874,16 +1863,16 @@ msgstr "הוספת משתמש"
 #: ../../public/templates/show_add_user.inc.php:37
 #: ../../public/templates/show_edit_user.inc.php:41
 #: ../../public/templates/show_install_account.inc.php:52
-#: ../../public/templates/show_login_form.inc.php:73
-#: ../../public/templates/show_now_playing_row.inc.php:37
-#: ../../public/templates/show_now_playing_video_row.inc.php:33
+#: ../../public/templates/show_login_form.inc.php:72
+#: ../../public/templates/show_now_playing_row.inc.php:40
+#: ../../public/templates/show_now_playing_video_row.inc.php:38
 #: ../../public/templates/show_recently_played.inc.php:45
 #: ../../public/templates/show_recently_played.inc.php:165
 #: ../../public/templates/show_user_registration.inc.php:90
 #: ../../public/templates/show_users.inc.php:52
 #: ../../public/templates/show_users.inc.php:90
-#: ../../src/Module/Catalog/Catalog_remote.php:119
-#: ../../src/Module/Catalog/Catalog_subsonic.php:119
+#: ../../src/Module/Catalog/Catalog_remote.php:120
+#: ../../src/Module/Catalog/Catalog_subsonic.php:120
 #: ../../src/Module/Cli/AdminAddUserCommand.php:48
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:197
 #: ../../src/Module/User/Registration.php:67
@@ -1899,10 +1888,10 @@ msgstr "שם משתמש"
 #: ../../public/templates/show_install_config.inc.php:102
 #: ../../public/templates/show_install.inc.php:77
 #: ../../public/templates/show_install.inc.php:130
-#: ../../public/templates/show_login_form.inc.php:77
+#: ../../public/templates/show_login_form.inc.php:76
 #: ../../public/templates/show_user_registration.inc.php:143
-#: ../../src/Module/Catalog/Catalog_remote.php:120
-#: ../../src/Module/Catalog/Catalog_subsonic.php:120
+#: ../../src/Module/Catalog/Catalog_remote.php:121
+#: ../../src/Module/Catalog/Catalog_subsonic.php:121
 #: ../../src/Module/Cli/AdminAddUserCommand.php:43
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:199
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:224
@@ -1922,7 +1911,7 @@ msgstr "רמת גישה של משתמש"
 #: ../../public/templates/show_preference_box.inc.php:81
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:127
 #: ../../src/Repository/Model/Shoutbox.php:322
-#: ../../src/Repository/Model/User.php:1097
+#: ../../src/Repository/Model/User.php:1096
 msgid "Guest"
 msgstr "אורח"
 
@@ -1931,7 +1920,7 @@ msgstr "אורח"
 #: ../../public/templates/show_edit_user.inc.php:96
 #: ../../public/templates/show_preference_box.inc.php:83
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:133
-#: ../../src/Repository/Model/User.php:1093
+#: ../../src/Repository/Model/User.php:1092
 msgid "Content Manager"
 msgstr "מנהל תוכן"
 
@@ -1940,7 +1929,7 @@ msgstr "מנהל תוכן"
 #: ../../public/templates/show_edit_user.inc.php:97
 #: ../../public/templates/show_preference_box.inc.php:84
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:136
-#: ../../src/Repository/Model/User.php:1091
+#: ../../src/Repository/Model/User.php:1090
 msgid "Catalog Manager"
 msgstr "מנהל קטלוגים"
 
@@ -1954,7 +1943,7 @@ msgstr "מנהל קטלוגים"
 #: ../../public/templates/show_preference_box.inc.php:85
 #: ../../public/templates/sidebar.inc.php:88
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:139
-#: ../../src/Module/Util/Ui.php:888 ../../src/Repository/Model/User.php:1089
+#: ../../src/Module/Util/Ui.php:889 ../../src/Repository/Model/User.php:1088
 msgid "Admin"
 msgstr "מנהל-על"
 
@@ -2031,7 +2020,7 @@ msgstr[3] "%d פעמים"
 
 #: ../../public/templates/show_album_group_disks.inc.php:112
 #: ../../public/templates/show_album.inc.php:125
-#: ../../public/templates/show_albums.inc.php:51
+#: ../../public/templates/show_albums.inc.php:53
 #: ../../public/templates/show_artist.inc.php:116
 #: ../../public/templates/show_broadcasts.inc.php:39
 #: ../../public/templates/show_catalogs.inc.php:38
@@ -2039,10 +2028,10 @@ msgstr[3] "%d פעמים"
 #: ../../public/templates/show_channels.inc.php:48
 #: ../../public/templates/show_label.inc.php:61
 #: ../../public/templates/show_missing_albums.inc.php:34
-#: ../../public/templates/show_playlists.inc.php:58
-#: ../../public/templates/show_playlists.inc.php:98
-#: ../../public/templates/show_podcast_episodes.inc.php:63
-#: ../../public/templates/show_podcast_episodes.inc.php:108
+#: ../../public/templates/show_playlists.inc.php:59
+#: ../../public/templates/show_playlists.inc.php:99
+#: ../../public/templates/show_podcast_episodes.inc.php:68
+#: ../../public/templates/show_podcast_episodes.inc.php:114
 #: ../../public/templates/show_podcast.inc.php:63
 #: ../../public/templates/show_podcasts.inc.php:42
 #: ../../public/templates/show_pvmsg.inc.php:34
@@ -2051,8 +2040,8 @@ msgstr[3] "%d פעמים"
 #: ../../public/templates/show_shared_objects.inc.php:42
 #: ../../public/templates/show_tvshow.inc.php:68
 #: ../../public/templates/show_tvshow_season.inc.php:62
-#: ../../public/templates/show_tvshow_seasons.inc.php:56
-#: ../../public/templates/show_tvshow_seasons.inc.php:94
+#: ../../public/templates/show_tvshow_seasons.inc.php:57
+#: ../../public/templates/show_tvshow_seasons.inc.php:95
 #: ../../public/templates/show_wanted_albums.inc.php:35
 #: ../../src/Module/Application/Album/ShowMissingAction.php:124
 msgid "Actions"
@@ -2062,7 +2051,7 @@ msgstr "פעולות"
 #: ../../public/templates/show_album_group_disks.inc.php:194
 #: ../../public/templates/show_album.inc.php:151
 #: ../../public/templates/show_album_row.inc.php:70
-#: ../../public/templates/show_artist_row.inc.php:66
+#: ../../public/templates/show_artist_row.inc.php:64
 #: ../../public/templates/show_playlist_row.inc.php:62
 #: ../../public/templates/show_search_options.inc.php:39
 msgid "Random to Temporary Playlist"
@@ -2096,11 +2085,11 @@ msgstr "עדכון מתגיות"
 #: ../../public/templates/show_install_config.inc.php:264
 #: ../../public/templates/show_playlist_media_row.inc.php:91
 #: ../../public/templates/show_podcast_episode.inc.php:95
-#: ../../public/templates/show_podcast_episode_row.inc.php:104
+#: ../../public/templates/show_podcast_episode_row.inc.php:111
 #: ../../public/templates/show_share.inc.php:39
 #: ../../public/templates/show_share.inc.php:40
 #: ../../public/templates/show_video.inc.php:123
-#: ../../public/templates/show_video_row.inc.php:126
+#: ../../public/templates/show_video_row.inc.php:133
 #: ../../src/Gui/Song/SongViewAdapter.php:239
 #: ../../src/Module/System/AutoUpdate.php:285
 #: ../../src/Module/System/AutoUpdate.php:287
@@ -2110,16 +2099,16 @@ msgstr "הורדה"
 
 #: ../../public/templates/show_album_group_disks.inc.php:198
 #: ../../public/templates/show_album.inc.php:175
-#: ../../public/templates/show_album_row.inc.php:116
+#: ../../public/templates/show_album_row.inc.php:118
 #: ../../public/templates/show_artist.inc.php:169
-#: ../../public/templates/show_artist_row.inc.php:105
+#: ../../public/templates/show_artist_row.inc.php:100
 #: ../../public/templates/show_html5_player.inc.php:182
 #: ../../public/templates/show_label.inc.php:67
 #: ../../public/templates/show_label.inc.php:68
-#: ../../public/templates/show_label_row.inc.php:49
+#: ../../public/templates/show_label_row.inc.php:50
 #: ../../public/templates/show_podcast_episode.inc.php:80
 #: ../../public/templates/show_video.inc.php:109
-#: ../../public/templates/show_video_row.inc.php:116
+#: ../../public/templates/show_video_row.inc.php:123
 #: ../../src/Gui/Song/SongViewAdapter.php:194
 #: ../../src/Repository/Model/Shoutbox.php:307
 msgid "Post Shout"
@@ -2134,7 +2123,7 @@ msgstr "שמירת סדר הפריטים"
 
 #: ../../public/templates/show_album_group_disks.inc.php:219
 #: ../../public/templates/show_album.inc.php:232
-#: ../../public/templates/show_album_row.inc.php:135
+#: ../../public/templates/show_album_row.inc.php:137
 msgid "Album Edit"
 msgstr "עריכת אלבום"
 
@@ -2168,8 +2157,8 @@ msgstr "גראפים"
 msgid "Edit Album"
 msgstr "עריכת אלבום"
 
-#: ../../public/templates/show_albums.inc.php:45
-#: ../../public/templates/show_artists.inc.php:44
+#: ../../public/templates/show_albums.inc.php:47
+#: ../../public/templates/show_artists.inc.php:46
 #: ../../public/templates/show_edit_album_row.inc.php:38
 #: ../../src/Gui/Song/SongViewAdapter.php:342
 #: ../../src/Repository/Model/Search.php:517
@@ -2177,9 +2166,9 @@ msgstr "עריכת אלבום"
 msgid "Album Artist"
 msgstr "אמן האלבום"
 
-#: ../../public/templates/show_albums.inc.php:46
-#: ../../public/templates/show_artists.inc.php:63
-#: ../../public/templates/show_artists.inc.php:122
+#: ../../public/templates/show_albums.inc.php:48
+#: ../../public/templates/show_artists.inc.php:65
+#: ../../public/templates/show_artists.inc.php:128
 #: ../../public/templates/show_browse_form.inc.php:36
 #: ../../public/templates/show_browse_form.inc.php:38
 #: ../../public/templates/show_genre_browse_form.inc.php:15
@@ -2189,32 +2178,32 @@ msgstr "אמן האלבום"
 #: ../../public/templates/show_manage_democratic.inc.php:37
 #: ../../public/templates/show_random.inc.php:45
 #: ../../public/templates/show_random.inc.php:47
-#: ../../public/templates/show_recommended_artists.inc.php:48
-#: ../../public/templates/show_recommended_artists.inc.php:106
+#: ../../public/templates/show_recommended_artists.inc.php:49
+#: ../../public/templates/show_recommended_artists.inc.php:110
 #: ../../public/templates/show_search_form.inc.php:46
 #: ../../public/templates/show_search_form.inc.php:48
 #: ../../public/templates/sidebar.inc.php:38
 #: ../../src/Application/Api/Ajax/Handler/IndexAjaxHandler.php:369
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:139
-#: ../../src/Module/Api/Upnp_Api.php:651
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:140
+#: ../../src/Module/Api/Upnp_Api.php:653
 #: ../../src/Repository/Model/Browse.php:236
 #: ../../src/Repository/Model/Browse.php:320
 msgid "Songs"
 msgstr "שירים"
 
 #. HINT: Number of times object has been played
-#: ../../public/templates/show_albums.inc.php:48
-#: ../../public/templates/show_artists.inc.php:67
-#: ../../public/templates/show_artists.inc.php:126
-#: ../../public/templates/show_podcast_episodes.inc.php:54
-#: ../../public/templates/show_podcast_episodes.inc.php:99
+#: ../../public/templates/show_albums.inc.php:50
+#: ../../public/templates/show_artists.inc.php:69
+#: ../../public/templates/show_artists.inc.php:132
+#: ../../public/templates/show_podcast_episodes.inc.php:59
+#: ../../public/templates/show_podcast_episodes.inc.php:106
 #: ../../public/templates/show_podcasts.inc.php:40
-#: ../../public/templates/show_recommended_artists.inc.php:52
-#: ../../public/templates/show_songs.inc.php:91
-#: ../../public/templates/show_songs.inc.php:177
+#: ../../public/templates/show_recommended_artists.inc.php:53
+#: ../../public/templates/show_songs.inc.php:97
+#: ../../public/templates/show_songs.inc.php:185
 #: ../../public/templates/show_video.inc.php:165
 #: ../../public/templates/show_videos.inc.php:60
-#: ../../public/templates/show_videos.inc.php:109
+#: ../../public/templates/show_videos.inc.php:105
 #: ../../src/Gui/Song/SongViewAdapter.php:386
 #: ../../src/Repository/Model/Search.php:535
 #: ../../src/Repository/Model/Search.php:663
@@ -2222,59 +2211,59 @@ msgstr "שירים"
 msgid "# Played"
 msgstr "# נוגנו"
 
-#: ../../public/templates/show_albums.inc.php:50
-#: ../../public/templates/show_artists.inc.php:73
-#: ../../public/templates/show_artists.inc.php:131
-#: ../../public/templates/show_playlist_medias.inc.php:57
-#: ../../public/templates/show_playlist_medias.inc.php:90
-#: ../../public/templates/show_playlists.inc.php:55
-#: ../../public/templates/show_playlists.inc.php:95
+#: ../../public/templates/show_albums.inc.php:52
+#: ../../public/templates/show_artists.inc.php:79
+#: ../../public/templates/show_artists.inc.php:139
+#: ../../public/templates/show_playlist_medias.inc.php:58
+#: ../../public/templates/show_playlist_medias.inc.php:91
+#: ../../public/templates/show_playlists.inc.php:56
+#: ../../public/templates/show_playlists.inc.php:96
 #: ../../public/templates/show_podcast_episode.inc.php:42
-#: ../../public/templates/show_podcast_episodes.inc.php:60
-#: ../../public/templates/show_podcast_episodes.inc.php:105
+#: ../../public/templates/show_podcast_episodes.inc.php:65
+#: ../../public/templates/show_podcast_episodes.inc.php:111
 #: ../../public/templates/show_podcasts.inc.php:41
-#: ../../public/templates/show_recommended_artists.inc.php:58
-#: ../../public/templates/show_recommended_artists.inc.php:111
-#: ../../public/templates/show_songs.inc.php:101
-#: ../../public/templates/show_songs.inc.php:183
-#: ../../public/templates/show_tvshow_seasons.inc.php:53
-#: ../../public/templates/show_tvshow_seasons.inc.php:91
-#: ../../public/templates/show_tvshows.inc.php:57
-#: ../../public/templates/show_tvshows.inc.php:98
+#: ../../public/templates/show_recommended_artists.inc.php:62
+#: ../../public/templates/show_recommended_artists.inc.php:117
+#: ../../public/templates/show_songs.inc.php:107
+#: ../../public/templates/show_songs.inc.php:191
+#: ../../public/templates/show_tvshow_seasons.inc.php:54
+#: ../../public/templates/show_tvshow_seasons.inc.php:92
+#: ../../public/templates/show_tvshows.inc.php:63
+#: ../../public/templates/show_tvshows.inc.php:106
 #: ../../public/templates/show_video.inc.php:72
-#: ../../public/templates/show_videos.inc.php:65
-#: ../../public/templates/show_videos.inc.php:114
+#: ../../public/templates/show_videos.inc.php:66
+#: ../../public/templates/show_videos.inc.php:111
 msgid "Rating"
 msgstr "דירוג"
 
-#: ../../public/templates/show_albums.inc.php:73
-#: ../../public/templates/show_albums.inc.php:132
-#: ../../public/templates/show_artists.inc.php:60
-#: ../../public/templates/show_artists.inc.php:119
+#: ../../public/templates/show_albums.inc.php:75
+#: ../../public/templates/show_albums.inc.php:135
+#: ../../public/templates/show_artists.inc.php:62
+#: ../../public/templates/show_artists.inc.php:125
 #: ../../public/templates/show_arts.inc.php:52
 #: ../../public/templates/show_labels.inc.php:55
 #: ../../public/templates/show_labels.inc.php:84
 #: ../../public/templates/show_live_streams.inc.php:57
 #: ../../public/templates/show_live_streams.inc.php:84
-#: ../../public/templates/show_playlist_medias.inc.php:52
-#: ../../public/templates/show_playlist_medias.inc.php:85
-#: ../../public/templates/show_playlists.inc.php:47
-#: ../../public/templates/show_playlists.inc.php:86
-#: ../../public/templates/show_podcast_episodes.inc.php:93
+#: ../../public/templates/show_playlist_medias.inc.php:53
+#: ../../public/templates/show_playlist_medias.inc.php:86
+#: ../../public/templates/show_playlists.inc.php:48
+#: ../../public/templates/show_playlists.inc.php:87
+#: ../../public/templates/show_podcast_episodes.inc.php:98
 #: ../../public/templates/show_podcasts.inc.php:66
 #: ../../public/templates/show_podcasts.inc.php:110
-#: ../../public/templates/show_recommended_artists.inc.php:45
-#: ../../public/templates/show_recommended_artists.inc.php:103
-#: ../../public/templates/show_tvshow_seasons.inc.php:47
-#: ../../public/templates/show_tvshow_seasons.inc.php:86
-#: ../../public/templates/show_tvshows.inc.php:50
-#: ../../public/templates/show_tvshows.inc.php:92
-#: ../../public/templates/show_videos.inc.php:48
-#: ../../public/templates/show_videos.inc.php:97
+#: ../../public/templates/show_recommended_artists.inc.php:46
+#: ../../public/templates/show_recommended_artists.inc.php:107
+#: ../../public/templates/show_tvshow_seasons.inc.php:48
+#: ../../public/templates/show_tvshow_seasons.inc.php:87
+#: ../../public/templates/show_tvshows.inc.php:52
+#: ../../public/templates/show_tvshows.inc.php:98
+#: ../../public/templates/show_videos.inc.php:49
+#: ../../public/templates/show_videos.inc.php:94
 msgid "Art"
 msgstr "תמונת אלבום"
 
-#: ../../public/templates/show_albums.inc.php:124
+#: ../../public/templates/show_albums.inc.php:128
 msgid "No Album found"
 msgstr "לא נמצא כל אלבום"
 
@@ -2286,8 +2275,8 @@ msgstr "לא נמצא כל אלבום"
 #: ../../public/templates/show_index.inc.php:66
 #: ../../public/templates/show_label.inc.php:122
 #: ../../public/templates/show_missing_artist.inc.php:34
-#: ../../public/templates/show_now_playing_row.inc.php:91
-#: ../../public/templates/show_now_playing_row.inc.php:97
+#: ../../public/templates/show_now_playing_row.inc.php:92
+#: ../../public/templates/show_now_playing_row.inc.php:98
 msgid "Loading..."
 msgstr "בטעינה..."
 
@@ -2315,9 +2304,8 @@ msgstr "ניגון הכל"
 #: ../../public/templates/show_podcast.inc.php:73
 #: ../../public/templates/show_tvshow.inc.php:78
 #: ../../public/templates/show_tvshow_season.inc.php:72
-#, fuzzy
 msgid "Play All Next"
-msgstr "הוספה לסוף רשימת ההשמעה"
+msgstr ""
 
 #: ../../public/templates/show_artist.inc.php:142
 #: ../../public/templates/show_playlist.inc.php:118
@@ -2338,7 +2326,7 @@ msgid "Random All to Temporary Playlist"
 msgstr "הוספת הכל בסדר אקראי לרשימת השמעה זמנית"
 
 #: ../../public/templates/show_artist.inc.php:215
-#: ../../public/templates/show_artist_row.inc.php:110
+#: ../../public/templates/show_artist_row.inc.php:104
 msgid "Artist Edit"
 msgstr "עריכת אמן"
 
@@ -2354,9 +2342,9 @@ msgstr "אלבומים חסרים"
 
 #: ../../public/templates/show_artist.inc.php:243
 #: ../../public/templates/show_artist.inc.php:282
-#: ../../public/templates/show_now_playing_row.inc.php:90
+#: ../../public/templates/show_now_playing_row.inc.php:91
 #: ../../public/templates/show_now_playing_similar.inc.php:32
-#: ../../public/templates/show_recommended_artists.inc.php:40
+#: ../../public/templates/show_recommended_artists.inc.php:41
 msgid "Similar Artists"
 msgstr "אמנים דומים"
 
@@ -2369,29 +2357,29 @@ msgstr "אמנים דומים"
 #: ../../public/templates/show_search_form.inc.php:62
 #: ../../public/templates/show_search_form.inc.php:64
 #: ../../public/templates/sidebar.inc.php:42
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:196
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:197
 #: ../../src/Repository/Model/Browse.php:364
 msgid "Labels"
 msgstr ""
 
-#: ../../public/templates/show_artists.inc.php:65
-#: ../../public/templates/show_artists.inc.php:124
+#: ../../public/templates/show_artists.inc.php:67
+#: ../../public/templates/show_artists.inc.php:130
 #: ../../public/templates/show_democratic_playlist.inc.php:65
 #: ../../public/templates/show_democratic_playlist.inc.php:115
-#: ../../public/templates/show_playlist_medias.inc.php:55
-#: ../../public/templates/show_playlist_medias.inc.php:88
-#: ../../public/templates/show_podcast_episodes.inc.php:52
-#: ../../public/templates/show_podcast_episodes.inc.php:97
-#: ../../public/templates/show_recommended_artists.inc.php:50
-#: ../../public/templates/show_recommended_artists.inc.php:108
-#: ../../public/templates/show_songs.inc.php:83
-#: ../../public/templates/show_songs.inc.php:172
+#: ../../public/templates/show_playlist_medias.inc.php:56
+#: ../../public/templates/show_playlist_medias.inc.php:89
+#: ../../public/templates/show_podcast_episodes.inc.php:57
+#: ../../public/templates/show_podcast_episodes.inc.php:104
+#: ../../public/templates/show_recommended_artists.inc.php:51
+#: ../../public/templates/show_recommended_artists.inc.php:112
+#: ../../public/templates/show_songs.inc.php:89
+#: ../../public/templates/show_songs.inc.php:180
 #: ../../public/templates/show_videos.inc.php:58
-#: ../../public/templates/show_videos.inc.php:107
+#: ../../public/templates/show_videos.inc.php:103
 msgid "Time"
 msgstr "זמן"
 
-#: ../../public/templates/show_artists.inc.php:111
+#: ../../public/templates/show_artists.inc.php:117
 msgid "No Artist found"
 msgstr "לא נמצא כל אמן"
 
@@ -2409,7 +2397,7 @@ msgstr "בחירה"
 
 #: ../../public/templates/show_arts.inc.php:60
 #: ../../public/templates/show_ip_history.inc.php:64
-#: ../../src/Repository/Model/User.php:1036
+#: ../../src/Repository/Model/User.php:1035
 msgid "Invalid"
 msgstr "לא תקין"
 
@@ -2475,7 +2463,7 @@ msgstr ""
 #: ../../public/templates/show_browse_form.inc.php:75
 #: ../../public/templates/show_browse_form.inc.php:77
 #: ../../public/templates/sidebar.inc.php:45
-#: ../../src/Module/Api/Upnp_Api.php:714
+#: ../../src/Module/Api/Upnp_Api.php:716
 #: ../../src/Repository/Model/Browse.php:267
 msgid "Radio Stations"
 msgstr "תחנות רדיו"
@@ -2483,7 +2471,7 @@ msgstr "תחנות רדיו"
 #: ../../public/templates/show_browse_form.inc.php:82
 #: ../../public/templates/show_browse_form.inc.php:84
 #: ../../public/templates/sidebar.inc.php:47
-#: ../../src/Module/Api/Upnp_Api.php:735
+#: ../../src/Module/Api/Upnp_Api.php:737
 #: ../../src/Repository/Model/Browse.php:372
 msgid "Podcasts"
 msgstr "פודקאסטים"
@@ -2547,10 +2535,15 @@ msgid "Update"
 msgstr "עדכון"
 
 #: ../../public/templates/show_catalog_row.inc.php:56
+#: ../../public/templates/sidebar_preferences.inc.php:63
+msgid "Import"
+msgstr ""
+
+#: ../../public/templates/show_catalog_row.inc.php:57
 msgid "Update File Tags"
 msgstr "עדכון תגיות קבצים"
 
-#: ../../public/templates/show_catalog_row.inc.php:62
+#: ../../public/templates/show_catalog_row.inc.php:63
 msgid "Go"
 msgstr ""
 
@@ -2586,7 +2579,7 @@ msgstr "לא נמצא כל קטלוג"
 #: ../../public/templates/show_localplay_controllers.inc.php:71
 #: ../../public/templates/show_plugins.inc.php:33
 #: ../../public/templates/show_plugins.inc.php:74
-#: ../../src/Module/System/Update.php:290
+#: ../../src/Module/System/Update.php:293
 msgid "Version"
 msgstr "גרסה"
 
@@ -2893,11 +2886,11 @@ msgstr ""
 
 #: ../../public/templates/show_edit_album_row.inc.php:108
 msgid "Overwrite tags of sub songs"
-msgstr ""
+msgstr "שכתוב תגיות של תתי-שירים"
 
 #: ../../public/templates/show_edit_album_row.inc.php:112
 msgid "Add tags to sub songs"
-msgstr ""
+msgstr "הוספת תגיות לתתי-שירים"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:54
 msgid "Place Formed"
@@ -2909,21 +2902,21 @@ msgstr ""
 
 #: ../../public/templates/show_edit_artist_row.inc.php:74
 msgid "Overwrite tags of sub albums and sub songs"
-msgstr ""
+msgstr "שכתוב תגיות של תתי-אלבומים ותתי-שירים"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:78
 msgid "Add tags to sub albums and sub songs"
-msgstr ""
+msgstr "הוספת תגיות לתתי-אלבומים ותתי-שירים"
 
 #. HINT: Catalog Name
 #: ../../public/templates/show_edit_catalog.inc.php:27
 #, php-format
 msgid "Settings for Catalog: %s"
-msgstr ""
+msgstr "הגדרות עבור הקטלוג: %s"
 
 #: ../../public/templates/show_edit_catalog.inc.php:92
 msgid "Save Catalog Settings"
-msgstr ""
+msgstr "שמירת הגדרות הקטלוג"
 
 #: ../../public/templates/show_edit_license.inc.php:27
 msgid "Configure License"
@@ -3022,11 +3015,11 @@ msgstr ""
 
 #: ../../public/templates/show_edit_tvshow_row.inc.php:50
 msgid "Overwrite tags of sub episodes"
-msgstr ""
+msgstr "שכתוב תגיות של תתי-פרקים"
 
 #: ../../public/templates/show_edit_tvshow_row.inc.php:54
 msgid "Add tags to sub episodes"
-msgstr ""
+msgstr "הוספת תגיות לתתי-פרקים"
 
 #: ../../public/templates/show_edit_user.inc.php:33
 msgid "Editing Existing User"
@@ -3050,7 +3043,7 @@ msgstr ""
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:483
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:481
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:501
-#: ../../src/Module/Util/Ui.php:799
+#: ../../src/Module/Util/Ui.php:800
 msgid "Democratic"
 msgstr "דמוקרטי"
 
@@ -3058,7 +3051,7 @@ msgstr "דמוקרטי"
 #: ../../public/templates/show_playtype_switch.inc.php:45
 #: ../../public/templates/sidebar.inc.php:62
 #: ../../public/templates/sidebar.inc.php:85 ../../src/Config/functions.php:783
-#: ../../src/Module/Util/Ui.php:802
+#: ../../src/Module/Util/Ui.php:803
 msgid "Localplay"
 msgstr ""
 
@@ -3069,7 +3062,7 @@ msgstr ""
 #: ../../public/templates/show_edit_user.inc.php:165
 #: ../../public/templates/show_live_stream.inc.php:57
 #: ../../public/templates/show_playtype_switch.inc.php:39
-#: ../../src/Module/Util/Ui.php:796
+#: ../../src/Module/Util/Ui.php:797
 msgid "Stream"
 msgstr ""
 
@@ -3085,10 +3078,10 @@ msgstr ""
 msgid "Update User"
 msgstr "עדכון משתמש"
 
-#: ../../public/templates/show_edit_video_row.inc.php:39
+#: ../../public/templates/show_edit_video_row.inc.php:41
 #: ../../public/templates/show_video.inc.php:149
 #: ../../public/templates/show_videos.inc.php:55
-#: ../../public/templates/show_videos.inc.php:104
+#: ../../public/templates/show_videos.inc.php:100
 msgid "Release Date"
 msgstr "תאריך שחרור"
 
@@ -3191,7 +3184,7 @@ msgstr "שעה"
 msgid "Your browser doesn't support this feature."
 msgstr "הדפדפן שלך אינו תומך באפשרות זו."
 
-#: ../../public/templates/show_html5_player_headers.inc.php:532
+#: ../../public/templates/show_html5_player_headers.inc.php:534
 msgid "Media is currently playing, are you sure you want to close?"
 msgstr "ישנה מדיה שמתנגנת כעת. האם באמת לסגור?"
 
@@ -3249,7 +3242,7 @@ msgid "Repeat Off"
 msgstr "חזרה מבוטלת"
 
 #: ../../public/templates/show_html5_player.inc.php:179
-#: ../../src/Repository/Model/Song.php:1735
+#: ../../src/Repository/Model/Song.php:1710
 msgid "Show Lyrics"
 msgstr "הצגת מילים"
 
@@ -3488,8 +3481,8 @@ msgstr ""
 
 #: ../../public/templates/show_install_config.inc.php:117
 #: ../../public/templates/show_manage_democratic.inc.php:36
-#: ../../src/Module/Util/Ui.php:924 ../../src/Module/Util/Ui.php:931
-#: ../../src/Module/Util/Ui.php:954
+#: ../../src/Module/Util/Ui.php:925 ../../src/Module/Util/Ui.php:932
+#: ../../src/Module/Util/Ui.php:955
 msgid "Default"
 msgstr "ברירת מחדל"
 
@@ -3627,8 +3620,8 @@ msgstr ""
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:38
 #: ../../src/Module/Api/DaapApiApplication.php:35
 #: ../../src/Module/Api/SubsonicApiApplication.php:52
-#: ../../src/Module/Util/Ui.php:671 ../../src/Module/Util/Ui.php:865
-#: ../../src/Module/Util/Ui.php:885
+#: ../../src/Module/Util/Ui.php:671 ../../src/Module/Util/Ui.php:866
+#: ../../src/Module/Util/Ui.php:886
 #: ../../src/Module/WebDav/WebDavApplication.php:48
 msgid "Disabled"
 msgstr "מושבת"
@@ -3774,11 +3767,11 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: ../../public/templates/show_live_stream_row.inc.php:36
+#: ../../public/templates/show_live_stream_row.inc.php:37
 msgid "Play live stream"
 msgstr ""
 
-#: ../../public/templates/show_live_stream_row.inc.php:50
+#: ../../public/templates/show_live_stream_row.inc.php:51
 msgid "Live Stream Edit"
 msgstr ""
 
@@ -3832,27 +3825,27 @@ msgstr ""
 msgid "Volume"
 msgstr "עוצמת שמע"
 
-#: ../../public/templates/show_login_form.inc.php:83
+#: ../../public/templates/show_login_form.inc.php:82
 msgid "Remember Me"
 msgstr "זכור אותי"
 
-#: ../../public/templates/show_login_form.inc.php:98
+#: ../../public/templates/show_login_form.inc.php:97
 #: ../../src/Module/User/NewPasswordSender.php:70
 msgid "Lost Password"
 msgstr "שכחתי סיסמה"
 
-#: ../../public/templates/show_login_form.inc.php:110
+#: ../../public/templates/show_login_form.inc.php:109
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
 msgstr ""
 
-#: ../../public/templates/show_login_form.inc.php:112
+#: ../../public/templates/show_login_form.inc.php:111
 msgid ""
 "Cookies are used for core site functionality and are not used for tracking "
 "or analytics."
 msgstr ""
 
-#: ../../public/templates/show_login_form.inc.php:114
+#: ../../public/templates/show_login_form.inc.php:113
 msgid "By logging in you agree to the use of cookies while using this site."
 msgstr ""
 
@@ -3861,12 +3854,12 @@ msgid "Submit"
 msgstr "הגשה"
 
 #: ../../public/templates/show_lyrics.inc.php:41
-#: ../../public/templates/show_now_playing_row.inc.php:50
+#: ../../public/templates/show_now_playing_row.inc.php:53
 #: ../../public/templates/show_partial_clip.inc.php:24
 #: ../../public/templates/show_recently_played.inc.php:40
 #: ../../public/templates/show_recently_played.inc.php:160
 #: ../../public/templates/show_tagcloud.inc.php:33
-#: ../../src/Repository/Model/Catalog.php:1857
+#: ../../src/Repository/Model/Catalog.php:1890
 msgid "Song"
 msgstr "שיר"
 
@@ -3921,9 +3914,9 @@ msgstr "עצמך"
 
 #: ../../public/templates/show_mail_users.inc.php:48
 #: ../../src/Module/Api/Edit/ShowEditObjectAction.php:66
-#: ../../src/Module/System/Update.php:1559
-#: ../../src/Module/System/Update.php:1561
-#: ../../src/Repository/Model/User.php:1290
+#: ../../src/Module/System/Update.php:1562
+#: ../../src/Module/System/Update.php:1564
+#: ../../src/Repository/Model/User.php:1289
 msgid "System"
 msgstr "מערכת"
 
@@ -4018,16 +4011,16 @@ msgstr ""
 msgid "Podcast Episodes"
 msgstr "פרקי פודקאסטים"
 
-#: ../../public/templates/show_mashup.inc.php:37
+#: ../../public/templates/show_mashup.inc.php:39
 msgid "Trending"
 msgstr ""
 
-#: ../../public/templates/show_mashup.inc.php:47
+#: ../../public/templates/show_mashup.inc.php:49
 #: ../../public/templates/sidebar.inc.php:66
 msgid "Newest"
 msgstr "חדשים ביותר"
 
-#: ../../public/templates/show_mashup.inc.php:57
+#: ../../public/templates/show_mashup.inc.php:59
 #: ../../public/templates/sidebar.inc.php:67
 msgid "Popular"
 msgstr "פופולרים"
@@ -4037,7 +4030,7 @@ msgid "No missing albums found"
 msgstr "לא אותרו אלבומים חסרים"
 
 #: ../../public/templates/show_missing_artists.inc.php:27
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:211
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:212
 msgid "Missing Artists"
 msgstr "אמנים חסרים"
 
@@ -4045,14 +4038,14 @@ msgstr "אמנים חסרים"
 msgid "No missing artists found"
 msgstr "לא אותרו אמנים חסרים"
 
-#: ../../public/templates/show_now_playing_row.inc.php:96
+#: ../../public/templates/show_now_playing_row.inc.php:97
 #: ../../public/templates/show_now_playing_similar.inc.php:58
 msgid "Similar Songs"
 msgstr "שירים דומים"
 
-#: ../../public/templates/show_now_playing_video_row.inc.php:46
+#: ../../public/templates/show_now_playing_video_row.inc.php:50
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Module/Api/Upnp_Api.php:1112
+#: ../../src/Module/Api/Upnp_Api.php:1114
 msgid "Video"
 msgstr "וידאו"
 
@@ -4087,9 +4080,8 @@ msgstr "הסרת כפילויות"
 
 #: ../../public/templates/show_playlist.inc.php:102
 #: ../../public/templates/show_playlist.inc.php:103
-#, fuzzy
 msgid "Share playlist"
-msgstr "רשימת השמעה חכמה"
+msgstr ""
 
 #: ../../public/templates/show_playlist.inc.php:141
 #: ../../public/templates/show_playlist_row.inc.php:112
@@ -4111,13 +4103,13 @@ msgstr "האם באמת למחוק רשימת השמעה זו?"
 msgid "Reorder"
 msgstr "סידור"
 
-#: ../../public/templates/show_playlist_medias.inc.php:45
-#: ../../public/templates/show_playlist_medias.inc.php:102
+#: ../../public/templates/show_playlist_medias.inc.php:46
+#: ../../public/templates/show_playlist_medias.inc.php:103
 msgid "Duration"
 msgstr "משך"
 
-#: ../../public/templates/show_playlists.inc.php:49
-#: ../../public/templates/show_playlists.inc.php:89
+#: ../../public/templates/show_playlists.inc.php:50
+#: ../../public/templates/show_playlists.inc.php:90
 #: ../../public/templates/show_searches.inc.php:50
 #: ../../public/templates/show_searches.inc.php:78
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
@@ -4125,23 +4117,23 @@ msgstr "משך"
 msgid "Playlist Name"
 msgstr "שם רשימת השמעה"
 
-#: ../../public/templates/show_playlists.inc.php:51
-#: ../../public/templates/show_playlists.inc.php:91
+#: ../../public/templates/show_playlists.inc.php:52
+#: ../../public/templates/show_playlists.inc.php:92
 msgid "Last Update"
 msgstr "עדכון אחרון"
 
 #. HINT: Number of items in a playlist
-#: ../../public/templates/show_playlists.inc.php:53
-#: ../../public/templates/show_playlists.inc.php:93
+#: ../../public/templates/show_playlists.inc.php:54
+#: ../../public/templates/show_playlists.inc.php:94
 msgid "# Items"
 msgstr "# פריטים"
 
-#: ../../public/templates/show_playlists.inc.php:77
+#: ../../public/templates/show_playlists.inc.php:78
 msgid "No playlist found"
 msgstr "לא נמצאה רשימת השמעה"
 
 #: ../../public/templates/show_playtype_switch.inc.php:56
-#: ../../src/Module/Util/Ui.php:804
+#: ../../src/Module/Util/Ui.php:805
 msgid "Web Player"
 msgstr "נגן רשת"
 
@@ -4170,13 +4162,13 @@ msgid "Link"
 msgstr "קישור"
 
 #: ../../public/templates/show_podcast_episode.inc.php:103
-#: ../../public/templates/show_podcast_episode_row.inc.php:112
+#: ../../public/templates/show_podcast_episode_row.inc.php:119
 msgid "Podcast Episode Edit"
 msgstr "עריכת פרק פודקאסט"
 
 #: ../../public/templates/show_podcast_episode.inc.php:120
-#: ../../public/templates/show_podcast_episodes.inc.php:56
-#: ../../public/templates/show_podcast_episodes.inc.php:102
+#: ../../public/templates/show_podcast_episodes.inc.php:61
+#: ../../public/templates/show_podcast_episodes.inc.php:108
 msgid "Publication Date"
 msgstr "תאריך פרסום"
 
@@ -4196,18 +4188,18 @@ msgstr "קובץ"
 msgid "Size"
 msgstr "גודל"
 
-#: ../../public/templates/show_podcast_episode_row.inc.php:110
+#: ../../public/templates/show_podcast_episode_row.inc.php:117
 #: ../../public/templates/show_podcast.inc.php:113
-#: ../../public/templates/show_podcast_row.inc.php:79
+#: ../../public/templates/show_podcast_row.inc.php:82
 msgid "Sync"
 msgstr "סנכרון"
 
-#: ../../public/templates/show_podcast_episodes.inc.php:85
+#: ../../public/templates/show_podcast_episodes.inc.php:90
 msgid "No podcast episode found"
 msgstr "לא נמצא אף פרק פודקאסט"
 
 #: ../../public/templates/show_podcast.inc.php:107
-#: ../../public/templates/show_podcast_row.inc.php:75
+#: ../../public/templates/show_podcast_row.inc.php:78
 msgid "Podcast Edit"
 msgstr "עריכת פודקאסט"
 
@@ -4219,10 +4211,10 @@ msgstr "עריכת פודקאסט"
 #: ../../public/templates/show_podcasts.inc.php:69
 #: ../../public/templates/show_podcasts.inc.php:113
 #: ../../public/templates/show_tvshow_season.inc.php:106
-#: ../../public/templates/show_tvshow_seasons.inc.php:50
-#: ../../public/templates/show_tvshow_seasons.inc.php:89
-#: ../../public/templates/show_tvshows.inc.php:52
-#: ../../public/templates/show_tvshows.inc.php:94
+#: ../../public/templates/show_tvshow_seasons.inc.php:51
+#: ../../public/templates/show_tvshow_seasons.inc.php:90
+#: ../../public/templates/show_tvshows.inc.php:54
+#: ../../public/templates/show_tvshows.inc.php:100
 #: ../../src/Repository/Model/Browse.php:344
 msgid "Episodes"
 msgstr "פרקים"
@@ -4352,8 +4344,8 @@ msgstr "הוספה אל הרשימה"
 
 #: ../../public/templates/show_recently_played.inc.php:43
 #: ../../public/templates/show_recently_played.inc.php:163
-#: ../../public/templates/show_songs.inc.php:69
-#: ../../public/templates/show_songs.inc.php:166
+#: ../../public/templates/show_songs.inc.php:71
+#: ../../public/templates/show_songs.inc.php:172
 #: ../../src/Gui/Song/SongViewAdapter.php:340
 #: ../../src/Repository/Model/Search.php:516
 msgid "Song Artist"
@@ -4445,7 +4437,7 @@ msgstr[3] "לפני %d עשורים"
 msgid "No recently played items found"
 msgstr "לא נמצאו פריטים שנוגנו לאחרונה"
 
-#: ../../public/templates/show_recommended_artists.inc.php:95
+#: ../../public/templates/show_recommended_artists.inc.php:99
 msgid "No similar artist found"
 msgstr "לא נמצאו אמנים דומים"
 
@@ -4536,9 +4528,8 @@ msgstr "שמירה בתור רשימת השמעה חכמה"
 
 #: ../../public/templates/show_search_form.inc.php:128
 #: ../../public/templates/show_search.inc.php:84
-#, fuzzy
 msgid "Save as Playlist"
-msgstr "שמירה בתור רשימת השמעה חכמה"
+msgstr ""
 
 #: ../../public/templates/show_search.inc.php:60
 msgid "Add All"
@@ -4587,20 +4578,20 @@ msgstr "כתובת אינטרנט פומבית"
 msgid "Shared by"
 msgstr "משותף על ידי"
 
-#: ../../public/templates/show_songs.inc.php:86
-#: ../../public/templates/show_songs.inc.php:174
+#: ../../public/templates/show_songs.inc.php:92
+#: ../../public/templates/show_songs.inc.php:182
 msgid "License"
 msgstr "רישיון שימוש"
 
 #. HINT: Number of times object has been skipped
-#: ../../public/templates/show_songs.inc.php:96
-#: ../../public/templates/show_songs.inc.php:180
+#: ../../public/templates/show_songs.inc.php:102
+#: ../../public/templates/show_songs.inc.php:188
 #: ../../src/Gui/Song/SongViewAdapter.php:389
 #: ../../src/Repository/Model/Search.php:537
 msgid "# Skipped"
 msgstr "# נפסחו"
 
-#: ../../public/templates/show_songs.inc.php:156
+#: ../../public/templates/show_songs.inc.php:162
 msgid "No song found"
 msgstr "לא נמצאו שירים"
 
@@ -4609,7 +4600,7 @@ msgid "Do you really want to delete this Tag?"
 msgstr "האם באמת למחוק את התגית הזו?"
 
 #: ../../public/templates/show_tagcloud.inc.php:82
-#: ../../src/Repository/Model/User.php:1038
+#: ../../src/Repository/Model/User.php:1037
 msgid "Not Enough Data"
 msgstr "אין מספיק מידע"
 
@@ -4902,7 +4893,7 @@ msgid ""
 msgstr ""
 
 #: ../../public/templates/show_tvshow.inc.php:90
-#: ../../public/templates/show_tvshow_row.inc.php:77
+#: ../../public/templates/show_tvshow_row.inc.php:79
 msgid "TV Show Edit"
 msgstr "עריכת סדרת טלויזיה"
 
@@ -4911,14 +4902,14 @@ msgid "Edit TV Show"
 msgstr "עריכת סדרת טלויזיה"
 
 #: ../../public/templates/show_tvshow.inc.php:112
-#: ../../public/templates/show_tvshows.inc.php:53
-#: ../../public/templates/show_tvshows.inc.php:95
+#: ../../public/templates/show_tvshows.inc.php:55
+#: ../../public/templates/show_tvshows.inc.php:101
 #: ../../src/Repository/Model/Browse.php:340
 msgid "Seasons"
 msgstr "עונות"
 
 #: ../../public/templates/show_tvshow_season.inc.php:84
-#: ../../public/templates/show_tvshow_season_row.inc.php:80
+#: ../../public/templates/show_tvshow_season_row.inc.php:82
 msgid "Season Edit"
 msgstr "עריכת עונה"
 
@@ -4926,11 +4917,11 @@ msgstr "עריכת עונה"
 msgid "Edit Season"
 msgstr "עריכת עונה"
 
-#: ../../public/templates/show_tvshow_seasons.inc.php:78
+#: ../../public/templates/show_tvshow_seasons.inc.php:79
 msgid "No season found"
 msgstr "לא נמצאו עונות"
 
-#: ../../public/templates/show_tvshows.inc.php:84
+#: ../../public/templates/show_tvshows.inc.php:90
 msgid "No TV show found"
 msgstr "לא נמצאו תוכניות טלויזיה"
 
@@ -4966,10 +4957,10 @@ msgstr "מפתח האימות שבו נעשה שימוש אינו נכון"
 
 #: ../../public/templates/show_user.inc.php:44
 #: ../../public/templates/show_users.inc.php:80
-#: ../../src/Module/Util/Ui.php:930 ../../src/Repository/Model/Catalog.php:706
-#: ../../src/Repository/Model/Catalog.php:707
-#: ../../src/Repository/Model/Catalog.php:708
-#: ../../src/Repository/Model/User.php:1001
+#: ../../src/Module/Util/Ui.php:931 ../../src/Repository/Model/Catalog.php:713
+#: ../../src/Repository/Model/Catalog.php:714
+#: ../../src/Repository/Model/Catalog.php:715
+#: ../../src/Repository/Model/User.php:1000
 msgid "Never"
 msgstr "אף פעם"
 
@@ -4977,13 +4968,13 @@ msgstr "אף פעם"
 #: ../../public/templates/show_users.inc.php:81
 #: ../../src/Module/Playback/Localplay/LocalPlay.php:624
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:511
-#: ../../src/Repository/Model/Playlist.php:271
-#: ../../src/Repository/Model/Playlist.php:272
+#: ../../src/Repository/Model/Playlist.php:276
+#: ../../src/Repository/Model/Playlist.php:277
 #: ../../src/Repository/Model/Podcast.php:330
 #: ../../src/Repository/Model/TVShow_Episode.php:89
-#: ../../src/Repository/Model/User.php:1008
-#: ../../src/Repository/Model/User.php:1099
-#: ../../src/Repository/Model/Video.php:819
+#: ../../src/Repository/Model/User.php:1007
+#: ../../src/Repository/Model/User.php:1098
+#: ../../src/Repository/Model/Video.php:830
 msgid "Unknown"
 msgstr "לא ידוע"
 
@@ -5084,13 +5075,13 @@ msgid "Subtitle"
 msgstr "כתוביות"
 
 #: ../../public/templates/show_video.inc.php:131
-#: ../../public/templates/show_video_row.inc.php:130
+#: ../../public/templates/show_video_row.inc.php:137
 msgid "Video Edit"
 msgstr "עריכת וידאו"
 
 #: ../../public/templates/show_video.inc.php:151
 #: ../../public/templates/show_videos.inc.php:57
-#: ../../public/templates/show_videos.inc.php:106
+#: ../../public/templates/show_videos.inc.php:102
 msgid "Resolution"
 msgstr "רזולוציה"
 
@@ -5121,11 +5112,11 @@ msgstr "עדכון אחרון"
 msgid "Added"
 msgstr "נוסף"
 
-#: ../../public/templates/show_video_row.inc.php:113
+#: ../../public/templates/show_video_row.inc.php:120
 msgid "Video Information"
 msgstr "מידע וידאו"
 
-#: ../../public/templates/show_videos.inc.php:89
+#: ../../public/templates/show_videos.inc.php:87
 msgid "No video found"
 msgstr "לא נמצא וידאו"
 
@@ -5199,13 +5190,13 @@ msgid "Music Clips"
 msgstr "קליפי מוסיקה"
 
 #: ../../public/templates/sidebar.inc.php:51
-#: ../../src/Module/Api/Upnp_Api.php:1070
+#: ../../src/Module/Api/Upnp_Api.php:1072
 #: ../../src/Repository/Model/Browse.php:349
 msgid "Movies"
 msgstr "סרטים"
 
 #: ../../public/templates/sidebar.inc.php:52
-#: ../../src/Module/Api/Upnp_Api.php:1092
+#: ../../src/Module/Api/Upnp_Api.php:1094
 #: ../../src/Repository/Model/Browse.php:359
 msgid "Personal Videos"
 msgstr "סרטונים פרטיים"
@@ -5216,7 +5207,7 @@ msgid "Uploads"
 msgstr "העלאות"
 
 #: ../../public/templates/sidebar.inc.php:58
-#: ../../src/Module/Api/Upnp_Api.php:693
+#: ../../src/Module/Api/Upnp_Api.php:695
 #: ../../src/Repository/Model/Browse.php:285
 msgid "Smart Playlists"
 msgstr "רשימות השמעה חכמות"
@@ -5280,10 +5271,6 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: ../../public/templates/sidebar_preferences.inc.php:63
-msgid "Import"
-msgstr ""
-
 #: ../../public/templates/sidebar_preferences.inc.php:76
 msgid "Help"
 msgstr ""
@@ -5320,7 +5307,7 @@ msgstr ""
 msgid "Added to playlist"
 msgstr "נוסף לרשימת השמעה"
 
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:246
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:247
 msgid "Users"
 msgstr "משתמשים"
 
@@ -5386,22 +5373,77 @@ msgstr ""
 
 #: ../../src/Config/functions.php:823
 msgid "Browse Music"
-msgstr "דפדוף במוסיקה"
+msgstr "עיון במוסיקה"
 
 #: ../../src/Config/functions.php:899 ../../src/Config/functions.php:958
 #: ../../src/Config/functions.php:1008 ../../src/Config/functions.php:1057
 msgid "Add New"
 msgstr "הוספת חדש"
 
-#: ../../src/Config/functions.php:1146
+#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#: ../../src/Config/functions.php:1097
+#: ../../src/Module/Api/Method/AlbumSongsMethod.php:66
+#: ../../src/Module/Api/Method/ArtistAlbumsMethod.php:61
+#: ../../src/Module/Api/Method/ArtistMethod.php:63
+#: ../../src/Module/Api/Method/ArtistSongsMethod.php:66
+#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:96
+#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:90
+#: ../../src/Module/Api/Method/BookmarkEditMethod.php:94
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:81
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:97
+#: ../../src/Module/Api/Method/CatalogMethod.php:60
+#: ../../src/Module/Api/Method/DemocraticMethod.php:70
+#: ../../src/Module/Api/Method/DemocraticMethod.php:96
+#: ../../src/Module/Api/Method/FlagMethod.php:90
+#: ../../src/Module/Api/Method/FollowersMethod.php:71
+#: ../../src/Module/Api/Method/FollowingMethod.php:71
+#: ../../src/Module/Api/Method/GenreMethod.php:61
+#: ../../src/Module/Api/Method/GetBookmarkMethod.php:89
+#: ../../src/Module/Api/Method/LabelMethod.php:67
+#: ../../src/Module/Api/Method/LicenseMethod.php:67
+#: ../../src/Module/Api/Method/PlaylistMethod.php:68
+#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:72
+#: ../../src/Module/Api/Method/PodcastDeleteMethod.php:72
+#: ../../src/Module/Api/Method/PodcastEditMethod.php:78
+#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:68
+#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:69
+#: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:70
+#: ../../src/Module/Api/Method/PodcastMethod.php:70
+#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:99
+#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:62
+#: ../../src/Module/Api/Method/PreferenceEditMethod.php:72
+#: ../../src/Module/Api/Method/RateMethod.php:91
+#: ../../src/Module/Api/Method/RecordPlayMethod.php:77
+#: ../../src/Module/Api/Method/RecordPlayMethod.php:90
+#: ../../src/Module/Api/Method/ScrobbleMethod.php:81
+#: ../../src/Module/Api/Method/ScrobbleMethod.php:106
+#: ../../src/Module/Api/Method/ShareCreateMethod.php:95
+#: ../../src/Module/Api/Method/ShareDeleteMethod.php:75
+#: ../../src/Module/Api/Method/ShareEditMethod.php:91
+#: ../../src/Module/Api/Method/SongDeleteMethod.php:63
+#: ../../src/Module/Api/Method/SongMethod.php:63
+#: ../../src/Module/Api/Method/SystemPreferenceMethod.php:64
+#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:65
+#: ../../src/Module/Api/Method/UpdateArtMethod.php:81
+#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:71
+#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:70
+#: ../../src/Module/Api/Method/UserMethod.php:63
+#: ../../src/Module/Api/Method/UserMethod.php:72
+#: ../../src/Module/Api/Method/UserPreferenceMethod.php:62
+#: ../../src/Module/Api/Method/VideoMethod.php:66
+#, php-format
+msgid "Not Found: %s"
+msgstr "לא נמצא: %s"
+
+#: ../../src/Config/functions.php:1154
 msgid "View License"
 msgstr "צפייה ברישיון"
 
-#: ../../src/Config/functions.php:1251 ../../src/Module/Util/Ui.php:768
+#: ../../src/Config/functions.php:1259 ../../src/Module/Util/Ui.php:769
 msgid "On"
 msgstr ""
 
-#: ../../src/Config/functions.php:1253 ../../src/Module/Util/Ui.php:769
+#: ../../src/Config/functions.php:1261 ../../src/Module/Util/Ui.php:770
 msgid "Off"
 msgstr ""
 
@@ -5476,16 +5518,19 @@ msgid "Version: %s"
 msgstr ""
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:103
+#: ../../src/Module/Art/Export/ArtExporter.php:97
 #, php-format
 msgid "Unable to open `%s` for writing"
 msgstr ""
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:110
+#: ../../src/Module/Art/Export/ArtExporter.php:105
 #, php-format
 msgid "Unable to write to `%s`"
 msgstr ""
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:125
+#: ../../src/Module/Art/Export/ArtExporter.php:112
 #, php-format
 msgid "Art files written: %d"
 msgstr ""
@@ -5508,7 +5553,7 @@ msgstr "בקשה לא תקינה"
 #: ../../src/Module/Api/Method/AdvancedSearchMethod.php:88
 #: ../../src/Module/Api/Method/AlbumMethod.php:84
 #: ../../src/Module/Api/Method/CatalogActionMethod.php:66
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:78
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:88
 #: ../../src/Module/Api/Method/FlagMethod.php:77
 #: ../../src/Module/Api/Method/FlagMethod.php:85
 #: ../../src/Module/Api/Method/GetArtMethod.php:69
@@ -5568,60 +5613,6 @@ msgid "No Results"
 msgstr ""
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#: ../../src/Module/Api/Method/AlbumSongsMethod.php:66
-#: ../../src/Module/Api/Method/ArtistAlbumsMethod.php:61
-#: ../../src/Module/Api/Method/ArtistMethod.php:63
-#: ../../src/Module/Api/Method/ArtistSongsMethod.php:66
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:96
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:90
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:94
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:84
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:92
-#: ../../src/Module/Api/Method/CatalogMethod.php:60
-#: ../../src/Module/Api/Method/DemocraticMethod.php:70
-#: ../../src/Module/Api/Method/DemocraticMethod.php:96
-#: ../../src/Module/Api/Method/FlagMethod.php:90
-#: ../../src/Module/Api/Method/FollowersMethod.php:71
-#: ../../src/Module/Api/Method/FollowingMethod.php:71
-#: ../../src/Module/Api/Method/GenreMethod.php:61
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:89
-#: ../../src/Module/Api/Method/LabelMethod.php:67
-#: ../../src/Module/Api/Method/LicenseMethod.php:67
-#: ../../src/Module/Api/Method/PlaylistMethod.php:68
-#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:72
-#: ../../src/Module/Api/Method/PodcastDeleteMethod.php:72
-#: ../../src/Module/Api/Method/PodcastEditMethod.php:78
-#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:68
-#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:69
-#: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:70
-#: ../../src/Module/Api/Method/PodcastMethod.php:70
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:99
-#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:62
-#: ../../src/Module/Api/Method/PreferenceEditMethod.php:72
-#: ../../src/Module/Api/Method/RateMethod.php:91
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:77
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:90
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:81
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:106
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:95
-#: ../../src/Module/Api/Method/ShareDeleteMethod.php:75
-#: ../../src/Module/Api/Method/ShareEditMethod.php:91
-#: ../../src/Module/Api/Method/SongDeleteMethod.php:63
-#: ../../src/Module/Api/Method/SongMethod.php:63
-#: ../../src/Module/Api/Method/SystemPreferenceMethod.php:64
-#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:65
-#: ../../src/Module/Api/Method/UpdateArtMethod.php:81
-#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:71
-#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:70
-#: ../../src/Module/Api/Method/UserMethod.php:63
-#: ../../src/Module/Api/Method/UserMethod.php:72
-#: ../../src/Module/Api/Method/UserPreferenceMethod.php:62
-#: ../../src/Module/Api/Method/VideoMethod.php:66
-#, php-format
-msgid "Not Found: %s"
-msgstr "לא נמצא: %s"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
 #: ../../src/Module/Api/Method/BookmarkCreateMethod.php:79
 #: ../../src/Module/Api/Method/BookmarkCreateMethod.php:88
 #: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:73
@@ -5647,14 +5638,14 @@ msgid "Bad Request"
 msgstr ""
 
 #: ../../src/Module/Api/Method/CatalogActionMethod.php:100
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:134
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:149
 #: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:76
 #: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:86
 #: ../../src/Module/Api/Method/ScrobbleMethod.php:101
 msgid "Not Found"
 msgstr "לא נמצא"
 
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:63
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:75
 msgid "Enable: delete_from_disk"
 msgstr ""
 
@@ -5766,12 +5757,12 @@ msgstr ""
 msgid "Access Control not Enabled"
 msgstr "בקרת כניסה אינה מאופשרת"
 
-#: ../../src/Module/Api/Upnp_Api.php:1048
+#: ../../src/Module/Api/Upnp_Api.php:1050
 #: ../../src/Repository/Model/Browse.php:354
 msgid "Clips"
 msgstr "קליפים"
 
-#: ../../src/Module/Api/Xml_Data.php:1432
+#: ../../src/Module/Api/Xml_Data.php:1176
 msgid "Ampache XSPF Playlist"
 msgstr ""
 
@@ -5921,6 +5912,7 @@ msgstr "תהליך יצירת הקטלוג החל"
 #: ../../src/Module/Application/Admin/Catalog/AddToAllCatalogsAction.php:58
 #: ../../src/Module/Application/Admin/Catalog/AddToCatalogAction.php:62
 #: ../../src/Module/Application/Admin/Catalog/FullServiceAction.php:64
+#: ../../src/Module/Application/Admin/Catalog/ImportToCatalogAction.php:62
 #: ../../src/Module/Application/Admin/Catalog/UpdateAllCatalogsAction.php:58
 #: ../../src/Module/Application/Admin/Catalog/UpdateCatalogAction.php:64
 msgid "Catalog update process has started"
@@ -5968,7 +5960,7 @@ msgstr "הקטלוג נמחק"
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
 #: ../../src/Module/Catalog/Catalog_Seafile.php:499
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:273
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:280
 msgid "There Was a Problem"
 msgstr "הייתה בעיה"
 
@@ -5997,10 +5989,9 @@ msgid "The Catalog art search has started"
 msgstr "החל חיפוש עטיפות בקטלוגים"
 
 #: ../../src/Module/Application/Admin/Catalog/ShowCustomizeCatalogAction.php:61
-#: ../../src/Repository/Model/Catalog.php:710
-#, fuzzy
+#: ../../src/Repository/Model/Catalog.php:717
 msgid "Public Catalog"
-msgstr "ניקוי קטלוג"
+msgstr "קטלוג פומבי"
 
 #: ../../src/Module/Application/Admin/Catalog/ShowDeleteCatalogAction.php:68
 msgid "This will permanently delete your Catalog"
@@ -6374,10 +6365,12 @@ msgstr[2] "בוצע בהצלחה ייבוא של רשימה עם %d שירים."
 msgstr[3] "בוצע בהצלחה ייבוא של רשימה עם %d שירים."
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:77
+#: ../../src/Module/Catalog/Catalog_local.php:521
 msgid "Success"
 msgstr ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:79
+#: ../../src/Module/Catalog/Catalog_local.php:523
 msgid "Failure"
 msgstr ""
 
@@ -6522,7 +6515,7 @@ msgstr "חובה להכניס סיסמה"
 
 #: ../../src/Module/Application/Register/AddUserAction.php:170
 #: ../../src/Module/System/InstallationHelper.php:404
-#: ../../src/Repository/Model/User.php:529
+#: ../../src/Repository/Model/User.php:528
 msgid "Passwords do not match"
 msgstr "הססמאות אינן תואמות"
 
@@ -6536,12 +6529,12 @@ msgid "Remove"
 msgstr "הסרה"
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:94
-#, fuzzy, php-format
+#, php-format
 msgid "Your search has been saved as a Playlist with the name %s"
-msgstr "החיפש שלך נשמר כרשימת השמעה חכמה בשם %s"
+msgstr ""
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:2843
+#: ../../src/Repository/Model/Catalog.php:2882
 msgid "Failed to create playlist"
 msgstr "יצירת רשימת השמעה נכשלה"
 
@@ -6645,6 +6638,15 @@ msgstr "הוידאו יימחק"
 msgid "Unable to open"
 msgstr "לא ניתן לפתוח"
 
+#: ../../src/Module/Art/Export/ArtExporter.php:61
+#, fuzzy
+msgid "Set album_art_store_disk to remove art from the database"
+msgstr "הפודקאסט יוסר ממסד הנתונים"
+
+#: ../../src/Module/Art/Export/ArtExporter.php:88
+msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
 #: ../../src/Module/Beets/Catalog.php:137
 msgid "Running Beets Update"
 msgstr ""
@@ -6674,8 +6676,8 @@ msgid "Beets Server URI"
 msgstr ""
 
 #: ../../src/Module/Catalog/Catalog_beetsremote.php:115
-#: ../../src/Module/Catalog/Catalog_remote.php:164
-#: ../../src/Module/Catalog/Catalog_subsonic.php:164
+#: ../../src/Module/Catalog/Catalog_remote.php:165
+#: ../../src/Module/Catalog/Catalog_subsonic.php:165
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr ""
 
@@ -6764,7 +6766,7 @@ msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
 #: ../../src/Module/Catalog/Catalog_local.php:210
-#: ../../src/Module/Catalog/Catalog_local.php:1039
+#: ../../src/Module/Catalog/Catalog_local.php:1051
 msgid "Path was not specified"
 msgstr "נתיב לא צוין"
 
@@ -6795,7 +6797,7 @@ msgstr "לא ניתן להשיג את גודל הקובץ עבור \"%s\""
 
 #. HINT: filename (file path)
 #: ../../src/Module/Catalog/Catalog_local.php:385
-#: ../../src/Module/Catalog/Catalog_local.php:628
+#: ../../src/Module/Catalog/Catalog_local.php:640
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
 msgstr "לא ניתן לקרוא את הקובץ. האם הוא קיים? %s"
@@ -6806,76 +6808,76 @@ msgstr "לא ניתן לקרוא את הקובץ. האם הוא קיים? %s"
 msgid "\"%s\" does not match site charset"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:539
+#: ../../src/Module/Catalog/Catalog_local.php:551
 msgid "N/A"
 msgstr "לא רלבנטי"
 
-#: ../../src/Module/Catalog/Catalog_local.php:544
+#: ../../src/Module/Catalog/Catalog_local.php:556
 #: ../../src/Module/Catalog/Catalog_Seafile.php:296
 msgid "Catalog Updated"
 msgstr "קטלוג עודכן"
 
-#: ../../src/Module/Catalog/Catalog_local.php:545
+#: ../../src/Module/Catalog/Catalog_local.php:557
 #, php-format
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "סך כל הזמן: [%s] סך כל המדיה: [%s] מדיה לשנייה: [%s]"
 
-#: ../../src/Module/Catalog/Catalog_local.php:661
+#: ../../src/Module/Catalog/Catalog_local.php:673
 msgid "Catalog root unreadable, stopping clean"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_local.php:686
+#: ../../src/Module/Catalog/Catalog_local.php:698
 msgid "All files would be removed. Doing nothing"
 msgstr "כל הקבצים יוסרו. דבר לא נעשה"
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:734
-#: ../../src/Module/Catalog/Catalog_local.php:764
+#: ../../src/Module/Catalog/Catalog_local.php:746
+#: ../../src/Module/Catalog/Catalog_local.php:776
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "הקובץ לא נמצא או שהוא בגודל 0 בייט: %s"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1046
+#: ../../src/Module/Catalog/Catalog_local.php:1058
 msgid "Specified path is inside an existing catalog"
 msgstr ""
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1055
+#: ../../src/Module/Catalog/Catalog_local.php:1067
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr "לא ניתן לקרוא את תוכן הספרייה. האם היא קיימת? %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:118
-#: ../../src/Module/Catalog/Catalog_subsonic.php:118
+#: ../../src/Module/Catalog/Catalog_remote.php:119
+#: ../../src/Module/Catalog/Catalog_subsonic.php:119
 msgid "URI"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_remote.php:170
-#: ../../src/Module/Catalog/Catalog_subsonic.php:170
+#: ../../src/Module/Catalog/Catalog_remote.php:171
+#: ../../src/Module/Catalog/Catalog_subsonic.php:171
 #: ../../src/Module/System/InstallationHelper.php:398
 msgid "No username or password was specified"
 msgstr ""
 
 #. HINT: remote URI
-#: ../../src/Module/Catalog/Catalog_remote.php:183
+#: ../../src/Module/Catalog/Catalog_remote.php:184
 #, php-format
 msgid "This path belongs to an existing remote Catalog: %s"
 msgstr "הנתיב הזה שייך לקטלוג מרוחק קיים: %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:205
+#: ../../src/Module/Catalog/Catalog_remote.php:206
 msgid "Running Remote Update"
 msgstr "מתבצע עדכון מרוחק"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:241
+#: ../../src/Module/Catalog/Catalog_remote.php:242
 msgid "Failed to connect to the remote server"
 msgstr "לא ניתן להתחבר לשרת המרוחק"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:271
+#: ../../src/Module/Catalog/Catalog_remote.php:272
 msgid "Remote Catalog Updated"
 msgstr "קטלוג מרוחק עודכן"
 
 #. HINT: count of songs found
-#: ../../src/Module/Catalog/Catalog_remote.php:271
+#: ../../src/Module/Catalog/Catalog_remote.php:272
 #, php-format
 msgid "%s song was found"
 msgid_plural "%s songs were found"
@@ -6886,22 +6888,22 @@ msgstr[3] "%s שירים נמצאו"
 
 #. HINT: Song Title
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_remote.php:301
+#: ../../src/Module/Catalog/Catalog_remote.php:302
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:330
-#: ../../src/Module/Catalog/Catalog_subsonic.php:281
+#: ../../src/Module/Catalog/Catalog_subsonic.php:282
 #, php-format
 msgid "Unable to insert song - %s"
 msgstr "לא ניתן להכניס את השיר - %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:309
+#: ../../src/Module/Catalog/Catalog_remote.php:310
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:338
-#: ../../src/Module/Catalog/Catalog_subsonic.php:298
-#: ../../src/Repository/Model/Catalog.php:1871
+#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Repository/Model/Catalog.php:1904
 #: ../../src/Repository/Model/Search.php:604
 msgid "Updated"
 msgstr "מעודכן"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:309
+#: ../../src/Module/Catalog/Catalog_remote.php:310
 msgid "Completed updating remote Catalog(s)."
 msgstr "הסתיים עדכון הקטלוג/ים המרוחק/ים."
 
@@ -7044,7 +7046,7 @@ msgstr ""
 #. HINT: Number of Songs added
 #. HINT: Number of songs
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:339
-#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Module/Catalog/Catalog_subsonic.php:300
 #, php-format
 msgid "%s Song added"
 msgid_plural "%s Songs added"
@@ -7070,16 +7072,16 @@ msgid "SoundCloud exception"
 msgstr ""
 
 #. HINT: subsonic catalog URI
-#: ../../src/Module/Catalog/Catalog_subsonic.php:182
+#: ../../src/Module/Catalog/Catalog_subsonic.php:183
 #, php-format
 msgid "This path belongs to an existing Subsonic Catalog: %s"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_subsonic.php:206
+#: ../../src/Module/Catalog/Catalog_subsonic.php:207
 msgid "Running Subsonic Remote Update"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Module/Catalog/Catalog_subsonic.php:300
 msgid "Completed updating Subsonic Catalog(s)"
 msgstr ""
 
@@ -7097,10 +7099,10 @@ msgid "Deactivated PHP memory limit"
 msgstr "בוטלה מגבלת זיכרון PHP"
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:79
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:251
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:258
 #, php-format
 msgid "Reading Catalog: \"%s\""
-msgstr ""
+msgstr "קריאת קטלוג: \"%s\""
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:88
 msgid "Start cleaning orphaned media entries"
@@ -7130,22 +7132,22 @@ msgstr ""
 msgid "Optimizing database tables"
 msgstr "מיטוב טבלאות מסד הנתונים"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:255
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:262
 msgid "Moving Catalog path"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:268
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:275
 msgid "The Catalog path has changed"
-msgstr ""
+msgstr "נתיב הקטלוג השתנה"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:279
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:286
 msgid "There is an error with your parameters"
 msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:63
 #, php-format
 msgid "Catalog `%s` not found"
-msgstr ""
+msgstr "הקטלוג `%s` לא נמצא"
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:96
 #, php-format
@@ -7307,24 +7309,43 @@ msgstr ""
 msgid "Cron process finished"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:49
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:53
 msgid "Export album art"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:56
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:61
 msgid "Metadata write mode (`linux` or `windows`)"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:57
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:62
 msgid "Export album art for Linux"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:70
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:75
 msgid "Start Album Art Dump"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:96
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:101
 msgid "Album Art Dump Complete"
+msgstr "הושלם איסוף עטיפות אלבומים"
+
+#: ../../src/Module/Cli/ExportArtCommand.php:49
+#: ../../src/Module/Cli/ExportArtCommand.php:57
+msgid "Export all database art to local_metadata_dir"
+msgstr ""
+
+#: ../../src/Module/Cli/ExportArtCommand.php:56
+msgid "Clear the database image when the local file exists"
+msgstr ""
+
+#: ../../src/Module/Cli/ExportArtCommand.php:65
+#, fuzzy
+msgid "Start Art Dump"
+msgstr "התחלת חיפוש אמן"
+
+#: ../../src/Module/Cli/ExportArtCommand.php:89
+#, fuzzy
+msgid "Art Dump Complete"
 msgstr "הושלם איסוף עטיפות אלבומים"
 
 #: ../../src/Module/Cli/ExportPlaylistCommand.php:42
@@ -7385,16 +7406,16 @@ msgstr "נכשלה יצירת קובץ הגדרות"
 
 #: ../../src/Module/Cli/MoveCatalogPathCommand.php:41
 msgid "Change a Catalog path"
-msgstr ""
+msgstr "שינוי נתיב קטלוג"
 
 #: ../../src/Module/Cli/MoveCatalogPathCommand.php:47
 msgid "The name of the catalog to update"
-msgstr ""
+msgstr "שם הקטלוג לעדכון"
 
 #: ../../src/Module/Cli/MoveCatalogPathCommand.php:48
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:51
 msgid "Type of Catalog (optional)"
-msgstr ""
+msgstr "סוג הקטלוג (לא חובה)"
 
 #: ../../src/Module/Cli/MoveCatalogPathCommand.php:49
 msgid "New path"
@@ -7463,8 +7484,9 @@ msgstr ""
 #: ../../src/Module/Cli/SongCleanupCommand.php:47
 #: ../../src/Module/Cli/SortFilesCommand.php:47
 #: ../../src/Module/Cli/UpdateDbCommand.php:48
-msgid "Disables dry-run and sorts the files"
-msgstr ""
+#, fuzzy
+msgid "Disables dry-run"
+msgstr "מושבת"
 
 #: ../../src/Module/Cli/SongCleanupCommand.php:48
 msgid "Show a list of disabled songs"
@@ -7502,7 +7524,7 @@ msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:37
 msgid "Perform catalog actions for all files of a catalog"
-msgstr ""
+msgstr "ביצוע פעולות קטלוג לכל הקבצים בקטלוג"
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:42
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:47
@@ -7542,15 +7564,15 @@ msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:50
 msgid "Name of Catalog (optional)"
-msgstr ""
+msgstr "שם הקטלוג (לא חובה)"
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:52
 msgid "Update the local catalog called `some-catalog`"
-msgstr ""
+msgstr "עדכון הקטלוג המקומי שנקרא `קטלוג-כלשהו`"
 
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:41
 msgid "Perform catalog actions for a single file"
-msgstr ""
+msgstr "ביצוע פעולות קטלוג על קובץ יחיד"
 
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:53
 msgid "Update /tmp/some-file.mp3 in the catalog `some-catalog`"
@@ -7632,11 +7654,11 @@ msgstr ""
 msgid "XBMC Active Instance"
 msgstr ""
 
-#: ../../src/Module/Playback/Stream_Playlist.php:506
+#: ../../src/Module/Playback/Stream_Playlist.php:507
 msgid "Ampache ASX Playlist"
 msgstr ""
 
-#: ../../src/Module/Playback/Stream_Playlist.php:715
+#: ../../src/Module/Playback/Stream_Playlist.php:716
 msgid "Vote added"
 msgstr "הצבעה נוספה"
 
@@ -8005,88 +8027,88 @@ msgstr "הקובץ הועבר..."
 msgid "Enabled"
 msgstr "מופעל"
 
-#: ../../src/Module/Util/Ui.php:811
+#: ../../src/Module/Util/Ui.php:812
 msgid "M3U"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:812
+#: ../../src/Module/Util/Ui.php:813
 msgid "Simple M3U"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:813
+#: ../../src/Module/Util/Ui.php:814
 msgid "PLS"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:814
+#: ../../src/Module/Util/Ui.php:815
 msgid "Asx"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:815
+#: ../../src/Module/Util/Ui.php:816
 msgid "RAM"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:816
+#: ../../src/Module/Util/Ui.php:817
 msgid "XSPF"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:866 ../../src/Repository/Model/Search.php:87
+#: ../../src/Module/Util/Ui.php:867 ../../src/Repository/Model/Search.php:87
 msgid "1 Star"
 msgstr "1 כוכב"
 
-#: ../../src/Module/Util/Ui.php:867 ../../src/Repository/Model/Search.php:88
+#: ../../src/Module/Util/Ui.php:868 ../../src/Repository/Model/Search.php:88
 msgid "2 Stars"
 msgstr "2 כוכבים"
 
-#: ../../src/Module/Util/Ui.php:868 ../../src/Repository/Model/Search.php:89
+#: ../../src/Module/Util/Ui.php:869 ../../src/Repository/Model/Search.php:89
 msgid "3 Stars"
 msgstr "3 כוכבים"
 
-#: ../../src/Module/Util/Ui.php:869 ../../src/Repository/Model/Search.php:90
+#: ../../src/Module/Util/Ui.php:870 ../../src/Repository/Model/Search.php:90
 msgid "4 Stars"
 msgstr "4 כוכבים"
 
-#: ../../src/Module/Util/Ui.php:870 ../../src/Repository/Model/Search.php:91
+#: ../../src/Module/Util/Ui.php:871 ../../src/Repository/Model/Search.php:91
 msgid "5 Stars"
 msgstr "5 כוכבים"
 
-#: ../../src/Module/Util/Ui.php:887
+#: ../../src/Module/Util/Ui.php:888
 msgid "Manager"
 msgstr "מנהל"
 
-#: ../../src/Module/Util/Ui.php:921
+#: ../../src/Module/Util/Ui.php:922
 msgid "Send on Add"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:922
+#: ../../src/Module/Util/Ui.php:923
 msgid "Send and Clear on Add"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:923
+#: ../../src/Module/Util/Ui.php:924
 msgid "Clear on Send"
 msgstr ""
 
-#: ../../src/Module/Util/Ui.php:932
+#: ../../src/Module/Util/Ui.php:933
 msgid "Always"
 msgstr "תמיד"
 
-#: ../../src/Module/Util/Ui.php:955
+#: ../../src/Module/Util/Ui.php:956
 msgid "Year ascending"
 msgstr "שנה בסדר עולה"
 
-#: ../../src/Module/Util/Ui.php:956
+#: ../../src/Module/Util/Ui.php:957
 msgid "Year descending"
 msgstr "שנה בסדר יורד"
 
-#: ../../src/Module/Util/Ui.php:957
+#: ../../src/Module/Util/Ui.php:958
 msgid "Name ascending"
 msgstr "שם בסדר עולה"
 
-#: ../../src/Module/Util/Ui.php:958
+#: ../../src/Module/Util/Ui.php:959
 msgid "Name descending"
 msgstr "שם בסדר יורד"
 
 #. HINT: Plugin Name
-#: ../../src/Module/Util/Ui.php:993
+#: ../../src/Module/Util/Ui.php:994
 #, php-format
 msgid "Click to grant %s access to Ampache"
 msgstr ""
@@ -8508,15 +8530,15 @@ msgstr ""
 msgid "Artist MusicBrainzID"
 msgstr ""
 
-#: ../../src/Repository/Model/Art.php:1373
+#: ../../src/Repository/Model/Art.php:1391
 msgid "Edit/Find Art"
 msgstr "עריכה/איתור עטיפה"
 
-#: ../../src/Repository/Model/Art.php:1376
+#: ../../src/Repository/Model/Art.php:1394
 msgid "Do you really want to reset art?"
 msgstr "האם לאפס את העטיפה?"
 
-#: ../../src/Repository/Model/Art.php:1377
+#: ../../src/Repository/Model/Art.php:1395
 msgid "Reset Art"
 msgstr "איפוס עטיפה"
 
@@ -8556,7 +8578,7 @@ msgstr ""
 msgid "Private Messages"
 msgstr "הודעות פרטיות"
 
-#: ../../src/Repository/Model/Catalog.php:811
+#: ../../src/Repository/Model/Catalog.php:818
 msgid "day"
 msgid_plural "days"
 msgstr[0] "יום"
@@ -8564,7 +8586,7 @@ msgstr[1] "יומיים"
 msgstr[2] "ימים"
 msgstr[3] "ימים"
 
-#: ../../src/Repository/Model/Catalog.php:813
+#: ../../src/Repository/Model/Catalog.php:820
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "שעה"
@@ -8572,19 +8594,19 @@ msgstr[1] "שעתיים"
 msgstr[2] "שעות"
 msgstr[3] "שעות"
 
-#: ../../src/Repository/Model/Catalog.php:861
+#: ../../src/Repository/Model/Catalog.php:868
 msgid "Failed to create the catalog, check the debug logs"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:1876
+#: ../../src/Repository/Model/Catalog.php:1909
 msgid "No Update Needed"
 msgstr "אין צורך בעדכון"
 
-#: ../../src/Repository/Model/Catalog.php:2538
+#: ../../src/Repository/Model/Catalog.php:2577
 msgid "Catalog Cleaned"
 msgstr "קטלוג נוקה"
 
-#: ../../src/Repository/Model/Catalog.php:2539
+#: ../../src/Repository/Model/Catalog.php:2578
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
@@ -8593,11 +8615,11 @@ msgstr[1] "%d קבצים הוסרו."
 msgstr[2] "%d קבצים הוסרו."
 msgstr[3] "%d קבצים הוסרו."
 
-#: ../../src/Repository/Model/Catalog.php:2564
+#: ../../src/Repository/Model/Catalog.php:2603
 msgid "Catalog Verified"
 msgstr "קטלוג מאומת"
 
-#: ../../src/Repository/Model/Catalog.php:2565
+#: ../../src/Repository/Model/Catalog.php:2604
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -8606,11 +8628,11 @@ msgstr[1] "%d קבצים עודכנו."
 msgstr[2] "%d קבצים עודכנו."
 msgstr[3] "%d קבצים עודכנו."
 
-#: ../../src/Repository/Model/Catalog.php:2861
+#: ../../src/Repository/Model/Catalog.php:2900
 msgid "No valid songs found in playlist file"
 msgstr "לא נמצאו שירים תקינים בקובץ רשימת ההשמעה"
 
-#: ../../src/Repository/Model/Catalog.php:3283
+#: ../../src/Repository/Model/Catalog.php:3342
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -8638,9 +8660,8 @@ msgid "Name is required"
 msgstr "דרוש שם"
 
 #: ../../src/Repository/Model/Live_Stream.php:264
-#, fuzzy
 msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr "כתובת אינה תקינה. חייבת להיות אחת מהבאות: mms:// , https://, http://"
+msgstr ""
 
 #: ../../src/Repository/Model/Live_Stream.php:270
 #: ../../src/Repository/Model/Live_Stream.php:307
@@ -8855,14 +8876,12 @@ msgid "My Rating (Artist)"
 msgstr "הדירוג שלי (אמן)"
 
 #: ../../src/Repository/Model/Search.php:530
-#, fuzzy
 msgid "Favorites (Album)"
-msgstr "מועדפים"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:531
-#, fuzzy
 msgid "Favorites (Artist)"
-msgstr "מועדפים"
+msgstr ""
 
 #. HINT: Number of times object has been played OR skipped
 #: ../../src/Repository/Model/Search.php:539
@@ -8913,14 +8932,12 @@ msgid "Length (in minutes)"
 msgstr "אורך (בדקות)"
 
 #: ../../src/Repository/Model/Search.php:552
-#, fuzzy
 msgid "Album Genre"
-msgstr "תמונת אלבום"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:553
-#, fuzzy
 msgid "Artist Genre"
-msgstr "אמן"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:556
 #: ../../src/Repository/Model/Search.php:674
@@ -8943,9 +8960,8 @@ msgstr "רשימת השמעה חכמה"
 #: ../../src/Repository/Model/Search.php:606
 #: ../../src/Repository/Model/Search.php:676
 #: ../../src/Repository/Model/Search.php:735
-#, fuzzy
 msgid "Recently played"
-msgstr "נוגנו לאחרונה"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:607
 msgid "Recently added"
@@ -8988,9 +9004,8 @@ msgid "Image Height"
 msgstr "גובה תמונה"
 
 #: ../../src/Repository/Model/Search.php:694
-#, fuzzy
 msgid "Possible Duplicate Albums"
-msgstr "הסרת כפילויות"
+msgstr ""
 
 #: ../../src/Repository/Model/Share.php:270
 msgid "Share Edit"
@@ -9010,751 +9025,751 @@ msgstr ""
 msgid "by"
 msgstr "על ידי"
 
-#: ../../src/Repository/Model/Song.php:1765
+#: ../../src/Repository/Model/Song.php:1740
 msgid "Track MusicBrainzID"
 msgstr ""
 
-#: ../../src/Repository/Model/User.php:525
+#: ../../src/Repository/Model/User.php:524
 msgid "Username is required"
 msgstr "דרוש שם משתמש"
 
-#: ../../src/Repository/Model/User.php:1312
+#: ../../src/Repository/Model/User.php:1311
 msgid "User avatar"
 msgstr "תמונת משתמש"
 
-#: ../../src/Repository/Model/Video.php:844
+#: ../../src/Repository/Model/Video.php:855
 msgid "Afar"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:845
+#: ../../src/Repository/Model/Video.php:856
 msgid "Abkhazian"
 msgstr "אבחזית"
 
-#: ../../src/Repository/Model/Video.php:846
+#: ../../src/Repository/Model/Video.php:857
 msgid "Avestan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:847
+#: ../../src/Repository/Model/Video.php:858
 msgid "Afrikaans"
 msgstr "אפריקנס"
 
-#: ../../src/Repository/Model/Video.php:848
+#: ../../src/Repository/Model/Video.php:859
 msgid "Akan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:849
+#: ../../src/Repository/Model/Video.php:860
 msgid "Amharic"
 msgstr "אמהרית"
 
-#: ../../src/Repository/Model/Video.php:850
+#: ../../src/Repository/Model/Video.php:861
 msgid "Aragonese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:851
+#: ../../src/Repository/Model/Video.php:862
 msgid "Arabic"
 msgstr "ערבית"
 
-#: ../../src/Repository/Model/Video.php:852
+#: ../../src/Repository/Model/Video.php:863
 msgid "Assamese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:853
+#: ../../src/Repository/Model/Video.php:864
 msgid "Avaric"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:854
+#: ../../src/Repository/Model/Video.php:865
 msgid "Aymara"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:855
+#: ../../src/Repository/Model/Video.php:866
 msgid "Azerbaijani"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:856
+#: ../../src/Repository/Model/Video.php:867
 msgid "Bashkir"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:857
+#: ../../src/Repository/Model/Video.php:868
 msgid "Belarusian"
 msgstr "בלרוסית"
 
-#: ../../src/Repository/Model/Video.php:858
+#: ../../src/Repository/Model/Video.php:869
 msgid "Bulgarian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:859
+#: ../../src/Repository/Model/Video.php:870
 msgid "Bihari"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:860
+#: ../../src/Repository/Model/Video.php:871
 msgid "Bislama"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:861
+#: ../../src/Repository/Model/Video.php:872
 msgid "Bambara"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:862
+#: ../../src/Repository/Model/Video.php:873
 msgid "Bengali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:863
+#: ../../src/Repository/Model/Video.php:874
 msgid "Tibetan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:864
+#: ../../src/Repository/Model/Video.php:875
 msgid "Breton"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:865
+#: ../../src/Repository/Model/Video.php:876
 msgid "Bosnian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:866
+#: ../../src/Repository/Model/Video.php:877
 msgid "Catalan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:867
+#: ../../src/Repository/Model/Video.php:878
 msgid "Chechen"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:868
+#: ../../src/Repository/Model/Video.php:879
 msgid "Chamorro"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:869
+#: ../../src/Repository/Model/Video.php:880
 msgid "Corsican"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:870
+#: ../../src/Repository/Model/Video.php:881
 msgid "Cree"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:871
+#: ../../src/Repository/Model/Video.php:882
 msgid "Czech"
 msgstr "צ'כית"
 
-#: ../../src/Repository/Model/Video.php:872
+#: ../../src/Repository/Model/Video.php:883
 msgid "Church Slavic"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:873
+#: ../../src/Repository/Model/Video.php:884
 msgid "Chuvash"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:874
+#: ../../src/Repository/Model/Video.php:885
 msgid "Welsh"
 msgstr "וולשית"
 
-#: ../../src/Repository/Model/Video.php:875
+#: ../../src/Repository/Model/Video.php:886
 msgid "Danish"
 msgstr "דנית"
 
-#: ../../src/Repository/Model/Video.php:876
+#: ../../src/Repository/Model/Video.php:887
 msgid "German"
 msgstr "גרמנית"
 
-#: ../../src/Repository/Model/Video.php:877
+#: ../../src/Repository/Model/Video.php:888
 msgid "Divehi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:878
+#: ../../src/Repository/Model/Video.php:889
 msgid "Dzongkha"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:879
+#: ../../src/Repository/Model/Video.php:890
 msgid "Ewe"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:880
+#: ../../src/Repository/Model/Video.php:891
 msgid "Greek"
 msgstr "יוונית"
 
-#: ../../src/Repository/Model/Video.php:881
+#: ../../src/Repository/Model/Video.php:892
 msgid "English"
 msgstr "אנגלית"
 
-#: ../../src/Repository/Model/Video.php:882
+#: ../../src/Repository/Model/Video.php:893
 msgid "Esperanto"
 msgstr "אספרנטו"
 
-#: ../../src/Repository/Model/Video.php:883
+#: ../../src/Repository/Model/Video.php:894
 msgid "Spanish"
 msgstr "ספרדית"
 
-#: ../../src/Repository/Model/Video.php:884
+#: ../../src/Repository/Model/Video.php:895
 msgid "Estonian"
 msgstr "אסטונית"
 
-#: ../../src/Repository/Model/Video.php:885
+#: ../../src/Repository/Model/Video.php:896
 msgid "Basque"
 msgstr "באסקית"
 
-#: ../../src/Repository/Model/Video.php:886
+#: ../../src/Repository/Model/Video.php:897
 msgid "Persian"
 msgstr "פרסית"
 
-#: ../../src/Repository/Model/Video.php:887
+#: ../../src/Repository/Model/Video.php:898
 msgid "Fulah"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:888
+#: ../../src/Repository/Model/Video.php:899
 msgid "Finnish"
 msgstr "פינית"
 
-#: ../../src/Repository/Model/Video.php:889
+#: ../../src/Repository/Model/Video.php:900
 msgid "Fijian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:890
+#: ../../src/Repository/Model/Video.php:901
 msgid "Faroese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:891
+#: ../../src/Repository/Model/Video.php:902
 msgid "French"
 msgstr "צרפתית"
 
-#: ../../src/Repository/Model/Video.php:892
+#: ../../src/Repository/Model/Video.php:903
 msgid "Western Frisian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:893
+#: ../../src/Repository/Model/Video.php:904
 msgid "Irish"
 msgstr "אירית"
 
-#: ../../src/Repository/Model/Video.php:894
+#: ../../src/Repository/Model/Video.php:905
 msgid "Scottish Gaelic"
 msgstr "גאלית סקוטית"
 
-#: ../../src/Repository/Model/Video.php:895
+#: ../../src/Repository/Model/Video.php:906
 msgid "Galician"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:896
+#: ../../src/Repository/Model/Video.php:907
 msgid "Guarani"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:897
+#: ../../src/Repository/Model/Video.php:908
 msgid "Gujarati"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:898
+#: ../../src/Repository/Model/Video.php:909
 msgid "Manx"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:899
+#: ../../src/Repository/Model/Video.php:910
 msgid "Hausa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:900
+#: ../../src/Repository/Model/Video.php:911
 msgid "Hebrew"
 msgstr "עברית"
 
-#: ../../src/Repository/Model/Video.php:901
+#: ../../src/Repository/Model/Video.php:912
 msgid "Hindi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:902
+#: ../../src/Repository/Model/Video.php:913
 msgid "Hiri Motu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:903
+#: ../../src/Repository/Model/Video.php:914
 msgid "Croatian"
 msgstr "קרואטית"
 
-#: ../../src/Repository/Model/Video.php:904
+#: ../../src/Repository/Model/Video.php:915
 msgid "Haitian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:905
+#: ../../src/Repository/Model/Video.php:916
 msgid "Hungarian"
 msgstr "הונגרית"
 
-#: ../../src/Repository/Model/Video.php:906
+#: ../../src/Repository/Model/Video.php:917
 msgid "Armenian"
 msgstr "ארמנית"
 
-#: ../../src/Repository/Model/Video.php:907
+#: ../../src/Repository/Model/Video.php:918
 msgid "Herero"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:908
+#: ../../src/Repository/Model/Video.php:919
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:909
+#: ../../src/Repository/Model/Video.php:920
 msgid "Indonesian"
 msgstr "אינדונזית"
 
-#: ../../src/Repository/Model/Video.php:910
+#: ../../src/Repository/Model/Video.php:921
 msgid "Interlingue"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:911
+#: ../../src/Repository/Model/Video.php:922
 msgid "Igbo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:912
+#: ../../src/Repository/Model/Video.php:923
 msgid "Sichuan Yi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:913
+#: ../../src/Repository/Model/Video.php:924
 msgid "Inupiaq"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:914
+#: ../../src/Repository/Model/Video.php:925
 msgid "Ido"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:915
+#: ../../src/Repository/Model/Video.php:926
 msgid "Icelandic"
 msgstr "איסלנדית"
 
-#: ../../src/Repository/Model/Video.php:916
+#: ../../src/Repository/Model/Video.php:927
 msgid "Italian"
 msgstr "איטלקית"
 
-#: ../../src/Repository/Model/Video.php:917
+#: ../../src/Repository/Model/Video.php:928
 msgid "Inuktitut"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:918
+#: ../../src/Repository/Model/Video.php:929
 msgid "Japanese"
 msgstr "יפנית"
 
-#: ../../src/Repository/Model/Video.php:919
+#: ../../src/Repository/Model/Video.php:930
 msgid "Javanese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:920
+#: ../../src/Repository/Model/Video.php:931
 msgid "Georgian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:921
+#: ../../src/Repository/Model/Video.php:932
 msgid "Kongo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:922
+#: ../../src/Repository/Model/Video.php:933
 msgid "Kikuyu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:923
+#: ../../src/Repository/Model/Video.php:934
 msgid "Kwanyama"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:924
+#: ../../src/Repository/Model/Video.php:935
 msgid "Kazakh"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:925
+#: ../../src/Repository/Model/Video.php:936
 msgid "Kalaallisut"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:926
+#: ../../src/Repository/Model/Video.php:937
 msgid "Khmer"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:927
+#: ../../src/Repository/Model/Video.php:938
 msgid "Kannada"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:928
+#: ../../src/Repository/Model/Video.php:939
 msgid "Korean"
 msgstr "קוריאנית"
 
-#: ../../src/Repository/Model/Video.php:929
+#: ../../src/Repository/Model/Video.php:940
 msgid "Kanuri"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:930
+#: ../../src/Repository/Model/Video.php:941
 msgid "Kashmiri"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:931
+#: ../../src/Repository/Model/Video.php:942
 msgid "Kurdish"
 msgstr "כורדית"
 
-#: ../../src/Repository/Model/Video.php:932
+#: ../../src/Repository/Model/Video.php:943
 msgid "Komi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:933
+#: ../../src/Repository/Model/Video.php:944
 msgid "Cornish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:934
+#: ../../src/Repository/Model/Video.php:945
 msgid "Kirghiz"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:935
+#: ../../src/Repository/Model/Video.php:946
 msgid "Latin"
 msgstr "לטינית"
 
-#: ../../src/Repository/Model/Video.php:936
+#: ../../src/Repository/Model/Video.php:947
 msgid "Luxembourgish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:937
+#: ../../src/Repository/Model/Video.php:948
 msgid "Ganda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:938
+#: ../../src/Repository/Model/Video.php:949
 msgid "Limburgish"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:939
+#: ../../src/Repository/Model/Video.php:950
 msgid "Lingala"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:940
+#: ../../src/Repository/Model/Video.php:951
 msgid "Lao"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:941
+#: ../../src/Repository/Model/Video.php:952
 msgid "Lithuanian"
 msgstr "ליטאית"
 
-#: ../../src/Repository/Model/Video.php:942
+#: ../../src/Repository/Model/Video.php:953
 msgid "Luba-Katanga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:943
+#: ../../src/Repository/Model/Video.php:954
 msgid "Latvian"
 msgstr "לטבית"
 
-#: ../../src/Repository/Model/Video.php:944
+#: ../../src/Repository/Model/Video.php:955
 msgid "Malagasy"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:945
+#: ../../src/Repository/Model/Video.php:956
 msgid "Marshallese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:946
+#: ../../src/Repository/Model/Video.php:957
 msgid "Maori"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:947
+#: ../../src/Repository/Model/Video.php:958
 msgid "Macedonian"
 msgstr "מקדונית"
 
-#: ../../src/Repository/Model/Video.php:948
+#: ../../src/Repository/Model/Video.php:959
 msgid "Malayalam"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:949
+#: ../../src/Repository/Model/Video.php:960
 msgid "Mongolian"
 msgstr "מונגולית"
 
-#: ../../src/Repository/Model/Video.php:950
+#: ../../src/Repository/Model/Video.php:961
 msgid "Marathi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:951
+#: ../../src/Repository/Model/Video.php:962
 msgid "Malay"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:952
+#: ../../src/Repository/Model/Video.php:963
 msgid "Maltese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:953
+#: ../../src/Repository/Model/Video.php:964
 msgid "Burmese"
 msgstr "בורמזית"
 
-#: ../../src/Repository/Model/Video.php:954
+#: ../../src/Repository/Model/Video.php:965
 msgid "Nauru"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:955
+#: ../../src/Repository/Model/Video.php:966
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:956
+#: ../../src/Repository/Model/Video.php:967
 msgid "North Ndebele"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:957
+#: ../../src/Repository/Model/Video.php:968
 msgid "Nepali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:958
+#: ../../src/Repository/Model/Video.php:969
 msgid "Ndonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:959
+#: ../../src/Repository/Model/Video.php:970
 msgid "Dutch"
 msgstr "הולנדית"
 
-#: ../../src/Repository/Model/Video.php:960
+#: ../../src/Repository/Model/Video.php:971
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:961
+#: ../../src/Repository/Model/Video.php:972
 msgid "Norwegian"
 msgstr "נורבגית"
 
-#: ../../src/Repository/Model/Video.php:962
+#: ../../src/Repository/Model/Video.php:973
 msgid "South Ndebele"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:963
+#: ../../src/Repository/Model/Video.php:974
 msgid "Navajo"
 msgstr "נוואחו"
 
-#: ../../src/Repository/Model/Video.php:964
+#: ../../src/Repository/Model/Video.php:975
 msgid "Chichewa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:965
+#: ../../src/Repository/Model/Video.php:976
 msgid "Occitan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:966
+#: ../../src/Repository/Model/Video.php:977
 msgid "Ojibwa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:967
+#: ../../src/Repository/Model/Video.php:978
 msgid "Oromo"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:968
+#: ../../src/Repository/Model/Video.php:979
 msgid "Oriya"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:969
+#: ../../src/Repository/Model/Video.php:980
 msgid "Ossetian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:970
+#: ../../src/Repository/Model/Video.php:981
 msgid "Panjabi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:971
+#: ../../src/Repository/Model/Video.php:982
 msgid "Pali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:972
+#: ../../src/Repository/Model/Video.php:983
 msgid "Polish"
 msgstr "פולנית"
 
-#: ../../src/Repository/Model/Video.php:973
+#: ../../src/Repository/Model/Video.php:984
 msgid "Pashto"
 msgstr "פשטו"
 
-#: ../../src/Repository/Model/Video.php:974
+#: ../../src/Repository/Model/Video.php:985
 msgid "Portuguese"
 msgstr "פורטוגלית"
 
-#: ../../src/Repository/Model/Video.php:975
+#: ../../src/Repository/Model/Video.php:986
 msgid "Quechua"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:976
+#: ../../src/Repository/Model/Video.php:987
 msgid "Raeto-Romance"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:977
+#: ../../src/Repository/Model/Video.php:988
 msgid "Kirundi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:978
+#: ../../src/Repository/Model/Video.php:989
 msgid "Romanian"
 msgstr "רומנית"
 
-#: ../../src/Repository/Model/Video.php:979
+#: ../../src/Repository/Model/Video.php:990
 msgid "Russian"
 msgstr "רוסית"
 
-#: ../../src/Repository/Model/Video.php:980
+#: ../../src/Repository/Model/Video.php:991
 msgid "Kinyarwanda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:981
+#: ../../src/Repository/Model/Video.php:992
 msgid "Sanskrit"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:982
+#: ../../src/Repository/Model/Video.php:993
 msgid "Sardinian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:983
+#: ../../src/Repository/Model/Video.php:994
 msgid "Sindhi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:984
+#: ../../src/Repository/Model/Video.php:995
 msgid "Northern Sami"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:985
+#: ../../src/Repository/Model/Video.php:996
 msgid "Sango"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:986
+#: ../../src/Repository/Model/Video.php:997
 msgid "Sinhala"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:987
+#: ../../src/Repository/Model/Video.php:998
 msgid "Slovak"
 msgstr "סלובקית"
 
-#: ../../src/Repository/Model/Video.php:988
+#: ../../src/Repository/Model/Video.php:999
 msgid "Slovenian"
 msgstr "סלובנית"
 
-#: ../../src/Repository/Model/Video.php:989
+#: ../../src/Repository/Model/Video.php:1000
 msgid "Samoan"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:990
+#: ../../src/Repository/Model/Video.php:1001
 msgid "Shona"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:991
+#: ../../src/Repository/Model/Video.php:1002
 msgid "Somali"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:992
+#: ../../src/Repository/Model/Video.php:1003
 msgid "Albanian"
 msgstr "אלבנית"
 
-#: ../../src/Repository/Model/Video.php:993
+#: ../../src/Repository/Model/Video.php:1004
 msgid "Serbian"
 msgstr "סרבית"
 
-#: ../../src/Repository/Model/Video.php:994
+#: ../../src/Repository/Model/Video.php:1005
 msgid "Swati"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:995
+#: ../../src/Repository/Model/Video.php:1006
 msgid "Southern Sotho"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:996
+#: ../../src/Repository/Model/Video.php:1007
 msgid "Sundanese"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:997
+#: ../../src/Repository/Model/Video.php:1008
 msgid "Swedish"
 msgstr "שבדית"
 
-#: ../../src/Repository/Model/Video.php:998
+#: ../../src/Repository/Model/Video.php:1009
 msgid "Swahili"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:999
+#: ../../src/Repository/Model/Video.php:1010
 msgid "Tamil"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1000
+#: ../../src/Repository/Model/Video.php:1011
 msgid "Telugu"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1001
+#: ../../src/Repository/Model/Video.php:1012
 msgid "Tajik"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1002
+#: ../../src/Repository/Model/Video.php:1013
 msgid "Thai"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1003
+#: ../../src/Repository/Model/Video.php:1014
 msgid "Tigrinya"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1004
+#: ../../src/Repository/Model/Video.php:1015
 msgid "Turkmen"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1005
+#: ../../src/Repository/Model/Video.php:1016
 msgid "Tagalog"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1006
+#: ../../src/Repository/Model/Video.php:1017
 msgid "Tswana"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1007
+#: ../../src/Repository/Model/Video.php:1018
 msgid "Tonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1008
+#: ../../src/Repository/Model/Video.php:1019
 msgid "Turkish"
 msgstr "תורכית"
 
-#: ../../src/Repository/Model/Video.php:1009
+#: ../../src/Repository/Model/Video.php:1020
 msgid "Tsonga"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1010
+#: ../../src/Repository/Model/Video.php:1021
 msgid "Tatar"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1011
+#: ../../src/Repository/Model/Video.php:1022
 msgid "Twi"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1012
+#: ../../src/Repository/Model/Video.php:1023
 msgid "Tahitian"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1013
+#: ../../src/Repository/Model/Video.php:1024
 msgid "Uighur"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1014
+#: ../../src/Repository/Model/Video.php:1025
 msgid "Ukrainian"
 msgstr "אוקראינית"
 
-#: ../../src/Repository/Model/Video.php:1015
+#: ../../src/Repository/Model/Video.php:1026
 msgid "Urdu"
 msgstr "אורדו"
 
-#: ../../src/Repository/Model/Video.php:1016
+#: ../../src/Repository/Model/Video.php:1027
 msgid "Uzbek"
 msgstr "אוזבקית"
 
-#: ../../src/Repository/Model/Video.php:1017
+#: ../../src/Repository/Model/Video.php:1028
 msgid "Venda"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1018
+#: ../../src/Repository/Model/Video.php:1029
 msgid "Vietnamese"
 msgstr "ויאטנמית"
 
-#: ../../src/Repository/Model/Video.php:1019
+#: ../../src/Repository/Model/Video.php:1030
 msgid "Volapuk"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1020
+#: ../../src/Repository/Model/Video.php:1031
 msgid "Walloon"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1021
+#: ../../src/Repository/Model/Video.php:1032
 msgid "Wolof"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1022
+#: ../../src/Repository/Model/Video.php:1033
 msgid "Xhosa"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1023
+#: ../../src/Repository/Model/Video.php:1034
 msgid "Yiddish"
 msgstr "יידיש"
 
-#: ../../src/Repository/Model/Video.php:1024
+#: ../../src/Repository/Model/Video.php:1035
 msgid "Yoruba"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1025
+#: ../../src/Repository/Model/Video.php:1036
 msgid "Zhuang"
 msgstr ""
 
-#: ../../src/Repository/Model/Video.php:1026
+#: ../../src/Repository/Model/Video.php:1037
 msgid "Chinese"
 msgstr "סינית"
 
-#: ../../src/Repository/Model/Video.php:1027
+#: ../../src/Repository/Model/Video.php:1038
 msgid "Zulu"
 msgstr ""
 
@@ -9808,7 +9823,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.04.2021 12:53:04 CEST
+# Last Update: 07.08.2021 20:43:00 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -10200,9 +10215,8 @@ msgid "Custom URL - Login page background"
 msgstr ""
 
 #: Database preference table id 177
-#, fuzzy
 msgid "Show Licence"
-msgstr "הצגת מילים"
+msgstr ""
 
 #: Database preference table id 178
 msgid "Browse by Original Year for albums (falls back to Year)"
@@ -10210,6 +10224,10 @@ msgstr ""
 
 #: Database preference table id 179
 msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Database preference table id 180
+msgid "Hide the Genre column in browse table rows"
 msgstr ""
 
 #: Database preference subcategory table id 1
@@ -10253,7 +10271,6 @@ msgid "library"
 msgstr "ספריה"
 
 #: Database preference subcategory table id 84
-#, fuzzy
 msgid "browse"
 msgstr "עיון"
 
@@ -10291,7 +10308,7 @@ msgstr ""
 
 #: Database preference subcategory table id 152
 msgid "catalog"
-msgstr ""
+msgstr "קטלוג"
 
 #: Database preference subcategory table id 164
 msgid "amazon"
