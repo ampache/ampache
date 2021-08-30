@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2021-08-07 20:36+0200\n"
-"PO-Revision-Date: 2021-04-26 02:12+0000\n"
-"Last-Translator: whenwesober\n"
+"POT-Creation-Date: 2021-08-30 22:44+0200\n"
+"PO-Revision-Date: 2021-08-07 23:25+0000\n"
+"Last-Translator: Transifex Bot <>\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/ampache/"
 "ampache/language/id_ID/)\n"
 "Language: id_ID\n"
@@ -47,16 +47,16 @@ msgstr "Semua Daftar Putar"
 #: ../../public/templates/show_add_catalog.inc.php:51
 #: ../../public/templates/show_edit_catalog.inc.php:42
 #: ../../public/templates/show_song_previews.inc.php:29
-#: ../../public/templates/show_songs.inc.php:65
-#: ../../public/templates/show_songs.inc.php:163
+#: ../../public/templates/show_songs.inc.php:67
+#: ../../public/templates/show_songs.inc.php:169
 msgid "Song Title"
 msgstr "Judul Lagu"
 
 #: ../../public/templates/browse_filters.inc.php:78
 #: ../../public/templates/header.inc.php:47
 #: ../../public/templates/show_artist.inc.php:238
-#: ../../public/templates/show_artists.inc.php:64
-#: ../../public/templates/show_artists.inc.php:123
+#: ../../public/templates/show_artists.inc.php:66
+#: ../../public/templates/show_artists.inc.php:129
 #: ../../public/templates/show_browse_form.inc.php:41
 #: ../../public/templates/show_browse_form.inc.php:43
 #: ../../public/templates/show_genre_browse_form.inc.php:20
@@ -64,13 +64,13 @@ msgstr "Judul Lagu"
 #: ../../public/templates/show_mashup_browse_form.inc.php:14
 #: ../../public/templates/show_random.inc.php:50
 #: ../../public/templates/show_random.inc.php:52
-#: ../../public/templates/show_recommended_artists.inc.php:49
-#: ../../public/templates/show_recommended_artists.inc.php:107
+#: ../../public/templates/show_recommended_artists.inc.php:50
+#: ../../public/templates/show_recommended_artists.inc.php:111
 #: ../../public/templates/show_search_form.inc.php:51
 #: ../../public/templates/show_search_form.inc.php:53
 #: ../../public/templates/sidebar.inc.php:41
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:108
-#: ../../src/Config/functions.php:827 ../../src/Module/Api/Upnp_Api.php:630
+#: ../../src/Config/functions.php:827 ../../src/Module/Api/Upnp_Api.php:632
 #: ../../src/Repository/Model/Browse.php:242
 msgid "Albums"
 msgstr "Album"
@@ -78,8 +78,8 @@ msgstr "Album"
 #: ../../public/templates/browse_filters.inc.php:81
 #: ../../public/templates/show_add_catalog.inc.php:45
 #: ../../public/templates/show_add_upload.inc.php:184
-#: ../../public/templates/show_artists.inc.php:45
-#: ../../public/templates/show_artists.inc.php:120
+#: ../../public/templates/show_artists.inc.php:47
+#: ../../public/templates/show_artists.inc.php:126
 #: ../../public/templates/show_democratic_playlist.inc.php:64
 #: ../../public/templates/show_democratic_playlist.inc.php:114
 #: ../../public/templates/show_disabled_songs.inc.php:34
@@ -90,19 +90,19 @@ msgstr "Album"
 #: ../../public/templates/show_lyrics.inc.php:55
 #: ../../public/templates/show_missing_albums.inc.php:31
 #: ../../public/templates/show_missing_artists.inc.php:31
-#: ../../public/templates/show_now_playing_row.inc.php:58
+#: ../../public/templates/show_now_playing_row.inc.php:61
 #: ../../public/templates/show_partial_clip.inc.php:23
 #: ../../public/templates/show_partial_clips.inc.php:26
 #: ../../public/templates/show_partial_edit_clip_row.inc.php:23
-#: ../../public/templates/show_recommended_artists.inc.php:46
-#: ../../public/templates/show_recommended_artists.inc.php:104
+#: ../../public/templates/show_recommended_artists.inc.php:47
+#: ../../public/templates/show_recommended_artists.inc.php:108
 #: ../../public/templates/show_song_previews.inc.php:30
 #: ../../public/templates/show_tagcloud.inc.php:31
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Repository/Model/Album.php:658
 #: ../../src/Repository/Model/Artist.php:510
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1770
+#: ../../src/Repository/Model/Song.php:1745
 msgid "Artist"
 msgstr "Artis"
 
@@ -123,7 +123,7 @@ msgstr "Katalog"
 #: ../../public/templates/show_export.inc.php:40
 #: ../../public/templates/show_mail_users.inc.php:36
 #: ../../public/templates/show_random.inc.php:81
-#: ../../src/Config/functions.php:1160
+#: ../../src/Config/functions.php:1168
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:52
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:75
 msgid "All"
@@ -314,7 +314,7 @@ msgstr "Beranda"
 #: ../../public/templates/show_album_group_disks.inc.php:184
 #: ../../public/templates/show_album.inc.php:128
 #: ../../public/templates/show_album_row.inc.php:49
-#: ../../public/templates/show_artist_row.inc.php:45
+#: ../../public/templates/show_artist_row.inc.php:44
 #: ../../public/templates/show_broadcast_row.inc.php:33
 #: ../../public/templates/show_channel_row.inc.php:35
 #: ../../public/templates/show_democratic.inc.php:49
@@ -323,23 +323,23 @@ msgstr "Beranda"
 #: ../../public/templates/show_localplay_control.inc.php:30
 #: ../../public/templates/show_manage_democratic.inc.php:54
 #: ../../public/templates/show_playlist_media_row.inc.php:41
-#: ../../public/templates/show_playlist_medias.inc.php:84
+#: ../../public/templates/show_playlist_medias.inc.php:85
 #: ../../public/templates/show_playlist_row.inc.php:41
 #: ../../public/templates/show_podcast_episode.inc.php:63
-#: ../../public/templates/show_podcast_episode_row.inc.php:42
-#: ../../public/templates/show_podcast_row.inc.php:40
+#: ../../public/templates/show_podcast_episode_row.inc.php:49
+#: ../../public/templates/show_podcast_row.inc.php:43
 #: ../../public/templates/show_random_albums.inc.php:54
 #: ../../public/templates/show_random_videos.inc.php:54
 #: ../../public/templates/show_recently_played.inc.php:105
 #: ../../public/templates/show_search_row.inc.php:39
-#: ../../public/templates/show_tvshow_row.inc.php:42
-#: ../../public/templates/show_tvshow_season_row.inc.php:42
+#: ../../public/templates/show_tvshow_row.inc.php:46
+#: ../../public/templates/show_tvshow_season_row.inc.php:44
 #: ../../public/templates/show_video.inc.php:95
-#: ../../public/templates/show_video_row.inc.php:47
+#: ../../public/templates/show_video_row.inc.php:54
 #: ../../src/Gui/Song/SongViewAdapter.php:116
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:136
 #: ../../src/Plugin/AmpachePersonalFavorites.php:143
-#: ../../src/Repository/Model/Art.php:1362
+#: ../../src/Repository/Model/Art.php:1380
 #: ../../src/Repository/Model/Shoutbox.php:301
 msgid "Play"
 msgstr "Putar"
@@ -358,7 +358,7 @@ msgstr "Putar"
 #: ../../public/templates/show_user.inc.php:132
 #: ../../public/templates/sidebar.inc.php:39
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:80
-#: ../../src/Config/functions.php:831 ../../src/Module/Api/Upnp_Api.php:609
+#: ../../src/Config/functions.php:831 ../../src/Module/Api/Upnp_Api.php:611
 #: ../../src/Repository/Model/Album.php:626
 #: ../../src/Repository/Model/Browse.php:262
 msgid "Artists"
@@ -369,9 +369,8 @@ msgstr "Artis"
 #: ../../public/templates/show_browse_form.inc.php:48
 #: ../../public/templates/sidebar.inc.php:40
 #: ../../src/Repository/Model/Browse.php:261
-#, fuzzy
 msgid "Album Artists"
-msgstr "Artis Album"
+msgstr ""
 
 #: ../../public/templates/header.inc.php:48
 #: ../../public/templates/show_mashup_browse_form.inc.php:20
@@ -379,31 +378,31 @@ msgstr "Artis Album"
 #: ../../public/templates/show_search_form.inc.php:70
 #: ../../public/templates/show_user.inc.php:135
 #: ../../public/templates/sidebar.inc.php:57
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:167
-#: ../../src/Module/Api/Upnp_Api.php:672
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:168
+#: ../../src/Module/Api/Upnp_Api.php:674
 #: ../../src/Repository/Model/Browse.php:272
 msgid "Playlists"
 msgstr "Daftar Putar"
 
 #: ../../public/templates/header.inc.php:49
-#: ../../public/templates/show_albums.inc.php:49
-#: ../../public/templates/show_artists.inc.php:70
-#: ../../public/templates/show_artists.inc.php:129
+#: ../../public/templates/show_albums.inc.php:51
+#: ../../public/templates/show_artists.inc.php:74
+#: ../../public/templates/show_artists.inc.php:136
 #: ../../public/templates/show_edit_album_row.inc.php:103
 #: ../../public/templates/show_edit_artist_row.inc.php:62
 #: ../../public/templates/show_edit_channel_row.inc.php:91
 #: ../../public/templates/show_edit_song_row.inc.php:94
 #: ../../public/templates/show_edit_tvshow_row.inc.php:45
-#: ../../public/templates/show_edit_video_row.inc.php:47
-#: ../../public/templates/show_now_playing_row.inc.php:68
-#: ../../public/templates/show_recommended_artists.inc.php:55
-#: ../../public/templates/show_recommended_artists.inc.php:109
-#: ../../public/templates/show_songs.inc.php:82
-#: ../../public/templates/show_songs.inc.php:171
-#: ../../public/templates/show_tvshows.inc.php:54
-#: ../../public/templates/show_tvshows.inc.php:96
+#: ../../public/templates/show_edit_video_row.inc.php:49
+#: ../../public/templates/show_now_playing_row.inc.php:71
+#: ../../public/templates/show_recommended_artists.inc.php:57
+#: ../../public/templates/show_recommended_artists.inc.php:114
+#: ../../public/templates/show_songs.inc.php:86
+#: ../../public/templates/show_songs.inc.php:178
+#: ../../public/templates/show_tvshows.inc.php:58
+#: ../../public/templates/show_tvshows.inc.php:103
 #: ../../public/templates/show_videos.inc.php:63
-#: ../../public/templates/show_videos.inc.php:112
+#: ../../public/templates/show_videos.inc.php:108
 #: ../../public/templates/sidebar.inc.php:53
 #: ../../src/Gui/Song/SongViewAdapter.php:346
 #: ../../src/Module/Application/Browse/TagAction.php:75
@@ -436,7 +435,7 @@ msgstr "Keluar"
 
 #: ../../public/templates/header.inc.php:65
 #: ../../public/templates/show_localplay_status.inc.php:34
-#: ../../public/templates/show_now_playing.inc.php:38
+#: ../../public/templates/show_now_playing.inc.php:40
 #: ../../public/templates/show_user.inc.php:94
 #: ../../src/Module/Playback/Localplay/LocalPlay.php:618
 #: ../../src/Module/Util/AmpacheRss.php:120
@@ -480,21 +479,21 @@ msgstr "Batal"
 #: ../../public/templates/show_album_group_disks.inc.php:186
 #: ../../public/templates/show_album.inc.php:129
 #: ../../public/templates/show_album_row.inc.php:51
-#: ../../public/templates/show_artist_row.inc.php:47
+#: ../../public/templates/show_artist_row.inc.php:46
 #: ../../public/templates/show_live_stream.inc.php:43
 #: ../../public/templates/show_playlist_media_row.inc.php:43
 #: ../../public/templates/show_playlist_row.inc.php:43
 #: ../../public/templates/show_podcast_episode.inc.php:65
-#: ../../public/templates/show_podcast_episode_row.inc.php:44
-#: ../../public/templates/show_podcast_row.inc.php:42
+#: ../../public/templates/show_podcast_episode_row.inc.php:51
+#: ../../public/templates/show_podcast_row.inc.php:45
 #: ../../public/templates/show_random_albums.inc.php:56
 #: ../../public/templates/show_random_videos.inc.php:56
 #: ../../public/templates/show_recently_played.inc.php:107
 #: ../../public/templates/show_search_row.inc.php:41
-#: ../../public/templates/show_tvshow_row.inc.php:44
-#: ../../public/templates/show_tvshow_season_row.inc.php:44
+#: ../../public/templates/show_tvshow_row.inc.php:48
+#: ../../public/templates/show_tvshow_season_row.inc.php:46
 #: ../../public/templates/show_video.inc.php:97
-#: ../../public/templates/show_video_row.inc.php:49
+#: ../../public/templates/show_video_row.inc.php:56
 #: ../../src/Application/Api/Upnp/PlayStatusApplication.php:65
 #: ../../src/Gui/Song/SongViewAdapter.php:128
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:139
@@ -507,21 +506,21 @@ msgstr "Putar berikutnya"
 #: ../../public/templates/show_album_group_disks.inc.php:189
 #: ../../public/templates/show_album.inc.php:130
 #: ../../public/templates/show_album_row.inc.php:54
-#: ../../public/templates/show_artist_row.inc.php:50
+#: ../../public/templates/show_artist_row.inc.php:49
 #: ../../public/templates/show_live_stream.inc.php:47
 #: ../../public/templates/show_playlist_media_row.inc.php:46
 #: ../../public/templates/show_playlist_row.inc.php:46
 #: ../../public/templates/show_podcast_episode.inc.php:69
-#: ../../public/templates/show_podcast_episode_row.inc.php:47
-#: ../../public/templates/show_podcast_row.inc.php:45
+#: ../../public/templates/show_podcast_episode_row.inc.php:54
+#: ../../public/templates/show_podcast_row.inc.php:48
 #: ../../public/templates/show_random_albums.inc.php:60
 #: ../../public/templates/show_random_videos.inc.php:60
 #: ../../public/templates/show_recently_played.inc.php:111
 #: ../../public/templates/show_search_row.inc.php:44
-#: ../../public/templates/show_tvshow_row.inc.php:47
-#: ../../public/templates/show_tvshow_season_row.inc.php:47
+#: ../../public/templates/show_tvshow_row.inc.php:51
+#: ../../public/templates/show_tvshow_season_row.inc.php:49
 #: ../../public/templates/show_video.inc.php:101
-#: ../../public/templates/show_video_row.inc.php:52
+#: ../../public/templates/show_video_row.inc.php:59
 #: ../../src/Gui/Song/SongViewAdapter.php:140
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:144
 #: ../../src/Plugin/AmpachePersonalFavorites.php:150
@@ -533,18 +532,18 @@ msgstr "Putar terakhir"
 #: ../../public/templates/show_album_group_disks.inc.php:193
 #: ../../public/templates/show_album.inc.php:150
 #: ../../public/templates/show_album_row.inc.php:69
-#: ../../public/templates/show_artist_row.inc.php:65
+#: ../../public/templates/show_artist_row.inc.php:63
 #: ../../public/templates/show_live_stream.inc.php:52
 #: ../../public/templates/show_playlist_media_row.inc.php:60
 #: ../../public/templates/show_playlist_row.inc.php:60
 #: ../../public/templates/show_podcast_episode.inc.php:74
-#: ../../public/templates/show_podcast_episode_row.inc.php:66
+#: ../../public/templates/show_podcast_episode_row.inc.php:72
 #: ../../public/templates/show_random_albums.inc.php:65
 #: ../../public/templates/show_recently_played.inc.php:121
 #: ../../public/templates/show_search_options.inc.php:36
 #: ../../public/templates/show_search_row.inc.php:52
 #: ../../public/templates/show_video.inc.php:106
-#: ../../public/templates/show_video_row.inc.php:71
+#: ../../public/templates/show_video_row.inc.php:78
 #: ../../src/Gui/Song/SongViewAdapter.php:169
 #: ../../src/Plugin/AmpacheCatalogFavorites.php:148
 #: ../../src/Plugin/AmpachePersonalFavorites.php:154
@@ -555,13 +554,13 @@ msgstr "Tambah ke Daftar Putar Sementara"
 #: ../../public/templates/rightbar.inc.php:50
 #: ../../public/templates/show_album.inc.php:152
 #: ../../public/templates/show_album_row.inc.php:76
-#: ../../public/templates/show_artist_row.inc.php:68
+#: ../../public/templates/show_artist_row.inc.php:66
 #: ../../public/templates/show_playlist_media_row.inc.php:63
 #: ../../public/templates/show_playlist_row.inc.php:64
-#: ../../public/templates/show_podcast_episode_row.inc.php:69
+#: ../../public/templates/show_podcast_episode_row.inc.php:75
 #: ../../public/templates/show_recently_played.inc.php:123
 #: ../../public/templates/show_search_row.inc.php:54
-#: ../../public/templates/show_video_row.inc.php:74
+#: ../../public/templates/show_video_row.inc.php:81
 #: ../../src/Gui/Song/SongViewAdapter.php:417
 msgid "Add to playlist"
 msgstr "Tambah ke daftar putar"
@@ -582,13 +581,13 @@ msgid "New messages"
 msgstr "Pesan baru"
 
 #: ../../public/templates/header.inc.php:387
-#: ../../public/templates/show_login_form.inc.php:87
+#: ../../public/templates/show_login_form.inc.php:86
 #: ../../public/templates/show_user_activate.inc.php:52
 msgid "Login"
 msgstr "Masuk"
 
 #: ../../public/templates/header.inc.php:390
-#: ../../public/templates/show_login_form.inc.php:95
+#: ../../public/templates/show_login_form.inc.php:94
 #: ../../public/templates/show_user_registration.inc.php:167
 msgid "Register"
 msgstr "Daftar"
@@ -679,7 +678,7 @@ msgid "Add to New Playlist"
 msgstr "Tambah ke Daftar Putar Baru"
 
 #: ../../public/templates/rightbar.inc.php:78
-#: ../../public/templates/show_album_row.inc.php:130
+#: ../../public/templates/show_album_row.inc.php:132
 #: ../../public/templates/show_playlist.inc.php:95
 #: ../../public/templates/show_playlist.inc.php:96
 #: ../../public/templates/show_playlist_row.inc.php:99
@@ -721,17 +720,17 @@ msgstr "Daftar Putar acak"
 #: ../../public/templates/show_access_list.inc.php:81
 #: ../../public/templates/show_account.inc.php:90
 #: ../../public/templates/show_album.inc.php:254
-#: ../../public/templates/show_album_row.inc.php:142
+#: ../../public/templates/show_album_row.inc.php:144
 #: ../../public/templates/show_artist.inc.php:223
-#: ../../public/templates/show_artist_row.inc.php:117
-#: ../../public/templates/show_catalog_row.inc.php:60
+#: ../../public/templates/show_artist_row.inc.php:110
+#: ../../public/templates/show_catalog_row.inc.php:61
 #: ../../public/templates/show_democratic_playlist.inc.php:100
 #: ../../public/templates/show_edit_user.inc.php:114
 #: ../../public/templates/show_label.inc.php:96
 #: ../../public/templates/show_label.inc.php:97
-#: ../../public/templates/show_label_row.inc.php:55
-#: ../../public/templates/show_license_row.inc.php:37
-#: ../../public/templates/show_live_stream_row.inc.php:56
+#: ../../public/templates/show_label_row.inc.php:56
+#: ../../public/templates/show_license_row.inc.php:38
+#: ../../public/templates/show_live_stream_row.inc.php:57
 #: ../../public/templates/show_localplay_instances.inc.php:53
 #: ../../public/templates/show_localplay_playlist.inc.php:57
 #: ../../public/templates/show_manage_democratic.inc.php:55
@@ -739,25 +738,25 @@ msgstr "Daftar Putar acak"
 #: ../../public/templates/show_playlist_media_row.inc.php:102
 #: ../../public/templates/show_playlist_row.inc.php:118
 #: ../../public/templates/show_podcast_episode.inc.php:110
-#: ../../public/templates/show_podcast_episode_row.inc.php:119
+#: ../../public/templates/show_podcast_episode_row.inc.php:126
 #: ../../public/templates/show_podcast.inc.php:120
 #: ../../public/templates/show_podcast.inc.php:121
-#: ../../public/templates/show_podcast_row.inc.php:85
+#: ../../public/templates/show_podcast_row.inc.php:88
 #: ../../public/templates/show_pvmsg_row.inc.php:39
 #: ../../public/templates/show_pvmsgs.inc.php:44
 #: ../../public/templates/show_search.inc.php:72
 #: ../../public/templates/show_search_row.inc.php:77
-#: ../../public/templates/show_shout_row.inc.php:41
+#: ../../public/templates/show_shout_row.inc.php:40
 #: ../../public/templates/show_tagcloud.inc.php:60
 #: ../../public/templates/show_tvshow.inc.php:100
 #: ../../public/templates/show_tvshow.inc.php:101
 #: ../../public/templates/show_tvshow_row.inc.php:85
 #: ../../public/templates/show_tvshow_season.inc.php:94
 #: ../../public/templates/show_tvshow_season.inc.php:95
-#: ../../public/templates/show_tvshow_season_row.inc.php:87
+#: ../../public/templates/show_tvshow_season_row.inc.php:89
 #: ../../public/templates/show_user_row.inc.php:88
 #: ../../public/templates/show_video.inc.php:138
-#: ../../public/templates/show_video_row.inc.php:137
+#: ../../public/templates/show_video_row.inc.php:144
 #: ../../src/Gui/Song/SongViewAdapter.php:327
 #: ../../src/Repository/Model/Broadcast.php:360
 #: ../../src/Repository/Model/Channel.php:314
@@ -833,9 +832,9 @@ msgstr "Tingkat"
 #: ../../public/templates/show_shared_objects.inc.php:33
 #: ../../public/templates/show_wanted_albums.inc.php:34
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:130
-#: ../../src/Module/Util/Ui.php:886 ../../src/Plugin/AmpacheFlattr.php:101
+#: ../../src/Module/Util/Ui.php:887 ../../src/Plugin/AmpacheFlattr.php:101
 #: ../../src/Plugin/AmpachePaypal.php:105
-#: ../../src/Repository/Model/User.php:1095
+#: ../../src/Repository/Model/User.php:1094
 msgid "User"
 msgstr "Pengguna"
 
@@ -848,16 +847,16 @@ msgstr "Pengguna"
 #: ../../public/templates/show_edit_playlist_row.inc.php:35
 #: ../../public/templates/show_edit_search_row.inc.php:35
 #: ../../public/templates/show_import_playlist.inc.php:38
-#: ../../public/templates/show_playlists.inc.php:52
-#: ../../public/templates/show_playlists.inc.php:92
+#: ../../public/templates/show_playlists.inc.php:53
+#: ../../public/templates/show_playlists.inc.php:93
 #: ../../public/templates/show_searches.inc.php:52
 #: ../../public/templates/show_searches.inc.php:80
 msgid "Type"
 msgstr "Jenis"
 
 #: ../../public/templates/show_access_list.inc.php:63
-#: ../../public/templates/show_artists.inc.php:76
-#: ../../public/templates/show_artists.inc.php:134
+#: ../../public/templates/show_artists.inc.php:82
+#: ../../public/templates/show_artists.inc.php:142
 #: ../../public/templates/show_catalog_types.inc.php:34
 #: ../../public/templates/show_catalog_types.inc.php:71
 #: ../../public/templates/show_democratic_playlist.inc.php:60
@@ -877,57 +876,57 @@ msgstr "Jenis"
 #: ../../public/templates/show_manage_license.inc.php:61
 #: ../../public/templates/show_manage_shoutbox.inc.php:37
 #: ../../public/templates/show_manage_shoutbox.inc.php:66
-#: ../../public/templates/show_playlist_medias.inc.php:60
-#: ../../public/templates/show_playlist_medias.inc.php:93
+#: ../../public/templates/show_playlist_medias.inc.php:61
+#: ../../public/templates/show_playlist_medias.inc.php:94
 #: ../../public/templates/show_plugins.inc.php:35
 #: ../../public/templates/show_plugins.inc.php:76
 #: ../../public/templates/show_podcast_episode.inc.php:59
 #: ../../public/templates/show_pvmsgs.inc.php:58
 #: ../../public/templates/show_pvmsgs.inc.php:85
-#: ../../public/templates/show_recommended_artists.inc.php:61
-#: ../../public/templates/show_recommended_artists.inc.php:114
-#: ../../public/templates/show_songs.inc.php:110
-#: ../../public/templates/show_tvshows.inc.php:60
-#: ../../public/templates/show_tvshows.inc.php:101
+#: ../../public/templates/show_recommended_artists.inc.php:65
+#: ../../public/templates/show_recommended_artists.inc.php:119
+#: ../../public/templates/show_songs.inc.php:116
+#: ../../public/templates/show_tvshows.inc.php:66
+#: ../../public/templates/show_tvshows.inc.php:109
 #: ../../public/templates/show_users.inc.php:67
 #: ../../public/templates/show_users.inc.php:105
 #: ../../public/templates/show_video.inc.php:92
 #: ../../public/templates/show_videos.inc.php:68
-#: ../../public/templates/show_videos.inc.php:117
+#: ../../public/templates/show_videos.inc.php:113
 msgid "Action"
 msgstr "Tindakan"
 
 #: ../../public/templates/show_access_list.inc.php:80
 #: ../../public/templates/show_album_group_disks.inc.php:220
 #: ../../public/templates/show_album.inc.php:233
-#: ../../public/templates/show_album_row.inc.php:136
+#: ../../public/templates/show_album_row.inc.php:138
 #: ../../public/templates/show_artist.inc.php:216
-#: ../../public/templates/show_artist_row.inc.php:111
+#: ../../public/templates/show_artist_row.inc.php:105
 #: ../../public/templates/show_label.inc.php:87
-#: ../../public/templates/show_license_row.inc.php:34
-#: ../../public/templates/show_live_stream_row.inc.php:51
+#: ../../public/templates/show_license_row.inc.php:35
+#: ../../public/templates/show_live_stream_row.inc.php:52
 #: ../../public/templates/show_playlist.inc.php:147
 #: ../../public/templates/show_playlist.inc.php:148
 #: ../../public/templates/show_playlist_row.inc.php:116
 #: ../../public/templates/show_podcast_episode.inc.php:104
-#: ../../public/templates/show_podcast_episode_row.inc.php:113
+#: ../../public/templates/show_podcast_episode_row.inc.php:120
 #: ../../public/templates/show_podcast.inc.php:108
-#: ../../public/templates/show_podcast_row.inc.php:76
+#: ../../public/templates/show_podcast_row.inc.php:79
 #: ../../public/templates/show_search.inc.php:65
 #: ../../public/templates/show_search.inc.php:66
 #: ../../public/templates/show_search_row.inc.php:74
-#: ../../public/templates/show_shout_row.inc.php:38
+#: ../../public/templates/show_shout_row.inc.php:37
 #: ../../public/templates/show_tagcloud.inc.php:55
 #: ../../public/templates/show_tagcloud.inc.php:56
 #: ../../public/templates/show_tvshow.inc.php:91
-#: ../../public/templates/show_tvshow_row.inc.php:78
+#: ../../public/templates/show_tvshow_row.inc.php:80
 #: ../../public/templates/show_tvshow_season.inc.php:85
-#: ../../public/templates/show_tvshow_season_row.inc.php:81
+#: ../../public/templates/show_tvshow_season_row.inc.php:83
 #: ../../public/templates/show_user.inc.php:85
 #: ../../public/templates/show_user.inc.php:89
 #: ../../public/templates/show_user_row.inc.php:75
 #: ../../public/templates/show_video.inc.php:132
-#: ../../public/templates/show_video_row.inc.php:131
+#: ../../public/templates/show_video_row.inc.php:138
 #: ../../src/Gui/Song/SongViewAdapter.php:284
 #: ../../src/Repository/Model/Broadcast.php:358
 #: ../../src/Repository/Model/Channel.php:312
@@ -987,8 +986,8 @@ msgstr "Situs Web"
 #: ../../public/templates/show_channels.inc.php:47
 #: ../../public/templates/show_edit_user.inc.php:68
 #: ../../public/templates/show_podcast_episode.inc.php:121
-#: ../../public/templates/show_podcast_episodes.inc.php:57
-#: ../../public/templates/show_podcast_episodes.inc.php:103
+#: ../../public/templates/show_podcast_episodes.inc.php:62
+#: ../../public/templates/show_podcast_episodes.inc.php:109
 #: ../../public/templates/show_user_registration.inc.php:125
 msgid "State"
 msgstr "Provinsi"
@@ -1141,7 +1140,7 @@ msgstr "Baris Otomatis Sisip"
 
 #: ../../public/templates/show_add_catalog.inc.php:44
 #: ../../public/templates/show_add_upload.inc.php:193
-#: ../../public/templates/show_albums.inc.php:44
+#: ../../public/templates/show_albums.inc.php:46
 #: ../../public/templates/show_democratic_playlist.inc.php:63
 #: ../../public/templates/show_democratic_playlist.inc.php:113
 #: ../../public/templates/show_disabled_songs.inc.php:33
@@ -1150,12 +1149,12 @@ msgstr "Baris Otomatis Sisip"
 #: ../../public/templates/show_edit_song_row.inc.php:51
 #: ../../public/templates/show_lyrics.inc.php:48
 #: ../../public/templates/show_missing_albums.inc.php:30
-#: ../../public/templates/show_now_playing_row.inc.php:54
+#: ../../public/templates/show_now_playing_row.inc.php:57
 #: ../../public/templates/show_recently_played.inc.php:42
 #: ../../public/templates/show_recently_played.inc.php:162
 #: ../../public/templates/show_song_previews.inc.php:31
-#: ../../public/templates/show_songs.inc.php:74
-#: ../../public/templates/show_songs.inc.php:169
+#: ../../public/templates/show_songs.inc.php:76
+#: ../../public/templates/show_songs.inc.php:175
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:31
 #: ../../src/Gui/Song/SongViewAdapter.php:344
@@ -1211,7 +1210,7 @@ msgid "Genre"
 msgstr "Genre"
 
 #: ../../public/templates/show_add_catalog.inc.php:52
-#: ../../public/templates/show_albums.inc.php:47
+#: ../../public/templates/show_albums.inc.php:49
 #: ../../public/templates/show_edit_album_row.inc.php:53
 #: ../../public/templates/show_edit_catalog.inc.php:43
 #: ../../public/templates/show_edit_song_row.inc.php:90
@@ -1219,13 +1218,13 @@ msgstr "Genre"
 #: ../../public/templates/show_get_art.inc.php:98
 #: ../../public/templates/show_graphs.inc.php:63
 #: ../../public/templates/show_missing_albums.inc.php:32
-#: ../../public/templates/show_now_playing_row.inc.php:62
+#: ../../public/templates/show_now_playing_row.inc.php:65
 #: ../../public/templates/show_partial_edit_movie_row.inc.php:31
 #: ../../public/templates/show_partial_movie.inc.php:23
 #: ../../public/templates/show_partial_movies.inc.php:26
 #: ../../public/templates/show_recently_played.inc.php:44
 #: ../../public/templates/show_recently_played.inc.php:164
-#: ../../public/templates/show_songs.inc.php:79
+#: ../../public/templates/show_songs.inc.php:81
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:347
 #: ../../src/Repository/Model/Album.php:668
@@ -1254,9 +1253,8 @@ msgstr "Jenis Rilis"
 #: ../../public/templates/show_edit_album_row.inc.php:87
 #: ../../public/templates/show_edit_catalog.inc.php:46
 #: ../../src/Repository/Model/Search.php:710
-#, fuzzy
 msgid "Release Status"
-msgstr "Tanggal Rilis"
+msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:56
 #: ../../public/templates/show_edit_album_row.inc.php:95
@@ -1268,7 +1266,7 @@ msgstr "Barcode"
 #: ../../public/templates/show_add_catalog.inc.php:58
 #: ../../public/templates/show_edit_catalog.inc.php:49
 #: ../../public/templates/sidebar.inc.php:50
-#: ../../src/Module/Api/Upnp_Api.php:1012
+#: ../../src/Module/Api/Upnp_Api.php:1014
 #: ../../src/Repository/Model/Browse.php:336
 msgid "TV Shows"
 msgstr "Acara TV"
@@ -1279,10 +1277,10 @@ msgstr "Acara TV"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:35
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:23
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:28
-#: ../../public/templates/show_tvshow_seasons.inc.php:49
-#: ../../public/templates/show_tvshow_seasons.inc.php:88
-#: ../../public/templates/show_tvshows.inc.php:51
-#: ../../public/templates/show_tvshows.inc.php:93
+#: ../../public/templates/show_tvshow_seasons.inc.php:50
+#: ../../public/templates/show_tvshow_seasons.inc.php:89
+#: ../../public/templates/show_tvshows.inc.php:53
+#: ../../public/templates/show_tvshows.inc.php:99
 #: ../../src/Repository/Model/TVShow_Episode.php:209
 #: ../../src/Repository/Model/TvShow.php:189
 #: ../../src/Repository/Model/TVShow_Season.php:166
@@ -1294,8 +1292,8 @@ msgstr "Acara TV"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:24
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:27
-#: ../../public/templates/show_tvshow_seasons.inc.php:48
-#: ../../public/templates/show_tvshow_seasons.inc.php:87
+#: ../../public/templates/show_tvshow_seasons.inc.php:49
+#: ../../public/templates/show_tvshow_seasons.inc.php:88
 #: ../../src/Repository/Model/TVShow_Episode.php:214
 #: ../../src/Repository/Model/TVShow_Season.php:140
 #: ../../src/Repository/Model/TVShow_Season.php:171
@@ -1319,22 +1317,22 @@ msgstr "Episode"
 #: ../../public/templates/show_edit_podcast_episode_row.inc.php:31
 #: ../../public/templates/show_edit_podcast_row.inc.php:35
 #: ../../public/templates/show_edit_song_row.inc.php:36
-#: ../../public/templates/show_edit_video_row.inc.php:35
-#: ../../public/templates/show_playlist_medias.inc.php:53
-#: ../../public/templates/show_playlist_medias.inc.php:86
+#: ../../public/templates/show_edit_video_row.inc.php:37
+#: ../../public/templates/show_playlist_medias.inc.php:54
+#: ../../public/templates/show_playlist_medias.inc.php:87
 #: ../../public/templates/show_podcast_episode.inc.php:116
-#: ../../public/templates/show_podcast_episodes.inc.php:49
-#: ../../public/templates/show_podcast_episodes.inc.php:94
+#: ../../public/templates/show_podcast_episodes.inc.php:50
+#: ../../public/templates/show_podcast_episodes.inc.php:99
 #: ../../public/templates/show_podcasts.inc.php:67
 #: ../../public/templates/show_podcasts.inc.php:111
 #: ../../public/templates/show_video.inc.php:144
-#: ../../public/templates/show_videos.inc.php:49
-#: ../../public/templates/show_videos.inc.php:98
+#: ../../public/templates/show_videos.inc.php:50
+#: ../../public/templates/show_videos.inc.php:95
 #: ../../src/Gui/Song/SongViewAdapter.php:339
 #: ../../src/Repository/Model/Podcast_Episode.php:197
 #: ../../src/Repository/Model/Search.php:514
 #: ../../src/Repository/Model/Search.php:704
-#: ../../src/Repository/Model/Song.php:1775
+#: ../../src/Repository/Model/Song.php:1750
 #: ../../src/Repository/Model/Video.php:349
 msgid "Title"
 msgstr "Judul"
@@ -1366,9 +1364,8 @@ msgstr "(tanpa awalan atau akhiran '/')"
 
 #: ../../public/templates/show_add_catalog.inc.php:81
 #: ../../public/templates/show_edit_catalog.inc.php:73
-#, fuzzy
 msgid "Catalog User"
-msgstr "Katalog"
+msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:95
 #: ../../public/templates/show_catalog_row.inc.php:55
@@ -1385,7 +1382,7 @@ msgid "Catalog Media Type"
 msgstr "Jenis Media Katalog"
 
 #: ../../public/templates/show_add_catalog.inc.php:107
-#: ../../src/Module/Api/Upnp_Api.php:762
+#: ../../src/Module/Api/Upnp_Api.php:764
 msgid "Music"
 msgstr "Musik"
 
@@ -1402,8 +1399,8 @@ msgid "Personal Video"
 msgstr "Video Pribadi"
 
 #: ../../public/templates/show_add_catalog.inc.php:116
-#: ../../public/templates/show_podcast_episodes.inc.php:51
-#: ../../public/templates/show_podcast_episodes.inc.php:96
+#: ../../public/templates/show_podcast_episodes.inc.php:54
+#: ../../public/templates/show_podcast_episodes.inc.php:102
 #: ../../src/Repository/Model/Podcast_Episode.php:192
 #: ../../src/Repository/Model/Podcast.php:167
 msgid "Podcast"
@@ -1563,15 +1560,13 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:62
 #: ../../public/templates/show_edit_label_row.inc.php:64
-#, fuzzy
 msgid "Production"
-msgstr "Lokasi"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:65
 #: ../../public/templates/show_edit_label_row.inc.php:67
-#, fuzzy
 msgid "Original Production"
-msgstr "Tahun Asli"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:68
 #: ../../public/templates/show_edit_label_row.inc.php:70
@@ -1580,9 +1575,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:71
 #: ../../public/templates/show_edit_label_row.inc.php:73
-#, fuzzy
 msgid "Reissue Production"
-msgstr "Resolusi"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:74
 #: ../../public/templates/show_edit_label_row.inc.php:76
@@ -1591,9 +1585,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:77
 #: ../../public/templates/show_edit_label_row.inc.php:79
-#, fuzzy
 msgid "Holding"
-msgstr "Memuat"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:80
 #: ../../public/templates/show_edit_label_row.inc.php:82
@@ -1602,9 +1595,8 @@ msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:83
 #: ../../public/templates/show_edit_label_row.inc.php:85
-#, fuzzy
 msgid "Tag Generated"
-msgstr "belum dinilai"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:88
 #: ../../public/templates/show_edit_artist_row.inc.php:50
@@ -1628,9 +1620,8 @@ msgstr "Alamat"
 #: ../../public/templates/show_edit_label_row.inc.php:98
 #: ../../public/templates/show_labels.inc.php:59
 #: ../../public/templates/show_labels.inc.php:88
-#, fuzzy
 msgid "Country"
-msgstr "Melawan"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:119
 #: ../../public/templates/show_edit_label_row.inc.php:110
@@ -1640,24 +1631,22 @@ msgstr "Melawan"
 #: ../../public/templates/show_test.inc.php:63
 #: ../../public/templates/show_user.inc.php:114
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:1857
+#: ../../src/Repository/Model/Catalog.php:1890
 #: ../../src/Repository/Model/Channel.php:310
 msgid "Status"
 msgstr "Status"
 
 #: ../../public/templates/show_add_label.inc.php:124
 #: ../../public/templates/show_edit_label_row.inc.php:115
-#: ../../public/templates/show_label_row.inc.php:41
-#, fuzzy
+#: ../../public/templates/show_label_row.inc.php:42
 msgid "Active"
-msgstr "Aktifkan"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:127
 #: ../../public/templates/show_edit_label_row.inc.php:118
-#: ../../public/templates/show_label_row.inc.php:43
-#, fuzzy
+#: ../../public/templates/show_label_row.inc.php:44
 msgid "Inactive"
-msgstr "Pengguna Tidak Aktif"
+msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:134
 #: ../../public/templates/show_add_live_stream.inc.php:63
@@ -1689,7 +1678,7 @@ msgstr "Alamat URL Stream"
 #: ../../public/templates/show_live_streams.inc.php:87
 #: ../../public/templates/show_video.inc.php:150
 #: ../../public/templates/show_videos.inc.php:56
-#: ../../public/templates/show_videos.inc.php:105
+#: ../../public/templates/show_videos.inc.php:101
 msgid "Codec"
 msgstr "Kodek"
 
@@ -1775,8 +1764,8 @@ msgstr "Ditemukan"
 #: ../../public/templates/show_search_row.inc.php:60
 #: ../../public/templates/show_video.inc.php:54
 #: ../../public/templates/sidebar_localplay.inc.php:62
-#: ../../src/Config/functions.php:1089 ../../src/Module/Util/Ui.php:794
-#: ../../src/Module/Util/Ui.php:831
+#: ../../src/Config/functions.php:1093 ../../src/Module/Util/Ui.php:795
+#: ../../src/Module/Util/Ui.php:832
 msgid "None"
 msgstr "Tidak ada"
 
@@ -1884,16 +1873,16 @@ msgstr "Tambahkan pengguna"
 #: ../../public/templates/show_add_user.inc.php:37
 #: ../../public/templates/show_edit_user.inc.php:41
 #: ../../public/templates/show_install_account.inc.php:52
-#: ../../public/templates/show_login_form.inc.php:73
-#: ../../public/templates/show_now_playing_row.inc.php:37
-#: ../../public/templates/show_now_playing_video_row.inc.php:33
+#: ../../public/templates/show_login_form.inc.php:72
+#: ../../public/templates/show_now_playing_row.inc.php:40
+#: ../../public/templates/show_now_playing_video_row.inc.php:38
 #: ../../public/templates/show_recently_played.inc.php:45
 #: ../../public/templates/show_recently_played.inc.php:165
 #: ../../public/templates/show_user_registration.inc.php:90
 #: ../../public/templates/show_users.inc.php:52
 #: ../../public/templates/show_users.inc.php:90
-#: ../../src/Module/Catalog/Catalog_remote.php:119
-#: ../../src/Module/Catalog/Catalog_subsonic.php:119
+#: ../../src/Module/Catalog/Catalog_remote.php:120
+#: ../../src/Module/Catalog/Catalog_subsonic.php:120
 #: ../../src/Module/Cli/AdminAddUserCommand.php:48
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:197
 #: ../../src/Module/User/Registration.php:67
@@ -1909,10 +1898,10 @@ msgstr "Nama Pengguna"
 #: ../../public/templates/show_install_config.inc.php:102
 #: ../../public/templates/show_install.inc.php:77
 #: ../../public/templates/show_install.inc.php:130
-#: ../../public/templates/show_login_form.inc.php:77
+#: ../../public/templates/show_login_form.inc.php:76
 #: ../../public/templates/show_user_registration.inc.php:143
-#: ../../src/Module/Catalog/Catalog_remote.php:120
-#: ../../src/Module/Catalog/Catalog_subsonic.php:120
+#: ../../src/Module/Catalog/Catalog_remote.php:121
+#: ../../src/Module/Catalog/Catalog_subsonic.php:121
 #: ../../src/Module/Cli/AdminAddUserCommand.php:43
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:199
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:224
@@ -1932,7 +1921,7 @@ msgstr "Tingkat akses pengguna"
 #: ../../public/templates/show_preference_box.inc.php:81
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:127
 #: ../../src/Repository/Model/Shoutbox.php:322
-#: ../../src/Repository/Model/User.php:1097
+#: ../../src/Repository/Model/User.php:1096
 msgid "Guest"
 msgstr "Pengunjung"
 
@@ -1941,7 +1930,7 @@ msgstr "Pengunjung"
 #: ../../public/templates/show_edit_user.inc.php:96
 #: ../../public/templates/show_preference_box.inc.php:83
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:133
-#: ../../src/Repository/Model/User.php:1093
+#: ../../src/Repository/Model/User.php:1092
 msgid "Content Manager"
 msgstr "Manajer Konten"
 
@@ -1950,7 +1939,7 @@ msgstr "Manajer Konten"
 #: ../../public/templates/show_edit_user.inc.php:97
 #: ../../public/templates/show_preference_box.inc.php:84
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:136
-#: ../../src/Repository/Model/User.php:1091
+#: ../../src/Repository/Model/User.php:1090
 msgid "Catalog Manager"
 msgstr "Manajer Katalog"
 
@@ -1964,7 +1953,7 @@ msgstr "Manajer Katalog"
 #: ../../public/templates/show_preference_box.inc.php:85
 #: ../../public/templates/sidebar.inc.php:88
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:139
-#: ../../src/Module/Util/Ui.php:888 ../../src/Repository/Model/User.php:1089
+#: ../../src/Module/Util/Ui.php:889 ../../src/Repository/Model/User.php:1088
 msgid "Admin"
 msgstr "Admin"
 
@@ -2038,7 +2027,7 @@ msgstr[0] "%dkali"
 
 #: ../../public/templates/show_album_group_disks.inc.php:112
 #: ../../public/templates/show_album.inc.php:125
-#: ../../public/templates/show_albums.inc.php:51
+#: ../../public/templates/show_albums.inc.php:53
 #: ../../public/templates/show_artist.inc.php:116
 #: ../../public/templates/show_broadcasts.inc.php:39
 #: ../../public/templates/show_catalogs.inc.php:38
@@ -2046,10 +2035,10 @@ msgstr[0] "%dkali"
 #: ../../public/templates/show_channels.inc.php:48
 #: ../../public/templates/show_label.inc.php:61
 #: ../../public/templates/show_missing_albums.inc.php:34
-#: ../../public/templates/show_playlists.inc.php:58
-#: ../../public/templates/show_playlists.inc.php:98
-#: ../../public/templates/show_podcast_episodes.inc.php:63
-#: ../../public/templates/show_podcast_episodes.inc.php:108
+#: ../../public/templates/show_playlists.inc.php:59
+#: ../../public/templates/show_playlists.inc.php:99
+#: ../../public/templates/show_podcast_episodes.inc.php:68
+#: ../../public/templates/show_podcast_episodes.inc.php:114
 #: ../../public/templates/show_podcast.inc.php:63
 #: ../../public/templates/show_podcasts.inc.php:42
 #: ../../public/templates/show_pvmsg.inc.php:34
@@ -2058,8 +2047,8 @@ msgstr[0] "%dkali"
 #: ../../public/templates/show_shared_objects.inc.php:42
 #: ../../public/templates/show_tvshow.inc.php:68
 #: ../../public/templates/show_tvshow_season.inc.php:62
-#: ../../public/templates/show_tvshow_seasons.inc.php:56
-#: ../../public/templates/show_tvshow_seasons.inc.php:94
+#: ../../public/templates/show_tvshow_seasons.inc.php:57
+#: ../../public/templates/show_tvshow_seasons.inc.php:95
 #: ../../public/templates/show_wanted_albums.inc.php:35
 #: ../../src/Module/Application/Album/ShowMissingAction.php:124
 msgid "Actions"
@@ -2069,7 +2058,7 @@ msgstr "Tindakan"
 #: ../../public/templates/show_album_group_disks.inc.php:194
 #: ../../public/templates/show_album.inc.php:151
 #: ../../public/templates/show_album_row.inc.php:70
-#: ../../public/templates/show_artist_row.inc.php:66
+#: ../../public/templates/show_artist_row.inc.php:64
 #: ../../public/templates/show_playlist_row.inc.php:62
 #: ../../public/templates/show_search_options.inc.php:39
 msgid "Random to Temporary Playlist"
@@ -2103,11 +2092,11 @@ msgstr "Perbarui dari tag"
 #: ../../public/templates/show_install_config.inc.php:264
 #: ../../public/templates/show_playlist_media_row.inc.php:91
 #: ../../public/templates/show_podcast_episode.inc.php:95
-#: ../../public/templates/show_podcast_episode_row.inc.php:104
+#: ../../public/templates/show_podcast_episode_row.inc.php:111
 #: ../../public/templates/show_share.inc.php:39
 #: ../../public/templates/show_share.inc.php:40
 #: ../../public/templates/show_video.inc.php:123
-#: ../../public/templates/show_video_row.inc.php:126
+#: ../../public/templates/show_video_row.inc.php:133
 #: ../../src/Gui/Song/SongViewAdapter.php:239
 #: ../../src/Module/System/AutoUpdate.php:285
 #: ../../src/Module/System/AutoUpdate.php:287
@@ -2117,16 +2106,16 @@ msgstr "Unduh"
 
 #: ../../public/templates/show_album_group_disks.inc.php:198
 #: ../../public/templates/show_album.inc.php:175
-#: ../../public/templates/show_album_row.inc.php:116
+#: ../../public/templates/show_album_row.inc.php:118
 #: ../../public/templates/show_artist.inc.php:169
-#: ../../public/templates/show_artist_row.inc.php:105
+#: ../../public/templates/show_artist_row.inc.php:100
 #: ../../public/templates/show_html5_player.inc.php:182
 #: ../../public/templates/show_label.inc.php:67
 #: ../../public/templates/show_label.inc.php:68
-#: ../../public/templates/show_label_row.inc.php:49
+#: ../../public/templates/show_label_row.inc.php:50
 #: ../../public/templates/show_podcast_episode.inc.php:80
 #: ../../public/templates/show_video.inc.php:109
-#: ../../public/templates/show_video_row.inc.php:116
+#: ../../public/templates/show_video_row.inc.php:123
 #: ../../src/Gui/Song/SongViewAdapter.php:194
 #: ../../src/Repository/Model/Shoutbox.php:307
 msgid "Post Shout"
@@ -2141,7 +2130,7 @@ msgstr "Simpan Urutan Trek"
 
 #: ../../public/templates/show_album_group_disks.inc.php:219
 #: ../../public/templates/show_album.inc.php:232
-#: ../../public/templates/show_album_row.inc.php:135
+#: ../../public/templates/show_album_row.inc.php:137
 msgid "Album Edit"
 msgstr "Edit Album"
 
@@ -2175,8 +2164,8 @@ msgstr "Grafik"
 msgid "Edit Album"
 msgstr "Edit Album"
 
-#: ../../public/templates/show_albums.inc.php:45
-#: ../../public/templates/show_artists.inc.php:44
+#: ../../public/templates/show_albums.inc.php:47
+#: ../../public/templates/show_artists.inc.php:46
 #: ../../public/templates/show_edit_album_row.inc.php:38
 #: ../../src/Gui/Song/SongViewAdapter.php:342
 #: ../../src/Repository/Model/Search.php:517
@@ -2184,9 +2173,9 @@ msgstr "Edit Album"
 msgid "Album Artist"
 msgstr "Artis Album"
 
-#: ../../public/templates/show_albums.inc.php:46
-#: ../../public/templates/show_artists.inc.php:63
-#: ../../public/templates/show_artists.inc.php:122
+#: ../../public/templates/show_albums.inc.php:48
+#: ../../public/templates/show_artists.inc.php:65
+#: ../../public/templates/show_artists.inc.php:128
 #: ../../public/templates/show_browse_form.inc.php:36
 #: ../../public/templates/show_browse_form.inc.php:38
 #: ../../public/templates/show_genre_browse_form.inc.php:15
@@ -2196,32 +2185,32 @@ msgstr "Artis Album"
 #: ../../public/templates/show_manage_democratic.inc.php:37
 #: ../../public/templates/show_random.inc.php:45
 #: ../../public/templates/show_random.inc.php:47
-#: ../../public/templates/show_recommended_artists.inc.php:48
-#: ../../public/templates/show_recommended_artists.inc.php:106
+#: ../../public/templates/show_recommended_artists.inc.php:49
+#: ../../public/templates/show_recommended_artists.inc.php:110
 #: ../../public/templates/show_search_form.inc.php:46
 #: ../../public/templates/show_search_form.inc.php:48
 #: ../../public/templates/sidebar.inc.php:38
 #: ../../src/Application/Api/Ajax/Handler/IndexAjaxHandler.php:369
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:139
-#: ../../src/Module/Api/Upnp_Api.php:651
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:140
+#: ../../src/Module/Api/Upnp_Api.php:653
 #: ../../src/Repository/Model/Browse.php:236
 #: ../../src/Repository/Model/Browse.php:320
 msgid "Songs"
 msgstr "Lagu"
 
 #. HINT: Number of times object has been played
-#: ../../public/templates/show_albums.inc.php:48
-#: ../../public/templates/show_artists.inc.php:67
-#: ../../public/templates/show_artists.inc.php:126
-#: ../../public/templates/show_podcast_episodes.inc.php:54
-#: ../../public/templates/show_podcast_episodes.inc.php:99
+#: ../../public/templates/show_albums.inc.php:50
+#: ../../public/templates/show_artists.inc.php:69
+#: ../../public/templates/show_artists.inc.php:132
+#: ../../public/templates/show_podcast_episodes.inc.php:59
+#: ../../public/templates/show_podcast_episodes.inc.php:106
 #: ../../public/templates/show_podcasts.inc.php:40
-#: ../../public/templates/show_recommended_artists.inc.php:52
-#: ../../public/templates/show_songs.inc.php:91
-#: ../../public/templates/show_songs.inc.php:177
+#: ../../public/templates/show_recommended_artists.inc.php:53
+#: ../../public/templates/show_songs.inc.php:97
+#: ../../public/templates/show_songs.inc.php:185
 #: ../../public/templates/show_video.inc.php:165
 #: ../../public/templates/show_videos.inc.php:60
-#: ../../public/templates/show_videos.inc.php:109
+#: ../../public/templates/show_videos.inc.php:105
 #: ../../src/Gui/Song/SongViewAdapter.php:386
 #: ../../src/Repository/Model/Search.php:535
 #: ../../src/Repository/Model/Search.php:663
@@ -2229,59 +2218,59 @@ msgstr "Lagu"
 msgid "# Played"
 msgstr "# Dimainkan"
 
-#: ../../public/templates/show_albums.inc.php:50
-#: ../../public/templates/show_artists.inc.php:73
-#: ../../public/templates/show_artists.inc.php:131
-#: ../../public/templates/show_playlist_medias.inc.php:57
-#: ../../public/templates/show_playlist_medias.inc.php:90
-#: ../../public/templates/show_playlists.inc.php:55
-#: ../../public/templates/show_playlists.inc.php:95
+#: ../../public/templates/show_albums.inc.php:52
+#: ../../public/templates/show_artists.inc.php:79
+#: ../../public/templates/show_artists.inc.php:139
+#: ../../public/templates/show_playlist_medias.inc.php:58
+#: ../../public/templates/show_playlist_medias.inc.php:91
+#: ../../public/templates/show_playlists.inc.php:56
+#: ../../public/templates/show_playlists.inc.php:96
 #: ../../public/templates/show_podcast_episode.inc.php:42
-#: ../../public/templates/show_podcast_episodes.inc.php:60
-#: ../../public/templates/show_podcast_episodes.inc.php:105
+#: ../../public/templates/show_podcast_episodes.inc.php:65
+#: ../../public/templates/show_podcast_episodes.inc.php:111
 #: ../../public/templates/show_podcasts.inc.php:41
-#: ../../public/templates/show_recommended_artists.inc.php:58
-#: ../../public/templates/show_recommended_artists.inc.php:111
-#: ../../public/templates/show_songs.inc.php:101
-#: ../../public/templates/show_songs.inc.php:183
-#: ../../public/templates/show_tvshow_seasons.inc.php:53
-#: ../../public/templates/show_tvshow_seasons.inc.php:91
-#: ../../public/templates/show_tvshows.inc.php:57
-#: ../../public/templates/show_tvshows.inc.php:98
+#: ../../public/templates/show_recommended_artists.inc.php:62
+#: ../../public/templates/show_recommended_artists.inc.php:117
+#: ../../public/templates/show_songs.inc.php:107
+#: ../../public/templates/show_songs.inc.php:191
+#: ../../public/templates/show_tvshow_seasons.inc.php:54
+#: ../../public/templates/show_tvshow_seasons.inc.php:92
+#: ../../public/templates/show_tvshows.inc.php:63
+#: ../../public/templates/show_tvshows.inc.php:106
 #: ../../public/templates/show_video.inc.php:72
-#: ../../public/templates/show_videos.inc.php:65
-#: ../../public/templates/show_videos.inc.php:114
+#: ../../public/templates/show_videos.inc.php:66
+#: ../../public/templates/show_videos.inc.php:111
 msgid "Rating"
 msgstr "Peringkat"
 
-#: ../../public/templates/show_albums.inc.php:73
-#: ../../public/templates/show_albums.inc.php:132
-#: ../../public/templates/show_artists.inc.php:60
-#: ../../public/templates/show_artists.inc.php:119
+#: ../../public/templates/show_albums.inc.php:75
+#: ../../public/templates/show_albums.inc.php:135
+#: ../../public/templates/show_artists.inc.php:62
+#: ../../public/templates/show_artists.inc.php:125
 #: ../../public/templates/show_arts.inc.php:52
 #: ../../public/templates/show_labels.inc.php:55
 #: ../../public/templates/show_labels.inc.php:84
 #: ../../public/templates/show_live_streams.inc.php:57
 #: ../../public/templates/show_live_streams.inc.php:84
-#: ../../public/templates/show_playlist_medias.inc.php:52
-#: ../../public/templates/show_playlist_medias.inc.php:85
-#: ../../public/templates/show_playlists.inc.php:47
-#: ../../public/templates/show_playlists.inc.php:86
-#: ../../public/templates/show_podcast_episodes.inc.php:93
+#: ../../public/templates/show_playlist_medias.inc.php:53
+#: ../../public/templates/show_playlist_medias.inc.php:86
+#: ../../public/templates/show_playlists.inc.php:48
+#: ../../public/templates/show_playlists.inc.php:87
+#: ../../public/templates/show_podcast_episodes.inc.php:98
 #: ../../public/templates/show_podcasts.inc.php:66
 #: ../../public/templates/show_podcasts.inc.php:110
-#: ../../public/templates/show_recommended_artists.inc.php:45
-#: ../../public/templates/show_recommended_artists.inc.php:103
-#: ../../public/templates/show_tvshow_seasons.inc.php:47
-#: ../../public/templates/show_tvshow_seasons.inc.php:86
-#: ../../public/templates/show_tvshows.inc.php:50
-#: ../../public/templates/show_tvshows.inc.php:92
-#: ../../public/templates/show_videos.inc.php:48
-#: ../../public/templates/show_videos.inc.php:97
+#: ../../public/templates/show_recommended_artists.inc.php:46
+#: ../../public/templates/show_recommended_artists.inc.php:107
+#: ../../public/templates/show_tvshow_seasons.inc.php:48
+#: ../../public/templates/show_tvshow_seasons.inc.php:87
+#: ../../public/templates/show_tvshows.inc.php:52
+#: ../../public/templates/show_tvshows.inc.php:98
+#: ../../public/templates/show_videos.inc.php:49
+#: ../../public/templates/show_videos.inc.php:94
 msgid "Art"
 msgstr "Sampul"
 
-#: ../../public/templates/show_albums.inc.php:124
+#: ../../public/templates/show_albums.inc.php:128
 msgid "No Album found"
 msgstr "Album tidak ditemukan"
 
@@ -2293,8 +2282,8 @@ msgstr "Album tidak ditemukan"
 #: ../../public/templates/show_index.inc.php:66
 #: ../../public/templates/show_label.inc.php:122
 #: ../../public/templates/show_missing_artist.inc.php:34
-#: ../../public/templates/show_now_playing_row.inc.php:91
-#: ../../public/templates/show_now_playing_row.inc.php:97
+#: ../../public/templates/show_now_playing_row.inc.php:92
+#: ../../public/templates/show_now_playing_row.inc.php:98
 msgid "Loading..."
 msgstr "Memuat..."
 
@@ -2322,9 +2311,8 @@ msgstr "Mainkan Semua"
 #: ../../public/templates/show_podcast.inc.php:73
 #: ../../public/templates/show_tvshow.inc.php:78
 #: ../../public/templates/show_tvshow_season.inc.php:72
-#, fuzzy
 msgid "Play All Next"
-msgstr "Mainkan Semua Yang Terakhir"
+msgstr ""
 
 #: ../../public/templates/show_artist.inc.php:142
 #: ../../public/templates/show_playlist.inc.php:118
@@ -2345,7 +2333,7 @@ msgid "Random All to Temporary Playlist"
 msgstr "Acak Semua untuk Daftar Putar Sementara"
 
 #: ../../public/templates/show_artist.inc.php:215
-#: ../../public/templates/show_artist_row.inc.php:110
+#: ../../public/templates/show_artist_row.inc.php:104
 msgid "Artist Edit"
 msgstr "Edit Artis"
 
@@ -2361,9 +2349,9 @@ msgstr "Album yang Hilang"
 
 #: ../../public/templates/show_artist.inc.php:243
 #: ../../public/templates/show_artist.inc.php:282
-#: ../../public/templates/show_now_playing_row.inc.php:90
+#: ../../public/templates/show_now_playing_row.inc.php:91
 #: ../../public/templates/show_now_playing_similar.inc.php:32
-#: ../../public/templates/show_recommended_artists.inc.php:40
+#: ../../public/templates/show_recommended_artists.inc.php:41
 msgid "Similar Artists"
 msgstr "Artis Serupa"
 
@@ -2376,29 +2364,29 @@ msgstr "Artis Serupa"
 #: ../../public/templates/show_search_form.inc.php:62
 #: ../../public/templates/show_search_form.inc.php:64
 #: ../../public/templates/sidebar.inc.php:42
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:196
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:197
 #: ../../src/Repository/Model/Browse.php:364
 msgid "Labels"
 msgstr "Label"
 
-#: ../../public/templates/show_artists.inc.php:65
-#: ../../public/templates/show_artists.inc.php:124
+#: ../../public/templates/show_artists.inc.php:67
+#: ../../public/templates/show_artists.inc.php:130
 #: ../../public/templates/show_democratic_playlist.inc.php:65
 #: ../../public/templates/show_democratic_playlist.inc.php:115
-#: ../../public/templates/show_playlist_medias.inc.php:55
-#: ../../public/templates/show_playlist_medias.inc.php:88
-#: ../../public/templates/show_podcast_episodes.inc.php:52
-#: ../../public/templates/show_podcast_episodes.inc.php:97
-#: ../../public/templates/show_recommended_artists.inc.php:50
-#: ../../public/templates/show_recommended_artists.inc.php:108
-#: ../../public/templates/show_songs.inc.php:83
-#: ../../public/templates/show_songs.inc.php:172
+#: ../../public/templates/show_playlist_medias.inc.php:56
+#: ../../public/templates/show_playlist_medias.inc.php:89
+#: ../../public/templates/show_podcast_episodes.inc.php:57
+#: ../../public/templates/show_podcast_episodes.inc.php:104
+#: ../../public/templates/show_recommended_artists.inc.php:51
+#: ../../public/templates/show_recommended_artists.inc.php:112
+#: ../../public/templates/show_songs.inc.php:89
+#: ../../public/templates/show_songs.inc.php:180
 #: ../../public/templates/show_videos.inc.php:58
-#: ../../public/templates/show_videos.inc.php:107
+#: ../../public/templates/show_videos.inc.php:103
 msgid "Time"
 msgstr "Waktu"
 
-#: ../../public/templates/show_artists.inc.php:111
+#: ../../public/templates/show_artists.inc.php:117
 msgid "No Artist found"
 msgstr "Artis tidak ditemukan"
 
@@ -2416,7 +2404,7 @@ msgstr "Pilih"
 
 #: ../../public/templates/show_arts.inc.php:60
 #: ../../public/templates/show_ip_history.inc.php:64
-#: ../../src/Repository/Model/User.php:1036
+#: ../../src/Repository/Model/User.php:1035
 msgid "Invalid"
 msgstr "Tidak valid"
 
@@ -2482,7 +2470,7 @@ msgstr "Siaran"
 #: ../../public/templates/show_browse_form.inc.php:75
 #: ../../public/templates/show_browse_form.inc.php:77
 #: ../../public/templates/sidebar.inc.php:45
-#: ../../src/Module/Api/Upnp_Api.php:714
+#: ../../src/Module/Api/Upnp_Api.php:716
 #: ../../src/Repository/Model/Browse.php:267
 msgid "Radio Stations"
 msgstr "Stasiun Radio"
@@ -2490,7 +2478,7 @@ msgstr "Stasiun Radio"
 #: ../../public/templates/show_browse_form.inc.php:82
 #: ../../public/templates/show_browse_form.inc.php:84
 #: ../../public/templates/sidebar.inc.php:47
-#: ../../src/Module/Api/Upnp_Api.php:735
+#: ../../src/Module/Api/Upnp_Api.php:737
 #: ../../src/Repository/Model/Browse.php:372
 msgid "Podcasts"
 msgstr "Podcast"
@@ -2554,10 +2542,15 @@ msgid "Update"
 msgstr "Perbarui"
 
 #: ../../public/templates/show_catalog_row.inc.php:56
+#: ../../public/templates/sidebar_preferences.inc.php:63
+msgid "Import"
+msgstr "Impor"
+
+#: ../../public/templates/show_catalog_row.inc.php:57
 msgid "Update File Tags"
 msgstr "Perbarui Tag Berkas"
 
-#: ../../public/templates/show_catalog_row.inc.php:62
+#: ../../public/templates/show_catalog_row.inc.php:63
 msgid "Go"
 msgstr "Lanjutkan"
 
@@ -2593,7 +2586,7 @@ msgstr "Katalog tidak ditemukan"
 #: ../../public/templates/show_localplay_controllers.inc.php:71
 #: ../../public/templates/show_plugins.inc.php:33
 #: ../../public/templates/show_plugins.inc.php:74
-#: ../../src/Module/System/Update.php:290
+#: ../../src/Module/System/Update.php:293
 msgid "Version"
 msgstr "Versi"
 
@@ -3062,7 +3055,7 @@ msgstr "Preset Konfigurasi"
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:483
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:481
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:501
-#: ../../src/Module/Util/Ui.php:799
+#: ../../src/Module/Util/Ui.php:800
 msgid "Democratic"
 msgstr "Demokratis"
 
@@ -3070,7 +3063,7 @@ msgstr "Demokratis"
 #: ../../public/templates/show_playtype_switch.inc.php:45
 #: ../../public/templates/sidebar.inc.php:62
 #: ../../public/templates/sidebar.inc.php:85 ../../src/Config/functions.php:783
-#: ../../src/Module/Util/Ui.php:802
+#: ../../src/Module/Util/Ui.php:803
 msgid "Localplay"
 msgstr "Putarlokal"
 
@@ -3081,7 +3074,7 @@ msgstr "Flash"
 #: ../../public/templates/show_edit_user.inc.php:165
 #: ../../public/templates/show_live_stream.inc.php:57
 #: ../../public/templates/show_playtype_switch.inc.php:39
-#: ../../src/Module/Util/Ui.php:796
+#: ../../src/Module/Util/Ui.php:797
 msgid "Stream"
 msgstr "Stream"
 
@@ -3097,10 +3090,10 @@ msgstr "Ini mempengaruhi semua akun non-admin"
 msgid "Update User"
 msgstr "Perbarui Pengguna"
 
-#: ../../public/templates/show_edit_video_row.inc.php:39
+#: ../../public/templates/show_edit_video_row.inc.php:41
 #: ../../public/templates/show_video.inc.php:149
 #: ../../public/templates/show_videos.inc.php:55
-#: ../../public/templates/show_videos.inc.php:104
+#: ../../public/templates/show_videos.inc.php:100
 msgid "Release Date"
 msgstr "Tanggal Rilis"
 
@@ -3203,7 +3196,7 @@ msgstr "Jam"
 msgid "Your browser doesn't support this feature."
 msgstr "Browser Anda tidak mendukung fitur ini."
 
-#: ../../public/templates/show_html5_player_headers.inc.php:532
+#: ../../public/templates/show_html5_player_headers.inc.php:534
 msgid "Media is currently playing, are you sure you want to close?"
 msgstr "Media saat ini sedang diputar, apakah Anda yakin ingin menutup?"
 
@@ -3261,7 +3254,7 @@ msgid "Repeat Off"
 msgstr "Ulang NonAktif"
 
 #: ../../public/templates/show_html5_player.inc.php:179
-#: ../../src/Repository/Model/Song.php:1735
+#: ../../src/Repository/Model/Song.php:1710
 msgid "Show Lyrics"
 msgstr "Tunjukkan Lirik"
 
@@ -3523,8 +3516,8 @@ msgstr ""
 
 #: ../../public/templates/show_install_config.inc.php:117
 #: ../../public/templates/show_manage_democratic.inc.php:36
-#: ../../src/Module/Util/Ui.php:924 ../../src/Module/Util/Ui.php:931
-#: ../../src/Module/Util/Ui.php:954
+#: ../../src/Module/Util/Ui.php:925 ../../src/Module/Util/Ui.php:932
+#: ../../src/Module/Util/Ui.php:955
 msgid "Default"
 msgstr "Default"
 
@@ -3685,8 +3678,8 @@ msgstr "tindakan config/ampache.cfg.php"
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:38
 #: ../../src/Module/Api/DaapApiApplication.php:35
 #: ../../src/Module/Api/SubsonicApiApplication.php:52
-#: ../../src/Module/Util/Ui.php:671 ../../src/Module/Util/Ui.php:865
-#: ../../src/Module/Util/Ui.php:885
+#: ../../src/Module/Util/Ui.php:671 ../../src/Module/Util/Ui.php:866
+#: ../../src/Module/Util/Ui.php:886
 #: ../../src/Module/WebDav/WebDavApplication.php:48
 msgid "Disabled"
 msgstr "Dinonaktifkan"
@@ -3835,11 +3828,11 @@ msgstr "Label Tidak ditemukan"
 msgid "Details"
 msgstr "Rincian"
 
-#: ../../public/templates/show_live_stream_row.inc.php:36
+#: ../../public/templates/show_live_stream_row.inc.php:37
 msgid "Play live stream"
 msgstr "Putar siaran langsung"
 
-#: ../../public/templates/show_live_stream_row.inc.php:50
+#: ../../public/templates/show_live_stream_row.inc.php:51
 msgid "Live Stream Edit"
 msgstr "Edit Stream Langsung"
 
@@ -3893,23 +3886,23 @@ msgstr "Kontrol Putarlokal"
 msgid "Volume"
 msgstr "Volume"
 
-#: ../../public/templates/show_login_form.inc.php:83
+#: ../../public/templates/show_login_form.inc.php:82
 msgid "Remember Me"
 msgstr "Ingat Saya"
 
-#: ../../public/templates/show_login_form.inc.php:98
+#: ../../public/templates/show_login_form.inc.php:97
 #: ../../src/Module/User/NewPasswordSender.php:70
 msgid "Lost Password"
 msgstr "Kata Sandi Hilang"
 
-#: ../../public/templates/show_login_form.inc.php:110
+#: ../../public/templates/show_login_form.inc.php:109
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
 msgstr ""
 "Ampache menempatkan cookie di komputer Anda untuk membantu membuat situs web "
 "ini lebih baik."
 
-#: ../../public/templates/show_login_form.inc.php:112
+#: ../../public/templates/show_login_form.inc.php:111
 msgid ""
 "Cookies are used for core site functionality and are not used for tracking "
 "or analytics."
@@ -3917,7 +3910,7 @@ msgstr ""
 "Cookie digunakan untuk fungsionalitas situs inti dan tidak digunakan untuk "
 "pelacakan atau analitik."
 
-#: ../../public/templates/show_login_form.inc.php:114
+#: ../../public/templates/show_login_form.inc.php:113
 msgid "By logging in you agree to the use of cookies while using this site."
 msgstr ""
 "Dengan masuk/login, Anda menyetujui penggunaan cookie saat menggunakan situs "
@@ -3928,12 +3921,12 @@ msgid "Submit"
 msgstr "Kirimkan"
 
 #: ../../public/templates/show_lyrics.inc.php:41
-#: ../../public/templates/show_now_playing_row.inc.php:50
+#: ../../public/templates/show_now_playing_row.inc.php:53
 #: ../../public/templates/show_partial_clip.inc.php:24
 #: ../../public/templates/show_recently_played.inc.php:40
 #: ../../public/templates/show_recently_played.inc.php:160
 #: ../../public/templates/show_tagcloud.inc.php:33
-#: ../../src/Repository/Model/Catalog.php:1857
+#: ../../src/Repository/Model/Catalog.php:1890
 msgid "Song"
 msgstr "Lagu"
 
@@ -3988,9 +3981,9 @@ msgstr "Diri Sendiri"
 
 #: ../../public/templates/show_mail_users.inc.php:48
 #: ../../src/Module/Api/Edit/ShowEditObjectAction.php:66
-#: ../../src/Module/System/Update.php:1559
-#: ../../src/Module/System/Update.php:1561
-#: ../../src/Repository/Model/User.php:1290
+#: ../../src/Module/System/Update.php:1562
+#: ../../src/Module/System/Update.php:1564
+#: ../../src/Repository/Model/User.php:1289
 msgid "System"
 msgstr "Sistem"
 
@@ -4085,16 +4078,16 @@ msgstr ""
 msgid "Podcast Episodes"
 msgstr "Episode podcast"
 
-#: ../../public/templates/show_mashup.inc.php:37
+#: ../../public/templates/show_mashup.inc.php:39
 msgid "Trending"
 msgstr "Tren"
 
-#: ../../public/templates/show_mashup.inc.php:47
+#: ../../public/templates/show_mashup.inc.php:49
 #: ../../public/templates/sidebar.inc.php:66
 msgid "Newest"
 msgstr "Terbaru"
 
-#: ../../public/templates/show_mashup.inc.php:57
+#: ../../public/templates/show_mashup.inc.php:59
 #: ../../public/templates/sidebar.inc.php:67
 msgid "Popular"
 msgstr "Populer"
@@ -4104,7 +4097,7 @@ msgid "No missing albums found"
 msgstr "Tidak ditemukan album yang hilang"
 
 #: ../../public/templates/show_missing_artists.inc.php:27
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:211
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:212
 msgid "Missing Artists"
 msgstr "Artis yang hilang"
 
@@ -4112,14 +4105,14 @@ msgstr "Artis yang hilang"
 msgid "No missing artists found"
 msgstr "Tidak ada artis yang hilang ditemukan"
 
-#: ../../public/templates/show_now_playing_row.inc.php:96
+#: ../../public/templates/show_now_playing_row.inc.php:97
 #: ../../public/templates/show_now_playing_similar.inc.php:58
 msgid "Similar Songs"
 msgstr "Lagu serupa"
 
-#: ../../public/templates/show_now_playing_video_row.inc.php:46
+#: ../../public/templates/show_now_playing_video_row.inc.php:50
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Module/Api/Upnp_Api.php:1112
+#: ../../src/Module/Api/Upnp_Api.php:1114
 msgid "Video"
 msgstr "Video"
 
@@ -4154,9 +4147,8 @@ msgstr "Hapus duplikat"
 
 #: ../../public/templates/show_playlist.inc.php:102
 #: ../../public/templates/show_playlist.inc.php:103
-#, fuzzy
 msgid "Share playlist"
-msgstr "Daftar putar pintar"
+msgstr ""
 
 #: ../../public/templates/show_playlist.inc.php:141
 #: ../../public/templates/show_playlist_row.inc.php:112
@@ -4178,13 +4170,13 @@ msgstr "Apakah Anda benar-benar ingin menghapus daftar putar ini?"
 msgid "Reorder"
 msgstr "Menyusun ulang"
 
-#: ../../public/templates/show_playlist_medias.inc.php:45
-#: ../../public/templates/show_playlist_medias.inc.php:102
+#: ../../public/templates/show_playlist_medias.inc.php:46
+#: ../../public/templates/show_playlist_medias.inc.php:103
 msgid "Duration"
 msgstr "Durasi"
 
-#: ../../public/templates/show_playlists.inc.php:49
-#: ../../public/templates/show_playlists.inc.php:89
+#: ../../public/templates/show_playlists.inc.php:50
+#: ../../public/templates/show_playlists.inc.php:90
 #: ../../public/templates/show_searches.inc.php:50
 #: ../../public/templates/show_searches.inc.php:78
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
@@ -4192,23 +4184,23 @@ msgstr "Durasi"
 msgid "Playlist Name"
 msgstr "Nama Daftar Putar"
 
-#: ../../public/templates/show_playlists.inc.php:51
-#: ../../public/templates/show_playlists.inc.php:91
+#: ../../public/templates/show_playlists.inc.php:52
+#: ../../public/templates/show_playlists.inc.php:92
 msgid "Last Update"
 msgstr "Pembaharuan Terakhir"
 
 #. HINT: Number of items in a playlist
-#: ../../public/templates/show_playlists.inc.php:53
-#: ../../public/templates/show_playlists.inc.php:93
+#: ../../public/templates/show_playlists.inc.php:54
+#: ../../public/templates/show_playlists.inc.php:94
 msgid "# Items"
 msgstr "# Item"
 
-#: ../../public/templates/show_playlists.inc.php:77
+#: ../../public/templates/show_playlists.inc.php:78
 msgid "No playlist found"
 msgstr "Tidak ditemukan daftar putar"
 
 #: ../../public/templates/show_playtype_switch.inc.php:56
-#: ../../src/Module/Util/Ui.php:804
+#: ../../src/Module/Util/Ui.php:805
 msgid "Web Player"
 msgstr "Pemutar web"
 
@@ -4237,13 +4229,13 @@ msgid "Link"
 msgstr "Tautan"
 
 #: ../../public/templates/show_podcast_episode.inc.php:103
-#: ../../public/templates/show_podcast_episode_row.inc.php:112
+#: ../../public/templates/show_podcast_episode_row.inc.php:119
 msgid "Podcast Episode Edit"
 msgstr "Edit Episode Podcast"
 
 #: ../../public/templates/show_podcast_episode.inc.php:120
-#: ../../public/templates/show_podcast_episodes.inc.php:56
-#: ../../public/templates/show_podcast_episodes.inc.php:102
+#: ../../public/templates/show_podcast_episodes.inc.php:61
+#: ../../public/templates/show_podcast_episodes.inc.php:108
 msgid "Publication Date"
 msgstr "Tanggal penerbitan"
 
@@ -4263,18 +4255,18 @@ msgstr "Mengajukan"
 msgid "Size"
 msgstr "Ukuran"
 
-#: ../../public/templates/show_podcast_episode_row.inc.php:110
+#: ../../public/templates/show_podcast_episode_row.inc.php:117
 #: ../../public/templates/show_podcast.inc.php:113
-#: ../../public/templates/show_podcast_row.inc.php:79
+#: ../../public/templates/show_podcast_row.inc.php:82
 msgid "Sync"
 msgstr "Sinkronkan"
 
-#: ../../public/templates/show_podcast_episodes.inc.php:85
+#: ../../public/templates/show_podcast_episodes.inc.php:90
 msgid "No podcast episode found"
 msgstr "Tidak ditemukan episode podcast"
 
 #: ../../public/templates/show_podcast.inc.php:107
-#: ../../public/templates/show_podcast_row.inc.php:75
+#: ../../public/templates/show_podcast_row.inc.php:78
 msgid "Podcast Edit"
 msgstr "Podcast Edit"
 
@@ -4286,10 +4278,10 @@ msgstr "Edit Podcast"
 #: ../../public/templates/show_podcasts.inc.php:69
 #: ../../public/templates/show_podcasts.inc.php:113
 #: ../../public/templates/show_tvshow_season.inc.php:106
-#: ../../public/templates/show_tvshow_seasons.inc.php:50
-#: ../../public/templates/show_tvshow_seasons.inc.php:89
-#: ../../public/templates/show_tvshows.inc.php:52
-#: ../../public/templates/show_tvshows.inc.php:94
+#: ../../public/templates/show_tvshow_seasons.inc.php:51
+#: ../../public/templates/show_tvshow_seasons.inc.php:90
+#: ../../public/templates/show_tvshows.inc.php:54
+#: ../../public/templates/show_tvshows.inc.php:100
 #: ../../src/Repository/Model/Browse.php:344
 msgid "Episodes"
 msgstr "Semua Episode"
@@ -4413,8 +4405,8 @@ msgstr "Antrikan"
 
 #: ../../public/templates/show_recently_played.inc.php:43
 #: ../../public/templates/show_recently_played.inc.php:163
-#: ../../public/templates/show_songs.inc.php:69
-#: ../../public/templates/show_songs.inc.php:166
+#: ../../public/templates/show_songs.inc.php:71
+#: ../../public/templates/show_songs.inc.php:172
 #: ../../src/Gui/Song/SongViewAdapter.php:340
 #: ../../src/Repository/Model/Search.php:516
 msgid "Song Artist"
@@ -4482,7 +4474,7 @@ msgstr[0] "%d dekade yang lalu"
 msgid "No recently played items found"
 msgstr "Tidak ada item yang baru diputar ditemukan"
 
-#: ../../public/templates/show_recommended_artists.inc.php:95
+#: ../../public/templates/show_recommended_artists.inc.php:99
 msgid "No similar artist found"
 msgstr "Tidak ditemukan artis yang sama"
 
@@ -4574,9 +4566,8 @@ msgstr "Simpan sebagai daftar putar pintar"
 
 #: ../../public/templates/show_search_form.inc.php:128
 #: ../../public/templates/show_search.inc.php:84
-#, fuzzy
 msgid "Save as Playlist"
-msgstr "Simpan sebagai daftar putar pintar"
+msgstr ""
 
 #: ../../public/templates/show_search.inc.php:60
 msgid "Add All"
@@ -4625,20 +4616,20 @@ msgstr "URL Publik"
 msgid "Shared by"
 msgstr "Dibagikan oleh"
 
-#: ../../public/templates/show_songs.inc.php:86
-#: ../../public/templates/show_songs.inc.php:174
+#: ../../public/templates/show_songs.inc.php:92
+#: ../../public/templates/show_songs.inc.php:182
 msgid "License"
 msgstr "Lisensi"
 
 #. HINT: Number of times object has been skipped
-#: ../../public/templates/show_songs.inc.php:96
-#: ../../public/templates/show_songs.inc.php:180
+#: ../../public/templates/show_songs.inc.php:102
+#: ../../public/templates/show_songs.inc.php:188
 #: ../../src/Gui/Song/SongViewAdapter.php:389
 #: ../../src/Repository/Model/Search.php:537
 msgid "# Skipped"
 msgstr "# Berjalan"
 
-#: ../../public/templates/show_songs.inc.php:156
+#: ../../public/templates/show_songs.inc.php:162
 msgid "No song found"
 msgstr "Tidak ditemukan lagu"
 
@@ -4647,7 +4638,7 @@ msgid "Do you really want to delete this Tag?"
 msgstr "Apakah kamu benar-benar ingin menghapus tag ini?"
 
 #: ../../public/templates/show_tagcloud.inc.php:82
-#: ../../src/Repository/Model/User.php:1038
+#: ../../src/Repository/Model/User.php:1037
 msgid "Not Enough Data"
 msgstr "Tidak cukup data"
 
@@ -5002,7 +4993,7 @@ msgstr ""
 "sini maka web_path Anda tidak diatur dengan benar."
 
 #: ../../public/templates/show_tvshow.inc.php:90
-#: ../../public/templates/show_tvshow_row.inc.php:77
+#: ../../public/templates/show_tvshow_row.inc.php:79
 msgid "TV Show Edit"
 msgstr "Acara TV Edit"
 
@@ -5011,14 +5002,14 @@ msgid "Edit TV Show"
 msgstr "Edit acara TV"
 
 #: ../../public/templates/show_tvshow.inc.php:112
-#: ../../public/templates/show_tvshows.inc.php:53
-#: ../../public/templates/show_tvshows.inc.php:95
+#: ../../public/templates/show_tvshows.inc.php:55
+#: ../../public/templates/show_tvshows.inc.php:101
 #: ../../src/Repository/Model/Browse.php:340
 msgid "Seasons"
 msgstr "Musim"
 
 #: ../../public/templates/show_tvshow_season.inc.php:84
-#: ../../public/templates/show_tvshow_season_row.inc.php:80
+#: ../../public/templates/show_tvshow_season_row.inc.php:82
 msgid "Season Edit"
 msgstr "Edit musim"
 
@@ -5026,11 +5017,11 @@ msgstr "Edit musim"
 msgid "Edit Season"
 msgstr "Edit Musim"
 
-#: ../../public/templates/show_tvshow_seasons.inc.php:78
+#: ../../public/templates/show_tvshow_seasons.inc.php:79
 msgid "No season found"
 msgstr "Tidak ditemukan musim"
 
-#: ../../public/templates/show_tvshows.inc.php:84
+#: ../../public/templates/show_tvshows.inc.php:90
 msgid "No TV show found"
 msgstr "Tidak ada acara TV yang ditemukan"
 
@@ -5066,10 +5057,10 @@ msgstr "Kunci validasi yang digunakan salah"
 
 #: ../../public/templates/show_user.inc.php:44
 #: ../../public/templates/show_users.inc.php:80
-#: ../../src/Module/Util/Ui.php:930 ../../src/Repository/Model/Catalog.php:706
-#: ../../src/Repository/Model/Catalog.php:707
-#: ../../src/Repository/Model/Catalog.php:708
-#: ../../src/Repository/Model/User.php:1001
+#: ../../src/Module/Util/Ui.php:931 ../../src/Repository/Model/Catalog.php:713
+#: ../../src/Repository/Model/Catalog.php:714
+#: ../../src/Repository/Model/Catalog.php:715
+#: ../../src/Repository/Model/User.php:1000
 msgid "Never"
 msgstr "Tidak pernah"
 
@@ -5077,13 +5068,13 @@ msgstr "Tidak pernah"
 #: ../../public/templates/show_users.inc.php:81
 #: ../../src/Module/Playback/Localplay/LocalPlay.php:624
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:511
-#: ../../src/Repository/Model/Playlist.php:271
-#: ../../src/Repository/Model/Playlist.php:272
+#: ../../src/Repository/Model/Playlist.php:276
+#: ../../src/Repository/Model/Playlist.php:277
 #: ../../src/Repository/Model/Podcast.php:330
 #: ../../src/Repository/Model/TVShow_Episode.php:89
-#: ../../src/Repository/Model/User.php:1008
-#: ../../src/Repository/Model/User.php:1099
-#: ../../src/Repository/Model/Video.php:819
+#: ../../src/Repository/Model/User.php:1007
+#: ../../src/Repository/Model/User.php:1098
+#: ../../src/Repository/Model/Video.php:830
 msgid "Unknown"
 msgstr "Tidak diketahui"
 
@@ -5184,13 +5175,13 @@ msgid "Subtitle"
 msgstr "Subtitle"
 
 #: ../../public/templates/show_video.inc.php:131
-#: ../../public/templates/show_video_row.inc.php:130
+#: ../../public/templates/show_video_row.inc.php:137
 msgid "Video Edit"
 msgstr "Video Edit"
 
 #: ../../public/templates/show_video.inc.php:151
 #: ../../public/templates/show_videos.inc.php:57
-#: ../../public/templates/show_videos.inc.php:106
+#: ../../public/templates/show_videos.inc.php:102
 msgid "Resolution"
 msgstr "Resolusi"
 
@@ -5221,11 +5212,11 @@ msgstr "Terakhir Diperbarui"
 msgid "Added"
 msgstr "Ditambahkan"
 
-#: ../../public/templates/show_video_row.inc.php:113
+#: ../../public/templates/show_video_row.inc.php:120
 msgid "Video Information"
 msgstr "Informasi video"
 
-#: ../../public/templates/show_videos.inc.php:89
+#: ../../public/templates/show_videos.inc.php:87
 msgid "No video found"
 msgstr "Tidak ada video yang ditemukan"
 
@@ -5299,13 +5290,13 @@ msgid "Music Clips"
 msgstr "Klip musik"
 
 #: ../../public/templates/sidebar.inc.php:51
-#: ../../src/Module/Api/Upnp_Api.php:1070
+#: ../../src/Module/Api/Upnp_Api.php:1072
 #: ../../src/Repository/Model/Browse.php:349
 msgid "Movies"
 msgstr "Film"
 
 #: ../../public/templates/sidebar.inc.php:52
-#: ../../src/Module/Api/Upnp_Api.php:1092
+#: ../../src/Module/Api/Upnp_Api.php:1094
 #: ../../src/Repository/Model/Browse.php:359
 msgid "Personal Videos"
 msgstr "Video Pribadi"
@@ -5316,7 +5307,7 @@ msgid "Uploads"
 msgstr "Unggah"
 
 #: ../../public/templates/sidebar.inc.php:58
-#: ../../src/Module/Api/Upnp_Api.php:693
+#: ../../src/Module/Api/Upnp_Api.php:695
 #: ../../src/Repository/Model/Browse.php:285
 msgid "Smart Playlists"
 msgstr "Daftar putar pintar"
@@ -5380,10 +5371,6 @@ msgstr "Pengontrol Localplay tidak didefinisikan"
 msgid "Account"
 msgstr "Akun"
 
-#: ../../public/templates/sidebar_preferences.inc.php:63
-msgid "Import"
-msgstr "Impor"
-
 #: ../../public/templates/sidebar_preferences.inc.php:76
 msgid "Help"
 msgstr "Bantuan"
@@ -5422,7 +5409,7 @@ msgstr ""
 msgid "Added to playlist"
 msgstr "Ditambahkan ke daftar putar"
 
-#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:246
+#: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:247
 msgid "Users"
 msgstr "Pengguna"
 
@@ -5495,15 +5482,70 @@ msgstr "Jelajahi Musik"
 msgid "Add New"
 msgstr "Tambah baru"
 
-#: ../../src/Config/functions.php:1146
+#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
+#: ../../src/Config/functions.php:1097
+#: ../../src/Module/Api/Method/AlbumSongsMethod.php:66
+#: ../../src/Module/Api/Method/ArtistAlbumsMethod.php:61
+#: ../../src/Module/Api/Method/ArtistMethod.php:63
+#: ../../src/Module/Api/Method/ArtistSongsMethod.php:66
+#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:96
+#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:90
+#: ../../src/Module/Api/Method/BookmarkEditMethod.php:94
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:81
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:97
+#: ../../src/Module/Api/Method/CatalogMethod.php:60
+#: ../../src/Module/Api/Method/DemocraticMethod.php:70
+#: ../../src/Module/Api/Method/DemocraticMethod.php:96
+#: ../../src/Module/Api/Method/FlagMethod.php:90
+#: ../../src/Module/Api/Method/FollowersMethod.php:71
+#: ../../src/Module/Api/Method/FollowingMethod.php:71
+#: ../../src/Module/Api/Method/GenreMethod.php:61
+#: ../../src/Module/Api/Method/GetBookmarkMethod.php:89
+#: ../../src/Module/Api/Method/LabelMethod.php:67
+#: ../../src/Module/Api/Method/LicenseMethod.php:67
+#: ../../src/Module/Api/Method/PlaylistMethod.php:68
+#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:72
+#: ../../src/Module/Api/Method/PodcastDeleteMethod.php:72
+#: ../../src/Module/Api/Method/PodcastEditMethod.php:78
+#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:68
+#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:69
+#: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:70
+#: ../../src/Module/Api/Method/PodcastMethod.php:70
+#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:99
+#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:62
+#: ../../src/Module/Api/Method/PreferenceEditMethod.php:72
+#: ../../src/Module/Api/Method/RateMethod.php:91
+#: ../../src/Module/Api/Method/RecordPlayMethod.php:77
+#: ../../src/Module/Api/Method/RecordPlayMethod.php:90
+#: ../../src/Module/Api/Method/ScrobbleMethod.php:81
+#: ../../src/Module/Api/Method/ScrobbleMethod.php:106
+#: ../../src/Module/Api/Method/ShareCreateMethod.php:95
+#: ../../src/Module/Api/Method/ShareDeleteMethod.php:75
+#: ../../src/Module/Api/Method/ShareEditMethod.php:91
+#: ../../src/Module/Api/Method/SongDeleteMethod.php:63
+#: ../../src/Module/Api/Method/SongMethod.php:63
+#: ../../src/Module/Api/Method/SystemPreferenceMethod.php:64
+#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:65
+#: ../../src/Module/Api/Method/UpdateArtMethod.php:81
+#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:71
+#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:70
+#: ../../src/Module/Api/Method/UserMethod.php:63
+#: ../../src/Module/Api/Method/UserMethod.php:72
+#: ../../src/Module/Api/Method/UserPreferenceMethod.php:62
+#: ../../src/Module/Api/Method/VideoMethod.php:66
+#, php-format
+msgid "Not Found: %s"
+msgstr "Tidak Ditemukan: %s"
+
+#: ../../src/Config/functions.php:1154
 msgid "View License"
 msgstr "Lihat Lisensi"
 
-#: ../../src/Config/functions.php:1251 ../../src/Module/Util/Ui.php:768
+#: ../../src/Config/functions.php:1259 ../../src/Module/Util/Ui.php:769
 msgid "On"
 msgstr "Di"
 
-#: ../../src/Config/functions.php:1253 ../../src/Module/Util/Ui.php:769
+#: ../../src/Config/functions.php:1261 ../../src/Module/Util/Ui.php:770
 msgid "Off"
 msgstr "Nonaktif"
 
@@ -5580,16 +5622,19 @@ msgid "Version: %s"
 msgstr "Versi: %s"
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:103
+#: ../../src/Module/Art/Export/ArtExporter.php:97
 #, php-format
 msgid "Unable to open `%s` for writing"
 msgstr "Tidak dapat membuka`%s` untuk ditulis"
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:110
+#: ../../src/Module/Art/Export/ArtExporter.php:105
 #, php-format
 msgid "Unable to write to `%s`"
 msgstr "Tidak dapat menulis ke `%s`"
 
 #: ../../src/Module/Album/Export/AlbumArtExporter.php:125
+#: ../../src/Module/Art/Export/ArtExporter.php:112
 #, php-format
 msgid "Art files written: %d"
 msgstr "Berkas SampulKarya ditulis: %d"
@@ -5612,7 +5657,7 @@ msgstr "Permintaan tidak valid"
 #: ../../src/Module/Api/Method/AdvancedSearchMethod.php:88
 #: ../../src/Module/Api/Method/AlbumMethod.php:84
 #: ../../src/Module/Api/Method/CatalogActionMethod.php:66
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:78
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:88
 #: ../../src/Module/Api/Method/FlagMethod.php:77
 #: ../../src/Module/Api/Method/FlagMethod.php:85
 #: ../../src/Module/Api/Method/GetArtMethod.php:69
@@ -5672,60 +5717,6 @@ msgid "No Results"
 msgstr "Tidak ada hasil"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#: ../../src/Module/Api/Method/AlbumSongsMethod.php:66
-#: ../../src/Module/Api/Method/ArtistAlbumsMethod.php:61
-#: ../../src/Module/Api/Method/ArtistMethod.php:63
-#: ../../src/Module/Api/Method/ArtistSongsMethod.php:66
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:96
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:90
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:94
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:84
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:92
-#: ../../src/Module/Api/Method/CatalogMethod.php:60
-#: ../../src/Module/Api/Method/DemocraticMethod.php:70
-#: ../../src/Module/Api/Method/DemocraticMethod.php:96
-#: ../../src/Module/Api/Method/FlagMethod.php:90
-#: ../../src/Module/Api/Method/FollowersMethod.php:71
-#: ../../src/Module/Api/Method/FollowingMethod.php:71
-#: ../../src/Module/Api/Method/GenreMethod.php:61
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:89
-#: ../../src/Module/Api/Method/LabelMethod.php:67
-#: ../../src/Module/Api/Method/LicenseMethod.php:67
-#: ../../src/Module/Api/Method/PlaylistMethod.php:68
-#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:72
-#: ../../src/Module/Api/Method/PodcastDeleteMethod.php:72
-#: ../../src/Module/Api/Method/PodcastEditMethod.php:78
-#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:68
-#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:69
-#: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:70
-#: ../../src/Module/Api/Method/PodcastMethod.php:70
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:99
-#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:62
-#: ../../src/Module/Api/Method/PreferenceEditMethod.php:72
-#: ../../src/Module/Api/Method/RateMethod.php:91
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:77
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:90
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:81
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:106
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:95
-#: ../../src/Module/Api/Method/ShareDeleteMethod.php:75
-#: ../../src/Module/Api/Method/ShareEditMethod.php:91
-#: ../../src/Module/Api/Method/SongDeleteMethod.php:63
-#: ../../src/Module/Api/Method/SongMethod.php:63
-#: ../../src/Module/Api/Method/SystemPreferenceMethod.php:64
-#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:65
-#: ../../src/Module/Api/Method/UpdateArtMethod.php:81
-#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:71
-#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:70
-#: ../../src/Module/Api/Method/UserMethod.php:63
-#: ../../src/Module/Api/Method/UserMethod.php:72
-#: ../../src/Module/Api/Method/UserPreferenceMethod.php:62
-#: ../../src/Module/Api/Method/VideoMethod.php:66
-#, php-format
-msgid "Not Found: %s"
-msgstr "Tidak Ditemukan: %s"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
 #: ../../src/Module/Api/Method/BookmarkCreateMethod.php:79
 #: ../../src/Module/Api/Method/BookmarkCreateMethod.php:88
 #: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:73
@@ -5751,14 +5742,14 @@ msgid "Bad Request"
 msgstr "Permintaan yang buruk"
 
 #: ../../src/Module/Api/Method/CatalogActionMethod.php:100
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:134
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:149
 #: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:76
 #: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:86
 #: ../../src/Module/Api/Method/ScrobbleMethod.php:101
 msgid "Not Found"
 msgstr "Tidak ditemukan"
 
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:63
+#: ../../src/Module/Api/Method/CatalogFileMethod.php:75
 msgid "Enable: delete_from_disk"
 msgstr "Aktifkan: delete_from_disk"
 
@@ -5870,12 +5861,12 @@ msgstr "Ditinggalkan"
 msgid "Access Control not Enabled"
 msgstr "Kontrol akses tidak diaktifkan"
 
-#: ../../src/Module/Api/Upnp_Api.php:1048
+#: ../../src/Module/Api/Upnp_Api.php:1050
 #: ../../src/Repository/Model/Browse.php:354
 msgid "Clips"
 msgstr "Klip"
 
-#: ../../src/Module/Api/Xml_Data.php:1432
+#: ../../src/Module/Api/Xml_Data.php:1176
 msgid "Ampache XSPF Playlist"
 msgstr "Daftar Putar XSPF Ampache"
 
@@ -6025,6 +6016,7 @@ msgstr "Proses pembuatan katalog sudah dimulai"
 #: ../../src/Module/Application/Admin/Catalog/AddToAllCatalogsAction.php:58
 #: ../../src/Module/Application/Admin/Catalog/AddToCatalogAction.php:62
 #: ../../src/Module/Application/Admin/Catalog/FullServiceAction.php:64
+#: ../../src/Module/Application/Admin/Catalog/ImportToCatalogAction.php:62
 #: ../../src/Module/Application/Admin/Catalog/UpdateAllCatalogsAction.php:58
 #: ../../src/Module/Application/Admin/Catalog/UpdateCatalogAction.php:64
 msgid "Catalog update process has started"
@@ -6072,7 +6064,7 @@ msgstr "Katalog telah dihapus"
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
 #: ../../src/Module/Catalog/Catalog_Seafile.php:499
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:273
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:280
 msgid "There Was a Problem"
 msgstr "Terdapat sebuah masalah"
 
@@ -6098,10 +6090,9 @@ msgid "The Catalog art search has started"
 msgstr "Pencarian seni katalog telah dimulai"
 
 #: ../../src/Module/Application/Admin/Catalog/ShowCustomizeCatalogAction.php:61
-#: ../../src/Repository/Model/Catalog.php:710
-#, fuzzy
+#: ../../src/Repository/Model/Catalog.php:717
 msgid "Public Catalog"
-msgstr "Bersihkan Katalog"
+msgstr ""
 
 #: ../../src/Module/Application/Admin/Catalog/ShowDeleteCatalogAction.php:68
 msgid "This will permanently delete your Catalog"
@@ -6478,14 +6469,14 @@ msgid_plural "Successfully imported playlist with %d songs."
 msgstr[0] "Berhasil meng-impor daftar putar dengan %d lagu."
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:77
-#, fuzzy
+#: ../../src/Module/Catalog/Catalog_local.php:521
 msgid "Success"
-msgstr "Berhasil"
+msgstr ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:79
-#, fuzzy
+#: ../../src/Module/Catalog/Catalog_local.php:523
 msgid "Failure"
-msgstr "Gagal"
+msgstr ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:88
 msgid "The Playlist could not be imported"
@@ -6628,7 +6619,7 @@ msgstr "Kamu harus memasukkan kata sandi"
 
 #: ../../src/Module/Application/Register/AddUserAction.php:170
 #: ../../src/Module/System/InstallationHelper.php:404
-#: ../../src/Repository/Model/User.php:529
+#: ../../src/Repository/Model/User.php:528
 msgid "Passwords do not match"
 msgstr "Sandi tidak cocok"
 
@@ -6642,13 +6633,12 @@ msgid "Remove"
 msgstr "Menghapus"
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:94
-#, fuzzy, php-format
+#, php-format
 msgid "Your search has been saved as a Playlist with the name %s"
 msgstr ""
-"Pencarian Anda telah disimpan sebagai daftar putar pintar dengan nama %s"
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:2843
+#: ../../src/Repository/Model/Catalog.php:2882
 msgid "Failed to create playlist"
 msgstr "Gagal membuat daftar putar"
 
@@ -6755,6 +6745,15 @@ msgstr "Video akan dihapus"
 msgid "Unable to open"
 msgstr "Tidak dapat dibuka"
 
+#: ../../src/Module/Art/Export/ArtExporter.php:61
+#, fuzzy
+msgid "Set album_art_store_disk to remove art from the database"
+msgstr "Podcast akan dihapus dari database"
+
+#: ../../src/Module/Art/Export/ArtExporter.php:88
+msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
 #: ../../src/Module/Beets/Catalog.php:137
 msgid "Running Beets Update"
 msgstr "Menjalankan pembaruan bit"
@@ -6784,8 +6783,8 @@ msgid "Beets Server URI"
 msgstr "Bits Server URI"
 
 #: ../../src/Module/Catalog/Catalog_beetsremote.php:115
-#: ../../src/Module/Catalog/Catalog_remote.php:164
-#: ../../src/Module/Catalog/Catalog_subsonic.php:164
+#: ../../src/Module/Catalog/Catalog_remote.php:165
+#: ../../src/Module/Catalog/Catalog_subsonic.php:165
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr "Jenis katalog jarak jauh dipilih, tetapi jalur bukan URL"
 
@@ -6878,7 +6877,7 @@ msgid "API Error: cannot connect to Dropbox."
 msgstr "Keslahan API: tidak dapat terhubung ke Dropbox."
 
 #: ../../src/Module/Catalog/Catalog_local.php:210
-#: ../../src/Module/Catalog/Catalog_local.php:1039
+#: ../../src/Module/Catalog/Catalog_local.php:1051
 msgid "Path was not specified"
 msgstr "PAthtidak ditentukan"
 
@@ -6909,7 +6908,7 @@ msgstr "Tidak dapat mendapatkan berkas untuk \"%s\""
 
 #. HINT: filename (file path)
 #: ../../src/Module/Catalog/Catalog_local.php:385
-#: ../../src/Module/Catalog/Catalog_local.php:628
+#: ../../src/Module/Catalog/Catalog_local.php:640
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
 msgstr "Berkas tidak bisa dibaca. Apakah itu ada? %s"
@@ -6920,76 +6919,76 @@ msgstr "Berkas tidak bisa dibaca. Apakah itu ada? %s"
 msgid "\"%s\" does not match site charset"
 msgstr "\"%s\" tidak cocok dengan charset situs"
 
-#: ../../src/Module/Catalog/Catalog_local.php:539
+#: ../../src/Module/Catalog/Catalog_local.php:551
 msgid "N/A"
 msgstr "T/A"
 
-#: ../../src/Module/Catalog/Catalog_local.php:544
+#: ../../src/Module/Catalog/Catalog_local.php:556
 #: ../../src/Module/Catalog/Catalog_Seafile.php:296
 msgid "Catalog Updated"
 msgstr "Katalog diperbarui"
 
-#: ../../src/Module/Catalog/Catalog_local.php:545
+#: ../../src/Module/Catalog/Catalog_local.php:557
 #, php-format
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "Waktu Total: [%s] Media Total: [%s] Media Per Detik: [%s]"
 
-#: ../../src/Module/Catalog/Catalog_local.php:661
+#: ../../src/Module/Catalog/Catalog_local.php:673
 msgid "Catalog root unreadable, stopping clean"
 msgstr "Akar katalog tidak dapat dibaca, berhenti bersih"
 
-#: ../../src/Module/Catalog/Catalog_local.php:686
+#: ../../src/Module/Catalog/Catalog_local.php:698
 msgid "All files would be removed. Doing nothing"
 msgstr "Semua berkas akan dihapus. Tidak melakukan apa-apa"
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:734
-#: ../../src/Module/Catalog/Catalog_local.php:764
+#: ../../src/Module/Catalog/Catalog_local.php:746
+#: ../../src/Module/Catalog/Catalog_local.php:776
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Berkas tidak ditemukan atau 0 Bytes: %s"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1046
+#: ../../src/Module/Catalog/Catalog_local.php:1058
 msgid "Specified path is inside an existing catalog"
 msgstr "Path yang ditentukan ada di dalam katalog yang ada"
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1055
+#: ../../src/Module/Catalog/Catalog_local.php:1067
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr "Folder itu tidak bisa dibaca. Apakah itu ada? %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:118
-#: ../../src/Module/Catalog/Catalog_subsonic.php:118
+#: ../../src/Module/Catalog/Catalog_remote.php:119
+#: ../../src/Module/Catalog/Catalog_subsonic.php:119
 msgid "URI"
 msgstr "URI"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:170
-#: ../../src/Module/Catalog/Catalog_subsonic.php:170
+#: ../../src/Module/Catalog/Catalog_remote.php:171
+#: ../../src/Module/Catalog/Catalog_subsonic.php:171
 #: ../../src/Module/System/InstallationHelper.php:398
 msgid "No username or password was specified"
 msgstr "Tidak ada nama pengguna atau kata sandi yang ditentukan"
 
 #. HINT: remote URI
-#: ../../src/Module/Catalog/Catalog_remote.php:183
+#: ../../src/Module/Catalog/Catalog_remote.php:184
 #, php-format
 msgid "This path belongs to an existing remote Catalog: %s"
 msgstr "Path ini milik sebuah Katalog jarak jauh: %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:205
+#: ../../src/Module/Catalog/Catalog_remote.php:206
 msgid "Running Remote Update"
 msgstr "Menjalankan pembaruan jarak jauh"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:241
+#: ../../src/Module/Catalog/Catalog_remote.php:242
 msgid "Failed to connect to the remote server"
 msgstr "Gagal terhubung ke server jarak jauh"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:271
+#: ../../src/Module/Catalog/Catalog_remote.php:272
 msgid "Remote Catalog Updated"
 msgstr "Remote Catalog Diperbarui"
 
 #. HINT: count of songs found
-#: ../../src/Module/Catalog/Catalog_remote.php:271
+#: ../../src/Module/Catalog/Catalog_remote.php:272
 #, php-format
 msgid "%s song was found"
 msgid_plural "%s songs were found"
@@ -6997,22 +6996,22 @@ msgstr[0] "%s lagu telah ditemukan"
 
 #. HINT: Song Title
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_remote.php:301
+#: ../../src/Module/Catalog/Catalog_remote.php:302
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:330
-#: ../../src/Module/Catalog/Catalog_subsonic.php:281
+#: ../../src/Module/Catalog/Catalog_subsonic.php:282
 #, php-format
 msgid "Unable to insert song - %s"
 msgstr "Tidak dapat memasukkan lagu - %s"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:309
+#: ../../src/Module/Catalog/Catalog_remote.php:310
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:338
-#: ../../src/Module/Catalog/Catalog_subsonic.php:298
-#: ../../src/Repository/Model/Catalog.php:1871
+#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Repository/Model/Catalog.php:1904
 #: ../../src/Repository/Model/Search.php:604
 msgid "Updated"
 msgstr "Diperbarui"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:309
+#: ../../src/Module/Catalog/Catalog_remote.php:310
 msgid "Completed updating remote Catalog(s)."
 msgstr "Selesai memperbarui katalog jarak jauh."
 
@@ -7161,7 +7160,7 @@ msgstr "Selesai memperbarui katalog SoundCloud"
 #. HINT: Number of Songs added
 #. HINT: Number of songs
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:339
-#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Module/Catalog/Catalog_subsonic.php:300
 #, php-format
 msgid "%s Song added"
 msgid_plural "%s Songs added"
@@ -7184,16 +7183,16 @@ msgid "SoundCloud exception"
 msgstr "Pengecualian SoundCloud"
 
 #. HINT: subsonic catalog URI
-#: ../../src/Module/Catalog/Catalog_subsonic.php:182
+#: ../../src/Module/Catalog/Catalog_subsonic.php:183
 #, php-format
 msgid "This path belongs to an existing Subsonic Catalog: %s"
 msgstr "Path ini milik sebuah Katalog Subsonic yang telah tersedia: %s"
 
-#: ../../src/Module/Catalog/Catalog_subsonic.php:206
+#: ../../src/Module/Catalog/Catalog_subsonic.php:207
 msgid "Running Subsonic Remote Update"
 msgstr "Menjalankan pembaruan jarak jauh Subsonic"
 
-#: ../../src/Module/Catalog/Catalog_subsonic.php:299
+#: ../../src/Module/Catalog/Catalog_subsonic.php:300
 msgid "Completed updating Subsonic Catalog(s)"
 msgstr "Selesai memperbarui katalog Subsonic"
 
@@ -7213,7 +7212,7 @@ msgid "Deactivated PHP memory limit"
 msgstr "Batas memori PHP yang dinonaktifkan"
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:79
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:251
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:258
 #, php-format
 msgid "Reading Catalog: \"%s\""
 msgstr "Membaca Katalog: \"%s\""
@@ -7246,15 +7245,15 @@ msgstr ""
 msgid "Optimizing database tables"
 msgstr "Mengoptimalkan tabel database"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:255
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:262
 msgid "Moving Catalog path"
 msgstr "Pindah path katalog"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:268
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:275
 msgid "The Catalog path has changed"
 msgstr "Jalur katalog telah berubah"
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:279
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:286
 msgid "There is an error with your parameters"
 msgstr "Terdapat kesalahan dengan parameter Anda"
 
@@ -7374,14 +7373,12 @@ msgid "UPnP backend disabled. Broadcast skipped."
 msgstr "Backend UPnP dinonaktifkan. Siaran dilewati."
 
 #: ../../src/Module/Cli/CacheProcessCommand.php:38
-#, fuzzy
 msgid "Run the cache process"
-msgstr "Jalankan proses cron"
+msgstr ""
 
 #: ../../src/Module/Cli/CacheProcessCommand.php:56
-#, fuzzy
 msgid "Cache process finished"
-msgstr "Proses cron selesai"
+msgstr ""
 
 #: ../../src/Module/Cli/ComputeCacheCommand.php:41
 msgid "Update the object cache tables"
@@ -7428,24 +7425,43 @@ msgstr "Cron cache tidak diaktifkan"
 msgid "Cron process finished"
 msgstr "Proses cron selesai"
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:49
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:53
 msgid "Export album art"
 msgstr "Ekspor karyaseni album"
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:56
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:61
 msgid "Metadata write mode (`linux` or `windows`)"
 msgstr "Mode Tulis Metadata (`linux` atau `windows`)"
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:57
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:62
 msgid "Export album art for Linux"
 msgstr "Ekspor KaryaSeni Album untuk Linux"
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:70
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:75
 msgid "Start Album Art Dump"
 msgstr "Mulai Dump KaryaSeni Album"
 
-#: ../../src/Module/Cli/ExportAlbumArtCommand.php:96
+#: ../../src/Module/Cli/ExportAlbumArtCommand.php:101
 msgid "Album Art Dump Complete"
+msgstr "Dump KaryaSeni Album Selesai"
+
+#: ../../src/Module/Cli/ExportArtCommand.php:49
+#: ../../src/Module/Cli/ExportArtCommand.php:57
+msgid "Export all database art to local_metadata_dir"
+msgstr ""
+
+#: ../../src/Module/Cli/ExportArtCommand.php:56
+msgid "Clear the database image when the local file exists"
+msgstr ""
+
+#: ../../src/Module/Cli/ExportArtCommand.php:65
+#, fuzzy
+msgid "Start Art Dump"
+msgstr "Mulai Dump KaryaSeni Album"
+
+#: ../../src/Module/Cli/ExportArtCommand.php:89
+#, fuzzy
+msgid "Art Dump Complete"
 msgstr "Dump KaryaSeni Album Selesai"
 
 #: ../../src/Module/Cli/ExportPlaylistCommand.php:42
@@ -7586,8 +7602,9 @@ msgstr "Hapus lagu-lagu yang dinonaktifkan"
 #: ../../src/Module/Cli/SongCleanupCommand.php:47
 #: ../../src/Module/Cli/SortFilesCommand.php:47
 #: ../../src/Module/Cli/UpdateDbCommand.php:48
-msgid "Disables dry-run and sorts the files"
-msgstr "Menonaktifkan dry-run dan memilah berkas"
+#, fuzzy
+msgid "Disables dry-run"
+msgstr "Dinonaktifkan"
 
 #: ../../src/Module/Cli/SongCleanupCommand.php:48
 msgid "Show a list of disabled songs"
@@ -7640,9 +7657,8 @@ msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:44
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:49
-#, fuzzy
 msgid "Adds new media files to the database"
-msgstr "Menambahkan media baru ke katalog"
+msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:45
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:50
@@ -7759,11 +7775,11 @@ msgstr "Contoh Aktif VLC"
 msgid "XBMC Active Instance"
 msgstr "Contoh Aktif XBMC"
 
-#: ../../src/Module/Playback/Stream_Playlist.php:506
+#: ../../src/Module/Playback/Stream_Playlist.php:507
 msgid "Ampache ASX Playlist"
 msgstr "Daftar Putar Ampache ASX"
 
-#: ../../src/Module/Playback/Stream_Playlist.php:715
+#: ../../src/Module/Playback/Stream_Playlist.php:716
 msgid "Vote added"
 msgstr "Penambahan Voting"
 
@@ -8144,88 +8160,88 @@ msgstr "Berkas pindah ..."
 msgid "Enabled"
 msgstr "Diaktifkan"
 
-#: ../../src/Module/Util/Ui.php:811
+#: ../../src/Module/Util/Ui.php:812
 msgid "M3U"
 msgstr "M3u"
 
-#: ../../src/Module/Util/Ui.php:812
+#: ../../src/Module/Util/Ui.php:813
 msgid "Simple M3U"
 msgstr "M3u sederhana"
 
-#: ../../src/Module/Util/Ui.php:813
+#: ../../src/Module/Util/Ui.php:814
 msgid "PLS"
 msgstr "Bantuan"
 
-#: ../../src/Module/Util/Ui.php:814
+#: ../../src/Module/Util/Ui.php:815
 msgid "Asx"
 msgstr "ASX"
 
-#: ../../src/Module/Util/Ui.php:815
+#: ../../src/Module/Util/Ui.php:816
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../src/Module/Util/Ui.php:816
+#: ../../src/Module/Util/Ui.php:817
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../src/Module/Util/Ui.php:866 ../../src/Repository/Model/Search.php:87
+#: ../../src/Module/Util/Ui.php:867 ../../src/Repository/Model/Search.php:87
 msgid "1 Star"
 msgstr "1 bintang"
 
-#: ../../src/Module/Util/Ui.php:867 ../../src/Repository/Model/Search.php:88
+#: ../../src/Module/Util/Ui.php:868 ../../src/Repository/Model/Search.php:88
 msgid "2 Stars"
 msgstr "2 bintang"
 
-#: ../../src/Module/Util/Ui.php:868 ../../src/Repository/Model/Search.php:89
+#: ../../src/Module/Util/Ui.php:869 ../../src/Repository/Model/Search.php:89
 msgid "3 Stars"
 msgstr "3 Bintang"
 
-#: ../../src/Module/Util/Ui.php:869 ../../src/Repository/Model/Search.php:90
+#: ../../src/Module/Util/Ui.php:870 ../../src/Repository/Model/Search.php:90
 msgid "4 Stars"
 msgstr "4 Bintang"
 
-#: ../../src/Module/Util/Ui.php:870 ../../src/Repository/Model/Search.php:91
+#: ../../src/Module/Util/Ui.php:871 ../../src/Repository/Model/Search.php:91
 msgid "5 Stars"
 msgstr "5 Bintang"
 
-#: ../../src/Module/Util/Ui.php:887
+#: ../../src/Module/Util/Ui.php:888
 msgid "Manager"
 msgstr "Pengelola"
 
-#: ../../src/Module/Util/Ui.php:921
+#: ../../src/Module/Util/Ui.php:922
 msgid "Send on Add"
 msgstr "Kirim Tambah"
 
-#: ../../src/Module/Util/Ui.php:922
+#: ../../src/Module/Util/Ui.php:923
 msgid "Send and Clear on Add"
 msgstr "Kirim dan hapus pada Tambah"
 
-#: ../../src/Module/Util/Ui.php:923
+#: ../../src/Module/Util/Ui.php:924
 msgid "Clear on Send"
 msgstr "Hapus pada Kirim"
 
-#: ../../src/Module/Util/Ui.php:932
+#: ../../src/Module/Util/Ui.php:933
 msgid "Always"
 msgstr "Selalu"
 
-#: ../../src/Module/Util/Ui.php:955
+#: ../../src/Module/Util/Ui.php:956
 msgid "Year ascending"
 msgstr "Sorot Tahun naik"
 
-#: ../../src/Module/Util/Ui.php:956
+#: ../../src/Module/Util/Ui.php:957
 msgid "Year descending"
 msgstr "Sorot Tahun turun"
 
-#: ../../src/Module/Util/Ui.php:957
+#: ../../src/Module/Util/Ui.php:958
 msgid "Name ascending"
 msgstr "Sorot Nama naik"
 
-#: ../../src/Module/Util/Ui.php:958
+#: ../../src/Module/Util/Ui.php:959
 msgid "Name descending"
 msgstr "Sorot Nama turun"
 
 #. HINT: Plugin Name
-#: ../../src/Module/Util/Ui.php:993
+#: ../../src/Module/Util/Ui.php:994
 #, php-format
 msgid "Click to grant %s access to Ampache"
 msgstr "Klik untuk memberikan %s akses ke Ampache"
@@ -8649,15 +8665,15 @@ msgstr "Rilis Group MusicBrainzid"
 msgid "Artist MusicBrainzID"
 msgstr "Artis musicbrainzid"
 
-#: ../../src/Repository/Model/Art.php:1373
+#: ../../src/Repository/Model/Art.php:1391
 msgid "Edit/Find Art"
 msgstr "Edit / temukan seni"
 
-#: ../../src/Repository/Model/Art.php:1376
+#: ../../src/Repository/Model/Art.php:1394
 msgid "Do you really want to reset art?"
 msgstr "Apakah kamu benar-benar ingin mengatur ulang seni?"
 
-#: ../../src/Repository/Model/Art.php:1377
+#: ../../src/Repository/Model/Art.php:1395
 msgid "Reset Art"
 msgstr "Reset Seni"
 
@@ -8697,49 +8713,49 @@ msgstr "Lisensi Media"
 msgid "Private Messages"
 msgstr "Pesan pribadi"
 
-#: ../../src/Repository/Model/Catalog.php:811
+#: ../../src/Repository/Model/Catalog.php:818
 msgid "day"
 msgid_plural "days"
 msgstr[0] "hari"
 
-#: ../../src/Repository/Model/Catalog.php:813
+#: ../../src/Repository/Model/Catalog.php:820
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "jam"
 
-#: ../../src/Repository/Model/Catalog.php:861
+#: ../../src/Repository/Model/Catalog.php:868
 msgid "Failed to create the catalog, check the debug logs"
 msgstr "Gagal membuat katalog, periksa log debug"
 
-#: ../../src/Repository/Model/Catalog.php:1876
+#: ../../src/Repository/Model/Catalog.php:1909
 msgid "No Update Needed"
 msgstr "Tidak diperlukan pembaruan"
 
-#: ../../src/Repository/Model/Catalog.php:2538
+#: ../../src/Repository/Model/Catalog.php:2577
 msgid "Catalog Cleaned"
 msgstr "Katalog dibersihkan"
 
-#: ../../src/Repository/Model/Catalog.php:2539
+#: ../../src/Repository/Model/Catalog.php:2578
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d berkas dihapus."
 
-#: ../../src/Repository/Model/Catalog.php:2564
+#: ../../src/Repository/Model/Catalog.php:2603
 msgid "Catalog Verified"
 msgstr "Katalog Terverifikasi"
 
-#: ../../src/Repository/Model/Catalog.php:2565
+#: ../../src/Repository/Model/Catalog.php:2604
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d berkas dipebarui."
 
-#: ../../src/Repository/Model/Catalog.php:2861
+#: ../../src/Repository/Model/Catalog.php:2900
 msgid "No valid songs found in playlist file"
 msgstr "Tidak ada lagu yang valid dalam berkas daftar putar"
 
-#: ../../src/Repository/Model/Catalog.php:3283
+#: ../../src/Repository/Model/Catalog.php:3342
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -8769,9 +8785,8 @@ msgid "Name is required"
 msgstr "Nama diperlukan"
 
 #: ../../src/Repository/Model/Live_Stream.php:264
-#, fuzzy
 msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr "URL tidak valid, harus mms:// , https:// atau http://"
+msgstr ""
 
 #: ../../src/Repository/Model/Live_Stream.php:270
 #: ../../src/Repository/Model/Live_Stream.php:307
@@ -8986,14 +9001,12 @@ msgid "My Rating (Artist)"
 msgstr "Peringkat Saya (Artis)"
 
 #: ../../src/Repository/Model/Search.php:530
-#, fuzzy
 msgid "Favorites (Album)"
-msgstr "Favorit"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:531
-#, fuzzy
 msgid "Favorites (Artist)"
-msgstr "SmartLists favorit"
+msgstr ""
 
 #. HINT: Number of times object has been played OR skipped
 #: ../../src/Repository/Model/Search.php:539
@@ -9044,14 +9057,12 @@ msgid "Length (in minutes)"
 msgstr "Panjang (dalam hitungan menit)"
 
 #: ../../src/Repository/Model/Search.php:552
-#, fuzzy
 msgid "Album Genre"
-msgstr "Sampul Album"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:553
-#, fuzzy
 msgid "Artist Genre"
-msgstr "Artis"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:556
 #: ../../src/Repository/Model/Search.php:674
@@ -9074,9 +9085,8 @@ msgstr "Daftar putar pintar"
 #: ../../src/Repository/Model/Search.php:606
 #: ../../src/Repository/Model/Search.php:676
 #: ../../src/Repository/Model/Search.php:735
-#, fuzzy
 msgid "Recently played"
-msgstr "Diputar Baru-Baru Ini"
+msgstr ""
 
 #: ../../src/Repository/Model/Search.php:607
 msgid "Recently added"
@@ -9119,9 +9129,8 @@ msgid "Image Height"
 msgstr "Tinggi gambar"
 
 #: ../../src/Repository/Model/Search.php:694
-#, fuzzy
 msgid "Possible Duplicate Albums"
-msgstr "Duplikat yang Mungkin"
+msgstr ""
 
 #: ../../src/Repository/Model/Share.php:270
 msgid "Share Edit"
@@ -9141,751 +9150,751 @@ msgstr "Anda baru saja menerima teriakan baru dari %1$s pada konten Anda %2$s"
 msgid "by"
 msgstr "oleh"
 
-#: ../../src/Repository/Model/Song.php:1765
+#: ../../src/Repository/Model/Song.php:1740
 msgid "Track MusicBrainzID"
 msgstr "Trek MusicBrainzid"
 
-#: ../../src/Repository/Model/User.php:525
+#: ../../src/Repository/Model/User.php:524
 msgid "Username is required"
 msgstr "Nama pengguna diperlukan"
 
-#: ../../src/Repository/Model/User.php:1312
+#: ../../src/Repository/Model/User.php:1311
 msgid "User avatar"
 msgstr "Pengguna Avatar"
 
-#: ../../src/Repository/Model/Video.php:844
+#: ../../src/Repository/Model/Video.php:855
 msgid "Afar"
 msgstr "Afar"
 
-#: ../../src/Repository/Model/Video.php:845
+#: ../../src/Repository/Model/Video.php:856
 msgid "Abkhazian"
 msgstr "Abkhazian"
 
-#: ../../src/Repository/Model/Video.php:846
+#: ../../src/Repository/Model/Video.php:857
 msgid "Avestan"
 msgstr "Avestan"
 
-#: ../../src/Repository/Model/Video.php:847
+#: ../../src/Repository/Model/Video.php:858
 msgid "Afrikaans"
 msgstr "Afrika"
 
-#: ../../src/Repository/Model/Video.php:848
+#: ../../src/Repository/Model/Video.php:859
 msgid "Akan"
 msgstr "Akan"
 
-#: ../../src/Repository/Model/Video.php:849
+#: ../../src/Repository/Model/Video.php:860
 msgid "Amharic"
 msgstr "Amharik"
 
-#: ../../src/Repository/Model/Video.php:850
+#: ../../src/Repository/Model/Video.php:861
 msgid "Aragonese"
 msgstr "Aragon"
 
-#: ../../src/Repository/Model/Video.php:851
+#: ../../src/Repository/Model/Video.php:862
 msgid "Arabic"
 msgstr "Arab"
 
-#: ../../src/Repository/Model/Video.php:852
+#: ../../src/Repository/Model/Video.php:863
 msgid "Assamese"
 msgstr "Assamese"
 
-#: ../../src/Repository/Model/Video.php:853
+#: ../../src/Repository/Model/Video.php:864
 msgid "Avaric"
 msgstr "Avaric"
 
-#: ../../src/Repository/Model/Video.php:854
+#: ../../src/Repository/Model/Video.php:865
 msgid "Aymara"
 msgstr "Aymara"
 
-#: ../../src/Repository/Model/Video.php:855
+#: ../../src/Repository/Model/Video.php:866
 msgid "Azerbaijani"
 msgstr "Azerbaijan"
 
-#: ../../src/Repository/Model/Video.php:856
+#: ../../src/Repository/Model/Video.php:867
 msgid "Bashkir"
 msgstr "Bashkir"
 
-#: ../../src/Repository/Model/Video.php:857
+#: ../../src/Repository/Model/Video.php:868
 msgid "Belarusian"
 msgstr "Belarusia"
 
-#: ../../src/Repository/Model/Video.php:858
+#: ../../src/Repository/Model/Video.php:869
 msgid "Bulgarian"
 msgstr "Bulgaria"
 
-#: ../../src/Repository/Model/Video.php:859
+#: ../../src/Repository/Model/Video.php:870
 msgid "Bihari"
 msgstr "Bihari"
 
-#: ../../src/Repository/Model/Video.php:860
+#: ../../src/Repository/Model/Video.php:871
 msgid "Bislama"
 msgstr "Bislama"
 
-#: ../../src/Repository/Model/Video.php:861
+#: ../../src/Repository/Model/Video.php:872
 msgid "Bambara"
 msgstr "Bambara"
 
-#: ../../src/Repository/Model/Video.php:862
+#: ../../src/Repository/Model/Video.php:873
 msgid "Bengali"
 msgstr "Benggala"
 
-#: ../../src/Repository/Model/Video.php:863
+#: ../../src/Repository/Model/Video.php:874
 msgid "Tibetan"
 msgstr "Tibet"
 
-#: ../../src/Repository/Model/Video.php:864
+#: ../../src/Repository/Model/Video.php:875
 msgid "Breton"
 msgstr "Breton"
 
-#: ../../src/Repository/Model/Video.php:865
+#: ../../src/Repository/Model/Video.php:876
 msgid "Bosnian"
 msgstr "Bosnia"
 
-#: ../../src/Repository/Model/Video.php:866
+#: ../../src/Repository/Model/Video.php:877
 msgid "Catalan"
 msgstr "Catalania"
 
-#: ../../src/Repository/Model/Video.php:867
+#: ../../src/Repository/Model/Video.php:878
 msgid "Chechen"
 msgstr "Chechen"
 
-#: ../../src/Repository/Model/Video.php:868
+#: ../../src/Repository/Model/Video.php:879
 msgid "Chamorro"
 msgstr "Chamoro"
 
-#: ../../src/Repository/Model/Video.php:869
+#: ../../src/Repository/Model/Video.php:880
 msgid "Corsican"
 msgstr "Korsika"
 
-#: ../../src/Repository/Model/Video.php:870
+#: ../../src/Repository/Model/Video.php:881
 msgid "Cree"
 msgstr "Cree"
 
-#: ../../src/Repository/Model/Video.php:871
+#: ../../src/Repository/Model/Video.php:882
 msgid "Czech"
 msgstr "Cekoslovakia"
 
-#: ../../src/Repository/Model/Video.php:872
+#: ../../src/Repository/Model/Video.php:883
 msgid "Church Slavic"
 msgstr "Slavia Church"
 
-#: ../../src/Repository/Model/Video.php:873
+#: ../../src/Repository/Model/Video.php:884
 msgid "Chuvash"
 msgstr "Chuvash"
 
-#: ../../src/Repository/Model/Video.php:874
+#: ../../src/Repository/Model/Video.php:885
 msgid "Welsh"
 msgstr "Welsh"
 
-#: ../../src/Repository/Model/Video.php:875
+#: ../../src/Repository/Model/Video.php:886
 msgid "Danish"
 msgstr "Denmark"
 
-#: ../../src/Repository/Model/Video.php:876
+#: ../../src/Repository/Model/Video.php:887
 msgid "German"
 msgstr "Jerman"
 
-#: ../../src/Repository/Model/Video.php:877
+#: ../../src/Repository/Model/Video.php:888
 msgid "Divehi"
 msgstr "Divei"
 
-#: ../../src/Repository/Model/Video.php:878
+#: ../../src/Repository/Model/Video.php:889
 msgid "Dzongkha"
 msgstr "Dzongkha"
 
-#: ../../src/Repository/Model/Video.php:879
+#: ../../src/Repository/Model/Video.php:890
 msgid "Ewe"
 msgstr "Ewe"
 
-#: ../../src/Repository/Model/Video.php:880
+#: ../../src/Repository/Model/Video.php:891
 msgid "Greek"
 msgstr "Yunani"
 
-#: ../../src/Repository/Model/Video.php:881
+#: ../../src/Repository/Model/Video.php:892
 msgid "English"
 msgstr "Inggris"
 
-#: ../../src/Repository/Model/Video.php:882
+#: ../../src/Repository/Model/Video.php:893
 msgid "Esperanto"
 msgstr "Esperanto"
 
-#: ../../src/Repository/Model/Video.php:883
+#: ../../src/Repository/Model/Video.php:894
 msgid "Spanish"
 msgstr "Spanyol"
 
-#: ../../src/Repository/Model/Video.php:884
+#: ../../src/Repository/Model/Video.php:895
 msgid "Estonian"
 msgstr "Estonia"
 
-#: ../../src/Repository/Model/Video.php:885
+#: ../../src/Repository/Model/Video.php:896
 msgid "Basque"
 msgstr "Baskui"
 
-#: ../../src/Repository/Model/Video.php:886
+#: ../../src/Repository/Model/Video.php:897
 msgid "Persian"
 msgstr "Persia"
 
-#: ../../src/Repository/Model/Video.php:887
+#: ../../src/Repository/Model/Video.php:898
 msgid "Fulah"
 msgstr "Fapat"
 
-#: ../../src/Repository/Model/Video.php:888
+#: ../../src/Repository/Model/Video.php:899
 msgid "Finnish"
 msgstr "Finlandia"
 
-#: ../../src/Repository/Model/Video.php:889
+#: ../../src/Repository/Model/Video.php:900
 msgid "Fijian"
 msgstr "Fiji"
 
-#: ../../src/Repository/Model/Video.php:890
+#: ../../src/Repository/Model/Video.php:901
 msgid "Faroese"
 msgstr "Farusi"
 
-#: ../../src/Repository/Model/Video.php:891
+#: ../../src/Repository/Model/Video.php:902
 msgid "French"
 msgstr "Perancis"
 
-#: ../../src/Repository/Model/Video.php:892
+#: ../../src/Repository/Model/Video.php:903
 msgid "Western Frisian"
 msgstr "Frisia Barat"
 
-#: ../../src/Repository/Model/Video.php:893
+#: ../../src/Repository/Model/Video.php:904
 msgid "Irish"
 msgstr "Irlandia"
 
-#: ../../src/Repository/Model/Video.php:894
+#: ../../src/Repository/Model/Video.php:905
 msgid "Scottish Gaelic"
 msgstr "Gaelic Skotlandia"
 
-#: ../../src/Repository/Model/Video.php:895
+#: ../../src/Repository/Model/Video.php:906
 msgid "Galician"
 msgstr "Galicia"
 
-#: ../../src/Repository/Model/Video.php:896
+#: ../../src/Repository/Model/Video.php:907
 msgid "Guarani"
 msgstr "Guarani"
 
-#: ../../src/Repository/Model/Video.php:897
+#: ../../src/Repository/Model/Video.php:908
 msgid "Gujarati"
 msgstr "Gujarati"
 
-#: ../../src/Repository/Model/Video.php:898
+#: ../../src/Repository/Model/Video.php:909
 msgid "Manx"
 msgstr "Manx"
 
-#: ../../src/Repository/Model/Video.php:899
+#: ../../src/Repository/Model/Video.php:910
 msgid "Hausa"
 msgstr "Hausa"
 
-#: ../../src/Repository/Model/Video.php:900
+#: ../../src/Repository/Model/Video.php:911
 msgid "Hebrew"
 msgstr "Ibrani"
 
-#: ../../src/Repository/Model/Video.php:901
+#: ../../src/Repository/Model/Video.php:912
 msgid "Hindi"
 msgstr "India"
 
-#: ../../src/Repository/Model/Video.php:902
+#: ../../src/Repository/Model/Video.php:913
 msgid "Hiri Motu"
 msgstr "Hiri Motu"
 
-#: ../../src/Repository/Model/Video.php:903
+#: ../../src/Repository/Model/Video.php:914
 msgid "Croatian"
 msgstr "Kroasia"
 
-#: ../../src/Repository/Model/Video.php:904
+#: ../../src/Repository/Model/Video.php:915
 msgid "Haitian"
 msgstr "Haiti"
 
-#: ../../src/Repository/Model/Video.php:905
+#: ../../src/Repository/Model/Video.php:916
 msgid "Hungarian"
 msgstr "Hungaria"
 
-#: ../../src/Repository/Model/Video.php:906
+#: ../../src/Repository/Model/Video.php:917
 msgid "Armenian"
 msgstr "Armenia"
 
-#: ../../src/Repository/Model/Video.php:907
+#: ../../src/Repository/Model/Video.php:918
 msgid "Herero"
 msgstr "Herero"
 
-#: ../../src/Repository/Model/Video.php:908
+#: ../../src/Repository/Model/Video.php:919
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr "Interlingua (Asosiasi Bahasa Auxiliar Internasional)"
 
-#: ../../src/Repository/Model/Video.php:909
+#: ../../src/Repository/Model/Video.php:920
 msgid "Indonesian"
 msgstr "Bahasa Indonesia"
 
-#: ../../src/Repository/Model/Video.php:910
+#: ../../src/Repository/Model/Video.php:921
 msgid "Interlingue"
 msgstr "Interlingue"
 
-#: ../../src/Repository/Model/Video.php:911
+#: ../../src/Repository/Model/Video.php:922
 msgid "Igbo"
 msgstr "Igbo"
 
-#: ../../src/Repository/Model/Video.php:912
+#: ../../src/Repository/Model/Video.php:923
 msgid "Sichuan Yi"
 msgstr "Sichuan Yi"
 
-#: ../../src/Repository/Model/Video.php:913
+#: ../../src/Repository/Model/Video.php:924
 msgid "Inupiaq"
 msgstr "Inupiaq"
 
-#: ../../src/Repository/Model/Video.php:914
+#: ../../src/Repository/Model/Video.php:925
 msgid "Ido"
 msgstr "Ido"
 
-#: ../../src/Repository/Model/Video.php:915
+#: ../../src/Repository/Model/Video.php:926
 msgid "Icelandic"
 msgstr "Islandia"
 
-#: ../../src/Repository/Model/Video.php:916
+#: ../../src/Repository/Model/Video.php:927
 msgid "Italian"
 msgstr "Italia"
 
-#: ../../src/Repository/Model/Video.php:917
+#: ../../src/Repository/Model/Video.php:928
 msgid "Inuktitut"
 msgstr "Inuktitut"
 
-#: ../../src/Repository/Model/Video.php:918
+#: ../../src/Repository/Model/Video.php:929
 msgid "Japanese"
 msgstr "Jepang"
 
-#: ../../src/Repository/Model/Video.php:919
+#: ../../src/Repository/Model/Video.php:930
 msgid "Javanese"
 msgstr "Jawa"
 
-#: ../../src/Repository/Model/Video.php:920
+#: ../../src/Repository/Model/Video.php:931
 msgid "Georgian"
 msgstr "Georgia"
 
-#: ../../src/Repository/Model/Video.php:921
+#: ../../src/Repository/Model/Video.php:932
 msgid "Kongo"
 msgstr "Kongo"
 
-#: ../../src/Repository/Model/Video.php:922
+#: ../../src/Repository/Model/Video.php:933
 msgid "Kikuyu"
 msgstr "Kikuyu"
 
-#: ../../src/Repository/Model/Video.php:923
+#: ../../src/Repository/Model/Video.php:934
 msgid "Kwanyama"
 msgstr "Kwanyama"
 
-#: ../../src/Repository/Model/Video.php:924
+#: ../../src/Repository/Model/Video.php:935
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: ../../src/Repository/Model/Video.php:925
+#: ../../src/Repository/Model/Video.php:936
 msgid "Kalaallisut"
 msgstr "Kalaallisut"
 
-#: ../../src/Repository/Model/Video.php:926
+#: ../../src/Repository/Model/Video.php:937
 msgid "Khmer"
 msgstr "Khmer"
 
-#: ../../src/Repository/Model/Video.php:927
+#: ../../src/Repository/Model/Video.php:938
 msgid "Kannada"
 msgstr "Kannada"
 
-#: ../../src/Repository/Model/Video.php:928
+#: ../../src/Repository/Model/Video.php:939
 msgid "Korean"
 msgstr "Korea"
 
-#: ../../src/Repository/Model/Video.php:929
+#: ../../src/Repository/Model/Video.php:940
 msgid "Kanuri"
 msgstr "Kanuri"
 
-#: ../../src/Repository/Model/Video.php:930
+#: ../../src/Repository/Model/Video.php:941
 msgid "Kashmiri"
 msgstr "Kashmiri"
 
-#: ../../src/Repository/Model/Video.php:931
+#: ../../src/Repository/Model/Video.php:942
 msgid "Kurdish"
 msgstr "Kurdi"
 
-#: ../../src/Repository/Model/Video.php:932
+#: ../../src/Repository/Model/Video.php:943
 msgid "Komi"
 msgstr "Komi"
 
-#: ../../src/Repository/Model/Video.php:933
+#: ../../src/Repository/Model/Video.php:944
 msgid "Cornish"
 msgstr "Cornisia"
 
-#: ../../src/Repository/Model/Video.php:934
+#: ../../src/Repository/Model/Video.php:945
 msgid "Kirghiz"
 msgstr "Kirgiz"
 
-#: ../../src/Repository/Model/Video.php:935
+#: ../../src/Repository/Model/Video.php:946
 msgid "Latin"
 msgstr "Latin"
 
-#: ../../src/Repository/Model/Video.php:936
+#: ../../src/Repository/Model/Video.php:947
 msgid "Luxembourgish"
 msgstr "Luksembourg"
 
-#: ../../src/Repository/Model/Video.php:937
+#: ../../src/Repository/Model/Video.php:948
 msgid "Ganda"
 msgstr "Ganda"
 
-#: ../../src/Repository/Model/Video.php:938
+#: ../../src/Repository/Model/Video.php:949
 msgid "Limburgish"
 msgstr "Limbah"
 
-#: ../../src/Repository/Model/Video.php:939
+#: ../../src/Repository/Model/Video.php:950
 msgid "Lingala"
 msgstr "Lingala"
 
-#: ../../src/Repository/Model/Video.php:940
+#: ../../src/Repository/Model/Video.php:951
 msgid "Lao"
 msgstr "Lao"
 
-#: ../../src/Repository/Model/Video.php:941
+#: ../../src/Repository/Model/Video.php:952
 msgid "Lithuanian"
 msgstr "Lithuania"
 
-#: ../../src/Repository/Model/Video.php:942
+#: ../../src/Repository/Model/Video.php:953
 msgid "Luba-Katanga"
 msgstr "Luba-katanga"
 
-#: ../../src/Repository/Model/Video.php:943
+#: ../../src/Repository/Model/Video.php:954
 msgid "Latvian"
 msgstr "Latvia"
 
-#: ../../src/Repository/Model/Video.php:944
+#: ../../src/Repository/Model/Video.php:955
 msgid "Malagasy"
 msgstr "Malagasi"
 
-#: ../../src/Repository/Model/Video.php:945
+#: ../../src/Repository/Model/Video.php:956
 msgid "Marshallese"
 msgstr "Marshallese"
 
-#: ../../src/Repository/Model/Video.php:946
+#: ../../src/Repository/Model/Video.php:957
 msgid "Maori"
 msgstr "Maori"
 
-#: ../../src/Repository/Model/Video.php:947
+#: ../../src/Repository/Model/Video.php:958
 msgid "Macedonian"
 msgstr "Makedonia"
 
-#: ../../src/Repository/Model/Video.php:948
+#: ../../src/Repository/Model/Video.php:959
 msgid "Malayalam"
 msgstr "Malayalam"
 
-#: ../../src/Repository/Model/Video.php:949
+#: ../../src/Repository/Model/Video.php:960
 msgid "Mongolian"
 msgstr "Mongolia"
 
-#: ../../src/Repository/Model/Video.php:950
+#: ../../src/Repository/Model/Video.php:961
 msgid "Marathi"
 msgstr "Marathi"
 
-#: ../../src/Repository/Model/Video.php:951
+#: ../../src/Repository/Model/Video.php:962
 msgid "Malay"
 msgstr "Melayu"
 
-#: ../../src/Repository/Model/Video.php:952
+#: ../../src/Repository/Model/Video.php:963
 msgid "Maltese"
 msgstr "Malta"
 
-#: ../../src/Repository/Model/Video.php:953
+#: ../../src/Repository/Model/Video.php:964
 msgid "Burmese"
 msgstr "Birma"
 
-#: ../../src/Repository/Model/Video.php:954
+#: ../../src/Repository/Model/Video.php:965
 msgid "Nauru"
 msgstr "Nauru"
 
-#: ../../src/Repository/Model/Video.php:955
+#: ../../src/Repository/Model/Video.php:966
 msgid "Norwegian Bokmal"
 msgstr "Bokmal Norwegia"
 
-#: ../../src/Repository/Model/Video.php:956
+#: ../../src/Repository/Model/Video.php:967
 msgid "North Ndebele"
 msgstr "Ndebele Utara"
 
-#: ../../src/Repository/Model/Video.php:957
+#: ../../src/Repository/Model/Video.php:968
 msgid "Nepali"
 msgstr "Nepal"
 
-#: ../../src/Repository/Model/Video.php:958
+#: ../../src/Repository/Model/Video.php:969
 msgid "Ndonga"
 msgstr "Ndonga"
 
-#: ../../src/Repository/Model/Video.php:959
+#: ../../src/Repository/Model/Video.php:970
 msgid "Dutch"
 msgstr "Belanda"
 
-#: ../../src/Repository/Model/Video.php:960
+#: ../../src/Repository/Model/Video.php:971
 msgid "Norwegian Nynorsk"
 msgstr "Norwegia Nynorsk"
 
-#: ../../src/Repository/Model/Video.php:961
+#: ../../src/Repository/Model/Video.php:972
 msgid "Norwegian"
 msgstr "Norwegia"
 
-#: ../../src/Repository/Model/Video.php:962
+#: ../../src/Repository/Model/Video.php:973
 msgid "South Ndebele"
 msgstr "Ndebele Selatan"
 
-#: ../../src/Repository/Model/Video.php:963
+#: ../../src/Repository/Model/Video.php:974
 msgid "Navajo"
 msgstr "Navajo"
 
-#: ../../src/Repository/Model/Video.php:964
+#: ../../src/Repository/Model/Video.php:975
 msgid "Chichewa"
 msgstr "Chichewa"
 
-#: ../../src/Repository/Model/Video.php:965
+#: ../../src/Repository/Model/Video.php:976
 msgid "Occitan"
 msgstr "Occitan"
 
-#: ../../src/Repository/Model/Video.php:966
+#: ../../src/Repository/Model/Video.php:977
 msgid "Ojibwa"
 msgstr "Ojibwa"
 
-#: ../../src/Repository/Model/Video.php:967
+#: ../../src/Repository/Model/Video.php:978
 msgid "Oromo"
 msgstr "Oromo"
 
-#: ../../src/Repository/Model/Video.php:968
+#: ../../src/Repository/Model/Video.php:979
 msgid "Oriya"
 msgstr "Oriya"
 
-#: ../../src/Repository/Model/Video.php:969
+#: ../../src/Repository/Model/Video.php:980
 msgid "Ossetian"
 msgstr "Ossetian"
 
-#: ../../src/Repository/Model/Video.php:970
+#: ../../src/Repository/Model/Video.php:981
 msgid "Panjabi"
 msgstr "Panjabi"
 
-#: ../../src/Repository/Model/Video.php:971
+#: ../../src/Repository/Model/Video.php:982
 msgid "Pali"
 msgstr "Pali"
 
-#: ../../src/Repository/Model/Video.php:972
+#: ../../src/Repository/Model/Video.php:983
 msgid "Polish"
 msgstr "Polandia"
 
-#: ../../src/Repository/Model/Video.php:973
+#: ../../src/Repository/Model/Video.php:984
 msgid "Pashto"
 msgstr "Pashto"
 
-#: ../../src/Repository/Model/Video.php:974
+#: ../../src/Repository/Model/Video.php:985
 msgid "Portuguese"
 msgstr "Portugis"
 
-#: ../../src/Repository/Model/Video.php:975
+#: ../../src/Repository/Model/Video.php:986
 msgid "Quechua"
 msgstr "Quechua"
 
-#: ../../src/Repository/Model/Video.php:976
+#: ../../src/Repository/Model/Video.php:987
 msgid "Raeto-Romance"
 msgstr "Raeto-Romance"
 
-#: ../../src/Repository/Model/Video.php:977
+#: ../../src/Repository/Model/Video.php:988
 msgid "Kirundi"
 msgstr "Kirundi"
 
-#: ../../src/Repository/Model/Video.php:978
+#: ../../src/Repository/Model/Video.php:989
 msgid "Romanian"
 msgstr "Rumania"
 
-#: ../../src/Repository/Model/Video.php:979
+#: ../../src/Repository/Model/Video.php:990
 msgid "Russian"
 msgstr "Rusia"
 
-#: ../../src/Repository/Model/Video.php:980
+#: ../../src/Repository/Model/Video.php:991
 msgid "Kinyarwanda"
 msgstr "Kinyarwanda"
 
-#: ../../src/Repository/Model/Video.php:981
+#: ../../src/Repository/Model/Video.php:992
 msgid "Sanskrit"
 msgstr "Sansekerta"
 
-#: ../../src/Repository/Model/Video.php:982
+#: ../../src/Repository/Model/Video.php:993
 msgid "Sardinian"
 msgstr "Sardinian"
 
-#: ../../src/Repository/Model/Video.php:983
+#: ../../src/Repository/Model/Video.php:994
 msgid "Sindhi"
 msgstr "Sindhi"
 
-#: ../../src/Repository/Model/Video.php:984
+#: ../../src/Repository/Model/Video.php:995
 msgid "Northern Sami"
 msgstr "Sami Utara"
 
-#: ../../src/Repository/Model/Video.php:985
+#: ../../src/Repository/Model/Video.php:996
 msgid "Sango"
 msgstr "Sango"
 
-#: ../../src/Repository/Model/Video.php:986
+#: ../../src/Repository/Model/Video.php:997
 msgid "Sinhala"
 msgstr "Sinhala"
 
-#: ../../src/Repository/Model/Video.php:987
+#: ../../src/Repository/Model/Video.php:998
 msgid "Slovak"
 msgstr "Orang Slovakia"
 
-#: ../../src/Repository/Model/Video.php:988
+#: ../../src/Repository/Model/Video.php:999
 msgid "Slovenian"
 msgstr "Slovenia"
 
-#: ../../src/Repository/Model/Video.php:989
+#: ../../src/Repository/Model/Video.php:1000
 msgid "Samoan"
 msgstr "Samoa"
 
-#: ../../src/Repository/Model/Video.php:990
+#: ../../src/Repository/Model/Video.php:1001
 msgid "Shona"
 msgstr "Shona"
 
-#: ../../src/Repository/Model/Video.php:991
+#: ../../src/Repository/Model/Video.php:1002
 msgid "Somali"
 msgstr "Somalia"
 
-#: ../../src/Repository/Model/Video.php:992
+#: ../../src/Repository/Model/Video.php:1003
 msgid "Albanian"
 msgstr "Bahasa Albania"
 
-#: ../../src/Repository/Model/Video.php:993
+#: ../../src/Repository/Model/Video.php:1004
 msgid "Serbian"
 msgstr "Orang Serbia"
 
-#: ../../src/Repository/Model/Video.php:994
+#: ../../src/Repository/Model/Video.php:1005
 msgid "Swati"
 msgstr "Swati"
 
-#: ../../src/Repository/Model/Video.php:995
+#: ../../src/Repository/Model/Video.php:1006
 msgid "Southern Sotho"
 msgstr "Sotho Utara"
 
-#: ../../src/Repository/Model/Video.php:996
+#: ../../src/Repository/Model/Video.php:1007
 msgid "Sundanese"
 msgstr "Sunda"
 
-#: ../../src/Repository/Model/Video.php:997
+#: ../../src/Repository/Model/Video.php:1008
 msgid "Swedish"
 msgstr "Swedia"
 
-#: ../../src/Repository/Model/Video.php:998
+#: ../../src/Repository/Model/Video.php:1009
 msgid "Swahili"
 msgstr "Swahili"
 
-#: ../../src/Repository/Model/Video.php:999
+#: ../../src/Repository/Model/Video.php:1010
 msgid "Tamil"
 msgstr "Tamil"
 
-#: ../../src/Repository/Model/Video.php:1000
+#: ../../src/Repository/Model/Video.php:1011
 msgid "Telugu"
 msgstr "Telugu"
 
-#: ../../src/Repository/Model/Video.php:1001
+#: ../../src/Repository/Model/Video.php:1012
 msgid "Tajik"
 msgstr "Tajik"
 
-#: ../../src/Repository/Model/Video.php:1002
+#: ../../src/Repository/Model/Video.php:1013
 msgid "Thai"
 msgstr "Thailand"
 
-#: ../../src/Repository/Model/Video.php:1003
+#: ../../src/Repository/Model/Video.php:1014
 msgid "Tigrinya"
 msgstr "Tigrinya"
 
-#: ../../src/Repository/Model/Video.php:1004
+#: ../../src/Repository/Model/Video.php:1015
 msgid "Turkmen"
 msgstr "Turkmen"
 
-#: ../../src/Repository/Model/Video.php:1005
+#: ../../src/Repository/Model/Video.php:1016
 msgid "Tagalog"
 msgstr "Tagalog"
 
-#: ../../src/Repository/Model/Video.php:1006
+#: ../../src/Repository/Model/Video.php:1017
 msgid "Tswana"
 msgstr "Tswana"
 
-#: ../../src/Repository/Model/Video.php:1007
+#: ../../src/Repository/Model/Video.php:1018
 msgid "Tonga"
 msgstr "Tonga"
 
-#: ../../src/Repository/Model/Video.php:1008
+#: ../../src/Repository/Model/Video.php:1019
 msgid "Turkish"
 msgstr "Turki"
 
-#: ../../src/Repository/Model/Video.php:1009
+#: ../../src/Repository/Model/Video.php:1020
 msgid "Tsonga"
 msgstr "Tsonga"
 
-#: ../../src/Repository/Model/Video.php:1010
+#: ../../src/Repository/Model/Video.php:1021
 msgid "Tatar"
 msgstr "Tatar"
 
-#: ../../src/Repository/Model/Video.php:1011
+#: ../../src/Repository/Model/Video.php:1022
 msgid "Twi"
 msgstr "Twi"
 
-#: ../../src/Repository/Model/Video.php:1012
+#: ../../src/Repository/Model/Video.php:1023
 msgid "Tahitian"
 msgstr "Tahitian"
 
-#: ../../src/Repository/Model/Video.php:1013
+#: ../../src/Repository/Model/Video.php:1024
 msgid "Uighur"
 msgstr "Uighur"
 
-#: ../../src/Repository/Model/Video.php:1014
+#: ../../src/Repository/Model/Video.php:1025
 msgid "Ukrainian"
 msgstr "Ukraina"
 
-#: ../../src/Repository/Model/Video.php:1015
+#: ../../src/Repository/Model/Video.php:1026
 msgid "Urdu"
 msgstr "Urdu"
 
-#: ../../src/Repository/Model/Video.php:1016
+#: ../../src/Repository/Model/Video.php:1027
 msgid "Uzbek"
 msgstr "Uzbek"
 
-#: ../../src/Repository/Model/Video.php:1017
+#: ../../src/Repository/Model/Video.php:1028
 msgid "Venda"
 msgstr "Venda"
 
-#: ../../src/Repository/Model/Video.php:1018
+#: ../../src/Repository/Model/Video.php:1029
 msgid "Vietnamese"
 msgstr "Vietnam"
 
-#: ../../src/Repository/Model/Video.php:1019
+#: ../../src/Repository/Model/Video.php:1030
 msgid "Volapuk"
 msgstr "Volapuk"
 
-#: ../../src/Repository/Model/Video.php:1020
+#: ../../src/Repository/Model/Video.php:1031
 msgid "Walloon"
 msgstr "Walloon"
 
-#: ../../src/Repository/Model/Video.php:1021
+#: ../../src/Repository/Model/Video.php:1032
 msgid "Wolof"
 msgstr "Wolof"
 
-#: ../../src/Repository/Model/Video.php:1022
+#: ../../src/Repository/Model/Video.php:1033
 msgid "Xhosa"
 msgstr "Xhosa"
 
-#: ../../src/Repository/Model/Video.php:1023
+#: ../../src/Repository/Model/Video.php:1034
 msgid "Yiddish"
 msgstr "Yidis"
 
-#: ../../src/Repository/Model/Video.php:1024
+#: ../../src/Repository/Model/Video.php:1035
 msgid "Yoruba"
 msgstr "Yoruba"
 
-#: ../../src/Repository/Model/Video.php:1025
+#: ../../src/Repository/Model/Video.php:1036
 msgid "Zhuang"
 msgstr "Zhuang"
 
-#: ../../src/Repository/Model/Video.php:1026
+#: ../../src/Repository/Model/Video.php:1037
 msgid "Chinese"
 msgstr "Cina"
 
-#: ../../src/Repository/Model/Video.php:1027
+#: ../../src/Repository/Model/Video.php:1038
 msgid "Zulu"
 msgstr "Zulu"
 
@@ -9939,7 +9948,7 @@ msgstr "Deskripsi tidak boleh kosong"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 04.04.2021 12:53:04 CEST
+# Last Update: 07.08.2021 20:43:00 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
@@ -10336,9 +10345,8 @@ msgid "Custom URL - Login page background"
 msgstr "URL Kustom - Latar Belakang Halaman Login"
 
 #: Database preference table id 177
-#, fuzzy
 msgid "Show Licence"
-msgstr "Tunjukkan Lirik"
+msgstr ""
 
 #: Database preference table id 178
 msgid "Browse by Original Year for albums (falls back to Year)"
@@ -10346,6 +10354,10 @@ msgstr ""
 
 #: Database preference table id 179
 msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Database preference table id 180
+msgid "Hide the Genre column in browse table rows"
 msgstr ""
 
 #: Database preference subcategory table id 1
@@ -10389,9 +10401,8 @@ msgid "library"
 msgstr "pustaka"
 
 #: Database preference subcategory table id 84
-#, fuzzy
 msgid "browse"
-msgstr "Telusuri"
+msgstr ""
 
 #: Database preference subcategory table id 86
 msgid "backend"
