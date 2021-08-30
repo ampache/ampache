@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 07.08.2021 20:43:00 CEST 
+ # Last Update: 30.08.2021 22:44:26 CEST 
 
  #######################################################################
 
@@ -405,6 +405,10 @@ msgstr ""
 
 #: Database preference table id 179
 msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Database preference table id 180
+msgid "Hide the Genre column in browse table rows"
 msgstr ""
 
 #: Database preference subcategory table id 1

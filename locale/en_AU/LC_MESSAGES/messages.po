@@ -1,22 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2021-08-30 22:44+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: English (Australia) (http://www.transifex.com/ampache/ampache/"
+"language/en_AU/)\n"
+"Language: en_AU\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../public/templates/browse_filters.inc.php:38
 msgid "Filters"
@@ -9765,15 +9765,14 @@ msgstr ""
 #: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:107
 msgid "Description cannot be empty"
 msgstr ""
- #######################################################################
 
- # This file lists all description strings from your Ampache-database -> preference-table.
- # Please do not delete or modify the content by yourself. It will be automatically (re)generated
- # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 30.08.2021 22:44:26 CEST 
-
- #######################################################################
-
+# This file lists all description strings from your Ampache-database ->
+# preference-table.
+# Please do not delete or modify the content by yourself. It will be
+# automatically (re)generated
+# if you run './gather-messages.sh [-gu|--getutds].
+# Last Update: 07.08.2021 20:43:00 CEST
+#
 #: Database preference table id 1
 msgid "Allow Downloads"
 msgstr ""
@@ -10135,7 +10134,8 @@ msgid "Custom blank video default image"
 msgstr ""
 
 #: Database preference table id 157
-msgid "Alphabet browsing by default for following library items (album,artist,...)"
+msgid ""
+"Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
 
 #: Database preference table id 171
