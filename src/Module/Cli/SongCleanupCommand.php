@@ -44,7 +44,7 @@ final class SongCleanupCommand extends Command
         $this->songFilesystemCleanup = $songFilesystemCleanup;
 
         $this
-            ->option('-d|--delete', T_('Disables dry-run and sorts the files'), 'boolval', false)
+            ->option('-d|--delete', T_('Disables dry-run'), 'boolval', false)
             ->usage('<bold>  cleanup:songs</end> <comment> ## ' . T_('Show a list of disabled songs') . '<eol/>');
     }
 

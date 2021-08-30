@@ -44,7 +44,7 @@ final class SortFilesCommand extends Command
         $this->songSorter      = $songSorter;
 
         $this
-            ->option('-x|--execute', T_('Disables dry-run and sorts the files'), 'boolval', false)
+            ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }

@@ -45,7 +45,7 @@ final class UpdateDbCommand extends Command
         $this->databaseCharsetUpdater = $databaseCharsetUpdater;
 
         $this
-            ->option('-x|--execute', T_('Disables dry-run and sorts the files'), 'boolval', false)
+            ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
             ->usage('<bold>  run:updateDb</end> <comment> ## ' . T_('Update the database') . '<eol/>');
     }
 
