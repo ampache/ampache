@@ -5,22 +5,18 @@
 [www.ampache.org](https://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 [Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
-[Telegram](https://t.me/ampache)
-[Reddit](https://www.reddit.com/r/ampache/)
-[Twitter](https://twitter.com/ampache)
-[Mastodon](https://fosstodon.org/@ampache)
 
 ## News
 
-**Ampache5 is getting close!** the develop branch is close to release now.
-A lot of work has been put into speeding up everything we can!
-This release is shaping up to be a great one and we can't wait to show you.
 
-* Keep an eye on the incoming changes to develop branch at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-  * Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
-  * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
-  * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
-  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](https://ampache.org/api/) website!
+Ampache 5 is here and it's big!
+
+* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
+* The bin folder has had a major rework [faq](https://github.com/ampache/ampache/wiki/cli-faq)
+* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
+* Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
+
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")

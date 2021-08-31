@@ -180,7 +180,7 @@ class TVShow_Episode extends Video
         $season->format($details);
 
         $this->f_title       = ($this->original_name ?: $this->f_title);
-        $this->f_link        = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_link        = '<a href="' . $this->link . '">' . scrub_out($this->f_title) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;

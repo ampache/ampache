@@ -447,7 +447,7 @@ class Wanted extends database_object
             $this->f_artist_link = $wartist['link'];
         }
         $this->link   = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
-        $this->f_link = "<a href=\"" . $this->link . "\">" . $this->name . "</a>";
+        $this->f_link = "<a href=\"" . $this->link . "\">" . scrub_out($this->name) . "</a>";
         $user         = new User($this->user);
         $user->format();
         $this->f_user = $user->f_name;

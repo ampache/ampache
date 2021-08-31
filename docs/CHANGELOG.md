@@ -1,8 +1,13 @@
 # CHANGELOG
 
-## Ampache 5.0.0-develop
+## Ampache 5.0.0-release
 
-Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+Ampache 5 is here and it's big!
+
+* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
+* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
+* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
@@ -10,9 +15,14 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
-**IMPORTANT** Default Database Collation has changed from utf8 to utf8mb4
+**IMPORTANT** For new installs default database charset/collation and table engine have changed
 
-* Run `php bin/cli run:updateDb` if you have been using plain utf8 and want to change
+* Engine MyISAM => InnoDB
+* Charset utf8 => utf8mb4
+* Collation utf8_unicode_ci => utf8mb4_unicode_ci
+
+If you want to keep utf8 make sure you set it before running updates.
+
 * To keep the current collation/charset update your config file
   * Set `database_charset = "utf8"`
   * Set `database_collation = "utf8_unicode_ci"`
@@ -101,6 +111,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Scrobble actions now check for the exact time as well (different agents or scripts would insert)
 * If you call a play url without an action we assume stream
 * Use ISO 8601 date for podcast episode pubdate display
+* Database tables default to InnoDB engine with utf8mb4 charset & collation
 * Subsonic
   * Wait a few seconds before allowing scrobbles to avoid collisions
   * Shift the last music play if gap is bigger than 5 repeated plays (over night, etc)
@@ -152,15 +163,18 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Delete podcasts and radio streams when deleting a catalog
 * Collect recommendation garbage correctly
 * Empty release date when updating a video would fail
+* Scrub out some link titles that can be abused by uploads
 * Subsonic
   * Support a global user playqueue with getplayqueue, saveplayqueue
   * Incorrect header being set on art requests
   * averageRating wasn't correctly cast for json
   * bookmark JSON was not correctly converted
 
-### API 5.0.0-develop
+### API 5.0.0
 
 All API code that used 'Tag' now references 'Genre' instead
+
+This version of the API is the first semantic version. "5.0.0"
 
 ### Added
 
@@ -191,6 +205,12 @@ All API code that used 'Tag' now references 'Genre' instead
 
 ### Changed
 
+* The API version matches release version '5.0.0'
+* A backcompatible version (500000) is sent when using old api versions
+* handshake and ping counts now return the actual object counts for playlists
+  * 'playlists' => $counts['playlist'],
+  * 'searches' => $counts['search'],
+  * 'playlists_searches' => $counts['playlist'] + $counts['search']
 * Renamed functions:
   * tags => genres
   * tag => genre
@@ -238,6 +258,7 @@ All API code that used 'Tag' now references 'Genre' instead
 ### Removed
 
 * Don't apply an album artist when it isn't distinct
+* MySQL faq isn't needed during install now that PHP 7.4 is a requirement
 
 ### Fixed
 

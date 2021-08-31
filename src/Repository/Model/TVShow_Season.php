@@ -145,7 +145,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $this->f_tvshow_link = $tvshow->f_link;
 
         $this->link   = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . $this->f_name . '">' . $this->f_name . '</a>';
+        $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
 
         if ($details) {
             $this->_get_extra_info();

@@ -196,8 +196,8 @@ class Broadcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name = $this->name;
-        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . $this->f_name . '</a>';
         if ($details) {
             $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');

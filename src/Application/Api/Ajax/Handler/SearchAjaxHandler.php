@@ -79,8 +79,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Artists'),
                             'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
-                            'label' => $artist->f_name,
-                            'value' => $artist->f_name,
+                            'label' => scrub_out($artist->f_name),
+                            'value' => scrub_out($artist->f_name),
                             'rels' => '',
                             'image' => Art::url($artist->id, 'artist', null, 10),
                         );
@@ -107,9 +107,9 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
-                            'label' => $album->f_name,
-                            'value' => $album->f_name,
-                            'rels' => $album->get_album_artist_name(),
+                            'label' => scrub_out($album->f_name),
+                            'value' => scrub_out($album->f_name),
+                            'rels' => scrub_out($album->get_album_artist_name()),
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
                     }
@@ -139,9 +139,9 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[]  = array(
                             'type' => T_('Songs'),
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
-                            'label' => $song->title,
-                            'value' => $song->title,
-                            'rels' => $song->get_artist_name(),
+                            'label' => scrub_out($song->title),
+                            'value' => scrub_out($song->title),
+                            'rels' => scrub_out($song->get_artist_name()),
                             'image' => Art::url($art_object, $art_type, null, 10),
                         );
                     }
@@ -211,8 +211,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Missing Artists'),
                             'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
-                            'label' => $artist['name'],
-                            'value' => $artist['name'],
+                            'label' => scrub_out($artist['name']),
+                            'value' => scrub_out($artist['name']),
                             'rels' => '',
                             'image' => '',
                         );

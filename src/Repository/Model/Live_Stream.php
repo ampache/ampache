@@ -125,9 +125,9 @@ class Live_Stream extends database_object implements Media, library_item
     {
         unset($details); // dead code but called from other format calls
         // Default link used on the rightbar
-        $this->f_name          = scrub_out($this->name);
+        $this->f_name          = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->link            = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
-        $this->f_link          = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
+        $this->f_link          = "<a href=\"" . $this->link . "\">" . scrub_out($this->f_name) . "</a>";
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
