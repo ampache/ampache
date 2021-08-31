@@ -1010,8 +1010,8 @@ class User extends database_object
         }
 
         $this->f_name = ($this->fullname_public)
-            ? filter_var($this->fullname, FILTER_SANITIZE_URL)
-            : filter_var($this->username, FILTER_SANITIZE_URL);
+            ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         // Base link
         $this->link   = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
