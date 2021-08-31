@@ -85,7 +85,7 @@ $access50        = Access::check('interface', 50); ?>
     </li>
     <?php if (User::is_registered()) { ?>
     <li class="sb2_dashboard">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_dashboards; ?></span><?php echo Ui::get_icon('all', $t_expander, 'dashboard', 'header-img ' . (($_COOKIE['sb_dashboard'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_dashboards; ?></span><?php echo Ui::get_icon('all', $t_expander, 'dashboard', 'header-img ' . (($_COOKIE['sb_dashboard'] == 'expanded') ? 'expanded' : 'collapsed')); ?></h4>
         <ul class="sb3" id="sb_home_dash" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_dashboard'))) {
             echo 'display: none;';
         } ?>">

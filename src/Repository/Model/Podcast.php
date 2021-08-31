@@ -149,7 +149,7 @@ class Podcast extends database_object implements library_item
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
-        $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
+        $this->f_link          = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
