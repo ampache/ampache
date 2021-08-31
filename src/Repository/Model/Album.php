@@ -603,7 +603,7 @@ class Album extends database_object implements library_item
         }
         $this->f_title = $this->f_name;
         $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . $this->f_name;
 
         // Looking if we need to display the release year
         if ($show_year) {

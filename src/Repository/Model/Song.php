@@ -1683,7 +1683,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // Create Links for the different objects
         $this->link          = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
-        $this->f_link        = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . $this->f_title . "\"> " . $this->f_title . "</a>";
+        $this->f_link        = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->f_title) . "\"> " . $this->f_title . "</a>";
         $this->f_album_link  = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
         if (!empty($this->albumartist)) {
