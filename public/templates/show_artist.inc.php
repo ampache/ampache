@@ -55,7 +55,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-Ui::show_box_top($artist->f_name, 'info-box'); ?>
+Ui::show_box_top(scrub_out($artist->f_name), 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
