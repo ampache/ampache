@@ -165,7 +165,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_file = $this->f_title . '.' . $this->type;
 
         $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
+        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
