@@ -53,7 +53,8 @@ rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./.git/* --exclud
 * Then unpack the exact zip and create a server to test basic functionality
 
 ```shell
-rm -rf /var/www/html && unzip -o ../ampache-${a_version}_all.zip -d /var/www/html/
+rm -rf /var/www/html && ln -s /var/www/ampache/public /var/www/html
+rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all.zip -d /var/www/ampache/
 ```
 
 * FIXME This might be where unit testing would be helpful.

@@ -73,8 +73,8 @@ interface InstallationHelperInterface
         $create_db = true,
         $overwrite = false,
         $create_tables = true,
-        $charset = 'utf8',
-        $collation = 'utf8_unicode_ci'
+        $charset = 'utf8mb4',
+        $collation = 'utf8mb4_unicode_ci'
     );
 
     /**
