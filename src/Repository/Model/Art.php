@@ -1115,7 +1115,7 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
-        if (Art::has_db($new_object_id, $object_type)) {
+        if (Art::has_db($new_object_id, $object_type) || $old_object_id == $new_object_id) {
             return false;
         }
 
