@@ -83,8 +83,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         // format shared lists using the username
         $this->f_name = (($this->user == Core::get_global('user')->id))
-            ? scrub_out($this->name)
-            : scrub_out($this->name . " (" . $this->username . ")");
+            ? $this->name
+            : $this->name . " (" . $this->username . ")";
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
     } // format
 
