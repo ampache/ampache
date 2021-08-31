@@ -6,7 +6,7 @@ Ampache 5 is here and it's big!
 
 * Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 * As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major rework [faq](https://github.com/ampache/ampache/wiki/cli-faq)
+* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
 * You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
