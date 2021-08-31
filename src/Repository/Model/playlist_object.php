@@ -83,8 +83,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         // format shared lists using the username
         $this->f_name = (($this->user == Core::get_global('user')->id))
-            ? $this->name
-            : $this->name . " (" . $this->username . ")";
+            ? filter_var($this->name, FILTER_SANITIZE_URL)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_URL);
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
     } // format
 
@@ -146,8 +146,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         if (!isset($this->f_name)) {
             $this->f_name = (($this->user == Core::get_global('user')->id))
-                ? $this->name
-                : $this->name . " (" . $this->username . ")";
+                ? filter_var($this->name, FILTER_SANITIZE_URL)
+                : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_URL);
         }
 
         return $this->f_name;

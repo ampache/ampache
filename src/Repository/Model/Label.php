@@ -142,9 +142,9 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_name  = scrub_out($this->name);
+        $this->f_name  = filter_var($this->name, FILTER_SANITIZE_URL);
         $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
         $this->artists = count($this->get_artists());
     }
 

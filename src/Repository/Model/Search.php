@@ -1018,7 +1018,7 @@ class Search extends playlist_object
         parent::format();
 
         $this->link   = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
     }
 
     /**

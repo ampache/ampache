@@ -290,7 +290,7 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->f_name         = scrub_out(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])));
+        $this->f_name         = filter_var(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])), FILTER_SANITIZE_URL);
         $this->total_duration = (int)$this->time;
         $this->object_cnt     = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;

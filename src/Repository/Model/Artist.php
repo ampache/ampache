@@ -211,7 +211,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // foreach info
 
         // set the full name
-        $this->f_name = scrub_out(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])));
+        $this->f_name = filter_var(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])), FILTER_SANITIZE_URL);
         // make sure the int values are cast to integers
         $this->object_cnt        = (int)$this->total_count;
         $this->time              = (int)$this->time;

@@ -1009,11 +1009,13 @@ class User extends database_object
             $this->f_create_date = get_datetime((int)$this->create_date);
         }
 
-        $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
+        $this->f_name = ($this->fullname_public)
+            ? filter_var($this->fullname, FILTER_SANITIZE_URL)
+            : filter_var($this->username, FILTER_SANITIZE_URL);
 
         // Base link
         $this->link   = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
         if ($details) {
             $user_data = self::get_user_data($this->id);

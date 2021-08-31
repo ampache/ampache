@@ -1678,7 +1678,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_albumartist_full = $this->get_album_artist_name();
 
         // Format the title
-        $this->f_title      = scrub_out($this->title);
+        $this->f_title      = filter_var($this->title, FILTER_SANITIZE_URL);
         $this->f_title_full = $this->f_title;
 
         // Create Links for the different objects
