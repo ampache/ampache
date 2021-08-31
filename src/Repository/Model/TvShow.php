@@ -164,7 +164,7 @@ class TvShow extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name), FILTER_SANITIZE_URL);
+        $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)), FILTER_SANITIZE_URL);
         $this->link   = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 

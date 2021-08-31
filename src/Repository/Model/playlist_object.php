@@ -145,7 +145,7 @@ abstract class playlist_object extends database_object implements library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = (($this->user == Core::get_global('user')->id))
+            $this->f_name = ($this->user == Core::get_global('user')->id)
                 ? filter_var($this->name, FILTER_SANITIZE_URL)
                 : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_URL);
         }
