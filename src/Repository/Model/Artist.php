@@ -211,7 +211,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // foreach info
 
         // set the full name
-        $this->f_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
+        $this->f_name = scrub_out(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])));
         // make sure the int values are cast to integers
         $this->object_cnt        = (int)$this->total_count;
         $this->time              = (int)$this->time;
@@ -473,7 +473,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->link   = ($this->catalog_id)
             ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
             : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name) . "</a>";
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name . "</a>";
 
         if ($details) {
             $min   = sprintf("%02d", (floor($this->time / 60) % 60));

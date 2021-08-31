@@ -913,8 +913,8 @@ class Json_Data
 
             $ourArray = array(
                 "id" => (string)$song->id,
-                "title" => $song->title,
-                "name" => $song->title,
+                "title" => $song->f_title,
+                "name" => $song->f_title,
                 "artist" => array(
                     "id" => (string) $song->artist,
                     "name" => $song->get_artist_name()),
@@ -1059,7 +1059,7 @@ class Json_Data
 
             array_push($JSON, array(
                 "id" => (string)$song->id,
-                "title" => $song->title,
+                "title" => $song->f_title,
                 "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
                 "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
                 "genre" => self::genre_array($song->tags),

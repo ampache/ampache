@@ -290,7 +290,7 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->f_name         = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
+        $this->f_name         = scrub_out(trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name'])));
         $this->total_duration = (int)$this->time;
         $this->object_cnt     = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
@@ -603,7 +603,7 @@ class Album extends database_object implements library_item
         }
         $this->f_title = $this->f_name;
         $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
 
         // Looking if we need to display the release year
         if ($show_year) {
@@ -615,6 +615,7 @@ class Album extends database_object implements library_item
             $this->f_title .= " [" . T_('Disk') . " " . $this->disk . "]";
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
+        $this->f_title = scrub_out($this->f_title);
         $this->f_link .= "</a>";
 
         if ($this->artist_count == '1') {
