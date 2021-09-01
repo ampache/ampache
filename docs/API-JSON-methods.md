@@ -139,8 +139,6 @@ These methods take no parameters beyond your auth key to return information
 
 ### system_update
 
-* **NEW** in 5.0.0-develop
-
 Check Ampache for updates and run the update if there is one.
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -160,8 +158,6 @@ Check Ampache for updates and run the update if there is one.
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_update.json)
 
 ### system_preferences
-
-* **NEW** in 5.0.0-develop
 
 Get your server preferences
 
@@ -183,8 +179,6 @@ Get your server preferences
 
 ### users
 
-* **NEW** in 5.0.0-develop
-
 Get ids and usernames for your site
 
 * return array
@@ -203,8 +197,6 @@ Get ids and usernames for your site
 
 ### user_preferences
 
-* **NEW** in 5.0.0-develop
-
 Get your user preferences
 
 * return array
@@ -222,8 +214,6 @@ Get your user preferences
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preferences.json)
 
 ### bookmarks
-
-* **NEW** in 5.0.0-develop
 
 Get information about bookmarked media this user is allowed to manage.
 
@@ -762,8 +752,6 @@ returns a single song
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/song.json)
 
 ### song_delete
-
-* **NEW** in 5.0.0-develop
 
 Delete an existing song. (if you are allowed to)
 
@@ -1744,8 +1732,6 @@ This returns the songs for a license
 
 ### labels
 
-* **NEW** in 5.0.0-develop
-
 This returns labels based on the specified filter
 
 | Input    | Type       | Description                                                      | Optional |
@@ -1774,8 +1760,6 @@ This returns labels based on the specified filter
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/labels.json)
 
 ### label
-
-* **NEW** in 5.0.0-develop
 
 This returns a single label
 
@@ -1807,8 +1791,6 @@ This returns a single label
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/label.json)
 
 ### label_artists
-
-* **NEW** in 5.0.0-develop
 
 This returns the artists for a label
 
@@ -2291,8 +2273,6 @@ Sync and download new podcast episodes
 
 ### user_preference
 
-* **NEW** in 5.0.0-develop
-
 Get your user preference by name
 
 | Input    | Type   | Description                                       | Optional |
@@ -2314,8 +2294,6 @@ Get your user preference by name
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preference.json)
 
 ### system_preference
-
-* **NEW** in 5.0.0-develop
 
 Get your server preference by name
 
@@ -2340,8 +2318,6 @@ Get your server preference by name
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_preferences.json)
 
 ### preference_create
-
-* **NEW** in 5.0.0-develop
 
 Add a new preference to your server
 
@@ -2374,8 +2350,6 @@ Add a new preference to your server
 
 ### preference_edit
 
-* **NEW** in 5.0.0-develop
-
 Edit a preference value and apply to all users if allowed
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -2402,8 +2376,6 @@ Edit a preference value and apply to all users if allowed
 
 ### preference_delete
 
-* **NEW** in 5.0.0-develop
-
 Delete a non-system preference by name
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -2428,8 +2400,6 @@ Delete a non-system preference by name
 
 ### get_bookmark
 
-* **NEW** in 5.0.0-develop
-
 Get the bookmark from it's object_id and object_type.
 
 | Input    | Type   | Description                                       | Optional |
@@ -2452,8 +2422,6 @@ Get the bookmark from it's object_id and object_type.
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/get_bookmark.json)
 
 ### bookmark_create
-
-* **NEW** in 5.0.0-develop
 
 Create a placeholder for the current media that you can return to later.
 
@@ -2481,8 +2449,6 @@ Create a placeholder for the current media that you can return to later.
 
 ### bookmark_edit
 
-* **NEW** in 5.0.0-develop
-
 Edit a placeholder for the current media that you can return to later.
 
 | Input      | Type    | Description                                       | Optional |
@@ -2509,8 +2475,6 @@ Edit a placeholder for the current media that you can return to later.
 
 ### bookmark_delete
 
-* **NEW** in 5.0.0-develop
-
 Delete an existing bookmark. (if it exists)
 
 | Input    | Type   | Description                                       | Optional |
@@ -2535,8 +2499,6 @@ Delete an existing bookmark. (if it exists)
 
 ### deleted_songs
 
-* **NEW** in 5.0.0-develop
-
 Returns songs that have been deleted from the server
 
 | Input    | Type    | Description                                      | Optional |
@@ -2560,8 +2522,6 @@ Returns songs that have been deleted from the server
 
 ### deleted_podcast_episodes
 
-* **NEW** in 5.0.0-develop
-
 This returns the episodes for a podcast that have been deleted
 
 | Input    | Type    | Description                                      | Optional |
@@ -2584,8 +2544,6 @@ This returns the episodes for a podcast that have been deleted
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/deleted_podcast_episodes.json)
 
 ### deleted_videos
-
-* **NEW** in 5.0.0-develop
 
 This returns video objects that have been deleted
 
