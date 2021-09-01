@@ -2,8 +2,8 @@
 
 ![Logo](https://ampache.org/img/logo/ampache-logo_x64.png)
 
-[www.ampache.org](https://ampache.org/) |
-[ampache.github.io](http://ampache.github.io)
+[www.ampache.org](https://ampache.org/)
+
 [Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
 
 ## News
