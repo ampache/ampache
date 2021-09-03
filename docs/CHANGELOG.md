@@ -10,7 +10,9 @@
 
 ### API-develop
 
-* No Change
+### Fixed
+
+* get_indexes: JSON didn't think live_streams was valid (it is)
 
 ## Ampache 5.0.0-release
 
