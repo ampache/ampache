@@ -2191,8 +2191,6 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
-            $update_time = time();
-            Song::update_utime($song->id, $update_time);
         } else {
             debug_event(self::class, "$song->file : no differences found", 5);
         }
@@ -2206,6 +2204,9 @@ abstract class Catalog extends database_object
                 $o_rating->set_rating($rating, $user);
             }
         }
+        // lets always update the time when you update
+        $update_time = time();
+        Song::update_utime($song->id, $update_time);
 
         return $info;
     } // update_song_from_tags
@@ -2256,6 +2257,9 @@ abstract class Catalog extends database_object
         } else {
             debug_event(self::class, $video->file . " : no differences found", 5);
         }
+        // lets always update the time when you update
+        $update_time = time();
+        Video::update_utime($video->id, $update_time);
 
         return $info;
     }

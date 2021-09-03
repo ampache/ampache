@@ -2,6 +2,10 @@
 
 ## Ampache-develop
 
+### Changed
+
+* Always update time when updating songs and videos from tags
+
 ### Fixed
 
 * SQL query error for Random Album in certain config setups

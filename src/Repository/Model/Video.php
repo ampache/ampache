@@ -1094,6 +1094,21 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
+     * update_utime
+     * sets a new update time
+     * @param integer $video_id
+     * @param integer $time
+     */
+    public static function update_utime($video_id, $time = 0)
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        self::_update_item('update_time', $time, $video_id, 75, true);
+    } // update_utime
+
+    /**
      * update_played
      * sets the played flag
      * @param boolean $new_played
@@ -1112,11 +1127,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param integer $value
-     * @param integer $song_id
+     * @param integer $video_id
      * @param integer $level
      * @return boolean
      */
-    private static function _update_item($field, $value, $song_id, $level)
+    private static function _update_item($field, $value, $video_id, $level)
     {
         /* Check them Rights! */
         if (!Access::check('interface', $level)) {
@@ -1129,7 +1144,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $sql = "UPDATE `video` SET `$field` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $video_id));
 
         return true;
     } // _update_item
