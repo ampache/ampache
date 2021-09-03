@@ -1486,7 +1486,7 @@ class Search extends playlist_object
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "(`album`.`total_count` $sql_match_operator $input)";
                     break;
                 case 'release_type':
                     $where[] = "`album`.`release_type` $sql_match_operator '$input'";
@@ -1736,7 +1736,7 @@ class Search extends playlist_object
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "(`artist`.`total_count` $sql_match_operator $input)";
                     break;
                 case 'other_user':
                     $other_userid = $input;
@@ -1968,18 +1968,16 @@ class Search extends playlist_object
                     $where[] = "`play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "(`song`.`total_count` $sql_match_operator $input)";
                     break;
                 case 'skipped_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "(`song`.`total_skip` $sql_match_operator $input)";
                     break;
                 case 'played_or_skipped_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') " .
-                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    $where[] = "((`song`.`total_count` + `song`.`total_skip`) $sql_match_operator $input)";
                     break;
                 case 'play_skip_ratio':
-                    $where[] = "`song`.`id` IN (SELECT `song`.`id` FROM `song` LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' GROUP BY `object_id`, `count_type`) AS `stream_count` on `song`.`id` = `stream_count`.`object_id` LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'skip' GROUP BY `object_id`, `count_type`) AS `skip_count` on `song`.`id` = `skip_count`.`object_id` WHERE ((IFNULL(`stream_count`.`counting`, 0)/IFNULL(`skip_count`.`counting`, 0)) * 100) $sql_match_operator '$input' GROUP BY `song`.`id`)";
+                    $where[] = "(((`song`.`total_count`/`song`.`total_skip`) * 100) $sql_match_operator $input)";
                     break;
                 case 'myplayed':
                 case 'myplayedalbum':
