@@ -296,12 +296,13 @@ class Album extends database_object implements library_item
         $this->addition_time  = (int)$this->addition_time;
         $this->song_count     = (int)$this->song_count;
         $this->artist_count   = (int)$this->artist_count;
+        // suite is used even without grouping
+        $albumRepository      = $this->getAlbumRepository();
+        $this->album_suite    = $albumRepository->getAlbumSuite($this);
 
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
-            $albumRepository         = $this->getAlbumRepository();
-            $this->album_suite       = $albumRepository->getAlbumSuite($this);
             $this->allow_group_disks = true;
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
