@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Ampache-develop
+
+### Fixed
+
+* SQL query error for Random Album in certain config setups
+* Album suite needed even without grouping
+* Stop scrubbing the podcast title so hard (so many `&amp;`'s)
+
+### API-develop
+
+* No Change
+
 ## Ampache 5.0.0-release
 
 Ampache 5 is here and it's big!
