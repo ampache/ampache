@@ -15,6 +15,10 @@
 
 ### API-develop
 
+### Added
+
+* stream: added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+
 ### Fixed
 
 * get_indexes: JSON didn't think live_streams was valid (it is)
