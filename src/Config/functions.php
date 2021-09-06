@@ -192,6 +192,9 @@ function get_languages()
                 case 'el_GR':
                     $name = 'Greek';
                     break; /* Greek */
+                case 'en_AU':
+                    $name = 'English (AU)';
+                    break; /* English */
                 case 'en_GB':
                     $name = 'English (UK)';
                     break; /* English */

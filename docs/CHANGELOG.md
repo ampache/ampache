@@ -5,6 +5,7 @@
 ### Added
 
 * Split search items in WebUI into optgroup categories
+* Add en_AU as a locale
 
 ### Changed
 
