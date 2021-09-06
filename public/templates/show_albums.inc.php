@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path      = AmpConfig::get('web_path');
 $thcount       = 9;
-$show_ratings  = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings  = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres   = AmpConfig::get('hide_genres');
 $is_table      = $browse->is_grid_view();
 $group_release = AmpConfig::get('album_release_type');
@@ -98,10 +98,8 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
     <tbody>
         <?php if (AmpConfig::get('ratings')) {
         Rating::build_cache('album', $object_ids);
+        Userflag::build_cache('album', $object_ids);
     }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('album', $object_ids);
-        }
 
         $show_direct_play_cfg = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');

@@ -659,8 +659,8 @@ class Search extends playlist_object
     {
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
-        $this->type_numeric('yearformed', T_('Year'), 'numeric', $t_artist_data);
-        $this->type_text('placeformed', T_('Place'), $t_artist_data);
+        $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
+        $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {

@@ -75,10 +75,6 @@ $subtitles = $video->get_subtitles();
                 <?php echo Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php
-        } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
         <dt><?php echo T_('Fav.'); ?></dt>
         <dd>
             <div id="userflag_<?php echo $video->id; ?>_video">

@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 
 $is_table     = $browse->is_grid_view();
 $show_art     = AmpConfig::get('playlist_art') || $browse->is_mashup();
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>

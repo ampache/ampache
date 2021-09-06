@@ -85,8 +85,6 @@ Ui::show_box_top(scrub_out($artist->f_name), 'info-box'); ?>
     <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
         <?php echo Rating::show($artist->id, 'artist', true); ?>
     </span>
-    <?php } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>

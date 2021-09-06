@@ -38,7 +38,7 @@ session_start();
 
 $web_path     = AmpConfig::get('web_path');
 $thcount      = 8;
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
 // translate depending on the browse type
@@ -87,8 +87,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('artist', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('artist', $object_ids);
         }
 

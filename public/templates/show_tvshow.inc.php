@@ -54,9 +54,6 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     <span id="rating_<?php echo (int) ($tvshow->id); ?>_tvshow">
         <?php echo Rating::show($tvshow->id, 'tvshow'); ?>
     </span>
-    <?php
-    } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $tvshow->id; ?>_tvshow">
         <?php echo Userflag::show($tvshow->id, 'tvshow'); ?>
     </span>

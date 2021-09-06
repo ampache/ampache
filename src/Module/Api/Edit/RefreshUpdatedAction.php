@@ -91,7 +91,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         database_object $libitem,
         int $object_id
     ): ?ResponseInterface {
-        $show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+        $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
         /**
          * @todo Every editable item type will need some sort of special handling here
          */
@@ -111,7 +111,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $this->talFactory->createTalView()
                     ->setContext('BROWSE_ARGUMENT', '')
                     ->setContext('USER_IS_REGISTERED', true)
-                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
+                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                     ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                     ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                     ->setContext('ARGUMENT_PARAM', $argument_param)

@@ -172,8 +172,6 @@ $access50        = Access::check('interface', 50); ?>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                 <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/stats.php?action=highest"><?php echo $t_topRated ?></a></li>
-                <?php } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
                 <li id="sb_home_info_userFlag"><a href="<?php echo $web_path?>/stats.php?action=userflag"><?php echo $t_favorites ?></a></li>
                 <?php } ?>
                 <?php if (AmpConfig::get('wanted')) { ?>

@@ -10,6 +10,7 @@
 ### Changed
 
 * Always update time when updating songs and videos from tags
+* Merge config 'ratings' and 'userflags' checks into ratings. (drop userflags)
 
 ### Fixed
 

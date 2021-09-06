@@ -1280,7 +1280,7 @@ class Subsonic_Xml_Data
     private static function setIfStarred($xml, $objectType, $object_id)
     {
         if (InterfaceImplementationChecker::is_library_item($objectType)) {
-            if (AmpConfig::get('userflags')) {
+            if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$res[1]));

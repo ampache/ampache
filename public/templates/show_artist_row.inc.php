@@ -84,9 +84,6 @@ $web_path   = AmpConfig::get('web_path'); ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
                     <?php echo Rating::show($libitem->id, 'artist'); ?>
                 </span>
-            <?php } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
                     <?php echo Userflag::show($libitem->id, 'artist'); ?>
                 </span>

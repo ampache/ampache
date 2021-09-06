@@ -28,7 +28,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 //mashup and grid view need different css
@@ -66,15 +66,12 @@ $cel_counter = "cel_counter"; ?>
         </tr>
     </thead>
     <tbody>
-        <?php
+        <?php if (AmpConfig::get('ratings')) {
         // Cache the ratings we are going to use
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist', $object_ids);
-        }
+        Rating::build_cache('artist', $object_ids);
         // Cache the userflags we are going to use
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('artist', $object_ids);
-        }
+        Userflag::build_cache('artist', $object_ids);
+    }
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {

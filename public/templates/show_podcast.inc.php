@@ -51,9 +51,6 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
     <span id="rating_<?php echo (int) ($podcast->id); ?>_podcast">
         <?php echo Rating::show($podcast->id, 'podcast'); ?>
     </span>
-    <?php } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $podcast->id; ?>_podcast">
         <?php echo Userflag::show($podcast->id, 'podcast'); ?>
     </span>

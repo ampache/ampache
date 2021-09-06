@@ -430,8 +430,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     </a>
                 </div>
 
-                <?php
-                    if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
+                <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
@@ -439,8 +438,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     </a>
                 </div>
 
-                <?php
-                    }
+                <?php }
                     if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
@@ -511,19 +509,18 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php
-                    if (Access::check('interface', 100)) {
-                        echo '<div id=update_notify>';
-                        //if (!AmpConfig::get('hide_ampache_messages', false)) {
-                        //    AutoUpdate::show_ampache_message();
-                        //}
-                        if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
-                            AutoUpdate::show_new_version();
-                            echo '<br />';
-                        }
-                        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+                <?php if (Access::check('interface', 100)) {
+                    echo '<div id=update_notify>';
+                    //if (!AmpConfig::get('hide_ampache_messages', false)) {
+                    //    AutoUpdate::show_ampache_message();
+                    //}
+                    if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
+                        AutoUpdate::show_new_version();
+                        echo '<br />';
+                    }
+                    $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
 
-                        if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
+                    if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
@@ -532,8 +529,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             </div>
                 <?php
                         }
-                        echo '</div>';
-                    }
+                    echo '</div>';
+                }
                 if (AmpConfig::get("ajax_load")) {
                     require Ui::find_template('show_web_player_embedded.inc.php');
                 } // load the web_player early to make sure the browser doesn't block audio playback?>

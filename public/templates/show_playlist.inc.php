@@ -55,8 +55,6 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <span id="rating_<?php echo $playlist->id; ?>_playlist">
         <?php echo Rating::show($playlist->id, 'playlist'); ?>
     </span>
-    <?php } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $playlist->id; ?>_playlist">
         <?php echo Userflag::show($playlist->id, 'playlist'); ?>
     </span>

@@ -35,11 +35,6 @@ final class ConfigViewAdapter implements ConfigViewAdapterInterface
         $this->configContainer = $configContainer;
     }
 
-    public function isUserFlagsEnabled(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS);
-    }
-
     public function isWaveformEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM);

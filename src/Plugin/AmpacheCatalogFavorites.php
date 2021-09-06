@@ -112,7 +112,7 @@ class AmpacheCatalogFavorites
      */
     public function display_home()
     {
-        if (AmpConfig::get('userflags')) {
+        if (AmpConfig::get('ratings')) {
             $userflags = Userflag::get_latest('song', 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';

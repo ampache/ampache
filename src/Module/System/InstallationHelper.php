@@ -525,7 +525,6 @@ final class InstallationHelper implements InstallationHelperInterface
         $trconfig = array(
             'use_auth' => 'true',
             'ratings' => 'true',
-            'userflags' => 'true',
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
@@ -547,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
         switch ($case) {
             case 'minimalist':
                 $trconfig['ratings']                   = 'false';
-                $trconfig['userflags']                 = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
                 $trconfig['channel']                   = 'false';

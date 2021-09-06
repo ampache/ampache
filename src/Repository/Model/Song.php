@@ -635,8 +635,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $song_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('song', $song_ids);
         }
 

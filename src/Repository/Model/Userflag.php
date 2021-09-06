@@ -350,7 +350,7 @@ class Userflag extends database_object
     public static function show($object_id, $type): string
     {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('userflags')) {
+        if (!AmpConfig::get('ratings')) {
             return '';
         }
 
