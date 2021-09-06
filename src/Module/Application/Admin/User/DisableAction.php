@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,26 +39,35 @@ final class DisableAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
+        $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+            return null;
+        }
+
         $this->ui->showHeader();
 
-        $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        $user   = $this->modelFactory->createUser($userId);
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: User Fullname */
             sprintf(T_('This will disable the user "%s"'), $user->fullname),
             sprintf(
                 'admin/users.php?action=confirm_disable&amp;user_id=%s',
-                $user->id
+                $userId
             ),
             1,
             'disable_user'
