@@ -60,14 +60,16 @@ final class EnableAction extends AbstractUserAction
         $this->ui->showHeader();
 
         $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
-
-        $this->userStateToggler->enable($user);
-
         $this->ui->showConfirmation(
-            T_('No Problem'),
-            /* HINT: Username and fullname together: Username (fullname) */
-            sprintf(T_('%s (%s) has been enabled'), $user->username, $user->fullname),
-            'admin/users.php'
+            T_('Are You Sure?'),
+            /* HINT: User Fullname */
+            sprintf(T_('This will enable the user "%s"'), $user->fullname),
+            sprintf(
+                'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                $user->id
+            ),
+            1,
+            'enable_user'
         );
 
         $this->ui->showQueryStats();

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,16 +37,12 @@ final class DisableAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
-    private UserStateTogglerInterface $userStateToggler;
-
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        UserStateTogglerInterface $userStateToggler
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;
-        $this->userStateToggler = $userStateToggler;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -55,21 +50,17 @@ final class DisableAction extends AbstractUserAction
         $this->ui->showHeader();
 
         $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
-
-        if ($this->userStateToggler->disable($user) === true) {
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                /* HINT: Username and fullname together: Username (fullname) */
-                sprintf(T_('%s (%s) has been disabled'), $user->username, $user->fullname),
-                'admin/users.php'
-            );
-        } else {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_('You need at least one active Administrator account'),
-                'admin/users.php'
-            );
-        }
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            /* HINT: User Fullname */
+            sprintf(T_('This will disable the user "%s"'), $user->fullname),
+            sprintf(
+                'admin/users.php?action=confirm_disable&amp;user_id=%s',
+                $user->id
+            ),
+            1,
+            'disable_user'
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

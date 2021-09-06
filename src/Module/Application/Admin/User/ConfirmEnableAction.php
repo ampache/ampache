@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
@@ -33,9 +34,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmDeleteAction extends AbstractUserAction
+final class ConfirmEnableAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'confirm_delete';
+    public const REQUEST_KEY = 'confirm_enable';
 
     private UiInterface $ui;
 
@@ -43,14 +44,18 @@ final class ConfirmDeleteAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UserStateTogglerInterface $userStateToggler;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UserStateTogglerInterface $userStateToggler
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->ui               = $ui;
+        $this->modelFactory     = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->userStateToggler = $userStateToggler;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -59,27 +64,21 @@ final class ConfirmDeleteAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('delete_user')) {
+        if (!Core::form_verify('enable_user')) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $user = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
-        if ($client->delete()) {
-            $this->ui->showConfirmation(
-                T_('No Problem'),
-                /* HINT: Username (Short Name) */
-                sprintf(T_('%s has been deleted'), $client->username),
-                sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
-            );
-        } else {
-            $this->ui->showConfirmation(
-                T_('There Was a Problem'),
-                T_('You need at least one active Administrator account'),
-                sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
-            );
-        }
+        $this->userStateToggler->enable($user);
+
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            /* HINT: Username and fullname together: Username (fullname) */
+            sprintf(T_('%s (%s) has been enabled'), $user->username, $user->fullname),
+            'admin/users.php'
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

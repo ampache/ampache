@@ -6,6 +6,7 @@
 
 * Split search items in WebUI into optgroup categories
 * Add en_AU as a locale
+* Require confirmation on enable/disable user links
 
 ### Changed
 
