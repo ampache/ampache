@@ -2,6 +2,10 @@
 
 ## Ampache-develop
 
+### Added
+
+* Split search items in WebUI into optgroup categories
+
 ### Changed
 
 * Always update time when updating songs and videos from tags
