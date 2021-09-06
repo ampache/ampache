@@ -479,9 +479,7 @@ class Xml_Data
                     $string .= self::videos($objects, $user_id);
                     break;
                 case 'live_stream':
-                    $live_stream = new Live_Stream($object_id);
-                    $live_stream->format();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n</$object_type>\n";
+                    $string .= self::live_streams($objects);
             }
         } // end foreach objects
 
@@ -535,6 +533,31 @@ class Xml_Data
 
         return self::output_xml($string);
     } // labels
+
+    /**
+     * live_streams
+     *
+     * This returns live_streams to the user, in a pretty xml document with the information
+     *
+     * @param  integer[] $live_streams
+     * @return string    return xml
+     */
+    public static function live_streams($live_streams)
+    {
+        if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
+            $live_streams = array_splice($live_streams, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . Catalog::get_count('live_stream') . "</total_count>\n";
+
+        foreach ($live_streams as $live_stream_id) {
+            $live_stream = new Live_Stream($live_stream_id);
+            $live_stream->format();
+
+            $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog><![CDATA[" . $live_stream->catalog . "]]></catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // live_streams
 
     /**
      * genres

@@ -2632,10 +2632,12 @@ Binary data methods are used for returning raw data to the user such as a image 
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 
+**DEVELOP** 'podcast_episode' has been added. 'podcast' is incorrect and will be removed in Ampache 6
+
 | Input     | Type    | Description                                      | Optional |
 |-----------|---------|--------------------------------------------------|----------|
 | 'id'      | integer | $object_id                                       | NO       |
-| 'type'    | string  | 'song', 'podcast'                                | NO       |
+| 'type'    | string  | 'song', 'podcast_episode', 'podcast'             | NO       |
 | 'bitrate' | integer | max bitrate for transcoding                      | YES      |
 | 'format'  | string  | 'mp3', 'ogg', 'raw', etc                         | YES      |
 | 'offset'  | integer | Return results starting from this index position | YES      |

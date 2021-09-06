@@ -21,7 +21,14 @@
 
 ### Added
 
+* NEW API functions
+  * Api::live_stream (get a radio stream by id)
+  * Api::live_streams
 * stream: added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+
+### Changed
+
+* live_stream objects added 'catalog' and 'site_url'
 
 ### Fixed
 

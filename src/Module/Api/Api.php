@@ -76,6 +76,8 @@ class Api
         'labels' => Method\LabelsMethod::class,
         'label' => Method\LabelMethod::class,
         'label_artists' => Method\LabelArtistsMethod::class,
+        'live_streams' => Method\LiveStreamsMethod::class,
+        'live_stream' => Method\LiveStreamMethod::class,
         'songs' => Method\SongsMethod::class,
         'song' => Method\SongMethod::class,
         'song_delete' => Method\SongDeleteMethod::class,

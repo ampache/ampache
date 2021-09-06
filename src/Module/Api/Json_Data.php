@@ -252,7 +252,9 @@ class Json_Data
                 "id" => (string) $live_stream_id,
                 "name" => $live_stream->f_name,
                 "url" => $live_stream->url,
-                "codec" => $live_stream->codec
+                "codec" => $live_stream->codec,
+                "catalog" => $live_stream->catalog,
+                "site_url" => $live_stream->site_url
             ));
         } // end foreach
         $output = ($object) ? array("live_stream" => $JSON) : $JSON[0];
