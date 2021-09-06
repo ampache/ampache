@@ -24,9 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,20 +37,12 @@ final class EnableAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
-    private ConfigContainerInterface $configContainer;
-
-    private UserStateTogglerInterface $userStateToggler;
-
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserStateTogglerInterface $userStateToggler
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->userStateToggler = $userStateToggler;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
