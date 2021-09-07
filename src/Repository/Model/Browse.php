@@ -466,8 +466,8 @@ class Browse extends Query
             $remember_length = time() + 31536000;
             $cookie_options  = [
                 'expires' => $remember_length,
-                'path' => AmpConfig::get('cookie_path'),
-                'domain' => AmpConfig::get('cookie_domain'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Strict'
             ];
