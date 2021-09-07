@@ -19,6 +19,8 @@
 * Album suite needed even without grouping
 * Stop scrubbing the podcast title so hard (so many `&amp;`'s)
 * Use total_count and total_skip columns for searches (Fixes searching with 0)
+* Subsonic
+  * Trim quotes for Subsonic searches (some clients add them)
 
 ### API-develop
 

@@ -894,6 +894,7 @@ class Subsonic_Api
     public static function search2($input, $elementName = "searchResult2")
     {
         $query    = self::check_parameter($input, 'query');
+        $query    = trim(urldecode($query), '"');
         $artists  = array();
         $albums   = array();
         $songs    = array();
