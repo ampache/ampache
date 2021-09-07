@@ -21,6 +21,7 @@
 * Use total_count and total_skip columns for searches (Fixes searching with 0)
 * Subsonic
   * Trim quotes for Subsonic searches (some clients add them)
+  * Support exact (lucene) searching when using quotes
 
 ### API-develop
 

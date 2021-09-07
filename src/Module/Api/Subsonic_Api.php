@@ -893,16 +893,16 @@ class Subsonic_Api
      */
     public static function search2($input, $elementName = "searchResult2")
     {
-        $query    = self::check_parameter($input, 'query');
-        $query    = trim(urldecode($query), '"');
+        $query    = urldecode((string)self::check_parameter($input, 'query'));
+        $operator = (substr($query, -1) == '"' && substr($query, 0) == '"') ? 4 : 0;
+        $query    = trim($query, '"');
         $artists  = array();
         $albums   = array();
         $songs    = array();
-        $operator = 0;
 
-        if (strlen((string)$query) > 1) {
-            if (substr((string)$query, -1) == "*") {
-                $query    = substr((string)$query, 0, -1);
+        if (strlen($query) > 1) {
+            if (substr($query, -1) == "*") {
+                $query    = substr($query, 0, -1);
                 $operator = 2; // Start with
             }
         }
