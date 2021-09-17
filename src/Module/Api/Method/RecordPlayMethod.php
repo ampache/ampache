@@ -55,9 +55,6 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
-            return false;
-        }
         $api_user  = User::get_from_username(Session::username($input['auth']));
         $play_user = (isset($input['user']) && (int) $input['user'] > 0)
             ? new User((int) $input['user'])

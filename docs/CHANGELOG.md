@@ -39,6 +39,7 @@
 ### Fixed
 
 * get_indexes: JSON didn't think live_streams was valid (it is)
+* record_play: user is mean't to be optional
 
 ## Ampache 5.0.0-release
 
