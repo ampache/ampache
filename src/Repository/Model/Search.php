@@ -565,6 +565,7 @@ class Search extends playlist_object
         $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->type_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
         $this->type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
@@ -613,7 +614,6 @@ class Search extends playlist_object
             }
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
         }
-        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_file_data);
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
@@ -661,6 +661,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Name'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -679,13 +680,12 @@ class Search extends playlist_object
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
-        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_play_data);
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->type_text('tag', T_('Genre'), $t_genre);
+        $this->type_text('tag', $t_genre, $t_genre);
 
         $t_file_data = T_('File Data');
-        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_file_data);
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
@@ -717,6 +717,7 @@ class Search extends playlist_object
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_album_data);
         $this->type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
         $this->type_text('release_type', T_('Release Type'), $t_album_data);
         $this->type_text('release_status', T_('Release Status'), $t_album_data);
 
@@ -737,14 +738,11 @@ class Search extends playlist_object
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
-        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_play_data);
+        $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);;
+        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->type_text('tag', T_('Genre'), $t_genre);
-
-        $t_play_data = T_('Play History');
-        $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+        $this->type_text('tag', $t_genre, $t_genre);
 
         $t_file_data = T_('File Data');
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
