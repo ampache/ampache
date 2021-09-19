@@ -738,7 +738,7 @@ class Search extends playlist_object
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);;
+        $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
