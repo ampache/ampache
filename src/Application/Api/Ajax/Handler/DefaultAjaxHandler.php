@@ -73,9 +73,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
             // Handle the users basketcases...
             case 'basket':
                 $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
-                $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
-
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+                    $object_id = $_REQUEST['id'] ?: $_REQUEST['object_id'];
                     if (!is_array($object_id)) {
                         $object_id = array($object_id);
                     }

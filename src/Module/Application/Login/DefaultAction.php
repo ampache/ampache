@@ -83,12 +83,11 @@ final class DefaultAction implements ApplicationActionInterface
         // Avoid form login if still connected
         if ($this->configContainer->get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
             $auth = false;
-            if (Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
+            $name = $this->configContainer->getSessionName();
+            if (array_key_exists($name, $_COOKIE) && Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
                 $auth = true;
-            } else {
-                if (Session::auth_remember()) {
-                    $auth = true;
-                }
+            } elseif (Session::auth_remember()) {
+                $auth = true;
             }
             if ($auth) {
                 return $this->responseFactory
@@ -124,7 +123,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         if (empty($_REQUEST['step'])) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-            if (($_POST['username']) ||
+            if ((filter_has_var(INPUT_POST, 'username')) ||
                 (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
                     (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
                 /* If we are in demo mode let's force auth success */
@@ -273,7 +272,7 @@ final class DefaultAction implements ApplicationActionInterface
 
             if (isset($username)) {
                 Session::create_user_cookie($username);
-                if ($_POST['rememberme']) {
+                if (filter_has_var(INPUT_POST, 'rememberme')) {
                     Session::create_remember_cookie($username);
                 }
             }
