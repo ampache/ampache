@@ -121,7 +121,10 @@ final class AddHostAction implements ApplicationActionInterface
         } else {
             $this->ui->show(
                 'show_add_access.inc.php',
-                ['action' => 'show_add_' . Core::get_post('type')]
+                [
+                    'action' => 'show_add_' . Core::get_post('type'),
+                    'add_type' => 'add_host'
+                ]
             );
         }
 
