@@ -194,7 +194,7 @@ class AmpacheUPnP extends localplay_controller
     public function get_instance($instance = '')
     {
         $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
-        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
         $db_results = Dba::query($sql, array($instance));
 
         return Dba::fetch_assoc($db_results);
