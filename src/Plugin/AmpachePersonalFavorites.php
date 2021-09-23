@@ -154,8 +154,6 @@ class AmpachePersonalFavorites
                             T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
-                        echo '<div style="white-space: normal;">' . $item[0]->description . '</div>';
-                        echo '</div>';
                         echo '</td></tr>';
 
                         $count++;
