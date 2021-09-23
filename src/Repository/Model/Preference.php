@@ -680,7 +680,10 @@ class Preference extends database_object
      */
     public static function load_from_session($uid = -1)
     {
-        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
+        if (!isset($_SESSION)) {
+            return false;
+        }
+        if (array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;
@@ -781,7 +784,7 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (strlen((string)$results['theme_name']) > 0) {
             // In case the theme was removed
-            if (!Core::is_readable(__DIR__ . '/../../public/themes/' . $results['theme_name'])) {
+            if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
             }
         } else {
