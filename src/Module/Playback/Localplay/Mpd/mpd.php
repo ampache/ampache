@@ -1074,7 +1074,7 @@ class mpd
     {
         $parts = explode('.', $string);
 
-        return (100 * $parts[0]) + (10 * $parts[1]) + $parts[2];
+        return (100 * (int)$parts[0]) + (10 * (int)$parts[1]) + (int)$parts[2];
     }
 
     /**
