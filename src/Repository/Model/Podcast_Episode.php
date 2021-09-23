@@ -144,7 +144,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function format($details = true)
     {
-        $this->f_title       = scrub_out($this->title);
+        $this->f_title       = $this->title;
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
