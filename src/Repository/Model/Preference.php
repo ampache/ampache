@@ -267,11 +267,14 @@ class Preference extends database_object
      */
     public static function update_all($preference_id, $value)
     {
-        $preference_id = (string)Dba::escape($preference_id);
-        $value         = (string)Dba::escape($value);
+        if ((int)$preference_id == 0 ) {
+            return false;
+        }
+        $preference_id = Dba::escape($preference_id);
+        $value         = Dba::escape($value);
 
-        $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
-        Dba::write($sql);
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
+        Dba::write($sql, array($value, $preference_id));
 
         parent::clear_cache();
 
@@ -325,23 +328,26 @@ class Preference extends database_object
      * id_from_name
      * This takes a name and returns the id
      * @param string $name
-     * @return array|integer
+     * @return int|false
      */
     public static function id_from_name($name)
     {
         $name = Dba::escape($name);
 
         if (parent::is_cached('id_from_name', $name)) {
-            return (int)(parent::get_from_cache('id_from_name', $name))[0];
+            return (int)(parent::get_from_cache('id_from_name', $name))['id'];
         }
 
-        $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
+        $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($name));
+        $results    = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            parent::add_to_cache('id_from_name', $name, $results);
 
-        parent::add_to_cache('id_from_name', $name, $row);
+            return (int)$results['id'];
+        }
 
-        return (int)$row['id'];
+        return false;
     } // id_from_name
 
     /**

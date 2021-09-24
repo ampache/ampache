@@ -426,7 +426,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public static function tag_exists($value)
     {
         if (parent::is_cached('tag_name', $value)) {
-            return (int)(parent::get_from_cache('tag_name', $value))[0];
+            return (int)(parent::get_from_cache('tag_name', $value))['id'];
         }
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
@@ -462,10 +462,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
         $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $results = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            return (int)$results['id'];
+        }
 
-        return $results['id'];
+        return false;
     } // tag_map_exists
 
     /**

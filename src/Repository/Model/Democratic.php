@@ -615,7 +615,7 @@ class Democratic extends Tmp_Playlist
     public function get_vote($id)
     {
         if (parent::is_cached('democratic_vote', $id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $id))[0];
+            return (int)(parent::get_from_cache('democratic_vote', $id))['count'];
         }
 
         $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
