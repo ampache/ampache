@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
@@ -169,6 +170,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $f_time_h;
     /**
+     * @var string $f_size
+     */
+    public $f_size;
+    /**
      * @var string $link
      */
     public $link;
@@ -258,7 +263,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
-            if ($results['id']) {
+            if (array_key_exists('id', $results)) {
                 $class_name = ObjectTypeToClassNameMapper::map(strtolower($dtype));
 
                 return new $class_name($video_id);
@@ -324,6 +329,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $hour           = sprintf("%02d", floor($min / 60));
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
+
+        // Format the size
+        $this->f_size = Ui::format_bytes($this->size);
 
         if ($details) {
             // Get the top tags
