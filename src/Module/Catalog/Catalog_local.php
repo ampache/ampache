@@ -341,6 +341,12 @@ class Catalog_local extends Catalog
                 return false;
             }
         }
+        if (!array_key_exists('gather_art', $options)) {
+            $options['gather_art'] = false;
+        }
+        if (!array_key_exists('parse_playlist', $options)) {
+            $options['parse_playlist'] = false;
+        }
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
@@ -823,15 +829,15 @@ class Catalog_local extends Catalog
         $results            = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
         $results['catalog'] = $this->id;
 
-        if (isset($options['user_upload'])) {
+        if (array_key_exists('user_upload', $options)) {
             $results['user_upload'] = $options['user_upload'];
         }
 
-        if (isset($options['license'])) {
+        if (array_key_exists('license', $options)) {
             $results['license'] = $options['license'];
         }
 
-        if ((int)$options['artist_id'] > 0) {
+        if (array_key_exists('artist_id', $options) && (int)$options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
@@ -840,7 +846,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        if ((int)$options['album_id'] > 0) {
+        if (array_key_exists('album_id', $options) && (int)$options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
             if (isset($album->id)) {
@@ -857,7 +863,7 @@ class Catalog_local extends Catalog
                 }
             }
 
-            if ($options['move_match_pattern']) {
+            if (array_key_exists('move_match_pattern', $options)) {
                 $patres = VaInfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
                 if ($patres['artist'] != $results['artist'] || $patres['album'] != $results['album'] || $patres['track'] != $results['track'] || $patres['title'] != $results['title']) {
                     $pattern = $this->sort_pattern . DIRECTORY_SEPARATOR . $this->rename_pattern;

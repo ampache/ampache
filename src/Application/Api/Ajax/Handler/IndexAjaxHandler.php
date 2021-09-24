@@ -192,7 +192,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
-                    if (isset($_REQUEST['artist'])) {
+                    if (array_key_exists('hide', $_REQUEST)) {
                         $artist = new Artist($_REQUEST['artist']);
                         $artist->format();
                         if ($artist->mbid) {

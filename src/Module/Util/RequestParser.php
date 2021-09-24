@@ -32,6 +32,9 @@ final class RequestParser implements RequestParserInterface
      */
     public function getFromRequest(string $variable): string
     {
+        if (!array_key_exists($variable, $_REQUEST)) {
+            return '';
+        }
         if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
             return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
@@ -39,10 +42,6 @@ final class RequestParser implements RequestParserInterface
             return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        if (isset($_REQUEST[$variable])) {
-            return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-
-        return '';
+        return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 }

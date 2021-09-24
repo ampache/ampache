@@ -49,23 +49,22 @@ final class DownloadAction extends AbstractStreamAction
 
         $mediaIds = [];
 
-        if (isset($_REQUEST['song_id'])) {
+        if (array_key_exists('song_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'song',
                 'object_id' => scrub_in($_REQUEST['song_id'])
             );
-        } elseif (isset($_REQUEST['video_id'])) {
+        } elseif (array_key_exists('video_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'video',
                 'object_id' => scrub_in($_REQUEST['video_id'])
             );
-        } elseif (isset($_REQUEST['podcast_episode_id'])) {
+        } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
             $mediaIds[] = array(
                 'object_type' => 'podcast_episode',
                 'object_id' => scrub_in($_REQUEST['podcast_episode_id'])
             );
         }
-
 
         return $this->stream(
             $mediaIds,

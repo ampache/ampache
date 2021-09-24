@@ -136,7 +136,7 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return (int) $bit_rate;
+        return (int)$bit_rate;
     }
 
     /**
@@ -260,7 +260,7 @@ class Stream
 
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
+        if (!array_key_exists('bitrate', $options)) {
             debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);

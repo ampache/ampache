@@ -166,7 +166,7 @@ final class UserRepository implements UserRepositoryInterface
             $db_results = Dba::read($sql, array($apikey));
             $results    = Dba::fetch_assoc($db_results);
 
-            if ($results['id']) {
+            if (array_key_exists('id', $results)) {
                 return new User((int) $results['id']);
             }
             // check for api sessions
@@ -174,7 +174,7 @@ final class UserRepository implements UserRepositoryInterface
             $db_results = Dba::read($sql, array($apikey, time()));
             $results    = Dba::fetch_assoc($db_results);
 
-            if ($results['username']) {
+            if (array_key_exists('username', $results)) {
                 return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client

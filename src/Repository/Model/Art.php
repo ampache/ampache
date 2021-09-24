@@ -927,7 +927,7 @@ class Art extends database_object
         } // came from the db
 
         // Check to see if it's a URL
-        if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
+        if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
@@ -958,7 +958,7 @@ class Art extends database_object
             $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
-            if ($id3['format_name'] == "WMA") {
+            if (array_key_exists('format_name', $id3) && $id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
             } elseif (isset($id3['id3v2']['APIC'])) {
                 // Foreach in case they have more then one
@@ -1186,17 +1186,17 @@ class Art extends database_object
         $meta   = $plugin->get_metadata($gtypes, $media_info);
         $images = array();
 
-        if ($meta['art']) {
+        if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
-        if ($meta['tvshow_season_art']) {
+        if (array_key_exists('tvshow_season_art', $meta)) {
             $url      = $meta['tvshow_season_art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
-        if ($meta['tvshow_art']) {
+        if (array_key_exists('tvshow_art', $meta)) {
             $url      = $meta['tvshow_art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);

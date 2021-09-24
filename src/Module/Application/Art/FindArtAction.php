@@ -75,7 +75,7 @@ final class FindArtAction extends AbstractArtAction
         $keyword  = '';
         $options  = [];
         foreach ($keywords as $key => $word) {
-            if (isset($_REQUEST['option_' . $key])) {
+            if (array_key_exists('option_' . $key, $_REQUEST)) {
                 $word['value'] = $_REQUEST['option_' . $key];
             }
             $options[$key] = $word['value'];
@@ -92,13 +92,13 @@ final class FindArtAction extends AbstractArtAction
         $cover_url = [];
         $limit     = 0;
 
-        if (isset($_REQUEST['artist_filter'])) {
+        if (array_key_exists('artist_filter', $_REQUEST)) {
             $options['artist_filter'] = true;
         }
-        if (isset($_REQUEST['search_limit'])) {
+        if (array_key_exists('search_limit', $_REQUEST)) {
             $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
         }
-        if (isset($_REQUEST['year_filter']) && !empty($_REQUEST['year_filter'])) {
+        if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
         }
 
@@ -153,7 +153,7 @@ final class FindArtAction extends AbstractArtAction
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
-                if ($image['raw']) {
+                if (array_key_exists('raw', $image)) {
                     unset($images[$index]['raw']);
                 }
             } // end foreach

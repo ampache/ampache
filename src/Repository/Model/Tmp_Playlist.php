@@ -117,27 +117,25 @@ class Tmp_Playlist extends database_object
     } // get_from_session
 
     /**
-     * get_from_userid
+     * get_from_username
      * This returns a tmp playlist object based on a userid passed
      * this is used for the user profiles page
-     * @param integer $user_id
+     * @param string $username
      * @return mixed
      */
-    public static function get_from_userid($user_id)
+    public static function get_from_username($username)
     {
-        // This is a little stupid, but because we don't have the
-        // user_id in the session or in the tmp_playlist table we have
-        // to do it this way.
-        $client   = new User($user_id);
-        $username = Dba::escape($client->username);
+        $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username` = ? ORDER BY `session`.`expire` DESC";
+        $db_results = Dba::read($sql, array($username));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username`='$username' ORDER BY `session`.`expire` DESC";
-        $db_results = Dba::read($sql);
+        // user doesn't have an active play queue
+        if (!$results) {
+            return false;
+        }
 
-        $data = Dba::fetch_assoc($db_results);
-
-        return $data['id'];
-    } // get_from_userid
+        return $results['id'];
+    } // get_from_username
 
     /**
      * get_items

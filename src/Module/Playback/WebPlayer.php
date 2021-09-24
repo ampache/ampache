@@ -74,7 +74,7 @@ class WebPlayer
     {
         $types   = array('real' => 'mp3', 'player' => '');
 
-        if ($item->codec) {
+        if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
@@ -109,14 +109,14 @@ class WebPlayer
     public static function get_media_object($urlinfo)
     {
         $media = null;
-        if ($urlinfo['id'] && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
+        if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
         } else {
-            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+            if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
                 $media = new Song_Preview($urlinfo['id']);
             } else {
-                if (isset($urlinfo['demo_id'])) {
+                if (array_key_exists('demo_id', $urlinfo)) {
                     $democratic = new Democratic($urlinfo['demo_id']);
                     if ($democratic->id) {
                         $song_id = $democratic->get_next_object();

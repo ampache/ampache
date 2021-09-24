@@ -97,19 +97,19 @@ final class DefaultAction implements ApplicationActionInterface
             ), true);
         }
 
-        if (isset($_REQUEST['transcode_template'])) {
+        if (array_key_exists('transcode_template', $_REQUEST)) {
             $mode = $_REQUEST['transcode_template'];
             $this->installationHelper->install_config_transcode_mode($mode);
         }
 
-        if (isset($_REQUEST['usecase'])) {
+        if (array_key_exists('usecase', $_REQUEST)) {
             $case = $_REQUEST['usecase'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_use_case($case);
             }
         }
 
-        if (isset($_REQUEST['backends'])) {
+        if (array_key_exists('backends', $_REQUEST)) {
             $backends = $_REQUEST['backends'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_backends($backends);

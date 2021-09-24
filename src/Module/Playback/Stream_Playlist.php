@@ -194,11 +194,11 @@ class Stream_Playlist
         $object     = new $class_name($object_id);
         $object->format();
 
-        if ($media['custom_play_action']) {
+        if (array_key_exists('custom_play_action', $media)) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
 
-        if ($_SESSION['iframe']['subtitle']) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('target', $_SESSION['iframe'])) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
@@ -244,7 +244,7 @@ class Stream_Playlist
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
-            $url['time']   = $object->time;
+            $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
                 case 'song':
                     $url['title']     = $object->title;

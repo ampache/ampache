@@ -757,7 +757,11 @@ class Query
      */
     public function get_type()
     {
-        return (string)$this->_state['type'];
+        if (array_key_exists('type', $this->_state)) {
+            return (string)$this->_state['type'];
+        }
+
+        return '';
     } // get_type
 
     /**
@@ -912,7 +916,11 @@ class Query
      */
     public function is_static_content()
     {
-        return make_bool($this->_state['static']);
+        if (array_key_exists('static', $this->_state)) {
+            return make_bool($this->_state['static']);
+        }
+
+        return false;
     }
 
     /**
@@ -922,7 +930,11 @@ class Query
      */
     public function is_simple()
     {
-        return $this->_state['simple'];
+        if (array_key_exists('simple', $this->_state)) {
+            return $this->_state['simple'];
+        }
+
+        return false;
     } // is_simple
 
     /**
@@ -1221,7 +1233,7 @@ class Query
      */
     private function get_sort_sql()
     {
-        if (!is_array($this->_state['sort'])) {
+        if (!array_key_exists('sort', $this->_state)) {
             return '';
         }
 
@@ -1299,7 +1311,8 @@ class Query
         $join_sql   = "";
         $having_sql = "";
         $order_sql  = "";
-        if (!isset($this->_state['custom']) || !$this->_state['custom']) {
+        $is_custom  = (array_key_exists('custom', $this->_state) && $this->_state['custom']);
+        if (!$is_custom) {
             $filter_sql = $this->get_filter_sql();
             $order_sql  = $this->get_sort_sql();
             $join_sql   = $this->get_join_sql();
@@ -1309,10 +1322,10 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group') && $this->_state['sort']) {
+        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group') && $this->_state['sort']) {
             $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
             $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
-        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
+        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -2377,7 +2390,7 @@ class Query
     public function get_content_div()
     {
         $key = 'browse_content_' . $this->get_type();
-        if ($this->_state['ak']) {
+        if (array_key_exists('ak', $this->_state)) {
             $key .= '_' . $this->_state['ak'];
         }
 

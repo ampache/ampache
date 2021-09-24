@@ -64,7 +64,7 @@ final class PlayItemAction extends AbstractStreamAction
                 $item       = new $class_name($object_id);
                 $mediaIds   = array_merge($mediaIds, $item->get_medias());
 
-                if ($_REQUEST['custom_play_action']) {
+                if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
                         if (is_array($mediaId)) {
                             $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];

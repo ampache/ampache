@@ -388,13 +388,14 @@ abstract class Catalog extends database_object
                 }
                 foreach ($fields as $key => $field) {
                     echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+                    $value = (array_key_exists('value', $field)) ? $field['value'] : '';
 
                     switch ($field['type']) {
                         case 'checkbox':
-                            echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
+                            echo "<input type='checkbox' name='" . $key . "' value='1' " . ((!empty($value)) ? 'checked' : '') . "/>";
                             break;
                         default:
-                            echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $field['value'] . "' />";
+                            echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $value . "' />";
                             break;
                     }
                     echo "</td></tr>";
@@ -476,7 +477,7 @@ abstract class Catalog extends database_object
         if ($results = Dba::fetch_assoc($db_results)) {
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
-                if (!$info[$key]) {
+                if (!array_key_exists($key, $info) || !$info[$key]) {
                     $info[$key] = $value;
                 }
             }
@@ -1554,7 +1555,7 @@ abstract class Catalog extends database_object
                 $keyword  = '';
                 foreach ($keywords as $key => $word) {
                     $options[$key] = $word['value'];
-                    if ($word['important'] && !empty($word['value'])) {
+                    if (array_key_exists('important', $word) && !empty($word['value'])) {
                         $keyword .= ' ' . $word['value'];
                     }
                 }
@@ -1894,16 +1895,13 @@ abstract class Catalog extends database_object
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
             // don't echo useless info when using api
-            if (($info['change']) && (!$api)) {
-                if ($info['element'][$type]) {
+            if ($info['change'] && (!$api)) {
+                if (array_key_exists($type, $info['element'])) {
                     $change = explode(' --> ', (string)$info['element'][$type]);
                     $result = (int)$change[1];
                 }
                 $file = scrub_out($song->file);
-                echo '<tr>' . "\n";
-                echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
-                echo $info['text'];
-                echo "</td>\n</tr>\n";
+                echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } else {
                 if (!$api) {
                     echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
@@ -2746,21 +2744,21 @@ abstract class Catalog extends database_object
      * check_int
      * Check to make sure a number fits into the database
      *
-     * @param integer $track
+     * @param integer $my_int
      * @param integer $max
      * @param integer $min
      * @return integer
      */
-    public static function check_int($track, $max, $min)
+    public static function check_int($my_int, $max, $min)
     {
-        if ($track > $max) {
+        if ($my_int > $max) {
             return $max;
         }
-        if ($track < $min) {
+        if ($my_int < $min) {
             return $min;
         }
 
-        return $track;
+        return $my_int;
     }
 
     /**
