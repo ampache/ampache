@@ -431,12 +431,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($value));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $results = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            parent::add_to_cache('tag_name', $value, $results);
 
-        parent::add_to_cache('tag_name', $results['name'], $results);
+            return (int)$results['id'];
+        }
 
-        return (int)$results['id'];
+        return 0;
     } // tag_exists
 
     /**
