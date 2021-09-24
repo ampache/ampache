@@ -133,12 +133,12 @@ class AmpacheTheaudiodb
                 $release = null;
                 if ($media_info['mb_albumid_group']) {
                     $album = $this->get_album($media_info['mb_albumid_group']);
-                    if ($album) {
+                    if ($album !== null) {
                         $release = $album->album[0];
                     }
                 } else {
                     $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if ($albums) {
+                    if ($albums !== null) {
                         $release = $albums->album[0];
                     }
                 }
