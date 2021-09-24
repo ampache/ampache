@@ -74,7 +74,7 @@ $t_logout          = T_('Log out'); ?>
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {
-    if (!$_SESSION['state']['sidebar_tab']) {
+    if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
         $_SESSION['state']['sidebar_tab'] = 'home';
     }
     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];

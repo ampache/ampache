@@ -40,7 +40,7 @@ if (isset($is_header) && $is_header) {
 $limit = $browse->get_offset();
 $start = $browse->get_start();
 $total = $browse->get_total();
-if (isset($_REQUEST['browse_uid'])) {
+if (array_key_exists('browse_uid', $_REQUEST)) {
     $uid = $_REQUEST['browse_uid']++;
 } else {
     $uid = AmpConfig::get('list_header_uid');

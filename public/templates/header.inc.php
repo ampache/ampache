@@ -454,7 +454,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
             <?php
                 }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
+                $isCollapsed = ((AmpConfig::get('sidebar_light') && (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] != "expanded")) || (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
@@ -507,7 +507,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if (Access::check('interface', 100)) {
                     echo '<div id=update_notify>';

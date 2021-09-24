@@ -26,7 +26,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\UiInterface;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 
-if (isset($_REQUEST['ssid'])) {
+if (array_key_exists('ssid', $_REQUEST)) {
     define('NO_SESSION', 1);
     /** @var \Psr\Container\ContainerInterface $dic */
     $dic = require_once __DIR__ . '/../src/Config/Init.php';

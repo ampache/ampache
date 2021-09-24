@@ -39,7 +39,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
-if (!$is_share) {
+if (!isset($is_share) || (isset($is_share) && !$is_share)) {
      $stream_id = $_REQUEST['playlist_id'];
      if (is_string($stream_id) || is_integer($stream_id)) {
          $playlist = new Stream_Playlist($stream_id);
