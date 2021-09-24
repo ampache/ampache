@@ -159,10 +159,8 @@ final class ShowAction implements ApplicationActionInterface
         if (!$typeManaged) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
 
-            $item     = new $class_name(
-                filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
-            );
-            $filename = $item->name ?: $item->title;
+            $item     = new $class_name(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
+            $filename = (isset($item->name)) ? $item->name : $item->title;
 
             $art = new Art($item->id, $type, $kind);
             $art->has_db_info();

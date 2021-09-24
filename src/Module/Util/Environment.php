@@ -158,7 +158,7 @@ final class Environment implements EnvironmentInterface
     {
         /* Check memory */
         $current_memory = ini_get('memory_limit');
-        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
+        $current_memory = (int)substr($current_memory, 0, strlen((string) $current_memory) - 1);
         $new_limit      = ($current_memory + 16) . "M";
 
         /* Bump it by 16 megs (for getid3)*/
