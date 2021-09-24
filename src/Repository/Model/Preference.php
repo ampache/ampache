@@ -267,7 +267,7 @@ class Preference extends database_object
      */
     public static function update_all($preference_id, $value)
     {
-        if ((int)$preference_id == 0 ) {
+        if ((int)$preference_id == 0) {
             return false;
         }
         $preference_id = Dba::escape($preference_id);
