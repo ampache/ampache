@@ -128,12 +128,13 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'artist_info':
-                if (AmpConfig::get('lastfm_api_key') && (isset($_REQUEST['artist']) || isset($_REQUEST['fullname']))) {
-                    if ($_REQUEST['artist']) {
+                if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
+                    if (array_key_exists('artist', $_REQUEST)) {
                         $artist = new Artist($_REQUEST['artist']);
                         $artist->format();
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
+                        $artist    = new Wanted(Wanted::get_wanted_by_name($_REQUEST['fullname']));
                         $biography = Recommendation::get_artist_info_by_name(rawurldecode($_REQUEST['fullname']));
                     }
                     ob_start();
@@ -142,9 +143,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'similar_artist':
-                if (AmpConfig::get('show_similar') && isset($_REQUEST['artist'])) {
+                if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
                     $artist = new Artist($_REQUEST['artist']);
                     $artist->format();
+                    $limit_threshold = AmpConfig::get('stats_threshold');
                     $object_ids      = array();
                     $missing_objects = array();
                     if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
@@ -172,7 +174,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'labels':
-                if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
+                if (AmpConfig::get('label') && array_key_exists('artist', $_REQUEST)) {
                     $labels     = $this->labelRepository->getByArtist((int) $_REQUEST['artist']);
                     $object_ids = array();
                     if (count($labels) > 0) {
@@ -191,7 +193,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'wanted_missing_albums':
-                if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
+                if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
                     if (array_key_exists('hide', $_REQUEST)) {
                         $artist = new Artist($_REQUEST['artist']);
                         $artist->format();
@@ -200,8 +202,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         } else {
                             debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
                         }
-                    } else {
+                    } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
+                    } else {
+                        $walbums = array();
                     }
 
                     ob_start();

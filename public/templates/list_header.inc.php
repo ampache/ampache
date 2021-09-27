@@ -35,6 +35,7 @@ if (isset($is_header) && $is_header) {
 } else {
     $is_header = true;
 }
+$argument_param = $argument_param ?? '';
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
 $limit = $browse->get_offset();
