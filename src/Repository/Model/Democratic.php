@@ -615,14 +615,14 @@ class Democratic extends Tmp_Playlist
     public function get_vote($id)
     {
         if (parent::is_cached('democratic_vote', $id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $id))['count'];
+            return (int)(parent::get_from_cache('democratic_vote', $id))[0];
         }
 
         $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
-        parent::add_to_cache('democratic_vote', $id, $results);
+        parent::add_to_cache('democratic_vote', $id, array($results['count']));
 
         return (int)$results['count'];
     } // get_vote

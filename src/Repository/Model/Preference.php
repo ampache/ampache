@@ -335,14 +335,14 @@ class Preference extends database_object
         $name = Dba::escape($name);
 
         if (parent::is_cached('id_from_name', $name)) {
-            return (int)(parent::get_from_cache('id_from_name', $name))['id'];
+            return (int)(parent::get_from_cache('id_from_name', $name))[0];
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($name));
         $results    = Dba::fetch_assoc($db_results);
         if (array_key_exists('id', $results)) {
-            parent::add_to_cache('id_from_name', $name, $results);
+            parent::add_to_cache('id_from_name', $name, array($results['id']));
 
             return (int)$results['id'];
         }
