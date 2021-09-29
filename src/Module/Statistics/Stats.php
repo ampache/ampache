@@ -756,6 +756,7 @@ class Stats
             case 'playlist':
             case 'podcast':
             case 'podcast_episode':
+            case 'live_stream':
                 return $type;
             case 'genre':
                 return 'tag';

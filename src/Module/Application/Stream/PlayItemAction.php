@@ -73,7 +73,7 @@ final class PlayItemAction extends AbstractStreamAction
                     }
                 }
                 // record this as a 'play' to help show usage and history for playlists and streams
-                if (!empty($mediaIds) AND in_array($objectType, array('playlist', 'live_stream'))) {
+                if (!empty($mediaIds) && in_array($objectType, array('playlist', 'live_stream'))) {
                     $user = Core::get_global('user');
                     Stats::insert($objectType, $object_id, $user->id, substr(Core::get_server('HTTP_USER_AGENT'), 0, 254), [], 'stream', time());
                 }
