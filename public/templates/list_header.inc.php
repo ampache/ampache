@@ -114,9 +114,9 @@ if ($limit > 0 && $total > $limit) {
     <span class="list-header-navmenu-border">
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid . $argument_param, T_('Prev'), 'browse_' . $uid . 'prev', '', 'prev'); ?></span>
     &nbsp;
-    <?php echo '&nbsp;' . T_('Page') . ':'; ?>
+    <span class="page-text"><?php echo '&nbsp;' . T_('Page') . ':'; ?></span>
     <input class="list-header-navmenu-input" type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo($current_page + 1); ?>" onBlur="delayRun(this, '50', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom' . $argument_param); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
-    <?php echo T_('of') . '&nbsp;' . $pages; ?>
+    <span class="page-text"><?php echo T_('of') . '&nbsp;' . $pages; ?></span>
     &nbsp;
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid . $argument_param, T_('Next'), 'browse_' . $uid . 'next', '', 'next'); ?></span>
     &nbsp;

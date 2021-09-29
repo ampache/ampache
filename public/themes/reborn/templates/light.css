@@ -354,6 +354,7 @@ span.page-nb {
     color: #1990db;
 }
 
+span.page-text,
 table.tabledata {
     color: #000;
 }
