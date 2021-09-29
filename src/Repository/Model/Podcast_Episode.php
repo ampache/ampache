@@ -344,7 +344,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if (!$this->check_play_history($user, $agent, $date)) {
             return false;
         }
-        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        }
 
         if (!$this->played) {
             self::update_played(true, $this->id);
