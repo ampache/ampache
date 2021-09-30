@@ -64,10 +64,10 @@ final class SharesMethod
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $shares = $browse->get_objects();
         if (empty($shares)) {

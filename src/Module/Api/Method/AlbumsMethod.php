@@ -84,18 +84,21 @@ final class AlbumsMethod implements MethodInterface
         $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $albums  = $browse->get_objects();
+        $albums = $browse->get_objects();
         if ($albums === []) {
             throw new ResultEmptyException(
                 T_('No Results')
             );
         }
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        $include = array();
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+        }
 
         ob_end_clean();
 

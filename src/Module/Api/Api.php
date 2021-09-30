@@ -305,10 +305,10 @@ class Api
     public static function check_parameter($input, $parameters, $method)
     {
         foreach ($parameters as $parameter) {
-            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
+            if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
                 continue;
             }
-            if (empty($input[$parameter])) {
+            if (!array_key_exists($parameter, $input)) {
                 debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

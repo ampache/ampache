@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
@@ -81,10 +82,13 @@ final class ApiHandler implements ApiHandlerInterface
             $this->logger
         );
 
-        $action = (string) Core::get_request('action');
+        $action       = (string) Core::get_request('action');
+        $is_handshake = $action == HandshakeMethod::ACTION;
+        $is_ping      = $action == PingMethod::ACTION;
+        $username     = $_REQUEST['user'] ?? $gatekeeper->getUserName();
 
         // If it's not a handshake then we can allow it to take up lots of time
-        if ($action != HandshakeMethod::ACTION) {
+        if (!$is_handshake) {
             set_time_limit(0);
         }
 
@@ -115,8 +119,8 @@ final class ApiHandler implements ApiHandlerInterface
          */
         if (
             $gatekeeper->sessionExists() === false &&
-            $action !== HandshakeMethod::ACTION &&
-            $action != PingMethod::ACTION
+            !$is_handshake &&
+            !$is_ping
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -137,14 +141,11 @@ final class ApiHandler implements ApiHandlerInterface
             );
         }
 
-        if ($action === HandshakeMethod::ACTION) {
-            $userId = User::get_from_username($_REQUEST['user'])->id;
+        if ($is_handshake) {
+            $userId = User::get_from_username($username)->id;
         } else {
             $userId = $gatekeeper->getUser()->id;
         }
-
-        // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : $gatekeeper->getUserName();
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
             $this->logger->warning(
@@ -166,7 +167,7 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            $action != HandshakeMethod::ACTION && $action != PingMethod::ACTION
+            !$is_handshake && !$is_ping
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly

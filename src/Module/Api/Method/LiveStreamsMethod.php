@@ -65,8 +65,8 @@ final class LiveStreamsMethod
         $browse->set_type('live_stream');
         $browse->set_sort('name', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
         $live_streams = $browse->get_objects();
         if (empty($live_streams)) {
             Api::empty('live_stream', $input['api_format']);

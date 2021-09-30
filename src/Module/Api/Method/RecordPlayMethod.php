@@ -69,7 +69,7 @@ final class RecordPlayMethod
         ob_end_clean();
         $object_id = (int) $input['id'];
         $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
-        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
@@ -80,7 +80,7 @@ final class RecordPlayMethod
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
+        $agent = (array_key_exists('client', $input))
             ? $input['client']
             : 'api';
 

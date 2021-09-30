@@ -67,10 +67,10 @@ final class ScrobbleMethod
         $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
         $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
         $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
-        $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
-        $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
-        $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
-        $date        = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $song_mbid   = (string) scrub_in($input['song_mbid'] ?? ''); //optional
+        $artist_mbid = (string) scrub_in($input['artist_mbid'] ?? ''); //optional
+        $album_mbid  = (string) scrub_in($input['album_mbid'] ?? ''); //optional
+        $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
         $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
         $valid       = in_array($user->id, static::getUserRepository()->getValid());

@@ -55,7 +55,7 @@ final class UserPreferenceMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string) $input['filter'];
+        $pref_name  = (string)($input['filter'] ?? '');
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

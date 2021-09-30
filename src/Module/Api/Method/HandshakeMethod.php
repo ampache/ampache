@@ -59,12 +59,12 @@ final class HandshakeMethod
      */
     public static function handshake(array $input)
     {
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
+        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? null);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim((string) $input['user']);
+        $username = trim((string) ($input['user'] ?? Session::username($_REQUEST['auth'])));
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
