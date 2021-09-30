@@ -83,7 +83,8 @@ class Query
             'total_count',
             'total_skip',
             'album',
-            'artist'
+            'artist',
+            'random'
         ),
         'album' => array(
             'name',
@@ -94,7 +95,8 @@ class Query
             'generic_artist',
             'song_count',
             'total_count',
-            'release_type'
+            'release_type',
+            'random'
         ),
         'artist' => array(
             'name',
@@ -103,7 +105,8 @@ class Query
             'yearformed',
             'song_count',
             'album_count',
-            'total_count'
+            'total_count',
+            'random'
         ),
         'playlist' => array(
             'name',
@@ -138,7 +141,8 @@ class Query
             'title',
             'resolution',
             'length',
-            'codec'
+            'codec',
+            'random'
         ),
         'wanted' => array(
             'user',
@@ -233,14 +237,16 @@ class Query
             'follow_date'
         ),
         'podcast' => array(
-            'title'
+            'title',
+            'random'
         ),
         'podcast_episode' => array(
             'title',
             'category',
             'author',
             'time',
-            'pubDate'
+            'pubDate',
+            'random'
         )
     ];
 
@@ -780,7 +786,10 @@ class Query
 
         $this->reset_join();
 
-        if ($order) {
+        if ($sort == 'random') {
+            $this->_state['sort']        = array();
+            $this->_state['sort'][$sort] = $order;
+        } elseif ($order) {
             $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
             $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
@@ -953,17 +962,18 @@ class Query
         if (!$this->is_simple()) {
             $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, array(session_id(), $this->id));
+            $results    = Dba::fetch_assoc($db_results);
 
-            $row = Dba::fetch_assoc($db_results);
+            if (array_key_exists('object_data', $results)) {
+                $this->_cache = (array)self::_unserialize($results['object_data']);
 
-            $this->_cache = (array)self::_unserialize($row['object_data']);
+                return $this->_cache;
+            }
 
-            return $this->_cache;
-        } else {
-            $objects = $this->get_objects();
+            return array();
         }
 
-        return $objects;
+        return $this->get_objects();
     } // get_saved
 
     /**
@@ -1009,7 +1019,7 @@ class Query
     private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
-        if (strlen((string)$this->_state['base']) && !$force) {
+        if (array_key_exists('base', $this->_state) && strlen((string)$this->_state['base']) && !$force) {
             return true;
         }
 
@@ -1933,6 +1943,10 @@ class Query
     {
         if ($order != 'DESC') {
             $order = 'ASC';
+        }
+        // random sorting
+        if ($field === 'random') {
+            return "RAND()";
         }
 
         // Depending on the type of browsing we are doing we can apply
