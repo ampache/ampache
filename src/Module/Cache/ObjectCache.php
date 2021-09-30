@@ -49,8 +49,7 @@ final class ObjectCache implements ObjectCacheInterface
             // get individual user thresholds if not the default
             $thresholds[] = (int)$row['value'];
         }
-        // TODO fix playlist sql.
-        $object_types = ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode'];
+        $object_types = ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'];
 
         foreach ($thresholds as $threshold) {
             foreach ($count_types as $count_type) {
