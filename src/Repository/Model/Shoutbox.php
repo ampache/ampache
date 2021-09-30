@@ -198,8 +198,8 @@ class Shoutbox
         }
 
         $sticky  = isset($data['sticky']) ? 1 : 0;
-        $user    = (int)($data['user'] ?: Core::get_global('user')->id);
-        $date    = (int)($data['date'] ?: time());
+        $user    = (int)($data['user'] ?? Core::get_global('user')->id);
+        $date    = (int)($data['date'] ?? time());
         $comment = strip_tags($data['comment']);
 
         $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)";

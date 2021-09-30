@@ -107,7 +107,7 @@ class Recommendation
     protected static function delete_recommendation_cache($type, $object_id)
     {
         $cache = self::get_recommendation_cache($type, $object_id);
-        if ($cache['id']) {
+        if (array_key_exists('id', $cache)) {
             Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', array($cache['id']));
             Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', array($cache['id']));
         }
@@ -130,10 +130,10 @@ class Recommendation
                 $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
                 Dba::write($sql, array(
                     $insertid,
-                    $recommendation['id'],
-                    $recommendation['name'],
-                    $recommendation['rel'],
-                    $recommendation['mbid']
+                    $recommendation['id'] ?? null,
+                    $recommendation['name'] ?? null,
+                    $recommendation['rel'] ?? null,
+                    $recommendation['mbid'] ?? null
                 ));
             }
         }
@@ -163,7 +163,7 @@ class Recommendation
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
-        if (!$cache['id']) {
+        if (!array_key_exists('id', $cache)) {
             $similars = array();
             try {
                 $xml = self::get_lastfm_results('track.getsimilar', $query);
@@ -206,7 +206,7 @@ class Recommendation
         }
 
         if (!isset($similars) || count($similars) == 0) {
-            $similars = $cache['items'];
+            $similars = $cache['items'] ?? array();
         }
         if ($similars) {
             $results = array();
@@ -244,7 +244,7 @@ class Recommendation
 
         $artist = new Artist($artist_id);
         $cache  = self::get_recommendation_cache('artist', $artist_id, true);
-        if (!$cache['id']) {
+        if (!array_key_exists('id', $cache)) {
             $similars = array();
             $fullname = $artist->f_name;
             $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
@@ -311,10 +311,10 @@ class Recommendation
         }
 
         if (!isset($similars) || count($similars) == 0) {
-            $similars = $cache['items'];
+            $similars = $cache['items'] ?? array();
         }
+        $results = array();
         if ($similars) {
-            $results = array();
             foreach ($similars as $similar) {
                 if (!$local_only || $similar['id'] !== null) {
                     $results[] = $similar;
@@ -326,11 +326,7 @@ class Recommendation
             }
         }
 
-        if (isset($results)) {
-            return $results;
-        }
-
-        return array();
+        return $results;
     } // get_artists_like
 
     /**
@@ -396,10 +392,10 @@ class Recommendation
 
         $results            = array();
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
-            (string)$xml->artist->bio->summary));
+            ($xml->artist->bio->summary ?? '')));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
-        $results['yearformed']  = (string)$xml->artist->bio->yearformed;
+        $results['placeformed'] = ($xml->artist->bio->placeformed ?? '');
+        $results['yearformed']  = ($xml->artist->bio->yearformed ?? '');
 
         if ($artist->id) {
             $results['id'] = $artist->id;

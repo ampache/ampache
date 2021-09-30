@@ -235,12 +235,15 @@ class AmpacheMpd extends localplay_controller
      */
     public function set_active_instance($uid, $user_id = '')
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ?: Core::get_global('user')->id;
+        // Not an admin? bubkiss!
+        if (!$user->has_access('100')) {
+            $user_id = $user->id ?? 0;
+        }
+        $user_id = $user_id ?: $user->id;
 
         Preference::update('mpd_active', $user_id, $uid);
         AmpConfig::set('mpd_active', $uid, true);

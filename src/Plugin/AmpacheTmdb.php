@@ -135,7 +135,7 @@ class AmpacheTmdb
             $config           = $configRepository->load();
             $imageHelper      = new ImageHelper($config);
 
-            $title = $media_info['original_name'] ?: $media_info['title'];
+            $title = $media_info['original_name'] ?? $media_info['title'];
 
             $results = array();
             if (in_array('movie', $gather_types)) {

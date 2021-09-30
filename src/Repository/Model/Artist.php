@@ -726,7 +726,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $db_results = Dba::read($sql, array($name));
             $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = $row['mbid'] ?: 'null';
+                $key            = $row['mbid'] ?? 'null';
                 $id_array[$key] = $row['id'];
             }
             if (count($id_array)) {

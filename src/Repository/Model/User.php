@@ -278,7 +278,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
-        return new User($results['id']);
+        return new User($results['id'] ?? 0);
     } // get_from_username
 
     /**
@@ -1024,9 +1024,10 @@ class User extends database_object
                 $sql        = "SELECT SUM(`song`.`size`) as `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
                 $db_results = Dba::read($sql, array($this->id));
                 $result     = Dba::fetch_assoc($db_results);
+                $play_size  = $result['play_size'] ?? 0;
                 // set the value for next time
-                self::set_user_data($this->id, 'play_size', (int)$result['play_size']);
-                $user_data['play_size'] = $result['play_size'];
+                self::set_user_data($this->id, 'play_size', (int)$play_size);
+                $user_data['play_size'] = $play_size;
             }
 
             $this->f_usage = Ui::format_bytes((int)$user_data['play_size']);

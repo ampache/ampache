@@ -80,7 +80,11 @@ class Userflag extends database_object
             return false;
         }
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+        if ($user_id === 0) {
+            return false;
         }
         $userflags  = array();
         $idlist     = '(' . implode(',', $ids) . ')';
@@ -147,7 +151,11 @@ class Userflag extends database_object
     public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+        if ($user_id === 0) {
+            return false;
         }
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
@@ -187,7 +195,8 @@ class Userflag extends database_object
     public function set_flag($flagged, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = (int)(Core::get_global('user')->id);
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         if ($user_id === 0) {
             return false;
@@ -289,7 +298,7 @@ class Userflag extends database_object
     public static function get_latest_sql($type, $user_id = null)
     {
         $user_id           = (int)($user_id);
-        $allow_group_disks = ($type == 'album' && AmpConfig::get('album_group'));
+        $allow_group_disks = AmpConfig::get('album_group') && $type == 'album';
         $sql               = ($allow_group_disks)
             ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
             : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag`";

@@ -194,7 +194,7 @@ class Stream
         if (isset($options['resolution'])) {
             $string_map['%RESOLUTION%'] = $options['resolution'];
         } else {
-            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
         }
         if (isset($options['quality'])) {
             $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;

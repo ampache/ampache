@@ -133,7 +133,7 @@ class AmpacheOmdb
             return null;
         }
 
-        $title = $media_info['original_name'] ?: $media_info['title'];
+        $title = $media_info['original_name'] ?? $media_info['title'];
 
         $results = array();
         try {

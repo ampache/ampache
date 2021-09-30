@@ -50,7 +50,7 @@ class Random
             $multi_where = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
             $user_id = Core::get_global('user')->id;
             $sql .= " $multi_where `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
@@ -112,7 +112,8 @@ class Random
             $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
         }
         if ((int)$user_id < 1) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
 
         $multi_where = 'WHERE';
@@ -160,7 +161,7 @@ class Random
             $multi_where = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
             $user_id = Core::get_global('user')->id;
             $sql .= " $multi_where `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }

@@ -68,7 +68,7 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         $f_end_date   = get_datetime((int)$end_date);
         $start_date   = $_REQUEST['start_date'] ? strtotime((string) $_REQUEST['start_date']) : ($end_date - 864000);
         $f_start_date = get_datetime((int)$start_date);
-        $zoom         = $_REQUEST['zoom'] ?: 'day';
+        $zoom         = $_REQUEST['zoom'] ?? 'day';
 
         $gtypes   = array();
         $gtypes[] = 'user_hits';

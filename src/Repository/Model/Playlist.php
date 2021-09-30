@@ -114,7 +114,8 @@ class Playlist extends playlist_object
     public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = ($includePublic)
             ? 'playlistids'
@@ -163,7 +164,8 @@ class Playlist extends playlist_object
     public static function get_playlist_array($user_id = null)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = 'playlistarray';
         if (parent::is_cached($key, $user_id)) {
@@ -198,10 +200,11 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @return array
      */
-    public static function get_details($type = 'playlist', $user_id = 0)
+    public static function get_details($type = 'playlist', $user_id = null)
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id ?: -1;
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? -1;
         }
 
         $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
@@ -225,7 +228,8 @@ class Playlist extends playlist_object
     public static function get_smartlists($user_id = null, $playlist_name = '', $like = true)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = 'smartlists';
         if (empty($playlist_name)) {
@@ -578,7 +582,8 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id ?: -1;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? -1;
         }
         // get the public_name/username
         $username = User::get_username($user_id);

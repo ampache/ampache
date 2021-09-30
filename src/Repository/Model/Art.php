@@ -112,6 +112,10 @@ class Art extends database_object
      */
     public static function is_valid_type($type)
     {
+        if (!$type) {
+            return false;
+        }
+
         return (InterfaceImplementationChecker::is_library_item($type) || $type == 'user');
     }
 

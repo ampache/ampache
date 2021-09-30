@@ -344,9 +344,9 @@ class Label extends database_object implements library_item
         $country       = $data['country'];
         $email         = $data['email'];
         $website       = $data['website'];
-        $user          = $data['user'] ?: Core::get_global('user')->id;
+        $user          = $data['user'] ?? Core::get_global('user')->id;
         $active        = $data['active'];
-        $creation_date = $data['creation_date'] ?: time();
+        $creation_date = $data['creation_date'] ?? time();
 
         $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));

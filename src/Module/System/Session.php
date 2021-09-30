@@ -66,10 +66,11 @@ final class Session implements SessionInterface
 
         // If we want a session
         if (!defined('NO_SESSION') && $useAuth) {
+            $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
-            if (!static::exists('interface', $_COOKIE[$sessionName])) {
+            if (!static::exists('interface', $sessionData)) {
                 if (!static::auth_remember()) {
-                    $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '');
+                    $this->authenticationManager->logout($sessionData);
 
                     return false;
                 }
