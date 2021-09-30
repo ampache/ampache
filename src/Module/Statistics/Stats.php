@@ -78,7 +78,7 @@ class Stats
      */
     public static function garbage_collection()
     {
-        foreach (array('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') as $object_type) {
+        foreach (array('album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode') as $object_type) {
             Dba::write("DELETE FROM `object_count` WHERE `object_type` = '$object_type' AND `object_count`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");
         }
     }
