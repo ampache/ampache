@@ -119,34 +119,27 @@ class Stream_Playlist
      */
     private function _add_urls($urls)
     {
-        $sql       = 'INSERT INTO `stream_playlist` ';
-        $value_sql = 'VALUES ';
-        $values    = array();
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $count     = true;
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        $sql    = '';
+        $values = array();
         foreach ($urls as $url) {
             $this->urls[] = $url;
+            $fields       = array();
+            $fields[]     = '`sid`';
             $values[]     = $this->id;
             $holders      = array();
             $holders[]    = '?';
 
             foreach ($url->properties as $field) {
-                if ($url->$field) {
-                    $holders[] = '?';
+                if ($url->$field !== null) {
+                    $fields[]  = '`' . $field . '`';
                     $values[]  = $url->$field;
-                    if ($count) {
-                        $fields[] = '`' . $field . '`';
-                    }
+                    $holders[] = '?';
                 }
             }
-            $count = false;
-            $value_sql .= '(' . implode(',', $holders) . '), ';
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
         }
-        $sql .= '(' . implode(',', $fields) . ') ';
-
-        return Dba::write($sql . rtrim($value_sql, ', '), $values);
+        return Dba::write($sql, $values);
     }
 
     /**
