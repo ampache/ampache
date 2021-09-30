@@ -123,25 +123,25 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         /* These parameters had better come in on the url. */
-        $uid          = scrub_in($_REQUEST['uid']);
-        $object_id    = (int) scrub_in($_REQUEST['oid']);
-        $session_id   = (string) scrub_in($_REQUEST['ssid']);
-        $client       = (string) scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
-        $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        $cache        = scrub_in($_REQUEST['cache']);
-        $format       = scrub_in($_REQUEST['format']);
+        $uid          = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
+        $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
+        $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
         $original     = $format == 'raw';
-        $action       = Core::get_get('action');
+        $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         $record_stats = true;
         $use_auth     = AmpConfig::get('use_auth');
 
         // Share id and secret if used
-        $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
-        $secret   = $_REQUEST['share_secret'];
+        $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
+        $secret   = array_key_exists('cache', $_REQUEST) ? $_REQUEST['share_secret'] : null;
 
         // This is specifically for tmp playlist requests
-        $demo_id    = Dba::escape($_REQUEST['demo_id']);
-        $random     = Dba::escape($_REQUEST['random']);
+        $demo_id    = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_SPECIAL_CHARS));
 
         // democratic play url doesn't include these
         if ($demo_id !== '') {
@@ -166,17 +166,17 @@ final class PlayAction implements ApplicationActionInterface
         $quality       = 0;
         $time          = time();
 
-        if (isset($_REQUEST['player'])) {
+        if (array_key_exists('player', $_REQUEST)) {
             $player = $_REQUEST['player'];
         }
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
-            $transcode_to = (string) scrub_in($_REQUEST['transcode_to']) == '' ? null : (string) scrub_in($_REQUEST['transcode_to']);
-            $bitrate      = (int) ($_REQUEST['bitrate']);
+            $transcode_to = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Trick to avoid LimitInternalRecursion reconfiguration
-            $vsettings = $_REQUEST['vsettings'];
-            if ($vsettings) {
+            $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            if (!empty($vsettings)) {
                 $vparts  = explode('-', $vsettings);
                 $v_count = count($vparts);
                 for ($i = 0; $i < $v_count; $i += 2) {
@@ -221,13 +221,13 @@ final class PlayAction implements ApplicationActionInterface
         // Authenticate the user if specified
         $username = Core::get_server('PHP_AUTH_USER');
         if (empty($username)) {
-            $username = $_REQUEST['u'];
+            $username = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         $password = Core::get_server('PHP_AUTH_PW');
         if (empty($password)) {
-            $password = $_REQUEST['p'];
+            $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-        $apikey = $_REQUEST['apikey'];
+        $apikey = filter_input(INPUT_GET, 'apikey', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $user = null;
         // If explicit user authentication was passed
@@ -394,7 +394,7 @@ final class PlayAction implements ApplicationActionInterface
          */
         if ($random !== '') {
             if ((int) Core::get_request('start') < 1) {
-                if (isset($_REQUEST['random_type'])) {
+                if (array_key_exists('random_type', $_REQUEST)) {
                     $rtype = $_REQUEST['random_type'];
                 } else {
                     $rtype = $type;
@@ -419,7 +419,7 @@ final class PlayAction implements ApplicationActionInterface
         } else {
             $type  = 'video';
             $media = new Video($object_id);
-            if (isset($_REQUEST['subtitle'])) {
+            if (array_key_exists('subtitle', $_REQUEST)) {
                 $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
             }
         }
@@ -497,7 +497,7 @@ final class PlayAction implements ApplicationActionInterface
         /* If we don't have a file, or the file is not readable */
         if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
             // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
-            if (is_object($tmp_playlist)) {
+            if (!empty($tmp_playlist)) {
                 $tmp_playlist->delete_track($object_id);
             }
             // FIXME: why are these separate?
@@ -603,7 +603,7 @@ final class PlayAction implements ApplicationActionInterface
         debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
         debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
-        $cpaction = $_REQUEST['custom_play_action'];
+        $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($cpaction) {
             debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
         }
@@ -673,12 +673,12 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions['quality'] = $quality;
             }
 
-            if (isset($_REQUEST['frame'])) {
+            if (array_key_exists('frame', $_REQUEST)) {
                 $troptions['frame'] = (float) $_REQUEST['frame'];
-                if (isset($_REQUEST['duration'])) {
+                if (array_key_exists('duration', $_REQUEST)) {
                     $troptions['duration'] = (float) $_REQUEST['duration'];
                 }
-            } elseif (isset($_REQUEST['segment'])) {
+            } elseif (array_key_exists('segment', $_REQUEST)) {
                 // 10 seconds segment. Should it be an option?
                 $ssize            = 10;
                 $send_all_in_once = true; // Should we use temporary folder instead?
