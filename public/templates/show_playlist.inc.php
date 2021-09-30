@@ -50,6 +50,11 @@ require Ui::find_template('show_playlist_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
+<div class="item_right_info">
+    <?php
+    $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
+    $playlist->display_art($thumb, false, false) ?>
+</div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo $playlist->id; ?>_playlist">

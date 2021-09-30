@@ -139,6 +139,7 @@ class Stream_Playlist
             }
             $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
         }
+
         return Dba::write($sql, $values);
     }
 

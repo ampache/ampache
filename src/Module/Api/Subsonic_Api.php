@@ -977,7 +977,7 @@ class Subsonic_Api
     public static function getplaylists($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
-        $username = $input['username'] ?: $input['u'];
+        $username = $input['username'] ?? $input['u'];
         $user     = User::get_from_username((string)$username);
 
         // Don't allow playlist listing for another user
@@ -1314,18 +1314,14 @@ class Subsonic_Api
         if (($type == 'podcast')) {
             $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "podcast");
         }
-        if ($type == 'search' || $type == 'playlist') {
-            $listitems = array();
-            // playlists and smartlists
-            if (($type == 'search')) {
-                $playlist  = new Search(Subsonic_Xml_Data::getAmpacheId($sub_id));
-                $listitems = $playlist->get_items();
-            } elseif (($type == 'playlist')) {
-                $playlist  = new Playlist(Subsonic_Xml_Data::getAmpacheId($sub_id));
-                $listitems = $playlist->get_items();
-            }
-            $item = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
-            $art  = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
+        if (($type == 'playlist')) {
+            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "playlist");
+        }
+        if ($type == 'search') {
+            $playlist  = new Search(Subsonic_Xml_Data::getAmpacheId($sub_id));
+            $listitems = $playlist->get_items();
+            $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
+            $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, "album");
@@ -2151,7 +2147,7 @@ class Subsonic_Api
     public static function getartistinfo($input, $child = "artistInfo")
     {
         $id                = self::check_parameter($input, 'id');
-        $count             = $input['count'] ?: 20;
+        $count             = $input['count'] ?? 20;
         $includeNotPresent = ($input['includeNotPresent'] === "true");
 
         if (Subsonic_Xml_Data::isArtist($id)) {
@@ -2195,7 +2191,7 @@ class Subsonic_Api
         }
 
         $id    = self::check_parameter($input, 'id');
-        $count = $input['count'] ?: 50;
+        $count = $input['count'] ?? 50;
 
         $songs = array();
         if (Subsonic_Xml_Data::isArtist($id)) {
@@ -2283,7 +2279,7 @@ class Subsonic_Api
      */
     public static function getnewestpodcasts($input)
     {
-        $count = $input['count'] ?: AmpConfig::get('podcast_new_download');
+        $count = $input['count'] ?? AmpConfig::get('podcast_new_download');
 
         if (AmpConfig::get('podcast')) {
             $response = Subsonic_Xml_Data::createSuccessResponse('getnewestpodcasts');

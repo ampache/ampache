@@ -119,13 +119,13 @@ final class FindArtAction extends AbstractArtAction
 
             if ($image_data != '') {
                 if ($art->insert($image_data, $upload['mime'])) {
-                    $this->ui->showConfirmation(
+                    $this->ui->showContinue(
                         T_('No Problem'),
                         T_('Art has been added'),
                         $burl
                     );
                 } else {
-                    $this->ui->showConfirmation(
+                    $this->ui->showContinue(
                         T_("There Was a Problem"),
                         T_('Art file failed to insert, check the dimensions are correct.'),
                         $burl

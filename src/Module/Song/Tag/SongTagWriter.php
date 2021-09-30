@@ -170,7 +170,7 @@ final class SongTagWriter implements SongTagWriterInterface
             $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
                 ? 'image_mime'
                 : 'mime';
-            $file_has_pics = isset($apics);
+            $file_has_pics = isset($apics) && is_array($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
                     $ndata['attached_picture'][] = array(

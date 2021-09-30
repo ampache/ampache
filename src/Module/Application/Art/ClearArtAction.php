@@ -68,7 +68,7 @@ final class ClearArtAction extends AbstractArtAction
 
         $this->ui->showHeader();
 
-        $this->ui->showConfirmation(
+        $this->ui->showContinue(
             T_('No Problem'),
             T_('Art information has been removed from the database'),
             $burl

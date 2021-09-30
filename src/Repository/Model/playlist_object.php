@@ -217,11 +217,18 @@ abstract class playlist_object extends database_object implements library_item
      * display_art
      * @param integer $thumb
      * @param boolean $force
+     * @param boolean $link
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false, $link = true)
     {
         if (AmpConfig::get('playlist_art') || $force) {
-            $medias     = $this->get_medias();
+            $add_link = ($link) ? $this->link : null;
+            if (Art::has_db($this->id, 'playlist')) {
+                Art::display('playlist', $this->id, $this->get_fullname(), $thumb, $add_link);
+
+                return;
+            }
+            $medias = $this->get_medias();
             shuffle($medias);
             foreach ($medias as $media) {
                 if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
@@ -237,7 +244,8 @@ abstract class playlist_object extends database_object implements library_item
                     }
 
                     if ($media !== null) {
-                        Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
+                        Art::duplicate($media['object_type'], $media['object_id'], $this->id, 'playlist');
+                        Art::display('playlist', $this->id, $this->get_fullname(), $thumb, $add_link);
 
                         return;
                     }
