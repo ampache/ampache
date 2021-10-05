@@ -81,7 +81,7 @@ class Dba
 
         try {
             // Run the query
-            if (!empty($params)) {
+            if (!empty($params) && strpos((string)$sql, '?')) {
                 $stmt = $dbh->prepare($sql);
                 $stmt->execute($params);
             } else {
