@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 
 $thcount      = 6;
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_mashup    = $browse->is_mashup();
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
@@ -72,8 +72,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('podcast_episode', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('podcast_episode', $object_ids);
         }
 

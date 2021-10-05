@@ -77,10 +77,6 @@ use Ampache\Module\Util\ZipHandlerInterface;
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist">
                     <?php echo Rating::show($libitem->id, 'playlist'); ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist">
                     <?php echo Userflag::show($libitem->id, 'playlist'); ?>
                 </span>

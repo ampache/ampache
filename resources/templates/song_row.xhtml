@@ -51,8 +51,8 @@
     </tal:block>
     <tal:block tal:condition="USING_RATINGS">
         <td class="cel_ratings">
-            <span tal:condition="CONFIG/isRatingEnabled" class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
-            <span tal:condition="CONFIG/isUserflagsEnabled" class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
+            <span class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
         </td>
     </tal:block>
     <td class="cel_action">

@@ -25,33 +25,36 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
+/** @var array $biography */
 
 ?>
 
 <div class="item_info">
-    <?php $thumb = (empty(trim($biography['summary']))) ? 32 : 2; ?>
-    <?php Art::display('artist', $artist->id, $artist->f_name, $thumb); ?>
+    <?php if ($artist instanceof Artist) {
+    $thumb = (empty(trim($biography['summary']))) ? 32 : 2;
+    Art::display('artist', $artist->id, $artist->f_name ?? $artist->name, $thumb);
+} ?>
     <div class="item_properties">
-    <?php $dcol = array();
-    if ($biography['placeformed']) {
-        $dcol[] = $biography['placeformed'];
-    }
-    if ($biography['yearformed']) {
-        $dcol[] = $biography['yearformed'];
-    }
-    if (count($dcol) > 0) {
-        echo implode(',', $dcol);
-    } ?>
+        <?php $dcol = array();
+        if (array_key_exists('placeformed', $biography)) {
+            $dcol[] = $biography['placeformed'];
+        }
+        if (array_key_exists('yearformed', $biography)) {
+            $dcol[] = $biography['yearformed'];
+        }
+        if (count($dcol) > 0) {
+            echo implode(',', $dcol);
+        } ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if (!empty(trim($biography['summary']))) { ?>
+    <?php if (array_key_exists('summary', $biography) && !empty(trim($biography['summary']))) { ?>
         <?php echo nl2br($biography['summary']); ?>
-    <?php
-        }?>
+        <?php
+    }?>
 </div>
 <script>
-$(document).ready(function(){
-    $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-});
+    $(document).ready(function(){
+        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+    });
 </script>

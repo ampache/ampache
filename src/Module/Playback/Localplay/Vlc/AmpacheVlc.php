@@ -196,9 +196,9 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
-        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -212,15 +212,19 @@ class AmpacheVlc extends localplay_controller
      */
     public function set_active_instance($uid, $user_id = '')
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ?: Core::get_global('user')->id;
+        // Not an admin? bubkiss!
+        if (!$user->has_access('100')) {
+            $user_id = $user->id ?? 0;
+        }
+        $user_id = $user_id ?: $user->id;
 
         Preference::update('vlc_active', $user_id, $uid);
         AmpConfig::set('vlc_active', $uid, true);
+        debug_event('vlc.controller', 'set_active_instance: ' . $uid . ' ' . $user_id, 5);
 
         return true;
     } // set_active_instance

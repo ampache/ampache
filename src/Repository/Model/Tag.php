@@ -253,7 +253,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['name'], $this->id));
 
-        if ($data['edit_tags']) {
+        if (array_key_exists('edit_tags', $data) && $data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
             $filterunder = str_replace('_', ', ', $filterfolk);
             $filter      = str_replace(';', ', ', $filterunder);
@@ -266,12 +266,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     self::add_tag($tag);
                     $merge_to = self::construct_from_name($tag);
                 }
-                $this->merge($merge_to->id, $data['merge_persist'] == '1');
+                $this->merge($merge_to->id, array_key_exists('merge_persist', $data));
             }
-            if ($data['keep_existing'] != '1') {
+            if (!array_key_exists('keep_existing', $data)) {
                 $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
                 Dba::write($sql, array($this->id));
-                if ($data['merge_persist'] != '1') {
+                if (!array_key_exists('merge_persist', $data)) {
                     $this->delete();
                 } else {
                     $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`id` = ? ";
@@ -297,7 +297,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
             Dba::write($sql);
             if ($is_persistent) {
-                $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
+                $sql = "REPLACE INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)";
                 Dba::write($sql, array($this->id, $merge_to));
             }
         }
@@ -431,12 +431,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($value));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $results = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            parent::add_to_cache('tag_name', $value, array($results['id']));
 
-        parent::add_to_cache('tag_name', $results['name'], $results);
+            return (int)$results['id'];
+        }
 
-        return (int)$results['id'];
+        return 0;
     } // tag_exists
 
     /**
@@ -459,10 +462,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
         $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $results = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            return (int)$results['id'];
+        }
 
-        return $results['id'];
+        return false;
     } // tag_map_exists
 
     /**

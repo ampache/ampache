@@ -64,12 +64,12 @@ final class ArtistsMethod
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
         // set the album_artist filter (if enabled)
-        if (($input['album_artist'])) {
+        if (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1) {
             Api::set_filter('album_artist', true);
         }
 
@@ -82,7 +82,10 @@ final class ArtistsMethod
 
         ob_end_clean();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        $include = array();
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+        }
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset']);

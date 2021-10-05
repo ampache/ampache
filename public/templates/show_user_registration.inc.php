@@ -150,8 +150,7 @@ $_SESSION['login'] = true; ?>
                         <input type='password' name='password_2' id='password_2' />
                     </div>
 
-                    <?php
-                    if (AmpConfig::get('captcha_public_reg')) {
+                    <?php if (AmpConfig::get('captcha_public_reg')) {
                         echo captcha::form("&rarr;&nbsp;");
                         echo AmpError::display('captcha');
                     } ?>

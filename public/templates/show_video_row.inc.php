@@ -104,10 +104,6 @@ if ($video_type != 'video') {
                 <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_video">
                     <?php echo Rating::show($libitem->id, 'video') ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_video">
                     <?php echo Userflag::show($libitem->id, 'video') ?>
                 </span>

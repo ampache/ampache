@@ -55,9 +55,9 @@ final class ShowAction implements ApplicationActionInterface
     {
         $content = '';
 
-        if (isset($_REQUEST['param_name'])) {
+        if (array_key_exists('param_name', $_REQUEST)) {
             $name = (string) scrub_in(filter_var($_REQUEST['param_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-            if (isset($_REQUEST[$name])) {
+            if (array_key_exists($name, $_REQUEST)) {
                 $content .= sprintf(
                     '%s: %s',
                     $name,
@@ -66,7 +66,7 @@ final class ShowAction implements ApplicationActionInterface
             }
         }
 
-        if (isset($_REQUEST['error'])) {
+        if (array_key_exists('error', $_REQUEST)) {
             $error             = (string) scrub_in(filter_var($_REQUEST['error'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             $error_description = (string) scrub_in(filter_var($_REQUEST['error_description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             $content .= sprintf('%s error: %s', $error, $error_description);

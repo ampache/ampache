@@ -284,7 +284,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if ($extra && (AmpConfig::get('show_played_times'))) {
-            $sql = "SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IN $idlist";
+            $sql = "SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
             //debug_event("artist.class", "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
@@ -726,7 +726,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $db_results = Dba::read($sql, array($name));
             $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = $row['mbid'] ?: 'null';
+                $key            = $row['mbid'] ?? 'null';
                 $id_array[$key] = $row['id'];
             }
             if (count($id_array)) {

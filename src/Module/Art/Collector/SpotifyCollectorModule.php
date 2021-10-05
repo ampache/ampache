@@ -92,6 +92,8 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                     'gather_spotify: A problem exists with the client credentials',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
+
+                return $images;
             }
         }
         $filter = [];

@@ -136,7 +136,7 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return (int) $bit_rate;
+        return (int)$bit_rate;
     }
 
     /**
@@ -194,7 +194,7 @@ class Stream
         if (isset($options['resolution'])) {
             $string_map['%RESOLUTION%'] = $options['resolution'];
         } else {
-            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
         }
         if (isset($options['quality'])) {
             $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
@@ -260,7 +260,7 @@ class Stream
 
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
+        if (!array_key_exists('bitrate', $options)) {
             debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
@@ -463,7 +463,7 @@ class Stream
         if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id) {
+            if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }

@@ -65,7 +65,7 @@ final class PreferenceCreateMethod
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string) $input['filter'];
+        $pref_name = (string)($input['filter'] ?? '');
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {

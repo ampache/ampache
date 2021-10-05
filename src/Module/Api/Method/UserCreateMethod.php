@@ -62,7 +62,7 @@ final class UserCreateMethod
             return false;
         }
         $username = $input['username'];
-        $fullname = $input['fullname'] ?: $username;
+        $fullname = $input['fullname'] ?? $username;
         $email    = $input['email'];
         $password = $input['password'];
         $disable  = (bool) $input['disable'];

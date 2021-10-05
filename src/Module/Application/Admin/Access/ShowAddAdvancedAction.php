@@ -54,7 +54,10 @@ final class ShowAddAdvancedAction implements ApplicationActionInterface
 
         $this->ui->show(
             'show_add_access.inc.php',
-            ['action' => $request->getQueryParams()['action'] ?? '']
+            [
+                'action' => $request->getQueryParams()['action'] ?? '',
+                'add_type' => 'show_add_advanced'
+            ]
         );
 
         $this->ui->showQueryStats();

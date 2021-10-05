@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
-if ($user->id) {
+if (isset($user->id)) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->load($user)) {
@@ -74,6 +74,7 @@ if ($user->id) {
     <?php
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
+        $user_id = !empty(Core::get_global('user')) ? Core::get_global('user')->id : -1;
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
 <?php

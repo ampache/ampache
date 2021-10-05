@@ -29,8 +29,8 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-$my_id    = (isset($client)) ? $user_id : $user->id;
-$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) : '';
+$user_id  = $user_id ?? -1;
+$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
 $is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata striped-rows">
@@ -63,8 +63,8 @@ foreach ($data as $row) {
     $time_string        = '-';
     $has_allowed_recent = (bool) $row['user_recent'];
     $has_allowed_time   = (bool) $row['user_time'];
-    $is_allowed_recent  = $is_admin || $my_id == $row_id || $has_allowed_recent;
-    $is_allowed_time    = $is_admin || $my_id == $row_id || $has_allowed_time;
+    $is_allowed_recent  = $is_admin || $user_id == $row_id || $has_allowed_recent;
+    $is_allowed_time    = $is_admin || $user_id == $row_id || $has_allowed_time;
     // if you don't allow now_playing don't show the whole row
     if ($is_allowed_recent) {
         // add the time if you've allowed it

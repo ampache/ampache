@@ -278,7 +278,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
-        return new User($results['id']);
+        return new User($results['id'] ?? 0);
     } // get_from_username
 
     /**
@@ -1024,9 +1024,10 @@ class User extends database_object
                 $sql        = "SELECT SUM(`song`.`size`) as `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
                 $db_results = Dba::read($sql, array($this->id));
                 $result     = Dba::fetch_assoc($db_results);
+                $play_size  = $result['play_size'] ?? 0;
                 // set the value for next time
-                self::set_user_data($this->id, 'play_size', (int)$result['play_size']);
-                $user_data['play_size'] = $result['play_size'];
+                self::set_user_data($this->id, 'play_size', (int)$play_size);
+                $user_data['play_size'] = $play_size;
             }
 
             $this->f_usage = Ui::format_bytes((int)$user_data['play_size']);
@@ -1304,12 +1305,11 @@ class User extends database_object
     {
         $avatar = array();
         $auth   = '';
-        if ($session['t'] && $session['s']) {
+        if (array_key_exists('t', $session) && $session['s']) {
             $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
-        } elseif ($session['auth']) {
+        } elseif (array_key_exists('auth', $session)) {
             $auth = '&auth=' . $session['auth'];
         }
-
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
@@ -1334,7 +1334,7 @@ class User extends database_object
             }
         }
 
-        if ($avatar['url'] === null) {
+        if (!array_key_exists('url', $avatar)) {
             $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];

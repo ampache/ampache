@@ -67,7 +67,7 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $songs = ($input['top50'])
+        $songs = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
             ? static::getSongRepository()->getTopSongsByArtist($artist)
             : static::getSongRepository()->getByArtist($object_id);
         $user  = User::get_from_username(Session::username($input['auth']));

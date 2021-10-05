@@ -74,7 +74,7 @@ $t_logout          = T_('Log out'); ?>
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {
-    if (!$_SESSION['state']['sidebar_tab']) {
+    if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
         $_SESSION['state']['sidebar_tab'] = 'home';
     }
     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
@@ -105,7 +105,7 @@ if (User::is_registered()) {
         </li>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
-            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
+            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
         }
     } ?>
     <li id="sb_tab_logout" class="sb1">

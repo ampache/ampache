@@ -133,49 +133,49 @@ class AmpacheTheaudiodb
                 $release = null;
                 if ($media_info['mb_albumid_group']) {
                     $album = $this->get_album($media_info['mb_albumid_group']);
-                    if ($album) {
+                    if ($album !== null) {
                         $release = $album->album[0];
                     }
                 } else {
                     $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if ($albums) {
+                    if ($albums !== null) {
                         $release = $albums->album[0];
                     }
                 }
 
                 if ($release) {
-                    $results['art']   = $release->strAlbumThumb;
-                    $results['title'] = $release->strAlbum;
+                    $results['art']   = $release->strAlbumThumb ?? null;
+                    $results['title'] = $release->strAlbum ?? null;
                 }
             } elseif (in_array('artist', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_artistid']) {
                     $artist = $this->get_artist($media_info['mb_artistid']);
-                    if ($artist) {
+                    if ($artist !== null) {
                         $release = $artist->artists[0];
                     }
                 } else {
                     $artists = $this->search_artists($media_info['title']);
-                    if ($artists) {
+                    if ($artists !== null) {
                         $release = $artists->artists[0];
                     }
                 }
-                if ($release) {
-                    $results['art']        = $release->strArtistThumb;
-                    $results['title']      = $release->strArtist;
-                    $results['summary']    = $release->strBiographyEN;
-                    $results['yearformed'] = $release->intFormedYear;
+                if ($release !== null) {
+                    $results['art']        = $release->strArtistThumb ?? null;
+                    $results['title']      = $release->strArtist ?? null;
+                    $results['summary']    = $release->strBiographyEN ?? null;
+                    $results['yearformed'] = $release->intFormedYear ?? null;
                 }
             } elseif ($media_info['mb_trackid']) {
                 $track = $this->get_track($media_info['mb_trackid']);
-                if ($track) {
-                    $track                       = $track->track[0];
-                    $results['mb_artistid']      = $track->strMusicBrainzArtistID;
-                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID;
-                    $results['album']            = $track->strAlbum;
-                    $results['artist']           = $track->strArtist;
-                    $results['title']            = $track->strTrack;
+                if ($track !== null) {
+                    $track                       = $track->track[0] ?? null;
+                    $results['mb_artistid']      = $track->strMusicBrainzArtistID ?? null;
+                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID ?? null;
+                    $results['album']            = $track->strAlbum ?? null;
+                    $results['artist']           = $track->strArtist ?? null;
+                    $results['title']            = $track->strTrack ?? null;
                 }
             }
         } catch (Exception $error) {

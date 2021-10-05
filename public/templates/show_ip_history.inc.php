@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 <div id="information_actions">
 <ul>
 <li>
-<?php if (isset($_REQUEST['all'])) { ?>
+<?php if (array_key_exists('all', $_REQUEST)) { ?>
     <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>">
         <?php echo Ui::get_icon('disable', T_('Disable')); ?>
         <?php echo T_('Show Unique'); ?>

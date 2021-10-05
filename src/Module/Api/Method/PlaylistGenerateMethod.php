@@ -109,7 +109,7 @@ final class PlaylistGenerateMethod
             $rule_count++;
         }
         // additional rules
-        if ((int) $input['flag'] == 1) {
+        if (array_key_exists('', $input) && (int)$input['flag'] == 1) {
             debug_event(self::class, 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -118,7 +118,7 @@ final class PlaylistGenerateMethod
         }
         if (array_key_exists('filter', $input)) {
             $array['rule_' . $rule_count]               = 'title';
-            $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
+            $array['rule_' . $rule_count . '_input']    = (string)($input['filter'] ?? '');
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }

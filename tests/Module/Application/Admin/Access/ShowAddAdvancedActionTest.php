@@ -87,7 +87,10 @@ class ShowAddAdvancedActionTest extends MockeryTestCase
         $this->ui->shouldReceive('show')
             ->with(
                 'show_add_access.inc.php',
-                ['action' => $action]
+                [
+                    'action' => $action,
+                    'add_type' => 'show_add_advanced'
+                ]
             )
             ->once();
 

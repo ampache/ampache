@@ -63,7 +63,11 @@ class Bookmark extends database_object
             $info = $this->get_info($object_id);
         } else {
             if ($user_id === null) {
-                $user_id = Core::get_global('user')->id;
+                $user    = Core::get_global('user');
+                $user_id = $user->id ?? 0;
+            }
+            if ($user_id === 0) {
+                return false;
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";

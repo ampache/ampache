@@ -117,7 +117,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                 );
                 $playlist->add($mediaIds);
             }
-            if (isset($urls)) {
+            if (!empty($urls)) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]

@@ -72,7 +72,7 @@ class AlbumSongsMethod
         // songs for all disks
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = (int) $input['exact'] == 1;
+        $exact = array_key_exists('exact', $input) && (int)$input['exact'] == 1;
         if (AmpConfig::get('album_group') && !$exact) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {

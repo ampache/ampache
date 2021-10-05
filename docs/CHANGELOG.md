@@ -1,5 +1,46 @@
 # CHANGELOG
 
+## Ampache-develop
+
+### Added
+
+* Split search items in WebUI into optgroup categories
+* Add en_AU as a locale
+* Require confirmation on enable/disable user links
+
+### Changed
+
+* Always update time when updating songs and videos from tags
+* Merge config 'ratings' and 'userflags' checks into ratings. (drop userflags)
+
+### Fixed
+
+* SQL query error for Random Album in certain config setups
+* Album suite needed even without grouping
+* Stop scrubbing the podcast title so hard (so many `&amp;`'s)
+* Use total_count and total_skip columns for searches (Fixes searching with 0)
+* Subsonic
+  * Trim quotes for Subsonic searches (some clients add them)
+  * Support exact (lucene) searching when using quotes
+
+### API-develop
+
+### Added
+
+* NEW API functions
+  * Api::live_stream (get a radio stream by id)
+  * Api::live_streams
+* stream: added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+
+### Changed
+
+* live_stream objects added 'catalog' and 'site_url'
+
+### Fixed
+
+* get_indexes: JSON didn't think live_streams was valid (it is)
+* record_play: user is mean't to be optional
+
 ## Ampache 5.0.0-release
 
 Ampache 5 is here and it's big!

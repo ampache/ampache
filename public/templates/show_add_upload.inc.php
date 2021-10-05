@@ -205,7 +205,7 @@ if ($upload_max > 0) { ?>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td class="upload_select">
         <?php show_license_select('license'); ?>
-        <div id="album_select_license_<?php echo $song->license ?>">
+        <div id="album_select_license">
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>
     </td>

@@ -56,7 +56,7 @@ if (!$gart) {
 $subtitles = $video->get_subtitles();
     foreach ($subtitles as $subtitle) {
         echo "<option value='" . $subtitle['lang_code'] . "' ";
-        if (isset($_SESSION['iframe']['subtitle']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {
             echo "selected";
         }
         echo ">" . $subtitle['lang_name'] . "</option>";
@@ -75,10 +75,6 @@ $subtitles = $video->get_subtitles();
                 <?php echo Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php
-        } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
         <dt><?php echo T_('Fav.'); ?></dt>
         <dd>
             <div id="userflag_<?php echo $video->id; ?>_video">

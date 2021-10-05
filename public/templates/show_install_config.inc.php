@@ -24,11 +24,11 @@
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
-$web_path_guess = $_REQUEST['web_path'];
+$web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();
 }
-$db_user        = scrub_out($_REQUEST['db_user']);
+$db_user        = scrub_out($_REQUEST['db_user'] ?? '');
 $local_username = scrub_out($_REQUEST['db_username']);
 if (!$db_user) {
     $local_username = scrub_out($_REQUEST['local_username']);
@@ -37,6 +37,8 @@ $local_pass = scrub_out($_REQUEST['db_password']);
 if (empty($local_pass)) {
     $local_pass = scrub_out($_REQUEST['local_pass']);
 }
+$has_usecase  = array_key_exists('usecase', $_REQUEST);
+$has_backends = array_key_exists('backends', $_REQUEST);
 
 require __DIR__ . '/install_header.inc.php'; ?>
         <div class="jumbotron" style="margin-top: 70px">
@@ -112,17 +114,17 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <br />
 <div class="form-group">
     <div class="radio">
-      <label><input type="radio" name="usecase" value="default" <?php if (!isset($_REQUEST['usecase']) || $_REQUEST['usecase'] == 'default') {
+      <label><input type="radio" name="usecase" value="default" <?php if (!$has_usecase || $_REQUEST['usecase'] == 'default') {
     echo 'checked';
 } ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with the best features.'); ?></label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="usecase" value="minimalist" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'minimalist') {
+      <label><input type="radio" name="usecase" value="minimalist" <?php if ($has_usecase && $_REQUEST['usecase'] == 'minimalist') {
     echo 'checked';
 } ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('Only essential features are enabled to simply stream your music from the Web Interface.'); ?></label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="usecase" value="community" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'community') {
+      <label><input type="radio" name="usecase" value="community" <?php if ($has_usecase && $_REQUEST['usecase'] == 'community') {
     echo 'checked';
 } ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('Recommended settings when using Ampache as a frontend for a music community.'); ?></label>
     </div>
@@ -171,22 +173,22 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <label><input type="checkbox" value="1" checked disabled>Ampache API</label>
     </div>
     <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!isset($_REQUEST['backends']) || in_array('subsonic', $_REQUEST['backends'])) {
+        <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!$has_backends || in_array('subsonic', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>Subsonic</label>
     </div>
     <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="upnp" <?php if (isset($_REQUEST['backends']) && in_array('upnp', $_REQUEST['backends'])) {
+        <label><input type="checkbox" name="backends[]" value="upnp" <?php if ($has_backends && in_array('upnp', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>UPnP</label>
     </div>
     <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="daap" <?php if (isset($_REQUEST['backends']) && in_array('daap', $_REQUEST['backends'])) {
+        <label><input type="checkbox" name="backends[]" value="daap" <?php if ($has_backends && in_array('daap', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>DAAP (iTunes)</label>
     </div>
     <div class="checkbox-inline">
-        <label><input type="checkbox" name="backends[]" value="webdav" <?php if (isset($_REQUEST['backends']) && in_array('webdav', $_REQUEST['backends'])) {
+        <label><input type="checkbox" name="backends[]" value="webdav" <?php if ($has_backends && in_array('webdav', $_REQUEST['backends'])) {
             echo 'checked';
         } ?>>WebDAV</label>
     </div>
@@ -271,7 +273,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
+                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : ''; echo debug_result(check_config_values($results)); ?></div>
                 <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
 
                 <div class="col-sm-4"></div>

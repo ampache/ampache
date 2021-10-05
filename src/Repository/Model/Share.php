@@ -469,7 +469,7 @@ class Share extends database_object
             }
         } else {
             // fall back to config defaults
-            $expire_days = AmpConfig::get('share_expire');
+            $expire_days = AmpConfig::get('share_expire', 7);
         }
 
         return (int)$expire_days;

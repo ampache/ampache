@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
 $web_path     = AmpConfig::get('web_path');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css

@@ -1013,8 +1013,8 @@ class Subsonic_Xml_Data
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count();
-            $xgenre->addAttribute('songCount', (string) $counts['song'] ?: 0);
-            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?: 0);
+            $xgenre->addAttribute('songCount', (string) $counts['song'] ?? 0);
+            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?? 0);
         }
     }
 
@@ -1280,7 +1280,7 @@ class Subsonic_Xml_Data
     private static function setIfStarred($xml, $objectType, $object_id)
     {
         if (InterfaceImplementationChecker::is_library_item($objectType)) {
-            if (AmpConfig::get('userflags')) {
+            if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$res[1]));

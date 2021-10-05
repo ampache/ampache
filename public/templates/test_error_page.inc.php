@@ -24,7 +24,10 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 ?>
-<?php $t_ampache = T_('Ampache'); ?>
+<?php
+$t_ampache = T_('Ampache');
+$htmllang  = $htmllang ?? 'en_US';
+$dir       = $dir ?? 'ltr'; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"

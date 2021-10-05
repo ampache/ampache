@@ -76,19 +76,24 @@ class Stream_Url extends MemoryObject
 
         $results['base_url'] = $url;
 
-        foreach ($elements as $element) {
-            list($key, $value) = explode('=', $element);
-            switch ($key) {
-                case 'oid':
-                    $key = 'id';
-                    break;
-                case 'video':
-                    if (make_bool($value)) {
-                        $results['type'] = 'video';
-                    }
-                    break;
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                if (empty($element)) {
+                    continue;
+                }
+                list($key, $value) = explode('=', $element);
+                switch ($key) {
+                    case 'oid':
+                        $key = 'id';
+                        break;
+                    case 'video':
+                        if (make_bool($value)) {
+                            $results['type'] = 'video';
+                        }
+                        break;
+                }
+                $results[$key] = $value;
             }
-            $results[$key] = $value;
         }
 
         return $results;

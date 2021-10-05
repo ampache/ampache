@@ -73,10 +73,6 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
                 <?php echo Rating::show($libitem->id, $object_type) ?>
             </span>
-        <?php
-        } ?>
-
-        <?php if (AmpConfig::get('userflags')) { ?>
             <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
                 <?php echo Userflag::show($libitem->id, $object_type) ?>
             </span>

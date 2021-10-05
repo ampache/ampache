@@ -36,7 +36,6 @@ final class ConfigurationKeyEnum
     public const USE_AUTH                      = 'use_auth';
     public const WEB_PATH                      = 'web_path';
     public const ALLOWED_ZIP_TYPES             = 'allow_zip_types';
-    public const USER_FLAGS                    = 'userflags';
     public const WAVEFORM                      = 'waveform';
     public const DIRECTPLAY                    = 'directplay';
     public const SOCIABLE                      = 'sociable';

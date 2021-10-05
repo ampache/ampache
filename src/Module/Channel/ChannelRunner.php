@@ -224,7 +224,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                             //fwrite($sock, $channel->header_chunk);
                             //debug_event('channel_run', 'IS NEW' . $channel->header_chunk, 5);
                             $clchunk_buffer = $channel->header_chunk . $chunk_buffer;
-                            if ($client['metadata']) {
+                            if (array_key_exists('metadata', $client)) {
                                 //stub
                                 //if (strtolower($channel->stream_type) == "ogg")
                                 while (strlen($clchunk_buffer) > $metadata_interval) {
@@ -249,7 +249,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                         }
 
                         // Check if we need to insert metadata information
-                        if ($client['metadata']) {
+                        if (array_key_exists('metadata', $client)) {
                             $chkmdlen = ($client['length'] + $chunklen) - $client['metadata_lastsent'];
                             if ($chkmdlen >= $metadata_interval) {
                                 $subpos = ($client['metadata_lastsent'] + $metadata_interval) - $client['length'];

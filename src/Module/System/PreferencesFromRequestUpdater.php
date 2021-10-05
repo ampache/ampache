@@ -95,7 +95,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             // Run the update for this preference only if it's set
-            if (isset($_REQUEST[$name]) || in_array($name, $null_allowed)) {
+            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed)) {
                 Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
             }
 

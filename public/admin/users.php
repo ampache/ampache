@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\Admin\User\AddUserAction;
 use Ampache\Module\Application\Admin\User\ConfirmDeleteAction;
+use Ampache\Module\Application\Admin\User\ConfirmDisableAction;
+use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
 use Ampache\Module\Application\Admin\User\DeleteAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
@@ -64,7 +66,9 @@ $dic->get(ApplicationRunner::class)->run(
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         DisableAction::REQUEST_KEY => DisableAction::class,
+        ConfirmDisableAction::REQUEST_KEY => ConfirmDisableAction::class,
         EnableAction::REQUEST_KEY => EnableAction::class,
+        ConfirmEnableAction::REQUEST_KEY => ConfirmEnableAction::class,
         AddUserAction::REQUEST_KEY => AddUserAction::class,
         UpdateUserAction::REQUEST_KEY => UpdateUserAction::class,
     ],

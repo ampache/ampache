@@ -61,9 +61,9 @@ final class UpdateArtMethod
         if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $overwrite = (int) $input['overwrite'] == 0;
+        $type      = (string)$input['type'];
+        $object_id = (int)$input['id'];
+        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
         $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data

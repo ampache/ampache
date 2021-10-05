@@ -47,12 +47,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
         }
         $allow_group_disks = (AmpConfig::get('album_group'));
         $sort_disk         = ($allow_group_disks)
-            ? "AND `album`.`disk` = 1 "
-            : "";
+            ? " `album`.`disk` = 1 "
+            : " 1 = 1 ";
 
         $sql = (AmpConfig::get('catalog_disable'))
-            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' %s", $sort_disk)
-            : "SELECT DISTINCT `album`.`id` FROM `album` " . str_replace("AND", "WHERE", $sort_disk);
+            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' AND %s", $sort_disk)
+            : sprintf("SELECT DISTINCT `album`.`id` FROM `album` WHERE %s", $sort_disk);
 
         if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('album', $userId);
@@ -366,7 +366,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {
                 // We assume undefined release type is album
-                $rtype = $row['release_type'] ?: 'album';
+                $rtype = $row['release_type'] ?? 'album';
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = array();
                 }

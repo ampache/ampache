@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path     = AmpConfig::get('web_path');
 $thcount      = 7;
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
@@ -61,8 +61,6 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         <?php
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('album', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('album', $object_ids);
         }
 
