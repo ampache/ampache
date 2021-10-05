@@ -41,7 +41,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = array();
         $ret       = array();
         $in_string = false;

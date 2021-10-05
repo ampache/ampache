@@ -24,11 +24,11 @@
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
-$web_path_guess = $_REQUEST['web_path'];
+$web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();
 }
-$db_user        = scrub_out($_REQUEST['db_user']);
+$db_user        = scrub_out($_REQUEST['db_user'] ?? '');
 $local_username = scrub_out($_REQUEST['db_username']);
 if (!$db_user) {
     $local_username = scrub_out($_REQUEST['local_username']);
@@ -273,7 +273,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
+                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : ''; echo debug_result(check_config_values($results)); ?></div>
                 <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
 
                 <div class="col-sm-4"></div>
