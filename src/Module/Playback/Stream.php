@@ -463,7 +463,7 @@ class Stream
         if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id) {
+            if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }

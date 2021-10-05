@@ -88,7 +88,6 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($name);
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event(__CLASS__, 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (!$plugin->is_valid()) {
@@ -96,7 +95,6 @@ class Plugin
                     continue;
                 }
                 if (!method_exists($plugin->_plugin, $type)) {
-                    debug_event(__CLASS__, 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }

@@ -193,9 +193,9 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
-        $db_results = Dba::query($sql, array($instance));
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -541,8 +541,7 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp.controller',
-            'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp.controller', 'Connected.', 5);
 

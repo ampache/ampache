@@ -116,9 +116,6 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }
 
-        // Make sure all default preferences are set
-        Preference::set_defaults();
-
         // Temp Fixes
         $results = Preference::fix_preferences($results);
 

@@ -184,9 +184,9 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id`= ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = Dba::query($sql, array($instance));
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -449,6 +449,9 @@ class AmpacheMpd extends localplay_controller
      */
     public function get()
     {
+        if (!$this->_mpd->status) {
+            return array();
+        }
         // If we don't have the playlist yet, pull it
         if (!isset($this->_mpd->playlist)) {
             $this->_mpd->RefreshInfo();
@@ -535,8 +538,11 @@ class AmpacheMpd extends localplay_controller
      */
     public function status()
     {
-        $track = $this->_mpd->status['song'];
         $array = array();
+        if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
+            return $array;
+        }
+        $track = $this->_mpd->status['song'];
 
         /* Construct the Array */
         $array['state']  = $this->_mpd->status['state'];
@@ -564,7 +570,7 @@ class AmpacheMpd extends localplay_controller
                 if (!empty($playlist_item['Name'])) {
                     $array['track_title'] = $playlist_item['Name'];
                 } else {
-                    $array['track_title'] = $playlist_item['file'];
+                    $array['track_title'] = $playlist_item['file'] ?? '';
                 }
             }
             if (!empty($playlist_item['Artist'])) {
@@ -587,8 +593,11 @@ class AmpacheMpd extends localplay_controller
     public function connect()
     {
         // Look at the current instance and pull the options for said instance
-        $options    = self::get_instance();
-        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'], 'debug_event');
+        $options = self::get_instance();
+        if (!array_key_exists('host', $options) && !array_key_exists('port', $options)) {
+            return false;
+        }
+        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
         if ($this->_mpd->connected) {
             return true;

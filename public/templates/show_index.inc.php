@@ -74,6 +74,7 @@ if (isset($user->id)) {
     <?php
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
+        $user_id = !empty(Core::get_global('user')) ? Core::get_global('user')->id : -1;
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
 <?php

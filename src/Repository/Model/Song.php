@@ -2052,7 +2052,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {
-            if (!Access::check('interface', 100)) {
+            if (!Access::check('interface', 100) && !empty(Core::get_global('user'))) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
                 $current_user = (int) Core::get_global('user')->id;
                 if ($current_user > 0) {

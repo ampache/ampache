@@ -443,26 +443,26 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @param string $database
      * @return mixed|PDO|null
      */
-    public static function dbh($database = '')
+    public static function dbh()
     {
-        if (!$database) {
-            $database = AmpConfig::get('database_name');
+        $database = AmpConfig::get('database_name');
+        if ($database == '') {
+            return null;
         }
 
         // Assign the Handle name that we are going to store
         $handle = 'dbh_' . $database;
 
-        if (!is_object(AmpConfig::get($handle))) {
+        if (is_object(AmpConfig::get($handle))) {
+            return AmpConfig::get($handle);
+        } else {
             $dbh = self::_connect();
             self::_setup_dbh($dbh, $database);
             AmpConfig::set($handle, $dbh, true);
 
             return $dbh;
-        } else {
-            return AmpConfig::get($handle);
         }
     }
 

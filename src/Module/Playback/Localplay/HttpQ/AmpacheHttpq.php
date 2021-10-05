@@ -209,9 +209,9 @@ class AmpacheHttpq extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
-        $db_results = Dba::query($sql, array($instance));
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -551,7 +551,7 @@ class AmpacheHttpq extends localplay_controller
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album']  = $song->get_album_name();
         } else {
-            $array['track_title'] = basename($array['track']);
+            $array['track_title'] = basename($array['track'] ?? '');
         }
 
         return $array;

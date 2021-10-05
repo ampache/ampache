@@ -182,7 +182,6 @@ final class DefaultAction implements ApplicationActionInterface
             /**
              * postAuth may return null, so this has to be considered in here
              */
-
             if ($auth['success']) {
                 $username = $auth['username'];
             } else {
@@ -305,7 +304,10 @@ final class DefaultAction implements ApplicationActionInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ) {
+                // admins need to know if an update is available
                 AutoUpdate::is_update_available();
+                // Make sure all default preferences are set
+                Preference::set_defaults();
             }
             // fix preferences that are missing for user
             User::fix_preferences($user->id);
