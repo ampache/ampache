@@ -29,6 +29,11 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
+$limit           = $_REQUEST['limit'] ?? 0;
+$random          = $_REQUEST['random'] ?? 0;
+$browse_id       = (isset($browse))
+    ? $browse->id
+    : 0;
 $currentType     = (isset($searchType))
     ? $searchType
     : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -84,28 +89,28 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         <td>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
-                    <option value="1" <?php if ((int) $_REQUEST['limit'] == 1) {
+                    <option value="1" <?php if ($limit == 1) {
             echo "selected=\"selected\"";
         }?>>1</option>
-                        <option value="5" <?php if ((int) $_REQUEST['limit'] == 5) {
+                        <option value="5" <?php if ($limit == 5) {
             echo "selected=\"selected\"";
         }?>>5</option>
-                        <option value="10" <?php if ((int) $_REQUEST['limit'] == 10) {
+                        <option value="10" <?php if ($limit == 10) {
             echo "selected=\"selected\"";
         }?>>10</option>
-                        <option value="25" <?php if ((int) $_REQUEST['limit'] == 25) {
+                        <option value="25" <?php if ($limit == 25) {
             echo "selected=\"selected\"";
         }?>>25</option>
-                        <option value="50" <?php if ((int) $_REQUEST['limit'] == 50) {
+                        <option value="50" <?php if ($limit == 50) {
             echo "selected=\"selected\"";
         }?>>50</option>
-                        <option value="100" <?php if ((int) $_REQUEST['limit'] == 100) {
+                        <option value="100" <?php if ($limit == 100) {
             echo "selected=\"selected\"";
         }?>>100</option>
-                        <option value="250" <?php if ((int) $_REQUEST['limit'] == 250) {
+                        <option value="250" <?php if ($limit == 250) {
             echo "selected=\"selected\"";
         }?>>250</option>
-                        <option value="500" <?php if ((int) $_REQUEST['limit'] == 500) {
+                        <option value="500" <?php if ($limit == 500) {
             echo "selected=\"selected\"";
         }?>>500</option>
                 </select>
@@ -113,7 +118,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     </tr>
     <tr id="random_results">
         <td><?php echo T_('Random'); ?></td>
-        <td><input type="checkbox" name="random" value="1" <?php if ((int) $_REQUEST['random'] == 1) {
+        <td><input type="checkbox" name="random" value="1" <?php if ($random == 1) {
             echo "checked";
         } ?> /></td>
     </tr>
@@ -128,7 +133,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
 <?php } ?>
     <input type="hidden" id="hiddenaction" name="action" value="search" />
-    <input type="hidden" name="browse_id" value="<?php echo $browse->id; ?>" />
+    <input type="hidden" name="browse_id" value="<?php echo $browse_id; ?>" />
 </div>
 </form>
 <script>

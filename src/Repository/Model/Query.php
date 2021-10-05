@@ -267,7 +267,7 @@ class Query
         }
         $this->user_id = Core::get_global('user')->id;
 
-        if ($query_id === null) {
+        if ($query_id === null || $query_id === 0) {
             $this->reset();
             $data = self::_serialize($this->_state);
 

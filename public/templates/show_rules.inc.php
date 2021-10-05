@@ -66,7 +66,7 @@ $logic_operator = strtolower($logic_operator); ?>
 <?php Ui::show_box_bottom(); ?>
 
 <?php
-if ($playlist) {
+if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
     $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
