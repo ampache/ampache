@@ -193,7 +193,6 @@ final class VaInfo implements VaInfoInterface
             $this->_getID3->option_tag_lyrics3     = true;
             $this->_getID3->option_tags_process    = true;
             $this->_getID3->option_tag_apetag      = true;
-            $this->_getID3->encoding               = $this->encoding;
 
             // get id3tag encoding (try to work around off-spec id3v1 tags)
             try {
