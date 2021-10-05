@@ -358,9 +358,8 @@ class Dba
             debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
         }
 
-        $stmt = $dbh->prepare('USE `' . $database . '`');
         try {
-            $stmt->execute();
+            $dbh->exec('USE `' . $database . '`');
         } catch (PDOException $error) {
             self::$_error = json_encode($dbh->errorInfo());
             debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);

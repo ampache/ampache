@@ -705,7 +705,9 @@ class Preference extends database_object
      */
     public static function clear_from_session()
     {
-        unset($_SESSION['userdata']['preferences']);
+        if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
+            unset($_SESSION['userdata']['preferences']);
+        }
     } // clear_from_session
 
     /**
