@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var null|Search $playlist */
 
-if ($playlist) {
+if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
     $logic_operator = Core::get_request('operator');

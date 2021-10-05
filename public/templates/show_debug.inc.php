@@ -89,6 +89,10 @@ $web_path    = AmpConfig::get('web_path'); ?>
             </thead>
             <tbody>
             <tr>
+                <td><?php echo T_('Version'); ?></td>
+                <td><?php echo (string)phpversion(); ?></td>
+            </tr>
+            <tr>
                 <td><?php echo T_('Memory Limit'); ?></td>
                 <td><?php echo ini_get('memory_limit'); ?></td>
             </tr>
