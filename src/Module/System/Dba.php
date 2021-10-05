@@ -79,12 +79,20 @@ class Dba
             return false;
         }
 
-        // Run the query
-        if (!empty($params)) {
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute($params);
-        } else {
-            $stmt = $dbh->query($sql);
+        try {
+            // Run the query
+            if (!empty($params)) {
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($params);
+            } else {
+                $stmt = $dbh->query($sql);
+            }
+        } catch (PDOException $error) {
+            // are you trying to write to something that doesn't exist?
+            self::$_error = $error->getMessage();
+            debug_event(__CLASS__, 'Connection failed: ' . $error->getMessage(), 1);
+
+            return false;
         }
 
         // Save the query, to make debug easier
@@ -350,10 +358,12 @@ class Dba
             debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
         }
 
-        if ($dbh->exec('USE `' . $database . '`') === false) {
+        $stmt = $dbh->prepare('USE `' . $database . '`');
+        try {
+            $stmt->execute();
+        } catch (PDOException $error) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()),
-                1);
+            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
