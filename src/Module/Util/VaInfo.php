@@ -207,6 +207,7 @@ final class VaInfo implements VaInfoInterface
 
                 return false;
             }
+            //$logger->error('RAW TAGS: ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
 
             if ($configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
                 $mb_order = $configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
@@ -888,7 +889,7 @@ final class VaInfo implements VaInfoInterface
             $parsed['title'] = urldecode($this->_pathinfo['filename']);
         }
         if (array_key_exists('audio', $tags)) {
-            $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? null;
+            $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';
             if ($parsed['mode'] == 'con') {
                 $parsed['mode'] = 'cbr';
             }
@@ -962,6 +963,8 @@ final class VaInfo implements VaInfoInterface
             case 'wmv':
             case 'wma':
                 return 'asf';
+            case 'mp4':
+                return 'quicktime';
             case 'flac':
             case 'flv':
             case 'mpg':
