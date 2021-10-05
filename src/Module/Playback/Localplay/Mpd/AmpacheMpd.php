@@ -449,7 +449,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function get()
     {
-        if (!$this->_mpd->status) {
+        if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
             return array();
         }
         // If we don't have the playlist yet, pull it
