@@ -167,8 +167,8 @@ final class ShowAction implements ApplicationActionInterface
 
             // That means the client has a cached version of the image
             $reqheaders = getallheaders();
-            if (array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
-                if (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache') {
+            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
+                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
                     $cetagf = explode('-', $reqheaders['If-None-Match']);
                     $cetag  = $cetagf[0];
                     // Same image than the cached one? Use the cache.
