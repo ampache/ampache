@@ -69,6 +69,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 }
                 break;
         }
+        $dirname = rtrim($dirname, "/");
 
         foreach ($items as $item) {
             $item->format();
