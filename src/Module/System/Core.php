@@ -333,23 +333,27 @@ class Core
      */
     public static function is_readable($path)
     {
-        if (is_dir($path)) {
-            $handle = opendir($path);
+        if (file_exists($path)) {
+            if (is_dir($path)) {
+                $handle = opendir($path);
+                if ($handle === false) {
+                    return false;
+                }
+                closedir($handle);
+
+                return true;
+            }
+
+            $handle = @fopen($path, 'rb');
             if ($handle === false) {
                 return false;
             }
-            closedir($handle);
+            fclose($handle);
 
             return true;
         }
 
-        $handle = @fopen($path, 'rb');
-        if ($handle === false) {
-            return false;
-        }
-        fclose($handle);
-
-        return true;
+        return false;
     }
 
     /**
