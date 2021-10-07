@@ -26,6 +26,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var Live_Stream $radio */
 ?>
 
 <?php Ui::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
@@ -55,7 +56,7 @@ use Ampache\Module\Util\Ui;
     $itemprops[T_('Name')]     = $radio->f_name;
     $itemprops[T_('Website')]  = scrub_out($radio->site_url);
     $itemprops[T_('Stream')]   = $radio->f_url_link;
-    $itemprops[T_('Codec')]    = scrub_out($video->codec);
+    $itemprops[T_('Codec')]    = scrub_out($radio->codec);
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
