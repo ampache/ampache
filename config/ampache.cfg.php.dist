@@ -738,7 +738,7 @@ live_stream = "true"
 ; Set this to true to enable podcasts and the
 ; possibility for admins to subscribe to new podcasts.
 ; DEFAULT: "false"
-;podcast = "true"
+podcast = "true"
 
 ; Web Socket address
 ; Declare the web socket server address
