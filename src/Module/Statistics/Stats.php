@@ -540,7 +540,7 @@ class Stats
         $type           = self::validate_type($input_type);
         $date           = time() - (86400 * (int)$threshold);
         $catalog_filter = (AmpConfig::get('catalog_filter'));
-        if ($type == 'playlist') {
+        if ($type == 'playlist' && !$addAdditionalColumns) {
             $sql = "SELECT `id` FROM `playlist`";
             if ($threshold > 0) {
                 $sql .= " WHERE `last_update` >= '" . $date . "' ";

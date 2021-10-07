@@ -273,6 +273,9 @@ class Update
         $update_string = "* Add podcast to the object_count table";
         $version[]     = array('version' => '510000', 'description' => $update_string);
 
+        $update_string = "* Add podcast to the cache_object_count tables";
+        $version[]     = array('version' => '510001', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1608,7 +1611,23 @@ class Update
     public static function update_510000()
     {
         $retval = true;
-        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode')";
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_510001
+     *
+     * Add podcast to the cache_object_count tables
+     */
+    public static function update_510001()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
