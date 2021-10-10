@@ -47,23 +47,32 @@ final class AlbumRepository implements AlbumRepositoryInterface
         }
         $allow_group_disks = (AmpConfig::get('album_group'));
         $sort_disk         = ($allow_group_disks)
-            ? "AND `album`.`disk` = 1 "
+            ? " AND `album`.`disk` = 1 "
             : "";
 
-        $sql = (AmpConfig::get('catalog_disable'))
-            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' %s", $sort_disk)
-            : "SELECT DISTINCT `album`.`id` FROM `album` " . str_replace("AND", "WHERE", $sort_disk);
-
+        $sql = "";
+        $where_and_clause = "";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`");
+            $where_and_clause .= sprintf(" AND `catalog`.`enabled` = '1' %s", $sort_disk);
+        } else {
+            $sql .= "SELECT DISTINCT `album`.`id` FROM `album` ";
+            $where_and_clause .= $sort_disk;
+        }
         if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('album', $userId);
+            $where_and_clause .= " AND" . Catalog::get_user_filter('album', $userId);
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $sql .= sprintf(
+            $where_and_clause .= sprintf(
                 "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
+        }
+        $and_pos = strpos($where_and_clause, "AND");
+        if ($and_pos !== false) {
+            $sql .= substr_replace($where_and_clause, "WHERE", $and_pos, 3);
         }
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',
