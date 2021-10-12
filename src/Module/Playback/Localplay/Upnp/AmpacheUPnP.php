@@ -120,9 +120,13 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
+        $name    = Dba::escape($data['name'] ?? null);
+        $url     = Dba::escape($data['url'] ?? null);
+        $user_id = Dba::escape(Core::get_global('user')->id);
+
         $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
 
-        return Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
+        return Dba::query($sql, array($name, $url, $user_id));
     }
 
     /**
@@ -217,7 +221,7 @@ class AmpacheUPnP extends localplay_controller
         if (!$user->has_access('100')) {
             $user_id = $user->id ?? 0;
         }
-        $user_id = $user_id ?: $user->id;
+        $user_id = $user_id ?? $user->id;
 
         Preference::update('upnp_active', $user_id, $uid);
         AmpConfig::set('upnp_active', $uid, true);

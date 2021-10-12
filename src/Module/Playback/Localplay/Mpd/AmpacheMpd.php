@@ -25,6 +25,7 @@ namespace Ampache\Module\Playback\Localplay\Mpd;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
@@ -121,25 +122,15 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_instance($data)
     {
-        foreach ($data as $key => $value) {
-            switch ($key) {
-                case 'name':
-                case 'host':
-                case 'port':
-                case 'password':
-                    ${$key} = Dba::escape($value);
-                    break;
-                default:
+        $name     = Dba::escape($data['name'] ?? null);
+        $host     = Dba::escape($data['host'] ?? null);
+        $port     = Dba::escape($data['port'] ?? null);
+        $password = Dba::escape($data['password'] ?? null);
+        $user_id  = Dba::escape(Core::get_global('user')->id);
 
-                    break;
-            } // end switch
-        } // end foreach
+        $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`)  VALUES (?, ?, ?, ?, ?)";
 
-        $user_id = Dba::escape(Core::get_global('user')->id);
-
-        $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES ('$name', '$host', '$port', '$password', '$user_id')";
-
-        return Dba::write($sql);
+        return Dba::write($sql, array($name, $host, $port, $password, $user_id));
     } // add_instance
 
     /**
@@ -243,7 +234,7 @@ class AmpacheMpd extends localplay_controller
         if (!$user->has_access('100')) {
             $user_id = $user->id ?? 0;
         }
-        $user_id = $user_id ?: $user->id;
+        $user_id = $user_id ?? $user->id;
 
         Preference::update('mpd_active', $user_id, $uid);
         AmpConfig::set('mpd_active', $uid, true);
@@ -507,6 +498,7 @@ class AmpacheMpd extends localplay_controller
                                 $data['link'] = $media->f_link;
                                 break;
                             case 'live_stream':
+                                /** @var Live_Stream $media */
                                 $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $frequency $site_url";
@@ -542,28 +534,33 @@ class AmpacheMpd extends localplay_controller
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
             return $array;
         }
-        $track = $this->_mpd->status['song'];
+        $track = $this->_mpd->status['song'] ?? 0;
 
         /* Construct the Array */
-        $array['state']  = $this->_mpd->status['state'];
-        $array['volume'] = $this->_mpd->status['volume'];
-        $array['repeat'] = $this->_mpd->status['repeat'];
-        $array['random'] = $this->_mpd->status['random'];
-        $array['track']  = $track + 1;
+        $array['state']        = $this->_mpd->status['state'];
+        $array['volume']       = $this->_mpd->status['volume'];
+        $array['repeat']       = $this->_mpd->status['repeat'];
+        $array['random']       = $this->_mpd->status['random'];
+        $array['track']        = $track + 1;
+        $array['track_title']  = '';
+        $array['track_artist'] = '';
+        $array['track_album']  = '';
 
-        $playlist_item = $this->_mpd->playlist[$track];
+        $playlist_item = array();
+        $url_data      = array();
+        if (is_array($this->_mpd->playlist) && array_key_exists($track, $this->_mpd->playlist)) {
+            $playlist_item = $this->_mpd->playlist[$track];
+            $url_data      = $this->parse_url($playlist_item['file']);
+        }
 
-        $url_data = $this->parse_url($playlist_item['file']);
-
-        debug_event('mdp.controller',
-            'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
+        debug_event('mdp.controller', 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
         if (count($url_data) > 0 && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album']  = $song->get_album_name();
-        } else {
+        } elseif (!empty($playlist_item)) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
             } else {
