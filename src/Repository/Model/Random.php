@@ -43,16 +43,16 @@ class Random
      */
     public static function artist()
     {
-        $multi_where = 'WHERE';
-        $sql         = "SELECT `artist`.`id` FROM `artist` ";
+        $join = 'WHERE';
+        $sql  = "SELECT `artist`.`id` FROM `artist` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `catalog_map`.`catalog_id` WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " $multi_where `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= " $join `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1";
 
@@ -116,15 +116,15 @@ class Random
             $user_id = $user->id ?? null;
         }
 
-        $multi_where = 'WHERE';
+        $join        = 'WHERE';
         $sql         = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " $multi_where `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= " $join `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
             $sql .= " AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "ORDER BY RAND() LIMIT $limit";
@@ -150,7 +150,7 @@ class Random
 
         $data        = Core::get_global('user')->get_recently_played('artist', 1);
         $where_sql   = "";
-        $multi_where = 'WHERE';
+        $join        = 'WHERE';
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
@@ -158,12 +158,12 @@ class Random
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " $multi_where `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= " $join `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);

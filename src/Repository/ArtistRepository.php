@@ -59,10 +59,10 @@ final class ArtistRepository implements ArtistRepositoryInterface
         }
 
         $sql  = "SELECT DISTINCT `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
-        $join = "WHERE";
+        $join = 'WHERE';
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
-            $join = "AND";
+            $join = 'AND';
         }
 
         $rating_filter = AmpConfig::get_rating_filter();

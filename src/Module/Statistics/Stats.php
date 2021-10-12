@@ -818,7 +818,7 @@ class Stats
             return $sql;
         }
         $base_type         = 'song';
-        $multi_where       = 'WHERE';
+        $join              = 'WHERE';
         $allow_group_disks = AmpConfig::get('album_group') && $type == 'album';
         $filter_type       = $type;
         // everything else
@@ -853,25 +853,25 @@ class Stats
         // join catalogs
         $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= $multi_where . " `catalog`.`enabled` = '1' ";
-            $multi_where = ' AND';
+            $sql .= $join . " `catalog`.`enabled` = '1' ";
+            $join = ' AND';
         }
         if ($catalog_filter) {
-            $sql .= $multi_where . Catalog::get_user_filter($filter_type, $user_id) . " ";
-            $multi_where = ' AND';
+            $sql .= $join . Catalog::get_user_filter($filter_type, $user_id) . " ";
+            $join = ' AND';
         }
         if ($catalog > 0) {
-            $sql .= $multi_where . " `catalog` = '" . (string)scrub_in($catalog) . "' ";
-            $multi_where = ' AND';
+            $sql .= $join . " `catalog` = '" . (string)scrub_in($catalog) . "' ";
+            $join = ' AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)Core::get_global('user')->id;
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
-            $sql .= $multi_where . " " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
-            $multi_where = ' AND';
+            $sql .= $join . " " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
+            $join = ' AND';
         }
         if ($allow_group_disks) {
-            $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `real_atime` DESC ";
+            $sql .= $join . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `real_atime` DESC ";
         } elseif ($type === 'song' || $base_type === 'video') {
             $sql .= "GROUP BY $sql_type, `real_atime` ORDER BY `real_atime` DESC ";
         } else {
