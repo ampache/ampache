@@ -45,40 +45,35 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (!$count) {
             $count = 1;
         }
-        $allow_group_disks = (AmpConfig::get('album_group'));
-        $sort_disk         = ($allow_group_disks)
-            ? " AND `album`.`disk` = 1 "
-            : "";
+        $sql  = "SELECT DISTINCT `album`.`id` FROM `album` ";
+        $join = 'WHERE';
 
-        $sql = "";
-        $where_and_clause = "";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`");
-            $where_and_clause .= sprintf(" AND `catalog`.`enabled` = '1' %s", $sort_disk);
-        } else {
-            $sql .= "SELECT DISTINCT `album`.`id` FROM `album` ";
-            $where_and_clause .= $sort_disk;
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
+            $join = 'AND';
         }
         if (AmpConfig::get('catalog_filter')) {
-            $where_and_clause .= " AND" . Catalog::get_user_filter('album', $userId);
+            $sql .= $join . Catalog::get_user_filter('album', $userId);
+            $join = 'AND';
+        }
+        if (AmpConfig::get('album_group')) {
+            $sql .= $join . " `album`.`disk` = 1 ";
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $where_and_clause .= sprintf(
-                "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
+            $sql .= $join . sprintf(
+                " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
-        }
-        $and_pos = strpos($where_and_clause, "AND");
-        if ($and_pos !== false) {
-            $sql .= substr_replace($where_and_clause, "WHERE", $and_pos, 3);
         }
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',
             $count
         );
         $db_results = Dba::read($sql);
+        //debug_event(self::class, 'getRandom ' . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
