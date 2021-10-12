@@ -90,9 +90,6 @@ if ($directplay_limit > 0) {
         <span id="rating_<?php echo $album->id; ?>_album">
             <?php echo Rating::show($album->id, 'album', true); ?>
         </span>
-        <?php
-    } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
         <span id="userflag_<?php echo $album->id; ?>_album">
             <?php echo Userflag::show($album->id, 'album'); ?>
         </span>

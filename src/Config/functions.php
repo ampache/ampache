@@ -192,6 +192,9 @@ function get_languages()
                 case 'el_GR':
                     $name = 'Greek';
                     break; /* Greek */
+                case 'en_AU':
+                    $name = 'English (AU)';
+                    break; /* English */
                 case 'en_GB':
                     $name = 'English (UK)';
                     break; /* English */
@@ -460,6 +463,9 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
  */
 function check_config_values($conf)
 {
+    if (!is_array($conf)) {
+        return false;
+    }
     if (!$conf['database_hostname']) {
         return false;
     }
@@ -503,15 +509,14 @@ function return_bytes($val)
     $val  = trim((string) $val);
     $last = strtolower((string) $val[strlen((string) $val) - 1]);
     switch ($last) {
-            // The 'G' modifier is available since PHP 5.1.0
         case 'g':
-            $val *= 1024;
+            $val = (int)$val * 1024;
             // Intentional break fall-through
         case 'm':
-            $val *= 1024;
+            $val = (int)$val * 1024;
             // Intentional break fall-through
         case 'k':
-            $val *= 1024;
+            $val = (int)$val * 1024;
             break;
     }
 
@@ -1287,7 +1292,9 @@ function show_table_render($render = false, $force = false)
 {
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
-        define('TABLE_RENDERED', 1); ?>
+        if (!defined('TABLE_RENDERED')) {
+            define('TABLE_RENDERED', 1);
+        } ?>
         <?php if (isset($render) && $render) { ?>
             <script>sortPlaylistRender();</script>
             <?php
@@ -1397,7 +1404,7 @@ function get_theme($name)
 
     $name = strtolower((string) $name);
 
-    if (isset($_mapcache[$name])) {
+    if (array_key_exists($name, $_mapcache)) {
         return $_mapcache[$name];
     }
 

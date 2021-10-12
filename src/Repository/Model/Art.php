@@ -112,6 +112,10 @@ class Art extends database_object
      */
     public static function is_valid_type($type)
     {
+        if (!$type) {
+            return false;
+        }
+
         return (InterfaceImplementationChecker::is_library_item($type) || $type == 'user');
     }
 
@@ -151,7 +155,10 @@ class Art extends database_object
      */
     public static function extension($mime)
     {
-        $data      = explode("/", (string)$mime);
+        if (empty($mime)) {
+            return '';
+        }
+        $data      = explode("/", $mime);
         $extension = $data['1'];
 
         if ($extension == 'jpeg') {
@@ -430,6 +437,14 @@ class Art extends database_object
         return true;
     } // insert
 
+    /**
+     * check_for_duplicate
+     * @param array $apics
+     * @param array $ndata
+     * @param array $new_pic
+     * @param string $apic_typeid
+     * @return int|null
+     */
     private function check_for_duplicate($apics, &$ndata, $new_pic, $apic_typeid)
     {
         $idx = null;
@@ -927,7 +942,7 @@ class Art extends database_object
         } // came from the db
 
         // Check to see if it's a URL
-        if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
+        if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
@@ -958,7 +973,7 @@ class Art extends database_object
             $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
-            if ($id3['format_name'] == "WMA") {
+            if (array_key_exists('format_name', $id3) && $id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
             } elseif (isset($id3['id3v2']['APIC'])) {
                 // Foreach in case they have more then one
@@ -1111,29 +1126,33 @@ class Art extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
+     * @param string $new_object_type
      * @return PDOStatement|boolean
      */
-    public static function duplicate($object_type, $old_object_id, $new_object_id)
+    public static function duplicate($object_type, $old_object_id, $new_object_id, $new_object_type = null)
     {
-        if (Art::has_db($new_object_id, $object_type) || $old_object_id == $new_object_id) {
+        $write_type = (self::is_valid_type($new_object_type))
+            ? $new_object_type
+            : $object_type;
+        if (Art::has_db($new_object_id, $write_type) || $old_object_id == $new_object_id) {
             return false;
         }
 
-        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
+        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
-                    self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind'], $row['mime']);
+                    self::write_to_dir($image, $row['size'], $write_type, $new_object_id, $row['kind'], $row['mime']);
                 }
             }
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? as `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        return Dba::write($sql, array($write_type, $new_object_id, $object_type, $old_object_id));
     }
 
     /**
@@ -1186,17 +1205,17 @@ class Art extends database_object
         $meta   = $plugin->get_metadata($gtypes, $media_info);
         $images = array();
 
-        if ($meta['art']) {
+        if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
-        if ($meta['tvshow_season_art']) {
+        if (array_key_exists('tvshow_season_art', $meta)) {
             $url      = $meta['tvshow_season_art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
-        if ($meta['tvshow_art']) {
+        if (array_key_exists('tvshow_art', $meta)) {
             $url      = $meta['tvshow_art'];
             $ures     = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
@@ -1383,14 +1402,13 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
+            $class_name  = ObjectTypeToClassNameMapper::map($object_type);
+            $libitem     = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
-
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo Ui::get_icon('delete', T_('Reset Art'));
                 echo "</a>";

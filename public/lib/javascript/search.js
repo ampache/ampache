@@ -26,8 +26,7 @@ var SearchRow = {
     add(ruleType, operator, input, subtype) {
         if (typeof(ruleType) != "string") {
             ruleType = 0;
-        }
-        else {
+        } else {
             jQuery.each(types, function(i) {
                 if (types[i].name == ruleType) {
                     ruleType = i;
@@ -84,8 +83,8 @@ var SearchRow = {
 
         var widget = types[ruleType].widget;
 
-        var inputNode  = document.createElement(widget["0"]);
-        inputNode.id   = "rule_" + ruleNumber + "_input";
+        var inputNode = document.createElement(widget["0"]);
+        inputNode.id = "rule_" + ruleNumber + "_input";
         inputNode.name = "rule_" + ruleNumber + "_input";
 
         switch(widget["0"]) {
@@ -99,13 +98,13 @@ var SearchRow = {
                     var option = document.createElement("option");
                     var realValue = 0;
                     // only allow ints that parse as ints and match the input
-                    if ( parseInt(widget["1"][i]) == widget["1"][i] && parseInt(i) === optioncount ) {
+                    if (parseInt(widget["1"][i]) == widget["1"][i] && parseInt(i) === optioncount) {
                         realValue = parseInt(widget["1"][i]);
                     }
                     else {
                         realValue = i;
                     }
-                    if ( input == realValue ) {
+                    if (input == realValue) {
                         option.selected = true;
                     }
                     option.value = realValue;
@@ -126,31 +125,50 @@ var SearchRow = {
         return inputNode;
     },
     constructOptions(ruleType, ruleNumber) {
-        var optionsNode  = document.createElement("select");
-        optionsNode.id   = "rule_" + ruleNumber;
+        var optionsNode = document.createElement("select");
+        optionsNode.id = "rule_" + ruleNumber;
         optionsNode.name = "rule_" + ruleNumber;
-
+        var groups = [];
         jQuery.each(types, function(i) {
-            var option = document.createElement("option");
-            option.innerHTML = types[i].label;
-            option.value = types[i].name;
-            if ( i == ruleType ) {
-                option.selected = true;
+            if (groups.indexOf(types[i].title) === -1) {
+                groups.push(types[i].title);
             }
-            optionsNode.appendChild(option);
         });
+        for (g = 0; g < groups.length; g++) {
+            var optGroupNode = document.createElement("optgroup");
+            optGroupNode.label = groups[g];
+
+            jQuery.each(types, function (i) {
+                if (groups[g] === types[i].title) {
+                    var option = document.createElement("option");
+                    option.innerHTML = types[i].label;
+                    option.value = types[i].name;
+                    if (i == ruleType) {
+                        option.selected = true;
+                    }
+                    if (groups[g] === '') {
+                        optionsNode.appendChild(option);
+                    } else {
+                        optGroupNode.appendChild(option);
+                    }
+                }
+            });
+            if (groups[g] !== '') {
+                optionsNode.appendChild(optGroupNode);
+            }
+        }
 
         $(optionsNode).change(SearchRow.update);
 
         return optionsNode;
     },
     constructOperators(ruleType, ruleNumber, operator) {
-        var operatorNode    = document.createElement("select");
-        operatorNode.id        = "rule_" + ruleNumber + "_operator";
-        operatorNode.name    = "rule_" + ruleNumber + "_operator";
+        var operatorNode = document.createElement("select");
+        operatorNode.id = "rule_" + ruleNumber + "_operator";
+        operatorNode.name = "rule_" + ruleNumber + "_operator";
 
         var basetype = types[ruleType].type;
-        operatorNode.className    = "operator" + basetype;
+        operatorNode.className = "operator" + basetype;
 
         var opts = basetypes[basetype];
         jQuery.each(opts, function(i) {
@@ -233,4 +251,3 @@ var SearchRow = {
         }
     }
 };
-

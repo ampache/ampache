@@ -67,10 +67,10 @@ final class PlaylistRemoveSongMethod
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
         } else {
-            if ((int) $input['clear'] === 1) {
+            if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
                 $playlist->delete_all();
                 Api::message('all songs removed from playlist', $input['api_format']);
-            } elseif ($input['song']) {
+            } elseif (array_key_exists('song', $input)) {
                 $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
@@ -80,7 +80,7 @@ final class PlaylistRemoveSongMethod
                 $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
                 Api::message('song removed from playlist', $input['api_format']);
-            } elseif ($input['track']) {
+            } elseif (array_key_exists('track', $input)) {
                 $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     Api::error(T_('Not Found'), '4704', self::ACTION, 'track', $input['api_format']);

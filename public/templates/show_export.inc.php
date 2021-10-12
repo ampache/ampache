@@ -25,10 +25,17 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-$name    = 'export_' . $_REQUEST['export_format'];
-${$name} = ' selected="selected"';
-$name    = 'catalog_' . $_REQUEST['export_catalog'];
-${$name} = ' selected="selected"';
+$export_itunes = '';
+$export_csv    = '';
+$export_format = (array_key_exists('export_format', $_REQUEST)) ? $_REQUEST['export_format'] : 'csv';
+switch ($export_format) {
+    case 'itunes':
+        $export_itunes = ' selected="selected"';
+        break;
+    case 'csv':
+        $export_csv = ' selected="selected"';
+        break;
+}
 
 Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data">
@@ -43,7 +50,7 @@ Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
                     foreach ($catalog_ids as $catalog_id) {
                         $catalog      = Catalog::create_from_id($catalog_id);
                         $current_name = 'catalog_' . $catalog->id; ?>
-                        <option value="<?php echo $catalog->id; ?>" <?php echo ${$current_name}; ?>><?php echo scrub_out($catalog->name); ?></option>
+                        <option value="<?php echo $catalog->id; ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->name); ?></option>
                     <?php
                     } ?>
                 </select>

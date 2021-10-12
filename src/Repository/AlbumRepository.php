@@ -370,7 +370,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {
                 // We assume undefined release type is album
-                $rtype = $row['release_type'] ?: 'album';
+                $rtype = $row['release_type'] ?? 'album';
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = array();
                 }

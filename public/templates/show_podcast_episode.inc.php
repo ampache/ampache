@@ -45,9 +45,6 @@ use Ampache\Module\Util\Ui;
                 <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
         <dt><?php echo T_('Fav.'); ?></dt>
         <dd>
             <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">

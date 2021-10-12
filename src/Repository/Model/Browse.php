@@ -127,7 +127,7 @@ class Browse extends Query
     {
         if ($this->is_simple() && $this->get_start() == 0) {
             $name = 'browse_current_' . $this->get_type();
-            if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
+            if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
                 $start = $_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
@@ -213,7 +213,7 @@ class Browse extends Query
         $hide_columns   = array();
         $argument_param = '';
         if (is_array($argument)) {
-            if (is_array($argument['hide'])) {
+            if (array_key_exists('hide', $argument) && is_array($argument['hide'])) {
                 $hide_columns = $argument['hide'];
             }
             if (!empty($hide_columns)) {
@@ -243,7 +243,7 @@ class Browse extends Query
                 $allow_group_disks = false;
                 if (is_array($argument)) {
                     $allow_group_disks = $argument['group_disks'];
-                    if ($argument['title']) {
+                    if (array_key_exists('title', $argument)) {
                         $box_title = $argument['title'];
                     }
                 }
@@ -466,8 +466,8 @@ class Browse extends Query
             $remember_length = time() + 31536000;
             $cookie_options  = [
                 'expires' => $remember_length,
-                'path' => AmpConfig::get('cookie_path'),
-                'domain' => AmpConfig::get('cookie_domain'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Strict'
             ];
@@ -494,7 +494,11 @@ class Browse extends Query
      */
     public function is_use_pages()
     {
-        return make_bool($this->_state['use_pages']);
+        if (array_key_exists('use_pages', $this->_state)) {
+            return make_bool($this->_state['use_pages']);
+        }
+
+        return false;
     }
 
     /**
@@ -512,7 +516,11 @@ class Browse extends Query
      */
     public function is_mashup()
     {
-        return make_bool($this->_state['mashup']);
+        if (array_key_exists('mashup', $this->_state)) {
+            return make_bool($this->_state['mashup']);
+        }
+
+        return false;
     }
 
     /**
@@ -530,7 +538,11 @@ class Browse extends Query
      */
     public function is_album_artist()
     {
-        return make_bool($this->_state['album_artist']);
+        if (array_key_exists('album_artist', $this->_state)) {
+            return make_bool($this->_state['album_artist']);
+        }
+
+        return false;
     }
 
     /**
@@ -552,7 +564,11 @@ class Browse extends Query
      */
     public function is_grid_view()
     {
-        return make_bool($this->_state['grid_view']);
+        if (array_key_exists('grid_view', $this->_state)) {
+            return make_bool($this->_state['grid_view']);
+        }
+
+        return false;
     }
 
     /**
@@ -582,7 +598,11 @@ class Browse extends Query
      */
     public function is_use_alpha()
     {
-        return make_bool($this->_state['use_alpha']);
+        if (array_key_exists('use_alpha', $this->_state)) {
+            return make_bool($this->_state['use_alpha']);
+        }
+
+        return false;
     }
 
     /**
@@ -618,7 +638,11 @@ class Browse extends Query
      */
     public function is_update_session()
     {
-        return make_bool($this->_state['update_session']);
+        if (array_key_exists('update_session', $this->_state)) {
+            return make_bool($this->_state['update_session']);
+        }
+
+        return false;
     }
 
     /**
@@ -636,7 +660,11 @@ class Browse extends Query
      */
     public function get_threshold()
     {
-        return (string)$this->_state['threshold'];
+        if (array_key_exists('threshold', $this->_state)) {
+            return (string)$this->_state['threshold'];
+        }
+
+        return '';
     }
 
     /**

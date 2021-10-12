@@ -55,7 +55,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 $web_path = AmpConfig::get('web_path');
                 $search   = $_REQUEST['search'];
                 $target   = $_REQUEST['target'];
-                $limit    = $_REQUEST['limit'] ?: 5;
+                $limit    = $_REQUEST['limit'] ?? 5;
 
                 $results = array();
 
@@ -249,7 +249,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
-                            'image' => $avatar['url'] ?: '',
+                            'image' => $avatar['url'] ?? '',
                         );
                     }
                 }

@@ -501,8 +501,11 @@ class LocalPlay
     public function current_instance()
     {
         $data = $this->_player->get_instance();
+        if (array_key_exists('id', $data)) {
+            return $data['id'];
+        }
 
-        return $data['id'];
+        return false;
     } // current_instance
 
     /**

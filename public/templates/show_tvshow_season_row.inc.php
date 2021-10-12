@@ -64,10 +64,6 @@ use Ampache\Module\Util\Ui;
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
                     <?php echo Rating::show($libitem->id, 'tvshow_season'); ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
                     <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
                 </span>

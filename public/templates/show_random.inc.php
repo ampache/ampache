@@ -29,8 +29,11 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
-$get_type    = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-$random_type = (in_array($get_type, array('song', 'album', 'artist', 'video')))
+$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$length       = $_POST['length'] ?? 0;
+$size_limit   = $_POST['size_limit'] ?? 0;
+$random_count = $_POST['random'] ?? 1;
+$random_type  = (in_array($get_type, array('song', 'album', 'artist', 'video')))
     ? $get_type
     : null;
 if (!$random_type) {
@@ -73,11 +76,11 @@ if (!$random_type) {
 <?php
         foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
-                (($_POST['random'] == $i) ? 'selected="selected"' : '') . '>' .
+                (($random_count == $i) ? 'selected="selected"' : '') . '>' .
                 $i . "</option>\n";
         }
             echo "\t\t\t" . '<option value="-1" ' .
-                (($_POST['random'] == '-1') ? 'selected="selected"' : '') . '>' .
+                (($random_count == '-1') ? 'selected="selected"' : '') . '>' .
                 T_('All') . "</option>\n"; ?>
         </select>
         </td>
@@ -89,11 +92,11 @@ if (!$random_type) {
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                (($_POST['length'] == 0) ? 'selected="selected"' : '') . '>' .
+                (($length == 0) ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
         foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
-                (($_POST['length'] == $i) ? 'selected="selected"' : '') . '>';
+                (($length == $i) ? 'selected="selected"' : '') . '>';
             if ($i < 60) {
                 printf(nT_('%d minute', '%d minutes', $i), $i);
             } else {
@@ -110,11 +113,11 @@ if (!$random_type) {
                 <select name="size_limit">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                (($_POST['size_limit'] == 0) ? 'selected="selected"' : '') . '>' .
+                (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
         foreach (array(64, 128, 256, 512, 1024) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '"' .
-                (($_POST['size_limit'] == $i) ? 'selected="selected"' : '') . '>' .
+                (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
                 Ui::format_bytes($i * 1048576) . "</option>\n";
         } ?>
                 </select>
@@ -131,7 +134,7 @@ if (!$random_type) {
 <?php Ui::show_box_bottom(); ?>
 <div id="browse">
 <?php
-    if (is_array($object_ids)) {
+    if (isset($object_ids) && is_array($object_ids)) {
         $browse = new Browse();
         $browse->set_type('song');
         $browse->save_objects($object_ids);

@@ -70,13 +70,12 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
         <tr>
             <td><?php echo T_('User Access Level'); ?>:</td>
                 <td>
-                    <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                     <select name="access">
-                        <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
-                        <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
-                        <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
-                        <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
-                        <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
+                        <option value="5"><?php echo T_('Guest'); ?></option>
+                        <option value="25" selected="selected"><?php echo T_('User'); ?></option>
+                        <option value="50"><?php echo T_('Content Manager'); ?></option>
+                        <option value="75"><?php echo T_('Catalog Manager'); ?></option>
+                        <option value="100"><?php echo T_('Admin'); ?></option>
                     </select>
                 </td>
         </tr>

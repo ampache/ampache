@@ -89,7 +89,29 @@ use Ampache\Module\Util\Ui;
         <tr>
             <td><?php echo T_('User Access Level'); ?>:</td>
             <td>
-                <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
+                <?php $var_name = 'on_' . (string)$client->access;
+                $on_5           = '';
+                $on_25          = '';
+                $on_50          = '';
+                $on_75          = '';
+                $on_100         = '';
+                switch ($var_name) {
+                    case 'on_5':
+                        $on_5 = 'selected="selected"';
+                        break;
+                    case 'on_25':
+                        $on_25 = 'selected="selected"';
+                        break;
+                    case 'on_50':
+                        $on_50 = 'selected="selected"';
+                        break;
+                    case 'on_75':
+                        $on_75 = 'selected="selected"';
+                        break;
+                    case 'on_100':
+                        $on_100 = 'selected="selected"';
+                        break;
+                } ?>
                 <select name="access">
                     <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                     <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>

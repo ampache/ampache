@@ -70,14 +70,14 @@ final class UserUpdateMethod
             return false;
         }
         $username   = $input['username'];
-        $fullname   = $input['fullname'];
-        $email      = $input['email'];
-        $website    = $input['website'];
-        $password   = $input['password'];
-        $state      = $input['state'];
-        $city       = $input['city'];
-        $disable    = $input['disable'];
-        $maxbitrate = $input['maxbitrate'];
+        $password   = $input['password'] ?? null;
+        $fullname   = $input['fullname'] ?? null;
+        $email      = $input['email'] ?? null;
+        $website    = $input['website'] ?? null;
+        $state      = $input['state'] ?? null;
+        $city       = $input['city'] ?? null;
+        $disable    = $input['disable'] ?? null;
+        $maxbitrate = $input['maxbitrate'] ?? null;
 
         // identify the user to modify
         $user    = User::get_from_username($username);

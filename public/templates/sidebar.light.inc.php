@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
     <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
     <?php
 } ?>
-    <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
+    <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php
     } ?>

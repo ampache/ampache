@@ -85,7 +85,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 $data['start'] ?? '',
                 $data['end'] ?? '',
                 $data['name'] ?? '',
-                (int) ($data['user'] ?: -1),
+                (int) ($data['user'] ?? -1),
                 (int) $data['level'] ?? 0,
                 $data['type'] ?? ''
             );

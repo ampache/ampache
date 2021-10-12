@@ -35,11 +35,11 @@ function PlayerFrame()
     var $webplayer = $("#webplayer");
     if ($webplayer.is(':visible')) {
 <?php
-if ($_REQUEST['append']) { ?>
+if (array_key_exists('append', $_REQUEST)) { ?>
         appendmedia = true;
 <?php
 } else {
-    if ($_REQUEST['playnext']) { ?>
+    if (array_key_exists('playnext', $_REQUEST)) { ?>
         playnext = true;
 <?php
         }

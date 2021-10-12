@@ -333,6 +333,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /** @var int */
     private $total_count;
 
+    /** @var int */
+    private $total_skip;
+
     /* Setting Variables */
     /**
      * @var boolean $_fake
@@ -410,25 +413,23 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $catalog          = $results['catalog'];
         $file             = $results['file'];
-        $title            = Catalog::check_length(Catalog::check_title($results['title'], $file));
-        $artist           = Catalog::check_length($results['artist']);
-        $album            = Catalog::check_length($results['album']);
-        $albumartist      = Catalog::check_length($results['albumartist']);
-        $albumartist      = $albumartist ?: null;
-        $bitrate          = $results['bitrate'] ?: 0;
-        $rate             = $results['rate'] ?: 0;
-        $mode             = $results['mode'];
-        $size             = $results['size'] ?: 0;
-        $time             = $results['time'] ?: 0;
+        $title            = Catalog::check_length(Catalog::check_title($results['title'] ?? null, $file));
+        $artist           = Catalog::check_length($results['artist'] ?? null);
+        $album            = Catalog::check_length($results['album'] ?? null);
+        $albumartist      = Catalog::check_length($results['albumartist'] ?? null);
+        $bitrate          = $results['bitrate'] ?? 0;
+        $rate             = $results['rate'] ?? 0;
+        $mode             = $results['mode'] ?? null;
+        $size             = $results['size'] ?? 0;
+        $time             = $results['time'] ?? 0;
         $track            = Catalog::check_track((string) $results['track']);
-        $track_mbid       = $results['mb_trackid'] ?: $results['mbid'];
-        $track_mbid       = $track_mbid ?: null;
+        $track_mbid       = $results['mb_trackid'] ?? $results['mbid'] ?? null;
         $album_mbid       = $results['mb_albumid'];
         $album_mbid_group = $results['mb_albumid_group'];
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $year             = Catalog::normalize_year($results['year'] ?: 0);
+        $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'];
         $tags             = $results['genre']; // multiple genre support makes this an array
         $lyrics           = $results['lyrics'];
@@ -454,7 +455,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
-        $channels              = $results['channels'] ?: 0;
+        $channels              = $results['channels'] ?? 0;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
         $release_status        = isset($results['release_status']) ? $results['release_status'] : null;
         $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
@@ -463,7 +464,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
         $r128_track_gain       = isset($results['r128_track_gain']) ? $results['r128_track_gain'] : null;
         $r128_album_gain       = isset($results['r128_album_gain']) ? $results['r128_album_gain'] : null;
-        $original_year         = Catalog::normalize_year($results['original_year'] ?: 0);
+        $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
         $barcode               = Catalog::check_length($results['barcode'], 64);
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
@@ -635,8 +636,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $song_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('song', $song_ids);
         }
 
@@ -1125,7 +1124,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function compare_media_information($media, $new_media, $string_array, $skip_array)
     {
-        $array = array();
+        $array            = array();
+        $array['change']  = false;
+        $array['element'] = false;
 
         // Pull out all the currently set vars
         $fields = get_object_vars($media);
@@ -2051,7 +2052,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {
-            if (!Access::check('interface', 100)) {
+            if (!Access::check('interface', 100) && !empty(Core::get_global('user'))) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
                 $current_user = (int) Core::get_global('user')->id;
                 if ($current_user > 0) {
@@ -2064,7 +2065,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (empty($row['geo_name']) && $row['latitude'] && $row['longitude']) {
+            if (empty($row['geo_name']) && array_key_exists('latitude', $row) && array_key_exists('longitude', $row)) {
                 $row['geo_name'] = Stats::get_cached_place_name($row['latitude'], $row['longitude']);
             }
             $results[] = $row;
@@ -2177,15 +2178,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         $args = '';
-        if (AmpConfig::get('encode_ss_frame') && isset($options['frame'])) {
+        if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_frame');
         }
-        if (AmpConfig::get('encode_ss_duration') && isset($options['duration'])) {
+        if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
             $args .= ' ' . AmpConfig::get('encode_ss_duration');
         }
         $args .= ' ' . AmpConfig::get('transcode_input');
 
-        if (AmpConfig::get('encode_srt') && $options['subtitle']) {
+        if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
             debug_event(self::class, 'Using subtitle ' . $options['subtitle'], 5);
             $args .= ' ' . AmpConfig::get('encode_srt');
         }

@@ -63,7 +63,10 @@ final class LabelArtistsMethod
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        $include = array();
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+        }
         $label   = new Label((int) scrub_in($input['filter']));
         $artists = $label->get_artists();
         if (empty($artists)) {

@@ -267,11 +267,14 @@ class Preference extends database_object
      */
     public static function update_all($preference_id, $value)
     {
-        $preference_id = (string)Dba::escape($preference_id);
-        $value         = (string)Dba::escape($value);
+        if ((int)$preference_id == 0) {
+            return false;
+        }
+        $preference_id = Dba::escape($preference_id);
+        $value         = Dba::escape($value);
 
-        $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
-        Dba::write($sql);
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
+        Dba::write($sql, array($value, $preference_id));
 
         parent::clear_cache();
 
@@ -325,7 +328,7 @@ class Preference extends database_object
      * id_from_name
      * This takes a name and returns the id
      * @param string $name
-     * @return array|integer
+     * @return int|false
      */
     public static function id_from_name($name)
     {
@@ -335,13 +338,16 @@ class Preference extends database_object
             return (int)(parent::get_from_cache('id_from_name', $name))[0];
         }
 
-        $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
+        $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($name));
+        $results    = Dba::fetch_assoc($db_results);
+        if (array_key_exists('id', $results)) {
+            parent::add_to_cache('id_from_name', $name, array($results['id']));
 
-        parent::add_to_cache('id_from_name', $name, $row);
+            return (int)$results['id'];
+        }
 
-        return (int)$row['id'];
+        return false;
     } // id_from_name
 
     /**
@@ -680,7 +686,10 @@ class Preference extends database_object
      */
     public static function load_from_session($uid = -1)
     {
-        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
+        if (!isset($_SESSION)) {
+            return false;
+        }
+        if (array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;
@@ -696,7 +705,9 @@ class Preference extends database_object
      */
     public static function clear_from_session()
     {
-        unset($_SESSION['userdata']['preferences']);
+        if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
+            unset($_SESSION['userdata']['preferences']);
+        }
     } // clear_from_session
 
     /**
@@ -760,7 +771,8 @@ class Preference extends database_object
      */
     public static function init()
     {
-        $user_id = Core::get_global('user')->id ? (int)(Core::get_global('user')->id) : -1;
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {
@@ -781,7 +793,7 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (strlen((string)$results['theme_name']) > 0) {
             // In case the theme was removed
-            if (!Core::is_readable(__DIR__ . '/../../public/themes/' . $results['theme_name'])) {
+            if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
             }
         } else {

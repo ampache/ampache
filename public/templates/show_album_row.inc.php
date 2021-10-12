@@ -99,10 +99,6 @@ $display_year = ($original_year && $libitem->original_year)
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album">
                     <?php echo Rating::show($libitem->id, 'album'); ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album">
                     <?php echo Userflag::show($libitem->id, 'album'); ?>
                 </span>

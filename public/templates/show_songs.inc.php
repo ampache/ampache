@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $limit_threshold */
 
 $web_path     = AmpConfig::get('web_path');
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 $is_table     = $browse->is_grid_view();
@@ -107,8 +107,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $object_ids);
-        } ?>
-                <?php if (AmpConfig::get('userflags')) {
             Userflag::build_cache('song', $object_ids);
         } ?>
                 <?php
@@ -136,7 +134,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 if ($libitem->enabled || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
-                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags')))
+                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                         ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                         ->setContext('ARGUMENT_PARAM', $argument_param)

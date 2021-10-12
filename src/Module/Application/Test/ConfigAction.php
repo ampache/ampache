@@ -73,7 +73,7 @@ final class ConfigAction implements ApplicationActionInterface
                 );
         } else {
             // Make sure the config file is set up and parsable
-            $results = @parse_ini_file($configfile);
+            $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
 
             if (empty($results)) {
                 $link = __DIR__ . '/../../../../public/test.php?action=config';

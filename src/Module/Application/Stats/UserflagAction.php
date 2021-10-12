@@ -69,7 +69,8 @@ final class UserflagAction implements ApplicationActionInterface
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
-        $user_id = Core::get_global('user')->id;
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? 0;
 
         $this->ui->showBoxTop(T_('Information'));
         $browse = $this->modelFactory->createBrowse();

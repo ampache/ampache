@@ -57,7 +57,7 @@ final class PreferenceEditMethod
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $all  = (int) $input['all'] == 1;
+        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -65,7 +65,7 @@ final class PreferenceEditMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string) $input['filter'];
+        $pref_name  = (string)($input['filter'] ?? '');
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

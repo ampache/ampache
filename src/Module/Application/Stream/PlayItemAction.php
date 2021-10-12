@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stream;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -64,12 +65,17 @@ final class PlayItemAction extends AbstractStreamAction
                 $item       = new $class_name($object_id);
                 $mediaIds   = array_merge($mediaIds, $item->get_medias());
 
-                if ($_REQUEST['custom_play_action']) {
+                if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
                         if (is_array($mediaId)) {
                             $mediaId['custom_play_action'] = $_REQUEST['custom_play_action'];
                         }
                     }
+                }
+                // record this as a 'play' to help show usage and history for playlists and streams
+                if (!empty($mediaIds) && in_array($objectType, array('playlist', 'live_stream'))) {
+                    $user = Core::get_global('user');
+                    Stats::insert($objectType, $object_id, $user->id, substr(Core::get_server('HTTP_USER_AGENT'), 0, 254), [], 'stream', time());
                 }
             }
         }

@@ -348,7 +348,7 @@ msgid "Rename uploaded file according to catalog pattern"
 msgstr ""
 
 #: Database preference table id 152
-msgid "Check library item at import time and don't import duplicates"
+msgid "Custom blank video default image"
 msgstr ""
 
 #: Database preference table id 153

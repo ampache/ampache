@@ -146,8 +146,8 @@ class AmpacheRatingMatch
                 $artist = new Rating($song->artist, 'artist');
                 $album  = new Rating($song->album, 'album');
 
-                $rating_artist = (int)$artist->get_user_rating($this->user_id);
-                $rating_album  = (int)$album->get_user_rating($this->user_id);
+                $rating_artist = $artist->get_user_rating($this->user_id);
+                $rating_album  = $album->get_user_rating($this->user_id);
                 if ($rating_artist < $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }
@@ -159,7 +159,7 @@ class AmpacheRatingMatch
                 $album  = new Album($rating->id);
                 $artist = new Rating($album->album_artist, 'artist');
 
-                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                $rating_artist = $artist->get_user_rating($this->user_id);
                 if ($rating_artist <= $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }

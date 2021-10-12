@@ -53,7 +53,7 @@ class Dba
     public static function query($sql, $params = array())
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
-        debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
+        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -79,12 +79,21 @@ class Dba
             return false;
         }
 
-        // Run the query
-        if (!empty($params)) {
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute($params);
-        } else {
-            $stmt = $dbh->query($sql);
+        try {
+            // Run the query
+            if (!empty($params) && strpos((string)$sql, '?')) {
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($params);
+            } else {
+                $stmt = $dbh->query($sql);
+            }
+        } catch (PDOException $error) {
+            // are you trying to write to something that doesn't exist?
+            self::$_error = $error->getMessage();
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
+
+            return false;
         }
 
         // Save the query, to make debug easier
@@ -350,10 +359,11 @@ class Dba
             debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
         }
 
-        if ($dbh->exec('USE `' . $database . '`') === false) {
+        try {
+            $dbh->exec('USE `' . $database . '`');
+        } catch (PDOException $error) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()),
-                1);
+            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
@@ -433,26 +443,26 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @param string $database
      * @return mixed|PDO|null
      */
-    public static function dbh($database = '')
+    public static function dbh()
     {
-        if (!$database) {
-            $database = AmpConfig::get('database_name');
+        $database = AmpConfig::get('database_name');
+        if ($database == '') {
+            return null;
         }
 
         // Assign the Handle name that we are going to store
         $handle = 'dbh_' . $database;
 
-        if (!is_object(AmpConfig::get($handle))) {
+        if (is_object(AmpConfig::get($handle))) {
+            return AmpConfig::get($handle);
+        } else {
             $dbh = self::_connect();
             self::_setup_dbh($dbh, $database);
             AmpConfig::set($handle, $dbh, true);
 
             return $dbh;
-        } else {
-            return AmpConfig::get($handle);
         }
     }
 

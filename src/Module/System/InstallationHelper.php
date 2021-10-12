@@ -41,7 +41,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = array();
         $ret       = array();
         $in_string = false;
@@ -215,7 +215,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $collation
      * @return boolean
      */
-    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci_unicode_ci')
+    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci')
     {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
@@ -236,7 +236,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         $db_exists = Dba::read('SHOW TABLES');
 
-        if ($db_exists && $create_db) {
+        if (is_object($db_exists) && $create_db) {
             if ($overwrite) {
                 Dba::write('DROP DATABASE `' . $database . '`');
             } else {
@@ -269,7 +269,7 @@ final class InstallationHelper implements InstallationHelperInterface
             if (!Dba::write($sql_user)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
+                T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
 
                 return false;
             }
@@ -283,7 +283,7 @@ final class InstallationHelper implements InstallationHelperInterface
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
+                T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
 
                 return false;
             }
@@ -525,7 +525,6 @@ final class InstallationHelper implements InstallationHelperInterface
         $trconfig = array(
             'use_auth' => 'true',
             'ratings' => 'true',
-            'userflags' => 'true',
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
@@ -547,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
         switch ($case) {
             case 'minimalist':
                 $trconfig['ratings']                   = 'false';
-                $trconfig['userflags']                 = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
                 $trconfig['channel']                   = 'false';

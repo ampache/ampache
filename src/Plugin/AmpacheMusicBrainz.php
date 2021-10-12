@@ -121,9 +121,9 @@ class AmpacheMusicBrainz
             $artist                 = $artist->artist;
             $results['mb_artistid'] = $artist->id;
             $results['artist']      = $artist->name;
-            $results['title']       = $track->title;
-            if (count($track->releases) == 1) {
-                $release          = $track->releases[0];
+            $results['title']       = $track->{'title'};
+            if (count($track->{'releases'}) == 1) {
+                $release          = $track->{'releases'}[0];
                 $results['album'] = $release->title;
             }
         }

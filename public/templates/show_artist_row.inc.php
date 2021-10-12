@@ -84,9 +84,6 @@ $web_path   = AmpConfig::get('web_path'); ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
                     <?php echo Rating::show($libitem->id, 'artist'); ?>
                 </span>
-            <?php } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
                     <?php echo Userflag::show($libitem->id, 'artist'); ?>
                 </span>
@@ -95,7 +92,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     <?php } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
-        if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
+        if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
     </a>

@@ -354,6 +354,7 @@ span.page-nb {
     color: #1990db;
 }
 
+span.page-text,
 table.tabledata {
     color: #000;
 }
@@ -654,7 +655,7 @@ div.jp-playlist li {
 .followbtn a,
 .list-header-navmenu-border {
     border-color: #fff;
-    color: #000;
+    color: #fff;
 }
 
 span.item-count,

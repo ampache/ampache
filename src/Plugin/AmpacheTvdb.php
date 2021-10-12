@@ -128,7 +128,7 @@ class AmpacheTvdb
         try {
             $tvdburl = 'http://thetvdb.com';
             $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);
-            $title   = $media_info['original_name'] ?: $media_info['title'];
+            $title   = $media_info['original_name'] ?? $media_info['title'];
 
             if ($media_info['tvshow']) {
                 $releases = $client->getSeries($media_info['tvshow']);

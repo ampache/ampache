@@ -44,14 +44,14 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                if (isset($_REQUEST['podcast_id'])) {
+                if (array_key_exists('podcast_id', $_REQUEST)) {
                     $podcast = new Podcast($_REQUEST['podcast_id']);
                     if ($podcast->id) {
                         $podcast->sync_episodes(true);
                     } else {
                         debug_event('podcast.ajax', 'Cannot find podcast', 1);
                     }
-                } elseif (isset($_REQUEST['podcast_episode_id'])) {
+                } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
                     $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
                     if ($episode->id !== null) {
                         $episode->gather();

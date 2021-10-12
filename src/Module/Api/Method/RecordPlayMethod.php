@@ -55,7 +55,7 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
         $api_user  = User::get_from_username(Session::username($input['auth']));
@@ -69,7 +69,7 @@ final class RecordPlayMethod
         ob_end_clean();
         $object_id = (int) $input['id'];
         $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
-        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
@@ -80,7 +80,7 @@ final class RecordPlayMethod
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
+        $agent = (array_key_exists('client', $input))
             ? $input['client']
             : 'api';
 

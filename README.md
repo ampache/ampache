@@ -2,18 +2,17 @@
 
 ![Logo](https://ampache.org/img/logo/ampache-logo_x64.png)
 
-[www.ampache.org](https://ampache.org/) |
-[ampache.github.io](http://ampache.github.io)
+[www.ampache.org](https://ampache.org/)
+
 [Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
 
 ## News
-
 
 Ampache 5 is here and it's big!
 
 * Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 * As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major rework [faq](https://github.com/ampache/ampache/wiki/cli-faq)
+* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
 * You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
 * Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
 
@@ -36,15 +35,15 @@ choosing a suitable method for doing so.
 
 ## Recommended Version
 
-The recommended and most stable version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
+The recommended and most stable version is the current stable [release5 branch](https://github.com/ampache/ampache/archive/release5.tar.gz).
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
 [![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=source-changes)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=source-changes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
+
+If you want to run the last stable version [release4](https://github.com/ampache/ampache/archive/release4.tar.gz) is still available
 
 ## Installation
 

@@ -12,7 +12,8 @@ $web_path         = AmpConfig::get('web_path');
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
-
+$iframed  = $iframed ?? false;
+$is_share = $is_share ?? false;
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
 <?php

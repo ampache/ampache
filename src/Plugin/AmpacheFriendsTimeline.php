@@ -103,7 +103,8 @@ class AmpacheFriendsTimeline
     public function display_home()
     {
         if (AmpConfig::get('sociable')) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? false;
             if ($user_id) {
                 echo '<div class="home_plugin">';
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(

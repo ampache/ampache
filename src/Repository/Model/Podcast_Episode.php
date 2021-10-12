@@ -144,7 +144,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function format($details = true)
     {
-        $this->f_title       = scrub_out($this->title);
+        $this->f_title       = $this->title;
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
@@ -344,7 +344,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if (!$this->check_play_history($user, $agent, $date)) {
             return false;
         }
-        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        }
 
         if (!$this->played) {
             self::update_played(true, $this->id);

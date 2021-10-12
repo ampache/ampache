@@ -220,6 +220,8 @@ class Json_Data
                 return self::podcast_episodes($objects, $user_id);
             case 'video':
                 return self::videos($objects, $user_id);
+            case 'live_stream':
+                return self::live_streams($objects, $user_id);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
@@ -250,10 +252,12 @@ class Json_Data
                 "id" => (string) $live_stream_id,
                 "name" => $live_stream->f_name,
                 "url" => $live_stream->url,
-                "codec" => $live_stream->codec
+                "codec" => $live_stream->codec,
+                "catalog" => $live_stream->catalog,
+                "site_url" => $live_stream->site_url
             ));
         } // end foreach
-        $output = ($object) ? array("live_stream" => $JSON) : $JSON[0];
+        $output = ($object) ? array("live_stream" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // live_streams
@@ -284,7 +288,7 @@ class Json_Data
                 "external_link" => $license->external_link
             ));
         } // end foreach
-        $output = ($object) ? array("license" => $JSON) : $JSON[0];
+        $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // licenses
@@ -322,7 +326,7 @@ class Json_Data
                 "user" => $label->user,
             ));
         } // end foreach
-        $output = ($object) ? array("label" => $JSON) : $JSON[0];
+        $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // labels
@@ -349,15 +353,15 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string) $tag_id,
                 "name" => $tag->name,
-                "albums" => (int) $counts['album'],
-                "artists" => (int) $counts['artist'],
-                "songs" => (int) $counts['song'],
-                "videos" => (int) $counts['video'],
-                "playlists" => (int) $counts['playlist'],
-                "live_streams" => (int) $counts['live_stream']
+                "albums" => (int) $counts['album'] ?? 0,
+                "artists" => (int) $counts['artist'] ?? 0,
+                "songs" => (int) $counts['song'] ?? 0,
+                "videos" => (int) $counts['video'] ?? 0,
+                "playlists" => (int) $counts['playlist'] ?? 0,
+                "live_streams" => (int) $counts['live_stream'] ?? 0
             ));
         } // end foreach
-        $output = ($object) ? array("genre" => $JSON) : $JSON[0];
+        $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // genres
@@ -426,7 +430,7 @@ class Json_Data
         } // end foreach artists
 
         if ($encode) {
-            $output = ($object) ? array("artist" => $JSON) : $JSON[0];
+            $output = ($object) ? array("artist" => $JSON) : $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -522,7 +526,7 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            $output = ($object) ? array("album" => $JSON) : $JSON[0];
+            $output = ($object) ? array("album" => $JSON) : $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -600,7 +604,7 @@ class Json_Data
                 "averagerating" => (string) ($rating->get_average_rating() ?: null)]
             );
         } // end foreach
-        $output = ($object) ? array("playlist" => $JSON) : $JSON[0];
+        $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // playlists
@@ -656,7 +660,7 @@ class Json_Data
                 "description" => $share_description
             ]);
         } // end foreach
-        $output = ($object) ? array("share" => $JSON) : $JSON[0];
+        $output = ($object) ? array("share" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // shares
@@ -697,7 +701,7 @@ class Json_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date]);
         } // end foreach
-        $output = ($object) ? array("bookmark" => $JSON) : $JSON[0];
+        $output = ($object) ? array("bookmark" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // bookmarks
@@ -746,7 +750,7 @@ class Json_Data
                 "sort_pattern" => $catalog_sort_pattern
             ]);
         } // end foreach
-        $output = ($object) ? array("catalog" => $JSON) : $JSON[0];
+        $output = ($object) ? array("catalog" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // catalogs
@@ -811,7 +815,7 @@ class Json_Data
                 "podcast_episode" => $podcast_episodes
             ]);
         } // end foreach
-        $output = ($object) ? array("podcast" => $JSON) : $JSON[0];
+        $output = ($object) ? array("podcast" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcasts
@@ -868,7 +872,7 @@ class Json_Data
         if (!$encode) {
             return $JSON;
         }
-        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0];
+        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcast_episodes
@@ -975,7 +979,7 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            $output = ($object) ? array("song" => $JSON) : $JSON[0];
+            $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -1023,7 +1027,7 @@ class Json_Data
                 "playcount" => (int) $video->object_cnt
             ));
         } // end foreach
-        $output = ($object) ? array("video" => $JSON) : $JSON[0];
+        $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // videos
@@ -1076,7 +1080,7 @@ class Json_Data
                 "vote" => $democratic->get_vote($row_id)
             ));
         } // end foreach
-        $output = ($object) ? array("song" => $JSON) : $JSON[0];
+        $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // democratic
@@ -1149,7 +1153,7 @@ class Json_Data
                 "username" => $user->username
             ));
         } // end foreach
-        $output = ($object) ? array("user" => $JSON) : $JSON[0];
+        $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // users
@@ -1180,7 +1184,7 @@ class Json_Data
             );
             $JSON[] = $ourArray;
         }
-        $output = ($object) ? array("shout" => $JSON) : $JSON[0];
+        $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // shouts
@@ -1213,7 +1217,7 @@ class Json_Data
             );
             $JSON[] = $ourArray;
         }
-        $output = ($object) ? array("activity" => $JSON) : $JSON[0];
+        $output = ($object) ? array("activity" => $JSON) : $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // timeline

@@ -119,34 +119,28 @@ class Stream_Playlist
      */
     private function _add_urls($urls)
     {
-        $sql       = 'INSERT INTO `stream_playlist` ';
-        $value_sql = 'VALUES ';
-        $values    = array();
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $count     = true;
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        $sql    = '';
+        $values = array();
         foreach ($urls as $url) {
             $this->urls[] = $url;
+            $fields       = array();
+            $fields[]     = '`sid`';
             $values[]     = $this->id;
             $holders      = array();
             $holders[]    = '?';
 
             foreach ($url->properties as $field) {
-                if ($url->$field) {
-                    $holders[] = '?';
+                if ($url->$field !== null) {
+                    $fields[]  = '`' . $field . '`';
                     $values[]  = $url->$field;
-                    if ($count) {
-                        $fields[] = '`' . $field . '`';
-                    }
+                    $holders[] = '?';
                 }
             }
-            $count = false;
-            $value_sql .= '(' . implode(',', $holders) . '), ';
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
         }
-        $sql .= '(' . implode(',', $fields) . ') ';
 
-        return Dba::write($sql . rtrim($value_sql, ', '), $values);
+        return Dba::write($sql, $values);
     }
 
     /**
@@ -194,11 +188,11 @@ class Stream_Playlist
         $object     = new $class_name($object_id);
         $object->format();
 
-        if ($media['custom_play_action']) {
+        if (array_key_exists('custom_play_action', $media)) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
 
-        if ($_SESSION['iframe']['subtitle']) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('target', $_SESSION['iframe'])) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
@@ -244,7 +238,7 @@ class Stream_Playlist
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
-            $url['time']   = $object->time;
+            $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
                 case 'song':
                     $url['title']     = $object->title;

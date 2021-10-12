@@ -43,6 +43,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\Wanted;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)
@@ -71,6 +72,7 @@ final class ObjectTypeToClassNameMapper
         'label' => Label::class,
         'podcast' => Podcast::class,
         'tag' => Tag::class,
+        'wanted' => Wanted::class,
     ];
 
     public const VIDEO_TYPES = [

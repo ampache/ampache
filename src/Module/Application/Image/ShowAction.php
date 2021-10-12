@@ -90,7 +90,7 @@ final class ShowAction implements ApplicationActionInterface
                 Core::get_request('s')
             );
 
-            $cookie = $_COOKIE[AmpConfig::get('session_name')];
+            $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
 
             if (
                 !Session::exists('interface', $cookie) &&
@@ -130,10 +130,9 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         /* Decide what size this image is */
-        $size = Art::get_thumb_size(
-            filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT)
-        );
-        $kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
+        $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $size  = Art::get_thumb_size($thumb);
+        $kind  = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
 
         $image       = '';
         $mime        = '';
@@ -158,21 +157,18 @@ final class ShowAction implements ApplicationActionInterface
         }
         if (!$typeManaged) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
+            $object_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            $item       = new $class_name($object_id);
+            $filename   = (isset($item->name)) ? $item->name : $item->title;
 
-            $item     = new $class_name(
-                filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
-            );
-            $filename = $item->name ?: $item->title;
-
-            $art = new Art($item->id, $type, $kind);
+            $art = new Art($object_id, $type, $kind);
             $art->has_db_info();
             $etag = $art->id;
 
             // That means the client has a cached version of the image
             $reqheaders = getallheaders();
-            if (isset($reqheaders['If-Modified-Since']) && isset($reqheaders['If-None-Match'])) {
-                $ccontrol = $reqheaders['Cache-Control'];
-                if ($ccontrol != 'no-cache') {
+            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
+                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
                     $cetagf = explode('-', $reqheaders['If-None-Match']);
                     $cetag  = $cetagf[0];
                     // Same image than the cached one? Use the cache.
@@ -208,18 +204,19 @@ final class ShowAction implements ApplicationActionInterface
                 }
                 $image = file_get_contents($defaultimg);
             } else {
+                $thumb_data = array();
                 if (filter_has_var(INPUT_GET, 'thumb')) {
                     $thumb_data = $art->get_thumb($size);
-                    $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                    $etag .= '-' . $thumb;
                 }
 
-                $mime  = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
-                $image = isset($thumb_data['thumb']) ? $thumb_data['thumb'] : $art->raw;
+                $mime  = array_key_exists('thumb_mime', $thumb_data) ? $thumb_data['thumb_mime'] : $art->raw_mime;
+                $image = array_key_exists('thumb', $thumb_data) ? $thumb_data['thumb'] : $art->raw;
             }
         }
 
         if (!empty($image)) {
-            $extension = Art::extension($mime);
+            $extension = Art::extension((string)$mime);
             $filename  = scrub_out($filename . '.' . $extension);
 
             // Send the headers and output the image

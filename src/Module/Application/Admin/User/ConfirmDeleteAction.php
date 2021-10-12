@@ -81,7 +81,6 @@ final class ConfirmDeleteAction extends AbstractUserAction
             );
         }
 
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

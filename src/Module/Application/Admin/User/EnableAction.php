@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,33 +41,36 @@ final class EnableAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
-    private UserStateTogglerInterface $userStateToggler;
-
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        UserStateTogglerInterface $userStateToggler
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui               = $ui;
-        $this->modelFactory     = $modelFactory;
-        $this->configContainer  = $configContainer;
-        $this->userStateToggler = $userStateToggler;
+        $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+            return null;
+        }
+
         $this->ui->showHeader();
 
-        $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
-
-        $this->userStateToggler->enable($user);
-
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        $user   = $this->modelFactory->createUser($userId);
         $this->ui->showConfirmation(
-            T_('No Problem'),
-            /* HINT: Username and fullname together: Username (fullname) */
-            sprintf(T_('%s (%s) has been enabled'), $user->username, $user->fullname),
-            'admin/users.php'
+            T_('Are You Sure?'),
+            /* HINT: User Fullname */
+            sprintf(T_('This will enable the user "%s"'), $user->fullname),
+            sprintf(
+                'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                $userId
+            ),
+            1,
+            'enable_user'
         );
 
         $this->ui->showQueryStats();

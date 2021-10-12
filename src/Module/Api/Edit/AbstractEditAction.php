@@ -62,11 +62,8 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
 
         // Post first
-        $object_type = $_POST['type'];
-        if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        $object_id = (int) Core::get_get('id');
+        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_id   = (int) Core::get_get('id');
 
         if (empty($object_type)) {
             $object_type = $source_object_type = filter_input(
@@ -77,8 +74,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             );
         } else {
             $source_object_type = $object_type;
-
-            $object_type = implode('_', explode('_', $object_type, -1));
+            $object_type        = implode('_', explode('_', $object_type, -1));
         }
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share' && $object_type != 'channel' && $object_type != 'tag') {

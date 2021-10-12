@@ -479,9 +479,7 @@ class Xml_Data
                     $string .= self::videos($objects, $user_id);
                     break;
                 case 'live_stream':
-                    $live_stream = new Live_Stream($object_id);
-                    $live_stream->format();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n</$object_type>\n";
+                    $string .= self::live_streams($objects);
             }
         } // end foreach objects
 
@@ -537,6 +535,31 @@ class Xml_Data
     } // labels
 
     /**
+     * live_streams
+     *
+     * This returns live_streams to the user, in a pretty xml document with the information
+     *
+     * @param  integer[] $live_streams
+     * @return string    return xml
+     */
+    public static function live_streams($live_streams)
+    {
+        if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
+            $live_streams = array_splice($live_streams, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . Catalog::get_count('live_stream') . "</total_count>\n";
+
+        foreach ($live_streams as $live_stream_id) {
+            $live_stream = new Live_Stream($live_stream_id);
+            $live_stream->format();
+
+            $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog><![CDATA[" . $live_stream->catalog . "]]></catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // live_streams
+
+    /**
      * genres
      *
      * This returns genres to the user, in a pretty xml document with the information
@@ -554,7 +577,7 @@ class Xml_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int) ($counts['album']) . "</albums>\n\t<artists>" . (int) ($counts['artist']) . "</artists>\n\t<songs>" . (int) ($counts['song']) . "</songs>\n\t<videos>" . (int) ($counts['video']) . "</videos>\n\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n</genre>\n";
+            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<live_streams>" . (int) ($counts['live_stream'] ?? 0) . "</live_streams>\n</genre>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1145,15 +1168,15 @@ class Xml_Data
             switch ($object_type) {
                 case 'song':
                     // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, update_time, album, artist
-                    $string .= "<deleted_song id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</albumartist>\n\t<total_count>" . $row['total_count'] . "</track>\n\t<total_skip>" . $row['total_skip'] . "</track>\n\t<update_time>" . $row['update_time'] . "</update_time>\n\t<album>" . $row['album'] . "</album>\n\t<artist>" . $row['artist'] . "</artist>\n</deleted_song>\n";
+                    $string .= "<deleted_song id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<update_time>" . $row['update_time'] . "</update_time>\n\t<album>" . $row['album'] . "</album>\n\t<artist>" . $row['artist'] . "</artist>\n</deleted_song>\n";
                     break;
                 case 'podcast_episode':
                     // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, podcast
-                    $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</albumartist>\n\t<total_count>" . $row['total_count'] . "</track>\n\t<total_skip>" . $row['total_skip'] . "</track>\n\t<played>" . $row['podcast'] . "</played>\n\t</deleted_podcast_episode>\n";
+                    $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<played>" . $row['podcast'] . "</played>\n\t</deleted_podcast_episode>\n";
                     break;
                 case 'video':
                     // id, addition_time, delete_time, title, file, catalog, total_count, total_skip
-                    $string .= "<deleted_video id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</albumartist>\n\t<total_count>" . $row['total_count'] . "</track>\n\t<total_skip>" . $row['total_skip'] . "</track>\n</deleted_video>\n";
+                    $string .= "<deleted_video id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n</deleted_video>\n";
             }
         } // end foreach objects
 

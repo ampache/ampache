@@ -116,7 +116,11 @@ class Rating extends database_object
             return false;
         }
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+        if ($user_id === 0) {
+            return false;
         }
         $ratings      = array();
         $user_ratings = array();
@@ -166,7 +170,11 @@ class Rating extends database_object
     public function get_user_rating($user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+        if ($user_id === 0) {
+            return false;
         }
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
@@ -226,7 +234,7 @@ class Rating extends database_object
         if ($allow_group_disks) {
             $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
         }
-        $sql .= " WHERE `object_type` = '" . $type . "'";
+        $sql .= " WHERE `object_type` = ?";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -281,7 +289,11 @@ class Rating extends database_object
     public function set_rating($rating, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+        if ($user_id === 0) {
+            return false;
         }
         // albums may be a group of id's
         if ($this->type == 'album' && AmpConfig::get('album_group')) {

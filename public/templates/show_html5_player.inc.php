@@ -16,7 +16,10 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";
 
-$autoplay    = true;
+$autoplay = true;
+$iframed  = $iframed ?? false;
+$is_share = $is_share ?? false;
+$embed    = $embed ?? false;
 if ($is_share) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');
 }
@@ -330,10 +333,12 @@ if (AmpConfig::get('webplayer_aurora')) {
     }
 
     // Load only existing codec scripts
-    foreach ($atypes as $atype) {
-        $spath = '/modules/aurora.js/' . $atype . '.js';
-        if (Core::is_readable(__DIR__ . '/../lib/components' . $spath)) {
-            echo '<script src="' . $web_path . $spath . '" defer></script>' . "\n";
+    if (!$isVideo) {
+        foreach ($atypes as $atype) {
+            $spath = '/modules/aurora.js/' . $atype . '.js';
+            if (Core::is_readable(__DIR__ . '/../lib' . $spath)) {
+                echo '<script src="' . $web_path . $spath . '" defer></script>' . "\n";
+            }
         }
     }
 }
