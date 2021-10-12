@@ -22,7 +22,7 @@
 
 @font-face {
     font-family: 'DejaVuSansCondensed';
-    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'), url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+    src: url('/themes/reborn/templates/fonts/dejavusanscondensed.eot?') format('embedded-opentype'), url('/themes/reborn/templates/fonts/dejavusanscondensed.woff') format('woff'), url('/themes/reborn/templates/fonts/dejavusanscondensed.ttf') format('truetype'), url('/themes/reborn/templates/fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
 }
 
 /* --------------------------
@@ -1768,7 +1768,7 @@ span.fatalerror {
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
-    background: url(../images/ratings/star_rating.png) left -1000px repeat-x;
+    background: url(/themes/reborn/images/ratings/star_rating.png) left -1000px repeat-x;
 }
 
 .star-rating ul {
@@ -1817,7 +1817,7 @@ span.fatalerror {
 .star-rating a.star0 {
     left: 0;
     width: 16px;
-    background: url(../../../images/ratings/x_off.gif) left top;
+    background: url(/images/ratings/x_off.gif) left top;
 }
 
 .dynamic-star-rating a:hover {
@@ -1825,7 +1825,7 @@ span.fatalerror {
 }
 
 .dynamic-star-rating a:hover.star0 {
-    background: url(../../../images/ratings/x.gif) left top;
+    background: url(/images/ratings/x.gif) left top;
 }
 
 .dynamic-star-rating ul {

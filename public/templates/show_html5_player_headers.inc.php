@@ -4,6 +4,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Ui;
 
 global $dic;
@@ -29,9 +30,9 @@ if (!$iframed) {
 <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/tools.js'); ?>"></script>
 <script>
 var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
 var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";

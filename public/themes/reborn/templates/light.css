@@ -126,7 +126,7 @@ input[type=submit]:focus:active {
    ------------------------ */
 #ajax-loading {
     color: #1990db;
-    background-image: url(../images/ajax-loader-light.gif);
+    background-image: url(/themes/reborn/images/ajax-loader-light.gif);
 }
 
 /* ------------------------
@@ -171,7 +171,7 @@ input[type=submit]:focus:active {
 
 #loginPage #headerlogo,
 #registerPage #headerlogo {
-    background-image: url('../images/ampache-light.png');
+    background-image: url('/themes/reborn/images/ampache-light.png');
 }
 
 #loginPage #loginbox {
@@ -454,7 +454,7 @@ input:invalid {
 }
 
 #content .missing {
-    background-image: url('../images/missing.png');
+    background-image: url('/themes/reborn/images/missing.png');
 }
 
 /* ------------------------
@@ -499,7 +499,7 @@ span.fatalerror {
 }
 
 .item_art .item_art_play .item_art_play_icon {
-    background-image: url('../images/videoplay.png');
+    background-image: url('/themes/reborn/images/videoplay.png');
 }
 
 .item_art .item_art_actions {
@@ -533,19 +533,19 @@ span.fatalerror {
 }
 
 .userflag a.userflag_true {
-    background: url(../../../images/icon_flag.png) left top;
+    background: url(/images/icon_flag.png) left top;
 }
 
 .userflag a:hover.userflag_true {
-    background: url(../../../images/icon_flag_off.png) left top;
+    background: url(/images/icon_flag_off.png) left top;
 }
 
 .userflag a.userflag_false {
-    background: url(../../../images/icon_flag_off.png) left top;
+    background: url(/images/icon_flag_off.png) left top;
 }
 
 .userflag a:hover.userflag_false {
-    background: url(../../../images/icon_flag.png) left top;
+    background: url(/images/icon_flag.png) left top;
 }
 
 /* ------------------------
@@ -669,7 +669,7 @@ a.option-list:hover {
 }
 
 .editdialogstyle.ui-dialog {
-    background-image: url("../../../images/background.light.png") !important;
+    background-image: url("/images/background.light.png") !important;
 }
 
 #tabs li a {

@@ -48,3 +48,4 @@ web.config
 *.swp
 *.v11.suo
 *~
+public/cached_assets/
