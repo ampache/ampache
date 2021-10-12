@@ -188,6 +188,21 @@ class Stream_Playlist
         $object     = new $class_name($object_id);
         $object->format();
 
+        if (array_key_exists('client', $media)) {
+            $additional_params .= "&client=" . $media['client'];
+        }
+        if (array_key_exists('player', $media)) {
+            $additional_params .= "&player=" . $media['player'];
+        }
+        if (array_key_exists('cache', $media)) {
+            $additional_params .= "&cache=" . $media['cache'];
+        }
+        if (array_key_exists('format', $media)) {
+            $additional_params .= "&format=" . $media['format'];
+        }
+        if (array_key_exists('transcode_to', $media)) {
+            $additional_params .= "&transcode_to=" . $media['transcode_to'];
+        }
         if (array_key_exists('custom_play_action', $media)) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
