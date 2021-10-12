@@ -152,9 +152,9 @@ class OAuthUtil
         $parsed_parameters = array();
         foreach ($pairs as $pair) {
             if (strpos((string)$pair, '=')) {
-                $split = explode('=', $pair, 2);
+                $split     = explode('=', $pair, 2);
                 $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
-                $value = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
+                $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
 
                 if (isset($parsed_parameters[$parameter])) {
                     // We have already received parameter(s) with this name, so add to the list
