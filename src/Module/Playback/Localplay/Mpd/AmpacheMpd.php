@@ -464,8 +464,9 @@ class AmpacheMpd extends localplay_controller
             $data['raw'] = $entry['file'];
 
             $url_data = $this->parse_url($entry['file']);
+            $url_key  = $url_data['primary_key'] ?? '';
 
-            switch ($url_data['primary_key']) {
+            switch ($url_key) {
                 case 'oid':
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
@@ -499,9 +500,8 @@ class AmpacheMpd extends localplay_controller
                                 break;
                             case 'live_stream':
                                 /** @var Live_Stream $media */
-                                $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $frequency $site_url";
+                                $data['name'] = "$media->name $site_url";
                                 $data['link'] = $media->site_url;
                                 break;
                         } // end switch on type
@@ -555,7 +555,7 @@ class AmpacheMpd extends localplay_controller
 
         debug_event('mdp.controller', 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
-        if (count($url_data) > 0 && !empty($url_data['oid'])) {
+        if (count($url_data) > 0 && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();

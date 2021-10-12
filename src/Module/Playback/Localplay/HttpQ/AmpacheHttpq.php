@@ -25,6 +25,7 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
@@ -507,9 +508,9 @@ class AmpacheHttpq extends localplay_controller
                                 $data['link'] = $media->f_link;
                                 break;
                             case 'live_stream':
-                                $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
+                                /** @var Live_Stream $media */
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $frequency $site_url";
+                                $data['name'] = "$media->name $site_url";
                                 $data['link'] = $media->site_url;
                                 break;
                         } // end switch on type
@@ -543,9 +544,9 @@ class AmpacheHttpq extends localplay_controller
         $array['repeat'] = $this->_httpq->get_repeat();
         $array['random'] = $this->_httpq->get_random();
         $array['track']  = $this->_httpq->get_now_playing();
-        $url_data        = $this->parse_url($array['track']);
 
-        if (isset($url_data['oid'])) {
+        $url_data = $this->parse_url($array['track']);
+        if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();
