@@ -1302,11 +1302,11 @@ class Search extends playlist_object
     public function update(array $data = null)
     {
         if ($data && is_array($data)) {
-            $this->name   = $data['name'];
-            $this->type   = $data['pl_type'];
-            $this->user   = $data['pl_user'];
-            $this->random = ((int)$data['random'] > 0 || $this->random) ? 1 : 0;
-            $this->limit  = $data['limit'];
+            $this->name   = $data['name'] ?? $this->name;
+            $this->type   = $data['pl_type'] ?? $this->type;
+            $this->user   = $data['pl_user'] ?? $this->user;
+            $this->random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
+            $this->limit  = $data['limit'] ?? $this->limit;
         }
         $this->username = User::get_username($this->user);
 
