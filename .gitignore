@@ -48,3 +48,4 @@ web.config
 *.swp
 *.v11.suo
 *~
+config/ampache.cfg.php.backup
