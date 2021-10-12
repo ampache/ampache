@@ -742,6 +742,7 @@ abstract class Catalog extends database_object
             $sql .= $join . Catalog::get_user_filter('catalog', $user_id);
         }
         $sql .= "ORDER BY `name`";
+        //debug_event(self::class, "get_catalogs sql:" . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -1182,7 +1183,7 @@ abstract class Catalog extends database_object
     public static function get_artist_arrays($catalogs)
     {
         $list = Dba::escape(implode(',', $catalogs));
-        $sql  = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, MIN(`catalog_map`.`catalog_id`) FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN ($list) GROUP BY `artist`.`id` ORDER BY `f_name`";
+        $sql  = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN ($list) GROUP BY `artist`.`id`, `artist`.`prefix`, `artist`.`name` ORDER BY `f_name`";
 
         $db_results = Dba::read($sql);
         $results    = array();

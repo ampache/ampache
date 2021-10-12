@@ -59,8 +59,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($action)) {
             $action = strtolower(Core::get_request('action'));
         }
-        $f        = ($_REQUEST['f']) ?: 'xml';
-        $callback = $_REQUEST['callback'];
+        $f        = ($_REQUEST['f']) ?? 'xml';
+        $callback = $_REQUEST['callback'] ?? $f;
         /* Set the correct default headers */
         if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
             Subsonic_Api::setHeader($f);
@@ -77,21 +77,18 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Authenticate the user with preemptive HTTP Basic authentication first
         $userName = Core::get_server('PHP_AUTH_USER');
-
         if (empty($userName)) {
-            $userName = $_REQUEST['u'];
+            $userName = $_REQUEST['u'] ?? '';
         }
         $password = Core::get_server('PHP_AUTH_PW');
         if (empty($password)) {
-            $password = (string) $_REQUEST['p'];
-            $token    = (string) $_REQUEST['t'];
-            $salt     = (string) $_REQUEST['s'];
-        } else {
-            $token = '';
-            $salt  = '';
+            $password = $_REQUEST['p'] ?? '';
         }
-        $version   = $_REQUEST['v'];
-        $clientapp = $_REQUEST['c'];
+
+        $token     = $_REQUEST['t'] ?? '';
+        $salt      = $_REQUEST['s'] ?? '';
+        $version   = $_REQUEST['v'] ?? '';
+        $clientapp = $_REQUEST['c'] ?? '';
 
         if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
@@ -161,33 +158,33 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $params = array();
         foreach ($query as $param) {
             if (strpos((string)$param, '=')) {
-                list($name, $value) = explode('=', $param);
-                $decname            = urldecode($name);
-                $decvalue           = urldecode($value);
+                [$name, $value] = explode('=', $param);
+                $decname        = urldecode($name);
+                $decvalue       = urldecode($value);
+            }
 
-                // workaround for clementine/Qt5 bug
-                // see https://github.com/clementine-player/Clementine/issues/6080
-                $matches = array();
-                if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
-                    $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
-                    if ($calc) {
-                        debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
-                        $decvalue = $calc;
-                    } else {
-                        debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
-                    }
-                }
-
-                if (array_key_exists($decname, $params)) {
-                    if (!is_array($params[$decname])) {
-                        $oldvalue           = $params[$decname];
-                        $params[$decname]   = array();
-                        $params[$decname][] = $oldvalue;
-                    }
-                    $params[$decname][] = $decvalue;
+            // workaround for clementine/Qt5 bug
+            // see https://github.com/clementine-player/Clementine/issues/6080
+            $matches = array();
+            if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
+                $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
+                if ($calc) {
+                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
+                    $decvalue = $calc;
                 } else {
-                    $params[$decname] = $decvalue;
+                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
                 }
+            }
+
+            if (array_key_exists($decname, $params)) {
+                if (!is_array($params[$decname])) {
+                    $oldvalue           = $params[$decname];
+                    $params[$decname]   = array();
+                    $params[$decname][] = $oldvalue;
+                }
+                $params[$decname][] = $decvalue;
+            } else {
+                $params[$decname] = $decvalue;
             }
         }
         //debug_event('rest/index', print_r($params, true), 5);

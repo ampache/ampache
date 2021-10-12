@@ -238,9 +238,11 @@ class Random
         $fuzzy_size = 0;
         $time_total = 0;
         $fuzzy_time = 0;
+        $size_limit = array_key_exists('size_limit', $data);
+        $length     = array_key_exists('length', $data);
         while ($row = Dba::fetch_assoc($db_results)) {
             // If size limit is specified
-            if ($data['size_limit']) {
+            if ($size_limit) {
                 // Convert
                 $new_size = ($row['size'] / 1024) / 1024;
 
@@ -265,7 +267,7 @@ class Random
             } // if size_limit
 
             // If length really does matter
-            if ($data['length']) {
+            if ($length) {
                 // base on min, seconds are for chumps and chumpettes
                 $new_time = floor($row['time'] / 60);
 
@@ -288,7 +290,7 @@ class Random
                 }
             } // if length does matter
 
-            if (!$data['size_limit'] && !$data['length']) {
+            if (!$size_limit && !$length) {
                 $results[] = (int) $row['id'];
             }
         } // end while results

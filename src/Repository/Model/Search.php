@@ -1344,7 +1344,7 @@ class Search extends playlist_object
      */
     private function _mangle_data($data, $type, $operator)
     {
-        if ($operator['preg_match']) {
+        if (array_key_exists('preg_match', $operator)) {
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
         }
 
