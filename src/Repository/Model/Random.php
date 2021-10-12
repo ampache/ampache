@@ -109,11 +109,11 @@ class Random
         $results = array();
 
         if (empty($limit)) {
-            $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+            $limit = AmpConfig::get('offset_limit', 25);
         }
         if ((int)$user_id < 1) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user->id ?? null;
         }
 
         $multi_where = 'WHERE';
