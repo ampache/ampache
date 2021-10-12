@@ -45,22 +45,25 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (!$count) {
             $count = 1;
         }
-        $allow_group_disks = (AmpConfig::get('album_group'));
-        $sort_disk         = ($allow_group_disks)
-            ? " `album`.`disk` = 1 "
-            : " 1 = 1 ";
+        $sql  = "SELECT DISTINCT `album`.`id` FROM `album` ";
+        $join = 'WHERE';
 
-        $sql = (AmpConfig::get('catalog_disable'))
-            ? sprintf("SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' AND %s", $sort_disk)
-            : sprintf("SELECT DISTINCT `album`.`id` FROM `album` WHERE %s", $sort_disk);
-
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
+            $join = 'AND';
+        }
         if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('album', $userId);
+            $sql .= $join . Catalog::get_user_filter('album', $userId);
+            $join = 'AND';
+        }
+        if (AmpConfig::get('album_group')) {
+            $sql .= $join . " `album`.`disk` = 1 ";
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
-            $sql .= sprintf(
-                "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
+            $sql .= $join . sprintf(
+                " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
@@ -70,6 +73,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $count
         );
         $db_results = Dba::read($sql);
+        //debug_event(self::class, 'getRandom ' . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
