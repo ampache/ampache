@@ -695,12 +695,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function update(array $data)
     {
         $sql    = "UPDATE `video` SET `title` = ?";
-        $title  = isset($data['title'])
-            ? $data['title']
-            : $this->title;
+        $title  = $data['title'] ?? $this->title;
         $params = array($title);
         // don't require a release date when updating a video
-        if (isset($data['release_date'])) {
+        if (isset($data['release_date']) && $data['release_date'] !== null) {
             $f_release_date     = (string) $data['release_date'];
             $release_date       = strtotime($f_release_date);
             $this->release_date = $release_date;
@@ -727,11 +725,12 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public static function update_video($video_id, Video $new_video)
     {
-        $update_time = time();
+        $update_time  = time();
+        $release_date = is_numeric($new_video->release_date) ? $new_video->release_date : null;
 
         $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $new_video->release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
+        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
     }
 
     /**
