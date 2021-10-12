@@ -207,7 +207,7 @@ class Stream_Playlist
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
 
-        if (array_key_exists('iframe', $_SESSION) && array_key_exists('target', $_SESSION['iframe'])) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
