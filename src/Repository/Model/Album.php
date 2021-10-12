@@ -161,14 +161,9 @@ class Album extends database_object implements library_item
     public $artist_count;
 
     /**
-     * @var integer $object_cnt
-     */
-    public $object_cnt;
-
-    /**
      * @var integer $total_count
      */
-    private $total_count;
+    public $total_count;
 
     /**
      * @var string $f_artist_name
@@ -292,7 +287,7 @@ class Album extends database_object implements library_item
         // Little bit of formatting here
         $this->f_name         = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         $this->total_duration = (int)$this->time;
-        $this->object_cnt     = (int)$this->total_count;
+        $this->total_count    = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
         $this->song_count     = (int)$this->song_count;
         $this->artist_count   = (int)$this->artist_count;
@@ -307,13 +302,13 @@ class Album extends database_object implements library_item
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
                 $this->total_duration = 0;
-                $this->object_cnt     = 0;
+                $this->total_count    = 0;
                 $this->song_count     = 0;
                 $this->artist_count   = $albumRepository->getArtistCountGroup($this->album_suite);
 
                 foreach ($this->album_suite as $albumId) {
                     $this->total_duration += $albumRepository->getAlbumDuration((int)$albumId);
-                    $this->object_cnt += $albumRepository->getAlbumPlayCount((int)$albumId);
+                    $this->total_count += $albumRepository->getAlbumPlayCount((int)$albumId);
                     $this->song_count += $albumRepository->getSongCount((int)$albumId);
                 }
             }
@@ -383,7 +378,7 @@ class Album extends database_object implements library_item
         $results['has_thumb'] = make_bool($art->thumb);
 
         if (AmpConfig::get('show_played_times')) {
-            $results['object_cnt'] = $this->object_cnt;
+            $results['total_count'] = $this->total_count;
         }
 
         parent::add_to_cache('album_extra', $this->id, $results);

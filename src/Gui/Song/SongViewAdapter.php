@@ -383,10 +383,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('# Played')] = scrub_out($this->song->object_cnt);
+            $songprops[T_('# Played')] = scrub_out($this->song->total_count);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('# Skipped')] = scrub_out($this->song->skip_cnt);
+            $songprops[T_('# Skipped')] = scrub_out($this->song->total_skip);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
@@ -479,11 +479,11 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getNumberPlayed(): int
     {
-        return $this->song->object_cnt;
+        return $this->song->total_count;
     }
 
     public function getNumberSkipped(): int
     {
-        return $this->song->skip_cnt;
+        return $this->song->total_skip;
     }
 }

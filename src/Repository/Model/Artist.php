@@ -133,14 +133,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $f_labels;
 
     /**
-     * @var integer $object_cnt
-     */
-    public $object_cnt;
-
-    /**
      * @var integer $total_count
      */
-    private $total_count;
+    public $total_count;
 
     /**
      * @var string $f_name // Prefix + Name, generated
@@ -213,7 +208,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         // set the full name
         $this->f_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         // make sure the int values are cast to integers
-        $this->object_cnt        = (int)$this->total_count;
+        $this->total_count       = (int)$this->total_count;
         $this->time              = (int)$this->time;
         $this->album_count       = (int)$this->album_count;
         $this->album_group_count = (int)$this->album_group_count;
@@ -290,7 +285,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $row['object_cnt'] = (!empty($limit_threshold))
+                $row['total_count'] = (!empty($limit_threshold))
                     ? Stats::get_object_count('artist', $row['artist'], $limit_threshold)
                     : $row['total_count'];
                 parent::add_to_cache('artist_extra', $row['artist'], $row);

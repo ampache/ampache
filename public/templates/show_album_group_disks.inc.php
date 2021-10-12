@@ -102,7 +102,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     <div style="display:inline;">
         <?php echo T_('Played') . ' ' .
             /* HINT: Number of times an object has been played */
-            sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+            sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
     </div>
 <?php } ?>
 <div id="information_actions">

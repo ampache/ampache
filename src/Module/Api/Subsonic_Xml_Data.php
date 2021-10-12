@@ -757,7 +757,7 @@ class Subsonic_Xml_Data
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = (int) $results['total_count'];
+                $results['total_count'] = (int) $results['total_count'];
             }
         }
         $extension       = pathinfo((string)$results['file'], PATHINFO_EXTENSION);
@@ -872,7 +872,7 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
         // <!-- Added in 1.14.0 -->
-        // $xsong->addAttribute('playCount', (string)$songData['object_cnt']);
+        // $xsong->addAttribute('playCount', (string)$songData['total_count']);
         $rating      = new Rating($songData['id'], "song");
         $user_rating = ($rating->get_user_rating() ?: 0);
         if ($user_rating > 0) {

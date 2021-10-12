@@ -73,7 +73,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
 <td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
 <td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
 <?php } ?>
 <?php if (!$hide_genres) { ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>

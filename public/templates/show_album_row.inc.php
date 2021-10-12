@@ -86,7 +86,7 @@ $display_year = ($original_year && $libitem->original_year)
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
-        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <?php if (!$hide_genres) {
         ++$thcount; ?>

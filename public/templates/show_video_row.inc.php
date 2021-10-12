@@ -93,7 +93,7 @@ if ($video_type != 'video') {
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->object_cnt; ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->total_count; ?></td>
 <?php } ?>
 <?php if (!$hide_genres) { ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>

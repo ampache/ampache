@@ -158,7 +158,7 @@ if (get_class($video) != Video::class) {
   }
   $videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
-      $videoprops[T_('# Played')]   = scrub_out($video->object_cnt);
+      $videoprops[T_('# Played')]   = scrub_out($video->total_count);
   }
 
     foreach ($videoprops as $key => $value) {

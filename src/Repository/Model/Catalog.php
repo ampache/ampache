@@ -2226,7 +2226,7 @@ abstract class Catalog extends database_object
         $new_video->resolution_x  = $results['resolution_x'];
         $new_video->resolution_y  = $results['resolution_y'];
         $new_video->time          = $results['time'];
-        $new_video->release_date  = $results['release_date'] ?? 0;
+        $new_video->release_date  = $results['release_date'] ?? null;
         $new_video->bitrate       = $results['bitrate'];
         $new_video->mode          = $results['mode'];
         $new_video->channels      = $results['channels'];

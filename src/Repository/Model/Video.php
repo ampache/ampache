@@ -134,13 +134,12 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $tags;
     /**
-     * @var integer $object_cnt
-     */
-    public $object_cnt;
-    /**
      * @var integer $total_count
      */
-    private $total_count;
+    public $total_count;
+
+    /** @var int */
+    public $total_skip;
     /**
      * @var integer $f_release_date
      */
@@ -240,9 +239,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $this->$key = $value;
         }
 
-        $data             = pathinfo($this->file);
-        $this->type       = strtolower((string) $data['extension']);
-        $this->object_cnt = (int)$this->total_count;
+        $data              = pathinfo($this->file);
+        $this->type        = strtolower((string) $data['extension']);
+        $this->total_count = (int)$this->total_count;
 
         return true;
     } // Constructor
@@ -618,19 +617,19 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
         $bitrate        = (int) $data['bitrate'];
         $mode           = $data['mode'];
-        $rezx           = (int) $data['resolution_x'];
-        $rezy           = (int) $data['resolution_y'];
-        $release_date   = (int) $data['release_date'];
+        $rezx           = $data['resolution_x'];
+        $rezy           = $data['resolution_y'];
+        $release_date   = $data['release_date'] ?? null;
         // No release date, then release date = production year
-        if (!$release_date && $data['year']) {
+        if (!$release_date && array_key_exists('year', $data)) {
             $release_date = strtotime((string) $data['year'] . '-01-01');
         }
-        $tags           = $data['genre'];
-        $channels       = (int) $data['channels'];
-        $disx           = (int) $data['display_x'];
-        $disy           = (int) $data['display_y'];
-        $frame_rate     = (float) $data['frame_rate'];
-        $video_bitrate  = (int) Catalog::check_int($data['video_bitrate'], 4294967294, 0);
+        $tags          = $data['genre'] ?? null;
+        $channels      = (int) $data['channels'];
+        $disx          = (int) $data['display_x'];
+        $disy          = (int) $data['display_y'];
+        $frame_rate    = (float) $data['frame_rate'];
+        $video_bitrate = Catalog::check_int($data['video_bitrate'], 4294967294, 0);
 
         $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
@@ -1189,7 +1188,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
         $string_array = array('title', 'tags');
-        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt', 'disabledMetadataFields');
+        $skip_array   = array('id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information

@@ -325,16 +325,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public $f_license;
 
     /** @var int */
-    public $skip_cnt;
+    public $total_count;
 
     /** @var int */
-    public $object_cnt;
-
-    /** @var int */
-    private $total_count;
-
-    /** @var int */
-    private $total_skip;
+    public $total_skip;
 
     /* Setting Variables */
     /**
@@ -380,10 +374,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-            $data             = pathinfo($this->file);
-            $this->type       = strtolower((string)$data['extension']);
-            $this->mime       = self::type_to_mime($this->type);
-            $this->object_cnt = (int)$this->total_count;
+            $data              = pathinfo($this->file);
+            $this->type        = strtolower((string)$data['extension']);
+            $this->mime        = self::type_to_mime($this->type);
+            $this->total_count = (int)$this->total_count;
         } else {
             $this->id = null;
 
@@ -610,12 +604,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = (!empty($limit_threshold))
+                $row['total_count'] = (!empty($limit_threshold))
                     ? Stats::get_object_count('song', $row['id'], $limit_threshold)
                     : $row['total_count'];
             }
             if (AmpConfig::get('show_skipped_times')) {
-                $row['skip_cnt'] = (!empty($limit_threshold))
+                $row['total_skip'] = (!empty($limit_threshold))
                     ? Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip')
                     : $row['total_skip'];
             }
@@ -668,10 +662,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = $results['total_count'];
+                $results['total_count'] = $results['total_count'];
             }
             if (AmpConfig::get('show_skipped_times')) {
-                $results['skip_cnt'] = $results['total_skip'];
+                $results['total_skip'] = $results['total_skip'];
             }
 
             parent::add_to_cache('song', $song_id, $results);
@@ -1101,8 +1095,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             'mime',
             'mbid',
             'waveform',
-            'object_cnt',
-            'skip_cnt',
+            'total_count',
+            'total_skip',
             'albumartist',
             'artist_mbid',
             'album_mbid',

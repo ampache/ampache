@@ -866,7 +866,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating($user_id) ?: null),
                 "rating" => ($rating->get_user_rating($user_id) ?: null),
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
-                "playcount" => (int) $episode->object_cnt,
+                "playcount" => (int) $episode->total_count,
                 "played" => $episode->played]);
         }
         if (!$encode) {
@@ -953,7 +953,7 @@ class Json_Data
             $ourArray['preciserating']         = ($rating->get_user_rating() ?: null);
             $ourArray['rating']                = ($rating->get_user_rating() ?: null);
             $ourArray['averagerating']         = ($rating->get_average_rating() ?: null);
-            $ourArray['playcount']             = (int)$song->object_cnt;
+            $ourArray['playcount']             = (int)$song->total_count;
             $ourArray['catalog']               = (int)$song->catalog;
             $ourArray['composer']              = $song->composer;
             $ourArray['channels']              = $song->channels;
@@ -1024,7 +1024,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating($user_id) ?: null),
                 "rating" => ($rating->get_user_rating($user_id) ?: null),
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
-                "playcount" => (int) $video->object_cnt
+                "playcount" => (int) $video->total_count
             ));
         } // end foreach
         $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
@@ -1076,7 +1076,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating() ?: null),
                 "rating" => ($rating->get_user_rating() ?: null),
                 "averagerating" => ($rating->get_average_rating() ?: null),
-                "playcount" => (int) $song->object_cnt,
+                "playcount" => (int) $song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ));
         } // end foreach

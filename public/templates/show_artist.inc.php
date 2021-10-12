@@ -95,7 +95,7 @@ if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
         /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $artist->object_cnt), $artist->object_cnt); ?>
+        sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
 </div>
 <?php } ?>
 

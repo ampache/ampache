@@ -83,7 +83,7 @@ if ($is_mashup) {
 <?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
 <td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
