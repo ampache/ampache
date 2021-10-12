@@ -160,32 +160,34 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $query  = explode('&', $query_string);
         $params = array();
         foreach ($query as $param) {
-            list($name, $value) = explode('=', $param);
-            $decname            = urldecode($name);
-            $decvalue           = urldecode($value);
+            if (strpos((string)$param, '=')) {
+                list($name, $value) = explode('=', $param);
+                $decname            = urldecode($name);
+                $decvalue           = urldecode($value);
 
-            // workaround for clementine/Qt5 bug
-            // see https://github.com/clementine-player/Clementine/issues/6080
-            $matches = array();
-            if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
-                $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
-                if ($calc) {
-                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
-                    $decvalue = $calc;
+                // workaround for clementine/Qt5 bug
+                // see https://github.com/clementine-player/Clementine/issues/6080
+                $matches = array();
+                if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
+                    $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
+                    if ($calc) {
+                        debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
+                        $decvalue = $calc;
+                    } else {
+                        debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
+                    }
+                }
+
+                if (array_key_exists($decname, $params)) {
+                    if (!is_array($params[$decname])) {
+                        $oldvalue           = $params[$decname];
+                        $params[$decname]   = array();
+                        $params[$decname][] = $oldvalue;
+                    }
+                    $params[$decname][] = $decvalue;
                 } else {
-                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
+                    $params[$decname] = $decvalue;
                 }
-            }
-
-            if (array_key_exists($decname, $params)) {
-                if (!is_array($params[$decname])) {
-                    $oldvalue           = $params[$decname];
-                    $params[$decname]   = array();
-                    $params[$decname][] = $oldvalue;
-                }
-                $params[$decname][] = $decvalue;
-            } else {
-                $params[$decname] = $decvalue;
             }
         }
         //debug_event('rest/index', print_r($params, true), 5);
