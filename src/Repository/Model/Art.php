@@ -158,7 +158,7 @@ class Art extends database_object
         if (empty($mime)) {
             return '';
         }
-        $data      = explode("/", $mime);
+        $data      = explode('/', $mime);
         $extension = $data['1'];
 
         if ($extension == 'jpeg') {
@@ -784,7 +784,7 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/", (string) $mime);
+        $data = explode('/', (string) $mime);
         $type = ((string) $data['1'] !== '') ? strtolower((string) $data['1']) : 'jpg';
 
         if (!self::test_image($image)) {

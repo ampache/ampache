@@ -339,7 +339,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         /* Figure out what type of file we are dealing with */
-        $this->type = $this->_get_type() ?: '';
+        $this->type = $this->_get_type() ?? '';
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
@@ -1139,7 +1139,7 @@ final class VaInfo implements VaInfoInterface
                     if (strlen($data['0']) > 4) {
                         $data[0] = date('Y', $parsed['originaldate']);
                     }
-                    $parsed['original_year'] = ($parsed['original_year']) ?: $data[0];
+                    $parsed['original_year'] = $parsed['original_year'] ?? $data[0];
                     break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];
@@ -1226,7 +1226,7 @@ final class VaInfo implements VaInfoInterface
                 case 'part_of_a_set':
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
-                    $parsed['totaldisks'] = $elements[1];
+                    $parsed['totaldisks'] = $elements[1] ?? null;
                     break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
@@ -1471,12 +1471,12 @@ final class VaInfo implements VaInfoInterface
                     //$parsed['track'] = $data[0];
                     $elements              = explode('/', $data[0]);
                     $parsed['track']       = $elements[0];
-                    $parsed['totaltracks'] = $elements[1];
+                    $parsed['totaltracks'] = $elements[1] ?? null;
                     break;
                 case 'disc_number':
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
-                    $parsed['totaldisks'] = $elements[1];
+                    $parsed['totaldisks'] = $elements[1] ?? null;
                     break;
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
@@ -1489,7 +1489,7 @@ final class VaInfo implements VaInfoInterface
                     if (strlen($data['0']) > 4) {
                         $data[0] = date('Y', $parsed['originaldate']);
                     }
-                    $parsed['original_year'] = ($parsed['original_year']) ?: $data[0];
+                    $parsed['original_year'] = $parsed['original_year'] ?? $data[0];
                     break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];

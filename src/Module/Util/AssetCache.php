@@ -42,6 +42,11 @@ class AssetCache
         self::$cacheDirPath = Core::get_server('DOCUMENT_ROOT') . self::$cacheDir;
     }
 
+    /**
+     * This uses the MD5 hash of a file to create a unique cached version, to avoid 'just clear your browser cache' issues
+     * @param string $path
+     * @return string
+     */
     public static function get_url(string $path)
     {
         self::set_cache_dir();

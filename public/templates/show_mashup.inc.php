@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 $threshold      = AmpConfig::get('stats_threshold');
 $limit          = (int)AmpConfig::get('popular_threshold', 10);
 $catalog_filter = AmpConfig::get('catalog_filter');
-$user_id        = ($catalog_filter)
+$user_id        = ($catalog_filter && !empty(Core::get_global('user')))
     ? Core::get_global('user')->id
     : null;
 

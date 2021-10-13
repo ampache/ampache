@@ -372,8 +372,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     <?php
                         Ui::show_box_top('', 'box box_headerbox');
                         require_once Ui::find_template('show_search_bar.inc.php');
-                        if (User::is_registered()) {
-                            require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
+                    if (User::is_registered() && !empty(Core::get_global('user'))) {
+                        require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
@@ -383,7 +383,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             } ?>
                         </span>
                     <?php
-                        } else { ?>
+                    } else { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
@@ -519,7 +519,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         AutoUpdate::show_new_version();
                         echo '<br />';
                     }
-                    $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+                    $count_temp_playlist = (!empty(Core::get_global('user')))
+                        ? count(Core::get_global('user')->playlist->get_items())
+                        : 0;
 
                     if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">

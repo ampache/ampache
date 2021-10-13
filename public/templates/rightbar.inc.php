@@ -30,6 +30,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
+$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
 ?>
 <script>
     function ToggleRightbarVisibility()
@@ -55,7 +56,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
             <?php
             global $dic;
             $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
-                Core::get_global('user')->id
+                $user_id
             );
             foreach ($playlists as $playlist) {
                 ?>

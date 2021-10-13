@@ -528,7 +528,7 @@ class AmpacheVlc extends localplay_controller
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
                         // it's a file get the last output after  and show that, hard to take every output possible in account
-                        $getlast      = explode("/", $entry);
+                        $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     } // end if loop

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -37,6 +38,13 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -159,7 +167,14 @@ final class ShowAction implements ApplicationActionInterface
             $class_name = ObjectTypeToClassNameMapper::map($type);
             $object_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
             $item       = new $class_name($object_id);
-            $filename   = (isset($item->name)) ? $item->name : $item->title;
+            if ($item instanceof Song || $item instanceof Video) {
+                $filename = $item->title;
+            } elseif ($item instanceof User) {
+                $filename = $item->username;
+            } else {
+                // Album || Artist || Broadcast || Label || Live_Stream
+                $filename = $item->name ?? '';
+            }
 
             $art = new Art($object_id, $type, $kind);
             $art->has_db_info();

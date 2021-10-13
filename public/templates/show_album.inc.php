@@ -189,7 +189,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
+        <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
         $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>

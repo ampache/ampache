@@ -31,9 +31,9 @@ use Ampache\Module\Util\Ui;
             </div>
         </div> <!-- end id="maincontainer"-->
         <?php
-            $count_temp_playlist = 1;
+            $count_temp_playlist = 0;
             if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                if (Core::get_global('user')->playlist) {
+                if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
                     $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
                 }
             } ?>

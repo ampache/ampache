@@ -104,7 +104,7 @@ class Ampacheflickr
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = array(
                         'title' => $photo->title,
-                        'url' => "http://farm" . $photo['farm'] . ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'] . "_m.jpg",
+                        'url' => "http://farm" . $photo['farm'] . ".static.flickr.com/" . $photo['server'] . '/' . $photo['id'] . "_" . $photo['secret'] . "_m.jpg",
                     );
                 }
             }

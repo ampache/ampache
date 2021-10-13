@@ -112,7 +112,7 @@ class Stream
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
-            $active_streams = (int) ($results[0]) ?: 0;
+            $active_streams = (int) ($results[0] ?? 0);
             debug_event(self::class, 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
