@@ -254,10 +254,11 @@ final class PlayAction implements ApplicationActionInterface
             return null;
         }
 
+        $session_name = AmpConfig::get('session_name');
         if ($use_auth) {
             // Identify the user according to it's web session
             // We try to avoid the generic 'Ampache User' as much as possible
-            if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
+            if (array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
                 Session::check();
                 $user = User::get_from_username($_SESSION['userdata']['username']);
                 $uid  = $user->id;
@@ -278,13 +279,13 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
 
-                // If require session is set then we need to make sure we're legit
+                // If require_session is set then we need to make sure we're legit
                 if ($use_auth && AmpConfig::get('require_session')) {
                     if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
                         debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
                     } elseif (!Session::exists('stream', $session_id)) {
                         // No valid session id given, try with cookie session from web interface
-                        $session_id = $_COOKIE[AmpConfig::get('session_name')];
+                        $session_id = $_COOKIE[$session_name];
                         if (!Session::exists('interface', $session_id)) {
                             debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
                             header('HTTP/1.1 403 Session Expired');
