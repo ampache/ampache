@@ -28,6 +28,7 @@ public/develop
 public/master
 public/foam
 public/ample
+public/cached_assets/
 storage/
 tmp/
 /vendor/
@@ -48,4 +49,4 @@ web.config
 *.swp
 *.v11.suo
 *~
-public/cached_assets/
+config/ampache.cfg.php.backup
