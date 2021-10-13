@@ -60,7 +60,7 @@ if ($album != T_('Unknown (Orphaned)')) {
 </div>
 <br /><br />
 <div class="lyrics">
-    <div id="lyrics_text"><?php echo ($lyrics['text']) ?: T_("No lyrics found."); ?></div>
+    <div id="lyrics_text"><?php echo($lyrics['text']) ?? T_("No lyrics found."); ?></div>
 <?php if ($lyrics['url']) { ?>
     <div id="lyrics_url"><a href="<?php echo $lyrics['url']; ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
 <?php

@@ -74,7 +74,7 @@ final class SongSorter implements SongSorterInterface
                 if ($directory === false || $filename === false) {
                     $fullpath = $song->file;
                 } else {
-                    $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
                 }
 
                 /* We need to actually do the moving (fake it if we are testing)
@@ -220,7 +220,7 @@ final class SongSorter implements SongSorterInterface
 
         foreach ($data as $dir) {
             $dir = $this->sort_clean_name($dir);
-            $path .= "/" . $dir;
+            $path .= '/' . $dir;
 
             /* We need to check for the existence of this directory */
             if (!is_dir($path)) {

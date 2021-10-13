@@ -76,7 +76,7 @@ class Song_Preview extends database_object implements Media, playable_item
             }
             if ($this->file) {
                 $data       = pathinfo($this->file);
-                $this->type = strtolower((string)$data['extension']) ?: 'mp3';
+                $this->type = strtolower((string)$data['extension']) ?? 'mp3';
                 $this->mime = Song::type_to_mime($this->type);
             }
         } else {

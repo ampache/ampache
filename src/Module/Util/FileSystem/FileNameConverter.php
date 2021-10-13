@@ -192,7 +192,7 @@ final class FileNameConverter implements FileNameConverterInterface
 
         foreach ($data as $dir) {
             $dir = $this->charset_clean_name($dir);
-            $path .= "/" . $dir;
+            $path .= '/' . $dir;
 
             if (!is_dir($path)) {
                 $interactor->info(printf(T_('Making directory: %s'), $path), true);

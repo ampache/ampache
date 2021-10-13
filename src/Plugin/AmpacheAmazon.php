@@ -212,7 +212,7 @@ class AmpacheAmazon
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
             debug_event('amazon.plugin',
-                "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, 5);
+                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search, 5);
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 

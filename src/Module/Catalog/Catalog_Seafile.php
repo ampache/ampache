@@ -245,7 +245,7 @@ class Catalog_Seafile extends Catalog
     {
         $arr = $this->seafile->from_virtual_path($file_path);
 
-        return $arr['path'] . "/" . $arr['filename'];
+        return $arr['path'] . '/' . $arr['filename'];
     }
 
     /**

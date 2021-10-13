@@ -709,7 +709,7 @@ class Catalog_dropbox extends Catalog
             set_time_limit(0);
             $meta = $dropbox->getMetadata($media->file);
 
-            $outfile = sys_get_temp_dir() . "/" . $meta->getName();
+            $outfile = sys_get_temp_dir() . '/' . $meta->getName();
 
             // Download File
             $this->download($dropbox, $media->file, null, $outfile);

@@ -26,9 +26,9 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Art\Export\Writer\MetadataWriter;
 use Ampache\Module\Art\Export\ArtExporterInterface;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
+use Ampache\Module\Art\Export\Writer\MetadataWriter;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;

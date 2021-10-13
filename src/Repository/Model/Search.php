@@ -1394,7 +1394,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
             if ($groupdisks) {
                 /* 'album_group' DEFAULT:
                  * `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`
@@ -1674,7 +1674,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'title':
@@ -1934,7 +1934,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'anywhere':
@@ -2349,7 +2349,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'file':
@@ -2431,7 +2431,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . ")";
 
@@ -2524,7 +2524,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'title':
@@ -2612,7 +2612,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'title':
@@ -2689,7 +2689,7 @@ class Search extends playlist_object
             }
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $sql_match_operator = $operator['sql'];
+            $sql_match_operator = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'username':
