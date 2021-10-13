@@ -61,7 +61,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
             <?php echo T_('Labels'); ?>
         </a>
     <?php } ?>
-    <a class="category <?php echo ($currentType == 'channel') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=playlist">
+    <a class="category <?php echo ($currentType == 'playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=playlist">
         <?php echo T_('Playlists'); ?>
     </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
