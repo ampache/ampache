@@ -26,6 +26,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\AssetCache;
 use Exception;
 use Ampache\Repository\Model\Preference;
 use Requests;
@@ -314,6 +315,7 @@ class AutoUpdate
         if (!$api) {
             echo T_('Done') . '<br />';
         }
+        AssetCache::clear_cache();
         ob_flush();
         self::get_latest_version(true);
     }
