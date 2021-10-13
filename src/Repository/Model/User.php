@@ -463,7 +463,7 @@ class User extends database_object
      */
     public static function is_registered()
     {
-        if (empty(!Core::get_global('user'))) {
+        if (empty(Core::get_global('user'))) {
             return false;
         }
         if (!Core::get_global('user')->id) {
