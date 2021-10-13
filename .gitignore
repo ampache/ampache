@@ -28,6 +28,7 @@ public/develop
 public/master
 public/foam
 public/ample
+public/cached_assets/
 storage/
 tmp/
 /vendor/

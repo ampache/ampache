@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Ui;
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
@@ -42,8 +43,8 @@ $_SESSION['login'] = true; ?>
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
+            <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>"></script>
+            <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>"></script>
             <div id="content">
                 <div id="guts">
                     <?php

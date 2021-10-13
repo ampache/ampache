@@ -52,6 +52,9 @@ $web_path    = AmpConfig::get('web_path'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
+            <li>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=asset"><?php echo Ui::get_icon('cog', T_('Clear Assets Cache')) . ' ' . T_('Clear Assets Cache'); ?></a>
+            </li>
         </ul>
     </div>
 
