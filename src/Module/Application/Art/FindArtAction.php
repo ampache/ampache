@@ -153,7 +153,7 @@ final class FindArtAction extends AbstractArtAction
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
-                if (array_key_exists('raw', $image)) {
+                if (is_array($image) && array_key_exists('raw', $image)) {
                     unset($images[$index]['raw']);
                 }
             } // end foreach
