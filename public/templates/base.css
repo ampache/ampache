@@ -113,6 +113,20 @@ a.tag_size4 { text-decoration: none; }
     display: none;
 }
 
+.browse_location {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.browse_location .category {
+    margin-right: 20px;
+}
+
+.browse_location .current {
+    padding-bottom: 5px;
+    border-bottom: 2px solid #666;
+}
+
 #aslideshow {
     background: rgba(0, 0, 0, 0.9);
     position: fixed;
