@@ -33,23 +33,21 @@ use Ampache\Module\System\Core;
  */
 class easy_captcha_utility
 {
-
-
     #-- determine usable temp directory
     /**
      * @return mixed
      */
-    public function tmp()
+    public static function tmp()
     {
         return current(array_filter(// filter by writability
             array_filter(// filter empty entries
                 array(
-                    $_SERVER['TMPDIR'],
-                    $_SERVER['REDIRECT_TMPDIR'],
-                    $_SERVER['TEMP'],
+                    $_SERVER['TMPDIR'] ?? null,
+                    $_SERVER['REDIRECT_TMPDIR'] ?? null,
+                    $_SERVER['TEMP'] ?? null,
                     ini_get('upload_tmp_dir'),
-                    $_SERVER['TMP'],
-                    $_SERVER['TEMPDIR'],
+                    $_SERVER['TMP'] ?? null,
+                    $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
                 )), "is_writable"));
@@ -115,7 +113,7 @@ class easy_captcha_utility
     /**
      * @return false|string
      */
-    public function expired_png()
+    public static function expired_png()
     {
         return base64_decode("iVBORw0KGgoAAAANSUhEUgAAADwAAAAUAgMAAACsbba6AAAADFBMVEUeEhFcMjGgWFf9jIrTTikpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA3UlEQVQY01XPzwoBcRAH8F9RjpSTm9xR9qQwtnX/latX0DrsA3gC8QDK0QO4bv7UOtmM+x4oZ4X5FQc1hlb41dR8mm/9ZhT/P7X/dDcpZPU3FYft9kWbLuWp4Bgt9v1oGG07Ja8ojfjxQFym02DVmoixkV/m2JI/TUtefR7nD9rkrhkC+6D77/8mUhDvw0ymLPwxf8esghEFRq8hqKcu2iG16Vlun1zYTO7RwCeFyoJqAgC3LQwzYiCokDj0MWRxb+Z6R8mPJb8Q77zlPbuCoJE8a/t7P773uv36tdcTmsXfRycoRJ8AAAAASUVORK5CYII=");
     }
@@ -208,6 +206,7 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
 
     /**
      * @param string $print
+     * @return string
      */
     public function js_header($print = '')
     {
@@ -215,9 +214,11 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
         header("Cache-Control: no-cache, no-store, must-revalidate, private");
         header("Expires: " . gmdate("r", time()));
         header("Content-Type: text/javascript");
-        if ($print) {
-            print $print;
+        if (!empty($print)) {
+            return $print;
         }
+
+        return '';
     }
 
 
@@ -250,7 +251,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
      * @param $url
      * @return string
      */
-    public function canonical_path($url)
+    public static function canonical_path($url)
     {
         $path = parse_url($url);
 

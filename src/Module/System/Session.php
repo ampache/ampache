@@ -83,7 +83,8 @@ final class Session implements SessionInterface
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
             // If the user ID doesn't exist deny them
-            if (!Core::get_global('user')->id && !$isDemoMode) {
+            $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+            if (!$user_id && !$isDemoMode) {
                 $this->authenticationManager->logout(session_id());
 
                 return false;
@@ -116,7 +117,8 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->fullname = $auth['fullname'];
                     $GLOBALS['user']->access   = (int) ($auth['access']);
                 }
-                if (!Core::get_global('user')->id && !$isDemoMode) {
+                $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+                if (!$user_id && !$isDemoMode) {
                     $this->authenticationManager->logout(session_id());
 
                     return false;
