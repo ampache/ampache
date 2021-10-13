@@ -127,7 +127,7 @@ define("CAPTCHA_PARAM_INPUT", "__ec_s");
 define("CAPTCHA_BGCOLOR", 0xFFFFFF);   // initial background color (non-inverse, white)
 define("CAPTCHA_SALT", ",e?c:7<");
 #define("CAPTCHA_DATA_URLS", 0);     // RFC2397-URLs exclude MSIE users
-define("CAPTCHA_FONT_DIR", __DIR__ . '/../../resources/fonts');
+define("CAPTCHA_FONT_DIR", __DIR__ . '/../../../../resources/fonts');
 #define("CAPTCHA_BASE_URL",
 #    (empty($_SERVER['HTTPS']) ? "http" : "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__),
 #        strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));

@@ -112,7 +112,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
     $objects = array();
 
     // FIXME :: this is kludgy
-    if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
+    if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
     } ?>
     <script>
