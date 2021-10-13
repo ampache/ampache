@@ -45,44 +45,32 @@ if (!$currentType) {
 }
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata">
-    <tr id="search_location">
-    <td><?php if ($currentType !== 'song') { ?>
-        <a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
-    } else {
-        echo T_('Songs');
-    } ?></td>
-    <td><?php if ($currentType !== 'album') { ?>
-        <a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php
-    } else {
-        echo T_('Albums');
-    } ?></td>
-    <td><?php if ($currentType !== 'artist') { ?>
-        <a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
-    } else {
-        echo T_('Artists');
-    } ?></td>
+
+<div class="category_options">
+    <a class="category <?php echo ($currentType == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=song">
+        <?php echo T_('Songs'); ?>
+    </a>
+    <a class="category <?php echo ($currentType == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=album">
+        <?php echo T_('Albums'); ?>
+    </a>
+    <a class="category <?php echo ($currentType == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=artist">
+        <?php echo T_('Artists'); ?>
+    </a>
     <?php if (AmpConfig::get('label')) { ?>
-        <td><?php if ($currentType !== 'label') { ?>
-            <a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo T_('Labels'); ?></a> <?php
-        } else {
-            echo T_('Labels');
-        } ?></td>
+        <a class="category <?php echo ($currentType == 'label') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=label">
+            <?php echo T_('Labels'); ?>
+        </a>
     <?php } ?>
-        <td><?php if ($currentType !== 'playlist') { ?>
-            <a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a> <?php
-        } else {
-            echo T_('Playlists');
-        } ?></td>
+    <a class="category <?php echo ($currentType == 'channel') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=playlist">
+        <?php echo T_('Playlists'); ?>
+    </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <td><?php if ($currentType !== 'video') { ?>
-            <a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a> <?php
-        } else {
-            echo T_('Videos');
-        } ?></td>
+        <a class="category <?php echo ($currentType == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=video">
+            <?php echo T_('Videos'); ?>
+        </a>
     <?php } ?>
-    </tr>
-</table>
+</div>
+
 <table class="tabledata">
     <tr id="search_max_results">
     <td><?php echo T_('Maximum Results'); ?></td>

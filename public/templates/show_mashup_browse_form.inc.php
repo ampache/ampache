@@ -12,7 +12,7 @@ $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_ST
 
 <h3 class="box-title"><?php echo T_('Dashboards'); ?></h3>
 
-<div class="browse_location">
+<div class="category_options">
     <a class="category <?php echo ($filter_str == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=album">
         <?php echo T_('Albums'); ?>
     </a>

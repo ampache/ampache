@@ -113,16 +113,16 @@ a.tag_size4 { text-decoration: none; }
     display: none;
 }
 
-.browse_location {
+.category_options {
     display: flex;
     margin-bottom: 20px;
 }
 
-.browse_location .category {
+.category_options .category {
     margin-right: 20px;
 }
 
-.browse_location .current {
+.category_options .current {
     padding-bottom: 5px;
     border-bottom: 2px solid #666;
 }
