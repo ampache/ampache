@@ -502,7 +502,7 @@ class AmpacheVlc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['name'] = $song->f_name . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link'] = $song->f_link;
                     break;
                 case 'demo_id':

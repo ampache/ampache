@@ -35,11 +35,11 @@ use Ampache\Module\Util\Ui;
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($podcast->f_title, 'info-box'); ?>
+Ui::show_box_top($podcast->f_name, 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
-    Art::display('podcast', $podcast->id, $podcast->f_title, $thumb); ?>
+    Art::display('podcast', $podcast->id, $podcast->f_name, $thumb); ?>
 </div>
 <?php if ($podcast->description) { ?>
 <div id="item_summary">

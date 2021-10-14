@@ -292,7 +292,7 @@ class Stream_Playlist
                     $url['codec'] = $object->stream_type;
                     break;
                 case 'podcast_episode':
-                    $url['title']     = $object->f_title;
+                    $url['title']     = $object->f_name;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));

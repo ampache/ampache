@@ -1535,7 +1535,7 @@ class Upnp_Api
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     $album->format();
-                    //debug_event(self::class, $album->f_title, 5);
+                    //debug_event(self::class, $album->f_name, 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
             break;
@@ -1636,7 +1636,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => $album->song_count,
-            'dc:title' => self::_replaceSpecialSymbols($album->f_title),
+            'dc:title' => self::_replaceSpecialSymbols($album->f_name),
             'upnp:class' => 'object.container.album.musicAlbum', // object.container.album.musicAlbum
             //'upnp:class' => 'object.container',
             'upnp:albumArtist' => $album->album_artist,
@@ -1707,7 +1707,7 @@ class Upnp_Api
             'id' => 'amp://music/songs/' . $song->id,
             'parentID' => $parent,
             'restricted' => 'false', // XXX
-            'dc:title' => self::_replaceSpecialSymbols($song->f_title),
+            'dc:title' => self::_replaceSpecialSymbols($song->f_name),
             'dc:date' => date("c", (int) $song->addition_time),
             'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
@@ -1804,7 +1804,7 @@ class Upnp_Api
             'id' => $parent . '/' . $video->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'dc:title' => self::_replaceSpecialSymbols($video->f_title),
+            'dc:title' => self::_replaceSpecialSymbols($video->f_name),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
             'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
@@ -1828,7 +1828,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => '1',
             'childCount' => count($podcast->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($podcast->f_title),
+            'dc:title' => self::_replaceSpecialSymbols($podcast->f_name),
             'upnp:class' => 'object.container',
         );
     }
@@ -1850,7 +1850,7 @@ class Upnp_Api
             'id' => 'amp://music/podcasts/' . $episode->podcast . '/' . $episode->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'dc:title' => self::_replaceSpecialSymbols($episode->f_title),
+            'dc:title' => self::_replaceSpecialSymbols($episode->f_name),
             'upnp:album' => self::_replaceSpecialSymbols($episode->f_podcast),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url

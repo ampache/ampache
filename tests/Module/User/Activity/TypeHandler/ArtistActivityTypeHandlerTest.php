@@ -114,7 +114,7 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
         $artist->shouldReceive('format')
             ->withNoArgs()
             ->once();
-        $artist->f_title             = '';
+        $artist->f_name = '';
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

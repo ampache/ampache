@@ -197,7 +197,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
             return false;
         }
 
-        $this->catalog_id = $catalog_init;
         /* Get the information from the db */
         $info = $this->get_info($artist_id);
 
@@ -205,14 +204,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $this->$key = $value;
         } // foreach info
 
-        // set the full name
-        $this->f_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         // make sure the int values are cast to integers
         $this->total_count       = (int)$this->total_count;
         $this->time              = (int)$this->time;
         $this->album_count       = (int)$this->album_count;
         $this->album_group_count = (int)$this->album_group_count;
         $this->song_count        = (int)$this->song_count;
+        $this->catalog_id        = (int)$catalog_init;
+
+        $this->get_fullname();
 
         return true;
     } // constructor
@@ -406,7 +406,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         } else {
-            $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $results[] = $row;
@@ -426,7 +426,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_id_array($artist_id)
     {
         $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results   = Dba::read($sql, array($artist_id));
         $row          = Dba::fetch_assoc($db_results, false);
 
@@ -470,7 +470,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
-        $this->link   = ($this->catalog_id)
+        $this->link   = ($this->catalog_id > 0)
             ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
             : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name) . "</a>";
@@ -520,7 +520,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_fullname()
     {
-        return $this->f_name;
+        // don't do anything if it's formatted
+        if (isset($this->f_name)) {
+            return $this->f_name;
+        }
+
+        // set the full name
+        $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
     }
 
     /**

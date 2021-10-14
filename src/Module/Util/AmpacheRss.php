@@ -286,7 +286,7 @@ class AmpacheRss
                 $song->format();
 
                 $xml_array = array(
-                    'title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                    'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
                     'link' => str_replace('&amp;', '&', $song->link),
                     'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
                     'comments' => $client->username,

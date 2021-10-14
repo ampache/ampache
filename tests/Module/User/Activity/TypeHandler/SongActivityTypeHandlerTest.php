@@ -76,7 +76,7 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
         $song->shouldReceive('format')
             ->withNoArgs()
             ->once();
-        $song->f_title     = $songName;
+        $song->f_name      = $songName;
         $song->f_artist    = $artistName;
         $song->f_album     = $albumName;
         $song->mbid        = $songMusicBrainzId;
@@ -126,7 +126,7 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
         $song->shouldReceive('format')
             ->withNoArgs()
             ->once();
-        $song->f_title             = '';
+        $song->f_name = '';
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

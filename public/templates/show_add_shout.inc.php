@@ -65,7 +65,7 @@ $boxtitle = T_('Post to Shoutbox');
 } ?>
 <div style="display: inline;">
 <?php
-$boxtitle = $object->f_title . ' ' . T_('Shoutbox');
+$boxtitle = $object->f_name . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 if (count($shouts)) {

@@ -209,7 +209,7 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "</tr>" . "\n";
                         $currentsong = "";
                         if ($channel->media) {
-                            $currentsong = $channel->media->f_artist . " - " . $channel->media->f_title;
+                            $currentsong = $channel->media->f_artist . " - " . $channel->media->f_name;
                         }
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Current Song:</td>" . "\n";

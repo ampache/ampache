@@ -179,8 +179,8 @@ class TVShow_Episode extends Video
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_title       = ($this->original_name ?: $this->f_title);
-        $this->f_link        = '<a href="' . $this->link . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_name        = ($this->original_name ?: $this->f_name);
+        $this->f_link        = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;
@@ -191,7 +191,7 @@ class TVShow_Episode extends Video
             $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
                     $this->episode_number);
         }
-        $this->f_file .= ' - ' . $this->f_title;
+        $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;
 
         return true;

@@ -226,11 +226,6 @@ class Album extends database_object implements library_item
     public $f_year_link;
 
     /**
-     * @var string $f_title
-     */
-    public $f_title;
-
-    /**
      * @var string $f_release_type
      */
     public $f_release_type;
@@ -285,7 +280,6 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->f_name         = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         $this->total_duration = (int)$this->time;
         $this->total_count    = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
@@ -299,6 +293,8 @@ class Album extends database_object implements library_item
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
             $this->allow_group_disks = true;
+        }
+        if ($this->allow_group_disks) {
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
                 $this->total_duration = 0;
@@ -313,6 +309,8 @@ class Album extends database_object implements library_item
                 }
             }
         }
+        // finally; set up your formatted name
+        $this->f_name = $this->get_fullname();
 
         return true;
     } // constructor
@@ -597,18 +595,17 @@ class Album extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-        $this->f_title = $this->f_name;
         $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
         $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to display the release year
         if ($show_year) {
-            $this->f_title .= " (" . $this->year . ")";
+            $this->f_name .= " (" . $this->year . ")";
             $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
         }
         // Looking if we need to combine or display disks
         if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
-            $this->f_title .= " [" . T_('Disk') . " " . $this->disk . "]";
+            $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
         $this->f_link .= "</a>";
@@ -674,6 +671,20 @@ class Album extends database_object implements library_item
      */
     public function get_fullname()
     {
+        // don't do anything if it's formatted
+        if (isset($this->f_name)) {
+            return $this->f_name;
+        }
+        $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+        // Looking if we need to display the release year
+        if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+            $this->f_name .= " (" . $this->year . ")";
+        }
+        // Looking if we need to combine or display disks
+        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
+            $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
+        }
+
         return $this->f_name;
     }
 

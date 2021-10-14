@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Podcast_Episode $episode */
 ?>
-<?php Ui::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+<?php Ui::show_box_top($episode->f_name . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 
 <?php if (User::is_registered()) { ?>
@@ -110,7 +110,7 @@ use Ampache\Module\Util\Ui;
     } ?>
     </dd>
 <?php
-    $songprops[T_('Title')]                  = $episode->f_title;
+    $songprops[T_('Title')]                  = $episode->f_name;
     $songprops[T_('Description')]            = $episode->f_description;
     $songprops[T_('Category')]               = $episode->f_category;
     $songprops[T_('Author')]                 = $episode->f_author;

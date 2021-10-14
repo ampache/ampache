@@ -149,9 +149,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public $addition_time;
     /**
-     * @var string $f_title
+     * @var string $f_name
      */
-    public $f_title;
+    public $f_name;
     /**
      * @var string $f_full_title
      */
@@ -302,10 +302,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function format($details = true)
     {
-        $this->f_title      = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->f_full_title = $this->f_title;
+        $this->f_name       = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $this->f_full_title = $this->f_name;
         $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_title . "\"> " . $this->f_title . "</a>";
+        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\"> " . $this->f_name . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -339,7 +339,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
-        $this->f_file   = $this->f_title . '.' . $this->type;
+        $this->f_file   = $this->f_name . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
@@ -354,7 +354,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $keywords          = array();
         $keywords['title'] = array('important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_title);
+            'value' => $this->f_name);
 
         return $keywords;
     }
@@ -365,7 +365,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        return $this->f_name;
     }
 
     /**

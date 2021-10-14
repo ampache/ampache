@@ -256,7 +256,7 @@ final class ChannelRunner implements ChannelRunnerInterface
                                 fwrite($sock, substr($clchunk, 0, $subpos));
                                 $client['length'] += $subpos;
                                 if ($channel->media->id != $client['metadata_lastsong']) {
-                                    $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_title . "';";
+                                    $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_name . "';";
                                     $metadata .= chr(0x00);
                                     $metadatalen = ceil(strlen($metadata) / 16);
                                     $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);

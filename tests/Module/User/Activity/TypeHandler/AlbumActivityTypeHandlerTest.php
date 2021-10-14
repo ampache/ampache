@@ -74,7 +74,7 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $album->f_album_artist_name = $albumArtistName;
-        $album->f_title             = $albumName;
+        $album->f_name              = $albumName;
         $album->mbid_group          = $musicBrainzIdGroup;
         $album->mbid                = $musicBrainzId;
 
@@ -121,7 +121,7 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $album->f_album_artist_name = $albumArtistName;
-        $album->f_title             = '';
+        $album->f_name              = '';
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

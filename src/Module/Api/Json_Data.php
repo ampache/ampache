@@ -779,7 +779,7 @@ class Json_Data
             $rating              = new Rating($podcast_id, 'podcast');
             $flag                = new Userflag($podcast_id, 'podcast');
             $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
-            $podcast_name        = $podcast->f_title;
+            $podcast_name        = $podcast->f_name;
             $podcast_description = $podcast->description;
             $podcast_language    = $podcast->f_language;
             $podcast_copyright   = $podcast->f_copyright;
@@ -845,8 +845,8 @@ class Json_Data
             $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
-                "title" => $episode->f_title,
-                "name" => $episode->f_title,
+                "title" => $episode->f_name,
+                "name" => $episode->f_name,
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
                 "author" => $episode->f_author,
@@ -917,8 +917,8 @@ class Json_Data
 
             $ourArray = array(
                 "id" => (string)$song->id,
-                "title" => $song->f_title,
-                "name" => $song->f_title,
+                "title" => $song->f_name,
+                "name" => $song->f_name,
                 "artist" => array(
                     "id" => (string) $song->artist,
                     "name" => $song->get_artist_name()),
@@ -1063,7 +1063,7 @@ class Json_Data
 
             array_push($JSON, array(
                 "id" => (string)$song->id,
-                "title" => $song->f_title,
+                "title" => $song->f_name,
                 "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
                 "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
                 "genre" => self::genre_array($song->tags),

@@ -78,37 +78,37 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
                     <option value="1" <?php if ($limit == 1) {
-            echo "selected=\"selected\"";
-        }?>>1</option>
+    echo "selected=\"selected\"";
+}?>>1</option>
                         <option value="5" <?php if ($limit == 5) {
-            echo "selected=\"selected\"";
-        }?>>5</option>
+    echo "selected=\"selected\"";
+}?>>5</option>
                         <option value="10" <?php if ($limit == 10) {
-            echo "selected=\"selected\"";
-        }?>>10</option>
+    echo "selected=\"selected\"";
+}?>>10</option>
                         <option value="25" <?php if ($limit == 25) {
-            echo "selected=\"selected\"";
-        }?>>25</option>
+    echo "selected=\"selected\"";
+}?>>25</option>
                         <option value="50" <?php if ($limit == 50) {
-            echo "selected=\"selected\"";
-        }?>>50</option>
+    echo "selected=\"selected\"";
+}?>>50</option>
                         <option value="100" <?php if ($limit == 100) {
-            echo "selected=\"selected\"";
-        }?>>100</option>
+    echo "selected=\"selected\"";
+}?>>100</option>
                         <option value="250" <?php if ($limit == 250) {
-            echo "selected=\"selected\"";
-        }?>>250</option>
+    echo "selected=\"selected\"";
+}?>>250</option>
                         <option value="500" <?php if ($limit == 500) {
-            echo "selected=\"selected\"";
-        }?>>500</option>
+    echo "selected=\"selected\"";
+}?>>500</option>
                 </select>
         </td>
     </tr>
     <tr id="random_results">
         <td><?php echo T_('Random'); ?></td>
         <td><input type="checkbox" name="random" value="1" <?php if ($random == 1) {
-            echo "checked";
-        } ?> /></td>
+    echo "checked";
+} ?> /></td>
     </tr>
 </table>
 

@@ -54,7 +54,7 @@ final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
         $album->format();
 
         $artistName = $album->f_album_artist_name;
-        $albumName  = $album->f_title;
+        $albumName  = $album->f_name;
 
         if ($artistName && $albumName) {
             $this->userActivityRepository->registerAlbumEntry(

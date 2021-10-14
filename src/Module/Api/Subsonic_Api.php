@@ -38,7 +38,6 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -46,7 +45,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -527,13 +525,17 @@ class Subsonic_Api
     {
         $object_id = self::check_parameter($input, 'id');
         $response  = Subsonic_Xml_Data::createSuccessResponse('getmusicdirectory');
-        if (Subsonic_Xml_Data::isArtist($object_id)) {
+        if ((int)$object_id === 0) {
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Directory not found", 'getmusicdirectory');
+        } elseif (Subsonic_Xml_Data::isArtist($object_id)) {
             Subsonic_Xml_Data::addArtistDirectory($response, $object_id);
         } elseif (Subsonic_Xml_Data::isAlbum($object_id)) {
             Subsonic_Xml_Data::addAlbumDirectory($response, $object_id);
-        } else {
-            // is it a catalog?
+        } elseif (Catalog::create_from_id($object_id)) {
             Subsonic_Xml_Data::addCatalogDirectory($response, $object_id);
+        } else {
+            debug_event(self::class, 'getmusicdirectory: Directory not found ' . $object_id, 4);
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Directory not found", 'getmusicdirectory');
         }
         self::apiOutput($input, $response);
     }
@@ -581,8 +583,7 @@ class Subsonic_Api
 
         $artist = new Artist(Subsonic_Xml_Data::getAmpacheId($artistid));
         if ($artist->isNew()) {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Artist not found.",
-                'getartist');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Artist not found.", 'getartist');
         } else {
             $response = Subsonic_Xml_Data::createSuccessResponse('getartist');
             Subsonic_Xml_Data::addArtist($response, $artist, true, true);
@@ -779,7 +780,7 @@ class Subsonic_Api
         }
         if ($musicFolderId > 0) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
-                $artist   = static::getModelFactory()->createArtist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
+                $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
                 $finput   = $artist->f_name;
                 $operator = 4;
                 $ftype    = "artist";
@@ -912,12 +913,12 @@ class Subsonic_Api
             }
         }
 
-        $artistCount  = isset($input['artistCount']) ? $input['artistCount'] : 20;
-        $artistOffset = $input['artistOffset'];
-        $albumCount   = isset($input['albumCount']) ? $input['albumCount'] : 20;
-        $albumOffset  = $input['albumOffset'];
-        $songCount    = isset($input['songCount']) ? $input['songCount'] : 20;
-        $songOffset   = $input['songOffset'];
+        $artistCount  = $input['artistCount'] ?? 20;
+        $artistOffset = $input['artistOffset'] ?? 0;
+        $albumCount   = $input['albumCount'] ?? 20;
+        $albumOffset  = $input['albumOffset'] ?? 0;
+        $songCount    = $input['songCount'] ?? 20;
+        $songOffset   = $input['songOffset'] ?? 0;
 
         $sartist          = array();
         $sartist['limit'] = $artistCount;
@@ -1038,8 +1039,7 @@ class Subsonic_Api
             }
             $response = Subsonic_Xml_Data::createSuccessResponse('createplaylist');
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '',
-                'createplaylist');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'createplaylist');
         }
         self::apiOutput($input, $response);
     }
@@ -1112,13 +1112,11 @@ class Subsonic_Api
             } elseif (is_string($input['songIndexToRemove'])) {
                 $songIndexToRemove = explode(',', $input['songIndexToRemove']);
             }
-            self::_updatePlaylist(Subsonic_Xml_Data::getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove,
-                $public);
+            self::_updatePlaylist(Subsonic_Xml_Data::getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
             $response = Subsonic_Xml_Data::createSuccessResponse('updateplaylist');
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED,
-                'Cannot edit a smart playlist.', 'updateplaylist');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'Cannot edit a smart playlist.', 'updateplaylist');
         }
         self::apiOutput($input, $response);
     }
@@ -1182,10 +1180,8 @@ class Subsonic_Api
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
-            $object = static::getPodcastEpisodeRepository()->findById(
-                (int) Subsonic_Xml_Data::getAmpacheId($fileid)
-            );
-            $url = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Podcast_episode((int) Subsonic_Xml_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
@@ -1214,10 +1210,8 @@ class Subsonic_Api
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
-            $object = static::getPodcastEpisodeRepository()->findById(
-                (int) Subsonic_Xml_Data::getAmpacheId($fileid)
-            );
-            $url = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Podcast_episode((int) Subsonic_Xml_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -1249,9 +1243,7 @@ class Subsonic_Api
         } else {
             self::apiOutput(
                 $input,
-                Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND,
-                    'Invalid id',
-                    'hls'));
+                Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'Invalid id', 'hls'));
         }
         $media['object_id']   = Subsonic_Xml_Data::getAmpacheId($fileid);
 
@@ -1307,15 +1299,12 @@ class Subsonic_Api
             $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "album");
         }
         if (($type == 'song')) {
-            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
-            if ($art != null && $art->id == null) {
+            $song_id = Subsonic_Xml_Data::getAmpacheId($sub_id);
+            $art     = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
+            if (!AmpConfig::get('show_song_art', false) || !Art::has_db($song_id, 'song')) {
                 // in most cases the song doesn't have a picture, but the album does
-                $song          = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
-                $show_song_art = AmpConfig::get('show_song_art', false);
-                $has_art       = Art::has_db($song->id, 'song');
-                $art_object    = ($show_song_art && $has_art) ? $song->id : $song->album;
-                $art_type      = ($show_song_art && $has_art) ? 'song' : 'album';
-                $art           = new Art($art_object, $art_type);
+                $song = new Song($song_id);
+                $art  = new Art($song->album, 'album');
             }
         }
         if (($type == 'podcast')) {
@@ -1505,8 +1494,7 @@ class Subsonic_Api
                         $ids[] = array('id' => $aid, 'type' => 'artist');
                     }
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM,
-                        'Missing parameter', '_setStar');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'Missing parameter', '_setStar');
                 }
             }
         }
@@ -1645,7 +1633,7 @@ class Subsonic_Api
         $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
         if (AmpConfig::get('share')) {
-            $expire_days = static::getExpirationDateCalculator()->calculate((int) $input['expires']);
+            $expire_days = Share::get_expiry($input['expires'] ?? null);
             $object_type = null;
             if (is_array($libitem_id) && Subsonic_Xml_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_Xml_Data::getAmpacheId($libitem_id[0]);
@@ -1705,7 +1693,7 @@ class Subsonic_Api
         $user     = User::get_from_username((string)$username);
         $id       = self::check_parameter($input, 'id');
         if (AmpConfig::get('share')) {
-            if (static::getShareRepository()->delete((int) $id, $user)) {
+            if (Share::delete_share((int) $id, $user)) {
                 $response = Subsonic_Xml_Data::createSuccessResponse('deleteshare');
             } else {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deleteshare');
@@ -1734,7 +1722,7 @@ class Subsonic_Api
             $share = new Share(Subsonic_Xml_Data::getAmpacheId($share_id));
             if ($share->id > 0) {
                 $expires = $share->expire_days;
-                if (isset($input['expires'])) {
+                if (array_key_exists('expires', $input)) {
                     // Parse as a string to work on 32-bit computers
                     $expires = $input['expires'];
                     if (strlen((string)$expires) > 3) {
@@ -2196,10 +2184,8 @@ class Subsonic_Api
             return;
         }
 
-        $id           = self::check_parameter($input, 'id');
-        $count        = $input['count'] ?? 50;
-        $modelFactory = static::getModelFactory();
-
+        $id    = self::check_parameter($input, 'id');
+        $count = $input['count'] ?? 50;
         $songs = array();
         if (Subsonic_Xml_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_Xml_Data::getAmpacheId($id));

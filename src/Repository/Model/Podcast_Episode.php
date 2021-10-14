@@ -59,7 +59,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $enabled;
     public $total_count;
     public $catalog;
-    public $f_title;
+    public $f_name;
     public $f_file;
     public $f_size;
     public $f_time;
@@ -143,7 +143,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function format($details = true)
     {
-        $this->f_title       = $this->title;
+        $this->f_name        = $this->title;
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
@@ -161,15 +161,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
         $this->f_size = Ui::format_bytes($this->size);
-        $this->f_file = $this->f_title . '.' . $this->type;
+        $this->f_file = $this->f_name . '.' . $this->type;
 
         $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->f_podcast      = $podcast->f_title;
+            $this->f_podcast      = $podcast->f_name;
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
@@ -194,7 +194,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $keywords['title'] = array(
             'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_title
+            'value' => $this->f_name
         );
 
         return $keywords;
@@ -205,7 +205,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        return $this->f_name;
     }
 
     /**
@@ -412,7 +412,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name()
     {
-        return $this->f_podcast . " - " . $this->f_title;
+        return $this->f_podcast . " - " . $this->f_name;
     }
 
     /**

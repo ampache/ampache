@@ -49,7 +49,7 @@ class Podcast extends database_object implements library_item
     public $total_count;
     public $episodes;
 
-    public $f_title;
+    public $f_name;
     public $f_website;
     public $f_description;
     public $f_language;
@@ -140,7 +140,7 @@ class Podcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_title         = $this->title;
+        $this->f_name          = $this->title;
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);
@@ -149,7 +149,7 @@ class Podcast extends database_object implements library_item
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
-        $this->f_link          = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_link          = '<a href="' . $this->link . '" title="' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
@@ -165,7 +165,7 @@ class Podcast extends database_object implements library_item
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_title
+            'value' => $this->f_name
         );
 
         return $keywords;
@@ -178,7 +178,7 @@ class Podcast extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        return $this->f_name;
     }
 
     /**
