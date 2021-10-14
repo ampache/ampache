@@ -32,7 +32,7 @@ $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_ST
 
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 
-<div class="browse_location">
+<div class="category_options">
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=song">
         <?php echo T_('Songs'); ?>
     </a>

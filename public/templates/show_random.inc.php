@@ -39,35 +39,26 @@ $random_type  = (in_array($get_type, array('song', 'album', 'artist', 'video')))
 if (!$random_type) {
     header("Location: " . AmpConfig::get('web_path') . '/random.php?action=get_advanced&type=song');
 }
+$web_path = AmpConfig::get('web_path');
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
-<table class="tabledata">
-<tr id="search_location">
-    <td><?php if ($random_type !== 'song') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
-} else {
-        echo T_('Songs');
-    } ?></td>
-    <td><?php if ($random_type !== 'album') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php
-    } else {
-        echo T_('Albums');
-    } ?></td>
-    <td><?php if ($random_type !== 'artist') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php
-    } else {
-        echo T_('Artists');
-    } ?></td>
+
+<div class="category_options">
+    <a class="category <?php echo ($random_type == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
+        <?php echo T_('Songs'); ?>
+    </a>
+    <a class="category <?php echo ($random_type == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=album">
+        <?php echo T_('Albums'); ?>
+    </a>
+    <a class="category <?php echo ($random_type == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
+        <?php echo T_('Artists'); ?>
+    </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <td><?php if ($random_type !== 'video') { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
-            <?php } else {
-        echo T_('Videos');
-    } ?></td>
+        <a class="category <?php echo ($random_type == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
-</tr>
-</table>
+</div>
+
 <table class="tabledata">
 <tr id="search_item_count">
         <td><?php echo T_('Item Count'); ?></td>

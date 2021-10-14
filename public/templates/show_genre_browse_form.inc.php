@@ -10,7 +10,7 @@ $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
 $filter_str      = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES); ?>
 
-<div class="browse_location">
+<div class="category_options">
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=song">
         <?php echo T_('Songs'); ?>
     </a>
