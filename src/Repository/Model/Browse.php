@@ -470,7 +470,7 @@ class Browse extends Query
 
     /**
      *
-     * @param string is_valid_type
+     * @param string $type
      * @param string $custom_base
      */
     public function set_type($type, $custom_base = '')

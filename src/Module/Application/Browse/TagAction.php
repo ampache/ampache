@@ -72,6 +72,9 @@ final class TagAction implements ApplicationActionInterface
         // This one's a doozy
         $request_type = $this->requestParser->getFromRequest('type');
         $browse_type  = ($browse->is_valid_type($request_type)) ? $request_type : 'artist';
+        if ($request_type != $browse_type) {
+            $_REQUEST['type'] = $browse_type;
+        }
         $browse->set_simple_browse(false);
         $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
         $object_ids = $browse->get_saved();
