@@ -93,6 +93,16 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
+            case 'top_tracks':
+                $artist = new Artist($_REQUEST['artist']);
+                $artist->format();
+                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, 20);
+                $browse       = new Browse();
+                $hide_columns = array('cel_artist');
+                ob_start();
+                require_once Ui::find_template('show_top_tracks.inc.php');
+                $results['top_tracks'] = ob_get_clean();
+                break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
                     $user->id,
