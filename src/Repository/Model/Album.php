@@ -600,12 +600,10 @@ class Album extends database_object implements library_item
 
         // Looking if we need to display the release year
         if ($show_year) {
-            $this->f_name .= " (" . $this->year . ")";
             $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
         }
         // Looking if we need to combine or display disks
         if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
-            $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
         $this->f_link .= "</a>";

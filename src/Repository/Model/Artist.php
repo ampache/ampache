@@ -473,7 +473,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->link   = ($this->catalog_id > 0)
             ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
             : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name) . "</a>";
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
 
         if ($details) {
             $min   = sprintf("%02d", (floor($this->time / 60) % 60));
@@ -508,7 +508,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
