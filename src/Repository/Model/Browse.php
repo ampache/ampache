@@ -41,6 +41,38 @@ use Ampache\Module\Util\Ui;
  */
 class Browse extends Query
 {
+    private const BROWSE_TYPES = array(
+        'song',
+        'album',
+        'user',
+        'artist',
+        'live_stream',
+        'playlist',
+        'playlist_media',
+        'playlist_localplay',
+        'smartplaylist',
+        'catalog',
+        'shoutbox',
+        'tag',
+        'video',
+        'wanted',
+        'share',
+        'song_preview',
+        'channel',
+        'broadcast',
+        'license',
+        'tvshow',
+        'tvshow_season',
+        'tvshow_episode',
+        'movie',
+        'clip',
+        'personal_video',
+        'label',
+        'pvmsg',
+        'podcast',
+        'podcast_episode'
+    );
+
     /**
      * @var boolean $show_header
      */
@@ -84,6 +116,19 @@ class Browse extends Query
     public function set_simple_browse($value)
     {
         $this->set_is_simple($value);
+    } // set_simple_browse
+
+    /**
+     * is_valid_type
+     * This sets the current browse object to a 'simple' browse method
+     * which means use the base query provided and expand from there
+     *
+     * @param string $type
+     * @return bool
+     */
+    public function is_valid_type($type)
+    {
+        return in_array($type, self::BROWSE_TYPES);
     } // set_simple_browse
 
     /**
@@ -425,34 +470,36 @@ class Browse extends Query
 
     /**
      *
-     * @param string $type
+     * @param string is_valid_type
      * @param string $custom_base
      */
     public function set_type($type, $custom_base = '')
     {
-        $name = 'browse_' . $type . '_pages';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
-        }
-        $name = 'browse_' . $type . '_alpha';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
-        } else {
-            $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
-                AmpConfig::get('libitem_browse_alpha'));
-            if (in_array($type, $default_alpha)) {
-                $this->set_use_alpha(true, false);
+        if (self::is_valid_type($type)) {
+            $name = 'browse_' . $type . '_pages';
+            if ((filter_has_var(INPUT_COOKIE, $name))) {
+                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             }
-        }
-        $name = 'browse_' . $type . '_grid_view';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
-        }
+            $name = 'browse_' . $type . '_alpha';
+            if ((filter_has_var(INPUT_COOKIE, $name))) {
+                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+            } else {
+                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
+                    AmpConfig::get('libitem_browse_alpha'));
+                if (in_array($type, $default_alpha)) {
+                    $this->set_use_alpha(true, false);
+                }
+            }
+            $name = 'browse_' . $type . '_grid_view';
+            if ((filter_has_var(INPUT_COOKIE, $name))) {
+                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+            }
 
-        parent::set_type($type, $custom_base);
+            parent::set_type($type, $custom_base);
+        }
     }
 
     /**
