@@ -29,7 +29,7 @@ use Ampache\Module\Application\Update\UpdateAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
-if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
+if (!array_key_exists('type', $_REQUEST) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
     // We need this stuff
     define('NO_SESSION', 1);
     define('OUTDATED_DATABASE_OK', 1);

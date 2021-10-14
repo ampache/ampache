@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Browse;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,16 +38,20 @@ final class TagAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'tag';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->requestParser = $requestParser;
+        $this->modelFactory  = $modelFactory;
+        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -65,7 +70,7 @@ final class TagAction implements ApplicationActionInterface
         // FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count', 'ASC');
         // This one's a doozy
-        $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
+        $browse_type = array_key_exists('type', $_REQUEST) ? $this->requestParser->getFromRequest('type') : 'artist';
         $browse->set_simple_browse(false);
         $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
         $object_ids = $browse->get_saved();
