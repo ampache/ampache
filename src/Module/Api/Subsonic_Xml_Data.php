@@ -650,13 +650,9 @@ class Subsonic_Xml_Data
         $sub_id  = (string)self::getArtistId($artist['id']);
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', $sub_id);
-        $xartist->addAttribute('parent', $artist['catalog_id']);
         $xartist->addAttribute('name', (string)self::checkName($artist['f_name']));
-
-        if (isset($artist['album_count'])) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-            $xartist->addAttribute('albumCount', (string)$artist['album_count']);
-        }
+        $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+        $xartist->addAttribute('albumCount', (string)$artist['album_count']);
     }
 
     /**
@@ -762,20 +758,19 @@ class Subsonic_Xml_Data
      */
     public static function getSongData($songId)
     {
-        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?';
+        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `song`.`total_skip`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?';
         $db_results = Dba::read($sql, array($songId));
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            debug_event(self::class, 'getAlbumData failed: ' . $songId, 5);
 
-        $results = Dba::fetch_assoc($db_results);
-        if (isset($results['id'])) {
-            if (AmpConfig::get('show_played_times')) {
-                $results['total_count'] = (int) $results['total_count'];
-            }
+            return array();
         }
-        $extension       = pathinfo((string)$results['file'], PATHINFO_EXTENSION);
-        $results['type'] = strtolower((string)$extension);
-        $results['mime'] = Song::type_to_mime($results['type']);
+        $extension   = pathinfo((string)$row['file'], PATHINFO_EXTENSION);
+        $row['type'] = strtolower((string)$extension);
+        $row['mime'] = Song::type_to_mime($row['type']);
 
-        return $results;
+        return $row;
     }
 
     /**
@@ -788,7 +783,6 @@ class Subsonic_Xml_Data
         $sql        = "SELECT * FROM `album` WHERE `id`=?";
         $db_results = Dba::read($sql, array($albumId));
         $row        = Dba::fetch_assoc($db_results);
-
         if (!$row) {
             debug_event(self::class, 'getAlbumData failed: ' . $albumId, 5);
 
@@ -809,8 +803,9 @@ class Subsonic_Xml_Data
         $sql        = "SELECT * FROM `artist` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($artistId));
         $row        = Dba::fetch_assoc($db_results);
-
         if (!$row) {
+            debug_event(self::class, 'getAlbumData failed: ' . $artistId, 5);
+
             return array();
         }
         $row['f_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
@@ -879,7 +874,7 @@ class Subsonic_Xml_Data
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', (string) self::checkName($artistData['f_name']));
-        $art_object = (AmpConfig::get('show_song_art') && Art::has_db($songData['id'], 'song')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
+        $art_object = (AmpConfig::get('show_song_art') && Art::has_db($songData['id'], 'song')) ? self::getSongId($songData['id']) : self::getAlbumId($songData['album']);
         $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
@@ -939,7 +934,7 @@ class Subsonic_Xml_Data
         if (self::$enable_json_checks && !empty($name)) {
             if (is_numeric($name)) {
                 // Add space character to fail numeric test
-                $name = $name .= " ";
+                $name .= " ";
             }
         }
 

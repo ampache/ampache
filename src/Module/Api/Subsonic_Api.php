@@ -90,7 +90,7 @@ class Subsonic_Api
         if (empty($input[$parameter])) {
             ob_end_clean();
             if ($addheader) {
-                self::setHeader($input['f']);
+                self::setHeader($input['f'] ?? 'xml');
             }
             self::apiOutput($input,
                 Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'check_parameter'));
@@ -579,7 +579,7 @@ class Subsonic_Api
     {
         $artistid = self::check_parameter($input, 'id');
 
-        $artist = static::getModelFactory()->createArtist($artistid);
+        $artist = new Artist(Subsonic_Xml_Data::getAmpacheId($artistid));
         if ($artist->isNew()) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Artist not found.",
                 'getartist');
@@ -1291,7 +1291,7 @@ class Subsonic_Api
         $size   = $input['size'] ?? false;
         $type   = Subsonic_Xml_Data::getAmpacheType($sub_id);
         if ($type == "") {
-            self::setHeader($input['f']);
+            self::setHeader($input['f'] ?? 'xml');
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1335,7 +1335,7 @@ class Subsonic_Api
             }
         }
         if (!$art || $art->get() == '') {
-            self::setHeader($input['f']);
+            self::setHeader($input['f'] ?? 'xml');
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -2154,7 +2154,7 @@ class Subsonic_Api
     {
         $id                = self::check_parameter($input, 'id');
         $count             = $input['count'] ?? 20;
-        $includeNotPresent = ($input['includeNotPresent'] === "true");
+        $includeNotPresent = (array_key_exists('includeNotPresent', $input) && $input['includeNotPresent'] === "true");
 
         if (Subsonic_Xml_Data::isArtist($id)) {
             $artist_id = Subsonic_Xml_Data::getAmpacheId($id);
