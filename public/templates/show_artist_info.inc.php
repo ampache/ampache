@@ -42,9 +42,8 @@ use Ampache\Module\Util\Ui;
         if (array_key_exists('yearformed', $biography)) {
             $dcol[] = $biography['yearformed'];
         }
-        if (count($dcol) > 0) {
-            echo implode(',', $dcol);
-        } ?>
+        $glue = (count(array_filter($dcol)) > 1) ? ',' : '';
+        echo implode($glue, $dcol) ?>
     </div>
 </div>
 <div id="item_summary">
