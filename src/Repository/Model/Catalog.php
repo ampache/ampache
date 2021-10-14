@@ -1183,7 +1183,7 @@ abstract class Catalog extends database_object
     public static function get_artist_arrays($catalogs)
     {
         $list = Dba::escape(implode(',', $catalogs));
-        $sql  = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN ($list) GROUP BY `artist`.`id`, `artist`.`prefix`, `artist`.`name` ORDER BY `f_name`";
+        $sql  = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count`, `catalog_map`.`catalog_id` AS `catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) WHERE `catalog_map`.`catalog_id` IN ($list) ORDER BY `f_name`;";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -3131,7 +3131,7 @@ abstract class Catalog extends database_object
     {
         // fill the data
         debug_event(self::class, 'Update mapping for table: ' . $table, 5);
-        $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0;";
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0;";
         Dba::write($sql);
     }
 
@@ -3157,9 +3157,9 @@ abstract class Catalog extends database_object
     {
         debug_event(self::class, "update_map $object_type: {{$object_id}}", 5);
         if ($object_type == 'artist') {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `catalog_map`.`object_type` = ? AND `artist`.`id` = ? AND `song`.`catalog` > 0;";
             Dba::write($sql, array($object_id));
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `catalog_map`.`object_type` = ? `artist`.`id` = ? AND `album`.`catalog` > 0;";
             Dba::write($sql, array($object_id));
         } elseif ($catalog > 0) {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";

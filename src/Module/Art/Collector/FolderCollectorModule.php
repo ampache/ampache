@@ -151,7 +151,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             // Recurse through this dir and create the files array
             while (false !== ($file = readdir($handle))) {
                 $extension = pathinfo($file);
-                $extension = $extension['extension'];
+                $extension = $extension['extension'] ?? '';
 
                 // Make sure it looks like an image file
                 if (!in_array($extension, $image_extensions)) {
