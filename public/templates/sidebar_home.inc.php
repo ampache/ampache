@@ -78,7 +78,7 @@ $access50        = Access::check('interface', 50); ?>
             <?php if ($allowVideo) { ?>
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=video"><?php echo $t_videos ?></a></li>
                 <?php } ?>
-        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=song"><?php echo $t_genres; ?></a></li>
+        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo $t_genres; ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
               <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo $t_uploads ?></a></li>
             <?php
