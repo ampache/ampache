@@ -1171,7 +1171,7 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
-        if (AmpConfig::get('subsonic_stream_scrobble') == 'false') {
+        if (AmpConfig::get('subsonic_stream_scrobble')) {
             $params .= '&cache=1';
         }
 
