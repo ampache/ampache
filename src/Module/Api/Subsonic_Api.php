@@ -1172,7 +1172,7 @@ class Subsonic_Api
             $params .= '&frame=' . $timeOffset;
         }
         if (AmpConfig::get('subsonic_stream_scrobble')) {
-            $params .= '&cache=1';
+            $params .= '&action=download&cache=1';
         }
 
         $url = '';
@@ -1204,7 +1204,7 @@ class Subsonic_Api
     {
         $fileid  = self::check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
+        $params  = '&client=' . rawurlencode($input['c']) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));

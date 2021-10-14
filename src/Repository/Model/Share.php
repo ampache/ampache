@@ -264,7 +264,7 @@ class Share extends database_object
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download',
+                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download&cache=1\">" . Ui::get_icon('download',
                             T_('Download')) . "</a>";
                 }
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit',

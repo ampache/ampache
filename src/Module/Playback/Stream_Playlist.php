@@ -191,11 +191,14 @@ class Stream_Playlist
         if (array_key_exists('client', $media)) {
             $additional_params .= "&client=" . $media['client'];
         }
-        if (array_key_exists('player', $media)) {
-            $additional_params .= "&player=" . $media['player'];
+        if (array_key_exists('action', $media)) {
+            $additional_params .= "&action=" . $media['action'];
         }
         if (array_key_exists('cache', $media)) {
             $additional_params .= "&cache=" . $media['cache'];
+        }
+        if (array_key_exists('player', $media)) {
+            $additional_params .= "&player=" . $media['player'];
         }
         if (array_key_exists('format', $media)) {
             $additional_params .= "&format=" . $media['format'];
@@ -739,7 +742,7 @@ class Stream_Playlist
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_Url::add_options($url->url, '&action=download');
+        $url = Stream_Url::add_options($url->url, '&action=download&cache=1');
         header('Location: ' . $url);
 
         return false;

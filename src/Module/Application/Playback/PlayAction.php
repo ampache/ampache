@@ -156,6 +156,7 @@ final class PlayAction implements ApplicationActionInterface
         // allow disabling stat recording from the play url
         if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode'))) {
             debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
+            $action       = 'download';
             $record_stats = false;
         }
 
