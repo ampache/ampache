@@ -1208,11 +1208,11 @@ class Search extends playlist_object
             if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
             }
-            if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
+            if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $this->name_to_basetype($value)) {
                 $ruleID     = (string)$ruleID[1];
                 $input_rule = (string)$data['rule_' . $ruleID . '_input'];
                 $operator   = $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'];
-                //keep vertical bar in regular expression
+                // keep vertical bar in regular expression
                 if (in_array($operator, ['regexp', 'notregexp'])) {
                     $input_rule = str_replace("|", "\0", $input_rule);
                 }

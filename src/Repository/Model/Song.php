@@ -697,23 +697,30 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album_mbid = ''
     ) {
         // by default require song, album, artist for any searches
-        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`title` = '" . Dba::escape($song_name) . "' AND (`artist`.`name` = '" . Dba::escape($artist_name) . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . Dba::escape($artist_name) . "') AND (`album`.`name` = '" . Dba::escape($album_name) . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . Dba::escape($album_name) . "')";
+        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = ?)";
+        $params = array($song_name, $artist_name, $artist_name, $album_name, $album_name);
         if ($song_mbid) {
-            $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
+            $sql .= " AND `song`.`mbid` = ?";
+            $params[] = $song_mbid;
         }
         if ($artist_mbid) {
-            $sql .= " AND `artist`.`mbid` = '" . $song_mbid . "'";
+            $sql .= " AND `artist`.`mbid` = ?";
+            $params[] = $artist_mbid;
         }
         if ($album_mbid) {
-            $sql .= " AND `album`.`mbid` = '" . $song_mbid . "'";
+            $sql .= " AND `album`.`mbid` = ?";
+            $params[] = $album_mbid;
         }
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-        if (isset($results['id'])) {
-            return $results['id'];
+        $sql .= " LIMIT 1;"; 
+        $db_results = Dba::read($sql, $params);
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            debug_event(self::class, 'can_scrobble failed to find: ' . $song_name, 5);
+
+            return '';
         }
 
-        return '';
+        return $row['id'];
     }
 
     /**
