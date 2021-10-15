@@ -299,9 +299,8 @@ class Share extends database_object
     public function getUserName(): string
     {
         $user = new User($this->user);
-        $user->format();
 
-        return $user->f_name;
+        return $user->username;
     }
 
     public function getLastVisitDateFormatted(): string

@@ -65,7 +65,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
-<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
     <?php if ($show_playlist_add) {

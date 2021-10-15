@@ -153,7 +153,7 @@ class Clip extends Video
             if ($this->artist) {
                 $artist = new Artist($this->artist);
                 $artist->format();
-                $this->f_artist     = $artist->f_link;
+                $this->f_artist     = $artist->get_f_link();
                 $this->f_full_title = '[' . scrub_out($artist->get_fullname()) . '] ' . $this->f_full_title;
             }
 

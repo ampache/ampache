@@ -71,7 +71,7 @@ $display_year = ($original_year && $libitem->original_year)
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('album', $libitem->id, $name, $thumb, $web_path . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
-<td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_album; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
