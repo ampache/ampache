@@ -697,21 +697,21 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album_mbid = ''
     ) {
         // by default require song, album, artist for any searches
-        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = ?)";
+        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
         $params = array($song_name, $artist_name, $artist_name, $album_name, $album_name);
-        if ($song_mbid) {
+        if (!empty($song_mbid)) {
             $sql .= " AND `song`.`mbid` = ?";
             $params[] = $song_mbid;
         }
-        if ($artist_mbid) {
+        if (!empty($artist_mbid)) {
             $sql .= " AND `artist`.`mbid` = ?";
             $params[] = $artist_mbid;
         }
-        if ($album_mbid) {
+        if (!empty($album_mbid)) {
             $sql .= " AND `album`.`mbid` = ?";
             $params[] = $album_mbid;
         }
-        $sql .= " LIMIT 1;"; 
+        $sql .= " LIMIT 1;";
         $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_assoc($db_results);
         if (!$row) {
