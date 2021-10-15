@@ -131,6 +131,7 @@ final class PlayAction implements ApplicationActionInterface
         $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
         $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
+        $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
         $original     = $format == 'raw';
         $transcode_to = (!$original && $format != '') ? $format : null;
         $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -154,13 +155,12 @@ final class PlayAction implements ApplicationActionInterface
             $action = 'stream';
         }
         // allow disabling stat recording from the play url
-        if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (($action === 'download' || $cache === '1') || !in_array($type, array('song', 'video', 'podcast_episode'))) {
             debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
             $action       = 'download';
             $record_stats = false;
         }
 
-        $bitrate       = 0;
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $resolution    = '';
@@ -169,7 +169,6 @@ final class PlayAction implements ApplicationActionInterface
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
             $transcode_to = $transcode_to ?? (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
-            $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Trick to avoid LimitInternalRecursion reconfiguration
             $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -640,7 +639,7 @@ final class PlayAction implements ApplicationActionInterface
                 } else {
                     $media_bitrate = floor($media->bitrate / 1000);
                     // debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
-                    if (($bitrate > 0 && ($bitrate) < $media_bitrate) || ($maxbitrate > 0 && ($maxbitrate) < $media_bitrate)) {
+                    if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
                     } elseif (!in_array('native', $valid_types) && $action != 'download') {
@@ -663,9 +662,9 @@ final class PlayAction implements ApplicationActionInterface
         $troptions = array();
         if ($transcode) {
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
             }
-            if ($maxbitrate) {
+            if ($maxbitrate > 0) {
                 $troptions['maxbitrate'] = $maxbitrate;
             }
             if ($subtitle) {
@@ -704,6 +703,7 @@ final class PlayAction implements ApplicationActionInterface
                 $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
             }
         }
+        //debug_event('play/index', 'troptions ' . print_r($troptions, true), 5);
 
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
