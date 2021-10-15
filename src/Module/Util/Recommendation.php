@@ -66,6 +66,23 @@ class Recommendation
     }
 
     /**
+     * @param string $object_type
+     * @param integer $object_id
+     * @return bool
+     */
+    public static function has_recommendation_cache($object_type, $object_id)
+    {
+        $sql        = "SELECT `id` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param string $type
      * @param integer $object_id
      * @param boolean $get_items
@@ -190,7 +207,7 @@ class Recommendation
                                 'rel' => $artist_name
                             );
                         } else {
-                            debug_event(self::class, "$name did not match any local song", 5);
+                            //debug_event(self::class, "$name did not match any local song", 5);
                             $similars[] = array(
                                 'id' => null,
                                 'name' => $name,
@@ -242,9 +259,9 @@ class Recommendation
             return array();
         }
 
-        $artist = new Artist($artist_id);
-        $cache  = self::get_recommendation_cache('artist', $artist_id, true);
+        $cache = self::get_recommendation_cache('artist', $artist_id, true);
         if (!array_key_exists('id', $cache)) {
+            $artist   = new Artist($artist_id);
             $similars = array();
             $fullname = $artist->get_fullname();
             $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
@@ -287,7 +304,7 @@ class Recommendation
 
                         // Then we give up
                         if ($local_id === null) {
-                            debug_event(self::class, "$name did not match any local artist", 5);
+                            //debug_event(self::class, "$name did not match any local artist", 5);
                             $similars[] = array(
                                 'id' => null,
                                 'name' => $name,

@@ -1210,8 +1210,8 @@ abstract class Catalog extends database_object
             $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
-            // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`last_update` < (UNIX_TIMESTAMP() - 15768000)";
+            // used for recommendations / similar artists
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `recommendation` WHERE `object_type` = 'artist');";
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
@@ -1719,6 +1719,11 @@ abstract class Catalog extends database_object
             Recommendation::get_artist_info($object_id);
             Recommendation::get_artists_like($object_id);
             Artist::set_last_update($object_id);
+            // get similar songs too
+            $artistSongs = static::getSongRepository()->getAllByArtist($object_id);
+            foreach ($artistSongs as $song_id) {
+                Recommendation::get_songs_like($song_id);
+            }
 
             // Stupid little cutesie thing
             $search_count++;
