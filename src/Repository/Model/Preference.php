@@ -574,107 +574,107 @@ class Preference extends database_object
     public static function set_defaults()
     {
         $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES " .
-               "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
-               "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
-               "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
-               "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
-               "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
-               "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-               "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
-               "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
-               "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
-               "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-               "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
-               "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
-               "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
-               "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
-               "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
-               "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
-               "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
-               "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
-               "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
-               "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
-               "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
-               "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " .
-               "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
-               "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
-               "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-               "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
-               "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-               "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'), " .
-               "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
-               "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
-               "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " .
-               "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " .
-               "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
-               "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
-               "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-               "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'), " .
-               "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
-               "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
-               "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
-               "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
-               "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
-               "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
-               "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-               "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
-               "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
-               "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-               "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
-               "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
-               "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
-               "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-               "(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'), " .
-               "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " .
-               "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " .
-               "(115, 'upload_user_artist', '0', 'Consider the user sender as the track''s artist', 75, 'boolean', 'system', 'upload'), " .
-               "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-               "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " .
-               "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
-               "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
-               "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
-               "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
-               "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
-               "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
-               "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
-               "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
-               "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
-               "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " .
-               "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " .
-               "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " .
-               "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " .
-               "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " .
-               "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
-               "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
-               "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'), " .
-               "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
-               "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
-               "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
-               "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " .
-               "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " .
-               "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
-               "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
-               "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
-               "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
-               "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
-               "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-               "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates', 100, 'boolean', 'system', 'catalog'), " .
-               "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
-               "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
-               "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
-               "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
-               "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
-               "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
-               "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-               "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'), " .
-               "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
-               "(158, 'show_license', '0', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
-               "(159, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'), " .
-               "(160, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse');";
+               "(1, 'download', '1', '" . Dba::escape(T_("Allow Downloads")) . "', 100, 'boolean', 'options', 'feature'), " .
+               "(4, 'popular_threshold', '10', '" . Dba::escape(T_("Popular Threshold")) . "', 25, 'integer', 'interface', 'query'), " .
+               "(19, 'transcode_bitrate', '128', '" . Dba::escape(T_("Transcode Bitrate")) . "', 25, 'string', 'streaming', 'transcoding'), " .
+               "(22, 'site_title', '" . Dba::escape(T_("Ampache :: For the Love of Music")) . "', 'Website Title', 100, 'string', 'interface', 'custom'), " .
+               "(23, 'lock_songs', '0', '" . Dba::escape(T_("Lock Songs")) . "', 100, 'boolean', 'system', null), " .
+               "(24, 'force_http_play', '0', '" . Dba::escape(T_("Force HTTP playback regardless of port")) . "', 100, 'boolean', 'system', null), " .
+               "(29, 'play_type', 'web_player', '" . Dba::escape(T_("Playback Type")) . "', 25, 'special', 'streaming', null), " .
+               "(31, 'lang', 'en_US', '" . Dba::escape(T_("Language")) . "', 100, 'special', 'interface', null), " .
+               "(32, 'playlist_type', 'm3u', '" . Dba::escape(T_("Playlist Type")) . "', 100, 'special', 'playlist', null), " .
+               "(33, 'theme_name', 'reborn', '" . Dba::escape(T_("Theme")) . "', 0, 'special', 'interface', 'theme'), " .
+               "(40, 'localplay_level', '0', '" . Dba::escape(T_("Localplay Access")) . "', 100, 'special', 'options', 'localplay'), " .
+               "(41, 'localplay_controller', '0', '" . Dba::escape(T_("Localplay Type")) . "', 100, 'special', 'options', 'localplay'), " .
+               "(44, 'allow_stream_playback', '1', '" . Dba::escape(T_("Allow Streaming")) . "', 100, 'boolean', 'options', 'feature'), " .
+               "(45, 'allow_democratic_playback', '0', '" . Dba::escape(T_("Allow Democratic Play")) . "', 100, 'boolean', 'options', 'feature'), " .
+               "(46, 'allow_localplay_playback', '0', '" . Dba::escape(T_("Allow Localplay Play")) . "', 100, 'boolean', 'options', 'localplay'), " .
+               "(47, 'stats_threshold', '7', '" . Dba::escape(T_("Statistics Day Threshold")) . "', 25, 'integer', 'interface', 'query'), " .
+               "(51, 'offset_limit', '50', '" . Dba::escape(T_("Offset Limit")) . "', 5, 'integer', 'interface', 'query'), " .
+               "(52, 'rate_limit', '8192', '" . Dba::escape(T_("Rate Limit")) . "', 100, 'integer', 'streaming', 'transcoding'), " .
+               "(53, 'playlist_method', 'default', '" . Dba::escape(T_("Playlist Method")) . "', 5, 'string', 'playlist', null), " .
+               "(55, 'transcode', 'default', '" . Dba::escape(T_("Allow Transcoding")) . "', 25, 'string', 'streaming', 'transcoding'), " .
+               "(69, 'show_lyrics', '0', '" . Dba::escape(T_("Show lyrics")) . "', 0, 'boolean', 'interface', 'player'), " .
+               "(70, 'mpd_active', '0', '" . Dba::escape(T_("MPD Active Instance")) . "', 25, 'integer', 'internal', 'mpd'), " .
+               "(71, 'httpq_active', '0', '" . Dba::escape(T_("httpQ Active Instance")) . "', 25, 'integer', 'internal', 'httpq'), " .
+               "(77, 'lastfm_grant_link', '', '" . Dba::escape(T_("Last.FM Grant URL")) . "', 25, 'string', 'internal', 'lastfm'), " .
+               "(78, 'lastfm_challenge', '', '" . Dba::escape(T_("Last.FM Submit Challenge")) . "', 25, 'string', 'internal', 'lastfm'), " .
+               "(82, 'now_playing_per_user', '1', '" . Dba::escape(T_("Now Playing filtered per user")) . "', 50, 'boolean', 'interface', 'home'), " .
+               "(83, 'album_sort', '0', '" . Dba::escape(T_("Album - Default sort")) . "', 25, 'string', 'interface', 'library'), " .
+               "(84, 'show_played_times', '0', '" . Dba::escape(T_("Show # played")) . "', 25, 'string', 'interface', 'browse'), " .
+               "(85, 'song_page_title', '1', '" . Dba::escape(T_("Show current song in Web player page title")) . "', 25, 'boolean', 'interface', 'player'), " .
+               "(86, 'subsonic_backend', '1', '" . Dba::escape(T_("Use Subsonic backend")) . "', 100, 'boolean', 'system', 'backend'), " .
+               "(88, 'webplayer_flash', '1', '" . Dba::escape(T_("Authorize Flash Web Player")) . "', 25, 'boolean', 'streaming', 'player'), " .
+               "(89, 'webplayer_html5', '1', '" . Dba::escape(T_("Authorize HTML5 Web Player")) . "', 25, 'boolean', 'streaming', 'player'), " .
+               "(90, 'allow_personal_info_now', '1', '" . Dba::escape(T_("Share Now Playing information")) . "', 25, 'boolean', 'interface', 'privacy'), " .
+               "(91, 'allow_personal_info_recent', '1', '" . Dba::escape(T_("Share Recently Played information")) . "', 25, 'boolean', 'interface', 'privacy'), " .
+               "(92, 'allow_personal_info_time', '1', '" . Dba::escape(T_("Share Recently Played information - Allow access to streaming date/time")) . "', 25, 'boolean', 'interface', 'privacy'), " .
+               "(93, 'allow_personal_info_agent', '1', '" . Dba::escape(T_("Share Recently Played information - Allow access to streaming agent")) . "', 25, 'boolean', 'interface', 'privacy'), " .
+               "(94, 'ui_fixed', '0', '" . Dba::escape(T_("Fix header position on compatible themes")) . "', 25, 'boolean', 'interface', 'theme'), " .
+               "(95, 'autoupdate', '1', '" . Dba::escape(T_("Check for Ampache updates automatically")) . "', 25, 'boolean', 'system', 'update'), " .
+               "(96, 'autoupdate_lastcheck', '', '" . Dba::escape(T_("AutoUpdate last check time")) . "', 25, 'string', 'internal', 'update'), " .
+               "(97, 'autoupdate_lastversion', '', '" . Dba::escape(T_("AutoUpdate last version from last check")) . "', 25, 'string', 'internal', 'update'), " .
+               "(98, 'autoupdate_lastversion_new', '', '" . Dba::escape(T_("AutoUpdate last version from last check is newer")) . "', 25, 'boolean', 'internal', 'update'), " .
+               "(99, 'webplayer_confirmclose', '0', '" . Dba::escape(T_("Confirmation when closing current playing window")) . "', 25, 'boolean', 'interface', 'player'), " .
+               "(100, 'webplayer_pausetabs', '1', '" . Dba::escape(T_("Auto-pause between tabs")) . "', 25, 'boolean', 'interface', 'player'), " .
+               "(101, 'stream_beautiful_url', '0', '" . Dba::escape(T_("Enable URL Rewriting")) . "', 100, 'boolean', 'streaming', null), " .
+               "(102, 'share', '0', '" . Dba::escape(T_("Allow Share")) . "', 100, 'boolean', 'options', 'feature'), " .
+               "(103, 'share_expire', '7', '" . Dba::escape(T_("Share links default expiration days (0=never)")) . "', 100, 'integer', 'system', 'share'), " .
+               "(104, 'slideshow_time', '0', '" . Dba::escape(T_("Artist slideshow inactivity time")) . "', 25, 'integer', 'interface', 'player'), " .
+               "(105, 'broadcast_by_default', '0', '" . Dba::escape(T_("Broadcast web player by default")) . "', 25, 'boolean', 'streaming', 'player'), " .
+               "(108, 'album_group', '1', '" . Dba::escape(T_("Album - Group multiple disks")) . "', 25, 'boolean', 'interface', 'library'), " .
+               "(109, 'topmenu', '0', '" . Dba::escape(T_("Top menu")) . "', 25, 'boolean', 'interface', 'theme'), " .
+               "(110, 'demo_clear_sessions', '0', '" . Dba::escape(T_("Democratic - Clear votes for expired user sessions")) . "', 25, 'boolean', 'playlist', null), " .
+               "(111, 'show_donate', '1', '" . Dba::escape(T_("Show donate button in footer")) . "', 25, 'boolean', 'interface', null), " .
+               "(112, 'upload_catalog', '-1', '" . Dba::escape(T_("Destination catalog")) . "', 75, 'integer', 'system', 'upload'), " .
+               "(113, 'allow_upload', '0', '" . Dba::escape(T_("Allow user uploads")) . "', 75, 'boolean', 'system', 'upload'), " .
+               "(114, 'upload_subdir', '1', '" . Dba::escape(T_("Create a subdirectory per user")) . "', 75, 'boolean', 'system', 'upload'), " .
+               "(115, 'upload_user_artist', '0', '" . Dba::escape(T_("Consider the user sender as the track's artist")) . "', 75, 'boolean', 'system', 'upload'), " .
+               "(116, 'upload_script', '', '" . Dba::escape(T_("Post-upload script (current directory = upload target directory)")) . "', 100, 'string', 'system', 'upload'), " .
+               "(117, 'upload_allow_edit', '1', '" . Dba::escape(T_("Allow users to edit uploaded songs")) . "', 75, 'boolean', 'system', 'upload'), " .
+               "(118, 'daap_backend', '0', '" . Dba::escape(T_("Use DAAP backend")) . "', 100, 'boolean', 'system', 'backend'), " .
+               "(119, 'daap_pass', '', '" . Dba::escape(T_("DAAP backend password")) . "', 100, 'string', 'system', 'backend'), " .
+               "(120, 'upnp_backend', '0', '" . Dba::escape(T_("Use UPnP backend")) . "', 100, 'boolean', 'system', 'backend'), " .
+               "(121, 'allow_video', '0', '" . Dba::escape(T_("Allow Video Features")) . "', 75, 'integer', 'options', 'feature'), " .
+               "(122, 'album_release_type', '1', '" . Dba::escape(T_("Album - Group per release type")) . "', 25, 'boolean', 'interface', 'library'), " .
+               "(123, 'ajax_load', '1', '" . Dba::escape(T_("Ajax page load")) . "', 25, 'boolean', 'interface', null), " .
+               "(124, 'direct_play_limit', '0', '" . Dba::escape(T_("Limit direct play to maximum media count")) . "', 25, 'integer', 'interface', 'player'), " .
+               "(125, 'home_moment_albums', '1', '" . Dba::escape(T_("Show Albums of the Moment")) . "', 25, 'integer', 'interface', 'home'), " .
+               "(126, 'home_moment_videos', '0', '" . Dba::escape(T_("Show Videos of the Moment")) . "', 25, 'integer', 'interface', 'home'), " .
+               "(127, 'home_recently_played', '1', '" . Dba::escape(T_("Show Recently Played")) . "', 25, 'integer', 'interface', 'home'), " .
+               "(128, 'home_now_playing', '1', '" . Dba::escape(T_("Show Now Playing")) . "', 25, 'integer', 'interface', 'home'), " .
+               "(129, 'custom_logo', '', '" . Dba::escape(T_("Custom URL - Logo")) . "', 25, 'string', 'interface', 'custom'), " .
+               "(130, 'album_release_type_sort', 'album,ep,live,single', '" . Dba::escape(T_("Album - Group per release type sort")) . "', 25, 'string', 'interface', 'library'), " .
+               "(131, 'browser_notify', '1', '" . Dba::escape(T_("Web Player browser notifications")) . "', 25, 'integer', 'interface', 'notification'), " .
+               "(132, 'browser_notify_timeout', '10', '" . Dba::escape(T_("Web Player browser notifications timeout (seconds)")) . "', 25, 'integer', 'interface', 'notification'), " .
+               "(133, 'geolocation', '0', '" . Dba::escape(T_("Allow Geolocation")) . "', 25, 'integer', 'options', 'feature'), " .
+               "(134, 'webplayer_aurora', '1', '" . Dba::escape(T_("Authorize JavaScript decoder (Aurora.js) in Web Player")) . "', 25, 'boolean', 'streaming', 'player'), " .
+               "(135, 'upload_allow_remove', '1', '" . Dba::escape(T_("Allow users to remove uploaded songs")) . "', 75, 'boolean', 'system', 'upload'), " .
+               "(136, 'custom_login_logo', '', '" . Dba::escape(T_("Custom URL - Login page logo")) . "', 75, 'string', 'interface', 'custom'), " .
+               "(137, 'custom_favicon', '', '" . Dba::escape(T_("Custom URL - Favicon")) . "', 75, 'string', 'interface', 'custom'), " .
+               "(138, 'custom_text_footer', '', '" . Dba::escape(T_("Custom text footer")) . "', 75, 'string', 'interface', 'custom'), " .
+               "(139, 'webdav_backend', '0', '" . Dba::escape(T_("Use WebDAV backend")) . "', 100, 'boolean', 'system', 'backend'), " .
+               "(140, 'notify_email', '0', '" . Dba::escape(T_("Allow E-mail notifications")) . "', 25, 'boolean', 'options', null), " .
+               "(141, 'theme_color', 'dark', '" . Dba::escape(T_("Theme color")) . "', 0, 'special', 'interface', 'theme'), " .
+               "(142, 'disabled_custom_metadata_fields', '', '" . Dba::escape(T_("Custom metadata - Disable these fields")) . "', 100, 'string', 'system', 'metadata'), " .
+               "(143, 'disabled_custom_metadata_fields_input', '', '" . Dba::escape(T_("Custom metadata - Define field list")) . "', 100, 'string', 'system', 'metadata'), " .
+               "(144, 'podcast_keep', '0', '" . Dba::escape(T_("# latest episodes to keep")) . "', 100, 'integer', 'system', 'podcast'), " .
+               "(145, 'podcast_new_download', '0', '" . Dba::escape(T_("# episodes to download when new episodes are available")) . "', 100, 'integer', 'system', 'podcast'), " .
+               "(146, 'libitem_contextmenu', '1', '" . Dba::escape(T_("Library item context menu")) . "', 0, 'boolean', 'interface', 'library'), " .
+               "(147, 'upload_catalog_pattern', '0', '" . Dba::escape(T_("Rename uploaded file according to catalog pattern")) . "', 100, 'boolean', 'system', 'upload'), " .
+               "(148, 'catalog_check_duplicate', '0', '" . Dba::escape(T_("Check library item at import time and don't import duplicates")) . "', 100, 'boolean', 'system', 'catalog'), " .
+               "(149, 'browse_filter', '0', '" . Dba::escape(T_("Show filter box on browse")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(150, 'sidebar_light', '0', '" . Dba::escape(T_("Light sidebar by default")) . "', 25, 'boolean', 'interface', 'theme'), " .
+               "(151, 'custom_blankalbum', '', '" . Dba::escape(T_("Custom blank album default image")) . "', 75, 'string', 'interface', 'custom'), " .
+               "(152, 'custom_blankmovie', '', '" . Dba::escape(T_("Custom blank video default image")) . "', 75, 'string', 'interface', 'custom'), " .
+               "(153, 'libitem_browse_alpha', '', '" . Dba::escape(T_("Alphabet browsing by default for following library items (album,artist,...)")) . "', 75, 'string', 'interface', 'browse'), " .
+               "(154, 'show_skipped_times', '0', '" . Dba::escape(T_("Show # skipped")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(155, 'custom_datetime', '', '" . Dba::escape(T_("Custom datetime")) . "', 25, 'string', 'interface', 'custom'), " .
+               "(156, 'cron_cache', '0', '" . Dba::escape(T_("Cache computed SQL data (eg. media hits stats) using a cron")) . "', 25, 'boolean', 'system', 'catalog'), " .
+               "(157, 'unique_playlist', '0', '" . Dba::escape(T_("Only add unique items to playlists")) . "', 25, 'boolean', 'playlist', NULL), " .
+               "(158, 'show_license', '0', '" . Dba::escape(T_("Show License")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(159, 'use_original_year', '0', '" . Dba::escape(T_("Browse by Original Year for albums (falls back to Year)")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(160, 'hide_single_artist', '0', '" . Dba::escape(T_("Hide the Song Artist column for Albums with one Artist")) . "', 25, 'boolean', 'interface', 'browse');";
         Dba::write($sql);
     } // set_defaults
 
