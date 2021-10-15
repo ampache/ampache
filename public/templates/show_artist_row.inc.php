@@ -33,6 +33,15 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $libitem */
+/** @var bool $show_direct_play */
+/** @var bool $show_playlist_add */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_artist */
+/** @var string $cel_time */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
@@ -51,12 +60,12 @@ $web_path   = AmpConfig::get('web_path'); ?>
 } ?>
     </div>
 </td>
-<?php $name = scrub_out($libitem->f_name); ?>
+<?php $name = scrub_out($libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
-<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
     <?php if ($show_playlist_add) {

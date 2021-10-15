@@ -28,14 +28,14 @@ use Ampache\Repository\Model\Album;
 final class LinuxMetadataWriter implements MetadataWriterInterface
 {
     public function write(
-        Album $album,
+        string $fileName,
         string $dirName,
         string $iconFileName
     ): void {
         $meta_file = $dirName . '/.directory';
         $string    = sprintf(
             "Name=%s\nIcon=%s",
-            $album->f_name,
+            $fileName,
             $iconFileName
         );
 

@@ -101,14 +101,14 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
         Userflag::build_cache('album', $object_ids);
     }
 
-        $show_direct_play_cfg = AmpConfig::get('directplay');
+        $show_direct_play     = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);
             $libitem->format(true, $limit_threshold);
-            $show_direct_play  = $show_direct_play_cfg;
+            $show_direct_play  = $show_direct_play;
             $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->song_count <= $directplay_limit);

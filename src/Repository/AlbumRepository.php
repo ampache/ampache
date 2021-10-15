@@ -182,7 +182,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         Album $album,
         int $catalogId = 0
     ): array {
-        $f_name = Dba::escape($album->f_name);
+        $f_name = Dba::escape($album->get_fullname(true));
         if ($f_name == '') {
             return array();
         }
@@ -337,17 +337,17 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
-        $display_year      = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $original_year     = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $allow_group_disks = AmpConfig::get('album_group');
         $sort_type         = AmpConfig::get('album_sort');
         $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
         //$sql_sort          = (AmpConfig::get('album_release_type')) ? "IFNULL(`album`.`release_type`, 'album'), " : "";
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = "$display_year ASC" . $sort_disk;
+                $sql_sort = "$original_year ASC" . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = "$display_year DESC" . $sort_disk;
+                $sql_sort = "$original_year DESC" . $sort_disk;
                 break;
             case 'name_asc':
                 $sql_sort = "`album`.`name` ASC" . $sort_disk;
@@ -356,7 +356,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name` DESC" . $sort_disk;
                 break;
             default:
-                $sql_sort = "`album`.`name`" . $sort_disk . ", $display_year";
+                $sql_sort = "`album`.`name`" . $sort_disk . ", $original_year";
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
@@ -393,6 +393,46 @@ final class AlbumRepository implements AlbumRepositoryInterface
             } else {
                 $results[] = (int)$row['id'];
             }
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets the album id has the same artist and title
+     *
+     * @return int[]
+     */
+    public function getByName(
+        string $name,
+        int $artistId
+    ): array {
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
+        $params = array($name, $name, $artistId);
+        //debug_event(self::class, 'getByName ' . $sql, 5);
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets the album id that is part of this mbid_group
+     *
+     * @return int[]
+     */
+    public function getByMbidGroup(
+        string $mbid
+    ): array {
+        $sql = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
+        //debug_event(self::class, 'getByMbid ' . $sql, 5);
+        $db_results = Dba::read($sql, array($mbid));
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
         }
 
         return $results;

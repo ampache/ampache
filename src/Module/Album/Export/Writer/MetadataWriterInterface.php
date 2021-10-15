@@ -26,7 +26,7 @@ use Ampache\Repository\Model\Album;
 interface MetadataWriterInterface
 {
     public function write(
-        Album $album,
+        string $fileName,
         string $dirName,
         string $iconFileName
     ): void;

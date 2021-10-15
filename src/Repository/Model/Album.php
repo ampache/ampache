@@ -572,8 +572,7 @@ class Album extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = '')
     {
-        $web_path  = AmpConfig::get('web_path');
-        $show_year = $this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year;
+        $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
 
@@ -595,20 +594,8 @@ class Album extends database_object implements library_item
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-        $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
-
-        // Looking if we need to display the release year
-        if ($show_year) {
-            $this->f_name .= " (" . $this->year . ")";
-            $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
-        }
-        // Looking if we need to combine or display disks
-        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
-            $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
-            $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
-        }
-        $this->f_link .= "</a>";
+        // set link and f_link
+        $this->get_f_link();
 
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
@@ -667,25 +654,58 @@ class Album extends database_object implements library_item
 
     /**
      * Get item fullname.
+     * @param bool $simple
      * @return string
      */
-    public function get_fullname()
+    public function get_fullname($simple = false)
     {
+        // return the basic name without all the wild formatting
+        if ($simple) {
+            return trim(trim($this->prefix . ' ' . trim($this->name)));
+        }
         // don't do anything if it's formatted
-        if (isset($this->f_name)) {
-            return $this->f_name;
-        }
-        $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
-        // Looking if we need to display the release year
-        if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
-            $this->f_name .= " (" . $this->year . ")";
-        }
-        // Looking if we need to combine or display disks
-        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
-            $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
+        if (!isset($this->f_name)) {
+            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            // Looking if we need to display the release year
+            if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+                $this->f_name .= " (" . $this->year . ")";
+            }
+            // Looking if we need to combine or display disks
+            if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
+                $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
+            }
         }
 
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -893,7 +913,7 @@ class Album extends database_object implements library_item
 
         if ($album_id !== null && $type !== null) {
             $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
-            Art::display($type, $album_id, $title, $thumb, $this->link);
+            Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }
 

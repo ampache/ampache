@@ -304,12 +304,6 @@ a.tag_size4 { text-decoration: none; }
 .collapsed {
     float: right;
     margin-top: 5px;
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
 }
 
@@ -324,20 +318,13 @@ a.tag_size4 { text-decoration: none; }
     margin: 0;
     background-color: #000;
     border-radius: 10px;
-    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    -webkit-transition: all 0.5s;
     transition: all 0.5s;
-    -webkit-transform: translate(-50%, 0);
-    -ms-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
 }
 
 #notification.notification-out {
     opacity: 0;
-    filter: alpha(opacity=0);
-    -webkit-transform: translate(-50%, 80px);
-    -ms-transform: translate(-50%, 80px);
     transform: translate(-50%, 80px);
 }
 

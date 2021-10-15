@@ -53,7 +53,7 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
         $artist = $this->modelFactory->createArtist($objectId);
         $artist->format();
 
-        $artistName    = $artist->f_name;
+        $artistName    = $artist->get_fullname();
         $musicBrainzId = $artist->mbid;
 
         if ($artistName) {

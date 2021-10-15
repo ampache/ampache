@@ -64,12 +64,12 @@ final class ScrobbleMethod
         }
         ob_end_clean();
         $charset     = AmpConfig::get('site_charset');
-        $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
-        $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
-        $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
-        $song_mbid   = (string) scrub_in($input['song_mbid'] ?? ''); //optional
-        $artist_mbid = (string) scrub_in($input['artist_mbid'] ?? ''); //optional
-        $album_mbid  = (string) scrub_in($input['album_mbid'] ?? ''); //optional
+        $song_name   = html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
+        $artist_name = html_entity_decode(scrub_out($input['artist']), ENT_QUOTES, $charset);
+        $album_name  = html_entity_decode(scrub_out($input['album']), ENT_QUOTES, $charset);
+        $song_mbid   = html_entity_decode(scrub_out($input['song_mbid'] ?? $input['songmbid'] ?? ''), ENT_QUOTES, $charset); //optional
+        $artist_mbid = html_entity_decode(scrub_out($input['artist_mbid'] ?? $input['artistmbid'] ?? ''), ENT_QUOTES, $charset); //optional
+        $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
         $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
@@ -92,10 +92,8 @@ final class ScrobbleMethod
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
-            ? $input['client']
-            : 'api';
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
+        $agent       = $input['client'] ?? 'api';
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);

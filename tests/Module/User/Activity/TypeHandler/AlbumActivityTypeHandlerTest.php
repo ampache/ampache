@@ -74,9 +74,13 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $album->f_album_artist_name = $albumArtistName;
-        $album->f_name              = $albumName;
         $album->mbid_group          = $musicBrainzIdGroup;
         $album->mbid                = $musicBrainzId;
+
+        $album->shouldReceive('get_fullname')
+            ->with(true)
+            ->once()
+            ->andReturn($albumName);
 
         $this->useractivityRepository->shouldReceive('registerAlbumEntry')
             ->with(
@@ -89,47 +93,6 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
                 $albumName,
                 $musicBrainzIdGroup,
                 $musicBrainzId
-            )
-            ->once();
-
-        $this->subject->registerActivity(
-            $objectId,
-            $objectType,
-            $action,
-            $userId,
-            $date
-        );
-    }
-
-    public function testRegisterActivityRegisterGenericActivity(): void
-    {
-        $album = $this->mock(Album::class);
-
-        $objectId           = 666;
-        $objectType         = 'some-object-type';
-        $action             = 'some-action';
-        $userId             = 42;
-        $date               = 123;
-        $albumArtistName    = 'some-album-artist-name';
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($objectId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $album->f_album_artist_name = $albumArtistName;
-        $album->f_name              = '';
-
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
-            ->with(
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date
             )
             ->once();
 

@@ -781,13 +781,13 @@ class Subsonic_Api
         if ($musicFolderId > 0) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
                 $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                $finput   = $artist->f_name;
+                $finput   = $artist->get_fullname();
                 $operator = 4;
                 $ftype    = "artist";
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->f_name;
+                    $finput   = $album->get_fullname(true);
                     $operator = 4;
                     $ftype    = "artist";
                 } else {
@@ -1171,8 +1171,8 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
-        if (AmpConfig::get('subsonic_stream_scrobble') == 'false') {
-            $params .= '&cache=1';
+        if (AmpConfig::get('subsonic_stream_scrobble')) {
+            $params .= '&action=download&cache=1';
         }
 
         $url = '';
@@ -1204,7 +1204,7 @@ class Subsonic_Api
     {
         $fileid  = self::check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
+        $params  = '&client=' . rawurlencode($input['c']) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));

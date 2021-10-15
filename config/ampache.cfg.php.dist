@@ -672,6 +672,11 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 ; DEFAULT: "false"
 ;hide_search = "true"
 
+; Allow or disallow upload scripts on the server
+; Enable this if you trust your users
+; DEFAULT: "false"
+;allow_upload_scripts = "true"
+
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################
@@ -800,12 +805,11 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
 
-; Subsonic clients all seem to ignore the download method and always stream.
-; This setting will stop recording stats from Subsonic stream actions.
-; (This means you can sync playlists without overloading your server)
-; Make sure you enable scrobbling in your Subsonic client to keep recording stats!
+; Subsonic clients all seem to ignore the download method and use stream.
+; This setting will cache Subsonic stream actions which will not record as a play
+; Make sure scrobble is set in Subsonic and Ampache will use that for play recording
 ; DEFAULT: "true"
-;subsonic_stream_scrobble = "true"
+subsonic_stream_scrobble = "true"
 
 ;#########################################################
 ; Debugging                                              #

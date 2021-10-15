@@ -29,6 +29,7 @@ use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -48,6 +49,8 @@ use Ampache\Repository\WantedRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private ArtCollectorInterface $artCollector;
 
     private SlideshowInterface $slideshow;
@@ -63,6 +66,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
     private VideoRepositoryInterface $videoRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
@@ -71,6 +75,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         WantedRepositoryInterface $wantedRepository,
         VideoRepositoryInterface $videoRepository
     ) {
+        $this->requestParser    = $requestParser;
         $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
         $this->albumRepository  = $albumRepository;
@@ -83,7 +88,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
+        $action  = $this->requestParser->getFromRequest('action');
         $moment  = (int) AmpConfig::get('of_the_moment');
         $user    = Core::get_global('user');
         // filter album and video of the Moment instead of a hardcoded value
@@ -92,7 +97,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         }
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'top_tracks':
                 $artist = new Artist($_REQUEST['artist']);
                 $artist->format();
@@ -140,12 +145,13 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist = new Artist($_REQUEST['artist']);
+                        $artist = new Artist($this->requestParser->getFromRequest('artist'));
                         $artist->format();
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
-                        $artist    = new Wanted(Wanted::get_wanted_by_name($_REQUEST['fullname']));
-                        $biography = Recommendation::get_artist_info_by_name(rawurldecode($_REQUEST['fullname']));
+                        $fullname  = $this->requestParser->getFromRequest('fullname');
+                        $artist    = new Wanted(Wanted::get_wanted_by_name($fullname));
+                        $biography = Recommendation::get_artist_info_by_name(rawurldecode($fullname));
                     }
                     ob_start();
                     require_once Ui::find_template('show_artist_info.inc.php');
@@ -154,7 +160,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
-                    $artist = new Artist($_REQUEST['artist']);
+                    $artist = new Artist($this->requestParser->getFromRequest('artist'));
                     $artist->format();
                     $limit_threshold = AmpConfig::get('stats_threshold');
                     $object_ids      = array();
@@ -174,9 +180,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'similar_now_playing':
-                $media_id = $_REQUEST['media_id'];
-                if (AmpConfig::get('show_similar') && isset($media_id) && isset($_REQUEST['media_artist'])) {
-                    $artists = Recommendation::get_artists_like($_REQUEST['media_artist'], 3, false);
+                $media_id = $this->requestParser->getFromRequest('media_id');
+                if (AmpConfig::get('show_similar') && isset($media_id) && array_key_exists('media_artist', $_REQUEST)) {
+                    $artists = Recommendation::get_artists_like($this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
                     require_once Ui::find_template('show_now_playing_similar.inc.php');
@@ -185,7 +191,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'labels':
                 if (AmpConfig::get('label') && array_key_exists('artist', $_REQUEST)) {
-                    $labels     = $this->labelRepository->getByArtist((int) $_REQUEST['artist']);
+                    $labels     = $this->labelRepository->getByArtist((int)$this->requestParser->getFromRequest('artist'));
                     $object_ids = array();
                     if (count($labels) > 0) {
                         foreach ($labels as $labelid => $label) {
@@ -204,10 +210,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
-                    if (array_key_exists('hide', $_REQUEST)) {
-                        $artist = new Artist($_REQUEST['artist']);
-                        $artist->format();
-                        if ($artist->mbid) {
+                    if (array_key_exists('artist', $_REQUEST)) {
+                        $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                        if (!empty($artist->mbid)) {
                             $walbums = Wanted::get_missing_albums($artist);
                         } else {
                             debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
@@ -224,18 +229,18 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'add_wanted':
-                if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
-                    $mbid = $_REQUEST['mbid'];
-                    if (empty($_REQUEST['artist'])) {
+                if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
+                    $mbid = $this->requestParser->getFromRequest('mbid');
+                    if (!array_key_exists('artist', $_REQUEST)) {
                         $artist_mbid = $_REQUEST['artist_mbid'];
                         $artist      = null;
                     } else {
-                        $artist      = $_REQUEST['artist'];
+                        $artist      = (int)$this->requestParser->getFromRequest('artist');
                         $aobj        = new Artist($artist);
                         $artist_mbid = $aobj->mbid;
                     }
-                    $name = $_REQUEST['name'];
-                    $year = $_REQUEST['year'];
+                    $name = $this->requestParser->getFromRequest('name');
+                    $year = $this->requestParser->getFromRequest('year');
 
                     if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
@@ -249,8 +254,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'remove_wanted':
-                if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
-                    $mbid = $_REQUEST['mbid'];
+                if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
+                    $mbid = $this->requestParser->getFromRequest('mbid');
 
                     $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
                     $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -264,8 +269,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'accept_wanted':
-                if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
-                    $mbid = $_REQUEST['mbid'];
+                if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
+                    $mbid = $this->requestParser->getFromRequest('mbid');
 
                     $walbum = new Wanted(Wanted::get_wanted($mbid));
                     $walbum->accept();

@@ -211,7 +211,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->album_group_count = (int)$this->album_group_count;
         $this->song_count        = (int)$this->song_count;
         $this->catalog_id        = (int)$catalog_init;
-
         $this->get_fullname();
 
         return true;
@@ -470,10 +469,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         $this->songs  = $this->song_count;
         $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
-        $this->link   = ($this->catalog_id > 0)
-            ? AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
-            : AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
-        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name) . "</a>";
+        // set link and f_link
+        $this->get_f_link();
 
         if ($details) {
             $min   = sprintf("%02d", (floor($this->time / 60) % 60));
@@ -508,7 +505,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -520,13 +517,43 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_fullname()
     {
-        // don't do anything if it's formatted
-        if (isset($this->f_name)) {
-            return $this->f_name;
+        if (!isset($this->f_name)) {
+            // set the full name
+            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
         }
 
-        // set the full name
-        $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = ($this->catalog_id > 0)
+                ? $web_path . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id
+                : $web_path . '/artists.php?action=show&artist=' . $this->id;
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -659,7 +686,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if ($artist_id !== null && $type !== null) {
-            Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

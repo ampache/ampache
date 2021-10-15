@@ -97,7 +97,7 @@ class Stream
     public static function get_allowed_bitrate()
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
-        $min_bitrate = AmpConfig::get('min_bit_rate');
+        $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
 
@@ -261,13 +261,13 @@ class Stream
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
         if (!array_key_exists('bitrate', $options)) {
-            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate = 0) {
+        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate == 0) {
             // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
+        debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
         if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
