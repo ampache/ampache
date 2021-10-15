@@ -672,6 +672,11 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 ; DEFAULT: "false"
 ;hide_search = "true"
 
+; Allow or disallow upload scripts on the server
+; Enable this if you trust your users
+; DEFAULT: "false"
+;allow_upload_scripts = "true"
+
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################

@@ -189,9 +189,9 @@ class Upload
      */
     public static function upload_script($targetdir, $targetfile)
     {
-        if (AmpConfig::get('upload_script')) {
+        $script = AmpConfig::get('upload_script');
+        if (AmpConfig::get('allow_upload_scripts') && $script) {
             chdir($targetdir);
-            $script = AmpConfig::get('upload_script');
             $script = str_replace('%FILE%', $targetfile, $script);
             exec($script);
         }
