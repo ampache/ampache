@@ -131,6 +131,16 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
+     * gets the album id has the same artist and title
+     *
+     * @return int[]
+     */
+    public function getByName(
+        string $name,
+        int $artistId
+    ): array;
+
+    /**
      * gets the album id that is part of this mbid_group
      *
      * @return int[]

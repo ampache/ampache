@@ -397,6 +397,28 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * gets the album id has the same artist and title
+     *
+     * @return int[]
+     */
+    public function getByName(
+        string $name,
+        int $artistId
+    ): array {
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
+        $params = array($name, $name, $artistId);
+        //debug_event(self::class, 'getByName ' . $sql, 5);
+        $db_results = Dba::read($sql, $params);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
     /**
      * gets the album id that is part of this mbid_group
      *
