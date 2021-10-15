@@ -95,7 +95,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
             $db_results = Dba::read($sql, [$username]);
             $row        = Dba::fetch_assoc($db_results);
             $hash_token = hash('md5', ($row['apikey'] . $salt));
-            if ($token == $hash_token && $row['username'] == $username && isset($row['apikey'])) {
+            if ($token === $hash_token && $row['username'] === $username && isset($row['apikey'])) {
                 return [
                     'success' => true,
                     'type' => 'api',
