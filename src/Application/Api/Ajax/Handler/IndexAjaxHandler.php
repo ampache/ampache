@@ -75,7 +75,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         WantedRepositoryInterface $wantedRepository,
         VideoRepositoryInterface $videoRepository
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser    = $requestParser;
         $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
         $this->albumRepository  = $albumRepository;

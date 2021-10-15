@@ -113,8 +113,10 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 
             fclose($file_handle);
 
+            $fileName = $album->get_fullname(true);
+
             $metadataWriter->write(
-                $album,
+                $fileName,
                 $dir,
                 $file
             );

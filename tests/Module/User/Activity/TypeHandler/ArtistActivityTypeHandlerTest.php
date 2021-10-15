@@ -72,8 +72,12 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $artist->f_name = $artistName;
         $artist->mbid   = $musicBrainzId;
+
+        $artist->shouldReceive('get_fullname')
+            ->with()
+            ->once()
+            ->andReturn($artistName);
 
         $this->useractivityRepository->shouldReceive('registerArtistEntry')
             ->with(
@@ -114,7 +118,11 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
         $artist->shouldReceive('format')
             ->withNoArgs()
             ->once();
-        $artist->f_name = '';
+
+        $artist->shouldReceive('get_fullname')
+            ->with()
+            ->once()
+            ->andReturn('');
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

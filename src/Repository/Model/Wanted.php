@@ -442,7 +442,7 @@ class Wanted extends database_object
     public function format()
     {
         if ($this->artist) {
-            $artist = new Artist($this->artist);
+            $artist              = new Artist($this->artist);
             $this->f_artist_link = $artist->get_f_link();
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);

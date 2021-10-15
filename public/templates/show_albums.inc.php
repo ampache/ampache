@@ -101,7 +101,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
         Userflag::build_cache('album', $object_ids);
     }
 
-        $show_direct_play = AmpConfig::get('directplay');
+        $show_direct_play     = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');
 
         /* Foreach through the albums */
