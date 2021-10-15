@@ -56,7 +56,7 @@ $display_year = ($original_year && $libitem->original_year)
             } ?>
     </div>
 </td>
-<?php $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->f_name); ?>
+<?php $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('album', $libitem->id, $name, $thumb, $web_path . '/albums.php?action=show&album=' . $libitem->id); ?>

@@ -665,10 +665,15 @@ class Album extends database_object implements library_item
 
     /**
      * Get item fullname.
+     * @param bool $simple
      * @return string
      */
-    public function get_fullname()
+    public function get_fullname($simple = false)
     {
+        // return the basic name without all the wild formatting
+        if ($simple) {
+            return trim(trim($this->prefix . ' ' . trim($this->name)));
+        }
         // don't do anything if it's formatted
         if (isset($this->f_name)) {
             return $this->f_name;
