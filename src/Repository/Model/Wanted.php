@@ -145,26 +145,8 @@ class Wanted extends database_object
             return null;
         }
 
-        $owngroups = array();
         $wartist   = array();
-        if ($artist) {
-            $albums = static::getAlbumRepository()->getByArtist($artist->id);
-            foreach ($albums as $albumid) {
-                $album = new Album($albumid);
-                if (trim((string)$album->mbid_group)) {
-                    $owngroups[] = $album->mbid_group;
-                } else {
-                    if (trim((string)$album->mbid)) {
-                        $malbum = $mbrainz->lookup('release', $album->mbid, array('release-groups'));
-                        if ($malbum->{'release-group'}) {
-                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                                $owngroups[] = $malbum->{'release-group'}->id;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
+        if (!$artist) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
             parent::add_to_cache('missing_artist', $lookupId, $wartist);
@@ -183,7 +165,7 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        if (!in_array($group->id, $owngroups)) {
+                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id)))) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
                             if ($wanted->id) {
@@ -211,7 +193,7 @@ class Wanted extends database_object
                                     $wanted->link .= "&artist_mbid=" . $lookupId;
                                 }
                                 $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                                $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
+                                $wanted->f_artist_link = $artist->f_link ?? $wartist['link'];
                                 $wanted->f_user        = Core::get_global('user')->f_name;
                             }
                             $results[] = $wanted;

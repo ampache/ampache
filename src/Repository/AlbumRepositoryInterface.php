@@ -129,4 +129,13 @@ interface AlbumRepositoryInterface
         ?int $catalog = null,
         bool $group_release_type = false
     ): array;
+
+    /**
+     * gets the album id that is part of this mbid_group
+     *
+     * @return int[]
+     */
+    public function getByMbidGroup(
+        string $mbid
+    ): array;
 }

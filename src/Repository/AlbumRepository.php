@@ -397,4 +397,22 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+    /**
+     * gets the album id that is part of this mbid_group
+     *
+     * @return int[]
+     */
+    public function getByMbidGroup(
+        string $mbid
+    ): array {
+        $sql = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
+        //debug_event(self::class, 'getByMbid ' . $sql, 5);
+        $db_results = Dba::read($sql, array($mbid));
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
 }
