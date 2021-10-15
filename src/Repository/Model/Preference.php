@@ -674,7 +674,10 @@ class Preference extends database_object
                "(157, 'unique_playlist', '0', '" . Dba::escape(T_("Only add unique items to playlists")) . "', 25, 'boolean', 'playlist', NULL), " .
                "(158, 'show_license', '0', '" . Dba::escape(T_("Show License")) . "', 25, 'boolean', 'interface', 'browse'), " .
                "(159, 'use_original_year', '0', '" . Dba::escape(T_("Browse by Original Year for albums (falls back to Year)")) . "', 25, 'boolean', 'interface', 'browse'), " .
-               "(160, 'hide_single_artist', '0', '" . Dba::escape(T_("Hide the Song Artist column for Albums with one Artist")) . "', 25, 'boolean', 'interface', 'browse');";
+               "(160, 'hide_single_artist', '0', '" . Dba::escape(T_("Hide the Song Artist column for Albums with one Artist")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(161, 'use_original_year', '0', '" . Dba::escape(T_("Browse by Original Year for albums (falls back to Year)")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(162, 'hide_single_artist', '0', '" . Dba::escape(T_("Hide the Song Artist column for Albums with one Artist")) . "', 25, 'boolean', 'interface', 'browse'), " .
+               "(163, 'hide_genres', '0', '" . Dba::escape(T_("Hide the Genre column in browse table rows")) . "', 25, 'boolean', 'interface', 'browse');";
         Dba::write($sql);
     } // set_defaults
 
