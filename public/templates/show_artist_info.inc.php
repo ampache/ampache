@@ -36,10 +36,10 @@ use Ampache\Module\Util\Ui;
 } ?>
     <div class="item_properties">
         <?php $dcol = array();
-        if (array_key_exists('placeformed', $biography)) {
+        if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
             $dcol[] = $biography['placeformed'];
         }
-        if (array_key_exists('yearformed', $biography)) {
+        if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
             $dcol[] = $biography['yearformed'];
         }
         if (count($dcol) > 0) {
