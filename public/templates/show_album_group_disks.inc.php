@@ -42,8 +42,7 @@ $web_path = AmpConfig::get('web_path');
 $album->allow_group_disks = true;
 // Title for this album
 $f_name  = $album->get_fullname();
-$title   = scrub_out($f_name);
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
+$title   = scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $show_playlist_add    = Access::check('interface', 25);
@@ -79,7 +78,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     </div>
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
-        $name  = '[' . $album->f_album_artist_name . '] ' . $title;
+        $name  = '[' . $album->f_album_artist_name . '] ' . scrub_out($f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb);
     } ?>

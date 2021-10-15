@@ -42,11 +42,11 @@ use Ampache\Repository\AlbumRepositoryInterface;
 $web_path = AmpConfig::get('web_path');
 
 /** @var Album $album */
+/** @var bool $isAlbumEditable */
 
 // Title for this album
 $f_name  = $album->get_fullname();
-$title   = scrub_out($f_name);
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
+$title   = scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
 
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
@@ -76,9 +76,9 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $artName  = '[' . $album->f_album_artist_name . '] ' . $title;
-        $thumb    = Ui::is_grid_view('album') ? 32 : 11;
-        Art::display('album', $album->id, $artName, $thumb); ?>
+        $name  = rawurlencode('[' . $album->f_album_artist_name . '] ' . scrub_out($f_name));
+        $thumb = Ui::is_grid_view('album') ? 32 : 11;
+        Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>

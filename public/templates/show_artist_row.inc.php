@@ -33,6 +33,15 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $libitem */
+/** @var bool $show_direct_play */
+/** @var bool $show_playlist_add */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_artist */
+/** @var string $cel_time */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();

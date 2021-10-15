@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
     $thumb = (empty(trim($biography['summary']))) ? 32 : 2;
-    Art::display('artist', $artist->id, $artist->get_fullname() ?? $artist->name, $thumb);
+    Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
 } ?>
     <div class="item_properties">
         <?php $dcol = array();

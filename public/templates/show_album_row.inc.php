@@ -35,6 +35,16 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
 /** @var mixed|null $original_year */
+/** @var bool $show_direct_play */
+/** @var bool $show_playlist_add */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var int $thcount */
+/** @var string $cel_cover */
+/** @var string $cel_album */
+/** @var string $cel_artist */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
 
 $web_path     = AmpConfig::get('web_path');
 $display_year = ($original_year && $libitem->original_year)
