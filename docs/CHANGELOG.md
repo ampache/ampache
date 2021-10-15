@@ -52,6 +52,8 @@
 * Make category headers a bit nicer
 * Check for valid browse types before loading nothing
 * Browsing Genre defaults to artist
+* Subsonic
+  * Disable stat recording on stream calls (disable subsonic_stream_scrobble in config to enable)
 
 ### Removed
 
@@ -85,6 +87,8 @@
 * Empty release_date when updating videos
 * Chrome errors where Content-Disposition has a comma (,)
 * Remove subtitle in stream_playlist if empty
+* Fix options and bitrate selection for stream.php requests
+* Scrobbles from Song::can_scrobble
 * Subsonic
   * Trim quotes (") for Subsonic searches (some clients add them)
   * Support exact (lucene) searching when using quotes (")
@@ -111,6 +115,7 @@
 * get_indexes: JSON didn't think live_streams was valid (it is)
 * record_play: user is optional
 * Bad xml tags in deleted functions
+* scrobble: Add song_mbid, artist_mbid, album_mbid (docs have no '_' so support both)
 
 ## Ampache 5.0.0-release
 

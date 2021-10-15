@@ -36,7 +36,7 @@ final class WindowsMetadataWriter implements MetadataWriterInterface
         $string    = sprintf(
             "[.ShellClassInfo]\nIconFile=%s\nIconIndex=0\nInfoTip=%s",
             $iconFileName,
-            $album->f_name
+            $album->get_fullname(true)
         );
 
         $meta_handle = fopen($meta_file, 'w');

@@ -1535,7 +1535,7 @@ class Upnp_Api
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     $album->format();
-                    //debug_event(self::class, $album->f_name, 5);
+                    //debug_event(self::class, $album->get_fullname(), 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
             break;
@@ -1597,7 +1597,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => $artist->albums,
-            'dc:title' => self::_replaceSpecialSymbols($artist->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($artist->get_fullname()),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
         );
@@ -1636,7 +1636,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => $album->song_count,
-            'dc:title' => self::_replaceSpecialSymbols($album->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($album->get_fullname()),
             'upnp:class' => 'object.container.album.musicAlbum', // object.container.album.musicAlbum
             //'upnp:class' => 'object.container',
             'upnp:albumArtist' => $album->album_artist,

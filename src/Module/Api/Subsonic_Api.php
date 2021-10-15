@@ -781,13 +781,13 @@ class Subsonic_Api
         if ($musicFolderId > 0) {
             if (Subsonic_Xml_Data::isArtist($musicFolderId)) {
                 $artist   = new Artist(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                $finput   = $artist->f_name;
+                $finput   = $artist->get_fullname();
                 $operator = 4;
                 $ftype    = "artist";
             } else {
                 if (Subsonic_Xml_Data::isAlbum($musicFolderId)) {
                     $album    = new Album(Subsonic_Xml_Data::getAmpacheId($musicFolderId));
-                    $finput   = $album->f_name;
+                    $finput   = $album->get_fullname(true);
                     $operator = 4;
                     $ftype    = "artist";
                 } else {

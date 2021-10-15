@@ -182,7 +182,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         Album $album,
         int $catalogId = 0
     ): array {
-        $f_name = Dba::escape($album->f_name);
+        $f_name = Dba::escape($album->get_fullname(true));
         if ($f_name == '') {
             return array();
         }

@@ -88,7 +88,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         // you might not send an artist name
         $options = (isset($artist))
-            ? array('artist' => $artist->f_name, 'album_name' => $walbum->name, 'keyword' => $artist->f_name . " " . $walbum->name)
+            ? array('artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name)
             : array('album_name' => $walbum->name, 'keyword' => $walbum->name);
 
         // Attempt to find the art.
@@ -103,7 +103,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
             $name = (isset($artist))
-                ? '[' . $artist->f_name . '] ' . scrub_out($walbum->name)
+                ? '[' . $artist->get_fullname() . '] ' . scrub_out($walbum->name)
                 : scrub_out($walbum->name);
 
             $image = $images[0]['url'];

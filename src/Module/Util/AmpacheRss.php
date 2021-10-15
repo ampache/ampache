@@ -316,9 +316,9 @@ class AmpacheRss
             $album->format();
 
             $xml_array = array(
-                'title' => $album->f_name,
+                'title' => $album->get_fullname(),
                 'link' => $album->link,
-                'description' => $album->f_artist_name . ' - ' . $album->f_name,
+                'description' => $album->f_artist_name . ' - ' . $album->get_fullname(true),
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date('c', $album->addition_time)
@@ -346,7 +346,7 @@ class AmpacheRss
             $artist->format();
 
             $xml_array = array(
-                'title' => $artist->f_name,
+                'title' => $artist->get_fullname(),
                 'link' => $artist->link,
                 'description' => $artist->summary,
                 'image' => Art::url($artist->id, 'artist', null, 2),

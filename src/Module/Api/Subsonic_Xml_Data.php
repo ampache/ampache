@@ -556,7 +556,7 @@ class Subsonic_Xml_Data
         $artist->format();
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', (string)self::getArtistId($artist->id));
-        $xartist->addAttribute('name', (string)self::checkName($artist->f_name));
+        $xartist->addAttribute('name', (string)self::checkName($artist->get_fullname()));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
             $allalbums = static::getAlbumRepository()->getByArtist($artist->id);
@@ -681,11 +681,12 @@ class Subsonic_Xml_Data
     {
         $album->format();
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
+        $f_name = (string)self::checkName($album->get_fullname());
         $xalbum->addAttribute('id', (string)self::getAlbumId($album->id));
         $xalbum->addAttribute('parent', (string) self::getArtistId($album->album_artist));
-        $xalbum->addAttribute('album', (string)self::checkName($album->f_name));
-        $xalbum->addAttribute('title', (string)self::checkName($album->f_name));
-        $xalbum->addAttribute('name', (string)self::checkName($album->f_name));
+        $xalbum->addAttribute('album', $f_name);
+        $xalbum->addAttribute('title', $f_name);
+        $xalbum->addAttribute('name', $f_name);
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', (string)$album->disk);
 
@@ -999,7 +1000,7 @@ class Subsonic_Xml_Data
         } else {
             $xdir->addAttribute('parent', (string)$album->catalog);
         }
-        $xdir->addAttribute('name', (string)self::checkName($album->f_name));
+        $xdir->addAttribute('name', (string)self::checkName($album->get_fullname()));
 
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);

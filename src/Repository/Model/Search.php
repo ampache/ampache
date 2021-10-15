@@ -1091,8 +1091,8 @@ class Search extends playlist_object
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
             $search_id = Dba::escape($this->id);
-            $sql       = "UPDATE `search` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
-            Dba::write($sql, array($search_id));
+            $sql       = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
+            Dba::write($sql, array($count, $search_id));
         }
     }
 

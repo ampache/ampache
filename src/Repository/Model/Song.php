@@ -1007,7 +1007,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $artist = new Artist($artist_id);
         if ($artist->id) {
-            return $artist->f_name;
+            return $artist->get_fullname();
         }
 
         return '';
