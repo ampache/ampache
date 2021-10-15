@@ -196,8 +196,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
                         $artist = new Artist($_REQUEST['artist']);
-                        $artist->format();
-                        $walbums = Wanted::get_missing_albums($artist);
+                        if (!empty($artist->mbid)) {
+                            $walbums = Wanted::get_missing_albums($artist);
+                        } else {
+                            debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
+                        }
                     } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
                     } else {

@@ -132,12 +132,13 @@ class Wanted extends database_object
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
+        $lookupId = $artist->mbid ?? $mbid;
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array('release-groups');
         $types    = explode(',', AmpConfig::get('wanted_types'));
-
         try {
-            $martist = $mbrainz->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
+            $martist = $mbrainz->lookup('artist', $lookupId, $includes);
+            debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
         } catch (Exception $error) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
@@ -164,14 +165,14 @@ class Wanted extends database_object
                 }
             }
         } else {
-            $wartist['mbid'] = $mbid;
+            $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
-            parent::add_to_cache('missing_artist', $mbid, $wartist);
-            $wartist = self::get_missing_artist($mbid);
+            parent::add_to_cache('missing_artist', $lookupId, $wartist);
+            $wartist = self::get_missing_artist($lookupId);
         }
 
         $results = array();
-        if (array_key_exists('release-groups', $martist)) {
+        if (!empty($martist)) {
             foreach ($martist->{'release-groups'} as $group) {
                 if (in_array(strtolower((string)$group->{'primary-type'}), $types)) {
                     $add     = true;
@@ -182,7 +183,6 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        debug_event(self::class, 'get_missing_albums ADDING: ' . $group->title, 5);
                         if (!in_array($group->id, $owngroups)) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
@@ -193,7 +193,7 @@ class Wanted extends database_object
                                 if ($artist) {
                                     $wanted->artist = $artist->id;
                                 } else {
-                                    $wanted->artist_mbid = $mbid;
+                                    $wanted->artist_mbid = $lookupId;
                                 }
                                 $wanted->name = $group->title;
                                 if (!empty($group->{'first-release-date'})) {
@@ -208,7 +208,7 @@ class Wanted extends database_object
                                 if ($artist) {
                                     $wanted->link .= "&artist=" . $wanted->artist;
                                 } else {
-                                    $wanted->link .= "&artist_mbid=" . $mbid;
+                                    $wanted->link .= "&artist_mbid=" . $lookupId;
                                 }
                                 $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                                 $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
