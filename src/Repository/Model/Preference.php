@@ -630,7 +630,7 @@ class Preference extends database_object
                "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " .
                "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " .
                "(115, 'upload_user_artist', '0', 'Consider the user sender as the track''s artist', 75, 'boolean', 'system', 'upload'), " .
-               "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 75, 'string', 'system', 'upload'), " .
+               "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
                "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " .
                "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
                "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
