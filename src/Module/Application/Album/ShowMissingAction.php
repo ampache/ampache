@@ -64,7 +64,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;
-            if (array_key_exists('hide', $_REQUEST)) {
+            if (array_key_exists('artist', $_REQUEST)) {
                 $artist              = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                 $walbum->artist      = $artist->id;
                 $walbum->artist_mbid = $artist->mbid;
