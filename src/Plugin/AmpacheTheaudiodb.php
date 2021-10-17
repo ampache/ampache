@@ -157,7 +157,7 @@ class AmpacheTheaudiodb
                     }
                 } else {
                     $artists = $this->search_artists($media_info['title']);
-                    if ($artists !== null && array_key_exists(0, $artists->artists)) {
+                    if ($artists !== null && is_array($artists->artists) && array_key_exists(0, $artists->artists)) {
                         $release = $artists->artists[0];
                     }
                 }
