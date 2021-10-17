@@ -3162,9 +3162,9 @@ abstract class Catalog extends database_object
     {
         debug_event(self::class, "update_map $object_type: {{$object_id}}", 5);
         if ($object_type == 'artist') {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `catalog_map`.`object_type` = ? AND `artist`.`id` = ? AND `song`.`catalog` > 0;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
             Dba::write($sql, array($object_id));
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `catalog_map`.`object_type` = ? `artist`.`id` = ? AND `album`.`catalog` > 0;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
             Dba::write($sql, array($object_id));
         } elseif ($catalog > 0) {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
