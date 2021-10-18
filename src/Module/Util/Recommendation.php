@@ -187,30 +187,32 @@ class Recommendation
                 if ($xml->similartracks) {
                     $catalog_disable = AmpConfig::get('catalog_disable');
                     foreach ($xml->similartracks->children() as $child) {
-                        $name     = $child->name;
-                        $local_id = null;
+                        $song_name = $child->name;
+                        $local_id  = null;
 
-                        $artist_name   = $child->artist->name;
-                        $s_artist_name = Catalog::trim_prefix((string)$artist_name);
+                        $artist_name = $child->artist->name;
+                        $searchname  = Catalog::trim_prefix((string)$artist_name);
+                        $s_name      = Dba::escape($searchname['string']);
+                        $s_fullname  = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
 
                         $sql = ($catalog_disable)
-                            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`title` = ? AND `artist`.`name` = ? AND `catalog`.`enabled` = '1'"
-                            : "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` WHERE `song`.`title` = ? AND `artist`.`name` = ? ";
+                            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `catalog`.`enabled` = '1'"
+                            : "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
 
-                        $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
+                        $db_result = Dba::read($sql, array($song_name, $s_name, $s_fullname));
                         if ($result = Dba::fetch_assoc($db_result)) {
                             $local_id = $result['id'];
-                            debug_event(self::class, "$name matched local song $local_id", 4);
+                            debug_event(self::class, "$song_name matched local song $local_id", 4);
                             $similars[] = array(
                                 'id' => $local_id,
-                                'name' => $name,
+                                'name' => $song_name,
                                 'rel' => $artist_name
                             );
                         } else {
                             //debug_event(self::class, "$name did not match any local song", 5);
                             $similars[] = array(
                                 'id' => null,
-                                'name' => $name,
+                                'name' => $song_name,
                                 'rel' => $artist_name
                             );
                         }
@@ -291,12 +293,13 @@ class Recommendation
                         // Then we fall back to the less likely to work exact name match
                         if ($local_id === null) {
                             $searchname = Catalog::trim_prefix($name);
-                            $searchname = Dba::escape($searchname['string']);
+                            $s_name     = Dba::escape($searchname['string']);
+                            $s_fullname = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
                             $sql        = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
-                                : "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
+                                : "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)";
 
-                            $db_result = Dba::read($sql, array($searchname, $searchname));
+                            $db_result = Dba::read($sql, array($s_name, $s_fullname));
                             if ($result = Dba::fetch_assoc($db_result)) {
                                 $local_id = $result['id'];
                             }
