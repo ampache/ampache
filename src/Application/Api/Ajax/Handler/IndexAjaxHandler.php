@@ -188,7 +188,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         if ($similar['id']) {
                             $similar_artist = new Artist($similar['id']);
                             // get the songs in a random order for even more chaos
-                            $object_ids = $this->songRepository->getRandomByArtist($similar_artist);
+                            $object_ids = array_merge($object_ids, $this->songRepository->getRandomByArtist($similar_artist));
                         }
                     }
                 }
