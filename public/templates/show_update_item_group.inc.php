@@ -25,6 +25,10 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
+/** @var string $type */
+/** @var int $object_id */
+/** @var array|null $catalog_id */
+
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 // update from high to low so you return to the first disk in a group album
 rsort($objects);
