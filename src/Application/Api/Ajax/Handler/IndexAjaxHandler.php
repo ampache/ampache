@@ -99,11 +99,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist = new Artist($_REQUEST['artist']);
-                $artist->format();
-                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, 20);
-                $browse       = new Browse();
-                $hide_columns = array('cel_artist');
+                $artist          = new Artist($this->requestParser->getFromRequest('artist'));
+                $object_ids      = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
+                $browse          = new Browse();
+                $hide_columns    = array('cel_artist');
+                $limit_threshold = AmpConfig::get('stats_threshold');
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -178,6 +178,29 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     require_once Ui::find_template('show_recommended_artists.inc.php');
                     $results['similar_artist'] = ob_get_clean();
                 }
+                break;
+            case 'similar_songs':
+                $artist = new Artist($this->requestParser->getFromRequest('artist'));
+                $similars   = Recommendation::get_artists_like($artist->id);
+                $object_ids = array();
+                if (!empty($similars)) {
+                    foreach ($similars as $similar) {
+                        if ($similar['id']) {
+                            $similar_artist = new Artist($similar['id']);
+                            // get the songs in a random order for even more chaos
+                            $object_ids = $this->songRepository->getRandomByArtist($similar_artist);
+                        }
+                    }
+                }
+                // randomize and slice
+                shuffle($object_ids);
+                $object_ids      = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
+                $browse          = new Browse();
+                $hide_columns    = array('cel_artist');
+                $limit_threshold = AmpConfig::get('stats_threshold');
+                ob_start();
+                require_once Ui::find_template('show_similar_songs.inc.php');
+                $results['similar_songs'] = ob_get_clean();
                 break;
             case 'similar_now_playing':
                 $media_id = $this->requestParser->getFromRequest('media_id');

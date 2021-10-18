@@ -124,7 +124,7 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
 
 <script>
     var index = 1;
-    var indexes = $("#top_tracks_<?php echo $artist->id; ?> .cel_play_content").each(function() {
+    var indexes = $("#similar_songs_<?php echo $artist->id; ?> .cel_play_content").each(function() {
         $(this).html(index++);
     });
 </script>

@@ -242,6 +242,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if ($show_similar) { ?>
             <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
+            <li><a id="similar_songs_link" href="#similar_songs"><?php echo T_('Similar Songs'); ?></a></li>
 <?php } ?>
 <?php if ($use_label) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
@@ -268,7 +269,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $browse->store();
     } ?>
         </div>
-
         <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
         <div id="top_tracks" class="tab_content">
             <?php Ui::show_box_top(null, 'info-box');
@@ -291,6 +291,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
         echo T_('Loading...');
         Ui::show_box_bottom(); ?>
+        </div>
+        <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
+        <div id="similar_songs" class="tab_content">
+            <?php Ui::show_box_top(null, 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
         </div>
 <?php
     } ?>
