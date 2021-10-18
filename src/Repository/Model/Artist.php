@@ -706,6 +706,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $prefix  = $trimmed['prefix'];
         // If Ampache support multiple artists per song one day, we should also handle other artists here
         $trimmed = Catalog::trim_featuring($name);
+        if ($name !== $trimmed[0]) {
+            debug_event(self::class, "check Artist: cut {{$name}} to {{$trimmed[0]}}", 4);
+            $mbid = '';
+        }
         $name    = $trimmed[0];
 
         // If Ampache support multiple artists per song one day, we should also handle other artists here
@@ -811,7 +815,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         $artist_id = (int) Dba::insert_id();
-        debug_event(self::class, "check album: created {{$artist_id}}", 4);
+        debug_event(self::class, "check artist: created {{$artist_id}}", 4);
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
