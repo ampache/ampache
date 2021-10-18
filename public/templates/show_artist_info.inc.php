@@ -43,7 +43,7 @@ use Ampache\Module\Util\Ui;
             $dcol[] = $biography['yearformed'];
         }
         if (count($dcol) > 0) {
-            echo implode(',', $dcol);
+            echo implode(', ', $dcol);
         } ?>
     </div>
 </div>
