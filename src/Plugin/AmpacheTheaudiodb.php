@@ -151,15 +151,11 @@ class AmpacheTheaudiodb
                 debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_artistid']) {
-                    $artist = $this->get_artist($media_info['mb_artistid']);
-                    if ($artist !== null) {
-                        $release = $artist->artists[0];
-                    }
+                    $artist  = $this->get_artist($media_info['mb_artistid']);
+                    $release = $artist->artists[0] ?? $release;
                 } else {
                     $artists = $this->search_artists($media_info['title']);
-                    if ($artists !== null && is_array($artists->artists) && array_key_exists(0, $artists->artists)) {
-                        $release = $artists->artists[0];
-                    }
+                    $release = $artists->artists[0] ?? $release;
                 }
                 if ($release !== null) {
                     $results['art']        = $release->strArtistThumb ?? null;
