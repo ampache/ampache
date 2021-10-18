@@ -196,7 +196,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 shuffle($object_ids);
                 $object_ids      = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
                 $browse          = new Browse();
-                $hide_columns    = array('cel_artist');
+                $hide_columns    = array();
                 $limit_threshold = AmpConfig::get('stats_threshold');
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
