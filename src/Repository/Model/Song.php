@@ -872,7 +872,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         if ($data['mb_artistid']) {
             $where .= " AND `artist`.`mbid` = ?";
-            $params[] = $data['mb_albumid'];
+            $params[] = $data['mb_artistid'];
         } else {
             $where .= " AND `artist`.`name` = ?";
             $params[] = $data['artist'];
