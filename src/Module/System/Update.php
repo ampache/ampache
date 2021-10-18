@@ -277,7 +277,7 @@ class Update
         $update_string = "* Add podcast to the cache_object_count tables";
         $version[]     = array('version' => '510001', 'description' => $update_string);
 
-        $update_string = "* Add indexes to recommendation_item table";
+        $update_string = ""; // REMOVED update
         $version[]     = array('version' => '510002', 'description' => $update_string);
 
         return $version;
@@ -1640,18 +1640,10 @@ class Update
     /**
      * update_510002
      *
-     * Add indexes to recommendation_item table
+     * Removed.
      */
     public static function update_510002()
     {
-        $retval = true;
-        $sql    = "CREATE INDEX `recommendation_item_mbid_IDX` USING BTREE ON `recommendation_item` (`mbid`);";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE INDEX `recommendation_item_recommendation_id_IDX` USING BTREE ON `recommendation_item` (`recommendation_id`);";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `recommendation_item`, (SELECT `artist`.`id` AS `recommendation_id`, `mbid` FROM `artist` WHERE `artist`.`mbid` IS NOT NULL) AS `artist` SET `recommendation_item`.`recommendation_id` = `artist`.`recommendation_id` WHERE `recommendation_item`.`recommendation_id` != `artist`.`recommendation_id` AND `recommendation_item`.`mbid` = `artist`.`mbid`;";
-        Dba::write($sql);
-
-        return $retval;
+        return true;
     }
 } // end update.class
