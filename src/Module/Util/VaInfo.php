@@ -920,11 +920,11 @@ final class VaInfo implements VaInfoInterface
                         case 'replaygain_track_peak':
                         case 'replaygain_album_gain':
                         case 'replaygain_album_peak':
-                            $parsed[$key] = !is_null($tag['data'][0]) ? (float) $tag['data'][0] : null;
+                            $parsed[$key] = (!is_null($tag['data'][0])) ? (float) $tag['data'][0] : null;
                             break;
                         case 'r128_track_gain':
                         case 'r128_album_gain':
-                            $parsed[$key] = !is_null($tag['data'][0]) ? (int) $tag['data'][0] : null;
+                            $parsed[$key] = (!is_null($tag['data'][0])) ? (int) $tag['data'][0] : null;
                             break;
                     }
                 }
@@ -995,7 +995,7 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
-            //debug_event(self::class, 'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0] ?? '', 5);
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
@@ -1074,7 +1074,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'Vorbis tag: ' . $tag . ' value: ' . $data[0] ?? '', 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -1218,7 +1218,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0] ?? '', 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1307,7 +1307,7 @@ final class VaInfo implements VaInfoInterface
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
-                //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
+                //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . $id3v2['comments']['text'][$txxx['description']] ?? '', 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         // return artists as array not as string of artists with delimiter, don't process metadata in catalog
@@ -1436,7 +1436,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'Quicktime tag: ' . $tag . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'Quicktime tag: ' . $tag . ' value: ' . $data[0] ?? '', 5);
             switch (strtolower($tag)) {
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));

@@ -184,7 +184,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $file_name = $fs_root->url() . '/some-file';
         $raw_mime  = 'image/png';
         $raw_art   = 'some-raw-bytes';
-        $fileName = 'some-full-name';
+        $fileName  = 'some-full-name';
 
         $album->id = $albumId;
 

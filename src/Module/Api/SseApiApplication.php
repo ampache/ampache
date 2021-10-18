@@ -61,7 +61,7 @@ final class SseApiApplication implements ApiApplicationInterface
             header('Cache-Control: no-cache');
         }
 
-        $worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
+        $worker = $_REQUEST['worker'] ?? null;
         if (array_key_exists('options', $_REQUEST)) {
             $options = json_decode(urldecode($_REQUEST['options']), true);
         } else {

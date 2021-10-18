@@ -2064,12 +2064,12 @@ abstract class Catalog extends database_object
             }
         }
         $new_song->language              = self::check_length($results['language'], 128);
-        $new_song->replaygain_track_gain = !is_null($results['replaygain_track_gain']) ? (float) $results['replaygain_track_gain'] : null;
-        $new_song->replaygain_track_peak = !is_null($results['replaygain_track_peak']) ? (float) $results['replaygain_track_peak'] : null;
-        $new_song->replaygain_album_gain = !is_null($results['replaygain_album_gain']) ? (float) $results['replaygain_album_gain'] : null;
-        $new_song->replaygain_album_peak = !is_null($results['replaygain_album_peak']) ? (float) $results['replaygain_album_peak'] : null;
-        $new_song->r128_track_gain       = !is_null($results['r128_track_gain']) ? (int) $results['r128_track_gain'] : null;
-        $new_song->r128_album_gain       = !is_null($results['r128_album_gain']) ? (int) $results['r128_album_gain'] : null;
+        $new_song->replaygain_track_gain = (!is_null($results['replaygain_track_gain'])) ? (float) $results['replaygain_track_gain'] : null;
+        $new_song->replaygain_track_peak = (!is_null($results['replaygain_track_peak'])) ? (float) $results['replaygain_track_peak'] : null;
+        $new_song->replaygain_album_gain = (!is_null($results['replaygain_album_gain'])) ? (float) $results['replaygain_album_gain'] : null;
+        $new_song->replaygain_album_peak = (!is_null($results['replaygain_album_peak'])) ? (float) $results['replaygain_album_peak'] : null;
+        $new_song->r128_track_gain       = (!is_null($results['r128_track_gain'])) ? (int) $results['r128_track_gain'] : null;
+        $new_song->r128_album_gain       = (!is_null($results['r128_album_gain'])) ? (int) $results['r128_album_gain'] : null;
 
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];
@@ -2092,7 +2092,7 @@ abstract class Catalog extends database_object
         $release_type     = self::check_length($results['release_type'], 32);
         $release_status   = $results['release_status'];
         $albumartist      = self::check_length($results['albumartist']);
-        $albumartist      = $albumartist ?: null;
+        $albumartist      = $albumartist ?? null;
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);

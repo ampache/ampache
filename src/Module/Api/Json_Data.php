@@ -418,9 +418,9 @@ class Json_Data
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating() ?: null),
-                "rating" => ($rating->get_user_rating() ?: null),
-                "averagerating" => ($rating->get_average_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating() ?? null),
+                "rating" => ($rating->get_user_rating() ?? null),
+                "averagerating" => ($rating->get_average_rating() ?? null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
                 "time" => (int) $artist->time,
@@ -517,9 +517,9 @@ class Json_Data
             $ourArray['genre']         = self::genre_array($album->tags);
             $ourArray['art']           = $art_url;
             $ourArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourArray['preciserating'] = ($rating->get_user_rating() ?: null);
-            $ourArray['rating']        = ($rating->get_user_rating() ?: null);
-            $ourArray['averagerating'] = ($rating->get_average_rating() ?: null);
+            $ourArray['preciserating'] = ($rating->get_user_rating() ?? null);
+            $ourArray['rating']        = ($rating->get_user_rating() ?? null);
+            $ourArray['averagerating'] = ($rating->get_average_rating() ?? null);
             $ourArray['mbid']          = $album->mbid;
 
             $JSON[] = $ourArray;
@@ -584,7 +584,7 @@ class Json_Data
                     $trackcount++;
                 }
             } else {
-                $items = ($playitem_total ?: 0);
+                $items = ($playitem_total ?? 0);
             }
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
@@ -599,9 +599,9 @@ class Json_Data
                 "type" => $playlist_type,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
-                "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null)]
+                "preciserating" => ($rating->get_user_rating($user_id) ?? null),
+                "rating" => ($rating->get_user_rating($user_id) ?? null),
+                "averagerating" => (string) ($rating->get_average_rating() ?? null)]
             );
         } // end foreach
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
@@ -809,9 +809,9 @@ class Json_Data
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
-                "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating($user_id) ?? null),
+                "rating" => ($rating->get_user_rating($user_id) ?? null),
+                "averagerating" => (string) ($rating->get_average_rating() ?? null),
                 "podcast_episode" => $podcast_episodes
             ]);
         } // end foreach
@@ -863,9 +863,9 @@ class Json_Data
                 "catalog" => $episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
-                "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating($user_id) ?? null),
+                "rating" => ($rating->get_user_rating($user_id) ?? null),
+                "averagerating" => (string) ($rating->get_average_rating() ?? null),
                 "playcount" => (int) $episode->total_count,
                 "played" => $episode->played]);
         }
@@ -950,9 +950,9 @@ class Json_Data
             $ourArray['albumartist_mbid']      = $song->albumartist_mbid;
             $ourArray['art']                   = $art_url;
             $ourArray['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourArray['preciserating']         = ($rating->get_user_rating() ?: null);
-            $ourArray['rating']                = ($rating->get_user_rating() ?: null);
-            $ourArray['averagerating']         = ($rating->get_average_rating() ?: null);
+            $ourArray['preciserating']         = ($rating->get_user_rating() ?? null);
+            $ourArray['rating']                = ($rating->get_user_rating() ?? null);
+            $ourArray['averagerating']         = ($rating->get_average_rating() ?? null);
             $ourArray['playcount']             = (int)$song->total_count;
             $ourArray['catalog']               = (int)$song->catalog;
             $ourArray['composer']              = $song->composer;
@@ -1021,9 +1021,9 @@ class Json_Data
                 "url" => $video->play_url('', 'api', false, $user_id),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
-                "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating($user_id) ?? null),
+                "rating" => ($rating->get_user_rating($user_id) ?? null),
+                "averagerating" => (string) ($rating->get_average_rating() ?? null),
                 "playcount" => (int) $video->total_count
             ));
         } // end foreach
@@ -1073,9 +1073,9 @@ class Json_Data
                 "url" => $song->play_url('', 'api', false, $user_id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => ($rating->get_user_rating() ?: null),
-                "rating" => ($rating->get_user_rating() ?: null),
-                "averagerating" => ($rating->get_average_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating() ?? null),
+                "rating" => ($rating->get_user_rating() ?? null),
+                "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => (int) $song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ));

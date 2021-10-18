@@ -833,11 +833,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function update(array $data)
     {
         // Save our current ID
-        $name        = isset($data['name']) ? $data['name'] : $this->name;
-        $mbid        = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $summary     = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $placeformed = isset($data['placeformed']) ? $data['placeformed'] : $this->placeformed;
-        $yearformed  = isset($data['yearformed']) ? $data['yearformed'] : $this->yearformed;
+        $name        = $data['name'] ?? $this->name;
+        $mbid        = $data['mbid'] ?? $this->mbid;
+        $summary     = $data['summary'] ?? $this->summary;
+        $placeformed = $data['placeformed'] ?? $this->placeformed;
+        $yearformed  = $data['yearformed'] ?? $this->yearformed;
 
         $current_id = $this->id;
 
@@ -901,12 +901,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $this->mbid = $mbid;
 
         $override_childs = false;
-        if ($data['overwrite_childs'] == 'checked') {
+        if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
 
         $add_to_childs = false;
-        if ($data['add_to_childs'] == 'checked') {
+        if (array_key_exists('add_to_childs', $data) && $data['add_to_childs'] == 'checked') {
             $add_to_childs = true;
         }
 

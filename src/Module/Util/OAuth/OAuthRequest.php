@@ -154,7 +154,7 @@ class OAuthRequest
      */
     public function get_parameter($name)
     {
-        return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+        return $this->parameters[$name] ?? null;
     }
 
     /**

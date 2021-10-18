@@ -180,7 +180,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'similar_songs':
-                $artist = new Artist($this->requestParser->getFromRequest('artist'));
+                $artist     = new Artist($this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
                 $object_ids = array();
                 if (!empty($similars)) {

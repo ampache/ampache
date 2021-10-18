@@ -221,8 +221,8 @@ class OAuthServer
     private function check_signature($request, $consumer, $token)
     {
         // this should probably be in a different method
-        $timestamp = $request instanceof OAuthRequest ? $request->get_parameter('oauth_timestamp') : null;
-        $nonce     = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
+        $timestamp = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_timestamp') : null;
+        $nonce     = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_nonce') : null;
 
         $this->check_timestamp($timestamp);
         $this->check_nonce($consumer, $token, $nonce, $timestamp);

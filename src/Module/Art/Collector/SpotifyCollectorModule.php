@@ -70,8 +70,8 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         $session = null;
         $images  = [];
 
-        $clientId     = $this->configContainer->get('spotify_client_id') ?: null;
-        $clientSecret = $this->configContainer->get('spotify_client_secret') ?: null;
+        $clientId     = $this->configContainer->get('spotify_client_id') ?? null;
+        $clientSecret = $this->configContainer->get('spotify_client_secret') ?? null;
 
         if ($clientId === null || $clientSecret === null) {
             $this->logger->debug(

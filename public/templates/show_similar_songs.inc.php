@@ -79,9 +79,9 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
         <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
-                Rating::build_cache('song', $object_ids);
-                Userflag::build_cache('song', $object_ids);
-            }
+            Rating::build_cache('song', $object_ids);
+            Userflag::build_cache('song', $object_ids);
+        }
         } ?>
         <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
     </tr>

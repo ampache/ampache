@@ -427,7 +427,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $comment          = $results['comment'];
         $tags             = $results['genre']; // multiple genre support makes this an array
         $lyrics           = $results['lyrics'];
-        $user_upload      = isset($results['user_upload']) ? $results['user_upload'] : null;
+        $user_upload      = $results['user_upload'] ?? null;
         $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
         $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
@@ -451,13 +451,13 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?? 0;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
-        $release_status        = isset($results['release_status']) ? $results['release_status'] : null;
-        $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
-        $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
-        $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
-        $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
-        $r128_track_gain       = isset($results['r128_track_gain']) ? $results['r128_track_gain'] : null;
-        $r128_album_gain       = isset($results['r128_album_gain']) ? $results['r128_album_gain'] : null;
+        $release_status        = $results['release_status'] ?? null;
+        $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
+        $replaygain_track_peak = $results['replaygain_track_peak'] ?? null;
+        $replaygain_album_gain = $results['replaygain_album_gain'] ?? null;
+        $replaygain_album_peak = $results['replaygain_album_peak'] ?? null;
+        $r128_track_gain       = $results['r128_track_gain'] ?? null;
+        $r128_album_gain       = $results['r128_album_gain'] ?? null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
         $barcode               = Catalog::check_length($results['barcode'], 64);
 

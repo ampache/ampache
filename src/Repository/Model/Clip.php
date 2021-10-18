@@ -85,7 +85,7 @@ class Clip extends Video
         if (!isset($data['artist']) || empty($data['artist'])) {
             return null;
         }
-        $artist_mbid = isset($data['mbid_artistid']) ? $data['mbid_artistid'] : null;
+        $artist_mbid = $data['mbid_artistid'] ?? null;
         if ($artist_mbid) {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }

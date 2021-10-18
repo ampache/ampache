@@ -277,6 +277,9 @@ class Update
         $update_string = "* Add podcast to the cache_object_count tables";
         $version[]     = array('version' => '510001', 'description' => $update_string);
 
+        $update_string = "* Add indexes to recommendation_item table";
+        $version[]     = array('version' => '510002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1054,13 +1057,13 @@ class Update
     {
         $retval = true;
 
-        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
+        $sql = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql    = "ALTER TABLE `album` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $sql = "ALTER TABLE `album` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql    = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $sql = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1075,7 +1078,7 @@ class Update
     {
         $retval = true;
 
-        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1090,10 +1093,10 @@ class Update
     {
         $retval = true;
 
-        $sql    = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1120,7 +1123,7 @@ class Update
         $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql    = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1220,9 +1223,9 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `artist` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `artist` ADD `album_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `artist` ADD `album_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1255,28 +1258,28 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `album` ADD `release_status` varchar(32) DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `album` ADD `addition_time` int(11) UNSIGNED DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `album` ADD `addition_time` int(11) UNSIGNED DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `album` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $sql = "ALTER TABLE `album` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `label` ADD `mbid` varchar(36) DEFAULT NULL;";
+        $sql = "ALTER TABLE `label` ADD `mbid` varchar(36) DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `label` ADD `country` varchar(64) DEFAULT NULL;";
+        $sql = "ALTER TABLE `label` ADD `country` varchar(64) DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `label` ADD `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';";
+        $sql = "ALTER TABLE `label` ADD `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
-        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+        Dba::write($sql);
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+        Dba::write($sql);
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+        Dba::write($sql);
+        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1296,7 +1299,7 @@ class Update
             $sql = "ALTER TABLE `$type` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
             $retval &= (Dba::write($sql) !== false);
             $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_count` = `object_count`.`total_count` WHERE `$type`.`total_count` != `object_count`.`total_count` AND `$type`.`id` = `object_count`.`object_id`;";
-            $retval &= (Dba::write($sql) !== false);
+            Dba::write($sql);
         }
         // tables that also have a skip count
         $tables = ['song', 'video', 'podcast_episode'];
@@ -1304,7 +1307,7 @@ class Update
             $sql = "ALTER TABLE `$type` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';";
             $retval &= (Dba::write($sql) !== false);
             $sql = "UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;";
-            $retval &= (Dba::write($sql) !== false);
+            Dba::write($sql);
         }
 
         return $retval;
@@ -1321,7 +1324,7 @@ class Update
         $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
         $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1365,14 +1368,14 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `album` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `album` ADD `artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `album` ADD `artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql    = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`));";
-        $retval &= (Dba::write($sql) !== false);
+        $sql = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`));";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`artist_count` != `song`.`artist_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1433,7 +1436,7 @@ class Update
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql    = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
+        $sql = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1484,7 +1487,7 @@ class Update
         $sql    = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
         $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1560,14 +1563,13 @@ class Update
 
         // fill the data
         $sql = "UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
         $sql = "UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;";
-        $retval &= (Dba::write($sql) !== false);
-        // system playlists are also possible
+        Dba::write($sql);
         $sql = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;";
-        $retval &= Dba::write($sql, array(T_('System')));
+        Dba::write($sql);
         $sql = "UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;";
-        $retval &= Dba::write($sql, array(T_('System')));
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1583,7 +1585,7 @@ class Update
         $sql    = "ALTER TABLE `podcast` ADD `episodes` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
         $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
 
         return $retval;
     }
@@ -1629,8 +1631,26 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
+        $sql = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_510002
+     *
+     * Add indexes to recommendation_item table
+     */
+    public static function update_510002()
+    {
+        $retval = true;
+        $sql    = "CREATE INDEX `recommendation_item_mbid_IDX` USING BTREE ON `recommendation_item` (`mbid`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "CREATE INDEX `recommendation_item_recommendation_id_IDX` USING BTREE ON `recommendation_item` (`recommendation_id`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `recommendation_item`, (SELECT `artist`.`id` AS `recommendation_id`, `mbid` FROM `artist` WHERE `artist`.`mbid` IS NOT NULL) AS `artist` SET `recommendation_item`.`recommendation_id` = `artist`.`recommendation_id` WHERE `recommendation_item`.`recommendation_id` != `artist`.`recommendation_id` AND `recommendation_item`.`mbid` = `artist`.`mbid`;";
+        Dba::write($sql);
 
         return $retval;
     }

@@ -253,7 +253,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     </div>
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
-<?php if ($multi_object_ids === null) {
+<?php if (!isset($multi_object_ids) || $multi_object_ids === null) {
             $multi_object_ids = array('' => $object_ids);
         }
 
@@ -277,37 +277,37 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </div>
 
 <?php if ($use_wanted) {
-        echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
+                echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
         <div id="missing_albums" class="tab_content">
         <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
 <?php if ($show_similar) {
-        echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
+                echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
         <div id="similar_artist" class="tab_content">
         <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
         <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
         <div id="similar_songs" class="tab_content">
             <?php Ui::show_box_top(null, 'info-box');
-            echo T_('Loading...');
-            Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
 <?php if ($use_label) {
-        echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
+                echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
         <div id="labels" class="tab_content">
         <?php Ui::show_box_top(T_('Labels'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
     </div>
 </div>

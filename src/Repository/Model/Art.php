@@ -1036,7 +1036,7 @@ class Art extends database_object
             }
         }
 
-        $mime      = isset($thumb_mime) ? $thumb_mime : (isset($mime) ? $mime : null);
+        $mime      = $thumb_mime ?? (isset($mime) ? $mime : null);
         $extension = self::extension($mime);
 
         if (AmpConfig::get('stream_beautiful_url')) {

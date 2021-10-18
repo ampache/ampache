@@ -688,7 +688,7 @@ class Preference extends database_object
     public static function translate_db()
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
-        $pref_array = array (
+        $pref_array = array(
             'download' => T_('Allow Downloads'),
             'popular_threshold' => T_('Popular Threshold'),
             'transcode_bitrate' => T_('Transcode Bitrate'),
@@ -851,7 +851,7 @@ class Preference extends database_object
             'yourls_use_idn' => T_('YOURLS use IDN'),
             'yourls_api_key' => T_('YOURLS API key')
         );
-        foreach($pref_array as $key => $value) {
+        foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));
         }
     } // translate_db

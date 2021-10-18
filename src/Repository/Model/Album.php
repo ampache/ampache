@@ -1048,12 +1048,12 @@ class Album extends database_object implements library_item
         } // if updated
 
         $override_childs = false;
-        if ($data['overwrite_childs'] == 'checked') {
+        if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
 
         $add_to_childs = false;
-        if ($data['add_to_childs'] == 'checked') {
+        if (array_key_exists('add_to_childs', $data) && $data['add_to_childs'] == 'checked') {
             $add_to_childs = true;
         }
 
