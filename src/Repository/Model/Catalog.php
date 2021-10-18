@@ -2693,7 +2693,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_featuring($string)
     {
-        return array_map('trim', explode(' feat. ', $string));
+        return array_map('trim', preg_split("/ feat\. /i", $string));
     } // trim_featuring
 
     /**
