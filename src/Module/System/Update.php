@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
 /**
@@ -363,9 +364,10 @@ class Update
         // Let's also clean up the preferences unconditionally
         debug_event(self::class, 'run_update: starting rebuild_all_preferences', 5);
         User::rebuild_all_preferences();
+        // translate preferences on DB update
+        Preference::translate_db();
 
-        // Upgrade complete
-        debug_event(self::class, 'run_update: starting', 4);
+        debug_event(self::class, 'run_update: Upgrade complete', 4);
 
         return true;
     } // run_update
