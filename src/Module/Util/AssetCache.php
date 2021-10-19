@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,7 +35,7 @@ use RegexIterator;
  */
 class AssetCache
 {
-    private static string $cacheText = '_cached_by_ampache_';
+    const cacheText = '_cached_by_ampache_';
 
     /**
      * This uses the MD5 hash of a file to create a unique cached version, to avoid 'just clear your browser cache' issues
@@ -49,7 +48,7 @@ class AssetCache
         $originalURL   = $url;
         $originalPath  = self::get_path($originalURL);
 
-        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::$cacheText . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
+        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::cacheText . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
         $cachedPath = self::get_path($cachedURL);
 
         if (!file_exists($cachedPath)) {
@@ -74,7 +73,7 @@ class AssetCache
         $pathArray = pathinfo($path);
 
         if (file_exists($path)) {
-            $cachedVersion = $pathArray['dirname'] . '/' . $pathArray['filename'] . self::$cacheText . md5_file($path) . '.' . $pathArray['extension'];
+            $cachedVersion = $pathArray['dirname'] . '/' . $pathArray['filename'] . self::cacheText . md5_file($path) . '.' . $pathArray['extension'];
             copy($path, $cachedVersion);
         }
     }
@@ -83,7 +82,7 @@ class AssetCache
     {
         $directory = new RecursiveDirectoryIterator(Core::get_server('DOCUMENT_ROOT'));
         $iterator  = new RecursiveIteratorIterator($directory);
-        $files     = new RegexIterator($iterator, '/.+' . self::$cacheText . '.+/i', RecursiveRegexIterator::GET_MATCH);
+        $files     = new RegexIterator($iterator, '/.+' . self::cacheText . '.+/i', RecursiveRegexIterator::GET_MATCH);
 
         foreach ($files as $file) {
             $file = implode("", $file);
