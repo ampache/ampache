@@ -858,6 +858,7 @@ class Json_Data
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
                 "mime" => $episode->mime,
+                "time" => $episode->time,
                 "public_url" => $episode->link,
                 "url" => $episode->play_url('', 'api', false, $user_id),
                 "catalog" => $episode->catalog,
