@@ -763,7 +763,7 @@ class Subsonic_Xml_Data
         $db_results = Dba::read($sql, array($songId));
         $row        = Dba::fetch_assoc($db_results);
         if (!$row) {
-            debug_event(self::class, 'getAlbumData failed: ' . $songId, 5);
+            debug_event(self::class, 'getSongData failed: ' . $songId, 5);
 
             return array();
         }
@@ -805,7 +805,7 @@ class Subsonic_Xml_Data
         $db_results = Dba::read($sql, array($artistId));
         $row        = Dba::fetch_assoc($db_results);
         if (!$row) {
-            debug_event(self::class, 'getAlbumData failed: ' . $artistId, 5);
+            debug_event(self::class, 'getArtistData failed: ' . $artistId, 5);
 
             return array();
         }
