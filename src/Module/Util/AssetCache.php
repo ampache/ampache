@@ -24,79 +24,68 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
+use RegexIterator;
 
 /**
  * A collection of methods related to cache-busting assets
  */
 class AssetCache
 {
-    private static string $cacheDir = '/cached_assets/';
-    private static string $cacheDirURL;
-    private static string $cacheDirPath;
-
-    private static function set_cache_dir()
-    {
-        self::$cacheDirURL  = AmpConfig::get('web_path') . self::$cacheDir;
-        self::$cacheDirPath = Core::get_server('DOCUMENT_ROOT') . self::$cacheDir;
-    }
+    const cacheText = '_cached_by_ampache_';
 
     /**
      * This uses the MD5 hash of a file to create a unique cached version, to avoid 'just clear your browser cache' issues
-     * @param string $path
+     * @param string $url
      * @return string
      */
-    public static function get_url(string $path)
+    public static function get_url(string $url)
     {
-        self::set_cache_dir();
+        $originalArray = pathinfo($url);
+        $originalURL   = $url;
+        $originalPath  = self::get_path($originalURL);
 
-        $originalFileURL       = $path;
-        $originalFilePath      = Core::get_server('DOCUMENT_ROOT') . str_replace(AmpConfig::get('web_path'), '', $path);
-        $originalFilePathArray = pathinfo($path);
+        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::cacheText . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
+        $cachedPath = self::get_path($cachedURL);
 
-        $cachedFileURL  = self::$cacheDirURL . $originalFilePathArray['filename'] . '-' . md5_file($originalFilePath) . '.' . $originalFilePathArray['extension'];
-        $cachedFilePath = self::$cacheDirPath . $originalFilePathArray['filename'] . '-' . md5_file($originalFilePath) . '.' . $originalFilePathArray['extension'];
-
-        if (!file_exists($cachedFilePath)) {
-            self::copy_file($originalFilePath);
+        if (!file_exists($cachedPath)) {
+            self::copy_file($originalPath);
         }
 
-        if (file_exists($cachedFilePath)) {
-            return $cachedFileURL;
+        if (file_exists($cachedPath)) {
+            return $cachedURL;
         }
 
         // if all else fails return original file
-        return $originalFileURL;
+        return $url;
+    }
+
+    private static function get_path($url)
+    {
+        return Core::get_server('DOCUMENT_ROOT') . parse_url($url, PHP_URL_PATH);
     }
 
     private static function copy_file(string $path)
     {
-        self::create_cache_dir();
+        $pathArray = pathinfo($path);
 
-        $filePath      = str_replace(AmpConfig::get('web_path'), Core::get_server('DOCUMENT_ROOT'), $path);
-        $filepathArray = pathinfo($path);
-
-        if (file_exists($filePath)) {
-            $cachedVersion = self::$cacheDirPath . $filepathArray['filename'] . '-' . md5_file($filePath) . '.' . $filepathArray['extension'];
-            copy($filePath, $cachedVersion);
-        }
-    }
-
-    private static function create_cache_dir()
-    {
-        if (!file_exists(self::$cacheDirPath)) {
-            mkdir(self::$cacheDirPath, 0755);
+        if (file_exists($path)) {
+            $cachedVersion = $pathArray['dirname'] . '/' . $pathArray['filename'] . self::cacheText . md5_file($path) . '.' . $pathArray['extension'];
+            copy($path, $cachedVersion);
         }
     }
 
     public static function clear_cache()
     {
-        self::set_cache_dir();
-
-        $files = glob(self::$cacheDirPath . '*');
+        $directory = new RecursiveDirectoryIterator(Core::get_server('DOCUMENT_ROOT'));
+        $iterator  = new RecursiveIteratorIterator($directory);
+        $files     = new RegexIterator($iterator, '/.+' . self::cacheText . '.+/i', RecursiveRegexIterator::GET_MATCH);
 
         foreach ($files as $file) {
+            $file = implode("", $file);
             if (is_file($file)) {
                 unlink($file);
             }
