@@ -67,26 +67,27 @@ final class EditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $data = $request->getParsedBody();
-
-        $licenseId = (int) ($data['license_id'] ?? 0);
+        $data      = $request->getParsedBody();
+        $licenseId = (array_key_exists('license_id', $data))
+            ? filter_var($data['license_id'], FILTER_SANITIZE_NUMBER_INT)
+            : 0;
         if ($licenseId > 0) {
             $license = $this->modelFactory->createLicense($licenseId);
 
             if ($license->id) {
                 $this->licenseRepository->update(
                     $licenseId,
-                    $data['name'] ?? '',
-                    $data['description'] ?? '',
-                    $data['external_link'] ?? ''
+                    (array_key_exists('name', $data)) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
+                    (array_key_exists('description', $data)) ? filter_var($data['description'], FILTER_SANITIZE_STRING)  : '',
+                    (array_key_exists('external_link', $data)) ? filter_var($data['external_link'], FILTER_SANITIZE_URL)  : ''
                 );
             }
             $text = T_('The License has been updated');
         } else {
             $this->licenseRepository->create(
-                $data['name'] ?? '',
-                $data['description'] ?? '',
-                $data['external_link'] ?? ''
+                (array_key_exists('name', $data)) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : '',
+                (array_key_exists('description', $data)) ? filter_var($data['description'], FILTER_SANITIZE_STRING)  : '',
+                (array_key_exists('external_link', $data)) ? filter_var($data['external_link'], FILTER_SANITIZE_URL)  : ''
             );
             $text = T_('A new License has been created');
         }

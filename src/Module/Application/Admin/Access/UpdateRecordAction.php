@@ -73,12 +73,11 @@ final class UpdateRecordAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
 
         $this->ui->showHeader();
 
-        $data = $request->getParsedBody();
-
+        $data     = $request->getParsedBody();
+        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
         try {
             $this->accessListManager->update(
                 $accessId,

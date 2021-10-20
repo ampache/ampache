@@ -78,8 +78,7 @@ final class AddHostAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $data = $request->getParsedBody();
-
+        $data    = $request->getParsedBody();
         $startIp = $data['start'] ?? '';
         $endIp   = $data['end'] ?? '';
 

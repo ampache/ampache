@@ -449,10 +449,11 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $username = $input['u'];
-        $user     = User::get_from_username((string)$username);
+        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $user     = User::get_from_username($username);
         $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
+
         Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
         self::apiOutput($input, $response);
     }
@@ -982,9 +983,9 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
-        $username = $input['username'] ?? $input['u'];
+        $username = (string)filter_var($input['username'], FILTER_SANITIZE_STRING) ?? (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user     = User::get_from_username((string)$username);
+        $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
 
         // Don't allow playlist listing for another user
         Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
@@ -1152,13 +1153,16 @@ class Subsonic_Api
     {
         $fileid = self::check_parameter($input, 'id', true);
 
-        $maxBitRate    = $input['maxBitRate'] ?? 0;
+        $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format'] ?? ''; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
-        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode
-        $user_id       = User::get_from_username($input['u'])->id;
+        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username      = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $user          = User::get_from_username($username);
+        $user_id       = $user->id;
+        $client        = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
 
-        $params = '&client=' . rawurlencode($input['c']);
+        $params = '&client=' . rawurlencode($client);
         if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
@@ -1204,7 +1208,8 @@ class Subsonic_Api
     {
         $fileid  = self::check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $params  = '&client=' . rawurlencode($input['c']) . '&action=download&cache=1';
+        $client  = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $params  = '&client=' . rawurlencode($client) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::getAmpacheId($fileid));
@@ -2049,7 +2054,7 @@ class Subsonic_Api
         $object_ids = self::check_parameter($input, 'id');
         $submission = ($input['submission'] === 'true' || $input['submission'] === '1');
         $username   = (string) $input['u'];
-        $client     = (string) $input['c'];
+        $client     = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $user       = User::get_from_username($username);
 
         if (!is_array($object_ids)) {
@@ -2415,12 +2420,10 @@ class Subsonic_Api
                 $episode->gather();
                 $response = Subsonic_Xml_Data::createSuccessResponse('downloadpodcastepisode');
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'downloadpodcastepisode');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'downloadpodcastepisode');
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'downloadpodcastepisode');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'downloadpodcastepisode');
         }
         self::apiOutput($input, $response);
     }
@@ -2569,9 +2572,10 @@ class Subsonic_Api
         if ($media->id) {
             $response  = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
             $position  = (int)((int)$input['position'] / 1000);
-            $username  = (string) $input['u'];
-            $client    = (string) $input['c'];
-            $user_id   = User::get_from_username($username)->id;
+            $client    = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+            $username  = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+            $user      = User::get_from_username($username);
+            $user_id   = $user->id;
             $user_data = User::get_user_data($user_id, 'playqueue_time');
             $time      = time();
             // wait a few seconds before smashing out play times
@@ -2616,9 +2620,10 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $username = (string) $input['u'];
-        $client   = (string) $input['c'];
-        $user_id  = User::get_from_username($username)->id;
+        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $user     = User::get_from_username($username);
+        $client   = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $user_id  = $user->id;
         $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
         User::set_user_data($user_id, 'playqueue_time', time());
         User::set_user_data($user_id, 'playqueue_client', $client);
