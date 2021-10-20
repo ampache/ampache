@@ -1687,6 +1687,8 @@ span.fatalerror {
 #item_summary {
     margin-right: 33%;
     padding-bottom: 20px;
+    max-height: 340px;
+    overflow-y: auto;
 }
 
 /* -------------------------

@@ -40,14 +40,14 @@ $web_path = AmpConfig::get('web_path'); ?>
         foreach ($plugins as $plugin_name) {
             $plugin            = new Plugin($plugin_name);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-            if (!$installed_version) {
+            if ($installed_version == 0) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
-                    $action .= '&nbsp;&nbsp;<a href="' . $web_path .
+                    $action .= '</br><a href="' . $web_path .
                     '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
