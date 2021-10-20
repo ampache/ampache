@@ -101,7 +101,8 @@ final class BookmarkCreateMethod
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position
+            'position' => $position,
+            'user' => $user->getId()
         );
 
         // create it then retrieve it
