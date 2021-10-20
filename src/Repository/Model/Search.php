@@ -1068,11 +1068,14 @@ class Search extends playlist_object
         }
         //debug_event(self::class, 'SQL get_items: ' . $sql, 5);
 
+        $count      = 1;
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
-                'object_type' => $this->searchtype
+                'object_type' => $this->searchtype,
+                'track' => $count++,
+                'track_id' => $row['id'],
             );
         }
         $this->date = time();
@@ -1211,7 +1214,7 @@ class Search extends playlist_object
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $this->name_to_basetype($value)) {
                 $ruleID     = (string)$ruleID[1];
-                $input_rule = (string)($data['rule_' . $ruleID . '_input']?? '');
+                $input_rule = (string)($data['rule_' . $ruleID . '_input'] ?? '');
                 $operator   = $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'];
                 // keep vertical bar in regular expression
                 if (in_array($operator, ['regexp', 'notregexp'])) {

@@ -746,8 +746,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
                 if (!$exists && $row = Dba::fetch_assoc($db_results)) {
                     $artist_id = (int)$row['id'];
-                    $exists = ($artist_id > 0);
-                    $mbid = ($exists)
+                    $exists    = ($artist_id > 0);
+                    $mbid      = ($exists)
                         ? $mbid_string
                         : $mbid;
                 }

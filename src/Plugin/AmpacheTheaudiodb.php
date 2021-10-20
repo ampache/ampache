@@ -395,5 +395,3 @@ class AmpacheTheaudiodb
         return $this->api_call('track-mb.php?i=' . $mbid);
     }
 }
-
-
