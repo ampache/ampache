@@ -749,6 +749,7 @@ class Search extends playlist_object
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $this->type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -1210,7 +1211,7 @@ class Search extends playlist_object
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $this->name_to_basetype($value)) {
                 $ruleID     = (string)$ruleID[1];
-                $input_rule = (string)$data['rule_' . $ruleID . '_input'];
+                $input_rule = (string)($data['rule_' . $ruleID . '_input']?? '');
                 $operator   = $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'];
                 // keep vertical bar in regular expression
                 if (in_array($operator, ['regexp', 'notregexp'])) {
@@ -1585,6 +1586,10 @@ class Search extends playlist_object
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
                     $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
+                    $where[]               = "`mbid_group` IN (SELECT `mbid_group` FROM `album` WHERE `disk` = 1 GROUP BY `mbid_group`, `disk` HAVING COUNT(`mbid_group`) > 1)";
+                    break;
+                case 'duplicate_mbid_group':
+                    $where[] = "`mbid_group` IN (SELECT `mbid_group` FROM `album` WHERE `disk` = 1 GROUP BY `mbid_group`, `disk` HAVING COUNT(`mbid_group`) > 1)";
                     break;
                 default:
                     break;
