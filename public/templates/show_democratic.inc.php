@@ -20,13 +20,16 @@
  *
  */
 
-/* HINT: Democratic Playlist Name */
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Democratic;
 
+/** @var Democratic $democratic */
+
+/* HINT: Democratic Playlist Name */
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
 Ui::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">

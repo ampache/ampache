@@ -55,6 +55,7 @@ class Browse extends Query
         'shoutbox',
         'tag',
         'video',
+        'democratic',
         'wanted',
         'share',
         'song_preview',
