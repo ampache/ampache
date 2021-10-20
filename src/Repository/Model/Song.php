@@ -570,6 +570,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // delete the rest
         Dba::write("DELETE FROM `song_data` WHERE `song_data`.`song_id` NOT IN (SELECT `song`.`id` FROM `song`);");
+        // also clean up some bad data that might creep in
+        Dba::write("UPDATE `song` SET `composer` = NULL WHERE `composer` = '';");
+        Dba::write("UPDATE `song` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `song_data` SET `comment` = NULL WHERE `comment` = '';");
+        Dba::write("UPDATE `song_data` SET `lyrics` = NULL WHERE `lyrics` = '';");
+        Dba::write("UPDATE `song_data` SET `label` = NULL WHERE `label` = '';");
+        Dba::write("UPDATE `song_data` SET `language` = NULL WHERE `language` = '';");
+        Dba::write("UPDATE `song_data` SET `waveform` = NULL WHERE `waveform` = '';");
     }
 
     /**

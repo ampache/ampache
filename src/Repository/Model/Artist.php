@@ -254,6 +254,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function garbage_collection()
     {
         Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL);");
+        // also clean up some bad data that might creep in
+        Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
+        Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
+        Dba::write("UPDATE `artist` SET `placeformed` = NULL WHERE `placeformed` = '';");
+        Dba::write("UPDATE `artist` SET `yearformed` = NULL WHERE `yearformed` = 0;");
     }
 
     /**
@@ -738,17 +744,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
             foreach ($matches as $mbid_string) {
                 $db_results = Dba::read($sql, array($mbid_string));
 
-                if (!$exists) {
-                    $row       = Dba::fetch_assoc($db_results);
+                if (!$exists && $row = Dba::fetch_assoc($db_results)) {
                     $artist_id = (int)$row['id'];
-                    $exists    = ($artist_id > 0);
-                    $mbid      = ($exists)
+                    $exists = ($artist_id > 0);
+                    $mbid = ($exists)
                         ? $mbid_string
                         : $mbid;
                 }
             }
-            // try the whole string if it didn't work
             if (!$exists) {
+                // try the whole string if it didn't work
                 $db_results = Dba::read($sql, array($mbid));
 
                 if ($row = Dba::fetch_assoc($db_results)) {
@@ -825,6 +830,29 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * update_name_from_mbid
+     *
+     * Refresh your atist name using external data based on the mbid
+     * @param string $new_name
+     * @param string $mbid
+     * @return array
+     */
+    public static function update_name_from_mbid($new_name, $mbid)
+    {
+        $trimmed = Catalog::trim_prefix(trim((string)$new_name));
+        $name    = $trimmed['string'];
+        $prefix  = $trimmed['prefix'];
+        $trimmed = Catalog::trim_featuring($name);
+        $name    = $trimmed[0];
+        debug_event(self::class, "update_name_from_mbid: rename {{$mbid}} to {{$prefix}} {{$name}}", 4);
+
+        $sql = 'UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `mbid` = ?';
+        Dba::write($sql, array($prefix, $name, $mbid));
+
+        return array('name' => $name, 'prefix' => $prefix);
+    }
+
+    /**
      * update
      * This takes a key'd array of data and updates the current artist
      * @param array $data
@@ -833,13 +861,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function update(array $data)
     {
         // Save our current ID
-        $name        = $data['name'] ?? $this->name;
+        $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
         $mbid        = $data['mbid'] ?? $this->mbid;
         $summary     = $data['summary'] ?? $this->summary;
         $placeformed = $data['placeformed'] ?? $this->placeformed;
         $yearformed  = $data['yearformed'] ?? $this->yearformed;
-
-        $current_id = $this->id;
+        $current_id  = $this->id;
 
         // Check if name is different than current name
         if ($this->name != $name) {
