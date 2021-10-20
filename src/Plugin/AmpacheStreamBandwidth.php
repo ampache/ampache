@@ -64,10 +64,8 @@ class AmpacheStreamBandwidth
         if (Preference::exists('stream_control_bandwidth_max')) {
             return false;
         }
-        Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), 1024, 50,
-            'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, 50,
-            'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), 1024, 50, 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, 50, 'integer', 'plugins', $this->name);
 
         return true;
     } // install

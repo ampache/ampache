@@ -484,6 +484,7 @@ class Preference extends database_object
                 return false;
             }
         }
+        debug_event(self::class, 'Inserted preference: ' . $name, 3);
 
         return true;
     } // insert
@@ -849,7 +850,9 @@ class Preference extends database_object
             'tvdb_api_key' => T_('TVDb API key'),
             'yourls_domain' => T_('YOURLS domain name'),
             'yourls_use_idn' => T_('YOURLS use IDN'),
-            'yourls_api_key' => T_('YOURLS API key')
+            'yourls_api_key' => T_('YOURLS API key'),
+            'tadb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
+            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));

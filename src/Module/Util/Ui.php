@@ -781,6 +781,8 @@ class Ui implements UiInterface
             case 'cron_cache':
             case 'show_lyrics':
             case 'unique_playlist':
+            case 'tadb_overwrite_name':
+            case 'mb_overwrite_name':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {

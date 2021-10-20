@@ -116,10 +116,13 @@ class AmpacheRatingMatch
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 2) {
             Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
         }
-        if ($from_version < 3) {
+        if ($from_version < (int)$this->version) {
             Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', 25, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', 25, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', 25, 'string', 'plugins', $this->name);

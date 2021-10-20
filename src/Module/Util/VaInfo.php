@@ -105,6 +105,7 @@ final class VaInfo implements VaInfoInterface
         'tvshow_season_art' => null,
         'art' => null
     );
+    private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
     public $encoding      = '';
     public $encodingId3v1 = '';
@@ -699,12 +700,25 @@ final class VaInfo implements VaInfoInterface
      */
     public static function get_mbid_array($mbid)
     {
-        $mbid_match_string = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
-        if (preg_match($mbid_match_string, $mbid, $matches)) {
+        if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
             return $matches;
         }
 
         return array($mbid);
+    }
+
+    /**
+     * is_mbid
+     * @param string $mbid
+     * @return bool
+     */
+    public static function is_mbid($mbid)
+    {
+        if (preg_match(self::MBID_REGEX, $mbid)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -855,7 +869,7 @@ final class VaInfo implements VaInfoInterface
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version) {
+                if ($installed_version > 0) {
                     if ($plugin->load(Core::get_global('user'))) {
                         $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gatherTypes,
                             self::clean_tag_info($this->tags,

@@ -72,8 +72,7 @@ class Ampachelistenbrainz
             return false;
         }
 
-        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins',
-            $this->name);
+        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install

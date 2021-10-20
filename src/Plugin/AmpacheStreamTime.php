@@ -64,10 +64,8 @@ class AmpacheStreamTime
         if (Preference::exists('stream_control_time_max')) {
             return false;
         }
-        Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer',
-            'plugins', $this->name);
-        Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer',
-            'plugins', $this->name);
+        Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer', 'plugins', $this->name);
 
         return true;
     } // install

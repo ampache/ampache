@@ -75,8 +75,7 @@ class Ampachelibrefm
             return false;
         }
 
-        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal',
-            $this->name);
+        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
         Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
@@ -100,16 +99,19 @@ class Ampachelibrefm
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 2) {
             Preference::rename('librefm_pass', 'librefm_md5_pass');
         }
-        if ($from_version < 3) {
+        if ($from_version < (int)$this->version) {
             Preference::delete('librefm_md5_pass');
             Preference::delete('librefm_user');
             Preference::delete('librefm_url');
             Preference::delete('librefm_host');
             Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins');
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
         }
 
         return true;

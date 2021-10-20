@@ -23,9 +23,14 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
+use MusicBrainz\Filters\ArtistFilter;
 use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -36,9 +41,12 @@ class AmpacheMusicBrainz
     public $categories  = 'metadata';
     public $description = 'MusicBrainz metadata integration';
     public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000001';
+    public $version     = '000002';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
+
+    // These are internal settings used by this class, run this->load to fill them out
+    private $overwrite_name;
 
     /**
      * Constructor
@@ -70,6 +78,29 @@ class AmpacheMusicBrainz
     } // uninstall
 
     /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade()
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+        if ($from_version < (int)$this->version) {
+            Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+        }
+
+        // did the upgrade work?
+        if (Preference::exists('mb_overwrite_name')) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
@@ -79,6 +110,9 @@ class AmpacheMusicBrainz
     public function load($user)
     {
         $user->set_preferences();
+        // overwrite matching MBID artist names
+        $data                 = $user->prefs;
+        $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
 
         return true;
     } // load
@@ -133,15 +167,24 @@ class AmpacheMusicBrainz
 
     /**
      * get_external_metadata
-     * Update an object (label for now) using musicbrainz
-     * @param Label $object
+     * Update an object (label or artist for now) using musicbrainz
+     * @param Label|Artist $object
      * @param string $object_type
      * @return bool
      */
-    public function get_external_metadata(Label $object, string $object_type = 'label')
+    public function get_external_metadata($object, string $object_type)
     {
+        $valid_types = array('label', 'artist');
+        // Artist metadata only for now
+        if (!in_array($object_type, $valid_types)) {
+            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists', 5);
+
+            return false;
+        }
+
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
-        if ($object->mbid) {
+        $results = array();
+        if (Vainfo::is_mbid($object->mbid)) {
             try {
                 $results = $mbrainz->lookup($object_type, $object->mbid);
             } catch (Exception $error) {
@@ -151,8 +194,16 @@ class AmpacheMusicBrainz
             }
         } else {
             try {
-                $args    = array($object_type => $object->name);
-                $results = $mbrainz->search(new LabelFilter($args), 1);
+                $args = array($object_type => $object->get_fullname());
+                switch ($object_type) {
+                    case 'label':
+                        $results = $mbrainz->search(new LabelFilter($args), 1);
+                        break;
+                    case 'artist':
+                        $results = $mbrainz->search(new ArtistFilter($args), 1);
+                        break;
+                    default:
+                }
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
@@ -163,23 +214,49 @@ class AmpacheMusicBrainz
             $results = $results[0];
         }
         if (!empty($results)) {
-            debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->name, 3);
-            $data = array(
-                'name' => $object->name,
-                'mbid' => $results->{'id'} ?: $object->mbid,
-                'category' => $results->{'type'} ?: $object->category,
-                'summary' => $results->{'disambiguation'} ?: $object->summary,
-                'address' => $object->address,
-                'country' => $results->{'country'} ?: $object->country,
-                'email' => $object->email,
-                'website' => $object->website,
-                'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
-            );
-            $object->update($data);
+            debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
+            $data = array();
+            switch ($object_type) {
+                case 'label':
+                    $data = array(
+                        'name' => $results->{'name'} ?? $object->get_fullname(),
+                        'mbid' => $results->{'id'} ?? $object->mbid,
+                        'category' => $results->{'type'} ?? $object->category,
+                        'summary' => $results->{'disambiguation'} ?? $object->summary,
+                        'address' => $object->address,
+                        'country' => $results->{'country'} ?? $object->country,
+                        'email' => $object->email,
+                        'website' => $object->website,
+                        'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
+                    );
+                    break;
+                case 'artist':
+                    $placeFormed = (isset($results->{'begin-area'}->{'name'}) && isset($results->{'area'}->{'name'}))
+                        ? $results->{'begin-area'}->{'name'} . ', ' . $results->{'area'}->{'name'}
+                        : $results->{'begin-area'}->{'name'} ?? $object->placeformed;
+                    $data = array(
+                        'name' => $results->{'name'} ?? $object->get_fullname(),
+                        'mbid' => $results->{'id'} ?? $object->mbid,
+                        'placeformed' => $placeFormed,
+                        'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? null))[0] ?? $object->yearformed
+                    );
+
+                    // when you come in with an mbid you might want to keep the name updated
+                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
+                        $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
+                        $object->prefix = $name_check['prefix'];
+                        $object->name   = $name_check['name'];
+                    }
+                    break;
+                default:
+            }
+            if (!empty($data)) {
+                $object->update($data);
+            }
 
             return true;
         }
 
         return false;
-    } // get_metadata
+    } // get_external_metadata
 }

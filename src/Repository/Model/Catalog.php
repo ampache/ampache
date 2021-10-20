@@ -1211,7 +1211,11 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'info') {
             // used for recommendations / similar artists
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `recommendation` WHERE `object_type` = 'artist');";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `recommendation` WHERE `object_type` = 'artist') ORDER BY RAND() LIMIT 500;";
+        }
+        if ($filter === 'time') {
+            // used checking musicbrainz and other plugins
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND() LIMIT 500;";
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
@@ -1741,19 +1745,43 @@ abstract class Catalog extends database_object
      *
      * This runs through all of the labels and refreshes information from musicbrainz
      * @param array $object_list
+     * @param string $object_type
      */
-    public function update_from_external($object_list = array())
+    public function update_from_external($object_list, $object_type)
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        debug_event(self::class, 'update_from_external found ' . (string) count($object_list) . ' items to check', 4);
-        $plugin = new Plugin('musicbrainz');
-        if ($plugin->load(new User(-1))) {
-            // Run through items and refresh info
-            foreach ($object_list as $label_id) {
-                $label = new Label($label_id);
-                $plugin->_plugin->get_external_metadata($label, 'label');
+        debug_event(self::class, 'update_from_external found ' . (string) count($object_list) . ' ' . $object_type . '\'s to check', 4);
+
+        // only allow your primary external metadata source to update values
+        $overwrites  = true;
+        $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
+        $plugin_list = Plugin::get_plugins('get_external_metadata');
+        foreach ($meta_order as $plugin_name) {
+            if (in_array($plugin_name, $plugin_list)) {
+                // only load metadata plugins you enable
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load(new User(-1)) && $overwrites) {
+                    debug_event(self::class, "get_external_metadata with: " . $plugin_name, 3);
+                    // Run through items and refresh info
+                    switch ($object_type) {
+                        case 'label':
+                            foreach ($object_list as $label_id) {
+                                $label = new Label($label_id);
+                                $plugin->_plugin->get_external_metadata($label, 'label');
+                            }
+                            break;
+                        case 'artist':
+                            foreach ($object_list as $artist_id) {
+                                $artist = new Artist($artist_id);
+                                $plugin->_plugin->get_external_metadata($artist, 'artist');
+                            }
+                            $overwrites = false;
+                            break;
+                        default:
+                    }
+                }
             }
         }
     }
@@ -2630,11 +2658,8 @@ abstract class Catalog extends database_object
      */
     public static function trim_prefix($string)
     {
-        $prefix_pattern = '/^(' . implode('\\s|',
-                explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
-        preg_match($prefix_pattern, $string, $matches);
-
-        if (count($matches)) {
+        $prefix_pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        if (preg_match($prefix_pattern, $string, $matches)) {
             $string = trim((string)$matches[2]);
             $prefix = trim((string)$matches[1]);
         } else {

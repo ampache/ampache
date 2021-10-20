@@ -63,10 +63,8 @@ class AmpacheStreamHits
         if (Preference::exists('stream_control_hits_max')) {
             return false;
         }
-        Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), -1, 50, 'integer', 'plugins',
-            $this->name);
-        Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, 50, 'integer',
-            'plugins', $this->name);
+        Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), -1, 50, 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, 50, 'integer', 'plugins', $this->name);
 
         return true;
     } // install
