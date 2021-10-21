@@ -177,6 +177,10 @@ final class ShowAction implements ApplicationActionInterface
                 // Album || Artist || Broadcast || Label || License || Live_Stream || Wanted
                 $filename = $item->name ?? '';
             }
+            if ($item instanceof Podcast_Episode) {
+                $object_id = $item->podcast;
+                $type      = 'podcast';
+            }
 
             $art = new Art($object_id, $type, $kind);
             $art->has_db_info();

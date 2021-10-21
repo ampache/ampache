@@ -61,7 +61,7 @@ if ($is_mashup) {
             $name = scrub_out($libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-            Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/podcast.php?action=show&podcast_episode=' . $libitem->id); ?>
+            Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $libitem->podcast); ?>
     </td>
 <?php
         } ?>
