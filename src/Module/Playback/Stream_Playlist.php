@@ -49,7 +49,6 @@ class Stream_Playlist
     public $id;
     public $urls = array();
     public $user;
-
     public $title;
 
     /**

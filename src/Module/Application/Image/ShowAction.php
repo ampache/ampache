@@ -42,6 +42,8 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -167,12 +169,12 @@ final class ShowAction implements ApplicationActionInterface
             $class_name = ObjectTypeToClassNameMapper::map($type);
             $object_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
             $item       = new $class_name($object_id);
-            if ($item instanceof Song || $item instanceof Video) {
+            if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast || $item instanceof Podcast_Episode) {
                 $filename = $item->title;
             } elseif ($item instanceof User) {
                 $filename = $item->username;
             } else {
-                // Album || Artist || Broadcast || Label || Live_Stream
+                // Album || Artist || Broadcast || Label || License || Live_Stream || Wanted
                 $filename = $item->name ?? '';
             }
 
