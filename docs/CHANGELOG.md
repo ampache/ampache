@@ -21,6 +21,14 @@
 * Add the current php version to the debug page
 * Cache bust some frequently updated assets
 * Clear asset cache during AutoUpdate
+* Gather Artist recommendations on play/Stat insert
+* Add Top Tracks and Similar Songs to Artist pages
+* Extend run:updateCatalog --update to update artist name matching mbid
+* Add duplicate_mbid_group to album searches
+* Translation Update October 2021
+* Config version 57
+* NEW config options
+  * allow_upload_scripts: Allow or disallow upload scripts on the server
 * Database 5.1.0 Build 1:
   * Add `podcast` to object_count table
   * Add `podcast` to cache_object_count table
@@ -33,7 +41,7 @@
   * Query errors would kill the whole page
   * Stop trying to read unreadable files
   * Explode key pairs when there is something to explode
-  * Don't try to update prefs that don't exist in the update array
+  * Don't try to update preferences that don't exist
   * Errors when not logged in trying to load a session
 * NEW files
   * Test scripts: codecoverage.sh, stan.sh, tests.sh
@@ -52,6 +60,11 @@
 * Make category headers a bit nicer
 * Check for valid browse types before loading nothing
 * Browsing Genre defaults to artist
+* Skip albums that match the exact title in wanted search
+* Translate all database description strings on updates
+* Hi-res blankalbum/placeholder image (1400x1400)
+* Allow larger artist summary with a scroll. linebreak place, year formed
+* During garbage collection clean up empty strings with NULL
 * Subsonic
   * Disable stat recording on stream calls (disable subsonic_stream_scrobble in config to enable)
 
@@ -89,6 +102,12 @@
 * Remove subtitle in stream_playlist if empty
 * Fix options and bitrate selection for stream.php requests
 * Scrobbles from Song::can_scrobble
+* Default preference list
+* MusicBrainz Artist Id could have been replaced with the Album Id
+* Artists being duplicated when feat. another artist
+* Don't let a non-critical update fail DB update
+* Search for 'played' albums and artists
+* Commands loading plugins from cli might not have a user
 * Subsonic
   * Trim quotes (") for Subsonic searches (some clients add them)
   * Support exact (lucene) searching when using quotes (")
@@ -103,7 +122,8 @@
 * NEW API functions
   * Api::live_stream (get a radio stream by id)
   * Api::live_streams
-* stream: added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+* Api::stream Added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+* Add 'time' and 'size' to all podcast_episode responses
 
 ### Changed
 
