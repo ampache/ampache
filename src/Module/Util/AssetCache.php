@@ -48,7 +48,7 @@ class AssetCache
         $originalURL   = $url;
         $originalPath  = self::get_path($originalURL);
 
-        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self:: . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
+        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::CACHETEXT . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
         $cachedPath = self::get_path($cachedURL);
 
         if (!file_exists($cachedPath) && is_writeable($cachedPath)) {
