@@ -52,10 +52,8 @@ class AssetCache
         $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::CACHETEXT . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
         $cachedPath = self::get_path($cachedURL);
 
-        if (!file_exists($cachedPath) && is_writeable($cachedPath)) {
-            if (!self::copy_file($originalPath)) {
-                return $url;
-            }
+        if (!file_exists($cachedPath) && !self::copy_file($originalPath)) {
+            return $url;
         }
 
         if (Core::is_readable($cachedPath)) {
@@ -83,7 +81,7 @@ class AssetCache
     {
         $pathArray     = pathinfo($path);
         $cachedVersion = $pathArray['dirname'] . '/' . $pathArray['filename'] . self::CACHETEXT . md5_file($path) . '.' . $pathArray['extension'];
-        if (file_exists($path) && is_writeable($cachedVersion)) {
+        if (file_exists($path)) {
             try {
                 copy($path, $cachedVersion);
 
