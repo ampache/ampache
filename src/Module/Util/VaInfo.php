@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Log\LoggerInterface;
@@ -863,6 +864,9 @@ final class VaInfo implements VaInfoInterface
     {
         $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
+        $user         = (Core::get_global('user')->id)
+            ? Core::get_global('user')
+            : new User(-1);
         // don't loop over getid3 and filename
         $tag_order    = array_diff($tag_order, array('getid3','filename'));
         foreach ($tag_order as $tag_source) {
@@ -870,7 +874,7 @@ final class VaInfo implements VaInfoInterface
                 $plugin            = new Plugin($tag_source);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load(Core::get_global('user'))) {
+                    if ($plugin->load($user)) {
                         $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gatherTypes,
                             self::clean_tag_info($this->tags,
                                 self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));

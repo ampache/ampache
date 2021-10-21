@@ -1758,11 +1758,14 @@ abstract class Catalog extends database_object
         $overwrites  = true;
         $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list = Plugin::get_plugins('get_external_metadata');
+        $user         = (Core::get_global('user')->id)
+            ? Core::get_global('user')
+            : new User(-1);
         foreach ($meta_order as $plugin_name) {
             if (in_array($plugin_name, $plugin_list)) {
                 // only load metadata plugins you enable
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load(new User(-1)) && $overwrites) {
+                if ($plugin->load($user) && $overwrites) {
                     debug_event(self::class, "get_external_metadata with: " . $plugin_name, 3);
                     // Run through items and refresh info
                     switch ($object_type) {
