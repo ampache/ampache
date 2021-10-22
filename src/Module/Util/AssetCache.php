@@ -81,7 +81,7 @@ class AssetCache
     {
         $pathArray     = pathinfo($path);
         $cachedVersion = $pathArray['dirname'] . '/' . $pathArray['filename'] . self::CACHETEXT . md5_file($path) . '.' . $pathArray['extension'];
-        if (file_exists($path)) {
+        if (Core::is_readable($path) && is_writeable($pathArray['dirname'])) {
             try {
                 copy($path, $cachedVersion);
 
