@@ -38,7 +38,7 @@ use PDOStatement;
 class Rating extends database_object
 {
     protected const DB_TABLENAME = 'rating';
-    private const RATING_TYPES = array(
+    private const RATING_TYPES   = array(
         'artist',
         'album',
         'song',
