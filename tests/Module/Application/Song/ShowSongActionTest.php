@@ -177,6 +177,11 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
+        $song->shouldReceive('get_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($title);
+
         $this->guiFactory->shouldReceive('createSongViewAdapter')
             ->with($gatekeeper, $song)
             ->once()
