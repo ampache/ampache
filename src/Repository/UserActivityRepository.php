@@ -115,10 +115,12 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_activity` WHERE `object_type` = '$type' AND `user_activity`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);");
+                Dba::write("DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);", array($type))
             }
             // accidental plays
             Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';");
+            // deleted users
+            Dba::write("DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);");
         }
     }
 
