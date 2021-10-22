@@ -242,11 +242,9 @@ class Song_Preview extends database_object implements Media, playable_item
         $this->f_artist = $this->f_artist_full;
 
         // Format the title
-        $this->f_name_full = $this->title;
-        $this->f_name      = $this->title;
-
-        $this->link         = "#";
-        $this->f_link       = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
+        $this->f_name_full  = $this->title;
+        $this->f_name       = $this->title;
+        $this->f_link       = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
 
         // Format the track (there isn't really anything to do here)
@@ -256,11 +254,30 @@ class Song_Preview extends database_object implements Media, playable_item
     } // format
 
     /**
+     * Get item fullname.
      * @return string
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $this->link = "#";
+        }
+
+        return $this->link;
     }
 
     /**

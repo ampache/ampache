@@ -132,7 +132,7 @@ class Label extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'label') || $force) {
-            Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -142,9 +142,9 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_name  = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
+        $this->get_fullname();
+        $this->get_link();
+        $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         $this->artists = count($this->get_artists());
     }
 
@@ -194,7 +194,26 @@ class Label extends database_object implements library_item
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/labels.php?action=show&label=' . scrub_out($this->id);
+        }
+
+        return $this->link;
     }
 
     /**

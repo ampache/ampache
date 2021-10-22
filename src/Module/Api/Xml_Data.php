@@ -463,7 +463,7 @@ class Xml_Data
                 case 'podcast':
                     $podcast = new Podcast($object_id);
                     $podcast->format();
-                    $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->f_name . "]]></name>\n\t<description><![CDATA[" . $podcast->description . "]]></description>\n\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
+                    $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->description . "]]></description>\n\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
                     if ($include) {
                         $episodes = $podcast->get_episodes();
                         foreach ($episodes as $episode_id) {
@@ -528,7 +528,7 @@ class Xml_Data
             $label = new Label($label_id);
             $label->format();
 
-            $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[$label->f_name]]></name>\n\t<artists><![CDATA[$label->artists]]></artists>\n\t<summary><![CDATA[$label->summary]]></summary>\n\t<external_link><![CDATA[$label->link]]></external_link>\n\t<address><![CDATA[$label->address]]></address>\n\t<category><![CDATA[$label->category]]></category>\n\t<email><![CDATA[$label->email]]></email>\n\t<website><![CDATA[$label->website]]></website>\n\t<user><![CDATA[$label->user]]></user>\n</license>\n";
+            $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[$label->f_name]]></name>\n\t<artists><![CDATA[$label->artists]]></artists>\n\t<summary><![CDATA[$label->summary]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[$label->address]]></address>\n\t<category><![CDATA[$label->category]]></category>\n\t<email><![CDATA[$label->email]]></email>\n\t<website><![CDATA[$label->website]]></website>\n\t<user><![CDATA[$label->user]]></user>\n</license>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -836,7 +836,7 @@ class Xml_Data
             $rating  = new Rating($podcast_id, 'podcast');
             $flag    = new Userflag($podcast_id, 'podcast');
             $art_url = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
-            $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->f_name . "]]></name>\n\t<description><![CDATA[" . $podcast->description . "]]></description>\n\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?? null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?? null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n";
+            $string .= "<podcast id=\"$podcast_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->description . "]]></description>\n\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?? null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?? null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n";
             if ($episodes) {
                 $items = $podcast->get_episodes();
                 if (count($items) > 0) {
@@ -872,7 +872,7 @@ class Xml_Data
             $rating  = new Rating($episode_id, 'podcast_episode');
             $flag    = new Userflag($episode_id, 'podcast_episode');
             $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
-            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->f_name . "]]></title>\n\t\t<name><![CDATA[" . $episode->f_name . "]]></name>\n\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t\t<public_url><![CDATA[" . $episode->link . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user_id) . "]]></url>\n\t\t<catalog><![CDATA[" . $episode->catalog . "]]></catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?? null) . "</preciserating>\n\t\t<rating>" . ($rating->get_user_rating($user_id) ?? null) . "</rating>\n\t\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
+            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user_id) . "]]></url>\n\t\t<catalog><![CDATA[" . $episode->catalog . "]]></catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?? null) . "</preciserating>\n\t\t<rating>" . ($rating->get_user_rating($user_id) ?? null) . "</rating>\n\t\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
 
         return self::output_xml($string, $full_xml);
@@ -1015,7 +1015,7 @@ class Xml_Data
         if ($fullinfo) {
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n\t<email><![CDATA[" . $user->email . "]]></email>\n\t<access>" . (int) $user->access . "</access>\n\t<fullname_public>" . (int) $user->fullname_public . "</fullname_public>\n\t<validation><![CDATA[" . $user->validation . "]]></validation>\n\t<disabled>" . (int) $user->disabled . "</disabled>\n";
         }
-        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n\t<link><![CDATA[" . $user->link . "]]></link>\n\t<website><![CDATA[" . $user->website . "]]></website>\n\t<state><![CDATA[" . $user->state . "]]></state>\n\t<city><![CDATA[" . $user->city . "]]></city>\n";
+        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n\t<link><![CDATA[" . $user->get_link() . "]]></link>\n\t<website><![CDATA[" . $user->website . "]]></website>\n\t<state><![CDATA[" . $user->state . "]]></state>\n\t<city><![CDATA[" . $user->city . "]]></city>\n";
         if ($user->fullname_public || $fullinfo) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
         }
@@ -1256,7 +1256,7 @@ class Xml_Data
         $xml->addAttribute("version", "2.0");
         $xchannel = $xml->addChild("channel");
         $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
-        //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
+        //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->get_link()));
         $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
         if (Art::has_db($libitem->id, $libitem_type)) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
@@ -1288,8 +1288,8 @@ class Xml_Data
             if ($media->f_artist) {
                 $xitem->addChild("xmlns:itunes:author", $media->f_artist);
             }
-            //$xmlink = $xitem->addChild("link", htmlentities($media->link));
-            $xitem->addChild("guid", htmlentities($media->link));
+            //$xmlink = $xitem->addChild("link", htmlentities($media->get_link()));
+            $xitem->addChild("guid", htmlentities($media->get_link()));
             if ($media->addition_time) {
                 $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
             }

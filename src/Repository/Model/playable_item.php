@@ -48,6 +48,13 @@ interface playable_item
     public function get_fullname();
 
     /**
+     * get_link
+     *
+     * Get the item link.
+     */
+    public function get_link();
+
+    /**
      * get_parent
      *
      * Get parent. Return parent `object_type`, `object_id` ; null otherwise.

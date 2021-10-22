@@ -180,7 +180,7 @@ class TVShow_Episode extends Video
         $season->format($details);
 
         $this->f_name        = ($this->original_name ?: $this->f_name);
-        $this->f_link        = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;
@@ -292,7 +292,7 @@ class TVShow_Episode extends Video
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

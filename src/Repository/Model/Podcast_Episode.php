@@ -143,7 +143,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function format($details = true)
     {
-        $this->f_name        = $this->title;
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
@@ -161,15 +160,14 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
         $this->f_size = Ui::format_bytes($this->size);
-        $this->f_file = $this->f_name . '.' . $this->type;
+        $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->f_podcast      = $podcast->f_name;
+            $this->f_podcast      = $podcast->get_fullname();
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
@@ -194,7 +192,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $keywords['title'] = array(
             'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -205,7 +203,26 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -297,7 +314,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -412,7 +429,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name()
     {
-        return $this->f_podcast . " - " . $this->f_name;
+        return $this->f_podcast . " - " . $this->get_fullname();
     }
 
     /**

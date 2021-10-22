@@ -1013,8 +1013,7 @@ class User extends database_object
         }
 
         // Base link
-        $this->link   = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $user_data = self::get_user_data($this->id);
@@ -1282,6 +1281,21 @@ class User extends database_object
         }
 
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**

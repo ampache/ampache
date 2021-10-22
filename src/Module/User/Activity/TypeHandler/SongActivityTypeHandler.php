@@ -53,7 +53,7 @@ final class SongActivityTypeHandler extends GenericActivityTypeHandler
         $song = $this->modelFactory->createSong($objectId);
         $song->format();
 
-        $songName   = $song->f_name;
+        $songName   = $song->get_fullname();
         $artistName = $song->f_artist;
         $albumName  = $song->f_album;
 

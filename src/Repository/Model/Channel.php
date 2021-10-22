@@ -347,6 +347,15 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
+     * get_link
+     * @return string
+     */
+    public function get_link()
+    {
+        return $this->url;
+    }
+
+    /**
      * get_parent
      * @return boolean|null
      */
