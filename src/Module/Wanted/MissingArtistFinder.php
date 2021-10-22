@@ -50,7 +50,7 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
         ]);
 
         return array_map(
-            static function (stdClass $result): array {
+            static function ($result): array {
                 return [
                     'mbid' => $result->id,
                     'name' => $result->name,
