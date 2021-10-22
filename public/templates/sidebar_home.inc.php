@@ -91,14 +91,14 @@ $access50        = Access::check('interface', 50); ?>
         <ul class="sb3" id="sb_home_dash" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_dashboard'))) {
             echo 'display: none;';
         } ?>">
-            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
-            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
-            <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
+            <li id="sb_home_dash_albums"><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
+            <li id="sb_home_dash_artists"><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
+            <li id="sb_home_dash_playlists"><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
             <?php if ($allowPodcast) { ?>
-                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
+                <li id="sb_home_dash_podcast_episodes"><a href="<?php echo $web_path ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
             <?php } ?>
             <?php if ($allowVideo) { ?>
-                <li id="sb_home_info_highest"><a href="<?php echo $web_path ?>/mashup.php?action=video"><?php echo $t_videos ?></a></li>
+                <li id="sb_home_dash_videos"><a href="<?php echo $web_path ?>/mashup.php?action=video"><?php echo $t_videos ?></a></li>
             <?php } ?>
         </ul>
     </li>
