@@ -268,7 +268,7 @@ function ShowEqualizer()
 function SavePlaylist()
 {
     if (jplaylist['playlist'].length > 0) {
-        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
+        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]['media_type'] + "&item_id=";
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             url += "," + jplaylist['playlist'][i]["media_id"];
         }
@@ -283,7 +283,7 @@ function SaveToExistingPlaylist(event)
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             item_ids += "," + jplaylist['playlist'][i]["media_id"];
         }
-        showPlaylistDialog(event, jplaylist['playlist'][0]["media_type"], item_ids);
+        showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
     }
 }
 

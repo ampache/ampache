@@ -268,7 +268,7 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['codec']     = $object->type;
-                    //$url['track_num'] = $object->f_track;
+                    $url['track_num'] = (string)$object->track;
                     break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
@@ -281,6 +281,7 @@ class Stream_Playlist
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
+                    $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->codec;
                     break;
