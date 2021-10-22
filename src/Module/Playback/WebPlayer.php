@@ -329,6 +329,14 @@ class WebPlayer
                 $url .= '&transcode_to=' . $types['real'];
             }
             //$url .= "&content_length=required";
+        } else {
+            // items like live streams need to keep an id for us as well
+            $regex = ($item->type == 'live_stream')
+                ? "/radio=([0-9]*)/"
+                : "/" . $item->type . "=([0-9]*)/";
+            preg_match($regex, $item->info_url, $matches);
+            $json['media_id']   = $matches[1] ?? null;
+            $json['media_type'] = $item->type;
         }
 
         $json['filetype'] = $types['player'];

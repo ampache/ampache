@@ -189,13 +189,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'action_buttons':
+                $rating_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
                 ob_start();
-                if (AmpConfig::get('ratings')) {
-                    echo " <span id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-                    echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
+                    echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
+                    echo Rating::show($rating_id, $rating_type);
                     echo "</span>";
-                    echo " <span id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-                    echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                    echo " <span id='userflag_" . $rating_id . "_" . $rating_type . "'>";
+                    echo Userflag::show($rating_id, $rating_type);
                     echo "</span>";
                 }
                 $results['action_buttons'] = ob_get_contents();

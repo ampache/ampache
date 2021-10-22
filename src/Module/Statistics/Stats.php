@@ -451,12 +451,16 @@ class Stats
             return false;
         }
         $previous  = self::get_last_play($user, $agent, $date);
+        // no previous data?
+        if (!array_key_exists('object_id', $previous) || !array_key_exists('object_type', $previous)) {
+            return true;
+        }
         $last_time = self::get_time($previous['object_id'], $previous['object_type']);
         $diff      = $date - (int) $previous['date'];
         $item_time = $object->time;
         $skip_time = AmpConfig::get_skip_timer($last_time);
 
-        // if your last song is 30 seconds and your skip timer if 40 you don't want to keep skipping it.
+        // if your last song is 30 seconds and your skip timer is 40 you don't want to keep skipping it.
         if ($last_time > 0 && $last_time < $skip_time) {
             return true;
         }

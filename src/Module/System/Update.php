@@ -280,6 +280,9 @@ class Update
         $update_string = ""; // REMOVED update
         $version[]     = array('version' => '510002', 'description' => $update_string);
 
+        $update_string = "* Add live_stream to the rating table";
+        $version[]     = array('version' => '510003', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1645,5 +1648,19 @@ class Update
     public static function update_510002()
     {
         return true;
+    }
+
+    /**
+     * update_510003
+     *
+     * Add live_stream to the rating table
+     */
+    public static function update_510003()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist', 'album', 'song', 'stream', 'live_stream', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
     }
 } // end update.class
