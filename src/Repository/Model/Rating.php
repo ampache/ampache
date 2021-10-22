@@ -38,6 +38,19 @@ use PDOStatement;
 class Rating extends database_object
 {
     protected const DB_TABLENAME = 'rating';
+    private const RATING_TYPES = array(
+        'artist',
+        'album',
+        'song',
+        'stream',
+        'live_stream',
+        'video',
+        'playlist',
+        'tvshow',
+        'tvshow_season',
+        'podcast',
+        'podcast_episode'
+    );
 
     // Public variables
     public $id; // The ID of the object rated
@@ -61,6 +74,15 @@ class Rating extends database_object
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    /**
+     * @param $type
+     * @return bool
+     */
+    public static function is_valid($type): bool
+    {
+        return in_array($type, self::RATING_TYPES);
     }
 
     /**
@@ -390,7 +412,7 @@ class Rating extends database_object
     public static function show($object_id, $type, $show_global_rating = false): string
     {
         // If ratings aren't enabled don't do anything
-        if (!AmpConfig::get('ratings')) {
+        if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES)) {
             return '';
         }
 
