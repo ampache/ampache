@@ -44,6 +44,9 @@ $t_search = T_('Search'); ?>
             <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
             <?php } ?>
+            <?php if (AmpConfig::get('wanted')) { ?>
+                <option value="missing_artist"><?php echo T_('Missing Artists')?></option>
+            <?php } ?>
         </select>
         <?php if ($environment->isMobile()) {
     echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";

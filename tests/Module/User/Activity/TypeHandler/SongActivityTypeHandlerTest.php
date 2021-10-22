@@ -83,6 +83,11 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
         $song->artist_mbid = $artistMusicBrainzId;
         $song->album_mbid  = $albumMusicBrainzId;
 
+        $song->shouldReceive('get_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($songName);
+
         $this->useractivityRepository->shouldReceive('registerSongEntry')
             ->with(
                 $userId,
@@ -127,6 +132,11 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $song->f_name = '';
+
+        $song->shouldReceive('get_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($song->f_name);
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(
