@@ -336,7 +336,7 @@ class WebPlayer
                 : "/" . $item->type . "=([0-9]*)/";
             preg_match($regex, $item->info_url, $matches);
             $json['media_id']   = $matches[1] ?? null;
-            $json['media_type'] = $urlinfo['type'];
+            $json['media_type'] = $item->type;
         }
 
         $json['filetype'] = $types['player'];
