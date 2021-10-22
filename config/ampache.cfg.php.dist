@@ -334,7 +334,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; For large catalogs the verify process can be terribly long so this will help
 ; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "true"
-catalog_verify_by_time = "false"
+catalog_verify_by_time = "true"
 
 ;#########################################################
 ; Program Settings                                       #
