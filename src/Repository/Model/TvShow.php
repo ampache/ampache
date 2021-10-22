@@ -164,9 +164,7 @@ class TvShow extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->link   = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $this->_get_extra_info();
@@ -187,7 +185,7 @@ class TvShow extends database_object implements library_item
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
         $keywords['type'] = array(
             'important' => false,
@@ -203,7 +201,27 @@ class TvShow extends database_object implements library_item
      */
     public function get_fullname()
     {
+        // don't do anything if it's formatted
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/tvshows.php?action=show&tvshow=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -296,7 +314,7 @@ class TvShow extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tvshow') || $force) {
-            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

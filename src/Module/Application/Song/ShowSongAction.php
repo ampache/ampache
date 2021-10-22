@@ -83,7 +83,7 @@ final class ShowSongAction implements ApplicationActionInterface
             $this->ui->showBoxTop(
                 sprintf(
                     T_('%s Details'),
-                    scrub_out($song->f_name)
+                    scrub_out($song->get_fullname())
                 ),
                 'box box_song_details'
             );

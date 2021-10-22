@@ -1828,7 +1828,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => '1',
             'childCount' => count($podcast->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($podcast->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($podcast->get_fullname()),
             'upnp:class' => 'object.container',
         );
     }
@@ -1850,7 +1850,7 @@ class Upnp_Api
             'id' => 'amp://music/podcasts/' . $episode->podcast . '/' . $episode->id,
             'parentID' => $parent,
             'restricted' => '1',
-            'dc:title' => self::_replaceSpecialSymbols($episode->f_name),
+            'dc:title' => self::_replaceSpecialSymbols($episode->get_fullname()),
             'upnp:album' => self::_replaceSpecialSymbols($episode->f_podcast),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url

@@ -154,6 +154,23 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = ($this instanceof Search)
+                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . scrub_out($this->id)
+                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . scrub_out($this->id);
+        }
+
+        return $this->link;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -222,7 +239,7 @@ abstract class playlist_object extends database_object implements library_item
     public function display_art($thumb = 2, $force = false, $link = true)
     {
         if (AmpConfig::get('playlist_art') || $force) {
-            $add_link = ($link) ? $this->link : null;
+            $add_link = ($link) ? $this->get_link() : null;
             if (Art::has_db($this->id, 'playlist')) {
                 Art::display('playlist', $this->id, $this->get_fullname(), $thumb, $add_link);
 

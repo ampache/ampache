@@ -235,7 +235,7 @@ class AmpacheRss
             }
             $xml_array = array(
                 'title' => $title,
-                'link' => $song->link,
+                'link' => $song->get_link(),
                 'description' => $description,
                 'comments' => $client->f_name . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
@@ -287,7 +287,7 @@ class AmpacheRss
 
                 $xml_array = array(
                     'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                    'link' => str_replace('&amp;', '&', $song->link),
+                    'link' => str_replace('&amp;', '&', $song->get_link()),
                     'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
                     'comments' => $client->username,
                     'pubDate' => date("r", (int)$item['date'])
@@ -317,7 +317,7 @@ class AmpacheRss
 
             $xml_array = array(
                 'title' => $album->get_fullname(),
-                'link' => $album->link,
+                'link' => $album->get_link(),
                 'description' => $album->f_artist_name . ' - ' . $album->get_fullname(true),
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
@@ -347,7 +347,7 @@ class AmpacheRss
 
             $xml_array = array(
                 'title' => $artist->get_fullname(),
-                'link' => $artist->link,
+                'link' => $artist->get_link(),
                 'description' => $artist->summary,
                 'image' => Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
@@ -381,7 +381,7 @@ class AmpacheRss
 
                 $xml_array = array(
                     'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
-                    'link' => $object->link,
+                    'link' => $object->get_link(),
                     'description' => $shout->text,
                     'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
                     'comments' => '',

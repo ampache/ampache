@@ -108,7 +108,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
             $media              = new Artist($art->uid);
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_name);
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }

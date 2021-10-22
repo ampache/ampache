@@ -1580,7 +1580,7 @@ class Subsonic_Xml_Data
             $xchannel = $xpodcasts->addChild('channel');
             $xchannel->addAttribute('id', (string)self::getPodcastId($podcast->id));
             $xchannel->addAttribute('url', (string)$podcast->feed);
-            $xchannel->addAttribute('title', (string)self::checkName($podcast->f_name));
+            $xchannel->addAttribute('title', (string)self::checkName($podcast->get_fullname()));
             $xchannel->addAttribute('description', (string)$podcast->f_description);
             if (Art::has_db($podcast->id, 'podcast')) {
                 $xchannel->addAttribute('coverArt', 'pod-' . self::getPodcastId($podcast->id));
@@ -1608,7 +1608,7 @@ class Subsonic_Xml_Data
         $xepisode = $xml->addChild(htmlspecialchars($elementName));
         $xepisode->addAttribute('id', (string)self::getPodcastEpId($episode->id));
         $xepisode->addAttribute('channelId', (string)self::getPodcastId($episode->podcast));
-        $xepisode->addAttribute('title', (string)self::checkName($episode->f_name));
+        $xepisode->addAttribute('title', (string)self::checkName($episode->get_fullname()));
         $xepisode->addAttribute('album', (string)$episode->f_podcast);
         $xepisode->addAttribute('description', (string)self::checkName($episode->f_description));
         $xepisode->addAttribute('duration', (string)$episode->time);

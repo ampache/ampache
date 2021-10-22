@@ -123,12 +123,9 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function format($details = true)
     {
-        unset($details); // dead code but called from other format calls
-        // Default link used on the rightbar
-        $this->f_name          = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->link            = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
-        $this->f_link          = "<a href=\"" . $this->link . "\">" . scrub_out($this->f_name) . "</a>";
-        $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
+        unset($details);
+        $this->f_link          = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
 
@@ -148,7 +145,26 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_fullname()
     {
-        return $this->name;
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        }
+
+        return $this->link;
     }
 
     /**
@@ -238,7 +254,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'live_stream') || $force) {
-            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

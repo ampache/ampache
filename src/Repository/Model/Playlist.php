@@ -274,9 +274,7 @@ class Playlist extends playlist_object
     public function format($details = true)
     {
         parent::format($details);
-        $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->get_fullname()) . '</a>';
-
+        $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     } // format

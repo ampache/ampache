@@ -1034,7 +1034,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $album_artist = new Artist($album_artist_id);
         if ($album_artist->id) {
-            return (string)$album_artist->f_name;
+            return (string)$album_artist->get_fullname();
         }
 
         return '';
@@ -1694,12 +1694,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->f_albumartist_full = $this->get_album_artist_name();
 
         // Format the title
-        $this->f_name      = $this->title;
-        $this->f_name_full = $this->f_name;
+        $this->f_name_full = $this->get_fullname();
 
         // Create Links for the different objects
-        $this->link          = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
-        $this->f_link        = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->f_name) . "\"> " . scrub_out($this->f_name) . "</a>";
+        $this->f_link        = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         $this->f_album_link  = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
         if (!empty($this->albumartist)) {
@@ -1729,7 +1727,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($this->track) {
             $this->f_file .= $this->track . ' - ';
         }
-        $this->f_file .= $this->f_name . '.' . $this->type;
+        $this->f_file .= $this->get_fullname() . '.' . $this->type;
 
         $this->f_publisher = $this->label;
         $this->f_composer  = $this->composer;
@@ -1764,7 +1762,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $keywords['title'] = array(
             'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -1785,7 +1783,26 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -1911,7 +1928,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         if ($object_id !== null && $type !== null) {
-            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $object_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -2274,7 +2291,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $run = str_replace("%c", $codec, $run);
             $run = str_replace("%a", $this->f_artist, $run);
             $run = str_replace("%A", $this->f_album, $run);
-            $run = str_replace("%t", $this->f_name, $run);
+            $run = str_replace("%t", $this->get_fullname(), $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 

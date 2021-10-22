@@ -905,6 +905,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        return '';
+    }
+
+    /**
      * @return null
      */
     public function get_parent()

@@ -48,7 +48,7 @@ $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_(
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
 $web_path    = AmpConfig::get('web_path');
 $client->format();
-Ui::show_box_top($client->f_name); ?>
+Ui::show_box_top($client->get_fullname()); ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
@@ -74,7 +74,7 @@ if (AmpConfig::get('sociable')) {
 <dl class="media_details">
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
-        <?php echo $client->f_name; ?>
+        <?php echo $client->get_fullname(); ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>

@@ -26,27 +26,29 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php
+/** @var Label $label */
+/** @var string $object_type */
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($label->f_name, 'info-box');
+Ui::show_box_top($label->get_fullname(), 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
 } ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($label->f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($label->f_name); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($label->get_fullname()); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($label->get_fullname()); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <div id="artist_biography">
         <div class="item_info">
-            <?php Art::display('label', $label->id, $label->f_name, 2); ?>
+            <?php Art::display('label', $label->id, $label->get_fullname(), 2); ?>
             <div class="item_properties">
                 <?php echo scrub_out($label->address); ?>
             </div>

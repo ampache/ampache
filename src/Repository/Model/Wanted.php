@@ -448,10 +448,32 @@ class Wanted extends database_object
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
         }
-        $this->link   = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
-        $this->f_link = "<a href=\"" . $this->link . "\">" . scrub_out($this->name) . "</a>";
+        $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->name) . "</a>";
         $user         = new User($this->user);
         $this->f_user = $user->get_fullname();
+    }
+
+    /**
+     * @return string
+     */
+    public function get_fullname()
+    {
+        return filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name;
+        }
+
+        return $this->link;
     }
 
     /**

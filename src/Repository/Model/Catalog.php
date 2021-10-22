@@ -1755,9 +1755,9 @@ abstract class Catalog extends database_object
         debug_event(self::class, 'update_from_external found ' . (string) count($object_list) . ' ' . $object_type . '\'s to check', 4);
 
         // only allow your primary external metadata source to update values
-        $overwrites  = true;
-        $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
-        $plugin_list = Plugin::get_plugins('get_external_metadata');
+        $overwrites   = true;
+        $meta_order   = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
+        $plugin_list  = Plugin::get_plugins('get_external_metadata');
         $user         = (Core::get_global('user')->id)
             ? Core::get_global('user')
             : new User(-1);

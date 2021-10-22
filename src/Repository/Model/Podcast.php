@@ -140,7 +140,7 @@ class Podcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name          = $this->title;
+        $this->get_fullname();
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);
@@ -148,8 +148,7 @@ class Podcast extends database_object implements library_item
         $this->f_website       = scrub_out($this->website);
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
-        $this->f_link          = '<a href="' . $this->link . '" title="' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
@@ -165,7 +164,7 @@ class Podcast extends database_object implements library_item
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -178,7 +177,26 @@ class Podcast extends database_object implements library_item
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -261,7 +279,7 @@ class Podcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

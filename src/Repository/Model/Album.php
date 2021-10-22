@@ -587,7 +587,7 @@ class Album extends database_object implements library_item
                 $album_artist = new Artist($this->album_artist);
                 $album_artist->format();
                 $this->album_artist_name   = $album_artist->name;
-                $this->f_album_artist_name = $album_artist->f_name;
+                $this->f_album_artist_name = $album_artist->get_fullname();
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
             }
 
@@ -641,7 +641,7 @@ class Album extends database_object implements library_item
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
         $keywords['year'] = array(
             'important' => false,
@@ -717,7 +717,7 @@ class Album extends database_object implements library_item
         if ($this->album_artist) {
             $album_artist = new Artist($this->album_artist);
 
-            return $album_artist->f_name;
+            return $album_artist->get_fullname();
         }
 
         return '';
@@ -912,7 +912,7 @@ class Album extends database_object implements library_item
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
+            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->get_fullname();
             Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }
@@ -979,7 +979,7 @@ class Album extends database_object implements library_item
             }
         } else {
             // run updates on the single fields
-            if (!empty($name) && $name != $this->f_name) {
+            if (!empty($name) && $name != $this->get_fullname()) {
                 $trimmed          = Catalog::trim_prefix(trim((string) $name));
                 $new_name         = $trimmed['string'];
                 $aPrefix          = $trimmed['prefix'];

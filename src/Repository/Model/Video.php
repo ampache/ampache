@@ -302,10 +302,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function format($details = true)
     {
-        $this->f_name       = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->f_full_title = $this->f_name;
-        $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\"> " . $this->f_name . "</a>";
+        $this->f_full_title = $this->get_fullname();
+        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . $this->get_fullname() . "\"> " . $this->get_fullname() . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -339,7 +337,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
-        $this->f_file   = $this->f_name . '.' . $this->type;
+        $this->f_file   = $this->get_fullname() . '.' . $this->type;
         if ($this->release_date) {
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
@@ -354,7 +352,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $keywords          = array();
         $keywords['title'] = array('important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_name);
+            'value' => $this->get_fullname());
 
         return $keywords;
     }
@@ -365,7 +363,26 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -461,7 +478,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('video', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

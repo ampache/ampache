@@ -531,7 +531,7 @@ function return_bytes($val)
 function check_config_writable()
 {
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writable(__DIR__ . '/../../config/ampache.cfg.php'))
+    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php'))
         || (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
 
@@ -540,7 +540,7 @@ function check_config_writable()
  */
 function check_htaccess_channel_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writable(__DIR__ . '/../../public/channel/.htaccess'))
+    return ((file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/.htaccess'))
         || (!file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/')));
 }
 
@@ -549,7 +549,7 @@ function check_htaccess_channel_writable()
  */
 function check_htaccess_rest_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writable(__DIR__ . '/../../public/rest/.htaccess'))
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
         || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
@@ -558,7 +558,7 @@ function check_htaccess_rest_writable()
  */
 function check_htaccess_play_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writable(__DIR__ . '/../../public/play/.htaccess'))
+    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
         || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
 }
 
