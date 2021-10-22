@@ -219,7 +219,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         // don't do anything if it's formatted
         if (!isset($this->link)) {
             $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
+            $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         }
 
         return $this->link;
