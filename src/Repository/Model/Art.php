@@ -1415,6 +1415,8 @@ class Art extends database_object
             }
             echo "</div>";
         }
+
+        echo "</a>\n";
         echo "</div>";
 
         return true;
