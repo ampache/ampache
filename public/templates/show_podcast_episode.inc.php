@@ -53,6 +53,15 @@ use Ampache\Module\Util\Ui;
         </dd>
     <?php } ?>
 <?php } ?>
+    <?php if (AmpConfig::get('waveform')) { ?>
+        <dt><?php echo T_('Waveform'); ?></dt>
+        <dd>
+            <div id="waveform_<?php echo $episode->id; ?>">
+                <img src="<?php echo AmpConfig::get('web_path'); ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
+            </div>
+        </dd>
+        <?php
+    } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (!empty($episode->file)) { ?>
