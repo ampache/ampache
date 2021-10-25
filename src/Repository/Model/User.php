@@ -193,7 +193,7 @@ class User extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -278,7 +278,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
-        return new User($results['id']);
+        return new User($results['id'] ?? 0);
     } // get_from_username
 
     /**
@@ -430,7 +430,7 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['ip'] ? $row['ip'] : null;
+            return $row['ip'] ?? null;
         }
 
         return false;
@@ -463,6 +463,9 @@ class User extends database_object
      */
     public static function is_registered()
     {
+        if (empty(Core::get_global('user'))) {
+            return false;
+        }
         if (!Core::get_global('user')->id) {
             return false;
         }
@@ -1009,13 +1012,8 @@ class User extends database_object
             $this->f_create_date = get_datetime((int)$this->create_date);
         }
 
-        $this->f_name = ($this->fullname_public)
-            ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
         // Base link
-        $this->link   = AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $user_data = self::get_user_data($this->id);
@@ -1024,9 +1022,10 @@ class User extends database_object
                 $sql        = "SELECT SUM(`song`.`size`) as `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
                 $db_results = Dba::read($sql, array($this->id));
                 $result     = Dba::fetch_assoc($db_results);
+                $play_size  = $result['play_size'] ?? 0;
                 // set the value for next time
-                self::set_user_data($this->id, 'play_size', (int)$result['play_size']);
-                $user_data['play_size'] = $result['play_size'];
+                self::set_user_data($this->id, 'play_size', (int)$play_size);
+                $user_data['play_size'] = $play_size;
             }
 
             $this->f_usage = Ui::format_bytes((int)$user_data['play_size']);
@@ -1195,19 +1194,38 @@ class User extends database_object
 
         // simple deletion queries.
         $user_tables = array(
-            'playlist',
-            'object_count',
-            'ip_history',
             'access_list',
+            'bookmark',
+            'broadcast',
+            'democratic',
+            'ip_history',
+            'object_count',
+            'playlist',
             'rating',
+            'search',
+            'share',
             'tag_map',
+            'user_activity',
+            'user_flag',
             'user_preference',
-            'user_vote'
+            'user_shout',
+            'user_vote',
+            'wanted'
         );
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
             Dba::write($sql, array($this->id));
         }
+        // reset their data to null if they've made custom changes
+        $user_tables = array(
+            'artist',
+            'label'
+        );
+        foreach ($user_tables as $table_id) {
+            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` = ?";
+            Dba::write($sql, array($this->id));
+        }
+
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
         Dba::write($sql);
@@ -1275,7 +1293,28 @@ class User extends database_object
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = ($this->fullname_public)
+                ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+                : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -1304,12 +1343,11 @@ class User extends database_object
     {
         $avatar = array();
         $auth   = '';
-        if ($session['t'] && $session['s']) {
+        if (array_key_exists('t', $session) && $session['s']) {
             $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
-        } elseif ($session['auth']) {
+        } elseif (array_key_exists('auth', $session)) {
             $auth = '&auth=' . $session['auth'];
         }
-
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
@@ -1334,7 +1372,7 @@ class User extends database_object
             }
         }
 
-        if ($avatar['url'] === null) {
+        if (!array_key_exists('url', $avatar)) {
             $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];

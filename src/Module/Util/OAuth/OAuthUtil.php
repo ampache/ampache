@@ -151,23 +151,25 @@ class OAuthUtil
 
         $parsed_parameters = array();
         foreach ($pairs as $pair) {
-            $split     = explode('=', $pair, 2);
-            $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
-            $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
+            if (strpos((string)$pair, '=')) {
+                $split     = explode('=', $pair, 2);
+                $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
+                $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
 
-            if (isset($parsed_parameters[$parameter])) {
-                // We have already received parameter(s) with this name, so add to the list
-                // of parameters with this name
+                if (isset($parsed_parameters[$parameter])) {
+                    // We have already received parameter(s) with this name, so add to the list
+                    // of parameters with this name
 
-                if (is_scalar($parsed_parameters[$parameter])) {
-                    // This is the first duplicate, so transform scalar (string) into an array
-                    // so we can add the duplicates
-                    $parsed_parameters[$parameter] = array($parsed_parameters[$parameter]);
+                    if (is_scalar($parsed_parameters[$parameter])) {
+                        // This is the first duplicate, so transform scalar (string) into an array
+                        // so we can add the duplicates
+                        $parsed_parameters[$parameter] = array($parsed_parameters[$parameter]);
+                    }
+
+                    $parsed_parameters[$parameter][] = $value;
+                } else {
+                    $parsed_parameters[$parameter] = $value;
                 }
-
-                $parsed_parameters[$parameter][] = $value;
-            } else {
-                $parsed_parameters[$parameter] = $value;
             }
         }
 

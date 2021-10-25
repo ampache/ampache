@@ -147,8 +147,6 @@ These methods take no parameters beyond your auth key to return information
 
 ### system_update
 
-* **NEW** in 5.0.0-develop
-
 Check Ampache for updates and run the update if there is one.
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -170,8 +168,6 @@ Check Ampache for updates and run the update if there is one.
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_update.xml)
 
 ### system_preferences
-
-* **NEW** in 5.0.0-develop
 
 Get your server preferences
 
@@ -195,8 +191,6 @@ Get your server preferences
 
 ### users
 
-* **NEW** in 5.0.0-develop
-
 Get ids and usernames for your site
 
 * return
@@ -217,8 +211,6 @@ Get ids and usernames for your site
 
 ### user_preferences
 
-* **NEW** in 5.0.0-develop
-
 Get your user preferences
 
 * return
@@ -232,8 +224,6 @@ Get your user preferences
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
 
 ### bookmarks
-
-* **NEW** in 5.0.0-develop
 
 Get information about bookmarked media this user is allowed to manage.
 
@@ -749,8 +739,6 @@ returns a single song
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/song.xml)
 
 ### song_delete
-
-* **NEW** in 5.0.0-develop
 
 Delete an existing song. (if you are allowed to)
 
@@ -1304,11 +1292,12 @@ This returns a single video
 ### stats
 
 Get some items based on some simple search types and filters. (Random by default)
-This method HAD partial backwards compatibility with older api versions but it has now been removed
+This method **HAD** partial backwards compatibility with older api versions but it has now been removed
 
 | Input      | Type    | Description                                      | Optional |
 |------------|---------|--------------------------------------------------|----------|
-| 'type'     | string  | 'song', 'album', 'artist'                        | NO       |
+| 'type'     | string  | 'song', 'album', 'artist', 'video',              | NO       |
+|            |         | 'playlist', 'podcast', 'podcast_episode'         |          |
 | 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent',       | YES      |
 |            |         | 'forgotten', 'flagged', 'random'                 |          |
 | 'user_id'  | integer |                                                  | YES      |
@@ -1749,9 +1738,60 @@ This returns the songs for a license
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license_songs.xml)
 
-### labels
+### live_streams
 
-* **NEW** in 5.0.0-develop
+This returns live_streams based on the specified filter
+
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/live_streams.xml)
+
+### live_stream
+
+This returns a single live_stream
+
+| Input    | Type   | Description                                 | Optional |
+|----------|--------|---------------------------------------------|----------|
+| 'filter' | string | UID of live_stream, returns live_stream XML | NO       |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/live_stream.xml)
+
+### labels
 
 This returns labels based on the specified filter
 
@@ -1781,8 +1821,6 @@ This returns labels based on the specified filter
 
 ### label
 
-* **NEW** in 5.0.0-develop
-
 This returns a single label
 
 | Input    | Type   | Description                     | Optional |
@@ -1807,8 +1845,6 @@ This returns a single label
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/label.xml)
 
 ### label_artists
-
-* **NEW** in 5.0.0-develop
 
 This returns the artists for a label
 
@@ -2026,16 +2062,16 @@ If you don't supply a user id (optional) then just fall back to you.
 
 Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 
-| Input        | Type    | Description  | Optional |
-|--------------|---------|--------------|----------|
-| 'song'       | string  | $song_name   | NO       |
-| 'artist'     | string  | $artist_name | NO       |
-| 'album'      | string  | $album_name  | NO       |
-| 'songmbid'   | string  | $song_mbid   | YES      |
-| 'artistmbid' | string  | $artist_mbid | YES      |
-| 'albummbid'  | string  | $album_mbid  | YES      |
-| 'date'       | integer | UNIXTIME()   | YES      |
-| 'client'     | string  | $agent       | YES      |
+| Input        | Type    | Description                  | Optional |
+|--------------|---------|------------------------------|----------|
+| 'song'       | string  | HTML encoded string          | NO       |
+| 'artist'     | string  | HTML encoded string          | NO       |
+| 'album'      | string  | HTML encoded string          | NO       |
+| 'songmbid'   | string  | `song_mbid` also supported   | YES      |
+| 'artistmbid' | string  | `artist_mbid` also supported | YES      |
+| 'albummbid'  | string  | `album_mbid` also supported  | YES      |
+| 'date'       | integer | UNIXTIME()                   | YES      |
+| 'client'     | string  | $agent                       | YES      |
 
 * return
 
@@ -2325,8 +2361,6 @@ Sync and download new podcast episodes
 
 ### user_preference
 
-* **NEW** in 5.0.0-develop
-
 Get your user preference by name
 
 | Input    | Type   | Description                                       | Optional |
@@ -2350,8 +2384,6 @@ Get your user preference by name
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preference.xml)
 
 ### system_preference
-
-* **NEW** in 5.0.0-develop
 
 Get your server preference by name
 
@@ -2378,8 +2410,6 @@ Get your server preference by name
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
 
 ### preference_create
-
-* **NEW** in 5.0.0-develop
 
 Add a new preference to your server
 
@@ -2414,8 +2444,6 @@ Add a new preference to your server
 
 ### preference_edit
 
-* **NEW** in 5.0.0-develop
-
 Edit a preference value and apply to all users if allowed
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -2444,8 +2472,6 @@ Edit a preference value and apply to all users if allowed
 
 ### preference_delete
 
-* **NEW** in 5.0.0-develop
-
 Delete a non-system preference by name
 
 **ACCESS REQUIRED:** 100 (Admin)
@@ -2472,8 +2498,6 @@ Delete a non-system preference by name
 
 ### get_bookmark
 
-* **NEW** in 5.0.0-develop
-
 Get the bookmark from it's object_id and object_type.
 
 | Input    | Type   | Description                                       | Optional |
@@ -2498,8 +2522,6 @@ Get the bookmark from it's object_id and object_type.
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_bookmark.xml)
 
 ### bookmark_create
-
-* **NEW** in 5.0.0-develop
 
 Create a placeholder for the current media that you can return to later.
 
@@ -2529,8 +2551,6 @@ Create a placeholder for the current media that you can return to later.
 
 ### bookmark_edit
 
-* **NEW** in 5.0.0-develop
-
 Edit a placeholder for the current media that you can return to later.
 
 | Input      | Type    | Description                                       | Optional |
@@ -2559,8 +2579,6 @@ Edit a placeholder for the current media that you can return to later.
 
 ### bookmark_delete
 
-* **NEW** in 5.0.0-develop
-
 Delete an existing bookmark. (if it exists)
 
 | Input    | Type   | Description                                       | Optional |
@@ -2587,8 +2605,6 @@ Delete an existing bookmark. (if it exists)
 
 ### deleted_songs
 
-* **NEW** in 5.0.0-develop
-
 Returns songs that have been deleted from the server
 
 | Input    | Type    | Description                                      | Optional |
@@ -2614,8 +2630,6 @@ Returns songs that have been deleted from the server
 
 ### deleted_podcast_episodes
 
-* **NEW** in 5.0.0-develop
-
 This returns the episodes for a podcast that have been deleted
 
 | Input    | Type    | Description                                      | Optional |
@@ -2640,8 +2654,6 @@ This returns the episodes for a podcast that have been deleted
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/deleted_podcast_episodes.xml)
 
 ### deleted_videos
-
-* **NEW** in 5.0.0-develop
 
 This returns video objects that have been deleted
 
@@ -2674,10 +2686,12 @@ Binary data methods are used for returning raw data to the user such as a image 
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 
+**DEVELOP** 'podcast_episode' has been added. 'podcast' is incorrect and will be removed in Ampache 6
+
 | Input     | Type    | Description                                      | Optional |
 |-----------|---------|--------------------------------------------------|----------|
 | 'id'      | integer | $object_id                                       | NO       |
-| 'type'    | string  | 'song', 'podcast'                                | NO       |
+| 'type'    | string  | 'song', 'podcast_episode', 'podcast'             | NO       |
 | 'bitrate' | integer | max bitrate for transcoding                      | YES      |
 | 'format'  | string  | 'mp3', 'ogg', 'raw', etc                         | YES      |
 | 'offset'  | integer | Return results starting from this index position | YES      |

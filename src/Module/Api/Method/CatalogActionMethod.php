@@ -93,6 +93,8 @@ final class CatalogActionMethod
             // clean up after the action
             Catalog::clean_empty_albums();
             Album::update_album_artist();
+            Catalog::update_mapping('artist');
+            Catalog::update_mapping('album');
             Catalog::update_counts();
 
             Api::message('successfully started: ' . $task, $input['api_format']);

@@ -59,8 +59,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($action)) {
             $action = strtolower(Core::get_request('action'));
         }
-        $f        = ($_REQUEST['f']) ?: 'xml';
-        $callback = $_REQUEST['callback'];
+        $f        = ($_REQUEST['f']) ?? 'xml';
+        $callback = $_REQUEST['callback'] ?? $f;
         /* Set the correct default headers */
         if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
             Subsonic_Api::setHeader($f);
@@ -77,21 +77,18 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Authenticate the user with preemptive HTTP Basic authentication first
         $userName = Core::get_server('PHP_AUTH_USER');
-
         if (empty($userName)) {
-            $userName = $_REQUEST['u'];
+            $userName = $_REQUEST['u'] ?? '';
         }
         $password = Core::get_server('PHP_AUTH_PW');
         if (empty($password)) {
-            $password = (string) $_REQUEST['p'];
-            $token    = (string) $_REQUEST['t'];
-            $salt     = (string) $_REQUEST['s'];
-        } else {
-            $token = '';
-            $salt  = '';
+            $password = $_REQUEST['p'] ?? '';
         }
-        $version   = $_REQUEST['v'];
-        $clientapp = $_REQUEST['c'];
+
+        $token     = $_REQUEST['t'] ?? '';
+        $salt      = $_REQUEST['s'] ?? '';
+        $version   = $_REQUEST['v'] ?? '';
+        $clientapp = $_REQUEST['c'] ?? '';
 
         if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
@@ -160,9 +157,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $query  = explode('&', $query_string);
         $params = array();
         foreach ($query as $param) {
-            list($name, $value) = explode('=', $param);
-            $decname            = urldecode($name);
-            $decvalue           = urldecode($value);
+            if (strpos((string)$param, '=')) {
+                [$name, $value] = explode('=', $param);
+                $decname        = urldecode($name);
+                $decvalue       = urldecode($value);
+            }
 
             // workaround for clementine/Qt5 bug
             // see https://github.com/clementine-player/Clementine/issues/6080

@@ -109,7 +109,7 @@ final class PlaylistGenerateMethod
             $rule_count++;
         }
         // additional rules
-        if ((int) $input['flag'] == 1) {
+        if (array_key_exists('', $input) && (int)$input['flag'] == 1) {
             debug_event(self::class, 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -118,7 +118,7 @@ final class PlaylistGenerateMethod
         }
         if (array_key_exists('filter', $input)) {
             $array['rule_' . $rule_count]               = 'title';
-            $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
+            $array['rule_' . $rule_count . '_input']    = (string)($input['filter'] ?? '');
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
@@ -126,7 +126,7 @@ final class PlaylistGenerateMethod
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
-            $array['rule_' . $rule_count . '_input']    = $album->f_name;
+            $array['rule_' . $rule_count . '_input']    = $album->get_fullname(true);
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
@@ -134,19 +134,19 @@ final class PlaylistGenerateMethod
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = $artist->f_name;
+            $array['rule_' . $rule_count . '_input']    = $artist->get_fullname();
             $array['rule_' . $rule_count . '_operator'] = 4;
         }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
         }
 
         // get db data
@@ -178,7 +178,7 @@ final class PlaylistGenerateMethod
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song', $user->id);
+                        echo Json_Data::indexes($song_ids, 'song', $user->id);
                         break;
                     default:
                         echo XML_Data::indexes($song_ids, 'song', $user->id);

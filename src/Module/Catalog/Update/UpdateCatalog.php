@@ -164,11 +164,16 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             if ($updateInfo === true) {
                 ob_start();
 
-                // Look for updated artist information. (missing or < 6 months since last update)
                 $interactor->info(
                     T_('Update artist information and fetch similar artists from last.fm'),
                     true
                 );
+
+                // Look for updated artist information. (1 month since last update MBID IS NOT NULL) LIMIT 500
+                $artists = $catalog->get_artist_ids('time');
+                $catalog->update_from_external($artists, 'artist');
+
+                // Look for updated recommendations / similar artists  LIMIT 500
                 $artist_info = $catalog->get_artist_ids('info');
                 $catalog->gather_artist_info($artist_info);
 
@@ -186,7 +191,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                     $labels = $catalog->get_label_ids('tag_generated');
-                    $catalog->update_from_external($labels);
+                    $catalog->update_from_external($labels, 'label');
 
                     $buffer = ob_get_contents();
 

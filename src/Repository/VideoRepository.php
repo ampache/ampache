@@ -84,7 +84,7 @@ final class VideoRepository implements VideoRepositoryInterface
         $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower((string) $type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
-            if ($results['count']) {
+            if (array_key_exists('count', $results)) {
                 return (int) $results['count'];
             }
         }

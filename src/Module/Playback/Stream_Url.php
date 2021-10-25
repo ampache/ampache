@@ -76,19 +76,25 @@ class Stream_Url extends MemoryObject
 
         $results['base_url'] = $url;
 
-        foreach ($elements as $element) {
-            list($key, $value) = explode('=', $element);
-            switch ($key) {
-                case 'oid':
-                    $key = 'id';
-                    break;
-                case 'video':
-                    if (make_bool($value)) {
-                        $results['type'] = 'video';
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                if (strpos((string)$element, '=')) {
+                    list($key, $value) = explode('=', $element);
+                    switch ($key) {
+                        case 'oid':
+                            $key = 'id';
+                            break;
+                        case 'video':
+                            if (make_bool($value)) {
+                                $results['type'] = 'video';
+                            }
+                            break;
                     }
-                    break;
+                    if (!empty($value)) {
+                        $results[$key] = $value;
+                    }
+                }
             }
-            $results[$key] = $value;
         }
 
         return $results;
@@ -112,9 +118,9 @@ class Stream_Url extends MemoryObject
             $newel = explode('&', $options);
 
             if (count($curel) > 2) {
-                foreach ($newel as $el) {
-                    if (!empty($el)) {
-                        $el = explode('=', $el);
+                foreach ($newel as $element) {
+                    if (strpos((string)$element, '=')) {
+                        $el = explode('=', $element);
                         array_splice($curel, count($curel) - 2, 0, $el);
                     }
                 }

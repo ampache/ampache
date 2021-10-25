@@ -34,12 +34,12 @@ use Ampache\Repository\Model\Tag;
                 <td><select name="object_id" autofocus>
 <?php
                         $playlists = Playlist::get_playlist_array();
-                        foreach ($playlists as $playlist) {
-                            echo "<option value='" . $playlist['id'] . "'";
-                            if ($playlist['id'] == $libitem->object_id) {
+                        foreach ($playlists as $key => $value) {
+                            echo "<option value='" . $key . "'";
+                            if ($key == $libitem->object_id) {
                                 echo " selected";
                             }
-                            echo ">" . $playlist['name'] . "</option>";
+                            echo ">" . $value . "</option>";
                         } ?>
                 </select></td>
             </tr>

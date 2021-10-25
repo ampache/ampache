@@ -162,7 +162,7 @@ class Share extends database_object
             } elseif ($object_type == 'album') {
                 $album = new Album($object_id);
                 $album->format();
-                $description = $album->f_name . ' (' . $album->f_album_artist_name . ')';
+                $description = $album->get_fullname() . ' (' . $album->f_album_artist_name . ')';
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -264,7 +264,7 @@ class Share extends database_object
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download',
+                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download&cache=1\">" . Ui::get_icon('download',
                             T_('Download')) . "</a>";
                 }
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit',
@@ -299,9 +299,8 @@ class Share extends database_object
     public function getUserName(): string
     {
         $user = new User($this->user);
-        $user->format();
 
-        return $user->f_name;
+        return $user->username;
     }
 
     public function getLastVisitDateFormatted(): string
@@ -469,7 +468,7 @@ class Share extends database_object
             }
         } else {
             // fall back to config defaults
-            $expire_days = AmpConfig::get('share_expire');
+            $expire_days = AmpConfig::get('share_expire', 7);
         }
 
         return (int)$expire_days;

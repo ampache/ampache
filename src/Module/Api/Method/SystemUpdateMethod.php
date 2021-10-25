@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\AutoUpdate;
@@ -60,6 +61,7 @@ final class SystemUpdateMethod
             // run the update
             AutoUpdate::update_files(true);
             AutoUpdate::update_dependencies(static::getConfigContainer(), true);
+            Preference::translate_db();
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);

@@ -116,10 +116,13 @@ class AmpacheRatingMatch
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 2) {
             Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
         }
-        if ($from_version < 3) {
+        if ($from_version < (int)$this->version) {
             Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', 25, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', 25, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', 25, 'string', 'plugins', $this->name);
@@ -146,8 +149,8 @@ class AmpacheRatingMatch
                 $artist = new Rating($song->artist, 'artist');
                 $album  = new Rating($song->album, 'album');
 
-                $rating_artist = (int)$artist->get_user_rating($this->user_id);
-                $rating_album  = (int)$album->get_user_rating($this->user_id);
+                $rating_artist = $artist->get_user_rating($this->user_id);
+                $rating_album  = $album->get_user_rating($this->user_id);
                 if ($rating_artist < $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }
@@ -159,7 +162,7 @@ class AmpacheRatingMatch
                 $album  = new Album($rating->id);
                 $artist = new Rating($album->album_artist, 'artist');
 
-                $rating_artist = (int)$artist->get_user_rating($this->user_id);
+                $rating_artist = $artist->get_user_rating($this->user_id);
                 if ($rating_artist <= $new_rating) {
                     $artist->set_rating($new_rating, $this->user_id);
                 }

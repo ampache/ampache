@@ -55,19 +55,19 @@ final class SseApiApplication implements ApiApplicationInterface
         ob_end_clean();
         set_time_limit(0);
 
-        if (!$_REQUEST['html']) {
+        if (!array_key_exists('html', $_REQUEST)) {
             define('SSE_OUTPUT', true);
             header('Content-Type: text/event-stream; charset=utf-8');
             header('Cache-Control: no-cache');
         }
 
-        $worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
-        if (isset($_REQUEST['options'])) {
+        $worker = $_REQUEST['worker'] ?? null;
+        if (array_key_exists('options', $_REQUEST)) {
             $options = json_decode(urldecode($_REQUEST['options']), true);
         } else {
             $options = null;
         }
-        if (isset($_REQUEST['catalogs'])) {
+        if (array_key_exists('catalogs', $_REQUEST)) {
             $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
         } else {
             $catalogs = null;

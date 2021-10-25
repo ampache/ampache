@@ -54,7 +54,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
+    <?php Art::display('tvshow', $libitem->id, $libitem->get_fullname(), 6, $libitem->get_link()); ?>
 </td>
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
@@ -66,10 +66,6 @@ use Ampache\Module\Util\Ui;
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow"><?php echo Rating::show($libitem->id, 'tvshow'); ?></span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php echo Userflag::show($libitem->id, 'tvshow'); ?></span>
             <?php } ?>
         </td>

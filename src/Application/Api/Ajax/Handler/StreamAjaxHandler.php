@@ -89,21 +89,19 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
-                    if ($_REQUEST['custom_play_action']) {
+                    if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
                     }
-                    if (!empty($_REQUEST['append'])) {
+                    if (array_key_exists('append', $_REQUEST) && !empty($_REQUEST['append'])) {
                         $_SESSION['iframe']['target'] .= '&append=true';
                     }
-                    if (!empty($_REQUEST['playnext'])) {
+                    if (array_key_exists('playnext', $_REQUEST) && !empty($_REQUEST['playnext'])) {
                         $_SESSION['iframe']['target'] .= '&playnext=true';
                     }
-                    if ($_REQUEST['subtitle']) {
+                    if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
-                    } else {
-                        if (isset($_SESSION['iframe']['subtitle'])) {
-                            unset($_SESSION['iframe']['subtitle']);
-                        }
+                    } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
+                        unset($_SESSION['iframe']['subtitle']);
                     }
                     $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
                 }

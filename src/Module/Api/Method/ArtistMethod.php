@@ -66,7 +66,10 @@ final class ArtistMethod
         }
 
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        $include = array();
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+        }
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::artists(array($object_id), $include, $user->id, true, false);

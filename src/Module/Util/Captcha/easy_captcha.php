@@ -321,7 +321,7 @@ class easy_captcha
      */
     public function data_file($object_id = null)
     {
-        return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($object_id ? $object_id : $this->id)) . ".a()";
+        return CAPTCHA_TEMP_DIR . '/' . preg_replace("/[^-,.\w]/", "", ($object_id ? $object_id : $this->id)) . ".a()";
     }
 
 

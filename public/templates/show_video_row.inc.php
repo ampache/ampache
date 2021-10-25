@@ -64,11 +64,11 @@ if (!isset($video_type)) {
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
         if ($libitem->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
+            $art_showed = Art::display('video', $libitem->id, $libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
         }
         if (!$art_showed) {
             $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
-            Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
+            Art::display('video', $libitem->id, $libitem->get_fullname(), $thumb, $libitem->get_link());
         } ?>
 </td>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
@@ -93,7 +93,7 @@ if ($video_type != 'video') {
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->object_cnt; ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->total_count; ?></td>
 <?php } ?>
 <?php if (!$hide_genres) { ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
@@ -104,10 +104,6 @@ if ($video_type != 'video') {
                 <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_video">
                     <?php echo Rating::show($libitem->id, 'video') ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_video">
                     <?php echo Userflag::show($libitem->id, 'video') ?>
                 </span>
@@ -117,7 +113,7 @@ if ($video_type != 'video') {
     <?php
     } ?>
 <td class="cel_action">
-<a href="<?php echo $libitem->link; ?>"><?php echo Ui::get_icon('preferences', T_('Video Information')); ?></a>
+<a href="<?php echo $libitem->get_link(); ?>"><?php echo Ui::get_icon('preferences', T_('Video Information')); ?></a>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>
         <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>

@@ -97,7 +97,7 @@ class Daap_Api
             $headers      = apache_request_headers();
             $reqheaders   = array();
             $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
-            if (isset($headers['Range'])) {
+            if (array_key_exists('Range', $headers)) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
@@ -512,7 +512,7 @@ class Daap_Api
             foreach ($meta as $tag) {
                 switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($tag, $song->f_title);
+                        $output .= self::tlv($tag, $song->f_name);
                         break;
                     case 'dmap.containeritemid':
                         /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);

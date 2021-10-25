@@ -31,12 +31,12 @@ use Ampache\Module\Util\Ui;
     <li><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
     <li><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', $t_smartlists); ?><br /><?php echo $t_smartlists ?></a></li>
-    <li><a href="<?php echo $web_path ?>/browse.php?action=tag&type=song"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres ?></a></li>
+    <li><a href="<?php echo $web_path ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres ?></a></li>
     <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
     <?php
 } ?>
-    <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
+    <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php
     } ?>

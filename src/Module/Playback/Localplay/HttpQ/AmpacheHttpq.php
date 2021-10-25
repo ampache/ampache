@@ -25,6 +25,7 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
@@ -121,15 +122,15 @@ class AmpacheHttpq extends localplay_controller
      */
     public function add_instance($data)
     {
-        $name     = Dba::escape($data['name']);
-        $host     = Dba::escape($data['host']);
-        $port     = Dba::escape($data['port']);
-        $password = Dba::escape($data['password']);
+        $name     = Dba::escape($data['name'] ?? null);
+        $host     = Dba::escape($data['host'] ?? null);
+        $port     = Dba::escape($data['port'] ?? null);
+        $password = Dba::escape($data['password'] ?? null);
         $user_id  = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES ('$name', '$host', '$port', '$password', '$user_id')";
+        $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql);
+        return Dba::write($sql, array($name, $host, $port, $password, $user_id));
     } // add_instance
 
     /**
@@ -209,9 +210,9 @@ class AmpacheHttpq extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
-        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -225,15 +226,19 @@ class AmpacheHttpq extends localplay_controller
      */
     public function set_active_instance($uid, $user_id = '')
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ?: Core::get_global('user')->id;
+        // Not an admin? bubkiss!
+        if (!$user->has_access('100')) {
+            $user_id = $user->id ?? 0;
+        }
+        $user_id = $user_id ?? $user->id;
 
         Preference::update('httpq_active', $user_id, $uid);
         AmpConfig::set('httpq_active', $uid, true);
+        debug_event('httpq.controller', 'set_active_instance: ' . $uid . ' ' . $user_id, 5);
 
         return true;
     } // set_active_instance
@@ -475,7 +480,7 @@ class AmpacheHttpq extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link'] = $song->f_link;
                     break;
                 case 'demo_id':
@@ -499,13 +504,13 @@ class AmpacheHttpq extends localplay_controller
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
-                                $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                 $data['link'] = $media->f_link;
                                 break;
                             case 'live_stream':
-                                $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
+                                /** @var Live_Stream $media */
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $frequency $site_url";
+                                $data['name'] = "$media->name $site_url";
                                 $data['link'] = $media->site_url;
                                 break;
                         } // end switch on type
@@ -539,15 +544,15 @@ class AmpacheHttpq extends localplay_controller
         $array['repeat'] = $this->_httpq->get_repeat();
         $array['random'] = $this->_httpq->get_random();
         $array['track']  = $this->_httpq->get_now_playing();
-        $url_data        = $this->parse_url($array['track']);
 
-        if (isset($url_data['oid'])) {
+        $url_data = $this->parse_url($array['track']);
+        if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album']  = $song->get_album_name();
         } else {
-            $array['track_title'] = basename($array['track']);
+            $array['track_title'] = basename($array['track'] ?? '');
         }
 
         return $array;

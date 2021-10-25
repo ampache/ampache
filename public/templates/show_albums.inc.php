@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path      = AmpConfig::get('web_path');
 $thcount       = 9;
-$show_ratings  = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings  = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres   = AmpConfig::get('hide_genres');
 $is_table      = $browse->is_grid_view();
 $group_release = AmpConfig::get('album_release_type');
@@ -98,19 +98,17 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
     <tbody>
         <?php if (AmpConfig::get('ratings')) {
         Rating::build_cache('album', $object_ids);
+        Userflag::build_cache('album', $object_ids);
     }
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('album', $object_ids);
-        }
 
-        $show_direct_play_cfg = AmpConfig::get('directplay');
+        $show_direct_play     = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);
             $libitem->format(true, $limit_threshold);
-            $show_direct_play  = $show_direct_play_cfg;
+            $show_direct_play  = $show_direct_play;
             $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->song_count <= $directplay_limit);

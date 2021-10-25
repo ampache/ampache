@@ -33,7 +33,7 @@ use Ampache\Module\System\Core;
         $broadcast->format(); ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
-            <?php echo $broadcast->f_name; ?>
+            <?php echo $broadcast->get_fullname(); ?>
         </a>
     </li>
 <?php

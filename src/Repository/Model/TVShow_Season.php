@@ -137,15 +137,12 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function format($details = true)
     {
-        $this->f_name = T_('Season') . ' ' . $this->season_number;
-
         $tvshow = new TvShow($this->tvshow);
         $tvshow->format($details);
-        $this->f_tvshow      = $tvshow->f_name;
+        $this->f_tvshow      = $tvshow->get_link();
         $this->f_tvshow_link = $tvshow->f_link;
 
-        $this->link   = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . scrub_out($this->f_name) . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . $tvshow->get_fullname() . ' - ' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $this->_get_extra_info();
@@ -185,8 +182,29 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function get_fullname()
     {
+        // don't do anything if it's formatted
+        if (!isset($this->f_name)) {
+            $this->f_name = T_('Season') . ' ' . $this->season_number;
+        }
+
         return $this->f_name;
     }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/tvshow_seasons.php?action=show&season=' . $this->id;
+        }
+
+        return $this->link;
+    }
+
 
     /**
      * @return array
@@ -295,7 +313,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         }
 
         if ($tvshow_id !== null && $type !== null) {
-            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

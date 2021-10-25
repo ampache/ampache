@@ -66,10 +66,11 @@ final class Session implements SessionInterface
 
         // If we want a session
         if (!defined('NO_SESSION') && $useAuth) {
+            $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
-            if (!static::exists('interface', $_COOKIE[$sessionName])) {
+            if (!static::exists('interface', $sessionData)) {
                 if (!static::auth_remember()) {
-                    $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '');
+                    $this->authenticationManager->logout($sessionData);
 
                     return false;
                 }
@@ -82,7 +83,8 @@ final class Session implements SessionInterface
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
             // If the user ID doesn't exist deny them
-            if (!Core::get_global('user')->id && !$isDemoMode) {
+            $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+            if (!$user_id && !$isDemoMode) {
                 $this->authenticationManager->logout(session_id());
 
                 return false;
@@ -115,7 +117,8 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->fullname = $auth['fullname'];
                     $GLOBALS['user']->access   = (int) ($auth['access']);
                 }
-                if (!Core::get_global('user')->id && !$isDemoMode) {
+                $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+                if (!$user_id && !$isDemoMode) {
                     $this->authenticationManager->logout(session_id());
 
                     return false;
@@ -124,7 +127,7 @@ final class Session implements SessionInterface
             }
         } else {
             // If Auth, but no session is set
-            if (isset($_REQUEST['sid'])) {
+            if (array_key_exists('sid', $_REQUEST)) {
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
@@ -181,8 +184,8 @@ final class Session implements SessionInterface
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
             'expires' => -1,
-            'path' => AmpConfig::get('cookie_path'),
-            'domain' => AmpConfig::get('cookie_domain'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
         ];
@@ -621,11 +624,11 @@ final class Session implements SessionInterface
     public static function create_remember_cookie($username)
     {
         $session_name    = AmpConfig::get('session_name');
-        $remember_length = time() + AmpConfig::get('remember_length', 604800);
+        $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
         $cookie_options  = [
             'expires' => $remember_length,
-            'path' => AmpConfig::get('cookie_path'),
-            'domain' => AmpConfig::get('cookie_domain'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
         ];

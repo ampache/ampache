@@ -67,7 +67,7 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $songs = ($input['top50'])
+        $songs = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
             ? static::getSongRepository()->getTopSongsByArtist($artist)
             : static::getSongRepository()->getByArtist($object_id);
         $user  = User::get_from_username(Session::username($input['auth']));
@@ -80,13 +80,13 @@ final class ArtistSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($songs, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);

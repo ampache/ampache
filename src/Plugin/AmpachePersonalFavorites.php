@@ -71,12 +71,9 @@ class AmpachePersonalFavorites
             return false;
         }
 
-        Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean',
-            'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer',
-            'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer',
-            'plugins', $this->name);
+        Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
+        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -154,8 +151,6 @@ class AmpachePersonalFavorites
                             T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
-                        echo '<div style="white-space: normal;">' . $item[0]->description . '</div>';
-                        echo '</div>';
                         echo '</td></tr>';
 
                         $count++;

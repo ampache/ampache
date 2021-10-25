@@ -55,7 +55,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 $web_path = AmpConfig::get('web_path');
                 $search   = $_REQUEST['search'];
                 $target   = $_REQUEST['target'];
-                $limit    = $_REQUEST['limit'] ?: 5;
+                $limit    = $_REQUEST['limit'] ?? 5;
 
                 $results = array();
 
@@ -79,8 +79,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Artists'),
                             'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
-                            'label' => scrub_out($artist->f_name),
-                            'value' => scrub_out($artist->f_name),
+                            'label' => scrub_out($artist->get_fullname()),
+                            'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
                             'image' => Art::url($artist->id, 'artist', null, 10),
                         );
@@ -107,8 +107,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
-                            'label' => scrub_out($album->f_name),
-                            'value' => scrub_out($album->f_name),
+                            'label' => scrub_out($album->get_fullname()),
+                            'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_album_artist_name()),
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
@@ -249,7 +249,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
-                            'image' => $avatar['url'] ?: '',
+                            'image' => $avatar['url'] ?? '',
                         );
                     }
                 }

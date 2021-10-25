@@ -70,9 +70,6 @@ if ($albums) {
         if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php echo Rating::show($album->id, 'album'); ?></span>
-            <?php } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_rating" id="userflag_<?php echo $album->id; ?>_album"><?php echo Userflag::show($album->id, 'album'); ?></span>
             <?php } ?>
         <?php } ?>

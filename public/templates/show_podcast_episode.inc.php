@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Podcast_Episode $episode */
 ?>
-<?php Ui::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+<?php Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 
 <?php if (User::is_registered()) { ?>
@@ -45,9 +45,6 @@ use Ampache\Module\Util\Ui;
                 <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
         <dt><?php echo T_('Fav.'); ?></dt>
         <dd>
             <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">
@@ -56,6 +53,15 @@ use Ampache\Module\Util\Ui;
         </dd>
     <?php } ?>
 <?php } ?>
+    <?php if (AmpConfig::get('waveform')) { ?>
+        <dt><?php echo T_('Waveform'); ?></dt>
+        <dd>
+            <div id="waveform_<?php echo $episode->id; ?>">
+                <img src="<?php echo AmpConfig::get('web_path'); ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
+            </div>
+        </dd>
+        <?php
+    } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (!empty($episode->file)) { ?>
@@ -113,7 +119,7 @@ use Ampache\Module\Util\Ui;
     } ?>
     </dd>
 <?php
-    $songprops[T_('Title')]                  = $episode->f_title;
+    $songprops[T_('Title')]                  = $episode->get_fullname();
     $songprops[T_('Description')]            = $episode->f_description;
     $songprops[T_('Category')]               = $episode->f_category;
     $songprops[T_('Author')]                 = $episode->f_author;

@@ -135,10 +135,10 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim((string)$this->prefix . " " . $this->f_title);
-        $this->f_title         = ($this->f_original_name ?: $this->f_title);
-        $this->f_full_title    = $this->f_title;
-        $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_original_name = trim((string)$this->prefix . " " . $this->get_fullname());
+        $this->f_name          = ($this->f_original_name ?: $this->get_fullname());
+        $this->f_full_title    = $this->f_name;
+        $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
 
         return true;
     } // format

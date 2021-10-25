@@ -114,7 +114,8 @@ class Playlist extends playlist_object
     public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = ($includePublic)
             ? 'playlistids'
@@ -163,7 +164,8 @@ class Playlist extends playlist_object
     public static function get_playlist_array($user_id = null)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = 'playlistarray';
         if (parent::is_cached($key, $user_id)) {
@@ -198,10 +200,11 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @return array
      */
-    public static function get_details($type = 'playlist', $user_id = 0)
+    public static function get_details($type = 'playlist', $user_id = null)
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id ?: -1;
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? -1;
         }
 
         $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
@@ -225,7 +228,8 @@ class Playlist extends playlist_object
     public static function get_smartlists($user_id = null, $playlist_name = '', $like = true)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = 'smartlists';
         if (empty($playlist_name)) {
@@ -270,9 +274,7 @@ class Playlist extends playlist_object
     public function format($details = true)
     {
         parent::format($details);
-        $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
-
+        $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     } // format
@@ -294,8 +296,8 @@ class Playlist extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_type' => $row['object_type'],
-                'object_id' => $row['object_id'],
-                'track' => $row['track'],
+                'object_id' => (int)$row['object_id'],
+                'track' => (int)$row['track'],
                 'track_id' => $row['id']
             );
         } // end while
@@ -578,7 +580,8 @@ class Playlist extends playlist_object
     public static function create($name, $type, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id ?: -1;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? -1;
         }
         // get the public_name/username
         $username = User::get_username($user_id);

@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
@@ -40,21 +41,27 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final class DefaultAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private AlbumRepositoryInterface $albumRepository;
 
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
     }
 
     public function handle(): void
     {
-        $results = array();
+        $results      = array();
+        $request_id   = $this->requestParser->getFromRequest('id');
+        $request_type = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -62,9 +69,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                switch ($_REQUEST['type']) {
+                switch ($request_type) {
                     case 'delete':
-                        Core::get_global('user')->playlist->delete_track($_REQUEST['id']);
+                        Core::get_global('user')->playlist->delete_track($request_id);
                         break;
                 } // end switch
 
@@ -72,10 +79,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             // Handle the users basketcases...
             case 'basket':
-                $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
-                $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
-
+                $object_type = $request_type ?? $this->requestParser->getFromRequest('object_type');
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+                    $object_id = $request_id ?? $this->requestParser->getFromRequest('object_id');
                     if (!is_array($object_id)) {
                         $object_id = array($object_id);
                     }
@@ -86,11 +92,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         Core::get_global('user')->playlist->add_medias($medias);
                     }
                 } else {
-                    switch ($_REQUEST['type']) {
+                    switch ($request_type) {
                         case 'browse_set':
                         case 'browse_set_random':
                             $songs   = array();
-                            $browse  = new Browse($_REQUEST['browse_id']);
+                            $browse  = new Browse($this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':
@@ -107,7 +113,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                     $songs = $objects;
                                     break;
                             } // end switch type
-                            if ($_REQUEST['type'] == 'browse_set_random') {
+                            if ($request_type == 'browse_set_random') {
                                 shuffle($songs);
                             }
                             foreach ($songs as $object_id) {
@@ -115,30 +121,30 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             }
                             break;
                         case 'album_full':
-                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $_REQUEST['id']));
+                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $request_id));
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
                         case 'album_random':
-                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $_REQUEST['id']));
+                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $request_id));
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
                         case 'artist_random':
                         case 'tag_random':
-                            $data       = explode('_', $_REQUEST['type']);
+                            $data       = explode('_', $request_type);
                             $type       = $data['0'];
                             $class_name = ObjectTypeToClassNameMapper::map($type);
-                            $object     = new $class_name($_REQUEST['id']);
+                            $object     = new $class_name($request_id);
                             $songs      = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
                         case 'playlist_random':
-                            $playlist = new Playlist($_REQUEST['id']);
+                            $playlist = new Playlist($request_id);
                             $items    = $playlist->get_random_items();
                             foreach ($items as $item) {
                                 Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
@@ -183,15 +189,15 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'action_buttons':
+                $rating_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
                 ob_start();
-                if (AmpConfig::get('ratings')) {
-                    echo " <span id='rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-                    echo Rating::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
+                    echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
+                    echo Rating::show($rating_id, $rating_type);
                     echo "</span>";
-                }
-                if (AmpConfig::get('userflags')) {
-                    echo " <span id='userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . "'>";
-                    echo Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                    echo " <span id='userflag_" . $rating_id . "_" . $rating_type . "'>";
+                    echo Userflag::show($rating_id, $rating_type);
                     echo "</span>";
                 }
                 $results['action_buttons'] = ob_get_contents();

@@ -85,7 +85,7 @@ class Clip extends Video
         if (!isset($data['artist']) || empty($data['artist'])) {
             return null;
         }
-        $artist_mbid = isset($data['mbid_artistid']) ? $data['mbid_artistid'] : null;
+        $artist_mbid = $data['mbid_artistid'] ?? null;
         if ($artist_mbid) {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }
@@ -153,8 +153,8 @@ class Clip extends Video
             if ($this->artist) {
                 $artist = new Artist($this->artist);
                 $artist->format();
-                $this->f_artist     = $artist->f_link;
-                $this->f_full_title = '[' . scrub_out($artist->f_name) . '] ' . $this->f_full_title;
+                $this->f_artist     = $artist->get_f_link();
+                $this->f_full_title = '[' . scrub_out($artist->get_fullname()) . '] ' . $this->f_full_title;
             }
 
             if ($this->song) {

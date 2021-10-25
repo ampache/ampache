@@ -57,9 +57,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $category;
     public $pubdate;
     public $enabled;
-    public $object_cnt;
+    public $total_count;
     public $catalog;
-    public $f_title;
+    public $waveform;
+    public $f_name;
     public $f_file;
     public $f_size;
     public $f_time;
@@ -75,7 +76,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_link;
     public $f_podcast;
     public $f_podcast_link;
-    private $total_count;
 
     /**
      * Constructor
@@ -144,7 +144,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function format($details = true)
     {
-        $this->f_title       = scrub_out($this->title);
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
@@ -162,20 +161,19 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
         $this->f_size = Ui::format_bytes($this->size);
-        $this->f_file = $this->f_title . '.' . $this->type;
+        $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->f_podcast      = $podcast->f_title;
+            $this->f_podcast      = $podcast->get_fullname();
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
         if (AmpConfig::get('show_played_times')) {
-            $this->object_cnt = (int) $this->total_count;
+            $this->total_count = (int) $this->total_count;
         }
 
         return true;
@@ -195,7 +193,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $keywords['title'] = array(
             'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_title
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -206,7 +204,26 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -298,7 +315,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -344,7 +361,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if (!$this->check_play_history($user, $agent, $date)) {
             return false;
         }
-        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        }
 
         if (!$this->played) {
             self::update_played(true, $this->id);
@@ -411,7 +430,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name()
     {
-        return $this->f_podcast . " - " . $this->f_title;
+        return $this->f_podcast . " - " . $this->get_fullname();
     }
 
     /**

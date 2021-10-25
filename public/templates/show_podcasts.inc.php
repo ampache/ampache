@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 
 $thcount      = 7;
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
 // translate once
 $count_text  = T_('# Played');
@@ -84,8 +84,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('podcast', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('podcast', $object_ids);
         }
 

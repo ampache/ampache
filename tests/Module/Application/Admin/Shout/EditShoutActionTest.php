@@ -82,7 +82,7 @@ class EditShoutActionTest extends MockeryTestCase
         $shoutbox   = $this->mock(Shoutbox::class);
 
         $shout_id     = 666;
-        $data         = ['shout_id' => (string) $shout_id];
+        $data         = ['shout_id' => $shout_id, 'comment' => '', 'sticky' => ''];
         $webPath      = 'some-path';
         $shoutbox->id = $shout_id;
 

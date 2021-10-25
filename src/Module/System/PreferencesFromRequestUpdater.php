@@ -73,7 +73,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
             $pref_id      = $data['id'];
-            $value        = scrub_in($_REQUEST[$name]);
+            $value        = scrub_in($_REQUEST[$name] ?? '');
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -95,11 +95,12 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             }
 
             // Run the update for this preference only if it's set
-            if (isset($_REQUEST[$name]) || in_array($name, $null_allowed)) {
-                Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
+            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed)) {
+                $applyToAll = $_REQUEST[$apply_to_all] ?? null;
+                Preference::update($pref_id, $user_id, $value, $applyToAll);
             }
 
-            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && $_REQUEST[$new_level]) {
+            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && array_key_exists($new_level, $_REQUEST)) {
                 Preference::update_level($pref_id, $_REQUEST[$new_level]);
             }
         } // end foreach preferences

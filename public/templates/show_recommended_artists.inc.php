@@ -21,14 +21,18 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+/** @var array $object_ids */
+/** @var array $missing_objects */
+/** @var string $limit_threshold */
+
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 //mashup and grid view need different css
@@ -66,20 +70,27 @@ $cel_counter = "cel_counter"; ?>
         </tr>
     </thead>
     <tbody>
-        <?php
+        <?php if (AmpConfig::get('ratings')) {
         // Cache the ratings we are going to use
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist', $object_ids);
-        }
+        Rating::build_cache('artist', $object_ids);
         // Cache the userflags we are going to use
-        if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('artist', $object_ids);
-        }
+        Userflag::build_cache('artist', $object_ids);
+    }
+        $show_direct_play_cfg = AmpConfig::get('directplay');
+        $directplay_limit     = AmpConfig::get('direct_play_limit');
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id);
-            $libitem->format(); ?>
+            $libitem = new Artist($artist_id, $_SESSION['catalog']);
+            $libitem->format(true, $limit_threshold);
+            $show_direct_play  = $show_direct_play_cfg;
+            $show_playlist_add = Access::check('interface', 25);
+            if ($directplay_limit > 0) {
+                $show_playlist_add = ($libitem->songs <= $directplay_limit);
+                if ($show_direct_play) {
+                    $show_direct_play = $show_playlist_add;
+                }
+            } ?>
         <tr id="artist_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>

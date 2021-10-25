@@ -28,7 +28,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Waveform;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,6 +41,8 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
@@ -45,10 +50,12 @@ final class ShowAction implements ApplicationActionInterface
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
         StreamFactoryInterface $streamFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
         $this->streamFactory   = $streamFactory;
@@ -68,9 +75,16 @@ final class ShowAction implements ApplicationActionInterface
         // This to allow other pages from the same session to be processed
         // Warning: Do not change any session variable after this call
         session_write_close();
-
-        $id       = (int) $_REQUEST['song_id'];
-        $waveform = Waveform::get($id);
+        if (array_key_exists('podcast_episode', $_REQUEST)) {
+            $object_id   = (int)$this->requestParser->getFromRequest('podcast_episode');
+            $object_type = 'podcast_episode';
+            $object      = new Podcast_Episode($object_id);
+        } else {
+            $object_id   = (int)$this->requestParser->getFromRequest('song_id');
+            $object_type = 'song';
+            $object      = new Song($object_id);
+        }
+        $waveform = Waveform::get($object, $object_type);
 
         if (!$waveform) {
             return null;

@@ -122,6 +122,7 @@ class UpdateGroupFromTagsActionTest extends MockeryTestCase
             ->with(
                 'show_update_item_group.inc.php',
                 [
+                    'object_id' => $albumId,
                     'catalog_id' => $catalogIds,
                     'type' => 'album',
                     'objects' => $album->album_suite,

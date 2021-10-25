@@ -262,6 +262,11 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->song->link = $value;
 
+        $this->song->shouldReceive('get_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
         $this->assertSame(
             $value,
             $this->subject->getSongUrl()
@@ -354,7 +359,7 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $value = 42;
 
-        $this->song->object_cnt = $value;
+        $this->song->total_count = $value;
 
         $this->assertSame(
             $value,
@@ -366,7 +371,7 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $value = 33;
 
-        $this->song->skip_cnt = $value;
+        $this->song->total_skip = $value;
 
         $this->assertSame(
             $value,

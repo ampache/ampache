@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -32,14 +33,17 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
+/** @var Podcast $podcast */
+/** @var string $object_type */
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($podcast->f_title, 'info-box'); ?>
+Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
-    Art::display('podcast', $podcast->id, $podcast->f_title, $thumb); ?>
+    Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
 </div>
 <?php if ($podcast->description) { ?>
 <div id="item_summary">
@@ -51,9 +55,6 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
     <span id="rating_<?php echo (int) ($podcast->id); ?>_podcast">
         <?php echo Rating::show($podcast->id, 'podcast'); ?>
     </span>
-    <?php } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $podcast->id; ?>_podcast">
         <?php echo Userflag::show($podcast->id, 'podcast'); ?>
     </span>

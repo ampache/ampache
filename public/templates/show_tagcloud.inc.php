@@ -26,6 +26,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Browse;
 
 $tag_types = array(
     'artist' => T_('Artist'),
@@ -35,12 +36,20 @@ $tag_types = array(
 );
 
 /** @var UiInterface $ui */
+/** @var Browse $browse2 */
+/** @var array $object_ids */
+/** @var string $browse_type */
 
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
 ?>
-<?php $ui->show('show_genre_browse_form.inc.php'); ?>
+<?php $ui->show(
+        'show_genre_browse_form.inc.php',
+    [
+        'type' => $browse_type
+    ]
+); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">

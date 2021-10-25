@@ -213,7 +213,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function getExternalPlayUrl(): string
     {
         return $this->song->play_url(
-            '&action=download',
+            '&action=download&cache=1',
             '',
             false,
             Core::get_global('user')->id
@@ -347,13 +347,13 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-        $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
-        $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
+        $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+        $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
         if ($this->song->mbid) {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         } else {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($this->song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
         $songprops[T_('Comment')]       = scrub_out($this->song->comment);
         $label_string                   = '';
@@ -383,10 +383,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('# Played')] = scrub_out($this->song->object_cnt);
+            $songprops[T_('# Played')] = scrub_out($this->song->total_count);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('# Skipped')] = scrub_out($this->song->skip_cnt);
+            $songprops[T_('# Skipped')] = scrub_out($this->song->total_skip);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
@@ -439,7 +439,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getSongUrl(): string
     {
-        return $this->song->link;
+        return $this->song->get_link();
     }
 
     public function getSongLink(): string
@@ -479,11 +479,11 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getNumberPlayed(): int
     {
-        return $this->song->object_cnt;
+        return $this->song->total_count;
     }
 
     public function getNumberSkipped(): int
     {
-        return $this->song->skip_cnt;
+        return $this->song->total_skip;
     }
 }

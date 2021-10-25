@@ -25,59 +25,94 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EnableActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
+    /** @var UiInterface|null */
     private MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
+    /** @var ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
+    /** @var ConfigContainerInterface|null */
     private MockInterface $configContainer;
-
-    /** @var UserStateTogglerInterface|MockInterface|null */
-    private MockInterface $userStateToggler;
 
     private ?EnableAction $subject;
 
     public function setUp(): void
     {
-        $this->ui               = $this->mock(UiInterface::class);
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
-        $this->userStateToggler = $this->mock(UserStateTogglerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new EnableAction(
             $this->ui,
             $this->modelFactory,
-            $this->configContainer,
-            $this->userStateToggler
+            $this->configContainer
         );
     }
 
-    public function testRunEnablesUser(): void
+    public function testRunThrowsExceptionIfAccessDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    public function testRunReturnsNullIfDemoModeIsEnabled(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
+        );
+    }
+
+    public function testRunRendersConfirmation(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $user       = $this->mock(User::class);
 
-        $userId       = 42;
-        $userFullName = 'some-full-name';
-        $userName     = 'some-name';
+        $userId   = 42;
+        $username = 'some-name';
 
-        $user->fullname = $userFullName;
-        $user->username = $userName;
+        $user->fullname = $username;
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -94,10 +129,10 @@ class EnableActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->userStateToggler->shouldReceive('enable')
-            ->with($user)
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
-            ->andReturnTrue();
+            ->andReturnFalse();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -110,10 +145,14 @@ class EnableActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('showConfirmation')
             ->with(
-                'No Problem',
-                /* HINT: Username and fullname together: Username (fullname) */
-                sprintf('%s (%s) has been enabled', $userName, $userFullName),
-                'admin/users.php'
+                'Are You Sure?',
+                sprintf('This will enable the user "%s"', $username),
+                sprintf(
+                    'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                    $userId
+                ),
+                1,
+                'enable_user'
             )
             ->once();
 

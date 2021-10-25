@@ -23,6 +23,10 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song;
+
+/** @var Song $song */
+/** @var array $lyrics */
 
 $web_path = AmpConfig::get('web_path');
 Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
@@ -33,7 +37,7 @@ $album  = scrub_out($song->f_album_full);
 $artist = scrub_out($song->f_artist_full); ?>
 <?php
 if ($album != T_('Unknown (Orphaned)')) {
-    Art::display('album', $song->album, $song->f_album_full, 2);
+    Art::display('album', $song->album, $album, 2);
 } ?>
 
 <div class="np_group">
@@ -46,21 +50,21 @@ if ($album != T_('Unknown (Orphaned)')) {
 
   <div class="np_cell cel_album">
       <label><?php echo T_('Album'); ?>:</label>
-      <a title="<?php echo scrub_out($song->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+      <a title="<?php echo $album; ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
               <?php echo $album; ?>
       </a>
   </div>
 
   <div class="np_cell cel_artist">
       <label><?php echo T_('Artist'); ?>:</label>
-      <a title="<?php echo scrub_out($song->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+      <a title="<?php echo $artist; ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
               <?php echo $artist; ?>
       </a>
   </div>
 </div>
 <br /><br />
 <div class="lyrics">
-    <div id="lyrics_text"><?php echo ($lyrics['text']) ?: T_("No lyrics found."); ?></div>
+    <div id="lyrics_text"><?php echo($lyrics['text']) ?? T_("No lyrics found."); ?></div>
 <?php if ($lyrics['url']) { ?>
     <div id="lyrics_url"><a href="<?php echo $lyrics['url']; ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
 <?php

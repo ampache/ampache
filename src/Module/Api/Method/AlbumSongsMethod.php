@@ -72,7 +72,7 @@ class AlbumSongsMethod
         // songs for all disks
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = (int) $input['exact'] == 1;
+        $exact = array_key_exists('exact', $input) && (int)$input['exact'] == 1;
         if (AmpConfig::get('album_group') && !$exact) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
@@ -95,13 +95,13 @@ class AlbumSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($songs, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);

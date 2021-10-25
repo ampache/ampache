@@ -70,13 +70,13 @@ final class DeletedPodcastEpisodesMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::deleted('podcast_episode', $items);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::deleted('podcast_episode', $items);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                XML_Data::set_offset($input['offset'] ?? 0);
+                XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::deleted('podcast_episode', $items);
         }
         Session::extend($input['auth']);

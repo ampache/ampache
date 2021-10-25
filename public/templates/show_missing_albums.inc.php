@@ -22,7 +22,7 @@
 
 use Ampache\Module\Util\Ui;
 
-?>
+$thcount = 5; ?>
 <?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>

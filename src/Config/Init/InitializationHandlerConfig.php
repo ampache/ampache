@@ -32,8 +32,8 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.0.0-release';
-    private const CONFIG_VERSION = '56';
+    private const VERSION        = '5.1.0-release';
+    private const CONFIG_VERSION = '57';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -99,12 +99,12 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 $results['web_path']
             );
 
-            $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
-            $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
+            $results['site_charset'] = $results['site_charset'] ?? 'UTF-8';
+            $results['raw_web_path'] = $results['raw_web_path'] ?? '/';
             if (!isset($results['max_upload_size'])) {
                 $results['max_upload_size'] = 1048576;
             }
-            $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+            $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?? '';
             if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
                 $results['user_ip_cardinality'] = 42;
             }
@@ -115,9 +115,6 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }
-
-        // Make sure all default preferences are set
-        Preference::set_defaults();
 
         // Temp Fixes
         $results = Preference::fix_preferences($results);

@@ -57,6 +57,13 @@ final class UpdateCatalogCommand extends Command
         string $catalogType
     ): void {
         $values = $this->values();
+        // do a default list of actions if you don't have anything set
+        if (empty($values['cleanup']) && empty($values['verify']) && empty($values['add']) && empty($values['art']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local') {
+            $values['cleanup'] = true;
+            $values['add']     = true;
+            $values['art']     = true;
+            $values['verify']  = true;
+        }
 
         $this->updateCatalog->update(
             $this->io(),

@@ -97,7 +97,7 @@ class Stream
     public static function get_allowed_bitrate()
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
-        $min_bitrate = AmpConfig::get('min_bit_rate');
+        $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
 
@@ -112,7 +112,7 @@ class Stream
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_row($db_results);
 
-            $active_streams = (int) ($results[0]) ?: 0;
+            $active_streams = (int) ($results[0] ?? 0);
             debug_event(self::class, 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
@@ -136,7 +136,7 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return (int) $bit_rate;
+        return (int)$bit_rate;
     }
 
     /**
@@ -194,7 +194,7 @@ class Stream
         if (isset($options['resolution'])) {
             $string_map['%RESOLUTION%'] = $options['resolution'];
         } else {
-            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
         }
         if (isset($options['quality'])) {
             $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
@@ -260,14 +260,14 @@ class Stream
 
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
-            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
+        if (!array_key_exists('bitrate', $options)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate = 0) {
+        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate == 0) {
             // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
+        debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
         if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
@@ -463,7 +463,7 @@ class Stream
         if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id) {
+            if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }

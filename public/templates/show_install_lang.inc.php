@@ -32,16 +32,16 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="form-group">
         <?php
-            $languages   = get_languages();
-            $var_name    = $value . "_lang";
-            ${$var_name} = "selected=\"selected\"";
+            $languages = get_languages();
+            $var_name  = $htmllang . "_lang";
 
             echo "<select class=\"form-control\" name=\"htmllang\">\n";
 
             foreach ($languages as $lang => $name) {
-                $var_name = $lang . "_lang";
+                $lang_name = $lang . "_lang";
+                $selected  = ($var_name == $lang_name) ? "selected=\"selected\"" : '';
 
-                echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
+                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
             } // end foreach
             echo "</select>\n"; ?>
             </div>

@@ -32,7 +32,8 @@ Ui::show_box_top(T_('Upload'));
 $ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = AmpConfig::get('web_path');
+$user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -183,7 +184,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td class="upload_select">
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="artist_select_album_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
@@ -192,7 +193,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td class="upload_select">
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="album_select_upload_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>
@@ -205,7 +206,7 @@ if ($upload_max > 0) { ?>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td class="upload_select">
         <?php show_license_select('license'); ?>
-        <div id="album_select_license_<?php echo $song->license ?>">
+        <div id="album_select_license">
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>
     </td>

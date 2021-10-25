@@ -211,10 +211,9 @@ class mpd
      */
     public function __construct($server, $port, $password = null, $debug_callback = null)
     {
-        $this->host     = $server;
-        $this->port     = $port;
+        $this->host     = trim($server);
+        $this->port     = trim($port);
         $this->password = $password;
-        debug_event(self::class, "Connecting to: " . $server . ":" . $port, 5);
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -1074,7 +1073,7 @@ class mpd
     {
         $parts = explode('.', $string);
 
-        return (100 * $parts[0]) + (10 * $parts[1]) + $parts[2];
+        return (100 * (int)$parts[0]) + (10 * (int)$parts[1]) + (int)$parts[2];
     }
 
     /**

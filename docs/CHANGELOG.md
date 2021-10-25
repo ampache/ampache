@@ -1,5 +1,150 @@
 # CHANGELOG
 
+## Ampache 5.1.0-release
+
+### Added
+
+* Split search items in WebUI into optgroup categories
+* Add en_AU as a locale
+* Require confirmation on enable/disable user links
+* Add f_size  to video parameters
+* Record plays for live_streams and playlists in object_count
+* Add podcast to the object_count table and add missing rows
+* Store playlist art in the database
+  * Show the art on the main playlist page
+  * Allow reset and change of playlist art
+  * Pick a random art item on reset and store
+  * Add a simple continue button for these dialogs
+  * Fix up display of image showaction
+  * Subsonic art looks for the playlist art the same as UI
+* Check for `?` in a query before trying to use parameters
+* Add the current php version to the debug page
+* Cache bust some frequently updated assets
+* Clear asset cache during AutoUpdate
+* Gather Artist recommendations on play/Stat insert
+* Add Top Tracks and Similar Songs to Artist pages
+* Extend run:updateCatalog --update to update artist name matching mbid
+* Add duplicate_mbid_group to album searches
+* Restored missing artist search to the header searchbar
+* Press enter on the list header to allow changing page number
+* Translation Update October 2021
+* Config version 57
+* NEW config options
+  * allow_upload_scripts: Allow or disallow upload scripts on the server
+* Database 5.1.0 Build 4:
+  * Add `podcast` to object_count table
+  * Add `podcast` to cache_object_count table
+  * Add `live_stream` to the rating table
+  * Add `waveforms` for podcast episodes
+* PHP8 Support
+  * Use array_key_exists to skip runtime errors
+  * Fix undefined variables in templates
+  * Errors with wanted/missing lookups and templates
+  * Ajax handler updates and fixes
+  * Set default and fallback values more often to avoid errors
+  * Query errors would kill the whole page
+  * Stop trying to read unreadable files
+  * Explode key pairs when there is something to explode
+  * Don't try to update preferences that don't exist
+  * Errors when not logged in trying to load a session
+* NEW files
+  * Test scripts: codecoverage.sh, stan.sh, tests.sh
+
+### Changed
+
+* Always update time when updating songs and videos from tags
+* Merge config 'ratings' and 'userflags' checks into ratings. (drop userflags)
+* Split search items into groups to help make it a bit clearer
+* Rearranged the list of search items
+* Simplify PlayAction code a bit and use filter_input
+* Speed up update_counts for missing object_counts
+* Enable Podcasts on new installs
+* Delete composer.lock
+* bin/cli run:updateCatalog with no options now does clean, Add, Verify and gather for all catalogs
+* Make category headers a bit nicer
+* Check for valid browse types before loading nothing
+* Browsing Genre defaults to artist
+* Skip albums that match the exact title in wanted search
+* Translate all database description strings on updates
+* Hi-res blankalbum/placeholder image (1400x1400)
+* Allow larger artist summary with a scroll. linebreak place, year formed
+* During garbage collection clean up empty strings with NULL
+* Subsonic
+  * Disable stat recording on stream calls (disable subsonic_stream_scrobble in config to enable)
+
+### Removed
+
+* object_cnt: use total_count and total_skip instead of calculated properties
+* f_title: use f_name
+* Scrub CSS with Autorprefixer
+
+### Fixed
+
+* SQL query error for Random Album in certain config setups
+* Album suite needed even without grouping
+* Stop scrubbing the podcast title so hard (so many `&amp;`'s)
+* Use total_count and total_skip columns for searches (Fixes searching with 0)
+* Can't change view limit on Android
+* Localplay instance could be 1
+* Missing add_type variable on ACL pages
+* Light theme follow button color
+* Missing CSS on list headers
+* Templates with missing variables
+* Fix Stream_Playlist::_add_urls to stop mismatched query values
+* Fix stream.php downloads not sending their url parameters to PlayAction
+* Garbage collect object_count for the possible items
+* Do not drop catalog in table podcast_episode when it doesn't exist yet
+* AAC codec from itunes doesn't provide a bitrate_mode (assume vbr)
+* bin/cli ExportPlaylistCommand had out of order args
+* bin/cli Allow database updates when out of date
+* Fix computeCache for playlists
+* Logic of SQL query to get random albums
+* Simplify the join code for some queries
+* Don't force random for smartlists when you turn it off
+* Empty release_date when updating videos
+* Chrome errors where Content-Disposition has a comma (,)
+* Remove subtitle in stream_playlist if empty
+* Fix options and bitrate selection for stream.php requests
+* Scrobbles from Song::can_scrobble
+* Default preference list
+* MusicBrainz Artist Id could have been replaced with the Album Id
+* Artists being duplicated when feat. another artist
+* Don't let a non-critical update fail DB update
+* Search for 'played' albums and artists
+* Commands loading plugins from cli might not have a user
+* Dashboard links to podcast episodes and art
+* Lots of issues in the webplayer which only supported song links
+* Clean up deleted user date from all tables
+* Waveforms for podcast episodes
+* Subsonic
+  * Trim quotes (") for Subsonic searches (some clients add them)
+  * Support exact (lucene) searching when using quotes (")
+  * Browse by folder is fixed
+  * Faster browse queries for all types
+  * Fix catalog browsing and loading library
+
+### API 5.1.0
+
+### Added
+
+* NEW API functions
+  * Api::live_stream (get a radio stream by id)
+  * Api::live_streams
+* Api::stream Added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+* Add 'time' and 'size' to all podcast_episode responses
+
+### Changed
+
+* live_stream objects added 'catalog' and 'site_url'
+* stats: additional type values: 'video', 'playlist', 'podcast', 'podcast_episode'
+
+### Fixed
+
+* get_indexes: JSON didn't think live_streams was valid (it is)
+* record_play: user is optional
+* Bad xml tags in deleted functions
+* scrobble: Add song_mbid, artist_mbid, album_mbid (docs have no '_' so support both)
+
 ## Ampache 5.0.0-release
 
 Ampache 5 is here and it's big!

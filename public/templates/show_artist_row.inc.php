@@ -33,6 +33,15 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $libitem */
+/** @var bool $show_direct_play */
+/** @var bool $show_playlist_add */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_artist */
+/** @var string $cel_time */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
@@ -51,12 +60,12 @@ $web_path   = AmpConfig::get('web_path'); ?>
 } ?>
     </div>
 </td>
-<?php $name = scrub_out($libitem->f_name); ?>
+<?php $name = scrub_out($libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
-<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
     <?php if ($show_playlist_add) {
@@ -73,7 +82,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
 <td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
 <td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
 <?php } ?>
 <?php if (!$hide_genres) { ?>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
@@ -84,9 +93,6 @@ $web_path   = AmpConfig::get('web_path'); ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
                     <?php echo Rating::show($libitem->id, 'artist'); ?>
                 </span>
-            <?php } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
                     <?php echo Userflag::show($libitem->id, 'artist'); ?>
                 </span>
@@ -95,7 +101,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     <?php } ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
-        if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
+        if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
     </a>

@@ -108,7 +108,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
             $media              = new Artist($art->uid);
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_name);
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
@@ -151,7 +151,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             // Recurse through this dir and create the files array
             while (false !== ($file = readdir($handle))) {
                 $extension = pathinfo($file);
-                $extension = $extension['extension'];
+                $extension = $extension['extension'] ?? '';
 
                 // Make sure it looks like an image file
                 if (!in_array($extension, $image_extensions)) {

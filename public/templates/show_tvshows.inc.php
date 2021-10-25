@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
 session_start();
 
 $web_path     = AmpConfig::get('web_path');
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings') || AmpConfig::get('userflags'));
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 8;
 $is_table     = $browse->is_grid_view();
@@ -71,8 +71,6 @@ $cel_tags  = ($is_table) ? "cel_tags" : 'grid_tags';?>
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('tvshow', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('tvshow', $object_ids);
         }
 

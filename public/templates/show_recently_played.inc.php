@@ -29,8 +29,8 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-$my_id    = (isset($client)) ? $user_id : $user->id;
-$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $my_id) : '';
+$user_id  = $user_id ?? -1;
+$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
 $is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata striped-rows">
@@ -39,8 +39,8 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
             <th class="cel_play"></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
+            <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
@@ -63,8 +63,8 @@ foreach ($data as $row) {
     $time_string        = '-';
     $has_allowed_recent = (bool) $row['user_recent'];
     $has_allowed_time   = (bool) $row['user_time'];
-    $is_allowed_recent  = $is_admin || $my_id == $row_id || $has_allowed_recent;
-    $is_allowed_time    = $is_admin || $my_id == $row_id || $has_allowed_time;
+    $is_allowed_recent  = $is_admin || $user_id == $row_id || $has_allowed_recent;
+    $is_allowed_time    = $is_admin || $user_id == $row_id || $has_allowed_time;
     // if you don't allow now_playing don't show the whole row
     if ($is_allowed_recent) {
         // add the time if you've allowed it
@@ -124,8 +124,8 @@ foreach ($data as $row) {
                     </a>
                 </span>
             </td>
-            <td class="cel_album"><?php echo $song->f_album_link; ?></td>
             <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+            <td class="cel_album"><?php echo $song->f_album_link; ?></td>
             <td class="cel_year"><?php echo $song->year; ?></td>
             <td class="cel_username">
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
@@ -159,8 +159,8 @@ foreach ($data as $row) {
             <th class="cel_play"></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
+            <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>

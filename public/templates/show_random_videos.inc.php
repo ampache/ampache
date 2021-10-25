@@ -42,11 +42,11 @@ if ($videos) {
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
-            $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
+            $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->get_link(), false, 'preview');
         }
         if (!$art_showed) {
             $thumb = Ui::is_grid_view('video') ? 7 : 6;
-            Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
+            Art::display('video', $video->id, $video->f_full_title, $thumb, $video->get_link());
         } ?>
         </div>
         <div class="play_video">
@@ -67,9 +67,6 @@ if ($videos) {
         if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
-            <?php } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_rating" id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>
             <?php } ?>
         <?php } ?>

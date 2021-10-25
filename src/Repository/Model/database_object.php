@@ -114,11 +114,11 @@ abstract class database_object
     public static function is_cached($index, $object_id)
     {
         // Make sure we've got some parents here before we dive below
-        if (!isset(self::$object_cache[$index])) {
+        if (!array_key_exists($index, self::$object_cache)) {
             return false;
         }
 
-        return isset(self::$object_cache[$index][$object_id]);
+        return array_key_exists($object_id, self::$object_cache[$index]);
     } // is_cached
 
     /**

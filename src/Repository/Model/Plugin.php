@@ -88,7 +88,6 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($name);
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event(__CLASS__, 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (!$plugin->is_valid()) {
@@ -96,7 +95,6 @@ class Plugin
                     continue;
                 }
                 if (!method_exists($plugin->_plugin, $type)) {
-                    debug_event(__CLASS__, 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
@@ -229,7 +227,7 @@ class Plugin
      * get_plugin_version
      * This returns the version of the specified plugin
      * @param $plugin_name
-     * @return boolean|mixed
+     * @return int
      */
     public static function get_plugin_version($plugin_name)
     {
@@ -239,10 +237,10 @@ class Plugin
         $db_results = Dba::read($sql, array($name));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['value'];
+            return (int)$results['value'];
         }
 
-        return false;
+        return 0;
     } // get_plugin_version
 
     /**

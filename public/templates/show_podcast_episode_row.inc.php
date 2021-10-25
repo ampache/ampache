@@ -58,10 +58,10 @@ use Ampache\Module\Util\Ui;
 </td>
 <?php
 if ($is_mashup) {
-            $name = scrub_out($libitem->f_full_title); ?>
+            $name = scrub_out($libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-            Art::display('podcast', $libitem->podcast, $name, $thumb, AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $libitem->podcast); ?>
+            Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
         } ?>
@@ -83,7 +83,7 @@ if ($is_mashup) {
 <?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
 <td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
@@ -94,10 +94,6 @@ if ($is_mashup) {
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
                     <?php echo Rating::show($libitem->id, 'podcast_episode'); ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
                     <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
                 </span>

@@ -161,14 +161,9 @@ class Album extends database_object implements library_item
     public $artist_count;
 
     /**
-     * @var integer $object_cnt
-     */
-    public $object_cnt;
-
-    /**
      * @var integer $total_count
      */
-    private $total_count;
+    public $total_count;
 
     /**
      * @var string $f_artist_name
@@ -231,11 +226,6 @@ class Album extends database_object implements library_item
     public $f_year_link;
 
     /**
-     * @var string $f_title
-     */
-    public $f_title;
-
-    /**
      * @var string $f_release_type
      */
     public $f_release_type;
@@ -290,33 +280,37 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->f_name         = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         $this->total_duration = (int)$this->time;
-        $this->object_cnt     = (int)$this->total_count;
+        $this->total_count    = (int)$this->total_count;
         $this->addition_time  = (int)$this->addition_time;
         $this->song_count     = (int)$this->song_count;
         $this->artist_count   = (int)$this->artist_count;
+        // suite is used even without grouping
+        $albumRepository      = $this->getAlbumRepository();
+        $this->album_suite    = $albumRepository->getAlbumSuite($this);
 
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
-            $albumRepository         = $this->getAlbumRepository();
-            $this->album_suite       = $albumRepository->getAlbumSuite($this);
             $this->allow_group_disks = true;
+        }
+        if ($this->allow_group_disks) {
             // don't reset and query if it's all going to be the same
             if (count($this->album_suite) > 1) {
                 $this->total_duration = 0;
-                $this->object_cnt     = 0;
+                $this->total_count    = 0;
                 $this->song_count     = 0;
                 $this->artist_count   = $albumRepository->getArtistCountGroup($this->album_suite);
 
                 foreach ($this->album_suite as $albumId) {
                     $this->total_duration += $albumRepository->getAlbumDuration((int)$albumId);
-                    $this->object_cnt += $albumRepository->getAlbumPlayCount((int)$albumId);
+                    $this->total_count += $albumRepository->getAlbumPlayCount((int)$albumId);
                     $this->song_count += $albumRepository->getSongCount((int)$albumId);
                 }
             }
         }
+        // finally; set up your formatted name
+        $this->f_name = $this->get_fullname();
 
         return true;
     } // constructor
@@ -382,7 +376,7 @@ class Album extends database_object implements library_item
         $results['has_thumb'] = make_bool($art->thumb);
 
         if (AmpConfig::get('show_played_times')) {
-            $results['object_cnt'] = $this->object_cnt;
+            $results['total_count'] = $this->total_count;
         }
 
         parent::add_to_cache('album_extra', $this->id, $results);
@@ -578,8 +572,7 @@ class Album extends database_object implements library_item
      */
     public function format($details = true, $limit_threshold = '')
     {
-        $web_path  = AmpConfig::get('web_path');
-        $show_year = $this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year;
+        $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
 
@@ -594,28 +587,15 @@ class Album extends database_object implements library_item
                 $album_artist = new Artist($this->album_artist);
                 $album_artist->format();
                 $this->album_artist_name   = $album_artist->name;
-                $this->f_album_artist_name = $album_artist->f_name;
+                $this->f_album_artist_name = $album_artist->get_fullname();
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
             }
 
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
-        $this->f_title = $this->f_name;
-        $this->link    = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_name) . "\">" . scrub_out($this->f_name);
-
-        // Looking if we need to display the release year
-        if ($show_year) {
-            $this->f_title .= " (" . $this->year . ")";
-            $this->f_link .= " <span class=\"year\">(" . $this->year . ")</span>";
-        }
-        // Looking if we need to combine or display disks
-        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
-            $this->f_title .= " [" . T_('Disk') . " " . $this->disk . "]";
-            $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
-        }
-        $this->f_link .= "</a>";
+        // set link and f_link
+        $this->get_f_link();
 
         if ($this->artist_count == '1') {
             $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
@@ -661,7 +641,7 @@ class Album extends database_object implements library_item
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
         $keywords['year'] = array(
             'important' => false,
@@ -674,11 +654,58 @@ class Album extends database_object implements library_item
 
     /**
      * Get item fullname.
+     * @param bool $simple
      * @return string
      */
-    public function get_fullname()
+    public function get_fullname($simple = false)
     {
+        // return the basic name without all the wild formatting
+        if ($simple) {
+            return trim(trim($this->prefix . ' ' . trim($this->name)));
+        }
+        // don't do anything if it's formatted
+        if (!isset($this->f_name)) {
+            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            // Looking if we need to display the release year
+            if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+                $this->f_name .= " (" . $this->year . ")";
+            }
+            // Looking if we need to combine or display disks
+            if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
+                $this->f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
+            }
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -690,7 +717,7 @@ class Album extends database_object implements library_item
         if ($this->album_artist) {
             $album_artist = new Artist($this->album_artist);
 
-            return $album_artist->f_name;
+            return $album_artist->get_fullname();
         }
 
         return '';
@@ -885,8 +912,8 @@ class Album extends database_object implements library_item
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
-            Art::display($type, $album_id, $title, $thumb, $this->link);
+            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->get_fullname();
+            Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }
 
@@ -952,7 +979,7 @@ class Album extends database_object implements library_item
             }
         } else {
             // run updates on the single fields
-            if (!empty($name) && $name != $this->f_name) {
+            if (!empty($name) && $name != $this->get_fullname()) {
                 $trimmed          = Catalog::trim_prefix(trim((string) $name));
                 $new_name         = $trimmed['string'];
                 $aPrefix          = $trimmed['prefix'];
@@ -1021,12 +1048,12 @@ class Album extends database_object implements library_item
         } // if updated
 
         $override_childs = false;
-        if ($data['overwrite_childs'] == 'checked') {
+        if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
 
         $add_to_childs = false;
-        if ($data['add_to_childs'] == 'checked') {
+        if (array_key_exists('add_to_childs', $data) && $data['add_to_childs'] == 'checked') {
             $add_to_childs = true;
         }
 

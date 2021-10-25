@@ -70,10 +70,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins',
-            $this->name);
-        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean',
-            'plugins', $this->name);
+        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name);
+        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
 
         return true;
     }
@@ -98,9 +96,11 @@ class AmpacheCatalogFavorites
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version < 2) {
-            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean',
-                'plugins');
+        if ($from_version == 0) {
+            return false;
+        }
+        if ($from_version < (int)$this->version) {
+            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
         }
 
         return true;
@@ -112,7 +112,7 @@ class AmpacheCatalogFavorites
      */
     public function display_home()
     {
-        if (AmpConfig::get('userflags')) {
+        if (AmpConfig::get('ratings')) {
             $userflags = Userflag::get_latest('song', 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';

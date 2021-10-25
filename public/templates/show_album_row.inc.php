@@ -35,6 +35,16 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Album $libitem */
 /** @var mixed|null $original_year */
+/** @var bool $show_direct_play */
+/** @var bool $show_playlist_add */
+/** @var bool $hide_genres */
+/** @var bool $show_ratings */
+/** @var int $thcount */
+/** @var string $cel_cover */
+/** @var string $cel_album */
+/** @var string $cel_artist */
+/** @var string $cel_counter */
+/** @var string $cel_tags */
 
 $web_path     = AmpConfig::get('web_path');
 $display_year = ($original_year && $libitem->original_year)
@@ -56,12 +66,12 @@ $display_year = ($original_year && $libitem->original_year)
             } ?>
     </div>
 </td>
-<?php $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->f_name); ?>
+<?php $name = '[' . $libitem->f_album_artist_name . '] ' . scrub_out($libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     Art::display('album', $libitem->id, $name, $thumb, $web_path . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
-<td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_album; ?>"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
@@ -86,7 +96,7 @@ $display_year = ($original_year && $libitem->original_year)
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
-        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
+        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <?php if (!$hide_genres) {
         ++$thcount; ?>
@@ -99,10 +109,6 @@ $display_year = ($original_year && $libitem->original_year)
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album">
                     <?php echo Rating::show($libitem->id, 'album'); ?>
                 </span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album">
                     <?php echo Userflag::show($libitem->id, 'album'); ?>
                 </span>

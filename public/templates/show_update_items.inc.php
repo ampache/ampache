@@ -25,6 +25,10 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
+/** @var string $type */
+/** @var int $object_id */
+/** @var array|null $catalog_id */
+
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 $return_id = Catalog::update_single_item($type, $object_id);
 //The target URL has changed so it needs to be updated
@@ -37,7 +41,7 @@ if ($object_id != $return_id) {
 <a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
 <br />
 <?php
-//gather art for this item
+// gather art for this item
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
     if (is_array($catalog_id) && $catalog_id[0] != '') {

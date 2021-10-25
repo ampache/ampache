@@ -41,8 +41,7 @@ use Ampache\Repository\Model\Song;
                     }
                 } else {
                     $artist = new Artist($a['id']);
-                    $artist->format();
-                    echo $artist->f_link;
+                    echo $artist->get_f_link();
                 } ?>
             </div>
         <?php

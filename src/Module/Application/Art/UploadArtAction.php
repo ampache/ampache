@@ -65,7 +65,7 @@ final class UploadArtAction extends AbstractArtAction
 
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            $this->ui->showConfirmation(
+            $this->ui->showContinue(
                 T_('There Was a Problem'),
                 T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'),
                 $burl
@@ -82,13 +82,13 @@ final class UploadArtAction extends AbstractArtAction
         if ($image_data !== '') {
             $art = $this->modelFactory->createArt($item->id, $object_type);
             if ($art->insert($image_data, $_FILES['file']['type'])) {
-                $this->ui->showConfirmation(
+                $this->ui->showContinue(
                     T_('No Problem'),
                     T_('Art has been added'),
                     $burl
                 );
             } else {
-                $this->ui->showConfirmation(
+                $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Art file failed to insert, check the dimensions are correct.'),
                     $burl
@@ -96,7 +96,7 @@ final class UploadArtAction extends AbstractArtAction
             }
         } else {
             // Else it failed
-            $this->ui->showConfirmation(
+            $this->ui->showContinue(
                 T_('There Was a Problem'),
                 T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'),
                 $burl

@@ -49,7 +49,7 @@ class Podcast extends database_object implements library_item
     public $total_count;
     public $episodes;
 
-    public $f_title;
+    public $f_name;
     public $f_website;
     public $f_description;
     public $f_language;
@@ -140,7 +140,7 @@ class Podcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_title         = scrub_out($this->title);
+        $this->get_fullname();
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);
@@ -148,8 +148,7 @@ class Podcast extends database_object implements library_item
         $this->f_website       = scrub_out($this->website);
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
-        $this->f_link          = '<a href="' . $this->link . '" title="' . scrub_out($this->f_title) . '">' . scrub_out($this->f_title) . '</a>';
+        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
@@ -165,7 +164,7 @@ class Podcast extends database_object implements library_item
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_title
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -178,7 +177,26 @@ class Podcast extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -261,7 +279,7 @@ class Podcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -274,7 +292,7 @@ class Podcast extends database_object implements library_item
     public function update(array $data)
     {
         $feed        = isset($data['feed']) ? $data['feed'] : $this->feed;
-        $title       = isset($data['title']) ? scrub_in($data['title']) : $this->title;
+        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : $this->title;
         $website     = isset($data['website']) ? scrub_in($data['website']) : $this->website;
         $description = isset($data['description']) ? scrub_in($data['description']) : $this->description;
         $generator   = isset($data['generator']) ? scrub_in($data['generator']) : $this->generator;

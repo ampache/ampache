@@ -32,10 +32,9 @@ use Ampache\Module\Util\Ui;
 if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800)) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));
-is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
-
-$web_path       = AmpConfig::get('web_path');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+$dir      = is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';
+$web_path = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;

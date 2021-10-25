@@ -112,8 +112,6 @@ $(document).ready(function(){
             <span id="rating_<?php echo $media->id; ?>_song">
                 <?php echo Rating::show($media->id, 'song'); ?>
             </span>
-        <?php }
-        if (AmpConfig::get('userflags')) { ?>
             <span id="userflag_<?php echo $media->id; ?>_song">
                 <?php echo Userflag::show($media->id, 'song'); ?>
             </span>

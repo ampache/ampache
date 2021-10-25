@@ -30,9 +30,7 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 
-if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
-    $is_admin = true;
-} ?>
+$is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
 <colgroup>
@@ -75,8 +73,29 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
             <?php if ($is_admin) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name         = 'on_' . $pref['level'];
-            ${$name}                    = 'selected="selected"'; ?>
+                    <?php $name         = 'on_' . (string)$pref['level'];
+                    $on_5               = '';
+                    $on_25              = '';
+                    $on_50              = '';
+                    $on_75              = '';
+                    $on_100             = '';
+                    switch ($name) {
+                        case 'on_5':
+                            $on_5 = 'selected="selected"';
+                            break;
+                        case 'on_25':
+                            $on_25 = 'selected="selected"';
+                            break;
+                        case 'on_50':
+                            $on_50 = 'selected="selected"';
+                            break;
+                        case 'on_75':
+                            $on_75 = 'selected="selected"';
+                            break;
+                        case 'on_100':
+                            $on_100 = 'selected="selected"';
+                            break;
+                    } ?>
                     <select name="level_<?php echo $pref['name']; ?>">
                         <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                         <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>

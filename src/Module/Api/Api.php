@@ -76,6 +76,8 @@ class Api
         'labels' => Method\LabelsMethod::class,
         'label' => Method\LabelMethod::class,
         'label_artists' => Method\LabelArtistsMethod::class,
+        'live_streams' => Method\LiveStreamsMethod::class,
+        'live_stream' => Method\LiveStreamMethod::class,
         'songs' => Method\SongsMethod::class,
         'song' => Method\SongMethod::class,
         'song_delete' => Method\SongDeleteMethod::class,
@@ -159,7 +161,7 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.0.0';
+    public static $version = '5.1.0';
 
     /**
      * @var Browse $browse
@@ -303,10 +305,10 @@ class Api
     public static function check_parameter($input, $parameters, $method)
     {
         foreach ($parameters as $parameter) {
-            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
+            if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
                 continue;
             }
-            if (empty($input[$parameter])) {
+            if (!array_key_exists($parameter, $input)) {
                 debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

@@ -83,7 +83,8 @@ class Query
             'total_count',
             'total_skip',
             'album',
-            'artist'
+            'artist',
+            'random'
         ),
         'album' => array(
             'name',
@@ -94,7 +95,8 @@ class Query
             'generic_artist',
             'song_count',
             'total_count',
-            'release_type'
+            'release_type',
+            'random'
         ),
         'artist' => array(
             'name',
@@ -103,7 +105,8 @@ class Query
             'yearformed',
             'song_count',
             'album_count',
-            'total_count'
+            'total_count',
+            'random'
         ),
         'playlist' => array(
             'name',
@@ -138,7 +141,8 @@ class Query
             'title',
             'resolution',
             'length',
-            'codec'
+            'codec',
+            'random'
         ),
         'wanted' => array(
             'user',
@@ -233,14 +237,16 @@ class Query
             'follow_date'
         ),
         'podcast' => array(
-            'title'
+            'title',
+            'random'
         ),
         'podcast_episode' => array(
             'title',
             'category',
             'author',
             'time',
-            'pubDate'
+            'pubDate',
+            'random'
         )
     ];
 
@@ -259,9 +265,15 @@ class Query
 
             return true;
         }
-        $this->user_id = Core::get_global('user')->id;
+        $this->user_id = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')->id
+            : null;
 
-        if ($query_id === null) {
+        if ($this->user_id === null) {
+            return false;
+        }
+
+        if ($query_id === null || $query_id === 0) {
             $this->reset();
             $data = self::_serialize($this->_state);
 
@@ -757,7 +769,11 @@ class Query
      */
     public function get_type()
     {
-        return (string)$this->_state['type'];
+        if (array_key_exists('type', $this->_state)) {
+            return (string)$this->_state['type'];
+        }
+
+        return '';
     } // get_type
 
     /**
@@ -776,7 +792,10 @@ class Query
 
         $this->reset_join();
 
-        if ($order) {
+        if ($sort == 'random') {
+            $this->_state['sort']        = array();
+            $this->_state['sort'][$sort] = $order;
+        } elseif ($order) {
             $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
             $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
@@ -912,7 +931,11 @@ class Query
      */
     public function is_static_content()
     {
-        return make_bool($this->_state['static']);
+        if (array_key_exists('static', $this->_state)) {
+            return make_bool($this->_state['static']);
+        }
+
+        return false;
     }
 
     /**
@@ -922,7 +945,11 @@ class Query
      */
     public function is_simple()
     {
-        return $this->_state['simple'];
+        if (array_key_exists('simple', $this->_state)) {
+            return $this->_state['simple'];
+        }
+
+        return false;
     } // is_simple
 
     /**
@@ -941,17 +968,18 @@ class Query
         if (!$this->is_simple()) {
             $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, array(session_id(), $this->id));
+            $results    = Dba::fetch_assoc($db_results);
 
-            $row = Dba::fetch_assoc($db_results);
+            if (array_key_exists('object_data', $results)) {
+                $this->_cache = (array)self::_unserialize($results['object_data']);
 
-            $this->_cache = (array)self::_unserialize($row['object_data']);
+                return $this->_cache;
+            }
 
-            return $this->_cache;
-        } else {
-            $objects = $this->get_objects();
+            return array();
         }
 
-        return $objects;
+        return $this->get_objects();
     } // get_saved
 
     /**
@@ -997,7 +1025,7 @@ class Query
     private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
-        if (strlen((string)$this->_state['base']) && !$force) {
+        if (array_key_exists('base', $this->_state) && strlen((string)$this->_state['base']) && !$force) {
             return true;
         }
 
@@ -1221,7 +1249,7 @@ class Query
      */
     private function get_sort_sql()
     {
-        if (!is_array($this->_state['sort'])) {
+        if (!array_key_exists('sort', $this->_state)) {
             return '';
         }
 
@@ -1299,7 +1327,8 @@ class Query
         $join_sql   = "";
         $having_sql = "";
         $order_sql  = "";
-        if (!isset($this->_state['custom']) || !$this->_state['custom']) {
+        $is_custom  = (array_key_exists('custom', $this->_state) && $this->_state['custom']);
+        if (!$is_custom) {
             $filter_sql = $this->get_filter_sql();
             $order_sql  = $this->get_sort_sql();
             $join_sql   = $this->get_join_sql();
@@ -1309,10 +1338,10 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group') && $this->_state['sort']) {
+        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group') && $this->_state['sort']) {
             $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
             $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
-        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
+        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -1921,6 +1950,10 @@ class Query
         if ($order != 'DESC') {
             $order = 'ASC';
         }
+        // random sorting
+        if ($field === 'random') {
+            return "RAND()";
+        }
 
         // Depending on the type of browsing we are doing we can apply
         // different filters that apply to different fields
@@ -2377,7 +2410,7 @@ class Query
     public function get_content_div()
     {
         $key = 'browse_content_' . $this->get_type();
-        if ($this->_state['ak']) {
+        if (array_key_exists('ak', $this->_state)) {
             $key .= '_' . $this->_state['ak'];
         }
 

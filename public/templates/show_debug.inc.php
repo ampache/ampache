@@ -52,6 +52,9 @@ $web_path    = AmpConfig::get('web_path'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
+            <li>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=asset"><?php echo Ui::get_icon('cog', T_('Clear Assets Cache')) . ' ' . T_('Clear Assets Cache'); ?></a>
+            </li>
         </ul>
     </div>
 
@@ -88,6 +91,10 @@ $web_path    = AmpConfig::get('web_path'); ?>
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td><?php echo T_('Version'); ?></td>
+                <td><?php echo (string)phpversion(); ?></td>
+            </tr>
             <tr>
                 <td><?php echo T_('Memory Limit'); ?></td>
                 <td><?php echo ini_get('memory_limit'); ?></td>

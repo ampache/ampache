@@ -24,14 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use PDOStatement;
 use RuntimeException;
-use Ampache\Repository\Model\Song;
 
 /**
  * Waveform code generation license:
@@ -68,31 +69,31 @@ class Waveform
     public $id;
 
     /**
-     * Get a song waveform.
-     * @param integer $song_id
+     * Get a song or podcast_episode waveform.
+     * @param Song|Podcast_Episode $object
+     * @param string $object_type
      * @return string|null|boolean
      * @throws RuntimeException
      */
-    public static function get($song_id)
+    public static function get($object, string $object_type)
     {
-        $song     = new Song($song_id);
         $waveform = null;
 
-        if ($song->id) {
-            $song->format();
+        if ($object->id) {
+            $object->format();
             if (AmpConfig::get('album_art_store_disk')) {
-                $waveform = self::get_from_file($song_id);
+                $waveform = self::get_from_file($object->id, $object_type);
             } else {
-                $waveform = $song->waveform;
+                $waveform = $object->waveform;
             }
-            if ($waveform === null && $waveform !== false) {
-                $catalog = Catalog::create_from_id($song->catalog);
+            if ($waveform == null || $waveform == false) {
+                $catalog = Catalog::create_from_id($object->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
-                    $valid_types   = $song->get_stream_types();
+                    $valid_types   = $object->get_stream_types();
 
-                    if ($song->type != $transcode_to) {
+                    if ($object->type != $transcode_to) {
                         $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
@@ -105,10 +106,10 @@ class Waveform
                                     return null;
                                 }
 
-                                $transcoder  = Stream::start_transcode($song, $transcode_to);
+                                $transcoder  = Stream::start_transcode($object, $transcode_to);
                                 $filepointer = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
-                                    debug_event(self::class, "Failed to open " . $song->file . " for waveform.", 3);
+                                    debug_event(self::class, "Failed to open " . $object->file . " for waveform.", 3);
 
                                     return null;
                                 }
@@ -136,15 +137,15 @@ class Waveform
                         }
                     } else {
                         // Already wav file, no transcode required
-                        $waveform = self::create_waveform($song->file);
+                        $waveform = self::create_waveform($object->file);
                     }
                 }
 
                 if ($waveform !== null && $waveform !== false) {
                     if (AmpConfig::get('album_art_store_disk')) {
-                        self::save_to_file($song_id, $waveform);
+                        self::save_to_file($object->id, $object_type, $waveform);
                     } else {
-                        self::save_to_db($song_id, $waveform);
+                        self::save_to_db($object->id, $object_type, $waveform);
                     }
                 }
             }
@@ -155,10 +156,11 @@ class Waveform
 
     /**
      * Return full path of the Waveform file.
-     * @param integer $song_id
+     * @param integer $object_id
+     * @param string $object_type
      * @return false|string
      */
-    public static function get_filepath($song_id)
+    public static function get_filepath($object_id, $object_type)
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
@@ -167,23 +169,28 @@ class Waveform
             return false;
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
-        $path .= "/waveform/" . substr($song_id, -1) . "/" . substr($song_id, -2, -1) . "/";
+        $path .= ($object_type == 'podcast_episode')
+            ? "/waveform/" . $object_type . '/' . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/"
+            : "/waveform/" . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/";
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
 
-        return $path . $song_id . ".png";
+        return $path . $object_id . ".png";
     }
 
     /**
      * Return content of a Waveform file.
-     * @param integer $song_id
+     * @param integer $object_id
+     * @param string $object_type
      * @return string|false
      */
-    public static function get_from_file($song_id)
+    public static function get_from_file($object_id, $object_type)
     {
-        $file = self::get_filepath($song_id);
+        $file = self::get_filepath($object_id, $object_type);
         if ($file !== false && file_exists($file)) {
+            debug_event(self::class, 'get_from_file ' . $file, 5);
+
             return file_get_contents($file);
         }
 
@@ -192,13 +199,14 @@ class Waveform
 
     /**
      * Save content of a Waveform into a file.
-     * @param integer $song_id
+     * @param integer $object_id
+     * @param string $object_type
      * @param string $waveform
      * @return integer|boolean
      */
-    public static function save_to_file($song_id, $waveform)
+    public static function save_to_file($object_id, $object_type, $waveform)
     {
-        $file = self::get_filepath($song_id);
+        $file = self::get_filepath($object_id, $object_type);
 
         return file_put_contents($file, $waveform);
     }
@@ -394,14 +402,17 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param integer $song_id
+     * @param integer $object_id
+     * @param string $object_type
      * @param string $waveform
      * @return PDOStatement|boolean
      */
-    protected static function save_to_db($song_id, $waveform)
+    protected static function save_to_db($object_id, $object_type, $waveform)
     {
-        $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
+        $sql = ($object_type == 'podcast_episode')
+            ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
+            : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($waveform, $song_id));
+        return Dba::write($sql, array($waveform, $object_id));
     }
 }

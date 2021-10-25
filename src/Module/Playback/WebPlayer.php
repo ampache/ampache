@@ -74,7 +74,7 @@ class WebPlayer
     {
         $types   = array('real' => 'mp3', 'player' => '');
 
-        if ($item->codec) {
+        if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
@@ -109,14 +109,14 @@ class WebPlayer
     public static function get_media_object($urlinfo)
     {
         $media = null;
-        if ($urlinfo['id'] && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
+        if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
         } else {
-            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+            if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
                 $media = new Song_Preview($urlinfo['id']);
             } else {
-                if (isset($urlinfo['demo_id'])) {
+                if (array_key_exists('demo_id', $urlinfo)) {
                     $democratic = new Democratic($urlinfo['demo_id']);
                     if ($democratic->id) {
                         $song_id = $democratic->get_next_object();
@@ -329,6 +329,14 @@ class WebPlayer
                 $url .= '&transcode_to=' . $types['real'];
             }
             //$url .= "&content_length=required";
+        } else {
+            // items like live streams need to keep an id for us as well
+            $regex = ($item->type == 'live_stream')
+                ? "/radio=([0-9]*)/"
+                : "/" . $item->type . "=([0-9]*)/";
+            preg_match($regex, $item->info_url, $matches);
+            $json['media_id']   = $matches[1] ?? null;
+            $json['media_type'] = $item->type;
         }
 
         $json['filetype'] = $types['player'];

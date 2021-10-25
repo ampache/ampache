@@ -72,8 +72,7 @@ class Ampachelistenbrainz
             return false;
         }
 
-        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins',
-            $this->name);
+        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -139,7 +138,7 @@ class Ampachelistenbrainz
             'additional_info' => $additional_info,
             'artist_name' => $artist->name,
             'track_name' => $song->title,
-            'release_name' => $album->f_name,
+            'release_name' => $album->get_fullname(true),
         );
         if (empty($additional_info)) {
             $track_metadata = array_splice($track_metadata, 1);

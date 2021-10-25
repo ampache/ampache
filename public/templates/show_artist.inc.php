@@ -55,17 +55,19 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-Ui::show_box_top(scrub_out($artist->f_name), 'info-box'); ?>
+$f_name = $artist->get_fullname();
+$title  = scrub_out($f_name);
+Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     <?php if ($artist->mbid) { ?>
         <a href="https://musicbrainz.org/artist/<?php echo $artist->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
-        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
+        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } ?>
     </div>
     <?php if (AmpConfig::get('lastfm_api_key')) {
@@ -76,7 +78,7 @@ Ui::show_box_top(scrub_out($artist->f_name), 'info-box'); ?>
     <?php
 } else {
         $thumb = 32;
-        Art::display('artist', $artist->id, $artist->f_name, $thumb);
+        Art::display('artist', $artist->id, $title, $thumb);
     } ?>
 </div>
 
@@ -85,8 +87,6 @@ Ui::show_box_top(scrub_out($artist->f_name), 'info-box'); ?>
     <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
         <?php echo Rating::show($artist->id, 'artist', true); ?>
     </span>
-    <?php } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
     <span id="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>
@@ -97,7 +97,7 @@ if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
         /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $artist->object_cnt), $artist->object_cnt); ?>
+        sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
 </div>
 <?php } ?>
 
@@ -236,11 +236,13 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#albums"><?php echo T_('Albums'); ?></a></li>
+            <li><a id="top_tracks_link" href="#top_tracks"><?php echo T_('Top Tracks'); ?></a></li>
 <?php if ($use_wanted) { ?>
             <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
 <?php } ?>
 <?php if ($show_similar) { ?>
             <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
+            <li><a id="similar_songs_link" href="#similar_songs"><?php echo T_('Similar Songs'); ?></a></li>
 <?php } ?>
 <?php if ($use_label) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
@@ -251,7 +253,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     </div>
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
-<?php if ($multi_object_ids === null) {
+<?php if (!isset($multi_object_ids) || $multi_object_ids === null) {
             $multi_object_ids = array('' => $object_ids);
         }
 
@@ -267,32 +269,45 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $browse->store();
     } ?>
         </div>
+        <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
+        <div id="top_tracks" class="tab_content">
+            <?php Ui::show_box_top(null, 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+
 <?php if ($use_wanted) {
-        echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
+                echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
         <div id="missing_albums" class="tab_content">
         <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
 <?php if ($show_similar) {
-        echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
+                echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
         <div id="similar_artist" class="tab_content">
         <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
+        </div>
+        <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
+        <div id="similar_songs" class="tab_content">
+            <?php Ui::show_box_top(null, 'info-box');
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
 <?php if ($use_label) {
-        echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
+                echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
         <div id="labels" class="tab_content">
         <?php Ui::show_box_top(T_('Labels'), 'info-box');
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+                echo T_('Loading...');
+                Ui::show_box_bottom(); ?>
         </div>
 <?php
-    } ?>
+            } ?>
     </div>
 </div>

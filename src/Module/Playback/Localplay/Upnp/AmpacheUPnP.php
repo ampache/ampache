@@ -120,9 +120,13 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
+        $name    = Dba::escape($data['name'] ?? null);
+        $url     = Dba::escape($data['url'] ?? null);
+        $user_id = Dba::escape(Core::get_global('user')->id);
+
         $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
 
-        return Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
+        return Dba::query($sql, array($name, $url, $user_id));
     }
 
     /**
@@ -193,9 +197,9 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
-        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -209,18 +213,22 @@ class AmpacheUPnP extends localplay_controller
      */
     public function set_active_instance($uid, $user_id = '')
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-        $user_id = $user_id ?: Core::get_global('user')->id;
-        debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
+        // Not an admin? bubkiss!
+        if (!$user->has_access('100')) {
+            $user_id = $user->id ?? 0;
+        }
+        $user_id = $user_id ?? $user->id;
 
         Preference::update('upnp_active', $user_id, $uid);
         AmpConfig::set('upnp_active', $uid, true);
+        debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
 
         return true;
-    }
+    } // set_active_instance
 
     /**
      * get_active_instance
@@ -537,8 +545,7 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp.controller',
-            'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp.controller', 'Connected.', 5);
 

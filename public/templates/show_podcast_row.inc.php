@@ -51,7 +51,7 @@ use Ampache\Module\Util\Ui;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->id, $libitem->f_title, 2, $libitem->link); ?>
+    <?php Art::display('podcast', $libitem->id, $libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>
@@ -63,10 +63,6 @@ use Ampache\Module\Util\Ui;
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast"><?php echo Rating::show($libitem->id, 'podcast'); ?></span>
-            <?php
-            } ?>
-
-            <?php if (AmpConfig::get('userflags')) { ?>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast"><?php echo Userflag::show($libitem->id, 'podcast'); ?></span>
             <?php
             } ?>

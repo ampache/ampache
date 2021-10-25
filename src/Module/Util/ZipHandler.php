@@ -77,11 +77,11 @@ final class ZipHandler implements ZipHandlerInterface
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
                 $dirname = dirname($file);
-                $artpath = $dirname . "/" . $art;
-                $folder  = explode("/", $dirname)[substr_count($dirname, "/", 0)];
-                $pl .= $folder . "/" . basename($file);
+                $artpath = $dirname . '/' . $art;
+                $folder  = explode('/', $dirname)[substr_count($dirname, "/", 0)];
+                $pl .= $folder . '/' . basename($file);
                 try {
-                    $arc->addFileFromPath($folder . "/" . basename($file), $file, $options);
+                    $arc->addFileFromPath($folder . '/' . basename($file), $file, $options);
                 } catch (Exception $e) {
                     $this->logger->error(
                         $e->getMessage(),
@@ -91,7 +91,7 @@ final class ZipHandler implements ZipHandlerInterface
             }
             if ($addart === true && !empty($folder) && !empty($artpath)) {
                 try {
-                    $arc->addFileFromPath($folder . "/" . $art, $artpath, $options);
+                    $arc->addFileFromPath($folder . '/' . $art, $artpath, $options);
                 } catch (Exception $e) {
                     $this->logger->error(
                         $e->getMessage(),

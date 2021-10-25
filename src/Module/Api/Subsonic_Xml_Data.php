@@ -24,34 +24,34 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\User_Playlist;
-use Ampache\Repository\SongRepositoryInterface;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
+use SimpleXMLElement;
 
 /**
  * XML_Data Class
@@ -481,12 +481,6 @@ class Subsonic_Xml_Data
         $xindexes = $xml->addChild('indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
         self::addIgnoredArticles($xindexes);
-        foreach ($catalogs as $folderid) {
-            $catalog = Catalog::create_from_id($folderid);
-            $xfolder = $xindexes->addChild('shortcut');
-            $xfolder->addAttribute('id', (string)$folderid);
-            $xfolder->addAttribute('name', (string)$catalog->name);
-        }
         self::addArtistArrays($xindexes, $artists);
     }
 
@@ -562,7 +556,7 @@ class Subsonic_Xml_Data
         $artist->format();
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', (string)self::getArtistId($artist->id));
-        $xartist->addAttribute('name', (string)self::checkName($artist->f_name));
+        $xartist->addAttribute('name', (string)self::checkName($artist->get_fullname()));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
             $allalbums = static::getAlbumRepository()->getByArtist($artist->id);
@@ -630,6 +624,23 @@ class Subsonic_Xml_Data
     }
 
     /**
+     * addChildArray
+     * @param SimpleXMLElement $xml
+     * @param array $child
+     */
+    public static function addChildArray($xml, $child)
+    {
+        $sub_id = (string)self::getArtistId($child['id']);
+        $xchild = $xml->addChild('child');
+        $xchild->addAttribute('id', $sub_id);
+        $xchild->addAttribute('parent', $child['catalog_id']);
+        $xchild->addAttribute('isDir', 'true');
+        $xchild->addAttribute('title', (string)self::checkName($child['f_name']));
+        $xchild->addAttribute('artist', (string)self::checkName($child['f_name']));
+        $xchild->addAttribute('coverArt', 'ar-' . $sub_id);
+    }
+
+    /**
      * addArtistArray
      * @param SimpleXMLElement $xml
      * @param array $artist
@@ -639,13 +650,9 @@ class Subsonic_Xml_Data
         $sub_id  = (string)self::getArtistId($artist['id']);
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', $sub_id);
-        $xartist->addAttribute('parent', $artist['catalog_id']);
         $xartist->addAttribute('name', (string)self::checkName($artist['f_name']));
-
-        if (isset($artist['album_count'])) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-            $xartist->addAttribute('albumCount', (string)$artist['album_count']);
-        }
+        $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+        $xartist->addAttribute('albumCount', (string)$artist['album_count']);
     }
 
     /**
@@ -674,11 +681,12 @@ class Subsonic_Xml_Data
     {
         $album->format();
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
+        $f_name = (string)self::checkName($album->get_fullname());
         $xalbum->addAttribute('id', (string)self::getAlbumId($album->id));
         $xalbum->addAttribute('parent', (string) self::getArtistId($album->album_artist));
-        $xalbum->addAttribute('album', (string)self::checkName($album->f_name));
-        $xalbum->addAttribute('title', (string)self::checkName($album->f_title));
-        $xalbum->addAttribute('name', (string)self::checkName($album->f_name));
+        $xalbum->addAttribute('album', $f_name);
+        $xalbum->addAttribute('title', $f_name);
+        $xalbum->addAttribute('name', $f_name);
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', (string)$album->disk);
 
@@ -751,20 +759,19 @@ class Subsonic_Xml_Data
      */
     public static function getSongData($songId)
     {
-        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?';
+        $sql        = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `song`.`total_count`, `song`.`total_skip`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?';
         $db_results = Dba::read($sql, array($songId));
+        $row        = Dba::fetch_assoc($db_results);
+        if (empty($row)) {
+            debug_event(self::class, 'getSongData failed: ' . $songId, 5);
 
-        $results = Dba::fetch_assoc($db_results);
-        if (isset($results['id'])) {
-            if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = (int) $results['total_count'];
-            }
+            return array();
         }
-        $extension       = pathinfo((string)$results['file'], PATHINFO_EXTENSION);
-        $results['type'] = strtolower((string)$extension);
-        $results['mime'] = Song::type_to_mime($results['type']);
+        $extension   = pathinfo((string)$row['file'], PATHINFO_EXTENSION);
+        $row['type'] = strtolower((string)$extension);
+        $row['mime'] = Song::type_to_mime($row['type']);
 
-        return $results;
+        return $row;
     }
 
     /**
@@ -774,13 +781,14 @@ class Subsonic_Xml_Data
      */
     public static function getAlbumData($albumId)
     {
-        $sql        = "SELECT * FROM `album` WHERE `id`='$albumId'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `album` WHERE `id`=?";
+        $db_results = Dba::read($sql, array($albumId));
+        $row        = Dba::fetch_assoc($db_results);
+        if (empty($row)) {
+            debug_event(self::class, 'getAlbumData failed: ' . $albumId, 5);
 
-        if (!$db_results) {
             return array();
         }
-        $row           = Dba::fetch_assoc($db_results);
         $row['f_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
 
         return $row;
@@ -793,14 +801,14 @@ class Subsonic_Xml_Data
      */
     public static function getArtistData($artistId)
     {
-        $sql        = "SELECT * FROM `artist` WHERE `id`='$artistId'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `artist` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($artistId));
+        $row        = Dba::fetch_assoc($db_results);
+        if (empty($row)) {
+            debug_event(self::class, 'getArtistData failed: ' . $artistId, 5);
 
-        if (!$db_results) {
             return array();
         }
-
-        $row           = Dba::fetch_assoc($db_results);
         $row['f_name'] = trim(trim((string)$row['prefix']) . ' ' . trim((string)$row['name']));
 
         return $row;
@@ -861,18 +869,18 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('isVideo', 'false');
         $xsong->addAttribute('type', 'music');
         // $album = new Album(songData->album);
-        $xsong->addAttribute('albumId', (string)self::getAlbumId($albumData['id']));
-        $xsong->addAttribute('album', (string)self::checkName($albumData['f_name']));
+        $xsong->addAttribute('albumId', (string)self::getAlbumId($songData['album']));
+        $xsong->addAttribute('album', (string)self::checkName($albumData['f_name'] ?? ''));
         // $artist = new Artist($song->artist);
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', (string) self::checkName($artistData['f_name']));
-        $art_object = (AmpConfig::get('show_song_art') && Art::has_db($songData['id'], 'song')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
+        $art_object = (AmpConfig::get('show_song_art') && Art::has_db($songData['id'], 'song')) ? self::getSongId($songData['id']) : self::getAlbumId($songData['album']);
         $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
         // <!-- Added in 1.14.0 -->
-        // $xsong->addAttribute('playCount', (string)$songData['object_cnt']);
+        // $xsong->addAttribute('playCount', (string)$songData['total_count']);
         $rating      = new Rating($songData['id'], "song");
         $user_rating = ($rating->get_user_rating() ?: 0);
         if ($user_rating > 0) {
@@ -894,7 +902,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('genre', (string)$tags[0]['name']);
         }
         $xsong->addAttribute('size', (string)$songData['size']);
-        if (Album::sanitize_disk($albumData['disk']) > 0) {
+        if (array_key_exists('disk', $albumData) && Album::sanitize_disk($albumData['disk']) > 0) {
             $xsong->addAttribute('discNumber', (string)Album::sanitize_disk($albumData['disk']));
         }
         $xsong->addAttribute('suffix', (string)$songData['type']);
@@ -927,7 +935,7 @@ class Subsonic_Xml_Data
         if (self::$enable_json_checks && !empty($name)) {
             if (is_numeric($name)) {
                 // Add space character to fail numeric test
-                $name = $name .= " ";
+                $name .= " ";
             }
         }
 
@@ -965,8 +973,9 @@ class Subsonic_Xml_Data
         $amp_id = self::getAmpacheId($artist_id);
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
+        debug_event(self::class, $amp_id . ' artist ' . $artist_id . ' DaTA Runtime Error ' . print_r($data, true), 5);
         $xdir->addAttribute('id', (string)$artist_id);
-        $xdir->addAttribute('parent', (string)Catalog::get_catalog_map('artist', $artist_id));
+        $xdir->addAttribute('parent', (string)$data['catalog_id']);
         $xdir->addAttribute('name', (string)$data['f_name']);
         $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
@@ -991,12 +1000,29 @@ class Subsonic_Xml_Data
         } else {
             $xdir->addAttribute('parent', (string)$album->catalog);
         }
-        $xdir->addAttribute('name', (string)self::checkName($album->f_title));
+        $xdir->addAttribute('name', (string)self::checkName($album->get_fullname()));
 
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
         foreach ($media_ids as $song_id) {
             self::addSong($xdir, $song_id, "child");
+        }
+    }
+
+    /**
+     * addCatalogDirectory for subsonic artist id
+     * @param SimpleXMLElement $xml
+     * @param string $catalog_id
+     */
+    public static function addCatalogDirectory($xml, $catalog_id)
+    {
+        $catalog = Catalog::create_from_id($catalog_id);
+        $xdir    = $xml->addChild('directory');
+        $xdir->addAttribute('id', (string)$catalog_id);
+        $xdir->addAttribute('name', $catalog->name);
+        $allartists = Catalog::get_artist_arrays(array($catalog_id));
+        foreach ($allartists as $artist) {
+            self::addChildArray($xdir, $artist);
         }
     }
 
@@ -1013,8 +1039,8 @@ class Subsonic_Xml_Data
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count();
-            $xgenre->addAttribute('songCount', (string) $counts['song'] ?: 0);
-            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?: 0);
+            $xgenre->addAttribute('songCount', (string) $counts['song'] ?? 0);
+            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?? 0);
         }
     }
 
@@ -1138,8 +1164,8 @@ class Subsonic_Xml_Data
         $items     = $PlayQueue->get_items();
         if (!empty($items)) {
             $current    = $PlayQueue->get_current_object();
-            $changed    = User::get_user_data($user_id, 'playqueue_date')['playqueue_date'];
-            $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_date'];
+            $changed    = User::get_user_data($user_id, 'playqueue_date')['playqueue_date'] ?? '';
+            $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_client'] ?? '';
             $xplayqueue = $xml->addChild('playQueue');
             $xplayqueue->addAttribute('current', self::getSongId($current['object_id']));
             $xplayqueue->addAttribute('position', (string)$current['current_time']);
@@ -1240,8 +1266,7 @@ class Subsonic_Xml_Data
             $track = self::addSong($xplaynow, $d['media']->getId(), "entry");
             if ($track !== null) {
                 $track->addAttribute('username', (string)$d['client']->username);
-                $track->addAttribute('minutesAgo',
-                    (string)(abs((time() - ($d['expire'] - $d['media']->time)) / 60)));
+                $track->addAttribute('minutesAgo', (string)(abs((time() - ($d['expire'] - $d['media']->time)) / 60)));
                 $track->addAttribute('playerId', (string)$d['agent']);
             }
         }
@@ -1259,7 +1284,7 @@ class Subsonic_Xml_Data
     {
         $xresult = $xml->addChild(htmlspecialchars($elementName));
         foreach ($artists as $artistid) {
-            $artist = new Artist($artistid);
+            $artist = new Artist((int) $artistid);
             self::addArtist($xresult, $artist);
         }
         foreach ($albums as $albumid) {
@@ -1280,7 +1305,7 @@ class Subsonic_Xml_Data
     private static function setIfStarred($xml, $objectType, $object_id)
     {
         if (InterfaceImplementationChecker::is_library_item($objectType)) {
-            if (AmpConfig::get('userflags')) {
+            if (AmpConfig::get('ratings')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int)$res[1]));
@@ -1302,7 +1327,7 @@ class Subsonic_Xml_Data
         $xstarred = $xml->addChild(htmlspecialchars($elementName));
 
         foreach ($artists as $artistid) {
-            $artist = new Artist($artistid);
+            $artist = new Artist((int) $artistid);
             self::addArtist($xstarred, $artist);
         }
 
@@ -1378,7 +1403,7 @@ class Subsonic_Xml_Data
     {
         $xradios = $xml->addChild('internetRadioStations');
         foreach ($radios as $radioid) {
-            $radio = new Live_Stream($radioid);
+            $radio = new Live_Stream((int)$radioid);
             self::addRadio($xradios, $radio);
         }
     }
@@ -1430,7 +1455,7 @@ class Subsonic_Xml_Data
     {
         $xshares = $xml->addChild('shares');
         foreach ($shares as $share_id) {
-            $share = new Share($share_id);
+            $share = new Share((int)$share_id);
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
@@ -1508,7 +1533,7 @@ class Subsonic_Xml_Data
      */
     public static function addArtistInfo($xml, $info, $similars, $child)
     {
-        $artist = new Artist($info['id']);
+        $artist = new Artist((int) $info['id']);
 
         $xartist = $xml->addChild(htmlspecialchars($child));
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
@@ -1555,7 +1580,7 @@ class Subsonic_Xml_Data
             $xchannel = $xpodcasts->addChild('channel');
             $xchannel->addAttribute('id', (string)self::getPodcastId($podcast->id));
             $xchannel->addAttribute('url', (string)$podcast->feed);
-            $xchannel->addAttribute('title', (string)self::checkName($podcast->f_title));
+            $xchannel->addAttribute('title', (string)self::checkName($podcast->get_fullname()));
             $xchannel->addAttribute('description', (string)$podcast->f_description);
             if (Art::has_db($podcast->id, 'podcast')) {
                 $xchannel->addAttribute('coverArt', 'pod-' . self::getPodcastId($podcast->id));
@@ -1583,7 +1608,7 @@ class Subsonic_Xml_Data
         $xepisode = $xml->addChild(htmlspecialchars($elementName));
         $xepisode->addAttribute('id', (string)self::getPodcastEpId($episode->id));
         $xepisode->addAttribute('channelId', (string)self::getPodcastId($episode->podcast));
-        $xepisode->addAttribute('title', (string)self::checkName($episode->f_title));
+        $xepisode->addAttribute('title', (string)self::checkName($episode->get_fullname()));
         $xepisode->addAttribute('album', (string)$episode->f_podcast);
         $xepisode->addAttribute('description', (string)self::checkName($episode->f_description));
         $xepisode->addAttribute('duration', (string)$episode->time);

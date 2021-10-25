@@ -644,6 +644,29 @@ class Ui implements UiInterface
     }
 
     /**
+     * shows a simple continue button after an action
+     *
+     * @param string $title The Title of the message
+     * @param string $text The details of the message
+     * @param string $next_url Where to go next
+     */
+    public function showContinue(
+        $title,
+        $text,
+        $next_url
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+
+        if (substr_count($next_url, $webPath)) {
+            $path = $next_url;
+        } else {
+            $path = sprintf('%s/%s', $webPath, $next_url);
+        }
+
+        require Ui::find_template('show_continue.inc.php');
+    }
+
+    /**
      * This function is used to escape user data that is getting redisplayed
      * onto the page, it htmlentities the mojo
      * This is the inverse of the scrub_in function
@@ -654,7 +677,7 @@ class Ui implements UiInterface
             return '';
         }
 
-        return htmlentities((string) $string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
+        return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
     }
 
     /**
@@ -758,6 +781,8 @@ class Ui implements UiInterface
             case 'cron_cache':
             case 'show_lyrics':
             case 'unique_playlist':
+            case 'tadb_overwrite_name':
+            case 'mb_overwrite_name':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
@@ -806,15 +831,39 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'playlist_type':
-                $var_name    = $value . "_type";
-                ${$var_name} = "selected=\"selected\"";
+                $is_m3u        = '';
+                $is_simple_m3u = '';
+                $is_pls        = '';
+                $is_asx        = '';
+                $is_ram        = '';
+                $is_xspf       = '';
+                switch ($value) {
+                    case 'simple_m3u':
+                        $is_simple_m3u = 'selected="selected"';
+                        break;
+                    case 'pls':
+                        $is_pls = 'selected="selected"';
+                        break;
+                    case 'asx':
+                        $is_asx = 'selected="selected"';
+                        break;
+                    case 'ram':
+                        $is_ram = 'selected="selected"';
+                        break;
+                    case 'xspf':
+                        $is_xspf = 'selected="selected"';
+                        break;
+                    case 'm3u':
+                    default:
+                        $is_m3u = 'selected="selected"';
+                }
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
-                echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . T_('Simple M3U') . "</option>\n";
-                echo "\t<option value=\"pls\" $pls_type>" . T_('PLS') . "</option>\n";
-                echo "\t<option value=\"asx\" $asx_type>" . T_('Asx') . "</option>\n";
-                echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
-                echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
+                echo "\t<option value=\"m3u\" $is_m3u>" . T_('M3U') . "</option>\n";
+                echo "\t<option value=\"simple_m3u\" $is_simple_m3u>" . T_('Simple M3U') . "</option>\n";
+                echo "\t<option value=\"pls\" $is_pls>" . T_('PLS') . "</option>\n";
+                echo "\t<option value=\"asx\" $is_asx>" . T_('Asx') . "</option>\n";
+                echo "\t<option value=\"ram\" $is_ram>" . T_('RAM') . "</option>\n";
+                echo "\t<option value=\"xspf\" $is_xspf>" . T_('XSPF') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'lang':
@@ -917,20 +966,41 @@ class Ui implements UiInterface
                 }
                 break;
             case 'playlist_method':
-                ${$value} = ' selected="selected"';
+                $is_send       = '';
+                $is_send_clear = '';
+                $is_clear      = '';
+                $is_default    = '';
+                if ($value == 'send') {
+                    $is_send = 'selected="selected"';
+                } elseif ($value == 'send_clear') {
+                    $is_send_clear = 'selected="selected"';
+                } elseif ($value == 'clear') {
+                    $is_clear = 'selected="selected"';
+                } elseif ($value == 'default') {
+                    $is_default = 'selected="selected"';
+                }
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"send\"$send>" . T_('Send on Add') . "</option>\n";
-                echo "\t<option value=\"send_clear\"$send_clear>" . T_('Send and Clear on Add') . "</option>\n";
-                echo "\t<option value=\"clear\"$clear>" . T_('Clear on Send') . "</option>\n";
-                echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
+                echo "\t<option value=\"send\"$is_send>" . T_('Send on Add') . "</option>\n";
+                echo "\t<option value=\"send_clear\"$is_send_clear>" . T_('Send and Clear on Add') . "</option>\n";
+                echo "\t<option value=\"clear\"$is_clear>" . T_('Clear on Send') . "</option>\n";
+                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'transcode':
-                ${$value} = ' selected="selected"';
+                $is_never   = '';
+                $is_default = '';
+                $is_always  = '';
+                if ($value == 'never') {
+                    $is_never = 'selected="selected"';
+                } elseif ($value == 'default') {
+                    $is_default = 'selected="selected"';
+                } elseif ($value == 'always') {
+                    $is_always = 'selected="selected"';
+                }
                 echo "<select name=\"$name\">\n";
-                echo "\t<option value=\"never\"$never>" . T_('Never') . "</option>\n";
-                echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
-                echo "\t<option value=\"always\"$always>" . T_('Always') . "</option>\n";
+                echo "\t<option value=\"never\"$is_never>" . T_('Never') . "</option>\n";
+                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
+                echo "\t<option value=\"always\"$is_always>" . T_('Always') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'album_sort':

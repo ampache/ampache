@@ -4,6 +4,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Ui;
 
 global $dic;
@@ -12,7 +13,8 @@ $web_path         = AmpConfig::get('web_path');
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
-
+$iframed  = $iframed ?? false;
+$is_share = $is_share ?? false;
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
 <?php
@@ -28,9 +30,9 @@ if (!$iframed) {
 <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>"></script>
+<script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/tools.js'); ?>"></script>
 <script>
 var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
 var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
@@ -266,7 +268,7 @@ function ShowEqualizer()
 function SavePlaylist()
 {
     if (jplaylist['playlist'].length > 0) {
-        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
+        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]['media_type'] + "&item_id=";
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             url += "," + jplaylist['playlist'][i]["media_id"];
         }
@@ -281,7 +283,7 @@ function SaveToExistingPlaylist(event)
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             item_ids += "," + jplaylist['playlist'][i]["media_id"];
         }
-        showPlaylistDialog(event, jplaylist['playlist'][0]["media_type"], item_ids);
+        showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
     }
 }
 

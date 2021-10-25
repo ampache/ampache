@@ -142,14 +142,14 @@ class Upload
     public static function check($catalog_id)
     {
         $allowed   = explode('|', AmpConfig::get('catalog_file_pattern'));
-        $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
+        $extension = strtolower((string) pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION));
 
-        if (!in_array(strtolower((string) $extension), $allowed)) {
+        if (!in_array($extension, $allowed)) {
             debug_event(self::class, 'File extension `' . $extension . '` not allowed.', 2);
 
             return null;
         }
-        if (isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
+        if (array_key_exists('upl', $_FILES) && $_FILES['upl']['error'] == 0) {
             $upload_catalog = Catalog::create_from_id($catalog_id);
             if ($upload_catalog->catalog_type == "local") {
                 return $upload_catalog;
@@ -189,9 +189,9 @@ class Upload
      */
     public static function upload_script($targetdir, $targetfile)
     {
-        if (AmpConfig::get('upload_script')) {
+        $script = AmpConfig::get('upload_script');
+        if (AmpConfig::get('allow_upload_scripts') && $script) {
             chdir($targetdir);
-            $script = AmpConfig::get('upload_script');
             $script = str_replace('%FILE%', $targetfile, $script);
             exec($script);
         }

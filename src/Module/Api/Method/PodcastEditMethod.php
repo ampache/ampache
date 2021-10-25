@@ -83,9 +83,9 @@ final class PodcastEditMethod
         $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
         $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
         $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
-        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
-        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $description    = filter_var($input['description'], FILTER_SANITIZE_STRING) ?? $podcast->description;
+        $generator      = filter_var($input['generator'], FILTER_SANITIZE_STRING) ?? $podcast->generator;
+        $copyright      = filter_var($input['copyright'], FILTER_SANITIZE_STRING) ?? $podcast->copyright;
         $data           = array(
             'feed' => $feed,
             'title' => $title,

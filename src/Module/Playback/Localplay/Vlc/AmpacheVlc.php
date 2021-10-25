@@ -120,10 +120,15 @@ class AmpacheVlc extends localplay_controller
      */
     public function add_instance($data)
     {
+        $name     = Dba::escape($data['name'] ?? null);
+        $host     = Dba::escape($data['host'] ?? null);
+        $port     = Dba::escape($data['port'] ?? null);
+        $password = Dba::escape($data['password'] ?? null);
+        $user_id  = Dba::escape(Core::get_global('user')->id);
+
         $sql = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::query($sql,
-            array($data['name'], $data['host'], $data['port'], $data['password'], Core::get_global('user')->id));
+        return Dba::query($sql, array($name, $host, $port, $password, $user_id));
     } // add_instance
 
     /**
@@ -196,9 +201,9 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
-        $sql        = ($instance > 1) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -212,15 +217,19 @@ class AmpacheVlc extends localplay_controller
      */
     public function set_active_instance($uid, $user_id = '')
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ?: Core::get_global('user')->id;
+        // Not an admin? bubkiss!
+        if (!$user->has_access('100')) {
+            $user_id = $user->id ?? 0;
+        }
+        $user_id = $user_id ?? $user->id;
 
         Preference::update('vlc_active', $user_id, $uid);
         AmpConfig::set('vlc_active', $uid, true);
+        debug_event('vlc.controller', 'set_active_instance: ' . $uid . ' ' . $user_id, 5);
 
         return true;
     } // set_active_instance
@@ -493,7 +502,7 @@ class AmpacheVlc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['name'] = $song->f_name . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link'] = $song->f_link;
                     break;
                 case 'demo_id':
@@ -519,7 +528,7 @@ class AmpacheVlc extends localplay_controller
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
                         // it's a file get the last output after  and show that, hard to take every output possible in account
-                        $getlast      = explode("/", $entry);
+                        $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     } // end if loop

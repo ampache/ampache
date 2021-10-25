@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 56
+config_version = 57
 
 ;#########################################################
 ; Auto Update                                            #
@@ -334,7 +334,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; For large catalogs the verify process can be terribly long so this will help
 ; speed things up by checking modification date using filemtime() before loading
 ; DEFAULT: "true"
-catalog_verify_by_time = "false"
+catalog_verify_by_time = "true"
 
 ;#########################################################
 ; Program Settings                                       #
@@ -463,6 +463,7 @@ default_auth_level = "guest"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in Ampache
+: It also allows users to flag objects as a favorite
 ; POSSIBLE VALUES: false true
 ; DEFAULT: "true"
 ratings = "true"
@@ -484,12 +485,6 @@ ratings = "true"
 ; assigned to a specific user set their user ID here.
 ; DEFAULT: -1
 ;rating_file_tag_user = 1
-
-; User flags/favorites
-; This allows user flags for almost any object in Ampache as favorite
-; POSSIBLE VALUES: false true
-; DEFAULT: "true"
-userflags = "true"
 
 ; Direct play
 ; This allows user to play directly a song or album
@@ -677,6 +672,11 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 ; DEFAULT: "false"
 ;hide_search = "true"
 
+; Allow or disallow upload scripts on the server
+; Enable this if you trust your users
+; DEFAULT: "false"
+;allow_upload_scripts = "true"
+
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################
@@ -743,7 +743,7 @@ live_stream = "true"
 ; Set this to true to enable podcasts and the
 ; possibility for admins to subscribe to new podcasts.
 ; DEFAULT: "false"
-;podcast = "true"
+podcast = "true"
 
 ; Web Socket address
 ; Declare the web socket server address
@@ -805,12 +805,11 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
 
-; Subsonic clients all seem to ignore the download method and always stream.
-; This setting will stop recording stats from Subsonic stream actions.
-; (This means you can sync playlists without overloading your server)
-; Make sure you enable scrobbling in your Subsonic client to keep recording stats!
+; Subsonic clients all seem to ignore the download method and use stream.
+; This setting will cache Subsonic stream actions which will not record as a play
+; Make sure scrobble is set in Subsonic and Ampache will use that for play recording
 ; DEFAULT: "true"
-;subsonic_stream_scrobble = "true"
+subsonic_stream_scrobble = "true"
 
 ;#########################################################
 ; Debugging                                              #

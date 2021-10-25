@@ -63,7 +63,7 @@ final class DownloadMethod
         $original  = $format && $format != 'raw';
         $user_id   = User::get_from_username(Session::username($input['auth']))->id;
 
-        $params = '&action=download' . '&client=api' . '&cache=1';
+        $params = '&client=api&action=download&cache=1';
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }

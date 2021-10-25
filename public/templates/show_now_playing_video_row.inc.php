@@ -56,10 +56,10 @@ $media->format(); ?>
     <div class="np_cell cel_video">
         <?php $art_showed = false;
 if ($media->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->link, false, 'preview');
+    $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    Art::display('video', $media->id, $media->f_full_title, 6, $media->link);
+    Art::display('video', $media->id, $media->f_full_title, 6, $media->get_link());
 } ?>
     </div>
 </div>

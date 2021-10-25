@@ -25,12 +25,22 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+
+/** @var Playlist|Search $playlist */
+/** @var int $playlist_track */
+/** @var int $search */
+/** @var array $object */
+/** @var string $object_type */
+/** @var string $cel_cover */
+/** @var string $cel_time */
+/** @var bool $show_ratings */
 
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
@@ -73,10 +83,6 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             <span class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
                 <?php echo Rating::show($libitem->id, $object_type) ?>
             </span>
-        <?php
-        } ?>
-
-        <?php if (AmpConfig::get('userflags')) { ?>
             <span class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>">
                 <?php echo Userflag::show($libitem->id, $object_type) ?>
             </span>

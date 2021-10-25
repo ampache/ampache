@@ -70,6 +70,7 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         $this->ui->show(
             'show_update_item_group.inc.php',
             [
+                'object_id' => $albumId,
                 'catalog_id' => $album->get_catalogs(),
                 'type' => 'album',
                 'objects' => $album->album_suite,
