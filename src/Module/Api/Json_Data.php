@@ -353,12 +353,12 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string) $tag_id,
                 "name" => $tag->name,
-                "albums" => (int) $counts['album'] ?? 0,
-                "artists" => (int) $counts['artist'] ?? 0,
-                "songs" => (int) $counts['song'] ?? 0,
-                "videos" => (int) $counts['video'] ?? 0,
-                "playlists" => (int) $counts['playlist'] ?? 0,
-                "live_streams" => (int) $counts['live_stream'] ?? 0
+                "albums" => (int)($counts['album'] ?? 0),
+                "artists" => (int)($counts['artist'] ?? 0),
+                "songs" => (int)($counts['song'] ?? 0),
+                "videos" => (int)($counts['video'] ?? 0),
+                "playlists" => (int)($counts['playlist'] ?? 0),
+                "live_streams" => (int)($counts['live_stream'] ?? 0)
             ));
         } // end foreach
         $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
