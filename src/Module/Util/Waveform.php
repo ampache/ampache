@@ -170,8 +170,8 @@ class Waveform
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
         $path .= ($object_type == 'podcast_episode')
-            ? "/waveform/". $object_type . '/' . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/"
-            : "/waveform/". substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/";
+            ? "/waveform/" . $object_type . '/' . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/"
+            : "/waveform/" . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/";
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
