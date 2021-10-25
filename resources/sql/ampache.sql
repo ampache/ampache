@@ -13,15 +13,14 @@
 --
 -- You should have received a copy of the GNU Affero General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 -- phpMyAdmin SQL Dump
 -- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Aug 31, 2021 at 11:56 AM
--- Server version: 10.5.11-MariaDB-1
--- PHP Version: 7.4.21
+-- Generation Time: Oct 25, 2021 at 03:53 PM
+-- Server version: 10.5.12-MariaDB-0+deb11u1
+-- PHP Version: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -181,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `broadcast` (
 DROP TABLE IF EXISTS `cache_object_count`;
 CREATE TABLE IF NOT EXISTS `cache_object_count` (
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `count_type` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -197,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `cache_object_count` (
 DROP TABLE IF EXISTS `cache_object_count_run`;
 CREATE TABLE IF NOT EXISTS `cache_object_count_run` (
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') COLLATE utf8mb4_unicode_ci NOT NULL,
   `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `count_type` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -663,7 +662,7 @@ CREATE TABLE IF NOT EXISTS `now_playing` (
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE IF NOT EXISTS `object_count` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL,
@@ -800,6 +799,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `waveform` mediumblob DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -929,7 +929,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL),
 (158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'),
 (159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'),
-(160, 'show_license', '1', 'Show Licence', 25, 'boolean', 'interface', 'browse'),
+(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'),
 (161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'),
 (162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'),
 (163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse');
@@ -944,7 +944,7 @@ DROP TABLE IF EXISTS `rating`;
 CREATE TABLE IF NOT EXISTS `rating` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
-  `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `rating` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1375,7 +1375,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '500015'),
+('db_version', '510004'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1404,7 +1404,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `rsstoken` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 

@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache-develop
+## Ampache 5.1.0-release
 
 ### Added
 
@@ -123,7 +123,7 @@
   * Faster browse queries for all types
   * Fix catalog browsing and loading library
 
-### API-develop
+### API 5.1.0
 
 ### Added
 

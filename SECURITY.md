@@ -2,10 +2,11 @@
 
 ## Supported Versions
 
-Now that version 4 is out all previous 3.x releases are considered unsupported.
+Now that version 5 is out all 4.x releases are considered supported until the end of PHP7.4 security support.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 5.x.x   | :white_check_mark: |
 | 4.x.x   | :white_check_mark: |
 | < 4.0   | :x:                |
 

@@ -20,6 +20,7 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 After each release, a documentation page will be created to allow pruning old features from the current version.
 Note that API 4.1 docs cover all previous versions.
 
+* [API 5.1 Documentation](https://ampache.org/api/versions/api-5.1)
 * [API 5.0 Documentation](https://ampache.org/api/versions/api-5.0)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
@@ -230,8 +231,8 @@ All Data methods return HTTP 200 responses
 * labels
 * label
 * label_artists
-* live_streams **develop only**
-* live_stream **develop only**
+* live_streams
+* live_stream
 * user
 * user_create
 * user_update
