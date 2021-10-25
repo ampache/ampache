@@ -142,11 +142,11 @@ final class PlaylistGenerateMethod
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? false);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? false);
+                Xml_Data::set_limit($input['limit'] ?? 0);
         }
 
         // get db data
@@ -178,7 +178,7 @@ final class PlaylistGenerateMethod
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song', $user->id);
+                        echo Json_Data::indexes($song_ids, 'song', $user->id);
                         break;
                     default:
                         echo XML_Data::indexes($song_ids, 'song', $user->id);

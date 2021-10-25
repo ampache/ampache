@@ -83,13 +83,13 @@ final class PodcastsMethod
         $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset'] ?? 0);
-                JSON_Data::set_limit($input['limit'] ?? false);
-                echo JSON_Data::podcasts($podcasts, $user->id, $episodes);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::podcasts($podcasts, $user->id, $episodes);
                 break;
             default:
                 XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? false);
+                XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::podcasts($podcasts, $user->id, $episodes);
         }
         Session::extend($input['auth']);

@@ -78,7 +78,7 @@ final class PodcastMethod
         $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($object_id), $user->id, $episodes, false);
+                echo Json_Data::podcasts(array($object_id), $user->id, $episodes, false);
                 break;
             default:
                 echo XML_Data::podcasts(array($object_id), $user->id, $episodes);

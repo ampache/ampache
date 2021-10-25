@@ -178,8 +178,8 @@ final class StatsMethod
             case 'song':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
                         echo Json_Data::songs($results, $user->id);
                         break;
                     default:
@@ -191,8 +191,8 @@ final class StatsMethod
             case 'artist':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
                         echo Json_Data::artists($results, array(), $user->id);
                         break;
                     default:
@@ -204,8 +204,8 @@ final class StatsMethod
             case 'album':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
                         echo Json_Data::albums($results, array(), $user->id);
                         break;
                     default:
@@ -217,8 +217,8 @@ final class StatsMethod
             case 'playlist':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
                         echo Json_Data::playlists($results, $user->id);
                         break;
                     default:
@@ -244,9 +244,9 @@ final class StatsMethod
             case 'podcast':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
-                        echo JSON_Data::podcasts($results, $user->id);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
+                        echo Json_Data::podcasts($results, $user->id);
                         break;
                     default:
                         XML_Data::set_offset($offset);
@@ -257,9 +257,9 @@ final class StatsMethod
             case 'podcast_episode':
                 switch ($input['api_format']) {
                     case 'json':
-                        JSON_Data::set_offset($offset);
-                        JSON_Data::set_limit($limit);
-                        echo JSON_Data::podcast_episodes($results, $user->id);
+                        Json_Data::set_offset($offset);
+                        Json_Data::set_limit($limit);
+                        echo Json_Data::podcast_episodes($results, $user->id);
                         break;
                     default:
                         XML_Data::set_offset($offset);
