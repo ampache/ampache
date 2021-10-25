@@ -41,7 +41,7 @@ final class LiveStreamsMethod
 
     /**
      * live_streams
-     * MINIMUM_API_VERSION=420000
+     * MINIMUM_API_VERSION=5.1.0
      *
      * This returns the live_streams  based on the specified filter
      *

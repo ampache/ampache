@@ -584,7 +584,7 @@ class Json_Data
                     $trackcount++;
                 }
             } else {
-                $items = ($playitem_total ?? 0);
+                $items = ((int)($playitem_total ?? 0));
             }
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
