@@ -42,7 +42,7 @@ final class LiveStreamMethod
 
     /**
      * live_stream
-     * MINIMUM_API_VERSION=420000
+     * MINIMUM_API_VERSION=5.1.0
      *
      * This returns a single live_stream based on UID
      *

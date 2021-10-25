@@ -520,6 +520,7 @@ class Search extends playlist_object
      */
     private function song_types()
     {
+        $user_id = $this->search_user->id ?? 0;
         $this->type_text('anywhere', T_('Any searchable text'));
 
         $t_song_data = T_('Song Data');
@@ -573,11 +574,11 @@ class Search extends playlist_object
         $this->type_text('artist_tag', T_('Artist Genre'), $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($this->search_user->id);
+        $playlists   = Playlist::get_playlist_array($user_id);
         if (!empty($playlists)) {
             $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
         }
-        $playlists = self::get_search_array($this->search_user->id);
+        $playlists = self::get_search_array($user_id);
         if (!empty($playlists)) {
             $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -618,7 +619,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -692,7 +693,7 @@ class Search extends playlist_object
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -751,7 +752,7 @@ class Search extends playlist_object
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -1371,7 +1372,7 @@ class Search extends playlist_object
     private function album_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -1670,7 +1671,7 @@ class Search extends playlist_object
     private function artist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -1942,7 +1943,7 @@ class Search extends playlist_object
     private function song_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -2358,7 +2359,7 @@ class Search extends playlist_object
     private function video_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -2440,7 +2441,7 @@ class Search extends playlist_object
     private function playlist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -2535,7 +2536,7 @@ class Search extends playlist_object
     private function label_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -2623,7 +2624,7 @@ class Search extends playlist_object
     private function tag_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $user_id            = $this->search_user->id;
+        $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 

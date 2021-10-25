@@ -2145,8 +2145,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get transcode settings for media.
-     * It can be confusing but when waveforms are enabled
-     * it will transcode the file twice.
+     * It can be confusing but when waveforms are enabled it will transcode the file twice.
      *
      * @param string $source
      * @param string $target

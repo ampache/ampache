@@ -184,10 +184,9 @@ class Rating extends database_object
 
     /**
      * get_user_rating
-     * Get a user's rating.  If no userid is passed in, we use the currently
-     * logged in user.
+     * Get a user's rating. If no userid is passed in, we use the currently logged in user.
      * @param integer $user_id
-     * @return integer
+     * @return integer|null
      */
     public function get_user_rating($user_id = null)
     {
@@ -196,49 +195,49 @@ class Rating extends database_object
             $user_id = $user->id ?? 0;
         }
         if ($user_id === 0) {
-            return false;
+            return null;
         }
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            return (int)parent::get_from_cache($key, $this->id)[0];
+        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
+            return parent::get_from_cache($key, $this->id)[0];
         }
 
-        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
+        $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ? AND `rating` > 0;";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
-
-        $rating = 0;
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $rating = $results['rating'];
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            return null;
         }
+        $rating = (int)$row['rating'];
+        parent::add_to_cache($key, $this->id, array($rating));
 
-        parent::add_to_cache($key, $this->id, array((int)$rating));
-
-        return (int)$rating;
+        return $rating;
     } // get_user_rating
 
     /**
      * get_average_rating
      * Get the floored average rating of what everyone has rated this object as.
-     * @return double
+     * @return double|null
      */
     public function get_average_rating()
     {
         $key = 'rating_' . $this->type . '_all';
-        if (parent::is_cached($key, $this->id)) {
+        if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
             return (double)parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
-
-        $rating = 0;
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $rating = (double)$results['rating'];
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            return null;
         }
-        parent::add_to_cache($key, $this->id, array((double)$rating));
 
-        return (double)$rating;
+        $rating = (double)$row['rating'];
+        parent::add_to_cache($key, $this->id, array($rating));
+
+        return $rating;
     } // get_average_rating
 
     /**

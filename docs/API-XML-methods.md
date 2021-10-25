@@ -1292,11 +1292,12 @@ This returns a single video
 ### stats
 
 Get some items based on some simple search types and filters. (Random by default)
-This method HAD partial backwards compatibility with older api versions but it has now been removed
+This method **HAD** partial backwards compatibility with older api versions but it has now been removed
 
 | Input      | Type    | Description                                      | Optional |
 |------------|---------|--------------------------------------------------|----------|
-| 'type'     | string  | 'song', 'album', 'artist'                        | NO       |
+| 'type'     | string  | 'song', 'album', 'artist', 'video',              | NO       |
+|            |         | 'playlist', 'podcast', 'podcast_episode'         |          |
 | 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent',       | YES      |
 |            |         | 'forgotten', 'flagged', 'random'                 |          |
 | 'user_id'  | integer |                                                  | YES      |
@@ -1737,6 +1738,59 @@ This returns the songs for a license
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license_songs.xml)
 
+### live_streams
+
+This returns live_streams based on the specified filter
+
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|----------|
+| 'filter' | string  | Filter results to match this string                      | YES      |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) | YES      |
+| 'offset' | integer | Return results starting from this index position         | YES      |
+| 'limit'  | integer | Maximum number of results to return                      | YES      |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/live_streams.xml)
+
+### live_stream
+
+This returns a single live_stream
+
+| Input    | Type   | Description                                 | Optional |
+|----------|--------|---------------------------------------------|----------|
+| 'filter' | string | UID of live_stream, returns live_stream XML | NO       |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/live_stream.xml)
+
 ### labels
 
 This returns labels based on the specified filter
@@ -2008,16 +2062,16 @@ If you don't supply a user id (optional) then just fall back to you.
 
 Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 
-| Input        | Type    | Description  | Optional |
-|--------------|---------|--------------|----------|
-| 'song'       | string  | $song_name   | NO       |
-| 'artist'     | string  | $artist_name | NO       |
-| 'album'      | string  | $album_name  | NO       |
-| 'songmbid'   | string  | $song_mbid   | YES      |
-| 'artistmbid' | string  | $artist_mbid | YES      |
-| 'albummbid'  | string  | $album_mbid  | YES      |
-| 'date'       | integer | UNIXTIME()   | YES      |
-| 'client'     | string  | $agent       | YES      |
+| Input        | Type    | Description                  | Optional |
+|--------------|---------|------------------------------|----------|
+| 'song'       | string  | HTML encoded string          | NO       |
+| 'artist'     | string  | HTML encoded string          | NO       |
+| 'album'      | string  | HTML encoded string          | NO       |
+| 'songmbid'   | string  | `song_mbid` also supported   | YES      |
+| 'artistmbid' | string  | `artist_mbid` also supported | YES      |
+| 'albummbid'  | string  | `album_mbid` also supported  | YES      |
+| 'date'       | integer | UNIXTIME()                   | YES      |
+| 'client'     | string  | $agent                       | YES      |
 
 * return
 

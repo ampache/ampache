@@ -88,13 +88,13 @@ final class ArtistsMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? false);
                 echo Json_Data::artists($artists, $include, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? false);
                 echo Xml_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);

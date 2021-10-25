@@ -161,7 +161,7 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.0.0';
+    public static $version = '5.1.0';
 
     /**
      * @var Browse $browse

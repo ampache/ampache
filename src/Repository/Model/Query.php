@@ -265,7 +265,13 @@ class Query
 
             return true;
         }
-        $this->user_id = Core::get_global('user')->id;
+        $this->user_id = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')->id
+            : null;
+
+        if ($this->user_id === null) {
+            return false;
+        }
 
         if ($query_id === null || $query_id === 0) {
             $this->reset();

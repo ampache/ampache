@@ -25,13 +25,17 @@
 * Add Top Tracks and Similar Songs to Artist pages
 * Extend run:updateCatalog --update to update artist name matching mbid
 * Add duplicate_mbid_group to album searches
+* Restored missing artist search to the header searchbar
+* Press enter on the list header to allow changing page number
 * Translation Update October 2021
 * Config version 57
 * NEW config options
   * allow_upload_scripts: Allow or disallow upload scripts on the server
-* Database 5.1.0 Build 1:
+* Database 5.1.0 Build 4:
   * Add `podcast` to object_count table
   * Add `podcast` to cache_object_count table
+  * Add `live_stream` to the rating table
+  * Add `waveforms` for podcast episodes
 * PHP8 Support
   * Use array_key_exists to skip runtime errors
   * Fix undefined variables in templates
@@ -108,6 +112,10 @@
 * Don't let a non-critical update fail DB update
 * Search for 'played' albums and artists
 * Commands loading plugins from cli might not have a user
+* Dashboard links to podcast episodes and art
+* Lots of issues in the webplayer which only supported song links
+* Clean up deleted user date from all tables
+* Waveforms for podcast episodes
 * Subsonic
   * Trim quotes (") for Subsonic searches (some clients add them)
   * Support exact (lucene) searching when using quotes (")
