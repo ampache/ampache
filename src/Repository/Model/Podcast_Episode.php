@@ -59,6 +59,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $enabled;
     public $total_count;
     public $catalog;
+    public $waveform;
     public $f_name;
     public $f_file;
     public $f_size;
