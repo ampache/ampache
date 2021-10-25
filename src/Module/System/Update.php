@@ -85,8 +85,7 @@ class Update
      */
     public static function format_version($data)
     {
-        return substr($data, 0, strlen((string)$data) - 5) . '.' . substr($data, strlen((string)$data) - 5,
-                1) . ' Build:' . substr($data, strlen((string)$data) - 4, strlen((string)$data));
+        return substr($data, 0, strlen((string)$data) - 5) . '.' . substr($data, strlen((string)$data) - 5, 1) . ' Build:' . substr($data, strlen((string)$data) - 4, strlen((string)$data));
     }
 
     /**
@@ -282,6 +281,9 @@ class Update
 
         $update_string = "* Add live_stream to the rating table";
         $version[]     = array('version' => '510003', 'description' => $update_string);
+
+        $update_string = "* Add waveform column to podcast_episode table";
+        $version[]     = array('version' => '510004', 'description' => $update_string);
 
         return $version;
     }
@@ -1659,6 +1661,21 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist', 'album', 'song', 'stream', 'live_stream', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_510004
+     *
+     * Add waveform column to podcast_episode table
+     */
+    public static function update_510004()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
