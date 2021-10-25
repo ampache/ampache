@@ -76,11 +76,11 @@ final class ShowAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
         if (array_key_exists('podcast_episode', $_REQUEST)) {
-            $object_id   = $this->requestParser->getFromRequest('podcast_episode');
+            $object_id   = (int)$this->requestParser->getFromRequest('podcast_episode');
             $object_type = 'podcast_episode';
             $object      = new Podcast_Episode($object_id);
         } else {
-            $object_id   = $this->requestParser->getFromRequest('song_id');
+            $object_id   = (int)$this->requestParser->getFromRequest('song_id');
             $object_type = 'song';
             $object      = new Song($object_id);
         }

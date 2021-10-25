@@ -78,12 +78,12 @@ final class VideosMethod
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? false);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::videos($video_ids, $user->id);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? false);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::videos($video_ids, $user->id);
         }
         Session::extend($input['auth']);
