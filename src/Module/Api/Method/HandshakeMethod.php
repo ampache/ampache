@@ -68,7 +68,7 @@ final class HandshakeMethod
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
+        Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
 
         // Log the attempt
         debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);

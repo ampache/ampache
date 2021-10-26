@@ -164,6 +164,11 @@ class Api
     public static $version = '5.1.0';
 
     /**
+     * @var string $version
+     */
+    public static $version_numeric = '510000';
+
+    /**
      * @var Browse $browse
      */
     public static $browse = null;
