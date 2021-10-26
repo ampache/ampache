@@ -53,7 +53,7 @@ final class PingMethod
     {
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
+        Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
 
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 
