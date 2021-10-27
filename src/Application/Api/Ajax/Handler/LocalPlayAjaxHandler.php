@@ -64,7 +64,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'command':
                 // Make sure they are allowed to do this
-                if (!Access::check('localplay', 50)) {
+                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
                     debug_event('localplay.ajax', 'Attempted to control Localplay without sufficient access', 1);
 
                     return;
