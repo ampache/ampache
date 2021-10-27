@@ -103,6 +103,9 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                     } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
                         unset($_SESSION['iframe']['subtitle']);
                     }
+                    if (AmpConfig::get('play_type') == 'localplay') {
+                        $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
+                    }
                     $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
                 }
                 break;
