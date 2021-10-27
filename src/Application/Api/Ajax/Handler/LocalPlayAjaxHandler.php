@@ -134,7 +134,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_track':
-                if (!Access::check('localplay', 50)) {
+                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
                     debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 
                     return;
@@ -180,7 +180,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'repeat':
                 // Make sure that they have access to do this again no clue
-                if (!Access::check('localplay', 50)) {
+                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
                     debug_event('localplay.ajax', 'Attempted to set repeat without access', 1);
 
                     return;
@@ -200,7 +200,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random':
                 // Make sure that they have access to do this
-                if (!Access::check('localplay', 50)) {
+                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
                     debug_event('localplay.ajax', 'Attempted to set random without access', 1);
 
                     return;
