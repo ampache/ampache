@@ -106,25 +106,20 @@ if (AmpConfig::get('song_page_title')) {
 
 function TogglePlayerVisibility()
 {
-    if ($("#webplayer").is(":visible")) {
-        $("#webplayer").slideUp();
+    const webPlayer = $("#webplayer")
+    if (webPlayer.is(":visible")) {
+        webPlayer.slideUp();
     } else {
-        $("#webplayer").slideDown();
+        webPlayer.slideDown();
     }
 }
 
 function TogglePlaylistExpand()
 {
-    if ($(".jp-playlist").css("opacity") !== '1') {
-        $(".jp-playlist").css('top', '-255%');
-        $(".jp-playlist").css('opacity', '1');
-        $(".jp-playlist").css('height', '350%');
-    } else {
-        $(".jp-playlist").css('top', '0px');
-        $(".jp-playlist").css('opacity', '0.9');
-        $(".jp-playlist").css('height', '95%');
-    }
+    const jpPlaylist = document.querySelector(".jp-playlist")
+    jpPlaylist.classList.toggle('taller')
 }
+
 </script>
 <?php
 if ($iframed) { ?>
@@ -207,8 +202,7 @@ function ShowVisualizer()
         $('#equalizer').css('visibility', 'hidden');
         $('#header').css('background-color', vizPrevHeaderColor);
         $('#webplayer').css('background-color', vizPrevPlayerColor);
-        $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-        $('.jp-playlist').css('background-color', 'rgb(20, 20, 20)');
+        $('.jp-interface, .jp-playlist').removeClass('vizualizer')
     } else {
         // Resource not yet initialized? Do it.
         if (!vizInitialized) {
@@ -228,8 +222,7 @@ function ShowVisualizer()
             $('#webplayer').css('cssText', 'background-color: #000 !important;');
             $('#webplayer').show();
             $("#webplayer-minimize").show();
-            $('.jp-interface').css('background-color', '#000');
-            $('.jp-playlist').css('background-color', '#000');
+            $('.jp-interface, .jp-playlist').addClass('vizualizer')
         } else {
             alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
         }
@@ -243,12 +236,8 @@ function ShowVisualizerFullScreen()
     }
 
     var element = document.getElementById("viz");
-    if (element.requestFullScreen) {
-        element.requestFullScreen();
-    } else if (element.webkitRequestFullScreen) {
-        element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
+    if (element.requestFullscreen) {
+        element.requestFullscreen()
     } else {
         alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
     }
@@ -257,11 +246,8 @@ function ShowVisualizerFullScreen()
 function ShowEqualizer()
 {
     if (isVisualizerEnabled()) {
-        if ($('#equalizer').css('visibility') == 'visible') {
-            $('#equalizer').css('visibility', 'hidden');
-        } else {
-            $('#equalizer').css('visibility', 'visible');
-        }
+        const equalizer = document.querySelector('#equalizer')
+        equalizer.classList.toggle("shown")
     }
 }
 
@@ -329,7 +315,7 @@ function ApplyReplayGain()
         var peakamplitude = 1;
         if (replaygainEnabled && currentjpitem != null) {
             var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
-            var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
+            var r128_track_gain = currentjpitem.attr("data-r128_track_gain");
 
             if (r128_track_gain !== 'null') {
                 // R128 PREFERRED

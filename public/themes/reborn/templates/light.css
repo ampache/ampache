@@ -523,9 +523,30 @@ div.jp-playlist {
     border-top: 1px solid #f8f8f8;
 }
 
+div.jp-playlist {
+  top : 0px;
+  opacity: 0.9;
+  height: 95%;
+}
+
+div.jp-playlist.taller {
+    top :-255%;
+    opacity: 1;
+    height: 350%;
+}
+
+div.jp-playlist.vizualizer,
+div.jp-interface.vizualizer {
+    background-color: #000;
+}
+
 .jp-no-solution {
     background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
     border-top: 1px solid #f8f8f8;
+}
+
+#equalizer.shown {
+  visibility: visible;
 }
 
 #webplayer {
