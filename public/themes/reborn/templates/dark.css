@@ -533,10 +533,6 @@ div.jp-playlist.taller {
     height: 350%;
 }
 
-div.jp-playlist.vizualizer,
-div.jp-interface.vizualizer {
-    background-color: #000;
-}
 
 .jp-no-solution {
     background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
@@ -545,10 +541,6 @@ div.jp-interface.vizualizer {
 
 #webplayer {
     background-color: #191919 !important;
-}
-
-#equalizer.shown {
-  visibility: visible;
 }
 
 div.playing_title a,
@@ -577,6 +569,47 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #ff9d00;
+}
+
+/* --------------------------
+   Equalizer
+   -------------------------- */
+#equalizerbtn {
+    visibility: hidden;
+}
+
+#equalizer {
+    visibility: hidden;
+    margin-right: 15px !important;
+}
+
+/* --------------------------
+   Vizualizer
+   -------------------------- */
+
+div.jp-playlist.vizualizer,
+div.jp-interface.vizualizer {
+    background-color: #000;
+}
+
+#uberviz.vizualizer,
+#equalizerbtn.vizualizer,
+#equalizer.vizualizer
+{
+    visibility: visible;
+}
+
+#header.vizualizer {
+    background-color:transparent;
+}
+
+#webplayer.vizualizer {
+    background-color: #000 !important;
+    display: block;
+}
+
+#webplayer-minimize.vizualizer {
+    display: block;
 }
 
 /* --------------------------

@@ -36,11 +36,6 @@ if (!$iframed) {
 <script>
 var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
 var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
-
-function update_action()
-{
-    // Stub
-}
 </script>
 <?php
 } ?>
@@ -56,7 +51,6 @@ function update_action()
 
 <script>
 var jplaylist = new Array();
-var jtypes = new Array();
 
 function convertMediaToJPMedia(media)
 {
@@ -81,17 +75,16 @@ function convertMediaToJPMedia(media)
 
 function addMedia(media)
 {
-    var jpmedia = convertMediaToJPMedia(media);
+    const jpmedia = convertMediaToJPMedia(media);
     jplaylist.add(jpmedia);
 }
 
 function playNext(media)
 {
-    var jpmedia = convertMediaToJPMedia(media);
+    const jpmedia = convertMediaToJPMedia(media);
     jplaylist.addAfter(jpmedia, jplaylist.current);
 }
-</script>
-<script>
+
 function ExitPlayer()
 {
     $("#webplayer").text('');
@@ -106,18 +99,12 @@ if (AmpConfig::get('song_page_title')) {
 
 function TogglePlayerVisibility()
 {
-    const webPlayer = $("#webplayer")
-    if (webPlayer.is(":visible")) {
-        webPlayer.slideUp();
-    } else {
-        webPlayer.slideDown();
-    }
+    $("#webplayer").slideToggle()
 }
 
 function TogglePlaylistExpand()
 {
-    const jpPlaylist = document.querySelector(".jp-playlist")
-    jpPlaylist.classList.toggle('taller')
+    document.querySelector(".jp-playlist").classList.toggle('taller')
 }
 
 </script>
@@ -192,17 +179,11 @@ function isVisualizerEnabled()
 }
 
 var vizInitialized = false;
-var vizPrevHeaderColor = "#000";
-var vizPrevPlayerColor = "#000";
 function ShowVisualizer()
 {
     if (isVisualizerEnabled()) {
-        $('#uberviz').css('visibility', 'hidden');
-        $('#equalizerbtn').css('visibility', 'hidden');
         $('#equalizer').css('visibility', 'hidden');
-        $('#header').css('background-color', vizPrevHeaderColor);
-        $('#webplayer').css('background-color', vizPrevPlayerColor);
-        $('.jp-interface, .jp-playlist').removeClass('vizualizer')
+        $('#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist').removeClass('vizualizer')
     } else {
         // Resource not yet initialized? Do it.
         if (!vizInitialized) {
@@ -214,15 +195,7 @@ function ShowVisualizer()
         }
 
         if (vizInitialized) {
-            $('#uberviz').css('visibility', 'visible');
-            $('#equalizerbtn').css('visibility', 'visible');
-            vizPrevHeaderColor = $('#header').css('background-color');
-            $('#header').css('background-color', 'transparent');
-            vizPrevPlayerColor = $('#webplayer').css('background-color');
-            $('#webplayer').css('cssText', 'background-color: #000 !important;');
-            $('#webplayer').show();
-            $("#webplayer-minimize").show();
-            $('.jp-interface, .jp-playlist').addClass('vizualizer')
+            $('#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist').addClass('vizualizer')
         } else {
             alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
         }
@@ -246,8 +219,7 @@ function ShowVisualizerFullScreen()
 function ShowEqualizer()
 {
     if (isVisualizerEnabled()) {
-        const equalizer = document.querySelector('#equalizer')
-        equalizer.classList.toggle("shown")
+        document.querySelector('#equalizer').classList.toggle("vizualizer")
     }
 }
 

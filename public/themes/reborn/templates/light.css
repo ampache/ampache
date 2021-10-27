@@ -545,10 +545,6 @@ div.jp-interface.vizualizer {
     border-top: 1px solid #f8f8f8;
 }
 
-#equalizer.shown {
-  visibility: visible;
-}
-
 #webplayer {
     background-color: #f8f8f8 !important;
 }
@@ -579,6 +575,47 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #1990db;
+}
+
+/* --------------------------
+   Equalizer
+   -------------------------- */
+#equalizerbtn {
+    visibility: hidden;
+}
+
+#equalizer {
+    visibility: hidden;
+    margin-right: 15px !important;
+}
+
+/* --------------------------
+   Vizualizer
+   -------------------------- */
+
+div.jp-playlist.vizualizer,
+div.jp-interface.vizualizer {
+    background-color: #f8f8f8;
+}
+
+#uberviz.vizualizer,
+#equalizerbtn.vizualizer,
+#equalizer.vizualizer
+{
+    visibility: visible;
+}
+
+#header.vizualizer {
+    background-color:transparent;
+}
+
+#webplayer.vizualizer {
+    background-color: #f8f8f8 !important;
+    display: block;
+}
+
+#webplayer-minimize.vizualizer {
+    display: block;
 }
 
 /* ------------------------
