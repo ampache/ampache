@@ -16,8 +16,8 @@ It's easy to use a program like github desktop to compare between branches.
 * Change to master branch
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
-  * lib/init.php (Set release version)
-  * lib/class/api.class.php (Set release version)
+  * src/Config/Init/InitializationHandlerConfig.php (Set VERSION and CONFIG_VERSION)
+  * src/Module/Api/Api.php (Set $version and $version_numeric)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
 * Commit merge for new version (e.g. 5.x.x) but **do not push!**
@@ -78,7 +78,7 @@ md5sum ../ampache-${a_version}_all.zip
 
 ## Additional requirements
 
-* Update ampache-docker README.md with the current version. ~~(This will kick off a build with the new version)~~
+* Update ampache-docker README.md with the current version.
 * Update config file in docker (ampache.cfg.php.dist)
 * Update and make a release for python3-ampache following the version with a build (5.x.x-1)
   * run build_docs.py to update the example files
