@@ -181,9 +181,10 @@ function isVisualizerEnabled()
 var vizInitialized = false;
 function ShowVisualizer()
 {
+    let selector = '#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist'
     if (isVisualizerEnabled()) {
         $('#equalizer').css('visibility', 'hidden');
-        $('#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist').removeClass('vizualizer')
+        $(selector).removeClass('vizualizer')
     } else {
         // Resource not yet initialized? Do it.
         if (!vizInitialized) {
@@ -193,9 +194,8 @@ function ShowVisualizer()
                 AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
             }
         }
-
         if (vizInitialized) {
-            $('#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist').addClass('vizualizer')
+            $(selector).addClass('vizualizer')
         } else {
             alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
         }
