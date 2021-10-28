@@ -308,6 +308,10 @@ class WebPlayer
         $types    = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
         $url      = $urlinfo['base_url'];
         $media    = self::get_media_object($urlinfo);
+        // stream urls that don't send a type (democratic playlists)
+        $item->type = (empty($item->type) && !empty($urlinfo['type']))
+            ? $urlinfo['type']
+            : $item->type;
 
         if ($media != null) {
             if ($urlinfo['type'] == 'song') {
@@ -331,9 +335,17 @@ class WebPlayer
             //$url .= "&content_length=required";
         } else {
             // items like live streams need to keep an id for us as well
-            $regex = ($item->type == 'live_stream')
-                ? "/radio=([0-9]*)/"
-                : "/" . $item->type . "=([0-9]*)/";
+            switch ($item->type) {
+                case 'live_stream':
+                    $regex =  "/radio=([0-9]*)/";
+                    break;
+                case 'democratic':
+                    $regex =  "/demo_id=([0-9]*)/";
+                    break;
+                default:
+                    $regex =  "/" . $item->type . "=([0-9]*)/";
+                    break;
+            }
             preg_match($regex, $item->info_url, $matches);
             $json['media_id']   = $matches[1] ?? null;
             $json['media_type'] = $item->type;
