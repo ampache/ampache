@@ -438,7 +438,7 @@ class Stream_Playlist
             $this->_add_url(new Stream_Url(array(
                 'url' => $url,
                 'title' => Stream_Url::get_title($url),
-                'author' => 'Ampache',
+                'author' => T_('Ampache'),
                 'time' => '-1'
             )));
         }
