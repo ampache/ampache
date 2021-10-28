@@ -251,7 +251,7 @@ class WebPlayer
         $addjs         = "";
         foreach ($playlist->urls as $item) {
             if ($item->type == 'broadcast') {
-                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                $addjs .= $callback_container . "broadcastHandler.startListening('" . $item->url . "');";
                 break;
             } else {
                 $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, $transcode_cfg) . ");";
@@ -274,7 +274,7 @@ class WebPlayer
         // play next for groups of items needs to be reversed to be in correct order
         foreach (array_reverse($playlist->urls) as $item) {
             if ($item->type == 'broadcast') {
-                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                $addjs .= $callback_container . "broadcastHandler.startListening('" . $item->url . "');";
                 break;
             } else {
                 $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, $transcode_cfg) . ");";

@@ -320,7 +320,6 @@ function SaveToExistingPlaylist(event)
 <script>
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
 var shouts = {};
-
 var waveformHandler = {
   clickTimer: null,
   click(songid, time) {
@@ -331,7 +330,7 @@ var waveformHandler = {
           NavigateTo('<?php echo $web_path ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
       } else {
           // Single click
-          if (brconn === null) {
+          if (broadcastHandler.brconn === null) {
               this.clickTimer = setTimeout(function() {
                   this.clickTimer = null;
                   $("#jquery_jplayer_1").data("jPlayer").play(time);
@@ -354,133 +353,124 @@ var waveformHandler = {
       document.querySelector('.waveform').classList.add("hidden")
   }
 }
-
 <?php
     } ?>
 
-var brkey = '';
-var brconn = null;
+var broadcastHandler = {
+    brkey: '',
+    brconn: null,
+    loadingSong: false,
+    bufferingSongPos: -1,
 
-function startBroadcast(key)
-{
-    brkey = key;
+    start(key) {
+        this.brkey = key;
+        this.listen();
+        this.brconn.onopen = function(e) {
+            broadcastHandler.sendMessage('AUTH_SID', '<?php echo session_id(); ?>');
+            broadcastHandler.sendMessage('REGISTER_BROADCAST', broadcastHandler.brkey);
+            broadcastHandler.sendMessage('SONG', currentjpitem.attr("data-media_id"));
+        };
+    },
 
-    listenBroadcast();
-    brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
-        sendBroadcastMessage('REGISTER_BROADCAST', brkey);
-        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
-    };
-}
-
-function startBroadcastListening(broadcast_id)
-{
-    listenBroadcast();
-
-    // Hide few UI information on listening mode
-    $('.jp-previous').css('visibility', 'hidden');
-    $('.jp-play').css('visibility', 'hidden');
-    $('.jp-pause').css('visibility', 'hidden');
-    $('.jp-next').css('visibility', 'hidden');
-    $('.jp-stop').css('visibility', 'hidden');
-    $('.jp-toggles').css('visibility', 'hidden');
-    $('.jp-playlist').css('visibility', 'hidden');
-    $('#broadcast').css('visibility', 'hidden');
-
-    $('.jp-seek-bar').css('pointer-events', 'none');
-
-    brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
-        sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
-    };
-}
-
-function listenBroadcast()
-{
-    if (brconn != null) {
-        stopBroadcast();
+    stop() {
+      this.brkey = '';
+      if (this.brconn != null && this.brconn.readyState == 1) {
+        this.brconn.close();
+      }
+      this.brconn = null;
     }
 
-    brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
-    brconn.onmessage = receiveBroadcastMessage;
-}
+    startListening(broadcast_id) {
+      this.listen();
+      // Hide few UI information on listening mode
+      $('.jp-previous').css('visibility', 'hidden');
+      $('.jp-play').css('visibility', 'hidden');
+      $('.jp-pause').css('visibility', 'hidden');
+      $('.jp-next').css('visibility', 'hidden');
+      $('.jp-stop').css('visibility', 'hidden');
+      $('.jp-toggles').css('visibility', 'hidden');
+      $('.jp-playlist').css('visibility', 'hidden');
+      $('#broadcast').css('visibility', 'hidden');
 
-var brLoadingSong = false;
-var brBufferingSongPos = -1;
+      $('.jp-seek-bar').css('pointer-events', 'none');
 
-function receiveBroadcastMessage(e)
-{
-    var jp = $("#jquery_jplayer_1").data("jPlayer");
-    var msgs = e.data.split(';');
+      this.brconn.onopen = function(e) {
+        this.sendMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
+        this.sendMessage('REGISTER_LISTENER', broadcast_id);
+      };
+    },
 
-    for (var i = 0; i < msgs.length; ++i) {
+    listen() {
+      if (this.brconn != null) {
+        this.stop();
+      }
+      this.brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
+      this.brconn.onmessage = this.receiveMessage;
+    },
+
+    receiveMessage(e) {
+      var jp = $("#jquery_jplayer_1").data("jPlayer");
+      var msgs = e.data.split(';');
+
+      for (var i = 0; i < msgs.length; ++i) {
         var msg = msgs[i].split(':');
         if (msg.length == 2) {
-            switch (msg[0]) {
-                case 'PLAYER_PLAY':
-                    if (msg[1] == '1') {
-                        if (jp.status.paused) {
-                            jp.play();
-                        }
-                    } else {
-                        if (!jp.status.paused) {
-                            jp.pause();
-                        }
-                    }
-                    break;
-                case 'SONG':
-                    addMedia($.parseJSON(atob(msg[1])));
-                    brLoadingSong = true;
-                    // Buffering song position in case it is asked in the next sec.
-                    // Otherwise we will move forward on the previous song instead of the new currently loading one
-                    setTimeout(function() {
-                        if (brBufferingSongPos > -1) {
-                            jp.play(brBufferingSongPos);
-                            brBufferingSongPos = -1;
-                        }
-                        brLoadingSong = false;
-                    }, 1000);
-                    jplaylist.next();
-                    break;
-                case 'SONG_POSITION':
-                    if (brLoadingSong) {
-                        brBufferingSongPos = parseFloat(msg[1]);
-                    } else {
-                        jp.play(parseFloat(msg[1]));
-                    }
-                    break;
-                case 'NB_LISTENERS':
-                    $('#broadcast_listeners').html(msg[1]);
-                    break;
-                case 'INFO':
-                    // Display information notification to user here
-                    break;
-                case 'ENDED':
-                    jp.stop();
-                    break;
-                default:
-                    alert('Unknown message code');
-                    break;
+          switch (msg[0]) {
+            case 'PLAYER_PLAY':
+            if (msg[1] == '1') {
+              if (jp.status.paused) {
+                jp.play();
+              }
+            } else {
+              if (!jp.status.paused) {
+                jp.pause();
+              }
             }
+            break;
+            case 'SONG':
+            addMedia($.parseJSON(atob(msg[1])));
+            this.loadingSong = true;
+            // Buffering song position in case it is asked in the next sec.
+            // Otherwise we will move forward on the previous song instead of the new currently loading one
+            setTimeout(function() {
+              if (broadcastHandler.bufferingSongPos > -1) {
+                jp.play(broadcastHandler.bufferingSongPos);
+                broadcastHandler.bufferingSongPos = -1;
+              }
+              broadcastHandler.loadingSong = false;
+            }, 1000);
+            jplaylist.next();
+            break;
+            case 'SONG_POSITION':
+            if (this.loadingSong) {
+              this.bufferingSongPos = parseFloat(msg[1]);
+            } else {
+              jp.play(parseFloat(msg[1]));
+            }
+            break;
+            case 'NB_LISTENERS':
+            $('#broadcast_listeners').html(msg[1]);
+            break;
+            case 'INFO':
+            // Display information notification to user here
+            break;
+            case 'ENDED':
+            jp.stop();
+            break;
+            default:
+            alert('Unknown message code');
+            break;
+          }
         }
-    }
-}
+      }
+    },
 
-function sendBroadcastMessage(cmd, value)
-{
-    if (brconn != null && brconn.readyState == 1) {
+    sendMessage(cmd, value) {
+      if (this.brconn != null && this.brconn.readyState == 1) {
         var msg = cmd + ':' + value + ';';
-        brconn.send(msg);
-    }
-}
-
-function stopBroadcast()
-{
-    brkey = '';
-    if (brconn != null && brconn.readyState == 1) {
-        brconn.close();
-    }
-    brconn = null;
+        this.brconn.send(msg);
+      }
+    },
 }
 
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>

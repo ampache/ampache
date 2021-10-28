@@ -157,8 +157,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         <?php } ?>
                         replaygainHandler.apply();
                     }
-                    if (brkey != '') {
-                        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
+                    if (broadcastHandler.brkey != '') {
+                        broadcastHandler.sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
                     }
                     if (playlist[index]['media_type'] == "song") {
                         var currenttype = 'song'
@@ -242,14 +242,14 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             waveformHandler.hide();
             <?php } ?>
 
-            if (brkey != '') {
-                sendBroadcastMessage('PLAYER_PLAY', 1);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('PLAYER_PLAY', 1);
             }
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
-            if (brkey != '') {
-                sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
             <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
@@ -269,8 +269,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
-            if (brkey != '') {
-                sendBroadcastMessage('PLAYER_PLAY', 0);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('PLAYER_PLAY', 0);
             }
         });
 
@@ -484,7 +484,7 @@ if (!$isVideo) {
         $broadcast = new Broadcast((int) $broadcast_id);
         $key       = Broadcast::generate_key();
         $broadcast->update_state(true, $key);
-        echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+        echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>broadcastHandler.start(\'' . $key . '\');</script>';
     } else {
         echo Broadcast::get_broadcast_link();
     } ?>
