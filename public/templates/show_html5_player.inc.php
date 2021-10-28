@@ -127,8 +127,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-            if (replaygainPersist === 'true' && replaygainEnabled === false) {
-                ToggleReplayGain();
+            if (replaygainPersist === 'true' && replaygainHandler.enabled === false) {
+                replaygainHandler.toggle();
             }
             var current = jplaylist.current,
                 playlist = jplaylist.playlist;
@@ -155,7 +155,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         <?php if (AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
-                        ApplyReplayGain();
+                        replaygainHandler.apply();
                     }
                     if (brkey != '') {
                         sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
@@ -294,8 +294,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             }
         });
 
-        replaygainNode = null;
-        replaygainEnabled = false;
+        replaygainHandler.node = null;
+        replaygainHandler.enabled = false;
         <?php echo WebPlayer::add_media_js($playlist); ?>
 
         $("#jquery_jplayer_1").resizable({
@@ -513,7 +513,7 @@ if (!$isVideo) {
                                 <a href="javascript:visualizerHandler.showVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', addslashes(T_('ReplayGain'))) ?></a>
+                                <a href="javascript:replaygainHandler.toggle();"><?php echo Ui::get_icon('replaygain', addslashes(T_('ReplayGain'))) ?></a>
                             </div>
                             <div id="equalizerbtn" class="action_button">
                                 <a href="javascript:visualizerHandler.showEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>

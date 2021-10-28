@@ -249,10 +249,10 @@ var AudioHandler = (function() {
 
     function loadMediaSource(mediaElement) {
         if (typeof mediaElement !== "undefined") {
-            if (mediaSource === null) {
-                mediaSource = audioContext.createMediaElementSource(mediaElement);
+            if (replaygainHandler.mediaSource === null) {
+              replaygainHandler.mediaSource = audioContext.createMediaElementSource(mediaElement);
             }
-            source = mediaSource;
+            source = replaygainHandler.mediaSource;
             source.connect(analyser);
             analyser.connect(gainNode);
             gainNode.connect(filter1);

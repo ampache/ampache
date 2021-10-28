@@ -612,6 +612,10 @@ div.jp-interface.vizualizer {
     display: block;
 }
 
+#replaygainbtn.enabled {
+    box-shadow: 0px 1px 0px 0px orange
+}
+
 /* --------------------------
    Other
    -------------------------- */

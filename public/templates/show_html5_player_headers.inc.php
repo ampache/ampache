@@ -162,17 +162,6 @@ function SwapSlideshow()
     swap_slideshow();
 }
 
-function initAudioContext()
-{
-    if (typeof AudioContext !== 'undefined') {
-        audioContext = new AudioContext();
-    } else if (typeof webkitAudioContext !== 'undefined') {
-        audioContext = new webkitAudioContext();
-    } else {
-        audioContext = null;
-    }
-}
-
 var visualizerHandler = {
     initialized: false,
     enabled: false,
@@ -221,6 +210,89 @@ var visualizerHandler = {
     }
 }
 
+var replaygainHandler = {
+  audioContext: null,
+  mediaSource: null,
+  enabled: false,
+  node: null,
+
+  initAudioContext() {
+    if (typeof AudioContext !== 'undefined') {
+        this.audioContext = new AudioContext();
+    } else if (typeof webkitAudioContext !== 'undefined') {
+        this.audioContext = new webkitAudioContext();
+    } else {
+        this.audioContext = null;
+    }
+  },
+
+  toggle() {
+      if (this.node === null) {
+          var mediaElement = $('.jp-jplayer').find('audio').get(0);
+          if (mediaElement) {
+              if (this.audioContext !== null) {
+                  this.mediaSource = this.audioContext.createMediaElementSource(mediaElement);
+                  this.node = this.audioContext.createGain();
+                  this.node.gain.value = 1;
+                  this.mediaSource.connect(this.node);
+                  mediaSource = this.mediaSource
+                  this.node.connect(this.audioContext.destination);
+              }
+          }
+      }
+
+      if (this.node != null) {
+          this.enabled = !this.enabled;
+          Cookies.set('replaygain', this.enabled, {<?php echo $cookie_string ?>});
+          this.apply();
+          let btn = document.querySelector('#replaygainbtn')
+          if (this.enabled) {
+              btn.classList.add('enabled')
+          } else {
+              btn.classList.remove('enabled')
+          }
+      }
+  },
+
+  apply() {
+      if (this.node != null) {
+          var gainlevel = 1;
+          var replaygain = 0;
+          var peakamplitude = 1;
+          if (this.enabled && currentjpitem != null) {
+              var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
+              var r128_track_gain = currentjpitem.attr("data-r128_track_gain");
+
+              if (r128_track_gain !== 'null') {
+                  // R128 PREFERRED
+                  replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
+                  var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
+                  var targetLevel = parseInt(-18); // LUFS/dB;
+                  var masteredVolume = referenceLevel - replaygain;
+                  var difference = targetLevel - masteredVolume;
+
+                  gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
+              } else if (replaygain_track_gain !== 'null') {
+                  // REPLAYGAIN FALLBACK
+                  replaygain = parseFloat(replaygain_track_gain);
+
+                  if (replaygain != null) {
+                      var track_peak = currentjpitem.attr("data-replaygain_track_peak");
+                      if (track_peak !== 'null') {
+                          peakamplitude = parseFloat(track_peak);
+                      }
+                      gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
+                  }
+              }
+          }
+
+          this.node.gain.value = gainlevel;
+      }
+  }
+}
+replaygainHandler.initAudioContext();
+var mediaSource
+
 function SavePlaylist()
 {
     if (jplaylist['playlist'].length > 0) {
@@ -243,76 +315,6 @@ function SaveToExistingPlaylist(event)
     }
 }
 
-var audioContext = null;
-var mediaSource = null;
-var replaygainEnabled = false;
-var replaygainNode = null;
-initAudioContext();
-
-function ToggleReplayGain()
-{
-    if (replaygainNode === null) {
-        var mediaElement = $('.jp-jplayer').find('audio').get(0);
-        if (mediaElement) {
-            if (audioContext !== null) {
-                mediaSource = audioContext.createMediaElementSource(mediaElement);
-                replaygainNode = audioContext.createGain();
-                replaygainNode.gain.value = 1;
-                mediaSource.connect(replaygainNode);
-                replaygainNode.connect(audioContext.destination);
-            }
-        }
-    }
-
-    if (replaygainNode != null) {
-        replaygainEnabled = !replaygainEnabled;
-        Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string ?>});
-        ApplyReplayGain();
-
-        if (replaygainEnabled) {
-            $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
-        } else {
-            $('#replaygainbtn').css('box-shadow', '');
-        }
-    }
-}
-
-function ApplyReplayGain()
-{
-    if (replaygainNode != null) {
-        var gainlevel = 1;
-        var replaygain = 0;
-        var peakamplitude = 1;
-        if (replaygainEnabled && currentjpitem != null) {
-            var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
-            var r128_track_gain = currentjpitem.attr("data-r128_track_gain");
-
-            if (r128_track_gain !== 'null') {
-                // R128 PREFERRED
-                replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
-                var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
-                var targetLevel = parseInt(-18); // LUFS/dB;
-                var masteredVolume = referenceLevel - replaygain;
-                var difference = targetLevel - masteredVolume;
-
-                gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
-            } else if (replaygain_track_gain !== 'null') {
-                // REPLAYGAIN FALLBACK
-                replaygain = parseFloat(replaygain_track_gain);
-
-                if (replaygain != null) {
-                    var track_peak = currentjpitem.attr("data-replaygain_track_peak");
-                    if (track_peak !== 'null') {
-                        peakamplitude = parseFloat(track_peak);
-                    }
-                    gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
-                }
-            }
-        }
-
-        replaygainNode.gain.value = gainlevel;
-    }
-}
 </script>
 <?php
 } ?>
