@@ -467,7 +467,7 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
             }
-            $file_target = rtrim(trim($cache_path), '/') . '/' . $mediaCatalogId . '/' . $media->id . '.' . $cache_target;
+            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
             if (!empty($cache_path) && !empty($cache_target) && is_file($file_target)) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
                 $cache_file   = true;

@@ -403,10 +403,6 @@ class Catalog_subsonic extends Catalog
 
             return false;
         }
-        // make a folder per catalog
-        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
-            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
-        }
         $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
@@ -422,26 +418,35 @@ class Catalog_subsonic extends Catalog
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
+            $target_file = Catalog::get_cache_path($row['id'], $this->id);
+            $file_exists = ($target_file !== false && is_file($target_file));
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
-            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
-                try {
-                    $filehandle = fopen($target_file, 'w');
-                    $options    = array(
-                        CURLOPT_RETURNTRANSFER => 1,
-                        CURLOPT_FILE => $filehandle,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_PIPEWAIT => 1,
-                        CURLOPT_URL => $remote_url,
-                    );
-                    $curl = curl_init();
-                    curl_setopt_array($curl, $options);
-                    curl_exec($curl);
-                    curl_close($curl);
-                    fclose($filehandle);
-                    debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
-                } catch (Exception $error) {
-                    debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+            if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
+                $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
+                $old_file_exists = is_file($old_target_file);
+                if ($old_file_exists) {
+                    // check for the old path first
+                    rename($old_target_file, $target_file);
+                    debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
+                } else {
+                    try {
+                        $filehandle = fopen($target_file, 'w');
+                        $options = array(
+                            CURLOPT_RETURNTRANSFER => 1,
+                            CURLOPT_FILE => $filehandle,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_PIPEWAIT => 1,
+                            CURLOPT_URL => $remote_url,
+                        );
+                        $curl = curl_init();
+                        curl_setopt_array($curl, $options);
+                        curl_exec($curl);
+                        curl_close($curl);
+                        fclose($filehandle);
+                        debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
+                    } catch (Exception $error) {
+                        debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    }
                 }
             }
         }

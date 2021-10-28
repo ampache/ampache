@@ -678,6 +678,24 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
+     * has_id
+     * @param int|string $song_id
+     * @return boolean
+     */
+    public static function has_id($song_id)
+    {
+
+        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
+        $db_results = Dba::read($sql, array($song_id));
+        $results    = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * can_scrobble
      *
      * return a song id based on a last.fm-style search in the database
