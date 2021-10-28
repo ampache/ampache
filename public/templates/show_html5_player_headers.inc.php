@@ -291,7 +291,6 @@ var replaygainHandler = {
   }
 }
 replaygainHandler.initAudioContext();
-var mediaSource
 
 function SavePlaylist()
 {
@@ -320,45 +319,42 @@ function SaveToExistingPlaylist(event)
 } ?>
 <script>
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
-var wavclicktimer = null;
 var shouts = {};
-function WaveformClick(songid, time)
-{
-    // Double click
-    if (wavclicktimer != null) {
-        clearTimeout(wavclicktimer);
-        wavclicktimer = null;
-        NavigateTo('<?php echo $web_path ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
-    } else {
-        // Single click
-        if (brconn === null) {
-            wavclicktimer = setTimeout(function() {
-                wavclicktimer = null;
-                $("#jquery_jplayer_1").data("jPlayer").play(time);
-            }, 250);
-        }
-    }
+
+var waveformHandler = {
+  clickTimer: null,
+  click(songid, time) {
+      // Double click
+      if (this.clickTimer != null) {
+          clearTimeout(this.clickTimer);
+          this.clickTimer = null;
+          NavigateTo('<?php echo $web_path ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
+      } else {
+          // Single click
+          if (brconn === null) {
+              this.clickTimer = setTimeout(function() {
+                  this.clickTimer = null;
+                  $("#jquery_jplayer_1").data("jPlayer").play(time);
+              }, 250);
+          }
+      }
+  },
+  clickTimeOffset(e) {
+      var parrentOffset = $(".waveform").offset().left;
+      var offset = e.pageX - parrentOffset;
+      var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
+      var time = duration * (offset / 400);
+
+      return time;
+  },
+  show() {
+      document.querySelector('.waveform').classList.remove("hidden")
+  },
+  hide() {
+      document.querySelector('.waveform').classList.add("hidden")
+  }
 }
 
-function ClickTimeOffset(e)
-{
-    var parrentOffset = $(".waveform").offset().left;
-    var offset = e.pageX - parrentOffset;
-    var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
-    var time = duration * (offset / 400);
-
-    return time;
-}
-
-function ShowWaveform()
-{
-    $('.waveform').css('visibility', 'visible');
-}
-
-function HideWaveform()
-{
-    $('.waveform').css('visibility', 'hidden');
-}
 <?php
     } ?>
 

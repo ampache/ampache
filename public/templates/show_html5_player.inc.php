@@ -207,10 +207,10 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         if (AmpConfig::get('waveform') && !$is_share) {
                             echo "var waveformobj = '';";
                             if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
-                                echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
+                                echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:waveformHandler.click(' + currentjpitem.attr('data-media_id') + ', waveformHandler.clickTimeOffset(event));\">';";
                             }
                             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
-                            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
+                            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"waveformHandler.show();\">';";
                             if (AmpConfig::get('waveform')) {
                                 echo "waveformobj += '</a>';";
                             }
@@ -239,7 +239,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                 }
             });
             <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
-            HideWaveform();
+            waveformHandler.hide();
             <?php } ?>
 
             if (brkey != '') {

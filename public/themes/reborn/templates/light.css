@@ -619,9 +619,16 @@ div.jp-interface.vizualizer {
 }
 
 #replaygainbtn.enabled {
-    box-shadow: 0px 1px 0px 0px orange
+    box-shadow: 0px 1px 0px 0px orange;
 }
 
+.waveform {
+    visibility: visible !important;
+}
+
+.waveform.hidden {
+    visibility: hidden !important;
+}
 /* ------------------------
    Other
    ------------------------ */

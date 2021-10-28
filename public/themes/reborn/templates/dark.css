@@ -2,7 +2,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version.waveform 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -613,9 +613,16 @@ div.jp-interface.vizualizer {
 }
 
 #replaygainbtn.enabled {
-    box-shadow: 0px 1px 0px 0px orange
+    box-shadow: 0px 1px 0px 0px orange;
 }
 
+.waveform {
+    visibility: visible !important;
+}
+
+.waveform.hidden {
+    visibility: hidden !important;
+}
 /* --------------------------
    Other
    -------------------------- */
