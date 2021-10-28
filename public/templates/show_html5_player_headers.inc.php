@@ -173,53 +173,51 @@ function initAudioContext()
     }
 }
 
-function isVisualizerEnabled()
-{
-    return ($('#uberviz').css('visibility') == 'visible');
-}
+var visualizerHandler = {
+    initialized: false,
+    enabled: false,
 
-var vizInitialized = false;
-function ShowVisualizer()
-{
-    let selector = '#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist'
-    if (isVisualizerEnabled()) {
-        $('#equalizer').css('visibility', 'hidden');
-        $(selector).removeClass('vizualizer')
-    } else {
-        // Resource not yet initialized? Do it.
-        if (!vizInitialized) {
-            if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
-                UberVizMain.init();
-                vizInitialized = true;
-                AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
+    showVisualizer() {
+        let selector = '#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist'
+        if (this.enabled) {
+            this.enabled = false
+            $('#equalizer').css('visibility', 'hidden')
+            $(selector).removeClass('vizualizer')
+        } else {
+            // Resource not yet initialized? Do it.
+            if (!this.initialized) {
+                if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
+                    UberVizMain.init();
+                    this.initialized = true;
+                    AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
+                }
+            }
+            if (this.initialized) {
+                this.enabled = true
+                $(selector).addClass('vizualizer')
+            } else {
+                alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
             }
         }
-        if (vizInitialized) {
-            $(selector).addClass('vizualizer')
-        } else {
-            alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
+    },
+
+    showVisualizerFullScreen() {
+      if (!this.enabled) {
+          this.showVisualizer()
+      }
+
+      var element = document.getElementById("viz");
+      if (element.requestFullscreen) {
+          element.requestFullscreen()
+      } else {
+          alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
+      }
+    },
+
+    showEqualizer(){
+        if (this.enabled) {
+            document.querySelector('#equalizer').classList.toggle("vizualizer")
         }
-    }
-}
-
-function ShowVisualizerFullScreen()
-{
-    if (!isVisualizerEnabled()) {
-        ShowVisualizer();
-    }
-
-    var element = document.getElementById("viz");
-    if (element.requestFullscreen) {
-        element.requestFullscreen()
-    } else {
-        alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
-    }
-}
-
-function ShowEqualizer()
-{
-    if (isVisualizerEnabled()) {
-        document.querySelector('#equalizer').classList.toggle("vizualizer")
     }
 }
 
