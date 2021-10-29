@@ -1953,7 +1953,7 @@ abstract class Catalog extends database_object
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
             // don't echo useless info when using api
-            if ($info['change'] && (!$api)) {
+            if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if (array_key_exists($type, $info['element'])) {
                     $change = explode(' --> ', (string)$info['element'][$type]);
                     $result = (int)$change[1];
