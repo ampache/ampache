@@ -2247,8 +2247,6 @@ abstract class Catalog extends database_object
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
             }
-        } else {
-            debug_event(__CLASS__, "$song->file : no differences found", 5);
         }
 
         // If song rating tag exists and is well formed (array user=>rating), update it
@@ -2310,8 +2308,6 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
             }
             Video::update_video_counts($video->id);
-        } else {
-            debug_event(__CLASS__, $video->file . " : no differences found", 5);
         }
         // lets always update the time when you update
         $update_time = time();
