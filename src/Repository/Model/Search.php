@@ -848,7 +848,7 @@ class Search extends playlist_object
         }
 
         // Verify the type
-        $search_type = $data['type'] ?? 'song';
+        $search_type = $data['type'] ?? '';
         switch ($search_type) {
             case 'album':
             case 'artist':
