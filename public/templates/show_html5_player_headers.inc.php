@@ -378,7 +378,7 @@ var broadcastHandler = {
         this.brconn.close();
       }
       this.brconn = null;
-    }
+    },
 
     startListening(broadcast_id) {
       this.listen();
