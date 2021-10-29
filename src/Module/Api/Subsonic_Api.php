@@ -983,7 +983,9 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        $username = (string)filter_var($input['username'], FILTER_SANITIZE_STRING) ?? (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username = isset($_REQUEST['username'])
+            ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
+            : (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user     = User::get_from_username((string)$username);
         $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
 
