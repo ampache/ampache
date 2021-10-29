@@ -255,7 +255,7 @@ class Rating extends database_object
         if ($allow_group_disks) {
             $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
         }
-        $sql .= " WHERE `object_type` = ?";
+        $sql .= " WHERE `object_type` = '$type'";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -290,7 +290,7 @@ class Rating extends database_object
         $sql .= " LIMIT $limit";
         //debug_event(self::class, 'get_highest ' . $sql, 5);
 
-        $db_results = Dba::read($sql, array($type));
+        $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
