@@ -233,7 +233,6 @@ class Rating extends database_object
         if (!$row) {
             return null;
         }
-
         $rating = (double)$row['rating'];
         parent::add_to_cache($key, $this->id, array($rating));
 
