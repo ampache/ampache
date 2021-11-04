@@ -201,6 +201,7 @@ class Random
 
         switch ($type) {
             case 'song':
+            case 'video':
                 return $results;
             case 'album':
                 $songs = array();
@@ -238,8 +239,8 @@ class Random
         $fuzzy_size = 0;
         $time_total = 0;
         $fuzzy_time = 0;
-        $size_limit = array_key_exists('size_limit', $data);
-        $length     = array_key_exists('length', $data);
+        $size_limit = (array_key_exists('size_limit', $data) && $data['size_limit'] > 0);
+        $length     = (array_key_exists('length', $data) && $data['length'] > 0);
         while ($row = Dba::fetch_assoc($db_results)) {
             // If size limit is specified
             if ($size_limit) {

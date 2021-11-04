@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,9 +44,11 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
+        SongRepositoryInterface $songRepository,
         VideoRepositoryInterface $videoRepository
     ) {
         $this->ui              = $ui;
+        $this->songRepository  = $songRepository;
         $this->videoRepository = $videoRepository;
     }
 
@@ -55,6 +58,25 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
         // We need to add them to the active playlist
         if (!empty($objectIds)) {
+            switch ($_REQUEST['type']) {
+                case 'album':
+                    $songs = array();
+                    foreach ($objectIds as $object_id) {
+                        $songs = array_merge($songs, $this->songRepository->getByAlbum($object_id));
+                    }
+                    $objectIds = $songs;
+                    break;
+                case 'artist':
+                    $songs = array();
+                    foreach ($objectIds as $object_id) {
+                        $songs = array_merge($songs, $this->songRepository->getAllByArtist($object_id));
+                    }
+                    $objectIds = $songs;
+                    break;
+                case 'song':
+                case 'video':
+                    break;
+            } // end switch type
             foreach ($objectIds as $object_id) {
                 Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
