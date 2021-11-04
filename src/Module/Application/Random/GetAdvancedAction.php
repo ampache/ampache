@@ -60,25 +60,16 @@ final class GetAdvancedAction implements ApplicationActionInterface
         if (!empty($objectIds)) {
             switch ($_REQUEST['type']) {
                 case 'album':
-                    $songs = array();
-                    foreach ($objectIds as $object_id) {
-                        $songs = array_merge($songs, $this->songRepository->getByAlbum($object_id));
-                    }
-                    $objectIds = $songs;
-                    break;
                 case 'artist':
-                    $songs = array();
-                    foreach ($objectIds as $object_id) {
-                        $songs = array_merge($songs, $this->songRepository->getAllByArtist($object_id));
-                    }
-                    $objectIds = $songs;
-                    break;
                 case 'song':
+                    $object_type = 'song';
+                    break;
                 case 'video':
+                    $object_type = 'video';
                     break;
             } // end switch type
             foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, $object_type);
             }
         }
 
