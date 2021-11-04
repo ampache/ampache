@@ -29,6 +29,9 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
+/** @var array $object_ids */
+
+$web_path     = AmpConfig::get('web_path');
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
@@ -37,12 +40,11 @@ $random_type  = (in_array($get_type, array('song', 'album', 'artist', 'video')))
     ? $get_type
     : null;
 if (!$random_type) {
-    header("Location: " . AmpConfig::get('web_path') . '/random.php?action=get_advanced&type=song');
+    header("Location: " . $web_path . '/random.php?action=get_advanced&type=song');
 }
-$web_path = AmpConfig::get('web_path');
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
 
 <div class="category_options">
     <a class="category <?php echo ($random_type == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
@@ -55,7 +57,9 @@ $web_path = AmpConfig::get('web_path');
         <?php echo T_('Artists'); ?>
     </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($random_type == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
+        <a class="category <?php echo ($random_type == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
+            <?php echo T_('Videos'); ?>
+        </a>
     <?php } ?>
 </div>
 
@@ -127,7 +131,7 @@ $web_path = AmpConfig::get('web_path');
 <?php
     if (isset($object_ids) && is_array($object_ids)) {
         $browse = new Browse();
-        $browse->set_type('song');
+        $browse->set_type($random_type);
         $browse->save_objects($object_ids);
         $browse->show_objects();
         $browse->store();

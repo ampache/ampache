@@ -168,12 +168,18 @@ class Waveform
 
             return false;
         }
-        // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
-        $path .= ($object_type == 'podcast_episode')
-            ? "/waveform/" . $object_type . '/' . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/"
-            : "/waveform/" . substr($object_id, -1) . '/' . substr($object_id, -2, -1) . "/";
+        // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
+        $dir1 = substr($object_id, -1, 1);
+        $dir2 = substr($object_id, -2, 1);
+        $path .=  "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
+        }
+        $old_target_file = $path . "/waveform/" . $dir1 . '/' . $dir2 . "/" . $object_id . ".png";
+        // move the song waveforms to the right place if they're in the old path
+        if ($object_type == 'song' && is_file($old_target_file)) {
+            rename($old_target_file, $path . $object_id . ".png");
+            debug_event(self::class, 'Moved: ' . $object_id . ' from: {' . $old_target_file . '}' . ' to: {' . $path . $object_id . ".png" . '}', 5);
         }
 
         return $path . $object_id . ".png";

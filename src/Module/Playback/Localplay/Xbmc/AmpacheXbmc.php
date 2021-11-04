@@ -220,24 +220,17 @@ class AmpacheXbmc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @param string $user_id
      * @return boolean
      */
-    public function set_active_instance($uid, $user_id = '')
+    public function set_active_instance($uid)
     {
         $user = Core::get_global('user');
         if ($user == '') {
             return false;
         }
-        // Not an admin? bubkiss!
-        if (!$user->has_access('100')) {
-            $user_id = $user->id ?? 0;
-        }
-        $user_id = $user_id ?? $user->id;
-
-        Preference::update('xbmc_active', $user_id, $uid);
+        Preference::update('xbmc_active', $user->id, $uid);
         AmpConfig::set('xbmc_active', $uid, true);
-        debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user_id, 5);
+        debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     } // set_active_instance

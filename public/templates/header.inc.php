@@ -336,7 +336,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 var object_type = iinfo[0];
                 var object_id = iinfo[1];
 
-                if (action !== undefined && action !== '') {
+                if (typeof action !== 'undefined' && action !== '') {
                     ajaxPut(jsAjaxUrl + action + '&object_type=' + object_type + '&object_id=' + object_id);
                 } else {
                     showPlaylistDialog(this, object_type, object_id);

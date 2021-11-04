@@ -669,16 +669,27 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $db_results = Dba::read($sql, array($song_id));
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
-            if (AmpConfig::get('show_played_times')) {
-                $results['total_count'] = $results['total_count'];
-            }
-            if (AmpConfig::get('show_skipped_times')) {
-                $results['total_skip'] = $results['total_skip'];
-            }
-
             parent::add_to_cache('song', $song_id, $results);
 
             return $results;
+        }
+
+        return false;
+    }
+
+    /**
+     * has_id
+     * @param int|string $song_id
+     * @return boolean
+     */
+    public static function has_id($song_id)
+    {
+
+        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
+        $db_results = Dba::read($sql, array($song_id));
+        $results    = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            return true;
         }
 
         return false;
@@ -2026,7 +2037,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-
         $type = $this->type;
 
         $this->format();

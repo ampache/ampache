@@ -164,7 +164,7 @@ class Api
     public static $version = '5.1.0';
 
     /**
-     * @var string $version
+     * @var string $version_numeric
      */
     public static $version_numeric = '510000';
 

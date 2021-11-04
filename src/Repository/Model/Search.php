@@ -658,6 +658,7 @@ class Search extends playlist_object
      */
     private function artist_types()
     {
+        $user_id = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
@@ -713,6 +714,7 @@ class Search extends playlist_object
      */
     private function album_types()
     {
+        $user_id = $this->search_user->id ?? 0;
         $t_album_data = T_('Album Data');
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
@@ -848,7 +850,8 @@ class Search extends playlist_object
         }
 
         // Verify the type
-        switch ($data['type']) {
+        $search_type = $data['type'] ?? '';
+        switch ($search_type) {
             case 'album':
             case 'artist':
             case 'video':
@@ -1651,7 +1654,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id` FROM `album`' : 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`',
+            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`' : 'SELECT `album`.`id` AS `id` FROM `album`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

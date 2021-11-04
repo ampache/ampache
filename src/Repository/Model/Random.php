@@ -201,6 +201,7 @@ class Random
 
         switch ($type) {
             case 'song':
+            case 'video':
                 return $results;
             case 'album':
                 $songs = array();
@@ -238,8 +239,8 @@ class Random
         $fuzzy_size = 0;
         $time_total = 0;
         $fuzzy_time = 0;
-        $size_limit = array_key_exists('size_limit', $data);
-        $length     = array_key_exists('length', $data);
+        $size_limit = (array_key_exists('size_limit', $data) && $data['size_limit'] > 0);
+        $length     = (array_key_exists('length', $data) && $data['length'] > 0);
         while ($row = Dba::fetch_assoc($db_results)) {
             // If size limit is specified
             if ($size_limit) {
@@ -353,6 +354,18 @@ class Random
                         : " WHERE " . $search_info['where_sql'];
                 }
                 $sql .= " GROUP BY `$type`.`id`";
+                break;
+            case 'video':
+                $sql = "SELECT `video`.`id`, `video`.`size`, `video`.`time` FROM `video` ";
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                $sql .= $catalog_disable_sql;
+                if (!empty($search_info['where_sql'])) {
+                    $sql .= ($catalog_disable)
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
+                }
                 break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";

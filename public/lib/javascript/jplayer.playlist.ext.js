@@ -3,37 +3,37 @@
 "use strict";
 
 jPlayerPlaylist.prototype._createListItem = function(media) {
-        var self = this;
+    var self = this;
 
-        // Wrap the <li> contents in a <div>
-        var attrClass = " class=\"playlist-row ";
-        if ("string" === typeof media.attrClass) {
-            attrClass += media.attrClass;
-        }
-        attrClass += "\" ";
+    // Wrap the <li> contents in a <div>
+    var attrClass = " class=\"playlist-row ";
+    if (typeof media.attrClass === "string") {
+        attrClass += media.attrClass;
+    }
+    attrClass += "\" ";
 
-        var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" " +
-                "data-poster=\"" + media.poster + "\" data-media_id=\"" + media.media_id + "\" data-album_id=\"" + media.album_id + "\" data-artist_id=\"" + media.artist_id + "\" " +
-                "data-replaygain_track_gain=\"" + media.replaygain_track_gain + "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak + "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain + "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak + "\" " +
-                "data-r128_track_gain=\"" + media.r128_track_gain + "\" data-r128_album_gain=\"" + media.r128_album_gain + "\"" +
-                "><div>";
+    var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" " +
+            "data-poster=\"" + media.poster + "\" data-media_id=\"" + media.media_id + "\" data-album_id=\"" + media.album_id + "\" data-artist_id=\"" + media.artist_id + "\" " +
+            "data-replaygain_track_gain=\"" + media.replaygain_track_gain + "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak + "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain + "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak + "\" " +
+            "data-r128_track_gain=\"" + media.r128_track_gain + "\" data-r128_album_gain=\"" + media.r128_album_gain + "\"" +
+            "><div>";
 
-        // Create image
-        // listItem += "<img class=\"cover\" src=\"" + media.cover + "\" alt=\"" + media.title + "\"/>";
+    // Create image
+    // listItem += "<img class=\"cover\" src=\"" + media.cover + "\" alt=\"" + media.title + "\"/>";
 
-        // Create remove control
-        listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
+    // Create remove control
+    listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
 
-        // Create song links
-        if (media["media_id"]) {
-            listItem += "<span class=\"jp-free-media menu\"><a></a></span>";
-        }
+    // Create song links
+    if (media["media_id"]) {
+        listItem += "<span class=\"jp-free-media menu\"><a></a></span>";
+    }
 
-        // The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
-        listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
-        listItem += "</div></li>";
+    // The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
+    listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
+    listItem += "</div></li>";
 
-        return listItem;
+    return listItem;
 };
 
 // TODO: take away the playlistName
@@ -56,18 +56,14 @@ jPlayerPlaylist.prototype.rmTrack = function(trackId, playlistName) {
 
 jPlayerPlaylist.prototype.remove = function(index) {
     var self = this;
-
     // console.log("remove track " + index);
-
     if (typeof index === "undefined") {
         this._initPlaylist([]);
         this._refresh(function() {
             $(self.cssSelector.jPlayer).jPlayer("clearMedia");
-            self.scan();
         });
         return true;
     } else {
-
         if (this.removing) {
             return false;
         } else {
@@ -131,33 +127,18 @@ jPlayerPlaylist.prototype.scan = function() {
     var self = this;
     var isAdjusted = false;
 
-    var replace = [];
-    var maxName = 0; // maximum value that name attribute assumes.
     $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-        if ($(value).attr("name") > maxName) {
-            maxName = parseInt($(value).attr("name"), 10);
-        }
-    });
-
-    var diffCount = maxName + 1 !== $(this.cssSelector.playlist + " ul li").length; // Flag that marks if the number of "ul li" elements doesn't match the name attribute counting.
-
-    $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-        if (!diffCount) {
-            replace[index] = self.original[$(value).attr("name")];
+        if (parseInt($(value).attr("name"), 10) !== index) {
+            // set the self.current index value if it's going to change.
             if (!isAdjusted && self.current === parseInt($(value).attr("name"), 10)) {
                 self.current = index;
                 isAdjusted = true;
             }
         }
+        // Reset the index order (name in the html) to match your jplayer playlist
         $(value).attr("name", index);
     });
-
-    if (!diffCount) {
-        this.original = replace;
-        this._originalPlaylist();
-    }
 };
-
 
 jPlayerPlaylist.prototype.setCurrent = function(current) {
     this.current = current;
@@ -191,23 +172,24 @@ jPlayerPlaylist.prototype._highlight = function(index) {
     }
 };
 
-jPlayerPlaylist.prototype.addAfter = function(media, idx) {
-    if (idx >= this.original.length || idx < 0) {
+jPlayerPlaylist.prototype.addAfter = function(media, index) {
+    if (index >= this.original.length || index < 0) {
         console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
         return;
     }
 
     $(this.cssSelector.playlist + " ul")
-        .find("li[name=" + idx + "]").after(this._createListItem(media)).end()
+        .find("li[name=" + index + "]").after(this._createListItem(media)).end()
         .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
 
     this._updateControls();
-    this.original.splice(idx + 1, 0, media);
-    this.playlist.splice(idx + 1, 0, media);
+    this.original.splice(index + 1, 0, media);
+    this.playlist.splice(index + 1, 0, media);
 
     if(this.original.length === 1) {
         this.select(0);
     }
+    this.scan();
 };
 
 $(document).ready(function() {

@@ -100,8 +100,8 @@ database_password = password
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
 ;
 ; There are a ton of options but you'll probably want one of these.
-; "utf8_unicode_ci"        = Regular unicode (3 bytes per character)
-; "utf8mb4_unicode_ci"     = 4 bytes per character
+; "utf8_unicode_ci" = Regular unicode (3 bytes per character)
+; "utf8mb4_unicode_ci" = 4 bytes per character
 ; "utf8mb4_unicode_520_ci" = Supports more characters and is based on UCA 5.2.0 weight keys
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
 ; DEFAULT: "utf8mb4_unicode_ci"
@@ -456,7 +456,7 @@ default_auth_level = "guest"
 ; This allows custom times to decide when a track is skipped
 ; Allows an integer to denote seconds, or a float to denote percentage
 ; POSSIBLE VALUES:
-; 20  = 20 seconds.
+; 20 = 20 seconds.
 ; 0.3 = 30%
 ; DEFAULT: 20
 ;skip_timer = 20
@@ -1083,29 +1083,30 @@ registration_mandatory_fields = "fullname"
 ; transcode_TYPE = {allowed|required|false}
 ; DEFAULT: "false"
 ;;; Audio
-;transcode_m4a  = "allowed"
+;transcode_m4a = "allowed"
 ;transcode_flac = "required"
-;transcode_mpc  = "required"
-;transcode_ogg  = "required"
-;transcode_oga  = "required"
+;transcode_mpc = "required"
+;transcode_ogg = "required"
+;transcode_oga = "required"
 ;transcode_opus = "required"
-;transcode_wav  = "required"
-;transcode_wma  = "required"
-;transcode_aif  = "required"
+;transcode_wav = "required"
+;transcode_wma = "required"
+;transcode_aif = "required"
 ;transcode_aiff = "required"
-;transcode_ape  = "required"
-;transcode_shn  = "required"
-transcode_mp3  = "allowed"
+;transcode_ape = "required"
+;transcode_shn = "required"
+transcode_mp3 = "allowed"
 ;;; Video
-;transcode_avi  = "allowed"
-;transcode_mkv  = "allowed"
-;transcode_mpg  = "allowed"
+;transcode_avi = "allowed"
+;transcode_flv = "allowed"
+;transcode_mkv = "allowed"
+;transcode_mpg = "allowed"
 ;transcode_mpeg = "allowed"
-;transcode_m4v  = "allowed"
-;transcode_mp4  = "allowed"
-;transcode_mov  = "allowed"
-;transcode_wmv  = "allowed"
-;transcode_ogv  = "allowed"
+;transcode_m4v = "allowed"
+;transcode_mp4 = "allowed"
+;transcode_mov = "allowed"
+;transcode_wmv = "allowed"
+;transcode_ogv = "allowed"
 ;transcode_divx = "allowed"
 ;transcode_m2ts = "allowed"
 ;transcode_webm = "allowed"
@@ -1227,24 +1228,24 @@ send_full_stream = "webplayer"
 ; web server or to make sure that clients get files quickly.
 ; Execute "php bin/cli run:cacheProcess" to process these files.
 ; DEFAULT: "false"
-;cache_m4a  = "true"
+;cache_m4a = "true"
 ;cache_flac = "true"
-;cache_mpc  = "true"
-;cache_ogg  = "true"
-;cache_oga  = "true"
+;cache_mpc = "true"
+;cache_ogg = "true"
+;cache_oga = "true"
 ;cache_opus = "true"
-;cache_wav  = "true"
-;cache_wma  = "true"
-;cache_aif  = "true"
+;cache_wav = "true"
+;cache_wma = "true"
+;cache_aif = "true"
 ;cache_aiff = "true"
-;cache_ape  = "true"
-;cache_shn  = "true"
-;cache_mp3  = "true"
+;cache_ape = "true"
+;cache_shn = "true"
+;cache_mp3 = "true"
 
 ; REMOTE CATALOGS ONLY
 ; Enabling cache_remote on remote catalogs will cache every file on the remote server
 ; DEFAULT: "false"
-;cache_remote  = "true"
+;cache_remote = "true"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #

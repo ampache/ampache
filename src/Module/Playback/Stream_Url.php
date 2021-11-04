@@ -89,6 +89,11 @@ class Stream_Url extends MemoryObject
                                 $results['type'] = 'video';
                             }
                             break;
+                        case 'demo_id':
+                            if (make_bool($value)) {
+                                $results['type'] = 'democratic';
+                            }
+                            break;
                     }
                     if (!empty($value)) {
                         $results[$key] = $value;
@@ -149,5 +154,25 @@ class Stream_Url extends MemoryObject
         }
 
         return $url;
+    }
+
+    /**
+     * get_title
+     * Get a translated title for the webplayer
+     * @param string $url
+     * @return string
+     */
+    public static function get_title($url): string
+    {
+        $urlinfo = self::parse($url);
+        $type    = $urlinfo['type'] ?? 'URL-Add';
+        switch ($type) {
+            case 'random':
+                return T_('Random');
+            case 'democratic':
+                return T_('Democratic');
+            default:
+                return $type;
+        }
     }
 }

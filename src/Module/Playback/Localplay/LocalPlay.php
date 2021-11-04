@@ -556,11 +556,11 @@ class LocalPlay
     /**
      * set_active_instance
      * This sets the active instance of the Localplay controller
-     * @param $instance
+     * @param $instance_id
      */
-    public function set_active_instance($instance)
+    public function set_active_instance($instance_id)
     {
-        $this->_player->set_active_instance($instance);
+        $this->_player->set_active_instance($instance_id);
     } // set_active_instance
 
     /**

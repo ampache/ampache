@@ -973,7 +973,6 @@ class Subsonic_Xml_Data
         $amp_id = self::getAmpacheId($artist_id);
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
-        debug_event(self::class, $amp_id . ' artist ' . $artist_id . ' DaTA Runtime Error ' . print_r($data, true), 5);
         $xdir->addAttribute('id', (string)$artist_id);
         $xdir->addAttribute('parent', (string)$data['catalog_id']);
         $xdir->addAttribute('name', (string)$data['f_name']);

@@ -1,5 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var AV = (window.AV);
+(function (global){
+var AV = (typeof window !== "undefined" ? window['AV'] : typeof global !== "undefined" ? global['AV'] : null);
 var tables = require('./tables');
 
 var ADTSDemuxer = AV.Demuxer.extend(function() {
@@ -80,6 +81,10 @@ var ADTSDemuxer = AV.Demuxer.extend(function() {
         }
     };
 });
+
+module.exports = ADTSDemuxer;
+
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./tables":11}],2:[function(require,module,exports){
 /*
  * AAC.js - Advanced Audio Coding decoder in JavaScript
@@ -186,8 +191,8 @@ CCEElement.prototype = {
                                 if (t !== 0) {
                                     var s = 1;
                                     t = gain += t;
-                                    if (sign) {
-                                        s -= 2 * (t * 0x1);
+                                    if (!sign) {
+                                        s -= 2 * (t & 0x1);
                                         t >>>= 1;
                                     }
                                     gainCache = Math.pow(scale, -t) * s;
@@ -323,6 +328,7 @@ CPEElement.prototype.decode = function(stream, config) {
 module.exports = CPEElement;
 
 },{"./ics":8}],4:[function(require,module,exports){
+(function (global){
 /*
  * AAC.js - Advanced Audio Coding decoder in JavaScript
  * Created by Devon Govett
@@ -343,7 +349,7 @@ module.exports = CPEElement;
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-var AV          = (window.AV);
+var AV          = (typeof window !== "undefined" ? window['AV'] : typeof global !== "undefined" ? global['AV'] : null);
 var ADTSDemuxer = require('./adts_demuxer');
 var ICStream    = require('./ics');
 var CPEElement  = require('./cpe');
@@ -413,10 +419,8 @@ var AACDecoder = AV.Decoder.extend(function() {
                 if (stream.read(1)) // dependsOnCoreCoder
                     stream.advance(14); // coreCoderDelay
 
-                if (stream.read(1)) {
-                    // extensionFlag
-                    if (this.config.profile > 16) {
-                        // error resiliant profile
+                if (stream.read(1)) { // extensionFlag
+                    if (this.config.profile > 16) { // error resiliant profile
                         this.config.sectionDataResilience = stream.read(1);
                         this.config.scalefactorResilience = stream.read(1);
                         this.config.spectralDataResilience = stream.read(1);
@@ -437,9 +441,6 @@ var AACDecoder = AV.Decoder.extend(function() {
         }
 
         this.filter_bank = new FilterBank(false, this.config.chanConfig);
-        this.ics = new ICStream(this.config);
-        this.cpe = new CPEElement(this.config);
-        this.cce = new CCEElement(this.config);
     };
 
     const SCE_ELEMENT = 0,
@@ -472,7 +473,7 @@ var AACDecoder = AV.Decoder.extend(function() {
                 // single channel and low frequency elements
                 case SCE_ELEMENT:
                 case LFE_ELEMENT:
-                    var ics = this.ics;
+                    var ics = new ICStream(this.config);
                     ics.id = id;
                     elements.push(ics);
                     ics.decode(stream, config, false);
@@ -480,7 +481,7 @@ var AACDecoder = AV.Decoder.extend(function() {
 
                 // channel pair element
                 case CPE_ELEMENT:
-                    var cpe = this.cpe;
+                    var cpe = new CPEElement(this.config);
                     cpe.id = id;
                     elements.push(cpe);
                     cpe.decode(stream, config);
@@ -488,7 +489,7 @@ var AACDecoder = AV.Decoder.extend(function() {
 
                 // channel coupling element
                 case CCE_ELEMENT:
-                    var cce = this.cce;
+                    var cce = new CCEElement(this.config);
                     this.cces.push(cce);
                     cce.decode(stream, config);
                     break;
@@ -564,8 +565,7 @@ var AACDecoder = AV.Decoder.extend(function() {
         for (var i = 0; i < elements.length && channel < channels; i++) {
             var e = elements[i];
 
-            if (e instanceof ICStream) {
-                // SCE or LFE element
+            if (e instanceof ICStream) { // SCE or LFE element
                 channel += this.processSingle(e, channel);
             } else if (e instanceof CPEElement) {
                 this.processPair(e, channel);
@@ -767,6 +767,7 @@ var AACDecoder = AV.Decoder.extend(function() {
 
 module.exports = AACDecoder;
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./adts_demuxer":1,"./cce":2,"./cpe":3,"./filter_bank":6,"./ics":8,"./tables":11}],5:[function(require,module,exports){
 /*
  * AAC.js - Advanced Audio Coding decoder in JavaScript
@@ -2900,7 +2901,7 @@ ICStream.prototype = {
                         var energy = 0;
 
                         for (var k = 0; k < width; k++) {
-                            this.randomState *= 1664525 + 1013904223;
+                            this.randomState = (this.randomState * (1664525 + 1013904223))|0;
                             data[off + k] = this.randomState;
                             energy += data[off + k] * data[off + k];
                         }
