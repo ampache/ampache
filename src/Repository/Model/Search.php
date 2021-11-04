@@ -1595,7 +1595,9 @@ class Search extends playlist_object
                     $where[] = "`album`.`id` IN (SELECT song.album FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.object_type = 'song' WHERE `playlist`.`name` $sql_match_operator '$input')";
                     break;
                 case 'playlist':
-                    $where[] = "`album`.`id` IN (SELECT song.album FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` $sql_match_operator '$input')";
+                    $where[] = ($sql_match_operator == '1')
+                        ? "`album`.`id` IN (SELECT song.album FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = '$input')"
+                        : "`album`.`id` NOT IN (SELECT song.album FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = '$input')";
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
