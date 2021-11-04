@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
+/** @var array $object_ids */
 
 $web_path     = AmpConfig::get('web_path');
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -130,7 +131,7 @@ if (!$random_type) {
 <?php
     if (isset($object_ids) && is_array($object_ids)) {
         $browse = new Browse();
-        $browse->set_type('song');
+        $browse->set_type($random_type);
         $browse->save_objects($object_ids);
         $browse->show_objects();
         $browse->store();

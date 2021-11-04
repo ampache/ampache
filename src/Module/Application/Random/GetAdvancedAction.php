@@ -54,22 +54,15 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds = Random::advanced($_REQUEST['type'], $_POST);
+        $objectIds   = Random::advanced($_REQUEST['type'], $_POST);
+        $objectType = ($_REQUEST['type'] == 'video')
+            ? 'video'
+            : 'song';
 
         // We need to add them to the active playlist
         if (!empty($objectIds)) {
-            switch ($_REQUEST['type']) {
-                case 'album':
-                case 'artist':
-                case 'song':
-                    $object_type = 'song';
-                    break;
-                case 'video':
-                    $object_type = 'video';
-                    break;
-            } // end switch type
             foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, $object_type);
+                Core::get_global('user')->playlist->add_object($object_id, $objectType);
             }
         }
 
