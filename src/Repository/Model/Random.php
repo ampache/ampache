@@ -355,6 +355,18 @@ class Random
                 }
                 $sql .= " GROUP BY `$type`.`id`";
                 break;
+            case 'video':
+                $sql = "SELECT `video`.`id`, `video`.`size`, `video`.`time` FROM `video` ";
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                $sql .= $catalog_disable_sql;
+                if (!empty($search_info['where_sql'])) {
+                    $sql .= ($catalog_disable)
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
+                }
+                break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 
