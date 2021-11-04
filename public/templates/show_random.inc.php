@@ -42,6 +42,9 @@ $random_type  = (in_array($get_type, array('song', 'album', 'artist', 'video')))
 if (!$random_type) {
     header("Location: " . $web_path . '/random.php?action=get_advanced&type=song');
 }
+$browse_type = ($random_type == 'video')
+    ? 'video'
+    : 'song';
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
@@ -131,7 +134,7 @@ if (!$random_type) {
 <?php
     if (isset($object_ids) && is_array($object_ids)) {
         $browse = new Browse();
-        $browse->set_type($random_type);
+        $browse->set_type($browse_type);
         $browse->save_objects($object_ids);
         $browse->show_objects();
         $browse->store();
