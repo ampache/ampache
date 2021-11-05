@@ -99,7 +99,60 @@ class WriteConfigActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunWritesConfigAndReturnsResponse(): void
+    public function testRunWritesConfigAndReturnsSuccessResponse(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+
+        $web_path = 'some-web-path';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->installationHelper->shouldReceive('write_config')
+            ->with(
+                Mockery::on(function (): bool {
+                    $test_path = __DIR__ . '/../../../../../config/ampache.cfg.php';
+
+                    return file_exists($test_path);
+                })
+            )
+            ->once()
+            ->andReturnTrue();
+
+        $this->responseFactory->shouldReceive('createResponse')
+            ->with(StatusCode::FOUND)
+            ->once()
+            ->andReturn($response);
+
+        $response->shouldReceive('withHeader')
+            ->with(
+                'Location',
+                sprintf('%s/index.php', $web_path)
+            )
+            ->once()
+            ->andReturnSelf();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($web_path);
+
+        $this->assertSame(
+            $response,
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunWritesConfigAndReturnsFailureResponse(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
@@ -138,7 +191,7 @@ class WriteConfigActionTest extends MockeryTestCase
         $response->shouldReceive('withHeader')
             ->with(
                 'Location',
-                sprintf('%s/index.php', $web_path)
+                sprintf('%s/error.php?permission=%s', $web_path, 'config%2Fampache.cfg.php')
             )
             ->once()
             ->andReturnSelf();
