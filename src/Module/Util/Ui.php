@@ -86,6 +86,14 @@ class Ui implements UiInterface
         require_once self::find_template('show_denied.inc.php');
     }
 
+    public function permissionDenied(string $fileName): void
+    {
+        // Clear any buffered crap
+        ob_end_clean();
+        header("HTTP/1.1 403 Permission Denied");
+        require_once self::find_template('show_denied_permission.inc.php');
+    }
+
     /**
      * ajax_include
      *
@@ -531,15 +539,15 @@ class Ui implements UiInterface
 
     public static function show_custom_style()
     {
-        if (AmpConfig::get('custom_login_background')) {
+        if (AmpConfig::get('custom_login_background', false)) {
             echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
         }
 
-        if (AmpConfig::get('custom_login_logo')) {
+        if (AmpConfig::get('custom_login_logo', false)) {
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
