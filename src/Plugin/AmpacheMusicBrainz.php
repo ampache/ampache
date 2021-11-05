@@ -110,9 +110,13 @@ class AmpacheMusicBrainz
     public function load($user)
     {
         $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!array_key_exists('mb_overwrite_name', $data)) {
+            $data['mb_overwrite_name'] = Preference::get_by_user(-1, 'mb_overwrite_name');
+        }
         // overwrite matching MBID artist names
-        $data                 = $user->prefs;
-        $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
+        $this->overwrite_name = (bool)$data['mb_overwrite_name'];
 
         return true;
     } // load
