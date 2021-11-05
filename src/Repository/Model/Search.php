@@ -1589,7 +1589,7 @@ class Search extends playlist_object
                     $where[] = "`album`.`catalog` $sql_match_operator '$input'";
                     break;
                 case 'tag':
-                    $where[] = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
+                    $where[] = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'playlist_name':
                     $where[] = "`album`.`id` IN (SELECT song.album FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.object_type = 'song' WHERE `playlist`.`name` $sql_match_operator '$input')";
@@ -1731,7 +1731,7 @@ class Search extends playlist_object
                     $where[] = "`artist`.`time` $sql_match_operator '$input'";
                     break;
                 case 'tag':
-                    $where[] = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    $where[] = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'rating':
                     // average ratings only
@@ -1990,7 +1990,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
                         $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR (`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
@@ -2003,15 +2003,15 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                     break;
                 case 'tag':
-                    $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'album_tag':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
+                    $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'artist_tag':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN tag on `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
