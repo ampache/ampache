@@ -27,7 +27,6 @@ use Ampache\Module\Util\UiInterface;
 
 define('NO_SESSION', 1);
 $dic = require_once __DIR__ . '/../src/Config/Init.php';
-debug_event('Ampache Error', print_r($_REQUEST, true), 2);
 $dic->get(UiInterface::class)->accessDenied();
 if (array_key_exists('permission', $_REQUEST)) {
     $dic->get(UiInterface::class)->permissionDenied(Core::get_request('permission'));
