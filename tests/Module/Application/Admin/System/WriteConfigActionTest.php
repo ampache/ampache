@@ -120,9 +120,8 @@ class WriteConfigActionTest extends MockeryTestCase
         $this->installationHelper->shouldReceive('write_config')
             ->with(
                 Mockery::on(function (): bool {
-                    $test_path = __DIR__ . '/../../../../../config/ampache.cfg.php';
 
-                    return file_exists($test_path);
+                    return true;
                 })
             )
             ->once()
@@ -173,12 +172,13 @@ class WriteConfigActionTest extends MockeryTestCase
         $this->installationHelper->shouldReceive('write_config')
             ->with(
                 Mockery::on(function ($path): bool {
+                    $test_path = __DIR__ . '/../../../../../config/ampache.cfg.php';
 
                     $this->assertTrue(
                         file_exists(dirname($path))
                     );
 
-                    return true;
+                    return realpath($test_path) === realpath($path);
                 })
             );
 
