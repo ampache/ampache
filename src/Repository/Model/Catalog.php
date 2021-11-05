@@ -780,7 +780,7 @@ abstract class Catalog extends database_object
             $dir_files     = new RecursiveIteratorIterator($catalog_dirs);
             $cache_files   = new RegexIterator($dir_files, '/\.mp3$/i');
             debug_event(__CLASS__, 'cache_catalogs: cleaning old files', 5);
-            foreach($cache_files as $file) {
+            foreach ($cache_files as $file) {
                 $path    = pathinfo($file);
                 $song_id = $path['filename'];
                 if (!Song::has_id($song_id)) {
@@ -3320,7 +3320,7 @@ abstract class Catalog extends database_object
             mkdir(rtrim(trim($path), '/') . '/' . $catalog_id, 0775, true);
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
-        $path .= '/'  . $catalog_id. '/' . substr($object_id, -1, 1) . '/' . substr($object_id, -2, 1) . '/';
+        $path .= '/' . $catalog_id . '/' . substr($object_id, -1, 1) . '/' . substr($object_id, -2, 1) . '/';
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }

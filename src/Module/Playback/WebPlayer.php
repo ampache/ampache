@@ -334,7 +334,7 @@ class WebPlayer
             $json['media_id']   = $media->id;
             $json['media_type'] = $urlinfo['type'];
 
-            //$url .= "&content_length=required";
+        //$url .= "&content_length=required";
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {

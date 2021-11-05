@@ -431,7 +431,7 @@ class Catalog_subsonic extends Catalog
                 } else {
                     try {
                         $filehandle = fopen($target_file, 'w');
-                        $options = array(
+                        $options    = array(
                             CURLOPT_RETURNTRANSFER => 1,
                             CURLOPT_FILE => $filehandle,
                             CURLOPT_TIMEOUT => 0,
