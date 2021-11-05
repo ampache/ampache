@@ -45,12 +45,17 @@ class AssetCache
      */
     public static function get_url(string $url)
     {
-        $originalArray = pathinfo($url);
-        $originalURL   = $url;
-        $originalPath  = self::get_path($originalURL);
+        $originalPath = self::get_path($url);
+        // check your document_root
+        if (!file_exists($originalPath)) {
+            debug_event(self::class, 'Error get_path: ' . $originalPath, 4);
 
-        $cachedURL  = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::CACHETEXT . md5_file(self::get_path($originalURL)) . '.' . $originalArray['extension'];
-        $cachedPath = self::get_path($cachedURL);
+            return $url;
+        }
+
+        $originalArray = pathinfo($url);
+        $cachedURL     = $originalArray['dirname'] . '/' . $originalArray['filename'] . self::CACHETEXT . md5_file($originalPath) . '.' . $originalArray['extension'];
+        $cachedPath    = self::get_path($cachedURL);
 
         if (!file_exists($cachedPath) && !self::copy_file($originalPath)) {
             return $url;
