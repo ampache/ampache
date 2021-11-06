@@ -226,7 +226,7 @@ final class VaInfo implements VaInfoInterface
             } else {
                 $tags = array();
                 foreach ($test_tags as $tag) {
-                    if ($value = $this->_raw['id3v1'][$tag]) {
+                    if (array_key_exists('id3v1', $this->_raw) && $value = $this->_raw['id3v1'][$tag]) {
                         $tags[$tag] = $value;
                     }
                 }
