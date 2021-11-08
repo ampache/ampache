@@ -66,20 +66,19 @@ final class ZipHandler implements ZipHandlerInterface
      */
     public function zip(string $name, array $media_files, bool $flat_path): void
     {
-        $art       = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-        $addart    = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $filter    = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $flat_name = str_replace("/", "_", $name);
-        $arc       = new ZipStream($filter . ".zip");
-        $pl        = '';
-        $options   = [
+        $art     = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart  = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
+        $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $arc     = new ZipStream($filter . ".zip");
+        $pl      = '';
+        $options = [
             'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
         ];
         
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
                 $dirname = ($flat_path)
-                    ? $flat_name
+                    ? $filter
                     : dirname($file);
                 $artpath = $dirname . '/' . $art;
                 $folder  = explode('/', $dirname)[substr_count($dirname, "/", 0)];
@@ -105,10 +104,10 @@ final class ZipHandler implements ZipHandlerInterface
             }
         }
         if (!empty($pl)) {
-            $arc->addFile($name . ".m3u", $pl, $options);
+            $arc->addFile($filter . ".m3u", $pl, $options);
         }
         $this->logger->debug(
-            'Sending Zip ' . $name,
+            'Sending Zip ' . $filter,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
