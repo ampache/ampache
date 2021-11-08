@@ -89,15 +89,12 @@ final class DefaultAction implements ApplicationActionInterface
 
         $media_ids    = [];
         $default_name = 'Unknown';
-        $action       = (string) scrub_in(Core::get_request('action'));
-        $object_type  = ($action == 'browse')
-            ? (string) scrub_in(Core::get_request('action'))
-            : $action;
         $name         = $default_name;
-
-        if ($object_type == 'browse') {
-            $object_type = Core::get_request('type');
-        }
+        $action       = (string) scrub_in(Core::get_request('action'));
+        $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
+        $object_type  = ($action == 'browse')
+            ? (string) scrub_in(Core::get_request('type'))
+            : $action;
 
         if (!$this->zipHandler->isZipable($object_type)) {
             $this->logger->error(
@@ -185,7 +182,7 @@ final class DefaultAction implements ApplicationActionInterface
         $song_files = $this->getMediaFiles($media_ids);
         if (is_array($song_files['0'])) {
             set_memory_limit($song_files['1'] + 32);
-            $this->zipHandler->zip($name, $song_files['0']);
+            $this->zipHandler->zip($name, $song_files['0'], $flat_path);
         }
 
         return null;
