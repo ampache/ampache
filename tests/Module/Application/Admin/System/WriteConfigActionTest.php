@@ -120,7 +120,6 @@ class WriteConfigActionTest extends MockeryTestCase
         $this->installationHelper->shouldReceive('write_config')
             ->with(
                 Mockery::on(function (): bool {
-
                     return true;
                 })
             )
