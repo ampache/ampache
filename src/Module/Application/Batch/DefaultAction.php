@@ -213,10 +213,9 @@ final class DefaultAction implements ApplicationActionInterface
                 $media = $this->modelFactory->createSong((int) $element);
             }
             if ($media->enabled) {
-                $media->format();
-                $total_size .= sprintf("%.2f", ($media->size / 1048576));
-                $dirname = '';
-                $parent  = $media->get_parent();
+                $total_size = $total_size + (int)$media->size;
+                $dirname    = '';
+                $parent     = $media->get_parent();
                 if ($parent != null) {
                     $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
                     $pobj       = new $class_name($parent['object_id']);
