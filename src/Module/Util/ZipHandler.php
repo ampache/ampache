@@ -66,19 +66,20 @@ final class ZipHandler implements ZipHandlerInterface
      */
     public function zip(string $name, array $media_files, bool $flat_path): void
     {
-        $art     = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-        $addart  = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $arc     = new ZipStream($filter . ".zip");
-        $pl      = '';
-        $options = [
+        $art       = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart    = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
+        $filter    = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $flat_name = str_replace("/", "_", $name);
+        $arc       = new ZipStream($filter . ".zip");
+        $pl        = '';
+        $options   = [
             'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
         ];
         
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
                 $dirname = ($flat_path)
-                    ? $name
+                    ? $flat_name
                     : dirname($file);
                 $artpath = $dirname . '/' . $art;
                 $folder  = explode('/', $dirname)[substr_count($dirname, "/", 0)];
