@@ -693,6 +693,8 @@ final class Session implements SessionInterface
                     $auth                             = true;
                 }
             }
+            // make sure the global is set too
+            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
             // make sure the prefs are set too
             Preference::init();
         }
