@@ -805,12 +805,6 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
 
-; Subsonic clients all seem to ignore the download method and use stream.
-; This setting will cache Subsonic stream actions which will not record as a play
-; Make sure scrobble is set in Subsonic and Ampache will use that for play recording
-; DEFAULT: "true"
-subsonic_stream_scrobble = "true"
-
 ;#########################################################
 ; Debugging                                              #
 ;#########################################################

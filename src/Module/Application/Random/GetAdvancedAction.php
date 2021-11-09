@@ -55,7 +55,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $objectIds   = Random::advanced($_REQUEST['type'], $_POST);
-        $objectType = ($_REQUEST['type'] == 'video')
+        $objectType  = ($_REQUEST['type'] == 'video')
             ? 'video'
             : 'song';
 

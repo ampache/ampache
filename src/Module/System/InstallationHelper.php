@@ -628,16 +628,20 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * Write new configuration into the current configuration file by keeping old values.
      * @param string $current_file_path
-     * @throws Exception
      */
-    public function write_config(string $current_file_path): void
+    public function write_config(string $current_file_path): bool
     {
+        if (!is_writeable($current_file_path)) {
+            return false;
+        }
         $new_data = $this->generate_config(parse_ini_file($current_file_path));
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
         fwrite($handle, $new_data, strlen((string) $new_data));
         fclose($handle);
+
+        return true;
     }
 
     /**

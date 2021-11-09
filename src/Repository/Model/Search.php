@@ -76,9 +76,10 @@ class Search extends playlist_object
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                $this->$key = ($key == 'rules')
+                    ? json_decode((string)$value, true)
+                    : $value;
             }
-            $this->rules = json_decode((string)$this->rules, true);
         }
         $this->date = time();
 
@@ -658,7 +659,7 @@ class Search extends playlist_object
      */
     private function artist_types()
     {
-        $user_id = $this->search_user->id ?? 0;
+        $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
@@ -714,7 +715,7 @@ class Search extends playlist_object
      */
     private function album_types()
     {
-        $user_id = $this->search_user->id ?? 0;
+        $user_id      = $this->search_user->id ?? 0;
         $t_album_data = T_('Album Data');
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);

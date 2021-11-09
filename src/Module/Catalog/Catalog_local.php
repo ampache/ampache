@@ -1210,9 +1210,9 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
             $file_exists = ($target_file !== false && is_file($target_file));
+            $song        = new Song($song_id);
             // check the old path too
             if ($file_exists) {
-                $song = new Song($song_id);
                 // get the time for the cached file and compare
                 $vainfo = $this->getUtilityFactory()->createVaInfo(
                     $target_file,
@@ -1223,7 +1223,9 @@ class Catalog_local extends Catalog
                     $this->rename_pattern
                 );
                 if ($song->time > 0 && !$vainfo->check_time($song->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->file, 5);
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->id, 5);
+                    unlink($target_file);
+                    $file_exists = false;
                 }
             }
             if (!$file_exists) {

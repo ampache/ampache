@@ -684,7 +684,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function has_id($song_id)
     {
-
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
         $results    = Dba::fetch_assoc($db_results);

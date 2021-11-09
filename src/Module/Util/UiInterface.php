@@ -54,6 +54,11 @@ interface UiInterface
     public function accessDenied(string $error = 'Access Denied'): void;
 
     /**
+     * Displays an error page when you can't write the config
+     */
+    public function permissionDenied(string $fileName): void;
+
+    /**
      * shows a confirmation of an action
      *
      * @param string $title The Title of the message

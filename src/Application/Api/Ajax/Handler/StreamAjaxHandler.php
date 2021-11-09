@@ -112,7 +112,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
             case 'basket':
                 // Go ahead and see if we should clear the playlist here or not,
                 // we might not actually clear it in the session.
-                if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
+                if ((array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear') || (AmpConfig::get('playlist_method') == 'clear')) {
                     define('NO_SONGS', '1');
                     ob_start();
                     require_once Ui::find_template('rightbar.inc.php');
@@ -120,7 +120,9 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
+                $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
+                    ? AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
+                    : AmpConfig::get('web_path') . '/stream.php?action=basket';
                 $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
                 break;
             default:

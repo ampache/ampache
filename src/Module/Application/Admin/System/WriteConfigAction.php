@@ -65,12 +65,18 @@ final class WriteConfigAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->installationHelper->write_config(__DIR__ . '/../../../../../config/ampache.cfg.php');
+        if ($this->installationHelper->write_config(__DIR__ . '/../../../../../config/ampache.cfg.php')) {
+            return $this->responseFactory->createResponse(StatusCode::FOUND)
+                ->withHeader(
+                    'Location',
+                    sprintf('%s/index.php', $this->configContainer->getWebPath())
+                );
+        }
 
         return $this->responseFactory->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                sprintf('%s/index.php', $this->configContainer->getWebPath())
+                sprintf('%s/error.php?permission=%s', $this->configContainer->getWebPath(), rawurlencode('config/ampache.cfg.php'))
             );
     }
 }

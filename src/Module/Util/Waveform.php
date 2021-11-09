@@ -171,7 +171,7 @@ class Waveform
         // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
         $dir1 = substr($object_id, -1, 1);
         $dir2 = substr($object_id, -2, 1);
-        $path .=  "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
+        $path .= "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
