@@ -76,9 +76,10 @@ class Search extends playlist_object
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                $this->$key = ($key == 'rules')
+                    ? json_decode((string)$value, true)
+                    : $value;
             }
-            $this->rules = json_decode((string)$this->rules, true);
         }
         $this->date = time();
 
