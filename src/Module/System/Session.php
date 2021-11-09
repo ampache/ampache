@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -68,8 +69,8 @@ final class Session implements SessionInterface
         if (!defined('NO_SESSION') && $useAuth) {
             $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
-            if (!static::exists('interface', $sessionData)) {
-                if (!static::auth_remember()) {
+            if (!self::exists('interface', $sessionData)) {
+                if (!self::auth_remember()) {
                     $this->authenticationManager->logout($sessionData);
 
                     return false;
@@ -77,7 +78,7 @@ final class Session implements SessionInterface
             }
 
             // This actually is starting the session
-            static::check();
+            self::check();
 
             // Create the new user
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
@@ -98,16 +99,16 @@ final class Session implements SessionInterface
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
             $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
-            if (!static::exists('interface', $_COOKIE[$sessionName])) {
-                static::create_cookie();
-                static::create($auth);
-                static::check();
+            if (!self::exists('interface', $_COOKIE[$sessionName])) {
+                self::create_cookie();
+                self::create($auth);
+                self::check();
                 $GLOBALS['user']           = new User('-1');
                 $GLOBALS['user']->username = $auth['username'];
                 $GLOBALS['user']->fullname = $auth['fullname'];
                 $GLOBALS['user']->access   = (int) ($auth['access']);
             } else {
-                static::check();
+                self::check();
                 if ($_SESSION['userdata']['username']) {
                     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
                 } else {
@@ -367,9 +368,12 @@ final class Session implements SessionInterface
 
         // No cookie no go!
         if (!filter_has_var(INPUT_COOKIE, $session_name)) {
-            debug_event(self::class, 'Existing session NOT found', 5);
+            if (!self::auth_remember()) {
+                debug_event(self::class, 'Existing session NOT found', 5);
 
-            return false;
+                return false;
+            }
+            debug_event(self::class, 'auth_remember session found', 5);
         }
 
         $cookie_options = [
@@ -689,6 +693,10 @@ final class Session implements SessionInterface
                     $auth                             = true;
                 }
             }
+            // make sure the global is set too
+            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            // make sure the prefs are set too
+            Preference::init();
         }
 
         return $auth;
