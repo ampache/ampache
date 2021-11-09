@@ -791,6 +791,7 @@ class Ui implements UiInterface
             case 'unique_playlist':
             case 'tadb_overwrite_name':
             case 'mb_overwrite_name':
+            case 'subsonic_always_download':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
