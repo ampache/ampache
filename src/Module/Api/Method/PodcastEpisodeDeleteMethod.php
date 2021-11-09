@@ -70,9 +70,7 @@ final class PodcastEpisodeDeleteMethod
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Catalog::can_remove($episode, $user->id)) {
-            Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
-
+        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
 
