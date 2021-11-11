@@ -70,8 +70,9 @@ final class Session implements SessionInterface
             $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
             if (!self::exists('interface', $sessionData)) {
-                $this->authenticationManager->logout($sessionData);
                 if (!self::auth_remember()) {
+                    $this->authenticationManager->logout($sessionData);
+
                     return false;
                 }
             }
@@ -184,7 +185,7 @@ final class Session implements SessionInterface
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
             'expires' => -1,
-            'path' => '/',
+            'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
@@ -377,13 +378,14 @@ final class Session implements SessionInterface
 
         $cookie_options = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
-            'path' => '/',
+            'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
         ];
 
-        // Set up the cookie params before we start the session. This is vital
+        // Set up the cookie params before we start the session.
+        // This is vital
         session_set_cookie_params($cookie_options);
         session_write_close();
 
@@ -569,7 +571,7 @@ final class Session implements SessionInterface
         if (isset($_SESSION)) {
             $cookie_options = [
                 'expires' => (int)AmpConfig::get('cookie_life'),
-                'path' => '/',
+                'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Strict'
@@ -578,7 +580,7 @@ final class Session implements SessionInterface
         } else {
             $cookie_options = [
                 'lifetime' => (int)AmpConfig::get('cookie_life'),
-                'path' => '/',
+                'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Strict'
@@ -607,7 +609,7 @@ final class Session implements SessionInterface
         $session_name   = AmpConfig::get('session_name');
         $cookie_options = [
             'expires' => (int)AmpConfig::get('cookie_life'),
-            'path' => '/',
+            'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict'
