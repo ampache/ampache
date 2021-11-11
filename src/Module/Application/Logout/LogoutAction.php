@@ -49,27 +49,27 @@ final class LogoutAction implements ApplicationActionInterface
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
-        $this->logger       = $logger;
+        $this->logger                = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $session_name   = $this->configContainer->getSessionName();
+        $sessionName    = $this->configContainer->get('session_name');
         $cookie_options = [
             'expires' => -1,
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'path' => (string)$this->configContainer->get('cookie_path'),
+            'domain' => (string)$this->configContainer->get('cookie_domain'),
+            'secure' => make_bool($this->configContainer->get('cookie_secure')),
             'samesite' => 'Strict'
         ];
         $this->logger->debug(
-            sprintf('LogoutAction: {%d}', $session_name),
+            'LogoutAction: ' . $sessionName,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         // To end a legitimate session, just call logout.
-        setcookie($session_name . '_remember', null, $cookie_options);
+        setcookie($sessionName . '_remember', null, $cookie_options);
 
-        $this->authenticationManager->logout($session_name, false);
+        $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '', false);
 
         return null;
     }
