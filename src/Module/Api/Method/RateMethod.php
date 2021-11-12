@@ -37,7 +37,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class RateMethod
 {
-    private const ACTION = 'rate';
+    public const ACTION = 'rate';
 
     /**
      * rate

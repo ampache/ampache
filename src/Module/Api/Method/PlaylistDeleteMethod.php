@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistDeleteMethod
 {
-    private const ACTION = 'playlist_delete';
+    public const ACTION = 'playlist_delete';
 
     /**
      * playlist_delete

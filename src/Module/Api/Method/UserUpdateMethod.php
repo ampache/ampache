@@ -40,7 +40,7 @@ use Ampache\Module\Util\Mailer;
  */
 final class UserUpdateMethod
 {
-    private const ACTION = 'user_update';
+    public const ACTION = 'user_update';
 
     /**
      * user_update

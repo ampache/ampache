@@ -39,7 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumSongsMethod
 {
-    private const ACTION = 'album_songs';
+    public const ACTION = 'album_songs';
 
     /**
      * album_songs

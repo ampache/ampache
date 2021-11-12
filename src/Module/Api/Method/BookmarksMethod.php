@@ -38,6 +38,8 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class BookmarksMethod
 {
+    public const ACTION = 'bookmarks';
+
     /**
      * bookmarks
      * MINIMUM_API_VERSION=5.0.0

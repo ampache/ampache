@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistAddSongMethod
 {
-    private const ACTION = 'playlist_add_song';
+    public const ACTION = 'playlist_add_song';
 
     /**
      * playlist_add_song

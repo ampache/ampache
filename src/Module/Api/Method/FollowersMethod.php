@@ -38,7 +38,7 @@ use Ampache\Repository\UserFollowerRepositoryInterface;
  */
 final class FollowersMethod
 {
-    private const ACTION = 'followers';
+    public const ACTION = 'followers';
 
     /**
      * followers

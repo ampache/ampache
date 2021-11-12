@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdatePodcastMethod
 {
-    private const ACTION = 'update_podcast';
+    public const ACTION = 'update_podcast';
 
     /**
      * update_podcast

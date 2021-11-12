@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Podcast_Episode;
  */
 final class StreamMethod
 {
-    private const ACTION = 'stream';
+    public const ACTION = 'stream';
 
     /**
      * stream

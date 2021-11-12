@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogMethod
 {
-    private const ACTION = 'catalog';
+    public const ACTION = 'catalog';
 
     /**
      * catalog

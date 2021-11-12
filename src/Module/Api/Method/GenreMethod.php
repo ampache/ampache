@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class GenreMethod
 {
-    private const ACTION = 'genre';
+    public const ACTION = 'genre';
 
     /**
      * genre

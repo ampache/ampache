@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class LocalplaySongsMethod
 {
-    private const ACTION = 'localplay_songs';
+    public const ACTION = 'localplay_songs';
 
     /**
      * localplay_songs

@@ -36,7 +36,7 @@ use Ampache\Module\Util\Recommendation;
  */
 final class UpdateArtistInfoMethod
 {
-    private const ACTION = 'update_artist_info';
+    public const ACTION = 'update_artist_info';
 
     /**
      * update_artist_info

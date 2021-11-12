@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistCreateMethod
 {
-    private const ACTION = 'playlist_create';
+    public const ACTION = 'playlist_create';
 
     /**
      * playlist_create

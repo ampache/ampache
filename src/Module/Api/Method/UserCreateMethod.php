@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class UserCreateMethod
 {
-    private const ACTION = 'user_create';
+    public const ACTION = 'user_create';
 
     /**
      * user_create

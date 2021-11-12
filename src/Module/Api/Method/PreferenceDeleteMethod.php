@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceDeleteMethod
 {
-    private const ACTION = 'preference_delete';
+    public const ACTION = 'preference_delete';
 
     /**
      * preference_delete

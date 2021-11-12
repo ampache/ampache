@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class DemocraticMethod
 {
-    private const ACTION = 'democratic';
+    public const ACTION = 'democratic';
 
     /**
      * democratic

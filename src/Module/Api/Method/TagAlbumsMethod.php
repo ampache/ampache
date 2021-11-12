@@ -34,7 +34,7 @@ use Ampache\Module\System\Session;
  */
 final class TagAlbumsMethod
 {
-    private const ACTION = 'tag_albums';
+    public const ACTION = 'tag_albums';
 
     /**
      * tag_albums

@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class ShareDeleteMethod
 {
-    private const ACTION = 'share_delete';
+    public const ACTION = 'share_delete';
 
     /**
      * share_delete

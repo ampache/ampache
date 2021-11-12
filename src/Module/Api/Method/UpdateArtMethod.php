@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdateArtMethod
 {
-    private const ACTION = 'update_art';
+    public const ACTION = 'update_art';
 
     /**
      * update_art

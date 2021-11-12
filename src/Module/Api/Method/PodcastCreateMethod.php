@@ -40,7 +40,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastCreateMethod
 {
-    private const ACTION = 'podcast_create';
+    public const ACTION = 'podcast_create';
 
     /**
      * podcast_create

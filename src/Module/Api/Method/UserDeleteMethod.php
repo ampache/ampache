@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class UserDeleteMethod
 {
-    private const ACTION = 'user_delete';
+    public const ACTION = 'user_delete';
 
     /**
      * user_delete

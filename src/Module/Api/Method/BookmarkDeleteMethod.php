@@ -39,7 +39,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class BookmarkDeleteMethod
 {
-    private const ACTION = 'bookmark_delete';
+    public const ACTION = 'bookmark_delete';
 
     /**
      * bookmark_delete

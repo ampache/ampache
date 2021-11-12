@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
  */
 final class DeletedPodcastEpisodesMethod
 {
-    private const ACTION = 'deleted_podcast_episodes';
+    public const ACTION = 'deleted_podcast_episodes';
 
     /**
      * deleted_podcast_episodes

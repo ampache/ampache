@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class GetArtMethod
 {
-    private const ACTION = 'get_art';
+    public const ACTION = 'get_art';
 
     /**
      * get_art

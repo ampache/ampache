@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class LicensesMethod
 {
-    private const ACTION = 'licenses';
+    public const ACTION = 'licenses';
 
     /**
      * licenses

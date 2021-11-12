@@ -41,7 +41,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class BookmarkCreateMethod
 {
-    private const ACTION = 'bookmark_create';
+    public const ACTION = 'bookmark_create';
 
     /**
      * bookmark_create

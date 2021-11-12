@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class ArtistMethod
 {
-    private const ACTION = 'artist';
+    public const ACTION = 'artist';
 
     /**
      * artist

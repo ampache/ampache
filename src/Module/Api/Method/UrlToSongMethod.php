@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class UrlToSongMethod
 {
-    private const ACTION = 'url_to_song';
+    public const ACTION = 'url_to_song';
 
     /**
      * url_to_song

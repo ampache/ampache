@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastEditMethod
 {
-    private const ACTION = 'podcast_edit';
+    public const ACTION = 'podcast_edit';
 
     /**
      * podcast_edit

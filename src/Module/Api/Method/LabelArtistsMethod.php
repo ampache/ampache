@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class LabelArtistsMethod
 {
-    private const ACTION = 'label_artists';
+    public const ACTION = 'label_artists';
 
     /**
      * label_artists

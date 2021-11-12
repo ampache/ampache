@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class LiveStreamMethod
 {
-    private const ACTION = 'live_stream';
+    public const ACTION = 'live_stream';
 
     /**
      * live_stream

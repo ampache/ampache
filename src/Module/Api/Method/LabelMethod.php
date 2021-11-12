@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class LabelMethod
 {
-    private const ACTION = 'label';
+    public const ACTION = 'label';
 
     /**
      * label

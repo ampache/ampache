@@ -35,7 +35,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 
 final class ArtistAlbumsMethod
 {
-    private const ACTION = 'artist_albums';
+    public const ACTION = 'artist_albums';
 
     /**
      * artist_albums

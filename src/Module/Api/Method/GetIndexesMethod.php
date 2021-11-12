@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class GetIndexesMethod
 {
-    private const ACTION = 'get_indexes';
+    public const ACTION = 'get_indexes';
 
     /**
      * get_indexes

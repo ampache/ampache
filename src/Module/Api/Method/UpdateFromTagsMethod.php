@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdateFromTagsMethod
 {
-    private const ACTION = 'update_from_tags';
+    public const ACTION = 'update_from_tags';
 
     /**
      * update_from_tags

@@ -45,7 +45,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
  */
 final class StatsMethod
 {
-    private const ACTION = 'stats';
+    public const ACTION = 'stats';
 
     /**
      * stats

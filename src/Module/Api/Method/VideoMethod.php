@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class VideoMethod
 {
-    private const ACTION = 'video';
+    public const ACTION = 'video';
 
     /**
      * video

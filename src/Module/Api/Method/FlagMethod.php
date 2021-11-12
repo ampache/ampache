@@ -37,7 +37,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class FlagMethod
 {
-    private const ACTION = 'flag';
+    public const ACTION = 'flag';
 
     /**
      * flag

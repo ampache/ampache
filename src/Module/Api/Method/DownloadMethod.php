@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class DownloadMethod
 {
-    private const ACTION = 'download';
+    public const ACTION = 'download';
 
     /**
      * download

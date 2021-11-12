@@ -36,7 +36,7 @@ use Ampache\Module\User\Following\UserFollowTogglerInterface;
  */
 final class ToggleFollowMethod
 {
-    private const ACTION = 'toggle_follow';
+    public const ACTION = 'toggle_follow';
 
     /**
      * toggle_follow

@@ -34,7 +34,7 @@ use Ampache\Module\System\Session;
  */
 final class TagMethod
 {
-    private const ACTION = 'tag';
+    public const ACTION = 'tag';
 
     /**
      * tag

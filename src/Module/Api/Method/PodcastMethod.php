@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastMethod
 {
-    private const ACTION = 'podcast';
+    public const ACTION = 'podcast';
 
     /**
      * podcast

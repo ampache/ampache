@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastEpisodeDeleteMethod
 {
-    private const ACTION = 'podcast_episode_delete';
+    public const ACTION = 'podcast_episode_delete';
 
     /**
      * podcast_episode_delete

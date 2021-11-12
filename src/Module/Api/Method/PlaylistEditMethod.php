@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistEditMethod
 {
-    private const ACTION = 'playlist_edit';
+    public const ACTION = 'playlist_edit';
 
     /**
      * playlist_edit

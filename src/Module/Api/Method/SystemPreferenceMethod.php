@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class SystemPreferenceMethod
 {
-    private const ACTION = 'system_preference';
+    public const ACTION = 'system_preference';
 
     /**
      * system_preference

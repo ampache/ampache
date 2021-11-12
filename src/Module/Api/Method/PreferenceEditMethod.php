@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceEditMethod
 {
-    private const ACTION = 'preference_edit';
+    public const ACTION = 'preference_edit';
 
     /**
      * preference_edit

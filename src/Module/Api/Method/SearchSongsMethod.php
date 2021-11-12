@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SearchSongsMethod
 {
-    private const ACTION = 'search_songs';
+    public const ACTION = 'search_songs';
 
     /**
      * search_songs

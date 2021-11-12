@@ -44,7 +44,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class ShareCreateMethod
 {
-    private const ACTION = 'share_create';
+    public const ACTION = 'share_create';
 
     /**
      * share_create

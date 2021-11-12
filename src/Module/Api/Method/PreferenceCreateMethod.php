@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceCreateMethod
 {
-    private const ACTION = 'preference_create';
+    public const ACTION = 'preference_create';
 
     /**
      * preference_create

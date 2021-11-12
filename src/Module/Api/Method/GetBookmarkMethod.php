@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class GetBookmarkMethod
 {
-    private const ACTION = 'get_bookmark';
+    public const ACTION = 'get_bookmark';
 
     /**
      * get_bookmark

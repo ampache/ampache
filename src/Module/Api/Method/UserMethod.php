@@ -39,7 +39,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class UserMethod
 {
-    private const ACTION = 'user';
+    public const ACTION = 'user';
 
     /**
      * user

@@ -40,7 +40,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogFileMethod
 {
-    private const ACTION = 'catalog_file';
+    public const ACTION = 'catalog_file';
 
     /**
      * catalog_file

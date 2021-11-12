@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class ShareMethod
 {
-    private const ACTION = 'share';
+    public const ACTION = 'share';
 
     /**
      * share

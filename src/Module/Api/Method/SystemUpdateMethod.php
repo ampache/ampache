@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SystemUpdateMethod
 {
-    private const ACTION = 'system_update';
+    public const ACTION = 'system_update';
 
     /**
      * system_update

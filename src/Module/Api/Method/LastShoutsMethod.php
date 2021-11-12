@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class LastShoutsMethod
 {
-    private const ACTION = 'last_shouts';
+    public const ACTION = 'last_shouts';
 
     /**
      * last_shouts

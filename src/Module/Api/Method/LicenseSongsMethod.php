@@ -39,7 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 final class LicenseSongsMethod
 {
-    private const ACTION = 'license_songs';
+    public const ACTION = 'license_songs';
 
     /**
      * license_songs

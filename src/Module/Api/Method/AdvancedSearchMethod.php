@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class AdvancedSearchMethod
 {
-    private const ACTION = 'advanced_search';
+    public const ACTION = 'advanced_search';
 
     /**
      * advanced_search

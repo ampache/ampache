@@ -34,7 +34,7 @@ use Ampache\Module\System\Session;
  */
 final class GoodbyeMethod
 {
-    private const ACTION = 'goodbye';
+    public const ACTION = 'goodbye';
 
     /**
      * goodbye
