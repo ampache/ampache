@@ -32,8 +32,8 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.1.1-develop';
-    private const CONFIG_VERSION = '57';
+    private const VERSION        = '5.1.1-release';
+    private const CONFIG_VERSION = '58';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -79,7 +79,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                     $protocol,
                     $_SERVER['SERVER_NAME'],
                     $_SERVER['SERVER_PORT'],
-                    $results['web_path']
+                    $results['web_path'] ?? ''
                 );
             }
             $results['http_port'] = (!empty($results['http_port']))
@@ -96,7 +96,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 $protocol,
                 $results['http_host'],
                 $port,
-                $results['web_path']
+                $results['web_path'] ?? ''
             );
             $results['site_charset'] = $results['site_charset'] ?? 'UTF-8';
             if (!isset($results['max_upload_size'])) {

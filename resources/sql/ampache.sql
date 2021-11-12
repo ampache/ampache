@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Oct 25, 2021 at 03:53 PM
+-- Generation Time: Nov 12, 2021 at 10:45 AM
 -- Server version: 10.5.12-MariaDB-0+deb11u1
--- PHP Version: 8.0.11
+-- PHP Version: 8.0.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -822,7 +822,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   PRIMARY KEY (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -932,7 +932,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'),
 (161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'),
 (162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'),
-(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse');
+(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'),
+(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic');
 
 -- --------------------------------------------------------
 
@@ -1375,7 +1376,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '510004'),
+('db_version', '510005'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1647,7 +1648,12 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 160, '1'),
 (-1, 115, '0'),
 (-1, 158, '6'),
-(-1, 159, '');
+(-1, 159, ''),
+(-1, 160, '1'),
+(-1, 161, '0'),
+(-1, 162, '0'),
+(-1, 163, '0'),
+(-1, 164, '0');
 
 -- --------------------------------------------------------
 

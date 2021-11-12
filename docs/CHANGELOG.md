@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache Develop
+## Ampache 5.1.1
 
 ### Added
 
@@ -9,6 +9,8 @@
 * Add transcode_flv to config
 * Add playlist, playlist_name to album searches
 * Send the user to an error page when the config wasn't written
+* Config version 58
+  * Removed subsonic_stream_scrobble
 * Database 5.1.0 Build 5:
   * Add `subsonic_always_download` to preferences
 
@@ -44,15 +46,19 @@
 * Setting cookies and session details on remember_me sessions
 * Set the catalog parameters for seafile catalogs
 * Database updates for php8
+* Remember me session cookie error when recreating a new session
+* ampache.sql script had AUTO_INCREMENT data it didn't need
 * Subsonic
   * Get the artists for a single catalog correctly
   * Browse highest used the sql differently to the UI
 
-### API develop
+## API 5.1.1
 
 ### Fixed
 
 * Access to podcast_episode_delete
+* stats calls with an offest and limit
+* advanced_search calls with an offset and limit
 
 ## Ampache 5.1.0-release
 

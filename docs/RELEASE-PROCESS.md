@@ -1,5 +1,10 @@
 # Ampache Release Guide
 
+## Release Naming
+
+* The minimum supported php version (currently 7.4) will always be released as `ampache-x.x.x_all.zip`
+* Additional php versions will be tagged by binary name e.g. `ampache-5.x.x_all_php8.0.zip`, `ampache-5.x.x_all_php8.1.zip`
+
 ## Official Release Process
 
 It's easy to use a program like github desktop to compare between branches.
@@ -22,8 +27,8 @@ It's easy to use a program like github desktop to compare between branches.
   * add new ampache.sql
 * Commit merge for new version (e.g. 5.x.x) but **do not push!**
 * Browse changes to check for things you've missed in the changelog
-* Add pchart to composer
-  * composer require --update-no-dev szymach/c-pchart "3.*"
+* ~~Add pchart to composer~~ (part of the dev requirements so it's included in releases)
+  * ~~composer require --update-no-dev szymach/c-pchart "3.*"~~
 * ~~Run composer install~~ (adding pchart updates everything)
 * Check `public/lib/components/prettyphoto/images` exists
 * Get missing map files
@@ -31,6 +36,20 @@ It's easy to use a program like github desktop to compare between branches.
 ```shell
 wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.js.map
 wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.css.map
+```
+
+* Reset the vendor folder completely and pull it all down
+
+```shell
+rm -rf ./vendor
+rm composer.lock
+```
+
+* Install packages for all supported php releases (ONE at a time obviously)
+
+```shell
+php7.4 /usr/local/bin/composer install
+php8.0 /usr/local/bin/composer install
 ```
 
 * Remove broken symbolic links
@@ -47,7 +66,8 @@ read -p "Enter Ampache Version: " a_version
 * Create a zip package named "ampache-5.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
+rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
+rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_php8.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
@@ -55,6 +75,7 @@ rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./.git/* --exclud
 ```shell
 rm -rf /var/www/html && ln -s /var/www/ampache/public /var/www/html
 rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all.zip -d /var/www/ampache/
+rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all_php8.0.zip -d /var/www/ampache/
 ```
 
 * FIXME This might be where unit testing would be helpful.
@@ -67,7 +88,7 @@ rm -rf /var/www/ampache && unzip -o ../ampache-${a_version}_all.zip -d /var/www/
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-${a_version}_all.zip
+md5sum ../ampache-${a_version}*.zip
 ```
 
 ## Post release
