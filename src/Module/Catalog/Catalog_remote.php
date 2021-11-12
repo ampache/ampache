@@ -397,10 +397,6 @@ class Catalog_remote extends Catalog
 
             return false;
         }
-        // make a folder per catalog
-        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
-            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
-        }
         $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
         $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 

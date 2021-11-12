@@ -1138,10 +1138,6 @@ class Catalog_local extends Catalog
 
             return false;
         }
-        // make a folder per catalog
-        if (!is_dir(rtrim(trim($path), '/') . '/' . $this->id)) {
-            mkdir(rtrim(trim($path), '/') . '/' . $this->id, 0777, true);
-        }
         $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
         $params = array($this->id);
         $join   = 'AND (';
@@ -1206,9 +1202,16 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
+            $target_file     = Catalog::get_cache_path($song_id, $this->id);
+            $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
+            if (is_file($old_target_file)) {
+                // check for the old path first
+                rename($old_target_file, $target_file);
+                debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
+            }
+            $file_exists = ($target_file !== false && is_file($target_file));
             $song        = new Song($song_id);
-            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
-            $file_exists = is_file($target_file);
+            // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
                 $vainfo = $this->getUtilityFactory()->createVaInfo(
@@ -1220,10 +1223,13 @@ class Catalog_local extends Catalog
                     $this->rename_pattern
                 );
                 if ($song->time > 0 && !$vainfo->check_time($song->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->file, 5);
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->id, 5);
+                    unlink($target_file);
+                    $file_exists = false;
                 }
             }
             if (!$file_exists) {
+                // transcode to the new path
                 Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }

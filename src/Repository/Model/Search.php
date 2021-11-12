@@ -76,9 +76,10 @@ class Search extends playlist_object
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                $this->$key = ($key == 'rules')
+                    ? json_decode((string)$value, true)
+                    : $value;
             }
-            $this->rules = json_decode((string)$this->rules, true);
         }
         $this->date = time();
 
@@ -658,6 +659,7 @@ class Search extends playlist_object
      */
     private function artist_types()
     {
+        $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
@@ -713,6 +715,7 @@ class Search extends playlist_object
      */
     private function album_types()
     {
+        $user_id      = $this->search_user->id ?? 0;
         $t_album_data = T_('Album Data');
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
@@ -744,6 +747,13 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
+
+        $t_playlists = T_('Playlists');
+        $playlists   = Playlist::get_playlist_array($user_id);
+        if (!empty($playlists)) {
+            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
+        }
+        $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
@@ -848,7 +858,8 @@ class Search extends playlist_object
         }
 
         // Verify the type
-        switch ($data['type']) {
+        $search_type = $data['type'] ?? '';
+        switch ($search_type) {
             case 'album':
             case 'artist':
             case 'video':
@@ -1434,7 +1445,7 @@ class Search extends playlist_object
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `album`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
                     $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
@@ -1573,17 +1584,25 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
                     $where[] = "`album`.`catalog` $sql_match_operator '$input'";
                     break;
                 case 'tag':
-                    $where[] = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='album' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $where[] = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
+                    break;
+                case 'playlist_name':
+                    $where[] = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator '$input')";
+                    break;
+                case 'playlist':
+                    $where[] = ($sql_match_operator == '1')
+                        ? "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = '$input')"
+                        : "`album`.`id` NOT IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = '$input')";
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
+                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') AS `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image_height':
                 case 'image_width':
@@ -1651,7 +1670,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id` FROM `album`' : 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`',
+            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`' : 'SELECT `album`.`id` AS `id` FROM `album`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -1713,12 +1732,12 @@ class Search extends playlist_object
                     $where[] = "`artist`.`time` $sql_match_operator '$input'";
                     break;
                 case 'tag':
-                    $where[] = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='artist' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $where[] = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
                     $where[] = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
@@ -1732,7 +1751,7 @@ class Search extends playlist_object
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
-                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
+                    $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'artist') AS `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image_height':
                 case 'image_width':
@@ -1858,7 +1877,7 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
                     $where[]                = "`artist_catalog`.`catalog_id` $sql_match_operator '$input'";
@@ -1972,7 +1991,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
                         $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR (`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
@@ -1985,15 +2004,15 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                     break;
                 case 'tag':
-                    $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'album_tag':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='album' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'artist_tag':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` WHERE `tag_map`.`object_type`='artist' AND `tag_map`.`tag_id` IN (SELECT `tag`.`id` FROM `tag` WHERE `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input'))";
+                    $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
@@ -2111,7 +2130,7 @@ class Search extends playlist_object
                 case 'rating':
                     // average ratings only
                     $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS `average_rating` on `average_rating`.`object_id` = `song`.`id` ";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `song`.`id` ";
                     break;
                 case 'favorite':
                     $where[] = "`song`.`title` $sql_match_operator '$input' AND `favorite_song_$user_id`.`user` = $user_id AND `favorite_song_$user_id`.`object_type` = 'song'";
@@ -2244,17 +2263,17 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) as `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'recent_updated':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
-                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
+                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
                     $where[] = "`song`.`mbid` $sql_match_operator '$input'";
@@ -2269,8 +2288,8 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate':
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
-                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album` on `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `song`.`artist` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `song`.`id` = `dupe_search1`.`dupe_id1`";
-                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album` on `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `song`.`artist` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`id` = `dupe_search2`.`dupe_id2`";
+                    $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `song`.`artist` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `song`.`id` = `dupe_search1`.`dupe_id1`";
+                    $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `song`.`artist` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 case 'metadata':
                     $field = (int)$rule[3];

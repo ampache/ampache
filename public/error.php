@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,22 +20,16 @@
  *
  */
 
-namespace Ampache\Module\Util;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\UiInterface;
 
-interface ZipHandlerInterface
-{
-    /**
-     * Check that an object type is allowed to be zipped.
-     */
-    public function isZipable(string $object_type): bool;
+/** @var \Psr\Container\ContainerInterface $dic */
 
-    /**
-     * takes array of full paths to medias
-     * zips them and sends them
-     *
-     * @param string $name name of the zip file to be created
-     * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
-     * @param bool $flat_path put the files into a single folder
-     */
-    public function zip(string $name, array $media_files, bool $flat_path): void;
+define('NO_SESSION', 1);
+$dic = require_once __DIR__ . '/../src/Config/Init.php';
+$dic->get(UiInterface::class)->accessDenied();
+if (array_key_exists('permission', $_REQUEST)) {
+    $dic->get(UiInterface::class)->permissionDenied(Core::get_request('permission'));
+} else {
+    $dic->get(UiInterface::class)->accessDenied();
 }

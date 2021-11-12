@@ -27,8 +27,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class LogoutAction implements ApplicationActionInterface
 {
@@ -38,27 +40,36 @@ final class LogoutAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        LoggerInterface $logger
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
+        $this->logger                = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $sessionName    = $this->configContainer->get('session_name');
         $cookie_options = [
             'expires' => -1,
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
-            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'path' => (string)$this->configContainer->get('cookie_path'),
+            'domain' => (string)$this->configContainer->get('cookie_domain'),
+            'secure' => make_bool($this->configContainer->get('cookie_secure')),
             'samesite' => 'Strict'
         ];
+        $this->logger->debug(
+            'LogoutAction: ' . $sessionName,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
         // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, $cookie_options);
+        setcookie($sessionName . '_remember', null, $cookie_options);
 
-        $this->authenticationManager->logout('', false);
+        $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '', false);
 
         return null;
     }

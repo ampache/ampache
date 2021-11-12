@@ -305,7 +305,7 @@ class Stream_Playlist
                     $url['title'] = 'Random URL';
                     break;
                 default:
-                    $url['title'] = 'URL-Add';
+                    $url['title'] = Stream_Url::get_title($url);
                     $url['time']  = -1;
                     break;
             }
@@ -437,8 +437,8 @@ class Stream_Playlist
         foreach ($urls as $url) {
             $this->_add_url(new Stream_Url(array(
                 'url' => $url,
-                'title' => 'URL-Add',
-                'author' => 'Ampache',
+                'title' => Stream_Url::get_title($url),
+                'author' => T_('Ampache'),
                 'time' => '-1'
             )));
         }

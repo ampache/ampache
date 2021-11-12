@@ -852,7 +852,8 @@ class Preference extends database_object
             'yourls_use_idn' => T_('YOURLS use IDN'),
             'yourls_api_key' => T_('YOURLS API key'),
             'tadb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
-            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid')
+            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
+            'subsonic_always_download' => T_('Force Subsonic streams to download. (Enable scrobble in your client to record stats)')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));

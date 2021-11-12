@@ -112,7 +112,7 @@ var FLACDecoder = AV.Decoder.extend(function() {
 
         var frame_or_sample_num = stream.read(7 - ones);
         for (; ones > 1; ones--) {
-            stream.advance(2); // === 2
+            stream.advance(2); // == 2
             frame_or_sample_num = (frame_or_sample_num << 6) | stream.read(6);
         }
 
@@ -511,8 +511,7 @@ var FLACDecoder = AV.Decoder.extend(function() {
         var output = 0,
             curbyte = 0;
 
-        while(true) {
-            // emulate goto in JS using the break statement :D
+        while(true) { // emulate goto in JS using the break statement :D
             curbyte = input >>> 24;
             if (curbyte) break;
             output += 8;
@@ -661,7 +660,7 @@ var FLACDemuxer = AV.Demuxer.extend(function() {
                     case SEEKTABLE:
                         for(var s=0; s<this.size/18; s++)
                         {
-                            if(stream.peekUInt32(0) === 0xFFFFFFFF && stream.peekUInt32(1) === 0xFFFFFFFF)
+                            if(stream.peekUInt32(0) == 0xFFFFFFFF && stream.peekUInt32(1) == 0xFFFFFFFF)
                             {
                                 //placeholder, ignore
                                 stream.advance(18);
@@ -705,8 +704,7 @@ var FLACDemuxer = AV.Demuxer.extend(function() {
 
                 case PICTURE:
                     var type = stream.readUInt32();
-                    if (type !== 3) {
-                        // make sure this is album art (type 3)
+                    if (type !== 3) { // make sure this is album art (type 3)
                         stream.advance(this.size - 4);
                     } else {
                         var mimeLen = stream.readUInt32(),
@@ -768,11 +766,11 @@ OggDemuxer.plugins.push({
     this.list.append(new AV.Buffer(packet));
 
     stream.advance(5); // magic
-    if (stream.readUInt8() !== 1)
+    if (stream.readUInt8() != 1)
       throw new Error('Unsupported FLAC version');
 
     stream.advance(3);
-    if (stream.peekString(0, 4) !== 'fLaC')
+    if (stream.peekString(0, 4) != 'fLaC')
       throw new Error('Not flac');
 
     this.flac = AV.Demuxer.find(stream.peekSingleBuffer(0, stream.remainingBytes()));

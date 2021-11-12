@@ -1,5 +1,65 @@
 # CHANGELOG
 
+## Ampache 5.1.1
+
+### Added
+
+* Clean cache files that aren't in the database
+* Translate random and democratic in the webplayer
+* Add transcode_flv to config
+* Add playlist, playlist_name to album searches
+* Send the user to an error page when the config wasn't written
+* Config version 58
+  * Removed subsonic_stream_scrobble
+* Database 5.1.0 Build 5:
+  * Add `subsonic_always_download` to preferences
+
+### Changed
+
+* Rebuild aurora.js modules from source
+* Perform waveform and cache on disk the same way
+* Move song waveforms on load if in the wrong folder
+* Make genre searches faster with a join instead of select in
+* Send a flat file path for zips when using browse/playlist
+
+### Removed
+
+* Podcast links on the dashboard removed (There is no link for them to go to)
+* Remove subsonic_stream_scrobble from config and make it per user (subsonic_always_download)
+
+### Fixed
+
+* Use addslashes for translations in html5 player
+* Send the generic client name for localplay again
+* Use the set permission level for localplay access
+* Webplayer playlists would become out of order after moving/adding
+* Cache process could cache the wrong song
+* Missing user id in search
+* Grouping sql in search when not grouping albums
+* Setting Localplay instance would not update the preference
+* Advanced search (Random) wasn't working in php8
+* Fixed returning the correct objects for advanced search (Random)
+* Some objects would add transcode_to to their play url
+* Set system prefs for mb and tadb plugins
+* Updating a channel in php8
+* Get tmp_playlist by session (could get confused and never retrieve items)
+* Setting cookies and session details on remember_me sessions
+* Set the catalog parameters for seafile catalogs
+* Database updates for php8
+* Remember me session cookie error when recreating a new session
+* ampache.sql script had AUTO_INCREMENT data it didn't need
+* Subsonic
+  * Get the artists for a single catalog correctly
+  * Browse highest used the sql differently to the UI
+
+## API 5.1.1
+
+### Fixed
+
+* Access to podcast_episode_delete
+* stats calls with an offest and limit
+* advanced_search calls with an offset and limit
+
 ## Ampache 5.1.0-release
 
 ### Added

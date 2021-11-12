@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,20 +44,25 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
+        SongRepositoryInterface $songRepository,
         VideoRepositoryInterface $videoRepository
     ) {
         $this->ui              = $ui;
+        $this->songRepository  = $songRepository;
         $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds = Random::advanced($_REQUEST['type'], $_POST);
+        $objectIds   = Random::advanced($_REQUEST['type'], $_POST);
+        $objectType  = ($_REQUEST['type'] == 'video')
+            ? 'video'
+            : 'song';
 
         // We need to add them to the active playlist
         if (!empty($objectIds)) {
             foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, $objectType);
             }
         }
 

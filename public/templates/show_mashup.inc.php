@@ -45,9 +45,11 @@ $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
 $browse->show_objects($object_ids);
 Ui::show_box_bottom();
- ?>
-<a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=newest#browse_content_<?php echo $object_type ?>"><?php Ui::show_box_top(T_('Newest')) ?></a>
-<?php
+if ($object_type == 'podcast_episode') {
+    Ui::show_box_top(T_('Newest'));
+} else {
+    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest#browse_content_" . $object_type . "\">" . Ui::show_box_top(T_('Newest')) . "</a>";
+}
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
@@ -55,9 +57,12 @@ $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
 $browse->show_objects($object_ids);
-Ui::show_box_bottom(); ?>
-<a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php Ui::show_box_top(T_('Popular')) ?></a>
-<?php
+Ui::show_box_bottom();
+if ($object_type == 'podcast_episode') {
+    Ui::show_box_top(T_('Popular'));
+} else {
+    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">" . Ui::show_box_top(T_('Popular')) . "</a>";
+}
 $object_ids = array_slice(Stats::get_top($object_type, $limit, $threshold, 0, $user_id), 0, 100);
 shuffle($object_ids);
 $object_ids = array_slice($object_ids, 0, $limit);

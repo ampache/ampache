@@ -83,7 +83,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     foreach ($shouts as $shoutsid) {
                         $shout = new Shoutbox($shoutsid);
                         $key   = (int) ($shout->data);
-                        echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
+                        echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
                         echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                         echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
                     }
