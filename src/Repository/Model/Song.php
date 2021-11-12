@@ -1081,12 +1081,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!$this->played) {
             self::update_played(true, $this->id);
         }
-        if (!Recommendation::has_recommendation_cache('song', $this->id)) {
-            Recommendation::get_songs_like($this->id);
-        }
-        if (!Recommendation::has_recommendation_cache('artist', $this->artist)) {
-            Recommendation::get_artists_like($this->artist);
-        }
 
         return true;
     } // set_played
