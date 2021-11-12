@@ -190,12 +190,16 @@ class Art extends database_object
             return false;
         }
 
+        // Check to make sure PHP:GD exists. Don't test things you can't change
+        if (!function_exists('imagecreatefromstring')) {
+            return true;
+        }
+
         $test  = false;
         $image = false;
-        // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
-        if (function_exists('ImageCreateFromString') && is_string($source)) {
+        if (is_string($source)) {
             $test  = true;
-            $image = ImageCreateFromString($source);
+            $image = imagecreatefromstring($source);
             if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event(self::class, 'Image failed PHP-GD test', 1);
                 $test = false;

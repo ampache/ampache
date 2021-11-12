@@ -117,7 +117,7 @@ $web_path    = AmpConfig::get('web_path'); ?>
             </tr>
             <tr>
                 <td><?php echo T_('GD Support'); ?></td>
-                <td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
+                <td><?php echo print_bool(function_exists('imagecreatefromstring')); ?></td>
             </tr>
             <tr>
                 <td><?php echo T_('Iconv Support'); ?></td>
