@@ -66,7 +66,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                     $key  = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
-                        '<script>startBroadcast(\'' . $key . '\');</script>';
+                        '<script>broadcastHandler.start(\'' . $key . '\');</script>';
                 }
                 break;
             case 'unbroadcast':
@@ -75,7 +75,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 if ($broadcast->id) {
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
-                        '<script>stopBroadcast();</script>';
+                        '<script>broadcastHandler.stop();</script>';
                 }
                 break;
             default:

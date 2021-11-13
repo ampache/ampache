@@ -127,8 +127,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-            if (replaygainPersist === 'true' && replaygainEnabled === false) {
-                ToggleReplayGain();
+            if (replaygainPersist === 'true' && replaygainHandler.enabled === false) {
+                replaygainHandler.toggle();
             }
             var current = jplaylist.current,
                 playlist = jplaylist.playlist;
@@ -155,10 +155,10 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         <?php if (AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
-                        ApplyReplayGain();
+                        replaygainHandler.apply();
                     }
-                    if (brkey != '') {
-                        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
+                    if (broadcastHandler.brkey != '') {
+                        broadcastHandler.sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
                     }
                     if (playlist[index]['media_type'] == "song") {
                         var currenttype = 'song'
@@ -207,10 +207,10 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         if (AmpConfig::get('waveform') && !$is_share) {
                             echo "var waveformobj = '';";
                             if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
-                                echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
+                                echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:waveformHandler.click(' + currentjpitem.attr('data-media_id') + ', waveformHandler.clickTimeOffset(event));\">';";
                             }
                             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
-                            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
+                            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . $web_path . "/waveform.php?' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\" onLoad=\"waveformHandler.show();\">';";
                             if (AmpConfig::get('waveform')) {
                                 echo "waveformobj += '</a>';";
                             }
@@ -239,17 +239,17 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                 }
             });
             <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
-            HideWaveform();
+            waveformHandler.hide();
             <?php } ?>
 
-            if (brkey != '') {
-                sendBroadcastMessage('PLAYER_PLAY', 1);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('PLAYER_PLAY', 1);
             }
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
-            if (brkey != '') {
-                sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
             <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
@@ -269,8 +269,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
-            if (brkey != '') {
-                sendBroadcastMessage('PLAYER_PLAY', 0);
+            if (broadcastHandler.brkey != '') {
+                broadcastHandler.sendBroadcastMessage('PLAYER_PLAY', 0);
             }
         });
 
@@ -294,8 +294,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             }
         });
 
-        replaygainNode = null;
-        replaygainEnabled = false;
+        replaygainHandler.node = null;
+        replaygainHandler.enabled = false;
         <?php echo WebPlayer::add_media_js($playlist); ?>
 
         $("#jquery_jplayer_1").resizable({
@@ -484,7 +484,7 @@ if (!$isVideo) {
         $broadcast = new Broadcast((int) $broadcast_id);
         $key       = Broadcast::generate_key();
         $broadcast->update_state(true, $key);
-        echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
+        echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>broadcastHandler.start(\'' . $key . '\');</script>';
     } else {
         echo Broadcast::get_broadcast_link();
     } ?>
@@ -507,16 +507,16 @@ if (!$isVideo) {
                         </div>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
-                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))) ?></a>
+                                <a href="javascript:visualizerHandler.showVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))) ?></a>
                             </div>
                             <div class="action_button">
-                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
+                                <a href="javascript:visualizerHandler.showVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', addslashes(T_('ReplayGain'))) ?></a>
+                                <a href="javascript:replaygainHandler.toggle();"><?php echo Ui::get_icon('replaygain', addslashes(T_('ReplayGain'))) ?></a>
                             </div>
-                            <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>
+                            <div id="equalizerbtn" class="action_button">
+                                <a href="javascript:visualizerHandler.showEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>
                             </div>
                             <?php } ?>
                         <?php } ?>

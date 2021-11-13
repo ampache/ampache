@@ -35,11 +35,6 @@ if (!$iframed) {
 <script>
 var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
 var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
-
-function update_action()
-{
-    // Stub
-}
 </script>
 <?php
 } ?>
@@ -55,7 +50,6 @@ function update_action()
 
 <script>
 var jplaylist = new Array();
-var jtypes = new Array();
 
 function convertMediaToJPMedia(media)
 {
@@ -80,17 +74,16 @@ function convertMediaToJPMedia(media)
 
 function addMedia(media)
 {
-    var jpmedia = convertMediaToJPMedia(media);
+    const jpmedia = convertMediaToJPMedia(media);
     jplaylist.add(jpmedia);
 }
 
 function playNext(media)
 {
-    var jpmedia = convertMediaToJPMedia(media);
+    const jpmedia = convertMediaToJPMedia(media);
     jplaylist.addAfter(jpmedia, jplaylist.current);
 }
-</script>
-<script>
+
 function ExitPlayer()
 {
     $("#webplayer").text('');
@@ -105,25 +98,14 @@ if (AmpConfig::get('song_page_title')) {
 
 function TogglePlayerVisibility()
 {
-    if ($("#webplayer").is(":visible")) {
-        $("#webplayer").slideUp();
-    } else {
-        $("#webplayer").slideDown();
-    }
+    $("#webplayer").slideToggle()
 }
 
 function TogglePlaylistExpand()
 {
-    if ($(".jp-playlist").css("opacity") !== '1') {
-        $(".jp-playlist").css('top', '-255%');
-        $(".jp-playlist").css('opacity', '1');
-        $(".jp-playlist").css('height', '350%');
-    } else {
-        $(".jp-playlist").css('top', '0px');
-        $(".jp-playlist").css('opacity', '0.9');
-        $(".jp-playlist").css('height', '95%');
-    }
+    document.querySelector(".jp-playlist").classList.toggle('taller')
 }
+
 </script>
 <?php
 if ($iframed) { ?>
@@ -179,90 +161,135 @@ function SwapSlideshow()
     swap_slideshow();
 }
 
-function initAudioContext()
-{
-    if (typeof AudioContext !== 'undefined') {
-        audioContext = new AudioContext();
-    } else if (typeof webkitAudioContext !== 'undefined') {
-        audioContext = new webkitAudioContext();
-    } else {
-        audioContext = null;
-    }
-}
+var visualizerHandler = {
+    initialized: false,
+    enabled: false,
 
-function isVisualizerEnabled()
-{
-    return ($('#uberviz').css('visibility') == 'visible');
-}
-
-var vizInitialized = false;
-var vizPrevHeaderColor = "#000";
-var vizPrevPlayerColor = "#000";
-function ShowVisualizer()
-{
-    if (isVisualizerEnabled()) {
-        $('#uberviz').css('visibility', 'hidden');
-        $('#equalizerbtn').css('visibility', 'hidden');
-        $('#equalizer').css('visibility', 'hidden');
-        $('#header').css('background-color', vizPrevHeaderColor);
-        $('#webplayer').css('background-color', vizPrevPlayerColor);
-        $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-        $('.jp-playlist').css('background-color', 'rgb(20, 20, 20)');
-    } else {
-        // Resource not yet initialized? Do it.
-        if (!vizInitialized) {
-            if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
-                UberVizMain.init();
-                vizInitialized = true;
-                AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
+    showVisualizer() {
+        let selector = '#uberviz, #equalizerbtn, #header, #webplayer, #webplayer-minimize, .jp-interface, .jp-playlist'
+        if (this.enabled) {
+            this.enabled = false
+            $('#equalizer').css('visibility', 'hidden')
+            $(selector).removeClass('vizualizer')
+        } else {
+            // Resource not yet initialized? Do it.
+            if (!this.initialized) {
+                if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
+                    UberVizMain.init();
+                    this.initialized = true;
+                    AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
+                }
+            }
+            if (this.initialized) {
+                this.enabled = true
+                $(selector).addClass('vizualizer')
+            } else {
+                alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
             }
         }
+    },
 
-        if (vizInitialized) {
-            $('#uberviz').css('visibility', 'visible');
-            $('#equalizerbtn').css('visibility', 'visible');
-            vizPrevHeaderColor = $('#header').css('background-color');
-            $('#header').css('background-color', 'transparent');
-            vizPrevPlayerColor = $('#webplayer').css('background-color');
-            $('#webplayer').css('cssText', 'background-color: #000 !important;');
-            $('#webplayer').show();
-            $("#webplayer-minimize").show();
-            $('.jp-interface').css('background-color', '#000');
-            $('.jp-playlist').css('background-color', '#000');
-        } else {
-            alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
+    showVisualizerFullScreen() {
+      if (!this.enabled) {
+          this.showVisualizer()
+      }
+
+      var element = document.getElementById("viz");
+      if (element.requestFullscreen) {
+          element.requestFullscreen()
+      } else {
+          alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
+      }
+    },
+
+    showEqualizer(){
+        if (this.enabled) {
+            document.querySelector('#equalizer').classList.toggle("vizualizer")
         }
     }
 }
 
-function ShowVisualizerFullScreen()
-{
-    if (!isVisualizerEnabled()) {
-        ShowVisualizer();
-    }
+var replaygainHandler = {
+  audioContext: null,
+  mediaSource: null,
+  enabled: false,
+  node: null,
 
-    var element = document.getElementById("viz");
-    if (element.requestFullScreen) {
-        element.requestFullScreen();
-    } else if (element.webkitRequestFullScreen) {
-        element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
+  initAudioContext() {
+    if (typeof AudioContext !== 'undefined') {
+        this.audioContext = new AudioContext();
+    } else if (typeof webkitAudioContext !== 'undefined') {
+        this.audioContext = new webkitAudioContext();
     } else {
-        alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
+        this.audioContext = null;
     }
-}
+  },
 
-function ShowEqualizer()
-{
-    if (isVisualizerEnabled()) {
-        if ($('#equalizer').css('visibility') == 'visible') {
-            $('#equalizer').css('visibility', 'hidden');
-        } else {
-            $('#equalizer').css('visibility', 'visible');
-        }
-    }
+  toggle() {
+      if (this.node === null) {
+          var mediaElement = $('.jp-jplayer').find('audio').get(0);
+          if (mediaElement) {
+              if (this.audioContext !== null) {
+                  this.mediaSource = this.audioContext.createMediaElementSource(mediaElement);
+                  this.node = this.audioContext.createGain();
+                  this.node.gain.value = 1;
+                  this.mediaSource.connect(this.node);
+                  mediaSource = this.mediaSource
+                  this.node.connect(this.audioContext.destination);
+              }
+          }
+      }
+
+      if (this.node != null) {
+          this.enabled = !this.enabled;
+          Cookies.set('replaygain', this.enabled, {<?php echo $cookie_string ?>});
+          this.apply();
+          let btn = document.querySelector('#replaygainbtn')
+          if (this.enabled) {
+              btn.classList.add('enabled')
+          } else {
+              btn.classList.remove('enabled')
+          }
+      }
+  },
+
+  apply() {
+      if (this.node != null) {
+          var gainlevel = 1;
+          var replaygain = 0;
+          var peakamplitude = 1;
+          if (this.enabled && currentjpitem != null) {
+              var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
+              var r128_track_gain = currentjpitem.attr("data-r128_track_gain");
+
+              if (r128_track_gain !== 'null') {
+                  // R128 PREFERRED
+                  replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
+                  var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
+                  var targetLevel = parseInt(-18); // LUFS/dB;
+                  var masteredVolume = referenceLevel - replaygain;
+                  var difference = targetLevel - masteredVolume;
+
+                  gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
+              } else if (replaygain_track_gain !== 'null') {
+                  // REPLAYGAIN FALLBACK
+                  replaygain = parseFloat(replaygain_track_gain);
+
+                  if (replaygain != null) {
+                      var track_peak = currentjpitem.attr("data-replaygain_track_peak");
+                      if (track_peak !== 'null') {
+                          peakamplitude = parseFloat(track_peak);
+                      }
+                      gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
+                  }
+              }
+          }
+
+          this.node.gain.value = gainlevel;
+      }
+  }
 }
+replaygainHandler.initAudioContext();
 
 function SavePlaylist()
 {
@@ -286,246 +313,163 @@ function SaveToExistingPlaylist(event)
     }
 }
 
-var audioContext = null;
-var mediaSource = null;
-var replaygainEnabled = false;
-var replaygainNode = null;
-initAudioContext();
-
-function ToggleReplayGain()
-{
-    if (replaygainNode === null) {
-        var mediaElement = $('.jp-jplayer').find('audio').get(0);
-        if (mediaElement) {
-            if (audioContext !== null) {
-                mediaSource = audioContext.createMediaElementSource(mediaElement);
-                replaygainNode = audioContext.createGain();
-                replaygainNode.gain.value = 1;
-                mediaSource.connect(replaygainNode);
-                replaygainNode.connect(audioContext.destination);
-            }
-        }
-    }
-
-    if (replaygainNode != null) {
-        replaygainEnabled = !replaygainEnabled;
-        Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string ?>});
-        ApplyReplayGain();
-
-        if (replaygainEnabled) {
-            $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
-        } else {
-            $('#replaygainbtn').css('box-shadow', '');
-        }
-    }
-}
-
-function ApplyReplayGain()
-{
-    if (replaygainNode != null) {
-        var gainlevel = 1;
-        var replaygain = 0;
-        var peakamplitude = 1;
-        if (replaygainEnabled && currentjpitem != null) {
-            var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
-            var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
-
-            if (r128_track_gain !== 'null') {
-                // R128 PREFERRED
-                replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
-                var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
-                var targetLevel = parseInt(-18); // LUFS/dB;
-                var masteredVolume = referenceLevel - replaygain;
-                var difference = targetLevel - masteredVolume;
-
-                gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
-            } else if (replaygain_track_gain !== 'null') {
-                // REPLAYGAIN FALLBACK
-                replaygain = parseFloat(replaygain_track_gain);
-
-                if (replaygain != null) {
-                    var track_peak = currentjpitem.attr("data-replaygain_track_peak");
-                    if (track_peak !== 'null') {
-                        peakamplitude = parseFloat(track_peak);
-                    }
-                    gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
-                }
-            }
-        }
-
-        replaygainNode.gain.value = gainlevel;
-    }
-}
 </script>
 <?php
 } ?>
 <script>
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
-var wavclicktimer = null;
 var shouts = {};
-function WaveformClick(songid, time)
-{
-    // Double click
-    if (wavclicktimer != null) {
-        clearTimeout(wavclicktimer);
-        wavclicktimer = null;
-        NavigateTo('<?php echo $web_path ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
-    } else {
-        // Single click
-        if (brconn === null) {
-            wavclicktimer = setTimeout(function() {
-                wavclicktimer = null;
-                $("#jquery_jplayer_1").data("jPlayer").play(time);
-            }, 250);
-        }
-    }
-}
+var waveformHandler = {
+  clickTimer: null,
+  click(songid, time) {
+      // Double click
+      if (this.clickTimer != null) {
+          clearTimeout(this.clickTimer);
+          this.clickTimer = null;
+          NavigateTo('<?php echo $web_path ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
+      } else {
+          // Single click
+          if (broadcastHandler.brconn === null) {
+              this.clickTimer = setTimeout(function() {
+                  this.clickTimer = null;
+                  $("#jquery_jplayer_1").data("jPlayer").play(time);
+              }, 250);
+          }
+      }
+  },
+  clickTimeOffset(e) {
+      var parrentOffset = $(".waveform").offset().left;
+      var offset = e.pageX - parrentOffset;
+      var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
+      var time = duration * (offset / 400);
 
-function ClickTimeOffset(e)
-{
-    var parrentOffset = $(".waveform").offset().left;
-    var offset = e.pageX - parrentOffset;
-    var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
-    var time = duration * (offset / 400);
-
-    return time;
-}
-
-function ShowWaveform()
-{
-    $('.waveform').css('visibility', 'visible');
-}
-
-function HideWaveform()
-{
-    $('.waveform').css('visibility', 'hidden');
+      return time;
+  },
+  show() {
+      document.querySelector('.waveform').classList.remove("hidden")
+  },
+  hide() {
+      document.querySelector('.waveform').classList.add("hidden")
+  }
 }
 <?php
     } ?>
 
-var brkey = '';
-var brconn = null;
+var broadcastHandler = {
+    brkey: '',
+    brconn: null,
+    loadingSong: false,
+    bufferingSongPos: -1,
 
-function startBroadcast(key)
-{
-    brkey = key;
+    start(key) {
+        this.brkey = key;
+        this.listen();
+        this.brconn.onopen = function(e) {
+            broadcastHandler.sendMessage('AUTH_SID', '<?php echo session_id(); ?>');
+            broadcastHandler.sendMessage('REGISTER_BROADCAST', broadcastHandler.brkey);
+            broadcastHandler.sendMessage('SONG', currentjpitem.attr("data-media_id"));
+        };
+    },
 
-    listenBroadcast();
-    brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
-        sendBroadcastMessage('REGISTER_BROADCAST', brkey);
-        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
-    };
-}
+    stop() {
+      this.brkey = '';
+      if (this.brconn != null && this.brconn.readyState == 1) {
+        this.brconn.close();
+      }
+      this.brconn = null;
+    },
 
-function startBroadcastListening(broadcast_id)
-{
-    listenBroadcast();
+    startListening(broadcast_id) {
+      this.listen();
+      // Hide few UI information on listening mode
+      $('.jp-previous').css('visibility', 'hidden');
+      $('.jp-play').css('visibility', 'hidden');
+      $('.jp-pause').css('visibility', 'hidden');
+      $('.jp-next').css('visibility', 'hidden');
+      $('.jp-stop').css('visibility', 'hidden');
+      $('.jp-toggles').css('visibility', 'hidden');
+      $('.jp-playlist').css('visibility', 'hidden');
+      $('#broadcast').css('visibility', 'hidden');
 
-    // Hide few UI information on listening mode
-    $('.jp-previous').css('visibility', 'hidden');
-    $('.jp-play').css('visibility', 'hidden');
-    $('.jp-pause').css('visibility', 'hidden');
-    $('.jp-next').css('visibility', 'hidden');
-    $('.jp-stop').css('visibility', 'hidden');
-    $('.jp-toggles').css('visibility', 'hidden');
-    $('.jp-playlist').css('visibility', 'hidden');
-    $('#broadcast').css('visibility', 'hidden');
+      $('.jp-seek-bar').css('pointer-events', 'none');
 
-    $('.jp-seek-bar').css('pointer-events', 'none');
+      this.brconn.onopen = function(e) {
+        this.sendMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
+        this.sendMessage('REGISTER_LISTENER', broadcast_id);
+      };
+    },
 
-    brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
-        sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
-    };
-}
+    listen() {
+      if (this.brconn != null) {
+        this.stop();
+      }
+      this.brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
+      this.brconn.onmessage = this.receiveMessage;
+    },
 
-function listenBroadcast()
-{
-    if (brconn != null) {
-        stopBroadcast();
-    }
+    receiveMessage(e) {
+      var jp = $("#jquery_jplayer_1").data("jPlayer");
+      var msgs = e.data.split(';');
 
-    brconn = new WebSocket('<?php echo Broadcast_Server::get_address(); ?>');
-    brconn.onmessage = receiveBroadcastMessage;
-}
-
-var brLoadingSong = false;
-var brBufferingSongPos = -1;
-
-function receiveBroadcastMessage(e)
-{
-    var jp = $("#jquery_jplayer_1").data("jPlayer");
-    var msgs = e.data.split(';');
-
-    for (var i = 0; i < msgs.length; ++i) {
+      for (var i = 0; i < msgs.length; ++i) {
         var msg = msgs[i].split(':');
         if (msg.length == 2) {
-            switch (msg[0]) {
-                case 'PLAYER_PLAY':
-                    if (msg[1] == '1') {
-                        if (jp.status.paused) {
-                            jp.play();
-                        }
-                    } else {
-                        if (!jp.status.paused) {
-                            jp.pause();
-                        }
-                    }
-                    break;
-                case 'SONG':
-                    addMedia($.parseJSON(atob(msg[1])));
-                    brLoadingSong = true;
-                    // Buffering song position in case it is asked in the next sec.
-                    // Otherwise we will move forward on the previous song instead of the new currently loading one
-                    setTimeout(function() {
-                        if (brBufferingSongPos > -1) {
-                            jp.play(brBufferingSongPos);
-                            brBufferingSongPos = -1;
-                        }
-                        brLoadingSong = false;
-                    }, 1000);
-                    jplaylist.next();
-                    break;
-                case 'SONG_POSITION':
-                    if (brLoadingSong) {
-                        brBufferingSongPos = parseFloat(msg[1]);
-                    } else {
-                        jp.play(parseFloat(msg[1]));
-                    }
-                    break;
-                case 'NB_LISTENERS':
-                    $('#broadcast_listeners').html(msg[1]);
-                    break;
-                case 'INFO':
-                    // Display information notification to user here
-                    break;
-                case 'ENDED':
-                    jp.stop();
-                    break;
-                default:
-                    alert('Unknown message code');
-                    break;
+          switch (msg[0]) {
+            case 'PLAYER_PLAY':
+            if (msg[1] == '1') {
+              if (jp.status.paused) {
+                jp.play();
+              }
+            } else {
+              if (!jp.status.paused) {
+                jp.pause();
+              }
             }
+            break;
+            case 'SONG':
+            addMedia($.parseJSON(atob(msg[1])));
+            this.loadingSong = true;
+            // Buffering song position in case it is asked in the next sec.
+            // Otherwise we will move forward on the previous song instead of the new currently loading one
+            setTimeout(function() {
+              if (broadcastHandler.bufferingSongPos > -1) {
+                jp.play(broadcastHandler.bufferingSongPos);
+                broadcastHandler.bufferingSongPos = -1;
+              }
+              broadcastHandler.loadingSong = false;
+            }, 1000);
+            jplaylist.next();
+            break;
+            case 'SONG_POSITION':
+            if (this.loadingSong) {
+              this.bufferingSongPos = parseFloat(msg[1]);
+            } else {
+              jp.play(parseFloat(msg[1]));
+            }
+            break;
+            case 'NB_LISTENERS':
+            $('#broadcast_listeners').html(msg[1]);
+            break;
+            case 'INFO':
+            // Display information notification to user here
+            break;
+            case 'ENDED':
+            jp.stop();
+            break;
+            default:
+            alert('Unknown message code');
+            break;
+          }
         }
-    }
-}
+      }
+    },
 
-function sendBroadcastMessage(cmd, value)
-{
-    if (brconn != null && brconn.readyState == 1) {
+    sendMessage(cmd, value) {
+      if (this.brconn != null && this.brconn.readyState == 1) {
         var msg = cmd + ':' + value + ';';
-        brconn.send(msg);
-    }
-}
-
-function stopBroadcast()
-{
-    brkey = '';
-    if (brconn != null && brconn.readyState == 1) {
-        brconn.close();
-    }
-    brconn = null;
+        this.brconn.send(msg);
+      }
+    },
 }
 
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>

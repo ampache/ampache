@@ -523,6 +523,23 @@ div.jp-playlist {
     border-top: 1px solid #f8f8f8;
 }
 
+div.jp-playlist {
+  top : 0px;
+  opacity: 0.9;
+  height: 95%;
+}
+
+div.jp-playlist.taller {
+    top :-255%;
+    opacity: 1;
+    height: 350%;
+}
+
+div.jp-playlist.vizualizer,
+div.jp-interface.vizualizer {
+    background-color: #000;
+}
+
 .jp-no-solution {
     background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
     border-top: 1px solid #f8f8f8;
@@ -560,6 +577,58 @@ div.jp-playlist li {
     color: #1990db;
 }
 
+/* --------------------------
+   Equalizer
+   -------------------------- */
+#equalizerbtn {
+    visibility: hidden;
+}
+
+#equalizer {
+    visibility: hidden;
+    margin-right: 15px !important;
+}
+
+/* --------------------------
+   Vizualizer
+   -------------------------- */
+
+div.jp-playlist.vizualizer,
+div.jp-interface.vizualizer {
+    background-color: #f8f8f8;
+}
+
+#uberviz.vizualizer,
+#equalizerbtn.vizualizer,
+#equalizer.vizualizer
+{
+    visibility: visible;
+}
+
+#header.vizualizer {
+    background-color:transparent;
+}
+
+#webplayer.vizualizer {
+    background-color: #f8f8f8 !important;
+    display: block;
+}
+
+#webplayer-minimize.vizualizer {
+    display: block;
+}
+
+#replaygainbtn.enabled {
+    box-shadow: 0px 1px 0px 0px orange;
+}
+
+.waveform {
+    visibility: visible !important;
+}
+
+.waveform.hidden {
+    visibility: hidden !important;
+}
 /* ------------------------
    Other
    ------------------------ */
