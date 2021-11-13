@@ -28,7 +28,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -100,9 +99,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>" defer></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>" defer></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/tools.js'); ?>" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
 
         <script>
             $(document).ready(function(){

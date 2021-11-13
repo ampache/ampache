@@ -25,7 +25,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
-use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;
 
@@ -50,8 +49,8 @@ $_SESSION['login'] = true; ?>
 
 <body id="registerPage">
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-    <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>"></script>
-    <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
 
     <div id="maincontainer">
         <div id="header">

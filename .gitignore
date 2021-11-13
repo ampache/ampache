@@ -28,7 +28,6 @@ public/develop
 public/master
 public/foam
 public/ample
-*_cached_by_ampache_*.*
 storage/
 tmp/
 /vendor/

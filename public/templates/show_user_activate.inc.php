@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Ui;
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
@@ -42,8 +41,8 @@ $web_path = AmpConfig::get('web_path'); ?>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-            <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>"></script>
-            <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
 <?php
     if ($validationResult) {
