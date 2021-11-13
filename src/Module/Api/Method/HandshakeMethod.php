@@ -59,7 +59,8 @@ final class HandshakeMethod
      */
     public static function handshake(array $input)
     {
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? null);
+        $now_time   = time();
+        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -68,13 +69,14 @@ final class HandshakeMethod
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
+        Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
+        $data_version = (int)substr($version, 0, 1);
 
         // Log the attempt
-        debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
+        debug_event(self::class, "Handshake Attempt, IP: $user_ip User: $username Version: $version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int) ($version) < Api::$auth_version && (int) $version[0] !== 5) {
+        if ((int)($version) < Api::$auth_version && $data_version !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
@@ -94,7 +96,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id)", 1);
+        debug_event(self::class, "Login Attempt, IP: $user_ip Time: $now_time User: $username ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;
@@ -106,18 +108,16 @@ final class HandshakeMethod
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < (time() - 1800)) ||
-                    ($timestamp > (time() + 1800))) {
-                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                if (($timestamp < ($now_time - 1800)) ||
+                    ($timestamp > ($now_time + 1800))) {
+                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
                     Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
 
-                // Now we're sure that there is an ACL line that matches
-                // this user or ALL USERS, pull the user's password and
-                // then see what we come out with
+                // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
                 $realpwd = static::getUserRepository()->retrievePasswordFromUser($client->getId());
 
                 if (!$realpwd) {
@@ -133,8 +133,6 @@ final class HandshakeMethod
                 if ($sha1pass !== $passphrase) {
                     $client = null;
                 }
-            } else {
-                $timestamp = time();
             }
 
             if ($client) {
@@ -143,7 +141,7 @@ final class HandshakeMethod
                 $data['username'] = $client->username;
                 $data['type']     = 'api';
                 $data['apikey']   = $client->apikey;
-                $data['value']    = $timestamp;
+                $data['value']    = $data_version;
                 if (isset($input['client'])) {
                     $data['agent'] = filter_var($input['client'], FILTER_SANITIZE_STRING);
                 }

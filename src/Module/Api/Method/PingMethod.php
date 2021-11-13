@@ -53,13 +53,16 @@ final class PingMethod
     {
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
+        Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
+        $data_version = (int)substr($version, 0, 1);
 
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
+            // set the data version as well
+            Session::write($input['auth'], $data_version);
             $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)), $xmldata, Api::server_details($input['auth']));
         }
 
