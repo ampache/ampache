@@ -198,7 +198,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                     $data[] = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
-                        'mime' => $image['mime'],
+                        'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
                     ];
                 }
