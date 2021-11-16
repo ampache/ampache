@@ -147,15 +147,8 @@ use Ampache\Module\Util\Ui;
             </td>
             <td>
                 <span>
-                    <?php if ($client->apikey) { ?>
-                    <br />
-                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <div id="apikey_qrcode"></div>
-                    </div>
-                    <br />
-                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
-                    <?php echo $client->apikey; ?>
-                    <?php
+                    <?php if ($client->apikey) {
+                    echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
                 } ?>
                 </span>
             </td>
