@@ -1604,10 +1604,10 @@ class Upnp_Api
     }
 
     /**
-      * @param Tag $tag
-      * @param string $parent
-      * @return array
-      */
+     * @param Tag $tag
+     * @param string $parent
+     * @return array
+     */
     private static function _itemTag($tag, $parent)
     {
         return array(
