@@ -39,14 +39,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 
-$web_path = AmpConfig::get('web_path');
-
 /** @var Album $album */
 /** @var bool $isAlbumEditable */
 
 // Title for this album
-$f_name  = $album->get_fullname();
-$title   = scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
+$f_name   = $album->get_fullname();
+$title    = scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
+$web_path = AmpConfig::get('web_path');
 
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
@@ -166,7 +165,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout); ?>
                     <?php echo $postshout; ?>
                 </a>
@@ -188,7 +187,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
                     <?php echo T_('Graphs'); ?>
                 </a>
@@ -197,7 +196,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
+                                            '<?php echo $web_path; ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', $saveorder); ?>
                 <?php echo $saveorder; ?>
             </a>
@@ -245,7 +244,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($album)) {
             $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
+            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>

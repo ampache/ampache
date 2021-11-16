@@ -47,7 +47,7 @@ $_SESSION['login'] = true; ?>
             <div id="content">
                 <div id="guts">
                     <?php
-                    $url  = AmpConfig::get('web_path') . '/login.php';
+                    $url  = $web_path . '/login.php';
                     $text = T_('Return to Login Page');
                     if (AmpConfig::get('admin_enable_required')) {
                         $text = T_('Please wait for an administrator to activate your account');

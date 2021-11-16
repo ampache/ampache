@@ -28,6 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
+$web_path = AmpConfig::get('web_path');
 ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
@@ -76,7 +77,7 @@ use Ampache\Module\Util\Ui;
     <li>
       <ul class="sb2" id="sb_modules">
         <li>
-          <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Modules'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_modules')) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+          <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Modules'); ?></span><img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_modules')) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
           <ul class="sb3" id="sb_Modules">
             <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
             <li id="sb_preferences_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
@@ -85,7 +86,7 @@ use Ampache\Module\Util\Ui;
         </li>
     </li>
     <li>
-      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+      <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span><img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
       <ul class="sb3" id="sb_preferences_sc">
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
         <?php
