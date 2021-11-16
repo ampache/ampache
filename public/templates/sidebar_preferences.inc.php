@@ -60,7 +60,7 @@ $categories = Preference::get_categories(); ?>
     <li>
     <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_home_playlist') && $_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
     <ul class="sb3" id="sb_home_playlist">
-<li id="sb_preferences_sections_playlist"><a href="<?php echo $web_path ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
+<li id="sb_preferences_sections_playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
 </ul>
 <?php } ?>
@@ -68,7 +68,7 @@ $categories = Preference::get_categories(); ?>
             <li>
     <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Upload'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_upload_sections') && $_COOKIE['sb_upload_sections'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="upload" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
     <ul class="sb3" id="sb_upload_sections">
-    <li id="sb_upload_sections_upload"><a href="<?php echo $web_path ?>/upload.php"><?php echo T_('Upload') ?></a></li>
+    <li id="sb_upload_sections_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload') ?></a></li>
     </li>
 </ul>
        <?php } ?>
@@ -78,7 +78,7 @@ $categories = Preference::get_categories(); ?>
         <li id="sb_help_sections_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
         <li id="sb_help_sections_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
-            <li id="sb_help_sections_cookies"><a href="<?php echo $web_path ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
+            <li id="sb_help_sections_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
         <?php } ?>
     </ul>
 <?php } ?>

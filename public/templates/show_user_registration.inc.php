@@ -54,7 +54,7 @@ $_SESSION['login'] = true; ?>
 
     <div id="maincontainer">
         <div id="header">
-            <a href="<?php echo $web_path ?>">
+            <a href="<?php echo $web_path; ?>">
                 <h1 id="headerlogo"></h1>
             </a>
         </div>

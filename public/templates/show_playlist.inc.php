@@ -47,7 +47,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <?php
 ob_start();
 require Ui::find_template('show_playlist_title.inc.php');
-$title = ob_get_contents();
+$title    = ob_get_contents();
+$web_path = AmpConfig::get('web_path');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
@@ -70,19 +71,19 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
+                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 <?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('sort', T_('Sort Tracks by Artist, Album, Song')); ?>
                 <?php echo T_('Sort Tracks by Artist, Album, Song'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('wand', T_('Remove Duplicates')); ?>
                 <?php echo T_('Remove Duplicates'); ?>
             </a>
@@ -94,7 +95,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     $zipHandler = $dic->get(ZipHandlerInterface::class);
     if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
@@ -129,7 +130,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('flow'); ?>
                 <?php echo T_('Create Channel'); ?>
             </a>
@@ -139,7 +140,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <?php $search_id = $playlist->has_search($playlist->user);
         if ($search_id > 0) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
+                <a href="<?php echo $web_path; ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
                     <?php echo Ui::get_icon('file_refresh'); ?>
                     <?php echo T_('Refresh from Smartlist'); ?>
                 </a>
@@ -152,7 +153,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
         <li>
-            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
                 <?php echo Ui::get_icon('delete'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
