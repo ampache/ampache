@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Collector\MetaTagCollectorModule;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -930,6 +931,9 @@ class Art extends database_object
         if (!isset($type)) {
             $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
+        if (empty($data)) {
+            return '';
+        }
 
         // Already have the data, this often comes from id3tags
         if (isset($data['raw'])) {
@@ -982,7 +986,45 @@ class Art extends database_object
             } elseif (isset($id3['id3v2']['APIC'])) {
                 // Foreach in case they have more then one
                 foreach ($id3['id3v2']['APIC'] as $image) {
-                    return $image['data'];
+                    if (!isset($image['picturetypeid'])) {
+                        break;
+                    }
+                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
+                    if ($data['title'] == $title) {
+                        return $image['data'];
+                    }
+                }
+            } elseif (isset($id3['id3v2']['PIC'])) {
+                // Foreach in case they have more then one
+                foreach ($id3['id3v2']['PIC'] as $image) {
+                    if (!isset($image['picturetypeid'])) {
+                        break;
+                    }
+                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
+                    if ($data['title'] == $title) {
+                        return $image['data'];
+                    }
+                }
+            } elseif (isset($id3['flac']['PICTURE'])) {
+                // Foreach in case they have more then one
+                foreach ($id3['comments']['picture'] as $image) {
+                    if (!isset($image['typeid'])) {
+                        break;
+                    }
+                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
+                    if ($data['title'] == $title) {
+                        return $image['data'];
+                    }
+                }
+            } elseif (isset($id3['comments']['picture'])) {
+                // Foreach in case they have more then one
+                foreach ($id3['comments']['picture'] as $image) {
+                    if (!isset($image['picturetype']) && !isset($image['description'])) {
+                        break;
+                    }
+                    if ($data['title'] == 'ID3 ' . $image['picturetype'] || $data['title'] == 'ID3 ' . $image['description']) {
+                        return $image['data'];
+                    }
                 }
             }
         } // if data song

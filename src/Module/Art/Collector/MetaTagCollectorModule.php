@@ -75,7 +75,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $limit = 5;
         }
 
-        if ($art->type == "video") {
+        if ($art->type == 'video') {
             $data = $this->gatherVideoTags($art);
         } elseif ($art->type == 'album' || $art->type == 'artist') {
             $data = $this->gatherSongTags($art, $limit);
@@ -156,7 +156,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             if (!in_array($image['data'], $raw_array)) {
-                $data[] = array(
+                $raw_array[] = $image['data'];
+                $data[]      = array(
                     $mtype => $media->file,
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
@@ -174,8 +175,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } elseif (isset($image['picturetypeid']) && !in_array($image['data'], $raw_array)) {
-                    $type   = self::getPictureType((int)$image['picturetypeid']);
-                    $data[] = [
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['picturetypeid']);
+                    $data[]      = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
@@ -194,8 +196,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } elseif (isset($image['picturetypeid']) && !in_array($image['data'], $raw_array)) {
-                    $type   = self::getPictureType((int)$image['picturetypeid']);
-                    $data[] = [
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['picturetypeid']);
+                    $data[]      = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -214,8 +217,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } elseif (isset($image['typeid']) && !in_array($image['data'], $raw_array)) {
-                    $type   = self::getPictureType((int)$image['typeid']);
-                    $data[] = [
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['typeid']);
+                    $data[]      = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -228,12 +232,22 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['comments']['picture'])) {
             // Foreach in case they have more than one
             foreach ($id3['comments']['picture'] as $image) {
-                if (!in_array($image['data'], $raw_array)) {
-                    $data[] = [
+                if (isset($image['picturetype']) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $data[]      = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
-                        'title' => 'ID3 ' . ($image['picturetype'] ?? $image['description'] ?? 'comment')
+                        'title' => 'ID3 ' . $image['picturetype']
+                    ];
+                }
+                if (isset($image['description']) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $data[]      = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $image['description']
                     ];
                 }
             }
