@@ -917,7 +917,7 @@ class Ui implements UiInterface
                     $is_3 = 'selected="selected"';
                 } elseif ($value == 4) {
                     $is_4 = 'selected="selected"';
-                } elseif ($value == 4) {
+                } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
