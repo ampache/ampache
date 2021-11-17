@@ -95,7 +95,7 @@ final class AlbumsMethod implements MethodInterface
                 T_('No Results')
             );
         }
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }

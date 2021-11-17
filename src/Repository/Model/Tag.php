@@ -57,6 +57,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $info = $this->get_info($tag_id);
+        if (empty($info)) {
+            return false;
+        }
 
         foreach ($info as $key => $value) {
             $this->$key = $value;

@@ -199,6 +199,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         /* Get the information from the db */
         $info = $this->get_info($artist_id);
+        if (empty($info)) {
+            return false;
+        }
 
         foreach ($info as $key => $value) {
             $this->$key = $value;

@@ -269,7 +269,6 @@ class Album extends database_object implements library_item
     {
         /* Get the information from the db */
         $info = $this->get_info($album_id);
-
         if (empty($info)) {
             return false;
         }
