@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Song3Method
@@ -41,9 +43,10 @@ final class Song3Method
      */
     public static function song(array $input)
     {
-        $uid = scrub_in($input['filter']);
+        $uid  = scrub_in($input['filter']);
+        $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo Xml3_Data::songs(array($uid));
+        echo Xml3_Data::songs(array($uid), $user->id);
     } // song
 }

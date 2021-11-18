@@ -26,7 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 
 /**
  * Class TagSongs3Method
@@ -43,11 +45,12 @@ final class TagSongs3Method
     public static function tag_songs(array $input)
     {
         $songs = Tag::get_tag_objects('song', $input['filter']);
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::songs($songs);
+        echo Xml3_Data::songs($songs, $user->id);
     } // tag_songs
 }

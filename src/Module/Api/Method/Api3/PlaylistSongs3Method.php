@@ -25,8 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PlaylistSongs3Method
@@ -44,6 +46,7 @@ final class PlaylistSongs3Method
     {
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();
+        $user     = User::get_from_username(Session::username($input['auth']));
 
         $songs = array();
         foreach ($items as $object) {
@@ -55,6 +58,6 @@ final class PlaylistSongs3Method
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($songs, $items);
+        echo Xml3_Data::songs($songs, $user->id, $items);
     } // playlist_songs
 }

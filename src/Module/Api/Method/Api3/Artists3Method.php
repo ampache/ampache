@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Artists3Method
@@ -60,11 +62,12 @@ final class Artists3Method
 
         $artists = $browse->get_objects();
         $include = [];
+        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($artists, $include);
+        echo Xml3_Data::artists($artists, $include, $user->id);
     } // artists
 }

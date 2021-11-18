@@ -25,8 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -45,12 +47,13 @@ final class ArtistSongs3Method
     {
         $artist = new Artist($input['filter']);
         $songs  = static::getSongRepository()->getByArtist($artist->id);
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($songs);
+        echo Xml3_Data::songs($songs, $user->id);
     } // artist_songs
 
     private static function getSongRepository(): SongRepositoryInterface

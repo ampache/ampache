@@ -24,9 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class AlbumSongs3Method
@@ -44,13 +46,14 @@ class AlbumSongs3Method
     {
         $album = new Album($input['filter']);
         $songs = static::getAlbumRepository()->getSongs($album->id);
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::songs($songs);
+        echo Xml3_Data::songs($songs, $user->id);
     } // album_songs
 
     /**

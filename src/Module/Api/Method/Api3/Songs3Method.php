@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Songs3Method
@@ -56,12 +58,13 @@ final class Songs3Method
         Api::set_filter('enabled', '1', $browse);
 
         $songs = $browse->get_objects();
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::songs($songs);
+        echo Xml3_Data::songs($songs, $user->id);
     } // songs
 }

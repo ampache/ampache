@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Artist3Method
@@ -43,9 +45,10 @@ final class Artist3Method
     {
         $uid     = scrub_in($input['filter']);
         $include = [];
+        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
-        echo Xml3_Data::artists(array($uid), $include);
+        echo Xml3_Data::artists(array($uid), $include, $user->id);
     } // artist
 }

@@ -40,7 +40,7 @@ final class Democratic3Method
      * This is for controlling democratic play
      * @param array $input
      */
-    public static function democratic(array $input)
+    public static function democratic(array $input, $user_id = null)
     {
         // Load up democratic information
         $democratic = Democratic::get_current_playlist();
@@ -81,7 +81,7 @@ final class Democratic3Method
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo Xml3_Data::democratic($objects);
+                echo Xml3_Data::democratic($objects, $user_id);
             break;
             case 'play':
                 $url       = $democratic->play_url();
