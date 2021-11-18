@@ -51,7 +51,7 @@ final class PreferenceEditMethod
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input)
+    public static function preference_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
@@ -88,7 +88,6 @@ final class PreferenceEditMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -56,7 +56,7 @@ final class PreferenceCreateMethod
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return boolean
      */
-    public static function preference_create(array $input)
+    public static function preference_create(array $input): bool
     {
         $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
@@ -109,7 +109,6 @@ final class PreferenceCreateMethod
         }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
-        Session::extend($input['auth']);
 
         return true;
     }

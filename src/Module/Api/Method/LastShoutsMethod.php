@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LastShoutsMethod
@@ -50,7 +49,7 @@ final class LastShoutsMethod
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts(array $input)
+    public static function last_shouts(array $input): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +76,6 @@ final class LastShoutsMethod
             default:
                 echo Xml_Data::shouts($shouts);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

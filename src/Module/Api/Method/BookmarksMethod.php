@@ -49,7 +49,7 @@ final class BookmarksMethod
      * @param array $input
      * @return boolean
      */
-    public static function bookmarks(array $input)
+    public static function bookmarks(array $input): bool
     {
         $user      = User::get_from_username(Session::username($input['auth']));
         $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
@@ -68,7 +68,6 @@ final class BookmarksMethod
             default:
                 echo Xml_Data::bookmarks($bookmarks);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -54,7 +54,7 @@ final class StreamMethod
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input)
+    public static function stream(array $input): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);

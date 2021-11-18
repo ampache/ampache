@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LabelsMethod
@@ -52,7 +51,7 @@ final class LabelsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function labels(array $input)
+    public static function labels(array $input): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -86,7 +85,6 @@ final class LabelsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::labels($labels);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

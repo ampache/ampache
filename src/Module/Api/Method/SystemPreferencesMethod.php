@@ -47,7 +47,7 @@ final class SystemPreferencesMethod
      * @param array $input
      * @return boolean
      */
-    public static function system_preferences(array $input)
+    public static function system_preferences(array $input): bool
     {
         $user = User::get_from_username(Session::username($input['auth']));
 
@@ -63,7 +63,6 @@ final class SystemPreferencesMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class SharesMethod
@@ -51,7 +50,7 @@ final class SharesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function shares(array $input)
+    public static function shares(array $input): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -88,7 +87,6 @@ final class SharesMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::shares($shares);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -48,7 +48,7 @@ final class ToggleFollowMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input)
+    public static function toggle_follow(array $input): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -60,17 +60,17 @@ final class ToggleFollowMethod
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
+            $user        = User::get_from_username(Session::username($input['auth']));
+            $follow_user = User::get_from_username($username);
+            if ($follow_user !== null) {
                 static::getUserFollowToggler()->toggle(
-                    $user->getId(),
-                    User::get_from_username(Session::username($input['auth']))->getId()
+                    $follow_user->getId(),
+                    $user->getId()
                 );
                 ob_end_clean();
                 Api::message('follow toggled for: ' . $user->id, $input['api_format']);
             }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -52,7 +52,7 @@ final class GenreArtistsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists(array $input)
+    public static function genre_artists(array $input): bool
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (empty($artists)) {
@@ -75,7 +75,6 @@ final class GenreArtistsMethod
                 echo Xml_Data::artists($artists, array(), $user->id);
         }
 
-        Session::extend($input['auth']);
 
         return true;
     }

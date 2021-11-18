@@ -51,7 +51,7 @@ final class DemocraticMethod
      * oid    = (integer) //optional
      * @return boolean
      */
-    public static function democratic(array $input)
+    public static function democratic(array $input): bool
     {
         if (!Api::check_parameter($input, array('method'), self::ACTION)) {
             return false;
@@ -138,7 +138,6 @@ final class DemocraticMethod
                 Api::error(T_('Invalid Request'), '4710', self::ACTION, 'method', $input['api_format']);
                 break;
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -51,7 +51,7 @@ final class CatalogActionMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action(array $input)
+    public static function catalog_action(array $input): bool
     {
         if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
@@ -101,7 +101,6 @@ final class CatalogActionMethod
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

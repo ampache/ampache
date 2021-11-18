@@ -57,7 +57,7 @@ final class HandshakeMethod
      * version   = (string) $version //optional
      * @return boolean
      */
-    public static function handshake(array $input)
+    public static function handshake(array $input): bool
     {
         $now_time   = time();
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
@@ -71,9 +71,6 @@ final class HandshakeMethod
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
         $data_version = (int)substr($version, 0, 1);
-
-        // Log the attempt
-        debug_event(self::class, "Handshake Attempt, IP: $user_ip User: $username Version: $version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int)($version) < Api::$auth_version && $data_version !== 5) {
@@ -90,13 +87,14 @@ final class HandshakeMethod
             if ($client) {
                 $user_id = $client->id;
             }
+            $username = false;
         } else {
             $client  = User::get_from_username($username);
             $user_id = $client->id;
         }
 
         // Log this attempt
-        debug_event(self::class, "Login Attempt, IP: $user_ip Time: $now_time User: $username ($user_id)", 1);
+        debug_event(self::class, "Login Attempt, IP: $user_ip Time: $timestamp User: $username ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;
@@ -110,7 +108,7 @@ final class HandshakeMethod
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < ($now_time - 1800)) ||
                     ($timestamp > ($now_time + 1800))) {
-                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . $now_time, 1);
+                    debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
                     Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 

@@ -56,7 +56,7 @@ final class BookmarkEditMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_edit(array $input)
+    public static function bookmark_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
@@ -120,7 +120,6 @@ final class BookmarkEditMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

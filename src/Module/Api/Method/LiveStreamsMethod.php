@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LiveStreamsMethod
@@ -52,7 +51,7 @@ final class LiveStreamsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function live_streams(array $input)
+    public static function live_streams(array $input): bool
     {
         if (!AmpConfig::get('live_stream')) {
             Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -86,7 +85,6 @@ final class LiveStreamsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::live_streams($live_streams);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

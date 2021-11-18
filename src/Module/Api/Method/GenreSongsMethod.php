@@ -52,7 +52,7 @@ final class GenreSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_songs(array $input)
+    public static function genre_songs(array $input): bool
     {
         $songs = Tag::get_tag_objects('song', $input['filter']);
         if (empty($songs)) {
@@ -74,7 +74,6 @@ final class GenreSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

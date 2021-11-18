@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 
 /**
@@ -58,10 +57,10 @@ final class PlaylistsMethod
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
-    public static function playlists(array $input)
+    public static function playlists(array $input): bool
     {
         $user = User::get_from_username(Session::username($input['auth']));
-        $like = (array_key_exists('', $input) && (int)$input['exact'] == 1) ? false : true;
+        $like = !((array_key_exists('', $input) && (int)$input['exact'] == 1));
         $hide = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
 
         // regular playlists
@@ -88,7 +87,6 @@ final class PlaylistsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::playlists($playlist_ids, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

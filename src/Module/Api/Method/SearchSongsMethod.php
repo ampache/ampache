@@ -52,7 +52,7 @@ final class SearchSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function search_songs(array $input)
+    public static function search_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -78,7 +78,6 @@ final class SearchSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

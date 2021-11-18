@@ -52,7 +52,7 @@ final class PodcastMethod
      * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
-    public static function podcast(array $input)
+    public static function podcast(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -83,7 +83,6 @@ final class PodcastMethod
             default:
                 echo XML_Data::podcasts(array($object_id), $user->id, $episodes);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

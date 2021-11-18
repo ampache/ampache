@@ -61,6 +61,5 @@ final class UserPreferencesMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
     }
 }

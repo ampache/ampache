@@ -56,7 +56,7 @@ final class SongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function songs(array $input)
+    public static function songs(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -90,7 +90,6 @@ final class SongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

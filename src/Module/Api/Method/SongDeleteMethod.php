@@ -50,7 +50,7 @@ final class SongDeleteMethod
      * filter = (string) UID of song to delete
      * @return boolean
      */
-    public static function song_delete(array $input)
+    public static function song_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -77,7 +77,6 @@ final class SongDeleteMethod
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
         Catalog::count_table('song');
-        Session::extend($input['auth']);
 
         return true;
     }

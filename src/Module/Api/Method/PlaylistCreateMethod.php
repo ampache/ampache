@@ -52,7 +52,7 @@ final class PlaylistCreateMethod
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create(array $input)
+    public static function playlist_create(array $input): bool
     {
         if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;
@@ -78,7 +78,6 @@ final class PlaylistCreateMethod
                 echo Xml_Data::playlists(array($object_id), $user->id);
         }
         Catalog::count_table('playlist');
-        Session::extend($input['auth']);
 
         return true;
     }

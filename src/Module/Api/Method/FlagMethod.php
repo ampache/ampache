@@ -53,7 +53,7 @@ final class FlagMethod
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag(array $input)
+    public static function flag(array $input): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -100,7 +100,6 @@ final class FlagMethod
             }
             Api::error('flag failed ' . $object_id, '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

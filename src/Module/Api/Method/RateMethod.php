@@ -51,7 +51,7 @@ final class RateMethod
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return bool
      */
-    public static function rate(array $input)
+    public static function rate(array $input): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,7 +63,6 @@ final class RateMethod
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -96,7 +95,6 @@ final class RateMethod
             $rate->set_rating($rating, $user->id);
             Api::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

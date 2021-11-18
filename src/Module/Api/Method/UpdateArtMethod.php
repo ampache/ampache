@@ -52,7 +52,7 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art(array $input)
+    public static function update_art(array $input): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
@@ -91,7 +91,6 @@ final class UpdateArtMethod
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

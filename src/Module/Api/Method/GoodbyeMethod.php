@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 
 /**
@@ -46,14 +47,15 @@ final class GoodbyeMethod
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye(array $input)
+    public static function goodbye(array $input): bool
     {
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
-            Session::destroy($input['auth']);
+            $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
+            Dba::write($sql, array($input['auth']));
 
             debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();

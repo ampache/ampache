@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class TagArtistsMethod
@@ -47,6 +46,5 @@ final class TagArtistsMethod
     public static function tag_artists(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
-        Session::extend($input['auth']);
     }
 }

@@ -52,7 +52,7 @@ final class GetArtMethod
      * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * @return boolean
      */
-    public static function get_art(array $input)
+    public static function get_art(array $input): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -71,44 +71,36 @@ final class GetArtMethod
             return false;
         }
 
-        $art = null;
-        if ($type == 'artist') {
-            $art = new Art($object_id, 'artist');
-        } elseif ($type == 'album') {
-            $art = new Art($object_id, 'album');
-        } elseif ($type == 'song') {
-            $art = new Art($object_id, 'song');
-            if ($art != null && $art->id == null) {
+        $art = new Art($object_id, $type);
+        if ($type == 'song') {
+            if (!Art::has_db($object_id, $type)) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = new Song($object_id);
                 $art  = new Art($song->album, 'album');
             }
-        } elseif ($type == 'podcast') {
-            $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
+            if (!Art::has_db($object_id, 'song')) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'playlist') {
-            $playlist  = new Playlist($object_id);
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, 'album');
+            if (!Art::has_db($object_id, $type)) {
+                $playlist  = new Playlist($object_id);
+                $listitems = $playlist->get_items();
+                $item      = $listitems[array_rand($listitems)];
+                $song      = new Song($item['object_id']);
+                $art       = new Art($song->album, 'album');
             }
         }
 
-        if ($art != null) {
+        if ($art->has_db_info()) {
             header('Access-Control-Allow-Origin: *');
-            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
+            if ($size && AmpConfig::get('resize_images')) {
                 $dim           = array();
                 $dim['width']  = $size;
                 $dim['height'] = $size;

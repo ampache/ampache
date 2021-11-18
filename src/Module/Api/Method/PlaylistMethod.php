@@ -52,7 +52,7 @@ final class PlaylistMethod
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist(array $input)
+    public static function playlist(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -83,7 +83,6 @@ final class PlaylistMethod
             default:
                 echo Xml_Data::playlists(array($object_id), $user->getId());
         }
-        Session::extend($input['auth']);
 
         return true;
     }

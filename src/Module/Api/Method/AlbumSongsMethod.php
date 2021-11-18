@@ -54,7 +54,7 @@ class AlbumSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs(array $input)
+    public static function album_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -104,7 +104,6 @@ class AlbumSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

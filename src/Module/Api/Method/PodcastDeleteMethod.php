@@ -50,7 +50,7 @@ final class PodcastDeleteMethod
      * filter = (string) UID of podcast to delete
      * @return boolean
      */
-    public static function podcast_delete(array $input)
+    public static function podcast_delete(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -81,7 +81,6 @@ final class PodcastDeleteMethod
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
         }
         Catalog::count_table('podcast');
-        Session::extend($input['auth']);
 
         return true;
     }

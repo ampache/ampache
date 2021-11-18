@@ -282,6 +282,18 @@ class User extends database_object
     } // get_from_username
 
     /**
+     * get_from_apikey
+     * This returns a built user from a username. This is a
+     * static function so it doesn't require an instance
+     * @param string apikey
+     * @return User|null $user
+     */
+    public static function get_from_apikey($apikey)
+    {
+        return static::getUserRepository()->findByApiKey($apikey);
+    } // get_from_apikey
+
+    /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]
@@ -1099,6 +1111,19 @@ class User extends database_object
                 return T_('Unknown');
         }
     } // access_level_to_name
+
+    /**
+     * fix_preferences_all
+     * Run fix_preferences for each user
+     */
+    public static function fix_preferences_all()
+    {
+        $users = static::getUserRepository()->getValidArray(true);
+        foreach ($users as $user_id => $username) {
+            debug_event(self::class, 'fix_preferences: ' . $username, 4);
+            User::fix_preferences($user_id);
+        }
+    } // fix_preferences_all
 
     /**
      * fix_preferences

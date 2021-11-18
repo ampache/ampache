@@ -52,7 +52,7 @@ final class PlaylistAddSongMethod
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      * @return boolean
      */
-    public static function playlist_add_song(array $input)
+    public static function playlist_add_song(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'song'), self::ACTION)) {
             return false;
@@ -74,7 +74,6 @@ final class PlaylistAddSongMethod
         }
         $playlist->add_songs(array($song));
         Api::message('song added to playlist', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

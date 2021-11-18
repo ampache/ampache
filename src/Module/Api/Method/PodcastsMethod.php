@@ -53,7 +53,7 @@ final class PodcastsMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts(array $input)
+    public static function podcasts(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -92,7 +92,6 @@ final class PodcastsMethod
                 XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::podcasts($podcasts, $user->id, $episodes);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

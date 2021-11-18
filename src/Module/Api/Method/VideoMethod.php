@@ -49,7 +49,7 @@ final class VideoMethod
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video(array $input)
+    public static function video(array $input): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -76,7 +76,6 @@ final class VideoMethod
             default:
                 echo Xml_Data::videos(array($object_id), $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

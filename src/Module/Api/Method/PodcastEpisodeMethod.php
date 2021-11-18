@@ -51,7 +51,7 @@ final class PodcastEpisodeMethod
      * filter  = (integer) podcast_episode ID number
      * @return boolean
      */
-    public static function podcast_episode(array $input)
+    public static function podcast_episode(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -80,7 +80,6 @@ final class PodcastEpisodeMethod
             default:
                 echo XML_Data::podcast_episodes(array($object_id), $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class ShareMethod
@@ -49,7 +48,7 @@ final class ShareMethod
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share(array $input)
+    public static function share(array $input): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -69,7 +68,6 @@ final class ShareMethod
             default:
                 echo Xml_Data::shares($share);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -26,13 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\User;
 
 /**
  * Class DeletedPodcastEpisodesMethod
@@ -53,7 +50,7 @@ final class DeletedPodcastEpisodesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function deleted_podcast_episodes(array $input)
+    public static function deleted_podcast_episodes(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -79,7 +76,6 @@ final class DeletedPodcastEpisodesMethod
                 XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::deleted('podcast_episode', $items);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

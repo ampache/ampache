@@ -51,7 +51,7 @@ final class LicenseSongsMethod
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs(array $input)
+    public static function license_songs(array $input): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +77,6 @@ final class LicenseSongsMethod
             default:
                 echo Xml_Data::songs($song_ids, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

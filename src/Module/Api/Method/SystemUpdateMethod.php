@@ -49,7 +49,7 @@ final class SystemUpdateMethod
      * @param array $input
      * @return boolean
      */
-    public static function system_update(array $input)
+    public static function system_update(array $input): bool
     {
         $user    = User::get_from_username(Session::username($input['auth']));
         $updated = false;
@@ -86,7 +86,6 @@ final class SystemUpdateMethod
         }
         //no update available but you are an admin so tell them
         Api::message('No update available', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

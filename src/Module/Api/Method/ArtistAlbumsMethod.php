@@ -49,7 +49,7 @@ final class ArtistAlbumsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums(array $input)
+    public static function artist_albums(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -82,7 +82,6 @@ final class ArtistAlbumsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::albums($albums, array(), $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

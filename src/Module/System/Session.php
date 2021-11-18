@@ -527,6 +527,28 @@ final class Session implements SessionInterface
         return $location;
     }
 
+    /**
+     * get_api_version
+     * Get session geolocation.
+     * @param string $sid
+     * @return int
+     */
+    public static function get_api_version($sid)
+    {
+        $api_version = 5;
+
+        if ($sid) {
+            $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
+            $db_results = Dba::read($sql, array($sid));
+            $row        = Dba::fetch_assoc($db_results);
+            if (!empty($row)) {
+                $api_version =  (int)$row['value'];
+            }
+        }
+
+        return $api_version;
+    }
+
     public function setup(): void
     {
         // enforce strict cookies. you don't need these elsewhere

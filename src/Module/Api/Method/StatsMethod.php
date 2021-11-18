@@ -64,7 +64,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input)
+    public static function stats(array $input): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -278,7 +278,6 @@ final class StatsMethod
                 }
                 break;
         }
-        Session::extend($input['auth']);
 
         return true;
     }

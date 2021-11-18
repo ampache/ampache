@@ -57,7 +57,7 @@ final class ArtistsMethod
      * limit        = (integer) //optional
      * @return boolean
      */
-    public static function artists(array $input)
+    public static function artists(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -82,7 +82,7 @@ final class ArtistsMethod
 
         ob_end_clean();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
@@ -97,7 +97,6 @@ final class ArtistsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::artists($artists, $include, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

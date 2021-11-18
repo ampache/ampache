@@ -56,7 +56,7 @@ final class CatalogFileMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input)
+    public static function catalog_file(array $input): bool
     {
         if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -148,7 +148,6 @@ final class CatalogFileMethod
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

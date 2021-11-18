@@ -47,7 +47,7 @@ final class PreferenceDeleteMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function preference_delete(array $input)
+    public static function preference_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -72,7 +72,6 @@ final class PreferenceDeleteMethod
         }
         Preference::delete($pref_name);
         Api::message("Deleted: $pref_name", $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

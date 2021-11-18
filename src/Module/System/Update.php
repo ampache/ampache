@@ -288,6 +288,12 @@ class Update
         $update_string = "* Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)";
         $version[]     = array('version' => '510005', 'description' => $update_string);
 
+        $update_string = "* Add api options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add option 'api_force_version'to to force a specific API response (even if that version is disabled)";
+        $version[]     = array('version' => '520000', 'description' => $update_string);
+
+        $update_string = "* Make sure preference names are always unique";
+        $version[]     = array('version' => '520001', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1697,6 +1703,59 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520000
+     *
+     * Add api options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+     * Add option 'api_force_version' to force a specific API response (even if that version is disabled)
+     */
+    public static function update_520000()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_4', '1', 'Enable API4 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_5', '1', 'Enable API5 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_force_version', '0', 'Force a specific API response (even if that version is disabled)', 25, 'special', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+    /**
+     * update_520000
+     *
+     * Make sure preference names are always unique
+     */
+    public static function update_520001()
+    {
+        $retval = true;
+        $sql    = "DELETE FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
+        Dba::write($sql);
+        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
+        Dba::write($sql);
+        $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        // fix all the prefs too
+        User::fix_preferences_all();
 
         return $retval;
     }

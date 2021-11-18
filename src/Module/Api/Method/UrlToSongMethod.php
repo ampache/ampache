@@ -50,7 +50,7 @@ final class UrlToSongMethod
      * url = (string) $url
      * @return boolean
      */
-    public static function url_to_song(array $input)
+    public static function url_to_song(array $input): bool
     {
         if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;

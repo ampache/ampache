@@ -57,7 +57,7 @@ final class PlaylistEditMethod
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit(array $input)
+    public static function playlist_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -107,7 +107,6 @@ final class PlaylistEditMethod
             $playlist->sort_tracks();
             $change_made = true;
         }
-        Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);

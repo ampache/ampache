@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 
 /**
@@ -52,7 +51,7 @@ final class FollowingMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function following(array $input)
+    public static function following(array $input): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -89,7 +88,6 @@ final class FollowingMethod
             default:
                 echo Xml_Data::users($users);
         }
-        Session::extend($input['auth']);
 
         return true;
     }
