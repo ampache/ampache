@@ -94,19 +94,20 @@ final class ApiHandler implements ApiHandlerInterface
         $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
         $api_version   = (int)$this->configContainer->get('api_force_version');
         $user          = $gatekeeper->getUser();
+        $userId        = $user->id ?? -1;
         if ($api_version == 0) {
             $api_version = ($is_handshake || $is_ping)
                 ? (int)substr($version, 0, 1)
                 : Session::get_api_version($input['auth']);
             // roll up the version if you haven't enabled the older versions
-            if ($api_version == 3 && !Preference::get_by_user($user->id, 'api_enable_3')) {
+            if ($api_version == 3 && !Preference::get_by_user($userId, 'api_enable_3')) {
                 $api_version = 4;
             }
-            if ($api_version == 4 && !Preference::get_by_user($user->id, 'api_enable_4')) {
+            if ($api_version == 4 && !Preference::get_by_user($userId, 'api_enable_4')) {
                 $api_version = 5;
             }
             // if you haven't enabled any api versions then don't keep going
-            if ($api_version == 5 && !Preference::get_by_user($user->id, 'api_enable_5')) {
+            if ($api_version == 5 && !Preference::get_by_user($userId, 'api_enable_5')) {
                 $this->logger->warning(
                     'No API version available; check your options!',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -222,7 +223,7 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
+        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
             $this->logger->warning(
                 sprintf('Unauthorized access attempt to API [%s]', Core::get_server('REMOTE_ADDR')),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
