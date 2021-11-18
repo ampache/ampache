@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Albums3Method
@@ -48,6 +50,7 @@ final class Albums3Method
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
