@@ -1045,7 +1045,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_artist_name($album_artist_id = 0)
     {
-        if (!empty($this->albumartist)) {
+        if (empty($this->albumartist)) {
             $this->format();
         }
         if (!$album_artist_id) {
