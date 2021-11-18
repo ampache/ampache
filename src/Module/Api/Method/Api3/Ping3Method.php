@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
 /**
@@ -56,7 +57,7 @@ final class Ping3Method
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event(self::class, 'Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'], '5');
+        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
 
         ob_end_clean();
         echo Xml3_Data::keyed_array($xmldata);

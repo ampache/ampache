@@ -92,7 +92,7 @@ final class Ping4Method
             $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, $countarray);
         }
 
-        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $token, 5);
+        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

@@ -88,7 +88,7 @@ final class Handshake3Method
         }
 
         // Log this attempt
-        debug_event(self::class, "Login Attempt, IP: $user_ip Time: $timestamp User: $username ($user_id)", 1);
+        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: $username ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;
@@ -182,7 +182,7 @@ final class Handshake3Method
             } // match
         } // end while
 
-        debug_event(self::class, 'Login Failed, unable to match passphrase', '1');
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
