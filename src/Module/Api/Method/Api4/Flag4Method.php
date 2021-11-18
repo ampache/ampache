@@ -54,8 +54,8 @@ final class Flag4Method
      */
     public static function flag(array $input): bool
     {
-        if (!AmpConfig::get('userflags')) {
-            Api4::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400', $input['api_format']);
+        if (!AmpConfig::get('ratings')) {
+            Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
 
             return false;
         }
