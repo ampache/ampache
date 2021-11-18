@@ -98,7 +98,7 @@ final class PlaylistGenerate4Method
             $rule_count++;
         }
         // additional rules
-        if ((int) $input['flag'] == 1) {
+        if ((int)($input['flag'] ?? 0) == 1) {
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -110,7 +110,7 @@ final class PlaylistGenerate4Method
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = new Album((int) $input['album']);
+        $album = new Album((int)($input['album'] ?? 0));
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
@@ -118,7 +118,7 @@ final class PlaylistGenerate4Method
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new Artist((int) $input['artist']);
+        $artist = new Artist((int)($input['artist'] ?? 0));
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';

@@ -66,7 +66,7 @@ final class FlagMethod
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool) $input['flag'];
+        $flag      = (bool)($input['flag'] ?? false);
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
         if ((int) $user->id > 0) {

@@ -61,7 +61,7 @@ final class GetArtMethod
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'];
+        $size      = $input['size'] ?? false;
         $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data

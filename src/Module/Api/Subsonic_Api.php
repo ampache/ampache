@@ -745,7 +745,7 @@ class Subsonic_Api
      */
     public static function getrandomsongs($input)
     {
-        $size = $input['size'];
+        $size = $input['size'] ?? false;
         if (!$size) {
             $size = 10;
         }

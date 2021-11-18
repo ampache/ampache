@@ -56,12 +56,12 @@ final class Playlists4Method
      */
     public static function playlists(array $input)
     {
-        $user     = User::get_from_username(Session::username($input['auth']));
-        $like     = !(((int)$input['exact'] == 1));
-        $hide     = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $user = User::get_from_username(Session::username($input['auth']));
+        $like = !((array_key_exists('', $input) && (int)$input['exact'] == 1));
+        $hide = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($user->id, (string) $input['filter'], $like);
+        $playlist_ids = Playlist::get_playlists($user->id, (string)($input['filter'] ?? ''), $like);
         // merge with the smartlists
         if (!$hide) {
             $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($user->id, (string) $input['filter'], $like));
