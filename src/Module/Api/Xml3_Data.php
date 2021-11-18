@@ -125,7 +125,7 @@ class Xml3_Data
      */
     public static function error($code, $string)
     {
-        $string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        $string = "\t<error code=\"$code\"><![CDATA[" . $string . "]]></error>";
 
         return Xml_Data::output_xml($string);
     } // error
@@ -143,7 +143,7 @@ class Xml3_Data
     {
         $final = self::_header();
         if (!empty($string)) {
-            $final .= "\t<$key><![CDATA[$string]]></$key>";
+            $final .= "\t<$key><![CDATA[" . $string . "]]></$key>";
         } else {
             $final .= "\t<$key />";
         }
@@ -256,7 +256,7 @@ class Xml3_Data
                 $value = self::keyed_array($value, 1);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
-                $string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
+                $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
             }
         } // end foreach
 
@@ -290,7 +290,7 @@ class Xml3_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int)($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int)($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int)($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int)($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int)($counts['playlist'] ?? 0) . "</playlists>\n\t<stream>" . (int)($counts['live_stream'] ?? 0) . "</stream>\n</tag>\n";
+            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . (int)($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int)($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int)($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int)($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int)($counts['playlist'] ?? 0) . "</playlists>\n\t<stream>" . (int)($counts['live_stream'] ?? 0) . "</stream>\n</tag>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -346,7 +346,7 @@ class Xml3_Data
                 $songs = ($artist->songs ?: 0);
             }
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[$art_url]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -394,7 +394,7 @@ class Xml3_Data
             if ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->artist_name]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->artist_name . "]]></artist>\n";
             }
 
             // Handle includes
@@ -404,7 +404,7 @@ class Xml3_Data
                 $songs = $album->song_count;
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk . "</disk>\n" . self::tags_string($album->tags) . "\t<art><![CDATA[$art_url]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
+            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk . "</disk>\n" . self::tags_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -437,7 +437,7 @@ class Xml3_Data
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
-            $string .= "<playlist id=\"$playlist->id\">\n\t<name><![CDATA[$playlist->name]]></name>\n\t<owner><![CDATA[$playlist->username]]></owner>\n\t<items>$item_total</items>\n\t<type>$playlist->type</type>\n</playlist>\n";
+            $string .= "<playlist id=\"$playlist->id\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username. "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -671,7 +671,7 @@ class Xml3_Data
      */
     public static function rss_feed($data, $title, $description, $date = null)
     {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if ($date != null) {
             $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
         }
