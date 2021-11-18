@@ -62,7 +62,7 @@ final class Rate4Method
             return false;
         }
         ob_end_clean();
-        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);;
+        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
