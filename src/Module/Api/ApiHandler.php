@@ -96,9 +96,10 @@ final class ApiHandler implements ApiHandlerInterface
         $userId        = $user->id ?? -1;
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
-            $api_version = ($is_handshake || $is_ping)
+            $api_session = Session::get_api_version($input['auth']);
+            $api_version = ($is_handshake || $is_ping || $api_session == 0)
                 ? (int)substr($version, 0, 1)
-                : Session::get_api_version($input['auth']);
+                : $api_session;
             // roll up the version if you haven't enabled the older versions
             if ($api_version == 3 && !Preference::get_by_user($userId, 'api_enable_3')) {
                 $api_version = 4;
