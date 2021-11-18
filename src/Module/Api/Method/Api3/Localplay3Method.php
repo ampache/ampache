@@ -44,21 +44,33 @@ final class Localplay3Method
     {
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $localplay->connect();
+        if (!$localplay->connect()) {
+            echo Xml3_Data::error('405', T_('Invalid Request'));
+
+            return false;
+        }
 
         switch ($input['command']) {
             case 'next':
+                $result = $localplay->next();
+                break;
             case 'prev':
-            case 'play':
+                $result = $localplay->prev();
+                break;
             case 'stop':
-                $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
-                echo Xml3_Data::keyed_array($xml_array);
-            break;
+                $result = $localplay->stop();
+                break;
+            case 'play':
+                $result = $localplay->play();
+                break;
             default:
                 // They are doing it wrong
                 echo Xml3_Data::error('405', T_('Invalid Request'));
-            break;
+
+                return false;
         } // end switch on command
+
+        $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result))));
+        echo Xml3_Data::keyed_array($xml_array);
     } // localplay
 }

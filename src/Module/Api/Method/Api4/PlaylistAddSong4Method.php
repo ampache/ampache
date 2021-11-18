@@ -59,7 +59,7 @@ final class PlaylistAddSong4Method
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song     = (int) $input['song'];
+        $song     = (int)$input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 

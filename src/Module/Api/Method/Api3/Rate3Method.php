@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Session;
@@ -45,7 +46,7 @@ final class Rate3Method
     public static function rate(array $input)
     {
         ob_end_clean();
-        $type      = (string) $input['type'];
+        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
