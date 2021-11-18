@@ -52,7 +52,7 @@ final class Gatekeeper implements GatekeeperInterface
         $this->request = $request;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return (isset($this->request->getQueryParams()['user']))
             ? User::get_from_username($this->request->getQueryParams()['user'])
