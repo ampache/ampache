@@ -1746,13 +1746,21 @@ class Update
      */
     public static function update_520001()
     {
-        $retval = true;
-        $sql    = "DELETE FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
-        Dba::write($sql);
+        $sql             = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
+        $dupe_prefs      = Dba::read($sql);
+        $pref_list       = array();
+        while ($results  = Dba::fetch_assoc($dupe_prefs)) {
+            $pref_list[] = (int)$results['id'];
+        }
+        // delete duplicates (if they exist)
+        foreach ($pref_list as $pref_id) {
+            $sql    = "DELETE FROM `preference` WHERE `id` = ?;";
+            Dba::write($sql, array($pref_id));
+        }
         $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
         Dba::write($sql);
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
-        Dba::write($sql);
+        $retval = (Dba::write($sql) !== false);
 
         // fix all the prefs too
         User::fix_preferences_all();
