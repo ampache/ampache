@@ -499,7 +499,9 @@ class AmpacheMpd extends localplay_controller
                                 break;
                         } // end switch on type
                     } else {
-                        $title_string = ($entry['Title'] && $entry['Album'] && $entry['Artist']) ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist'] : T_('Unknown');
+                        $title_string = (isset($entry['Title']) && isset($entry['Album']) && isset($entry['Artist']))
+                            ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist']
+                            : T_('Unknown');
                         $data['name'] = $title_string;
                         $data['link'] = '';
                     }
