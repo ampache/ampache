@@ -97,7 +97,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_handshake || $is_ping || $api_session == 0)
+            $api_version = ($is_handshake || $is_ping)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -336,6 +336,10 @@ final class ApiHandler implements ApiHandlerInterface
              *
              * @todo cleanup
              */
+            $this->logger->info(
+                sprintf('API function [%s]', $handlerClassName),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
