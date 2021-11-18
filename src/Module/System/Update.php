@@ -1752,7 +1752,7 @@ class Update
         $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
         Dba::write($sql);
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
 
         // fix all the prefs too
         User::fix_preferences_all();
