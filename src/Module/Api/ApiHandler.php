@@ -92,9 +92,9 @@ final class ApiHandler implements ApiHandlerInterface
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];
         $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
-        $api_version   = (int)$this->configContainer->get('api_force_version');
         $user          = $gatekeeper->getUser();
         $userId        = $user->id ?? -1;
+        $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_version = ($is_handshake || $is_ping)
                 ? (int)substr($version, 0, 1)
