@@ -85,8 +85,8 @@ final class EditObjectAction extends AbstractEditAction
             $object_type = implode('_', explode('_', $object_type, -1));
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $class_name($_POST['id']);
+        $className  = ObjectTypeToClassNameMapper::map($object_type);
+        $libitem    = new $className($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueless check
             if (filter_has_var(INPUT_POST, 'user')) {
@@ -127,8 +127,8 @@ final class EditObjectAction extends AbstractEditAction
 
         $libitem->format();
         $new_id     = $libitem->update($_POST);
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $class_name($new_id);
+        $className  = ObjectTypeToClassNameMapper::map($object_type);
+        $libitem    = new $className($new_id);
         $libitem->format();
 
         xoutput_headers();

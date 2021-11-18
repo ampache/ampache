@@ -41,8 +41,8 @@ use Ampache\Config\AmpConfig;
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
                     <td class="cel_song"><?php echo $song->title; ?></td>
-                    <td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
-                    <td class="cel_artist"><?php echo $song->get_artist_name($song->album); ?></td>
+                    <td class="cel_album"><?php echo $song->get_album_name(); ?></td>
+                    <td class="cel_artist"><?php echo $song->get_artist_name(); ?></td>
                     <td class="cel_filename"><?php echo $song->file; ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>

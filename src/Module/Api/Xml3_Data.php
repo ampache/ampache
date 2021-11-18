@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
@@ -437,7 +438,7 @@ class Xml3_Data
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
-            $string .= "<playlist id=\"$playlist->id\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username. "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
+            $string .= "<playlist id=\"$playlist->id\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -541,11 +542,11 @@ class Xml3_Data
         }
 
         $democratic = Democratic::get_current_playlist();
-
-        $string = '';
+        $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
-            $song = new $data['object_type']($data['object_id']);
+            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $className($data['object_id']);
             $song->format();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
@@ -557,7 +558,7 @@ class Xml3_Data
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', $_REQUEST['auth']);
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -645,7 +646,7 @@ class Xml3_Data
             $user     = new User($activity->user);
             $string .= "\t<activity id=\"" . $aid . "\">\n\t\t<date>" . $activity->activity_date . "</date>\n\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n\t\t<object_id>" . $activity->object_id . "</object_id>\n\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
             $string .= "\t</activity>\n";
         }

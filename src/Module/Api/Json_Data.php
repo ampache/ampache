@@ -1057,8 +1057,8 @@ class Json_Data
         $JSON = [];
 
         foreach ($object_ids as $row_id => $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $class_name($data['object_id']);
+            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $className($data['object_id']);
             $song->format();
 
             $rating  = new Rating($song->id, 'song');
@@ -1067,8 +1067,8 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
-                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
-                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
+                "artist" => array("id" => (string) $song->artist, "name" => $song->get_artist_name()),
+                "album" => array("id" => (string) $song->album, "name" => $song->get_album_name()),
                 "genre" => self::genre_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,

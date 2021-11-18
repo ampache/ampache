@@ -921,8 +921,8 @@ class Json4_Data
             array_push($JSON, array(
                 "id" => (string) $song->id,
                 "title" => $song->title,
-                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
-                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
+                "artist" => array("id" => (string) $song->artist, "name" => $song->get_artist_name()),
+                "album" => array("id" => (string) $song->album, "name" => $song->get_album_name()),
                 "tag" => self::tags_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,

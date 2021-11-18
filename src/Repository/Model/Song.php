@@ -956,6 +956,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_name($album_id = 0)
     {
+        if (isset($this->f_album_full) && $album_id == 0) {
+            return $this->f_album_full;
+        }
         if (!$album_id) {
             $album_id = $this->album;
         }
@@ -1020,6 +1023,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_artist_name($artist_id = 0)
     {
+        if (isset($this->f_artist_full) && $artist_id == 0) {
+            return $this->f_artist_full;
+        }
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
@@ -1039,15 +1045,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_artist_name($album_artist_id = 0)
     {
+        if (!empty($this->albumartist)) {
+            $this->format();
+        }
         if (!$album_artist_id) {
             $album_artist_id = $this->albumartist;
         }
-        $album_artist = new Artist($album_artist_id);
-        if ($album_artist->id) {
-            return (string)$album_artist->get_fullname();
-        }
 
-        return '';
+        return self::get_artist_name($album_artist_id);
     } // get_album_artist_name
 
     /**

@@ -86,16 +86,16 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
         $this->logger->warning(
-            $class_name,
+            $className,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         $this->logger->warning(
             $object_id,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-        $libitem    = new $class_name($object_id);
+        $libitem    = new $className($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }
