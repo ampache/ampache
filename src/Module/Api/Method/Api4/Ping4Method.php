@@ -54,15 +54,16 @@ final class Ping4Method
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);
-        $token        = (string) $input['auth'];
         $user         = User::get_from_username(Session::username($input['auth']));
 
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api4::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $token)) {
-            Session::extend($token);
-            Session::write($input['auth'], $data_version);
+        if (Session::exists('api', $input['auth'])) {
+            Session::extend($input['auth']);
+            if (in_array($data_version, array(3, 4, 5))) {
+                Session::write($input['auth'], $data_version);
+            }
             // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
             $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
             $db_results = Dba::read($sql);
