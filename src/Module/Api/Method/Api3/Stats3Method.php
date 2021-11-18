@@ -50,6 +50,7 @@ final class Stats3Method
         $offset   = $input['offset'];
         $limit    = $input['limit'];
         $username = $input['username'];
+        $user     = User::get_from_username($username);
 
         $albums = null;
         if ($type == "newest") {
@@ -63,7 +64,6 @@ final class Stats3Method
                 } else {
                     if ($type == "recent") {
                         if (!empty($username)) {
-                            $user = User::get_from_username($username);
                             if ($user !== null) {
                                 $albums = $user->get_recently_played($limit, 'album');
                             } else {

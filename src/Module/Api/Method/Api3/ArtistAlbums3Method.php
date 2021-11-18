@@ -25,9 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\User;
 
 final class ArtistAlbums3Method
 {
@@ -42,6 +44,7 @@ final class ArtistAlbums3Method
     {
         $artist = new Artist($input['filter']);
         $albums = static::getAlbumRepository()->getByArtist($artist->id);
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
