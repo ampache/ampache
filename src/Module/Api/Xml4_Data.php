@@ -485,7 +485,7 @@ class Xml4_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int) ($counts['album']) . "</albums>\n\t<artists>" . (int) ($counts['artist']) . "</artists>\n\t<songs>" . (int) ($counts['song']) . "</songs>\n\t<videos>" . (int) ($counts['video']) . "</videos>\n\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n\t<stream>" . (int) ($counts['live_stream']) . "</stream>\n</tag>\n";
+            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<stream>" . (int) ($counts['live_stream'] ?? 0) . "</stream>\n</tag>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);

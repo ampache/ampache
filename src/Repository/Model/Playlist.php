@@ -734,7 +734,7 @@ class Playlist extends playlist_object
             $results    = Dba::fetch_assoc($db_results);
         }
         if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event(self::class, 'has_item results: ' . $results['object_id'], 5);
+            debug_event(self::class, 'has_item results: ' . ($results['object_id'] ?? $results['track']), 5);
 
             return true;
         }

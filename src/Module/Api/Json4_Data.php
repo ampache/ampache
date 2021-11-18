@@ -263,12 +263,12 @@ class Json4_Data
             array_push($TAGS, array(
                 "id" => (string) $tag_id,
                 "name" => $tag->name,
-                "albums" => (int) $counts['album'],
-                "artists" => (int) $counts['artist'],
-                "songs" => (int) $counts['song'],
-                "videos" => (int) $counts['video'],
-                "playlists" => (int) $counts['playlist'],
-                "stream" => (int) $counts['live_stream']
+                "albums" => (int)($counts['album'] ?? 0),
+                "artists" => (int)($counts['artist'] ?? 0),
+                "songs" => (int)($counts['song'] ?? 0),
+                "videos" => (int)($counts['video'] ?? 0),
+                "playlists" => (int)($counts['playlist'] ?? 0),
+                "stream" => (int)($counts['live_stream'] ?? 0)
             ));
         } // end foreach
 
