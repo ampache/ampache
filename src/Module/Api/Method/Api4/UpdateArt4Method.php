@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -57,12 +58,12 @@ final class UpdateArt4Method
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['api_format'])) {
             return false;
         }
-        $type      = (string) $input['type'];
+        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object    = (int) $input['id'];
         $overwrite = (int) $input['overwrite'] == 0;
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album'))) {
+        if (!in_array($type, array('Artist', 'Album'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return true;

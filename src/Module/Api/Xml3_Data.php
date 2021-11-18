@@ -647,7 +647,7 @@ class Xml3_Data
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
-            $string .= "\t</activity>n";
+            $string .= "\t</activity>\n";
         }
         $string .= "</timeline>\n";
 

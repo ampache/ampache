@@ -48,8 +48,7 @@ final class Democratic3Method
 
         switch ($input['method']) {
             case 'vote':
-                $type  = 'song';
-                $media = new $type($input['oid']);
+                $media = new Song($input['oid']);
                 if (!$media->id) {
                     echo Xml3_Data::error('400', T_('Media Object Invalid or Not Specified'));
                     break;
@@ -66,13 +65,12 @@ final class Democratic3Method
                 echo Xml3_Data::keyed_array($xml_array);
             break;
             case 'devote':
-                $type  = 'song';
-                $media = new $type($input['oid']);
+                $media = new Song($input['oid']);
                 if (!$media->id) {
                     echo Xml3_Data::error('400', T_('Media Object Invalid or Not Specified'));
                 }
 
-                $uid = $democratic->get_uid_from_object_id($media->id, $type);
+                $uid = $democratic->get_uid_from_object_id($media->id);
                 $democratic->remove_vote($uid);
 
                 // Everything was ok

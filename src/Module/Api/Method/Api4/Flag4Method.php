@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api4;
@@ -63,7 +64,7 @@ final class Flag4Method
             return false;
         }
         ob_end_clean();
-        $type      = $input['type'];
+        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object_id = $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
         $user      = User::get_from_username(Session::username($input['auth']));

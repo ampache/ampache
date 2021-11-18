@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api4;
 
@@ -50,11 +51,11 @@ final class UpdateFromTags4Method
         if (!Api4::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
-        $type   = (string) $input['type'];
+        $type   = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album', 'song'))) {
+        if (!in_array($type, array('Artist', 'Album', 'Song'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
