@@ -64,7 +64,7 @@ final class Democratic3Method
                 ));
 
                 // If everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 echo Xml3_Data::keyed_array($xml_array);
             break;
             case 'devote':
@@ -77,7 +77,7 @@ final class Democratic3Method
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 echo Xml3_Data::keyed_array($xml_array);
             break;
             case 'playlist':
