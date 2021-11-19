@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Album3Method
@@ -43,6 +45,7 @@ final class Album3Method
     {
         $uid     = scrub_in($input['filter']);
         $include = [];
+        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }

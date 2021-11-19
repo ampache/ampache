@@ -24,9 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Democratic3Method
@@ -40,10 +42,11 @@ final class Democratic3Method
      * This is for controlling democratic play
      * @param array $input
      */
-    public static function democratic(array $input, $user_id = null)
+    public static function democratic(array $input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         // Load up democratic information
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
 
         switch ($input['method']) {
@@ -81,7 +84,7 @@ final class Democratic3Method
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo Xml3_Data::democratic($objects, $user_id);
+                echo Xml3_Data::democratic($objects, $user);
             break;
             case 'play':
                 $url       = $democratic->play_url();

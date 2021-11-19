@@ -56,8 +56,9 @@ final class DemocraticMethod
         if (!Api::check_parameter($input, array('method'), self::ACTION)) {
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
         // Load up democratic information
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
 
         switch ($input['method']) {
@@ -112,15 +113,14 @@ final class DemocraticMethod
                 break;
             case 'playlist':
                 $objects = $democratic->get_items();
-                $user    = User::get_from_username(Session::username($input['auth']));
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::democratic($objects, $user->id);
+                        echo Json_Data::democratic($objects, $user);
                         break;
                     default:
-                        echo Xml_Data::democratic($objects, $user->id);
+                        echo Xml_Data::democratic($objects, $user);
                 }
                 break;
             case 'play':

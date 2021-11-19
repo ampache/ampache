@@ -123,14 +123,12 @@ class Democratic extends Tmp_Playlist
      */
     public function set_parent()
     {
-        $demo_id = Dba::escape($this->id);
-
-        $sql        = "SELECT * FROM `tmp_playlist` WHERE `session`='$demo_id'";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_assoc($db_results);
-
-        $this->tmp_playlist = $row['id'];
+        $sql        = "SELECT * FROM `tmp_playlist` WHERE `session` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
+        if (!empty($row)) {
+            $this->tmp_playlist = $row['id'];
+        }
     } // set_parent
 
     /**
@@ -191,16 +189,19 @@ class Democratic extends Tmp_Playlist
      * This returns the current users current playlist, or if specified
      * this current playlist of the user
      */
-    public static function get_current_playlist()
+    public static function get_current_playlist($user = false)
     {
-        $democratic_id = AmpConfig::get('democratic_id');
-
+        if (!$user) {
+            $user = Core::get_global('user');
+        }
+        $democratic_id = AmpConfig::get('democratic_id', false);
         if (!$democratic_id) {
-            $level         = Dba::escape(Core::get_global('user')->access);
-            $sql           = "SELECT `id` FROM `democratic` WHERE `level` <= '$level' ORDER BY `level` DESC,`primary` DESC";
-            $db_results    = Dba::read($sql);
+            $sql           = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC,`primary` DESC";
+            $db_results    = Dba::read($sql, array($user->access ?? 0));
             $row           = Dba::fetch_assoc($db_results);
-            $democratic_id = $row['id'];
+            if (!empty($row)) {
+                $democratic_id = $row['id'];
+            }
         }
 
         return new Democratic($democratic_id);

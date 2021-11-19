@@ -244,7 +244,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
             $live_stream->format();
@@ -278,7 +277,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($licenses as $license_id) {
             $license = new License($license_id);
             array_push($JSON, array(
@@ -309,7 +307,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
             $label->format();
@@ -1042,23 +1039,21 @@ class Json_Data
      * due to the votes and all of that
      *
      * @param  array        $object_ids Object IDs
-     * @param  integer|null $user_id
+     * @param  User|null $user
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return string       JSON Object "song"
      */
-    public static function democratic($object_ids = array(), $user_id = null, $object = true)
+    public static function democratic($object_ids = array(), $user = null, $object = true)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
         }
-
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-
         foreach ($object_ids as $row_id => $data) {
-            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $className($data['object_id']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song      = new $className($data['object_id']);
             $song->format();
 
             $rating  = new Rating($song->id, 'song');
@@ -1073,12 +1068,12 @@ class Json_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => $song->play_url('', 'api', false, $user_id),
+                "url" => $song->play_url('', 'api', false, $user->id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => $rating->get_user_rating(),
-                "rating" => $rating->get_user_rating(),
-                "averagerating" => $rating->get_average_rating(),
+                "preciserating" => ($rating->get_user_rating($user->id) ?: null),
+                "rating" => ($rating->get_user_rating($user->id) ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
                 "playcount" => (int) $song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ));

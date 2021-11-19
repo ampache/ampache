@@ -532,16 +532,16 @@ class Xml3_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    array    $object_ids    Object IDs
-     * @return    string    return xml
+     * @param    array   $object_ids    Object IDs
+     * @param    User $user
+     * @return   string  return xml
      */
-    public static function democratic($object_ids = array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user = null)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
         }
-
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
@@ -558,7 +558,7 @@ class Xml3_Data
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', $_REQUEST['auth']);
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user->id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?: null) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);

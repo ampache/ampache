@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
@@ -226,7 +227,6 @@ class Json4_Data
         }
 
         $JSON = [];
-
         foreach ($licenses as $license_id) {
             $license = new License($license_id);
             array_push($JSON, array(
@@ -898,21 +898,20 @@ class Json4_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param integer $user_id
+     * @param User $user
      * @return string    return JSON
      */
-    public static function democratic($object_ids = array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user = null)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
         }
-
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-
         foreach ($object_ids as $row_id => $data) {
-            $song = new $data['object_type']($data['object_id']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song      = new $className($data['object_id']);
             $song->format();
 
             $rating  = new Rating($song->id, 'song');
@@ -927,11 +926,11 @@ class Json4_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => $song->play_url('', 'api', false, $user_id),
+                "url" => $song->play_url('', 'api', false, $user->id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => ($rating->get_user_rating() ?: null),
-                "rating" => ($rating->get_user_rating() ?: null),
+                "preciserating" => ($rating->get_user_rating($user->id) ?: null),
+                "rating" => ($rating->get_user_rating($user->id) ?: null),
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "vote" => $democratic->get_vote($row_id),
                 "genre" => self::tags_array($song->tags, true)

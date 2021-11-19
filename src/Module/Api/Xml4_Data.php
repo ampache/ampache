@@ -866,12 +866,12 @@ class Xml4_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param integer $user_id
+     * @param User $user
      * @return   string     return xml
      */
-    public static function democratic($object_ids = array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user = null)
     {
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
@@ -888,7 +888,7 @@ class Xml4_Data
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user->id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?: null) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
