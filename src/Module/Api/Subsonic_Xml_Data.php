@@ -695,7 +695,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->album_artist));
-        $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
+        $xalbum->addAttribute('artist', (string) self::checkName($album->get_album_artist_fullname()));
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)

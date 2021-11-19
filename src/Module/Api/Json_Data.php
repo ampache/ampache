@@ -478,7 +478,7 @@ class Json_Data
             $ourArray["name"] = $album->get_fullname();
 
             // Do a little check for artist stuff
-            if ($album->f_album_artist_name != "") {
+            if ($album->get_album_artist_fullname() != "") {
                 $ourArray['artist'] = array(
                     "id" => (string)$album->album_artist,
                     "name" => $album->f_album_artist_name
@@ -491,7 +491,7 @@ class Json_Data
             } else {
                 $ourArray['artist'] = array(
                     "id" => (string)$album->album_artist,
-                    "name" => $album->f_artist_name
+                    "name" => $album->get_artist_fullname()
                 );
             }
 
@@ -921,13 +921,13 @@ class Json_Data
                 "name" => $song->get_fullname(),
                 "artist" => array(
                     "id" => (string) $song->artist,
-                    "name" => $song->get_artist_name()),
+                    "name" => $song->get_artist_fullname()),
                 "album" => array(
                     "id" => (string) $song->album,
-                    "name" => $song->get_album_name()),
+                    "name" => $song->get_album_fullname()),
                 'albumartist' => array(
                     "id" => (string) $song->albumartist,
-                    "name" => $song->get_album_artist_name()
+                    "name" => $song->get_album_artist_fullname()
                 )
             );
 
@@ -1062,8 +1062,8 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
-                "artist" => array("id" => (string) $song->artist, "name" => $song->get_artist_name()),
-                "album" => array("id" => (string) $song->album, "name" => $song->get_album_name()),
+                "artist" => array("id" => (string) $song->artist, "name" => $song->get_artist_fullname()),
+                "album" => array("id" => (string) $song->album, "name" => $song->get_album_fullname()),
                 "genre" => self::genre_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,

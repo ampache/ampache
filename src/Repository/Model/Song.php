@@ -954,7 +954,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $album_id
      * @return string
      */
-    public function get_album_name($album_id = 0)
+    public function get_album_fullname($album_id = 0)
     {
         if (isset($this->f_album_full) && $album_id == 0) {
             return $this->f_album_full;
@@ -1021,7 +1021,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $artist_id
      * @return string
      */
-    public function get_artist_name($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0)
     {
         if (isset($this->f_artist_full) && $artist_id == 0) {
             return $this->f_artist_full;
@@ -1038,12 +1038,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_artist_name
 
     /**
-     * get_album_artist_name
+     * get_album_artist_fullname
      * gets the name of $this->albumartist, allows passing of id
      * @param integer $album_artist_id
      * @return string
      */
-    public function get_album_artist_name($album_artist_id = 0)
+    public function get_album_artist_fullname($album_artist_id = 0)
     {
         if (empty($this->albumartist)) {
             $this->format();
@@ -1052,8 +1052,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = $this->albumartist;
         }
 
-        return self::get_artist_name($album_artist_id);
-    } // get_album_artist_name
+        return self::get_artist_fullname($album_artist_id);
+    } // get_album_artist_fullname
 
     /**
      * set_played
@@ -1692,15 +1692,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->disk = ($this->disk) ? $this->disk : $album->disk;
 
         // Format the album name
-        $this->f_album_full = $this->get_album_name();
+        $this->f_album_full = $this->get_album_fullname();
         $this->f_album      = $this->f_album_full;
 
         // Format the artist name
-        $this->f_artist_full = $this->get_artist_name();
+        $this->f_artist_full = $this->get_artist_fullname();
         $this->f_artist      = $this->f_artist_full;
 
         // Format the album_artist name
-        $this->f_albumartist_full = $this->get_album_artist_name();
+        $this->f_albumartist_full = $this->get_album_artist_fullname();
 
         // Format the title
         $this->f_name_full = $this->get_fullname();
@@ -2057,7 +2057,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_stream_name()
     {
-        return $this->get_artist_name() . " - " . $this->title;
+        return $this->get_artist_fullname() . " - " . $this->title;
     }
 
     /**

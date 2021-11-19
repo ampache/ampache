@@ -582,12 +582,8 @@ class Album extends database_object implements library_item
                 $this->$key = $value;
             }
 
-            if ($this->album_artist) {
-                $album_artist = new Artist($this->album_artist);
-                $album_artist->format();
-                $this->album_artist_name   = $album_artist->name;
-                $this->f_album_artist_name = $album_artist->get_fullname();
-                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
+            if ($this->get_album_artist_fullname() != "") {
+                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->get_album_artist_name()) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
             }
 
             $this->tags   = Tag::get_top_tags('album', $this->id);
@@ -595,17 +591,8 @@ class Album extends database_object implements library_item
         }
         // set link and f_link
         $this->get_f_link();
-
-        if ($this->artist_count == '1') {
-            $artist              = trim(trim((string)$this->artist_prefix) . ' ' . trim((string)$this->artist_name));
-            $this->f_artist_name = $artist;
-            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->artist_name) . "\">" . scrub_out($artist) . "</a>";
-            $this->f_artist      = $artist;
-        } else {
-            $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
-            $this->f_artist      = T_('Various');
-            $this->f_artist_name = $this->f_artist;
-        }
+        $this->get_artist_fullname();
+        $this->get_f_artist_link();
 
         if (!$this->year) {
             $this->f_year = "N/A";
@@ -708,18 +695,75 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Get item f_artist_link.
+     * @return string
+     */
+    public function get_f_artist_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_artist_link)) {
+            if ($this->artist_count == '1') {
+                $this->f_artist_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\">" . scrub_out($this->get_artist_fullname()) . "</a>";
+            } else {
+                $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
+            }
+        }
+
+        return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_artist_name.
+     * @return string
+     */
+    public function get_artist_fullname()
+    {
+        if (!isset($this->f_artist_name)) {
+            if ($this->artist_count == '1') {
+                $artist = new Artist($this->album_artist);
+                $this->f_artist_name = trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name));
+            } else {
+                $this->f_artist_name = T_('Various');
+            }
+        }
+
+        return $this->f_artist_name;
+    }
+
+    /**
      * Get item album_artist fullname.
+     * @return string
+     */
+    public function get_album_artist_fullname()
+    {
+        if (!isset($this->f_album_artist_name)) {
+            if ($this->album_artist) {
+                $album_artist = new Artist($this->album_artist);
+                $this->f_album_artist_name = $album_artist->get_fullname();
+            } else {
+                $this->f_album_artist_name = '';
+            }
+        }
+
+        return $this->f_album_artist_name;
+    }
+
+    /**
+     * Get item album_artist name.
      * @return string
      */
     public function get_album_artist_name()
     {
-        if ($this->album_artist) {
-            $album_artist = new Artist($this->album_artist);
-
-            return $album_artist->get_fullname();
+        if (!isset($this->album_artist_name)) {
+            if ($this->album_artist) {
+                $album_artist = new Artist($this->album_artist);
+                $this->album_artist_name = $album_artist->name;
+            } else {
+                $this->album_artist_name = '';
+            }
         }
 
-        return '';
+        return $this->album_artist_name;
     }
 
     /**
@@ -759,7 +803,7 @@ class Album extends database_object implements library_item
         $search['rule_1_input']    = $this->name;
         $search['rule_1_operator'] = 4;
         $search['rule_1']          = "album";
-        $search['rule_2_input']    = $this->album_artist_name;
+        $search['rule_2_input']    = $this->get_album_artist_name();
         $search['rule_2_operator'] = 4;
         $search['rule_2']          = "artist";
         $songs                     = Search::run($search);
@@ -911,7 +955,7 @@ class Album extends database_object implements library_item
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->get_fullname();
+            $title = '[' . ($this->get_album_artist_fullname() ?? $this->get_artist_fullname()) . '] ' . $this->get_fullname();
             Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }

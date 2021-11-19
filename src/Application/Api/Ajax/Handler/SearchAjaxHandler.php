@@ -109,7 +109,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
-                            'rels' => scrub_out($album->get_album_artist_name()),
+                            'rels' => scrub_out($album->get_album_artist_fullname()),
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
                     }
@@ -141,7 +141,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
-                            'rels' => scrub_out($song->get_artist_name()),
+                            'rels' => scrub_out($song->get_artist_fullname()),
                             'image' => Art::url($art_object, $art_type, null, 10),
                         );
                     }
