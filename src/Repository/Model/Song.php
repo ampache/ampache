@@ -1045,7 +1045,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_artist_fullname($album_artist_id = 0)
     {
-        if (empty($this->albumartist)) {
+        if (!isset($this->albumartist)) {
             $this->format();
         }
         if (!$album_artist_id) {
@@ -1686,10 +1686,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // force the album artist.
         $album             = new Album($this->album);
-        $this->albumartist = (!empty($this->albumartist)) ? $this->albumartist : $album->album_artist;
+        $this->albumartist = $this->albumartist ?? $album->album_artist;
 
         // fix missing song disk (where is this coming from?)
-        $this->disk = ($this->disk) ? $this->disk : $album->disk;
+        $this->disk = ($this->disk) ?? $album->disk;
 
         // Format the album name
         $this->f_album_full = $this->get_album_fullname();
