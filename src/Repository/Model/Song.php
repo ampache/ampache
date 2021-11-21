@@ -1045,14 +1045,18 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_album_artist_fullname($album_artist_id = 0)
     {
-        if (!isset($this->albumartist)) {
-            $this->format();
+        if ($album_artist_id) {
+            return self::get_artist_fullname($album_artist_id);
         }
-        if (!$album_artist_id) {
-            $album_artist_id = $this->albumartist;
+        if ($this->albumartist == null) {
+            return '';
+        }
+        if (!isset($this->albumartist)) {
+            $album             = new Album($this->album);
+            $this->albumartist = $album->album_artist;
         }
 
-        return self::get_artist_fullname($album_artist_id);
+        return self::get_artist_fullname($this->albumartist);
     } // get_album_artist_fullname
 
     /**
