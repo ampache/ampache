@@ -740,7 +740,7 @@ class Xml_Data
             $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
-            $string .= "<playlist id=" . $playlist_id . ">\n\t<name><![CDATA[" . $playlist_name > "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>$playitem_total</items>\n\t<type>$playlist_type</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=" . $playlist_id . ">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>$playitem_total</items>\n\t<type>$playlist_type</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
