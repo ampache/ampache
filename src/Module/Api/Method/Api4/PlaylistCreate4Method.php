@@ -65,6 +65,7 @@ final class PlaylistCreate4Method
         }
 
         $uid = Playlist::create($name, $type, $user->id);
+        Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::playlists(array($uid), $user_id);
@@ -72,7 +73,6 @@ final class PlaylistCreate4Method
             default:
                 echo Xml4_Data::playlists(array($uid), $user_id);
         }
-        Catalog::count_table('playlist');
 
         return true;
     } // playlist_create

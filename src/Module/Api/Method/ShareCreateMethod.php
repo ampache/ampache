@@ -117,6 +117,7 @@ final class ShareCreateMethod
             return false;
         }
 
+        Catalog::count_table('share');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -125,7 +126,6 @@ final class ShareCreateMethod
             default:
                 echo Xml_Data::shares($share);
         }
-        Catalog::count_table('share');
 
         return true;
     }

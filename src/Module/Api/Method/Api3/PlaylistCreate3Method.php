@@ -48,10 +48,10 @@ final class PlaylistCreate3Method
         if ($type != 'private') {
             $type = 'public';
         }
+        Catalog::count_table('playlist');
 
         $uid = Playlist::create($name, $type);
         echo Xml3_Data::playlists(array($uid));
 
-        Catalog::count_table('playlist');
     }
 }

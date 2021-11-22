@@ -77,6 +77,7 @@ final class PodcastCreateMethod
             return false;
         }
 
+        Catalog::count_table('podcast');
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
@@ -86,7 +87,6 @@ final class PodcastCreateMethod
             default:
                 echo XML_Data::podcasts(array($podcast), $user->id);
         }
-        Catalog::count_table('podcast');
 
         return true;
     }

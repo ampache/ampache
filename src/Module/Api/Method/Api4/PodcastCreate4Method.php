@@ -70,6 +70,7 @@ final class PodcastCreate4Method
         $data['catalog'] = $input['catalog'];
         $podcast         = Podcast::create($data, true);
         if ($podcast) {
+            Catalog::count_table('podcast');
             $user    = User::get_from_username(Session::username($input['auth']));
             $user_id = $user->id;
             ob_end_clean();
@@ -80,7 +81,6 @@ final class PodcastCreate4Method
                 default:
                     echo Xml4_Data::podcasts(array($podcast), $user_id);
             }
-            Catalog::count_table('podcast');
         } else {
             Api4::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
         }
