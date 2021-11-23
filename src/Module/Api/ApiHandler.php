@@ -126,6 +126,10 @@ final class ApiHandler implements ApiHandlerInterface
                 );
             }
         }
+        // If you call api3 from json you don't get anything so change back to 5
+        if ($api_format == 'json' && $api_version == 3) {
+            $api_version = 5;
+        }
 
         // If it's not a handshake then we can allow it to take up lots of time
         if (!$is_handshake) {
