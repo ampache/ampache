@@ -38,7 +38,7 @@ if (empty($rootdir)) {
 }
 $rootdir .= DIRECTORY_SEPARATOR;
 
-if (filter_has_var(INPUT_GET, 'operation')) {
+if (isset($_GET['operation'])) {
     $fs = new FileSystem($rootdir);
     try {
         $rslt = null;

@@ -125,7 +125,7 @@ final class ShowAction implements ApplicationActionInterface
         /**
          * @deprecated FIXME: Legacy stuff - should be removed after a version or so
          */
-        if (!filter_has_var(INPUT_GET, 'object_type')) {
+        if (!isset($_GET['object_type'])) {
             $_GET['object_type'] = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
 
@@ -142,14 +142,14 @@ final class ShowAction implements ApplicationActionInterface
         /* Decide what size this image is */
         $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = Art::get_thumb_size($thumb);
-        $kind  = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
+        $kind  = isset($_GET['kind']) ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
 
         $image       = '';
         $mime        = '';
         $filename    = '';
         $etag        = '';
         $typeManaged = false;
-        if (filter_has_var(INPUT_GET, 'type')) {
+        if (isset($_GET['type'])) {
             switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
                 case 'popup':
                     $typeManaged = true;
@@ -226,7 +226,7 @@ final class ShowAction implements ApplicationActionInterface
                 $image = file_get_contents($defaultimg);
             } else {
                 $thumb_data = array();
-                if (filter_has_var(INPUT_GET, 'thumb')) {
+                if (isset($_GET['thumb'])) {
                     $thumb_data = $art->get_thumb($size);
                     $etag .= '-' . $thumb;
                 }

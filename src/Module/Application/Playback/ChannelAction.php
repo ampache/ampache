@@ -77,7 +77,7 @@ final class ChannelAction implements ApplicationActionInterface
         // Authenticate the user here
         if ($channel->is_private) {
             $is_auth = false;
-            if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
+            if (isset($_SERVER['PHP_AUTH_USER'])) {
                 $htusername = Core::get_server('PHP_AUTH_USER');
                 $htpassword = Core::get_server('PHP_AUTH_PW');
 

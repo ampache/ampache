@@ -54,7 +54,7 @@ final class ShowArtDlgAction extends AbstractArtAction
         }
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 

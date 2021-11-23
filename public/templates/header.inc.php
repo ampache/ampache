@@ -454,7 +454,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
             <?php
                 }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] != "expanded")) || (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] == "collapsed")); ?>
+                $isCollapsed = ((AmpConfig::get('sidebar_light') && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >

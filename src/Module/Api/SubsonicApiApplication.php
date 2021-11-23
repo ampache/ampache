@@ -90,7 +90,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $version   = $_REQUEST['v'] ?? '';
         $clientapp = $_REQUEST['c'] ?? '';
 
-        if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
