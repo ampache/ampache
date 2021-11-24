@@ -118,6 +118,7 @@ class Preference extends database_object
         'show_license',
         'show_lyrics',
         'show_played_times',
+        'show_playlist_username',
         'show_skipped_times',
         'sidebar_light',
         'site_title',
@@ -693,7 +694,8 @@ class Preference extends database_object
                "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
                "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
                "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-               "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache');";
+               "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
+               "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse');";
         Dba::write($sql);
     } // set_defaults
 
@@ -872,7 +874,8 @@ class Preference extends database_object
             'api_enable_3' => T_('Allow Ampache API3 responses'),
             'api_enable_4' => T_('Allow Ampache API4 responses'),
             'api_enable_5' => T_('Allow Ampache API5 responses'),
-            'api_force_version' => T_('Force a specific API response no matter what version you send')
+            'api_force_version' => T_('Force a specific API response no matter what version you send'),
+            'show_playlist_username' => T_('Show playlist owner username in titles')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));

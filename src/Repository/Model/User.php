@@ -1113,19 +1113,6 @@ class User extends database_object
     } // access_level_to_name
 
     /**
-     * fix_preferences_all
-     * Run fix_preferences for each user
-     */
-    public static function fix_preferences_all()
-    {
-        $users = static::getUserRepository()->getValidArray(true);
-        foreach ($users as $user_id => $username) {
-            debug_event(self::class, 'fix_preferences: ' . $username, 4);
-            User::fix_preferences($user_id);
-        }
-    } // fix_preferences_all
-
-    /**
      * fix_preferences
      * This is the new fix_preferences function, it does the following
      * Remove Duplicates from user, add in missing
@@ -1145,8 +1132,8 @@ class User extends database_object
         }
 
         /* Get All Preferences for the current user */
-        $sql        = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `user_preference` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($user_id));
 
         $results      = array();
         $zero_results = array();
@@ -1453,13 +1440,20 @@ class User extends database_object
      */
     public static function rebuild_all_preferences()
     {
-        // Clean out any preferences garbage left over
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
+        // Garbage collection
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL;";
+        Dba::write($sql);
+        // delete system prefs from users
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`catagory` = 'system';";
         Dba::write($sql);
 
-        // Get only users who has less preferences than excepted
-        // otherwise it would have significant performance issue with large user database
-        $sql        = "SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < (SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
+        // How many preferences should we have?
+        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `catagory` != 'system';";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $pref_count = (int)$row['pref_count'];
+        // Get only users who have less preferences than excepted otherwise it would have significant performance issue with large user database
+        $sql        = "SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < $pref_count";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences($row['user']);

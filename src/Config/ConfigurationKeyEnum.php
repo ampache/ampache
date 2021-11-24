@@ -157,6 +157,7 @@ final class ConfigurationKeyEnum
     public const SHOW_LICENSE                          = 'show_license';
     public const SHOW_LYRICS                           = 'show_lyrics';
     public const SHOW_PLAYED_TIMES                     = 'show_played_times';
+    public const SHOW_PLAYLIST_USERNAME                = 'show_playlist_username';
     public const SHOW_SKIPPED_TIMES                    = 'show_skipped_times';
     public const SIDEBAR_LIGHT                         = 'sidebar_light';
     public const SIMPLE_USER_MODE                      = 'simple_user_mode';

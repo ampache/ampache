@@ -738,6 +738,7 @@ class Ui implements UiInterface
             case 'hide_single_artist':
             case 'hide_genres':
             case 'show_skipped_times':
+            case 'show_playlist_username':
             case 'show_license':
             case 'song_page_title':
             case 'subsonic_backend':

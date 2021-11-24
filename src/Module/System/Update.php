@@ -294,6 +294,9 @@ class Update
         $update_string = "* Make sure preference names are always unique";
         $version[]     = array('version' => '520001', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('show_playlist_username') Show playlist owner username in titles";
+        $version[]     = array('version' => '520002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1739,8 +1742,9 @@ class Update
 
         return $retval;
     }
+
     /**
-     * update_520000
+     * update_520001
      *
      * Make sure preference names are always unique
      */
@@ -1762,8 +1766,22 @@ class Update
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
         $retval = (Dba::write($sql) !== false);
 
-        // fix all the prefs too
-        User::fix_preferences_all();
+        return $retval;
+    }
+
+    /**
+     * update_520002
+     *
+     * Add ui option ('show_playlist_username') Show playlist owner username in titles
+     */
+    public static function update_520002()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
