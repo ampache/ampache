@@ -99,9 +99,7 @@ class AmpachePiwik
      */
     public function display_on_footer()
     {
-        $currentUrl = scrub_out("http" . (filter_has_var(INPUT_SERVER,
-                'HTTPS') ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
-
+        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
         echo "<!-- Piwik -->\n";
         echo "<script>\n";
         echo "var _paq = _paq || [];\n";

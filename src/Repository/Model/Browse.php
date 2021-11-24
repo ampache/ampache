@@ -478,12 +478,12 @@ class Browse extends Query
     {
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
-            if ((filter_has_var(INPUT_COOKIE, $name))) {
+            if ((isset($_COOKIE[$name]))) {
                 $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             }
             $name = 'browse_' . $type . '_alpha';
-            if ((filter_has_var(INPUT_COOKIE, $name))) {
+            if ((isset($_COOKIE[$name]))) {
                 $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             } else {
@@ -494,7 +494,7 @@ class Browse extends Query
                 }
             }
             $name = 'browse_' . $type . '_grid_view';
-            if ((filter_has_var(INPUT_COOKIE, $name))) {
+            if ((isset($_COOKIE[$name]))) {
                 $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             }

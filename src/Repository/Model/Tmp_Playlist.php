@@ -146,7 +146,7 @@ class Tmp_Playlist extends database_object
     public function get_items()
     {
         $session_name = AmpConfig::get('session_name');
-        if (filter_has_var(INPUT_COOKIE, $session_name)) {
+        if (isset($_COOKIE[$session_name])) {
             // Select all objects for this session
             $session    = $_COOKIE[$session_name];
             $sql        = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ?;";

@@ -615,7 +615,7 @@ class Ui implements UiInterface
     {
         $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
-        if (filter_has_var(INPUT_COOKIE, $name)) {
+        if (isset($_COOKIE[$name])) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 
