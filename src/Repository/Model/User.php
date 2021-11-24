@@ -1448,7 +1448,7 @@ class User extends database_object
         Dba::write($sql);
 
         // How many preferences should we have?
-        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `catagory` != 'system';";
+        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `catagory` != 'system' AND `user_preference`.`user` != -1;";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $pref_count = (int)$row['pref_count'];
@@ -1458,6 +1458,8 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences($row['user']);
         }
+        // Fix the system user preferences
+        self::fix_preferences(-1);
 
         return true;
     } // rebuild_all_preferences
