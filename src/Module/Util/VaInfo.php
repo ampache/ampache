@@ -1388,7 +1388,8 @@ final class VaInfo implements VaInfoInterface
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
-                        if ($enable_custom_metadata && !in_array(strtolower($this->trimAscii($txxx['description'])), $parsed)) {
+                        $frame = strtolower($this->trimAscii($txxx['description']));
+                        if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
                             $parsed[strtolower($this->trimAscii($txxx['description']))] = $id3v2['comments']['text'][$txxx['description']];
                         }
                         break;
