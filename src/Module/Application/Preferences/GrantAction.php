@@ -53,14 +53,12 @@ final class GrantAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $user = empty(Core::get_global('user'))
-            ? $gatekeeper->getUser()
-            : Core::get_global('user');
+        $user = $gatekeeper->getUser();
 
         // Make sure we're a user and they came from the form
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
-            isset($user->id)
+            !isset($user->id)
         ) {
             throw new AccessDeniedException();
         }
