@@ -144,11 +144,11 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function get_fullname()
     {
-        if (!isset($this->f_name)) {
-            $this->f_name = ($this->user == Core::get_global('user')->id || !AmpConfig::get('show_playlist_username'))
-                ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-                : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
+        $show_fullname = AmpConfig::get('show_playlist_username');
+        $my_playlist   = $this->user == Core::get_global('user')->id;
+        $this->f_name  = ($my_playlist || !$show_fullname)
+            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         return $this->f_name;
     }
