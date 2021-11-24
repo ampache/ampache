@@ -65,7 +65,7 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme      = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
+        $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
         $http_url    = ($http_url) ? $http_url : $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = ($http_method) ? $http_method : $_SERVER['REQUEST_METHOD'];
 

@@ -125,7 +125,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         $dest         = $this->create();
 
         #-- URL param ?hires=1 influences used drawing scheme
-        if (filter_has_var(INPUT_GET, 'hires')) {
+        if (isset($_GET['hires'])) {
             $single_pixel = 0;
         }
 

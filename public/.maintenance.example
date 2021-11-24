@@ -12,7 +12,7 @@ if (empty($domain)) {
     $domain = $_SERVER['SERVER_NAME'];
 }
 $scheme = "http";
-if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on') {
+if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') == 'on') {
     $scheme = "https";
 }
 $fromurl = rawurlencode($scheme . "://" . $domain . $_SERVER[REQUEST_URI]);

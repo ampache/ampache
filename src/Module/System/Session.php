@@ -310,7 +310,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'),
+        $s_ip = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'),
             FILTER_VALIDATE_IP) : '0';
         $type  = $data['type'];
         $value = '';
@@ -735,7 +735,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
+        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
                 FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }
