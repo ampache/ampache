@@ -56,7 +56,7 @@ final class GrantAction implements ApplicationActionInterface
         // Make sure we're a user and they came from the form
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
-            Core::get_global('user')->id > 0
+            empty(Core::get_global('user'))
         ) {
             throw new AccessDeniedException();
         }
