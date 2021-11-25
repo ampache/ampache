@@ -57,7 +57,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         $this->logger->debug(
-            sprintf('Called for action: {%d}', Core::get_request('action')),
+            'Called for action: {' . Core::get_request('action') . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
