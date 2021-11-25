@@ -843,10 +843,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
 
+        $uid = 0;
         if ($user === true) {
             $uid = (int)(Core::get_global('user')->id);
-        } else {
-            $uid = (int)($user);
         }
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";

@@ -1045,12 +1045,10 @@ final class VaInfo implements VaInfoInterface
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
-                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
-                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
@@ -1145,13 +1143,11 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'releasetype':
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
-                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'releasestatus':
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
-                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1353,10 +1349,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ",
-                            $id3v2['comments']['text'][$txxx['description']]) : implode(', ',
-                            array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]),
-                                array('')));
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
                         break;
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1455,6 +1448,7 @@ final class VaInfo implements VaInfoInterface
      * _cleanup_quicktime
      * @param $tags
      * @return array
+     * @throws Exception
      */
     private function _cleanup_quicktime($tags)
     {
@@ -1463,6 +1457,10 @@ final class VaInfo implements VaInfoInterface
         foreach ($tags as $tag => $data) {
             //debug_event(self::class, 'Quicktime tag: ' . $tag . ' value: ' . $data[0] ?? '', 5);
             switch (strtolower($tag)) {
+                case 'genre':
+                    // Pass the array through
+                    $parsed[$tag] = $this->parseGenres($data);
+                    break;
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
@@ -1486,8 +1484,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['mb_artistid'] = $data[0];
                     break;
                 case 'musicbrainz album type':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ',
-                        array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz album status':
                     $parsed['release_status'] = $data[0];
@@ -1783,7 +1780,7 @@ final class VaInfo implements VaInfoInterface
 
     /**
      *
-     * @param array $data
+     * @param array|string $data
      * @return array
      * @throws Exception
      */
