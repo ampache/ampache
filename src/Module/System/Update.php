@@ -288,7 +288,7 @@ class Update
         $update_string = "* Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)";
         $version[]     = array('version' => '510005', 'description' => $update_string);
 
-        $update_string = "* Add api options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add option 'api_force_version'to to force a specific API response (even if that version is disabled)";
+        $update_string = "* Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)";
         $version[]     = array('version' => '520000', 'description' => $update_string);
 
         $update_string = "* Make sure preference names are always unique";
@@ -1716,8 +1716,8 @@ class Update
     /**
      * update_520000
      *
-     * Add api options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
-     * Add option 'api_force_version' to force a specific API response (even if that version is disabled)
+     * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+     * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
      */
     public static function update_520000()
     {

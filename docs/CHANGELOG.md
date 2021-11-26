@@ -1,6 +1,69 @@
 # CHANGELOG
 
-## Ampache 5.1.1
+## Ampache 5.2.0-develop
+
+Ampache 5.2.0 (and all future versions) now support multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
+
+To change from API3 to API5 you can send a ping with a new version parameter to update your session (or send goodbye to log off and start again.)
+
+API3 is not recommended for use outside of running old applications and it is recommended that you turn off API versions you don't use.
+
+### Added
+
+* Get image from more tag types
+* Database 5.2.0 Build 3:
+ * Make sure preference names are always unique
+ * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+ * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
+ * Add ui option ('show_playlist_username') Show playlist owner username in titles
+ * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+
+### Changed
+
+* Don't try to return objects that aren't there sometimes
+* Update catalog counts before returning API data
+* Fix preferences for system and users after each update
+* Light theme hover color for sidebar
+
+### Removed
+
+* Remove AssestCache class and functions (unreliable)
+
+### Fixed
+
+* test_image function would fail without php-gd (which is optional)
+* Searching for images in files would not return the files you found
+* Get rid of that annoying space on api key text in the WebUI
+* Catalog map for artist tables
+* ratingmatch_stars value 5 wasn't setting itself
+* filter_has_var is returning false in FCGI enabled PHP
+* Allow catalog manager to manage a catalog in the WebUI
+* When using custom metadata don't overwrite managed values
+* Missing (and duplicate) preferences for users and system
+* Size 0 when reading file tags
+* Disk and totaldisks for wma files
+* Genre for quicktime/m4a files.
+
+## API 5.2.0
+
+Check out the docs for multi API support at [ampache.org](https://ampache.org/api/)
+
+**note** JSON didn't exist for API3 so all json requests from API3 calls will revert to API5
+
+### Added
+
+* Support for API3, API4 and API5 responses including PHP8 support
+* API3
+  * Added genre calls to match API4 and API5
+
+### Fixed
+
+* Session and user id identification and errors from that (keeps original tag calls)
+* API3
+  * democratic: This method was broken in API3 and never worked correctly
+
+
+## Ampache 5.1.1-release
 
 ### Added
 
