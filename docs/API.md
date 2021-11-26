@@ -1,6 +1,6 @@
 ---
-title: "API 5"
-metaTitle: "API 5"
+title: "Ampache API"
+metaTitle: "Ampache API"
 metaDescription: "API documentation"
 ---
 
@@ -18,18 +18,25 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 ## Archived Version Documentation
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
-Note that API 4.1 docs cover all previous versions.
 
-* [API 5.1 Documentation](https://ampache.org/api/versions/api-5.1)
 * [API 5.0 Documentation](https://ampache.org/api/versions/api-5.0)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
 * [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
 * [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
+* [API 3.x Documentation](https://ampache.org/api/api-3)
 
 ## Changelog API develop
 
 Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to keep an eye on changes between versions
+
+## Before you begin
+
+Ampache 5.2.0+ supports multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
+
+To change from API3 to API5 you can send a ping with a new version parameter to update your session (or send goodbye to log off and start again.)
+
+API3 is not recommended for use outside of running old applications and it is recommended that you turn off API versions you don't use.
 
 ## Sending Handshake Request
 
@@ -65,7 +72,7 @@ The key that must be passed to Ampache is the API Key generated for a specific u
 http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=350001
 ```
 
-In API 4.0.0 and higher; the key can be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
+If you are using Ampache 4.0.0 and higher; the key can be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
 
 ```PHP
 $user = 'username';
@@ -162,23 +169,26 @@ All Auth methods return HTTP 200 responses
 
 * handshake
 * ping
-* goodbye
+* goodbye **Api4+**
 
 ### Non-Data Methods
 
 All Non-Data methods return HTTP 200 responses
 
-* system_update
-* users
-* user_preferences
-* bookmarks
+* system_update **Api5+**
+* users **Api4+**
+* user_preferences **Api5+**
+* bookmarks **Api5+**
 
 ### Data Methods
 
 All Data methods return HTTP 200 responses
 
-* get_indexes
 * [advanced_search](https://ampache.org/api/api-advanced-search)
+* stats
+* get_indexes **Api4+**
+* get_similar **Api4+**
+* get_bookmark **Api5+**
 * artists
 * artist
 * artist_songs
@@ -186,85 +196,82 @@ All Data methods return HTTP 200 responses
 * albums
 * album
 * album_songs
+* songs
+* song
+* song_delete **Api5+**
+* url_to_song
 * genres
 * genre
 * genre_artists
 * genre_albums
 * genre_songs
-* songs
-* song
-* song_delete
-* url_to_song
 * playlists
 * playlist
 * playlist_songs
 * playlist_create
-* playlist_edit
+* playlist_edit **Api4+**
 * playlist_delete
 * playlist_add_song
 * playlist_remove_song
-* playlist_generate
-* shares
-* share
-* share_create
-* share_edit
-* share_delete
-* get_similar
+* playlist_generate **Api4+**
+* shares **Api4+**
+* share **Api4+**
+* share_create **Api4+**
+* share_edit **Api4+**
+* share_delete **Api4+**
 * search_songs
 * videos
 * video
-* podcasts
-* podcast
-* podcast_create
-* podcast_edit
-* podcast_delete
-* podcast_episodes
-* podcast_episode
-* podcast_episode_delete
-* stats
-* catalogs
-* catalog
-* catalog_file
+* podcasts **Api4+**
+* podcast **Api4+**
+* podcast_create **Api4+**
+* podcast_edit **Api4+**
+* podcast_delete **Api4+**
+* podcast_episodes **Api4+**
+* podcast_episode **Api4+**
+* podcast_episode_delete **Api4+**
+* catalogs **Api4+**
+* catalog **Api4+**
+* catalog_action **Api4+**
+* catalog_file **Api4+**
 * licenses
 * license
 * license_songs
-* labels
-* label
-* label_artists
-* live_streams
-* live_stream
-* user
-* user_create
-* user_update
-* user_delete
+* labels **Api5+**
+* label **Api5+**
+* label_artists **Api5+**
+* live_streams  **Api5+**
+* live_stream  **Api5+**
 * rate
-* flag
-* record_play
-* scrobble
+* flag **Api4+**
+* record_play **Api4+**
+* scrobble **Api4+**
 * followers
 * following
 * toggle_follow
 * last_shouts
 * timeline
 * friends_timeline
-* catalog_action
-* update_from_tags
-* update_artist_info
-* update_art
-* update_podcast
-* user_preference
-* system_preferences
-* system_preference
-* preference_create
-* preference_edit
-* preference_delete
-* get_bookmark
-* bookmark_create
-* bookmark_edit
-* bookmark_delete
-* deleted_songs
-* deleted_podcast_episodes
-* deleted_videos
+* update_from_tags **Api4+**
+* update_artist_info **Api4+**
+* update_art **Api4+**
+* update_podcast **Api4+**
+* user
+* user_create **Api4+**
+* user_update **Api4+**
+* user_delete **Api4+**
+* user_preference **Api5+**
+* system_preferences **Api5+**
+* system_preference **Api5+**
+* preference_create **Api5+**
+* preference_edit **Api5+**
+* preference_delete **Api5+**
+* bookmark_create **Api5+**
+* bookmark_edit **Api5+**
+* bookmark_delete **Api5+**
+* deleted_songs **Api5+**
+* deleted_podcast_episodes **Api5+**
+* deleted_videos **Api5+**
 
 ### Binary Data Methods
 
@@ -276,15 +283,16 @@ All binary methods will not return XML/JSON responses. they will either return t
 
 @throws (HTTP 404 Not Found)
 
-* stream
-* download
-* get_art
+* stream **Api4+**
+* download **Api4+**
+* get_art **Api4+**
 
 ### Control Methods
 
 All Control methods return HTTP 200 responses
 
 * localplay
+* localplay_songs **Api5+**
 * democratic
 
 ## Access Levels
