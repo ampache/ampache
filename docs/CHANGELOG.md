@@ -32,7 +32,7 @@ API3 is not recommended for use outside of running old applications and it is re
 ### Fixed
 
 * test_image function would fail without php-gd (which is optional)
-* Searching for images in files would not return the files you found
+* Searching for images in files could not return the files you found
 * Get rid of that annoying space on api key text in the WebUI
 * Catalog map for artist tables
 * ratingmatch_stars value 5 wasn't setting itself
@@ -52,16 +52,15 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 
 ### Added
 
-* Support for API3, API4 and API5 responses including PHP8 support
+* Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
 * API3
-  * Added genre calls to match API4 and API5
+  * Added genre calls as an alias to tag functions to match API4 and API5
 
 ### Fixed
 
-* Session and user id identification and errors from that (keeps original tag calls)
+* Session and user id identification and errors from that
 * API3
   * democratic: This method was broken in API3 and never worked correctly
-
 
 ## Ampache 5.1.1-release
 
