@@ -720,7 +720,7 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_artist_name)) {
             if ($this->artist_count == '1') {
-                $artist = new Artist($this->album_artist);
+                $artist              = new Artist($this->album_artist);
                 $this->f_artist_name = trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name));
             } else {
                 $this->f_artist_name = T_('Various');
@@ -738,7 +738,7 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_album_artist_name)) {
             if ($this->album_artist) {
-                $album_artist = new Artist($this->album_artist);
+                $album_artist              = new Artist($this->album_artist);
                 $this->f_album_artist_name = $album_artist->get_fullname();
             } else {
                 $this->f_album_artist_name = '';
@@ -756,7 +756,7 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->album_artist_name)) {
             if ($this->album_artist) {
-                $album_artist = new Artist($this->album_artist);
+                $album_artist            = new Artist($this->album_artist);
                 $this->album_artist_name = $album_artist->name;
             } else {
                 $this->album_artist_name = '';

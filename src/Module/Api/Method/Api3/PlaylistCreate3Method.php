@@ -52,6 +52,5 @@ final class PlaylistCreate3Method
 
         $uid = Playlist::create($name, $type);
         echo Xml3_Data::playlists(array($uid));
-
     }
 }

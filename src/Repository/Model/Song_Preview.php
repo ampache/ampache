@@ -212,6 +212,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $artist_id = $this->artist;
         }
         $artist = new Artist($artist_id);
+
         return $artist->get_fullname();
     } // get_album_name
 

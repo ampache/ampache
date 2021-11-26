@@ -61,10 +61,11 @@ final class Playlists4Method
         $hide = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($user->id, (string)($input['filter'] ?? ''), $like);
+        $playlists = Playlist::get_playlists($user->id, (string)($input['filter'] ?? ''), $like, true, false);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($user->id, (string) $input['filter'], $like));
+            $searches  = Playlist::get_smartlists($user->id, '', true, false);
+            $playlists = array_merge($playlists, $searches);
         }
 
         ob_end_clean();
@@ -72,12 +73,12 @@ final class Playlists4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::playlists($playlist_ids, $user->id);
+                echo Json4_Data::playlists($playlists, $user->id);
             break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::playlists($playlist_ids, $user->id);
+                echo Xml4_Data::playlists($playlists, $user->id);
         }
     } // playlists
 }

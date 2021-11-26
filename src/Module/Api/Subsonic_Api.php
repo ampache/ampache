@@ -983,14 +983,16 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        $username = isset($_REQUEST['username'])
+        $username  = isset($_REQUEST['username'])
             ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
             : (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
-        $user     = User::get_from_username((string)$username);
-        $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
+        $user      = User::get_from_username((string)$username);
+        $response  = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
+        $playlists = Playlist::get_playlists($user->id, '', true, true, false);
+        $searches  = Playlist::get_smartlists($user->id, '', true, false);
 
         // Don't allow playlist listing for another user
-        Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
+        Subsonic_Xml_Data::addPlaylists($response, $playlists, $searches);
         self::apiOutput($input, $response);
     }
 

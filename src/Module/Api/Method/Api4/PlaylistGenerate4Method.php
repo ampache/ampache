@@ -106,7 +106,7 @@ final class PlaylistGenerate4Method
         }
         if (array_key_exists('filter', $input)) {
             $array['rule_' . $rule_count]               = 'title';
-            $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
+            $array['rule_' . $rule_count . '_input']    = (string)($input['filter'] ?? '');
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }

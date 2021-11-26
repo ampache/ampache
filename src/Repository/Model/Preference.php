@@ -58,6 +58,7 @@ class Preference extends database_object
         'api_enable_4',
         'api_enable_5',
         'api_force_version',
+        'api_hidden_playlists',
         'autoupdate',
         'autoupdate_lastcheck',
         'autoupdate_lastversion',
@@ -695,7 +696,8 @@ class Preference extends database_object
                "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
                "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
                "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
-               "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse');";
+               "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
+               "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options');";
         Dba::write($sql);
     } // set_defaults
 
@@ -875,7 +877,8 @@ class Preference extends database_object
             'api_enable_4' => T_('Allow Ampache API4 responses'),
             'api_enable_5' => T_('Allow Ampache API5 responses'),
             'api_force_version' => T_('Force a specific API response no matter what version you send'),
-            'show_playlist_username' => T_('Show playlist owner username in titles')
+            'show_playlist_username' => T_('Show playlist owner username in titles'),
+            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));

@@ -738,11 +738,11 @@ abstract class Catalog extends database_object
     {
         $params = array();
         $sql    = "SELECT `id` FROM `catalog` ";
-        $join   = "WHERE";
+        $join   = 'WHERE';
         if (!empty($filter_type)) {
             $sql .= "$join `gather_types` = ? ";
             $params[] = $filter_type;
-            $join     = "AND";
+            $join     = 'AND';
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= $join . Catalog::get_user_filter('catalog', $user_id);

@@ -52,11 +52,11 @@ final class Playlists3Method
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         $browse->set_filter('playlist_type', '1');
 
-        $playlist_ids = $browse->get_objects();
+        $playlists = $browse->get_objects();
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::playlists($playlist_ids);
+        echo Xml3_Data::playlists($playlists);
     } // playlists
 }

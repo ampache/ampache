@@ -297,6 +297,9 @@ class Update
         $update_string = "* Add ui option ('show_playlist_username') Show playlist owner username in titles";
         $version[]     = array('version' => '520002', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string";
+        $version[]     = array('version' => '520003', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1781,6 +1784,23 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520003
+     *
+     * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+     */
+    public static function update_520003()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
