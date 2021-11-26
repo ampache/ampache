@@ -146,7 +146,7 @@ class Playlist extends playlist_object
         if (!$includeHidden) {
             $hide_string = AmpConfig::get('api_hidden_playlists', '');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` LIKE '$hide_string%'";
+                $sql .= "$join `name` NOT LIKE '$hide_string%'";
             }
         }
         $sql .= "ORDER BY `name`";
@@ -266,7 +266,7 @@ class Playlist extends playlist_object
         if (!$includeHidden) {
             $hide_string = AmpConfig::get('api_hidden_playlists', '');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` LIKE '$hide_string%'";
+                $sql .= "$join `name` NOT LIKE '$hide_string%'";
             }
         }
         $sql .= "ORDER BY `name`";
