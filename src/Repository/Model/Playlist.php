@@ -144,9 +144,9 @@ class Playlist extends playlist_object
             $join = 'AND';
         }
         if (!$includeHidden) {
-            $hide_string = AmpConfig::get('api_hidden_playlists', '');
+            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` NOT LIKE '$hide_string%'";
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%'";
             }
         }
         $sql .= "ORDER BY `name`";
@@ -264,9 +264,9 @@ class Playlist extends playlist_object
             $join = 'AND';
         }
         if (!$includeHidden) {
-            $hide_string = AmpConfig::get('api_hidden_playlists', '');
+            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` NOT LIKE '$hide_string%'";
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%'";
             }
         }
         $sql .= "ORDER BY `name`";
