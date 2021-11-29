@@ -39,5 +39,5 @@ interface GuiGatekeeperInterface
     /**
      * Returns the currently logged in user
      */
-    public function getUser(): User;
+    public function getUser();
 }
