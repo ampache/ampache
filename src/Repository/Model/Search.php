@@ -1994,28 +1994,36 @@ class Search extends playlist_object
                     $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     // we want AND NOT and like for this query to really exclude them
                     if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
-                        $where[] = "NOT (`song`.`artist` IN (SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR `song`.`album` IN (SELECT `album`.`id` FROM `album` WHERE `album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song`.`id` IN (SELECT `song_data`.`song_id` FROM `song_data` WHERE `song_data`.`comment` LIKE '$input') OR `song`.`id` IN (SELECT `song_data`.`song_id` FROM `song_data` WHERE `song_data`.`label` LIKE '$input') OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
+                        $where[] = "NOT ((`artist`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE '$input') OR (`album`.`name` LIKE '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$input') OR `song_data`.`comment` LIKE '$input' OR `song_data`.`label` LIKE '$input' OR `song`.`file` LIKE '$input' OR `song`.`title` LIKE '$input' OR NOT " . $tag_string . ')';
                     } else {
-                        $where[] = "(`song`.`artist` IN (SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') OR `song`.`album` IN (SELECT `album`.`id` FROM `album` WHERE `album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') OR `song`.`id` IN (SELECT `song_data`.`song_id` FROM `song_data` WHERE `song_data`.`comment` $sql_match_operator '$input') OR `song`.`id` IN (SELECT `song_data`.`song_id` FROM `song_data` WHERE `song_data`.`label` $sql_match_operator '$input') OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input' OR " . $tag_string . ')';
+                        $where[] = "((`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') OR (`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input' OR " . $tag_string . ')';
                     }
+                    // join it all up
+                    $table['album']    = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $table['artist']   = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    $join['song_data'] = true;
                     break;
                 case 'tag':
                     $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'album_tag':
-                    $where[] = "`song`.`album` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
+                    $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'artist_tag':
-                    $where[] = "`song`.`artist` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator '$input' WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                     break;
                 case 'album':
-                    $where[] = "`song`.`album` IN (SELECT `album`.`id` FROM `album` WHERE `album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input')";
+                    $where[]        = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input')";
+                    $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     break;
                 case 'artist':
-                    $where[] = "`song`.`artist` IN (SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
+                    $where[]         = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
+                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     break;
                 case 'album_artist':
                     $where[]         = "(`album_artist`.`name` $sql_match_operator '$input' " .
