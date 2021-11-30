@@ -146,7 +146,7 @@ class Playlist extends playlist_object
         if (!$includeHidden) {
             $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%'";
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
             }
         }
         $sql .= "ORDER BY `name`";
@@ -249,7 +249,7 @@ class Playlist extends playlist_object
             }
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
-        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
+        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search` ";
         $params   = array();
         $join     = 'WHERE';
 
@@ -266,7 +266,7 @@ class Playlist extends playlist_object
         if (!$includeHidden) {
             $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
             if (!empty($hide_string)) {
-                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%'";
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
             }
         }
         $sql .= "ORDER BY `name`";
