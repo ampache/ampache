@@ -87,6 +87,8 @@ final class GrantAction implements ApplicationActionInterface
                 );
 
                 $this->ui->showConfirmation($title, $text, $next_url);
+
+                return null;
             }
         }
 
