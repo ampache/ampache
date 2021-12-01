@@ -245,11 +245,12 @@ final class Session implements SessionInterface
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            // debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            //debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+
             return $results[$column];
         }
 
-        debug_event(self::class, 'Unable to read session from key ' . $key . ' no data found', 3);
+        debug_event(self::class, 'Unable to read ' . $column . ' from key ' . $key . ' no data found', 3);
 
         return '';
     }
@@ -381,7 +382,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Lax'
         ];
 
         // Set up the cookie params before we start the session.
@@ -596,7 +597,7 @@ final class Session implements SessionInterface
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict'
+                'samesite' => 'Lax'
             ];
             setcookie(session_name(), session_id(), $cookie_options);
         } else {
@@ -605,7 +606,7 @@ final class Session implements SessionInterface
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict'
+                'samesite' => 'Lax'
             ];
             session_set_cookie_params($cookie_options);
         }
