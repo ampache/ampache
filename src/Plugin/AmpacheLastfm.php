@@ -194,7 +194,7 @@ class AmpacheLastfm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param string $user_id
+     * @param int $user_id
      * @param string $token
      * @return boolean
      */

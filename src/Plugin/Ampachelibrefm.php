@@ -195,8 +195,8 @@ class Ampachelibrefm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param $user_id
-     * @param $token
+     * @param int $user_id
+     * @param string $token
      * @return boolean
      */
     public function get_session($user_id, $token)

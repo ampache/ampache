@@ -300,6 +300,9 @@ class Update
         $update_string = "* Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string";
         $version[]     = array('version' => '520003', 'description' => $update_string);
 
+        $update_string = "* Set 'plugins' category to lastfm_challenge preference";
+        $version[]     = array('version' => '520004', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1802,6 +1805,20 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520004
+     *
+     * Set 'plugins' category to lastfm_challenge preference
+     */
+    public static function update_520004()
+    {
+        $retval = true;
+        $sql    = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }
