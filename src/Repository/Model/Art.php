@@ -931,7 +931,7 @@ class Art extends database_object
         if (!isset($type)) {
             $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
-        if (empty($data)) {
+        if (empty($data) || !is_array($data)) {
             return '';
         }
 
