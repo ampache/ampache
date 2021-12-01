@@ -553,7 +553,7 @@ final class Session implements SessionInterface
     public function setup(): void
     {
         // enforce strict cookies. you don't need these elsewhere
-        ini_set('session.cookie_samesite', 'Strict');
+        ini_set('session.cookie_samesite', 'Lax');
 
         session_set_save_handler(
             static function (): bool {
