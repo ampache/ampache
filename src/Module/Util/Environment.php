@@ -248,7 +248,7 @@ final class Environment implements EnvironmentInterface
 
     public function isMobile(): bool
     {
-        $user_agent = (string) $_SERVER['HTTP_USER_AGENT'];
+        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
 
         return strpos($user_agent, 'Mobile') && (
             strpos($user_agent, 'Android') ||

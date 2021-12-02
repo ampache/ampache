@@ -3462,7 +3462,7 @@ abstract class Catalog extends database_object
                 $write_tags     = AmpConfig::get('write_tags', false);
                 AmpConfig::set_by_array(['write_tags' => 'true'], true);
 
-                $id3Writer = static::getSongTagWriter();
+                $songTagWriter = static::getSongTagWriter();
                 set_time_limit(0);
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
@@ -3472,7 +3472,7 @@ abstract class Catalog extends database_object
                             $song = new Song($song_id);
                             $song->format();
 
-                            $id3Writer->write($song);
+                            $songTagWriter->write($song);
                         }
                     }
                 }

@@ -2033,7 +2033,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?: 0;
+            $uid = Core::get_global('user')->id ?? 0;
         }
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {

@@ -388,7 +388,8 @@ final class VaInfo implements VaInfoInterface
         $extensionMap  = [
             'mp3' => 'id3v2.3',
             'flac' => 'metaflac',
-            'oga' => 'vorbiscomment'
+            'oga' => 'vorbiscomment',
+            'ogg' => 'vorbiscomment'
         ];
         if (!array_key_exists(strtolower($extension), $extensionMap)) {
             $this->logger->debug(

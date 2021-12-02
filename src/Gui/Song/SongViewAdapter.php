@@ -216,7 +216,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             '&action=download&cache=1',
             '',
             false,
-            Core::get_global('user')->id
+            Core::get_global('user')->id ?? 0
         );
     }
 
@@ -269,7 +269,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function isEditable(): bool
     {
         return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || (
-            $this->song->get_user_owner() == Core::get_global('user')->id &&
+                (!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         );
     }
@@ -287,7 +287,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function canToggleState(): bool
     {
         return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) || (
-            $this->song->get_user_owner() == Core::get_global('user')->id &&
+                (!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         );
     }
