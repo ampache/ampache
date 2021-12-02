@@ -453,10 +453,10 @@ class Playlist extends playlist_object
     private function update_user($new_user)
     {
         if ($this->_update_item('user', $new_user, 50)) {
-            $this->type     = $new_user;
+            $this->user     = $new_user;
             $this->username = User::get_username($new_user);
-            $sql            = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = ?;";
-            Dba::write($sql, array($this->username, $new_user));
+            $sql            = "UPDATE `playlist` SET `user` = ?, `username` = ? WHERE `playlist`.`user` = ?;";
+            Dba::write($sql, array($this->user, $this->username, $this->user));
         }
     } // update_type
 

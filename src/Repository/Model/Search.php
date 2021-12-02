@@ -1329,10 +1329,11 @@ class Search extends playlist_object
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
         Dba::write($sql, array(
             $this->name,
             $this->type,
+            $this->user,
             $this->username,
             json_encode($this->rules),
             $this->logic_operator,
