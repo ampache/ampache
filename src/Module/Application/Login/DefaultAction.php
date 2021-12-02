@@ -152,7 +152,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if ($auth['success']) {
                         $username = $auth['username'];
-                    } elseif ($auth['ui_required']) {
+                    } elseif (array_key_exists('ui_required', $auth)) {
                         echo $auth['ui_required'];
 
                         return null;
