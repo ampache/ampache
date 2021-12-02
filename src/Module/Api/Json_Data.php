@@ -39,6 +39,7 @@ use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -547,18 +548,22 @@ class Json_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-
-        $JSON = [];
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $JSON               = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
+            $playlist_names = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
             if ((int) $playlist_id === 0) {
-                $playlist       = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                    continue;
+                }
                 $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $object_type    = 'search';
@@ -567,6 +572,9 @@ class Json_Data
                 $playlist_id    = $playlist->id;
                 $playitem_total = $playlist->get_media_count('song');
                 $object_type    = 'playlist';
+                if ($hide_dupe_searches && $playlist->user == $user_id) {
+                    $playlist_names[] = $playlist->name;
+                }
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;

@@ -771,6 +771,7 @@ class Ui implements UiInterface
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_recently_played':
+            case 'api_hide_dupe_searches':
             case 'home_now_playing':
             case 'browser_notify':
             case 'allow_video':

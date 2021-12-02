@@ -990,9 +990,10 @@ class Subsonic_Api
         $response  = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
         $playlists = Playlist::get_playlists($user->id, '', true, true, false);
         $searches  = Playlist::get_smartlists($user->id, '', true, false);
+        // allow skipping dupe search names when used as refresh searches
+        $hide_dupe_searches = (bool)Preference::get_by_user($user->id, 'api_hide_dupe_searches');
 
-        // Don't allow playlist listing for another user
-        Subsonic_Xml_Data::addPlaylists($response, $playlists, $searches);
+        Subsonic_Xml_Data::addPlaylists($response, $user->id, $playlists, $searches, $hide_dupe_searches);
         self::apiOutput($input, $response);
     }
 

@@ -1104,19 +1104,28 @@ class Subsonic_Xml_Data
     /**
      * addPlaylists
      * @param SimpleXMLElement $xml
-     * @param $playlists
+     * @param int $user_id
+     * @param array $playlists
      * @param array $smartplaylists
+     * @param bool $hide_dupe_searches
      */
-    public static function addPlaylists($xml, $playlists, $smartplaylists = array())
+    public static function addPlaylists($xml, $user_id, $playlists, $smartplaylists = array(), $hide_dupe_searches = false)
     {
-        $xplaylists = $xml->addChild('playlists');
+        $playlist_names = array();
+        $xplaylists     = $xml->addChild('playlists');
         foreach ($playlists as $plistid) {
             $playlist = new Playlist($plistid);
+            if ($hide_dupe_searches && $playlist->user == $user_id) {
+                $playlist_names[] = $playlist->name;
+            }
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $splistid) {
-            $smartplaylist = new Search((int)str_replace('smart_', '', (string)$splistid), 'song');
-            self::addSmartPlaylist($xplaylists, $smartplaylist);
+            $playlist = new Search((int)str_replace('smart_', '', (string)$splistid), 'song');
+            if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                continue;
+            }
+            self::addSmartPlaylist($xplaylists, $playlist);
         }
     }
 

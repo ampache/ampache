@@ -303,6 +303,9 @@ class Update
         $update_string = "* Set 'plugins' category to lastfm_challenge preference";
         $version[]     = array('version' => '520004', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients";
+        $version[]     = array('version' => '520005', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1819,6 +1822,23 @@ class Update
         $retval = true;
         $sql    = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520005
+     *
+     * Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients
+     */
+    public static function update_520005()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

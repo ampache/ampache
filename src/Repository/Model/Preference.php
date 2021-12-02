@@ -59,6 +59,7 @@ class Preference extends database_object
         'api_enable_5',
         'api_force_version',
         'api_hidden_playlists',
+        'api_hide_dupe_searches',
         'autoupdate',
         'autoupdate_lastcheck',
         'autoupdate_lastversion',

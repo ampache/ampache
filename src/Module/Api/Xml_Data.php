@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -709,10 +710,12 @@ class Xml_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $string             = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
+            $playlist_names     = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
@@ -720,7 +723,9 @@ class Xml_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
-
+                if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                    continue;
+                }
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $object_type    = 'search';
@@ -730,6 +735,9 @@ class Xml_Data
 
                 $playitem_total = $playlist->get_media_count('song');
                 $object_type    = 'playlist';
+                if ($hide_dupe_searches && $playlist->user == $user_id) {
+                    $playlist_names[] = $playlist->name;
+                }
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
@@ -1131,7 +1139,7 @@ class Xml_Data
      */
     public static function rss_feed($data, $title, $date = null)
     {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        $string = "\t<title>" . $title. "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
         }

@@ -26,6 +26,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -622,10 +623,12 @@ class Xml4_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($playlists) . "</total_count>\n";
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $string             = "<total_count>" . count($playlists) . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
+            $playlist_names = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
@@ -633,31 +636,32 @@ class Xml4_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
-                $playlist->format();
-
-                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
-                $playlist_user  = ($playlist->type !== 'public') ? $playlist->username : $playlist->type;
-                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                    continue;
+                }
+                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
-                $playlist_type  = $playlist->type;
                 $object_type    = 'search';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
-                $playlist->format();
 
-                $playlist_name  = $playlist->name;
-                $playlist_user  = $playlist->username;
                 $playitem_total = $playlist->get_media_count('song');
-                $playlist_type  = $playlist->type;
                 $object_type    = 'playlist';
+                if ($hide_dupe_searches && $playlist->user == $user_id) {
+                    $playlist_names[] = $playlist->name;
+                }
             }
+            $playlist_name = $playlist->get_fullname();
+            $playlist_user = $playlist->username;
+            $playlist_type = $playlist->type;
+
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
             $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
-            $string .= "<playlist id=" . $playlist_id . ">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>$playitem_total</items>\n\t<type>$playlist_type</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n</playlist>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -1000,7 +1004,7 @@ class Xml4_Data
      */
     public static function rss_feed($data, $title, $date = null)
     {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        $string = "\t<title>" . $title. "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
         }
