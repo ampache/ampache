@@ -711,11 +711,11 @@ class Xml_Data
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
         $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $playlist_names     = array();
         $string             = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist_names     = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
