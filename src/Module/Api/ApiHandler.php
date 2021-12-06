@@ -130,6 +130,8 @@ final class ApiHandler implements ApiHandlerInterface
         if ($api_format == 'json' && $api_version == 3) {
             $api_version = 5;
         }
+        // send the version to API calls (this is used to determine return data for api4/api5)
+        $input['api_version'] = $api_version;
 
         // If it's not a handshake then we can allow it to take up lots of time
         if (!$is_handshake) {

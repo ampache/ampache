@@ -49,8 +49,8 @@ final class ArtistsMethod
      * @param array $input
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add          = self::set_filter(date) //optional
-     * update       = self::set_filter(date) //optional
+     * add          = Api::set_filter(date) //optional
+     * update       = Api::set_filter(date) //optional
      * include      = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional

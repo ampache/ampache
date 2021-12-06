@@ -23,6 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
 ?>
 
 <?php Ui::show_box_top(scrub_out($title), 'box box_continue'); ?>

@@ -1139,7 +1139,7 @@ class Xml_Data
      */
     public static function rss_feed($data, $title, $date = null)
     {
-        $string = "\t<title>" . $title. "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
         }

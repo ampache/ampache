@@ -1310,7 +1310,7 @@ class Search extends playlist_object
     /**
      * update
      *
-     * This function updates the saved version with the current settings.
+     * This function updates the saved search with the current settings.
      * @param array|null $data
      * @return integer
      */

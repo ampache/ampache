@@ -53,8 +53,8 @@ final class GetIndexesMethod
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = self::set_filter(date) //optional
-     * update      = self::set_filter(date) //optional
+     * add         = Api::set_filter(date) //optional
+     * update      = Api::set_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
