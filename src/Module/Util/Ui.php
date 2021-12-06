@@ -780,6 +780,7 @@ class Ui implements UiInterface
             case 'upload_catalog_pattern':
             case 'catalogfav_gridview':
             case 'personalfav_display':
+            case 'ratingmatch_write_tags':
             case 'ratingmatch_flags':
             case 'catalog_check_duplicate':
             case 'browse_filter':

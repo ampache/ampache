@@ -21,8 +21,9 @@
 
 namespace Ampache\Module\Song\Tag;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 interface SongTagWriterInterface
 {
@@ -31,5 +32,14 @@ interface SongTagWriterInterface
      */
     public function write(
         Song $song
+    ): void;
+
+    /**
+     * Write the song rating to the file and include existing tags
+     */
+    public function writeRating(
+        Song $song,
+        User $user,
+        Rating $rating
     ): void;
 }

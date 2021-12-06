@@ -294,6 +294,18 @@ class User extends database_object
     } // get_from_apikey
 
     /**
+     * get_from_email
+     * This returns a built user from a username. This is a
+     * static function so it doesn't require an instance
+     * @param string $emailAddress
+     * @return User|null $user
+     */
+    public static function get_from_email($emailAddress)
+    {
+        return static::getUserRepository()->findByEmail($emailAddress);
+    } // get_from_email
+
+    /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]

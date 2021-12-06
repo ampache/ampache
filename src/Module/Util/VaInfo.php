@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -400,14 +401,14 @@ final class VaInfo implements VaInfoInterface
             return;
         }
 
-        $format = $extensionMap[$extension];
-
+        $format                       = $extensionMap[$extension];
         $tagWriter->filename          = $this->filename;
         $tagWriter->tagformats        = array($format);
         $tagWriter->overwrite_tags    = true;
+        $tagWriter->remove_other_tags = false;
         $tagWriter->tag_encoding      = $TaggingFormat;
-        $tagWriter->remove_other_tags = true;
         $tagWriter->tag_data          = $tagData;
+        debug_event(self::class, print_r($tagData, true),5);
         /*
         *  Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
         *  This hasn't been tested on Windows and there is evidence that
@@ -441,7 +442,7 @@ final class VaInfo implements VaInfoInterface
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
                 $this->logger->debug(
-                    'Warning Writing Image: ' . $message,
+                    'Warning Writing Tags: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
@@ -449,7 +450,7 @@ final class VaInfo implements VaInfoInterface
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
                 $this->logger->error(
-                    'Error Writing Image: ' . $message,
+                    'Error Writing Tags: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             }
@@ -1183,6 +1184,13 @@ final class VaInfo implements VaInfoInterface
                     $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
                 default:
+                    // look for set ratings using email address
+                    foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
+                        $rating_user = User::get_from_email(array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? false);
+                        if ($rating_user) {
+                            $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
+                        }
+                    }
                     $parsed[$tag] = $data[0];
                     break;
             }
