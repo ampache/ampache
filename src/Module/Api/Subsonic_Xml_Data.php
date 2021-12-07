@@ -633,7 +633,9 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::getArtistId($child['id']);
         $xchild = $xml->addChild('child');
         $xchild->addAttribute('id', $sub_id);
-        $xchild->addAttribute('parent', $child['catalog_id']);
+        if (array_key_exists('catalog_id', $child)) {
+            $xchild->addAttribute('parent', $child['catalog_id']);
+        }
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', (string)self::checkName($child['f_name']));
         $xchild->addAttribute('artist', (string)self::checkName($child['f_name']));
@@ -974,7 +976,9 @@ class Subsonic_Xml_Data
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
-        $xdir->addAttribute('parent', (string)$data['catalog_id']);
+        if (array_key_exists('catalog_id', $data)) {
+            $xdir->addAttribute('parent', (string)$data['catalog_id']);
+        }
         $xdir->addAttribute('name', (string)$data['f_name']);
         $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
