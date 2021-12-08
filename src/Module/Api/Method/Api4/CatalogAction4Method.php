@@ -68,7 +68,7 @@ final class CatalogAction4Method
 
         if ($catalog) {
             define('API', true);
-            if (isset($SSE_OUTPUT)) {
+            if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }
             switch ($task) {

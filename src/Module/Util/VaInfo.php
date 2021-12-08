@@ -408,7 +408,7 @@ final class VaInfo implements VaInfoInterface
         $tagWriter->remove_other_tags = false;
         $tagWriter->tag_encoding      = $TaggingFormat;
         $tagWriter->tag_data          = $tagData;
-        debug_event(self::class, print_r($tagData, true),5);
+
         /*
         *  Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
         *  This hasn't been tested on Windows and there is evidence that
@@ -1016,7 +1016,10 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
-            //debug_event(self::class, 'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0] ?? '', 5);
+            //$this->logger->debug(
+            //    'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0] ?? '',
+            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            //);
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
@@ -1098,7 +1101,10 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'Vorbis tag: ' . $tag . ' value: ' . $data[0] ?? '', 5);
+            //$this->logger->debug(
+            //    'Vorbis tag: ' . $tag . ' value: ' . $data[0] ?? '',
+            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            //);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -1247,7 +1253,10 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0] ?? '', 5);
+            //$this->logger->debug(
+            //    'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0] ?? '',
+            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            //);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1336,7 +1345,10 @@ final class VaInfo implements VaInfoInterface
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
-                //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . $id3v2['comments']['text'][$txxx['description']] ?? '', 5);
+                //$this->logger->debug(
+                //    'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . $id3v2['comments']['text'][$txxx['description']] ?? '',
+                //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                //);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         // return artists as array not as string of artists with delimiter, don't process metadata in catalog
@@ -1464,7 +1476,10 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event(self::class, 'Quicktime tag: ' . $tag . ' value: ' . $data[0] ?? '', 5);
+            //$this->logger->debug(
+            //    'Quicktime tag: ' . $tag . ' value: ' . $data[0] ?? '',
+            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            //);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through

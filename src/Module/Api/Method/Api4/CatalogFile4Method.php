@@ -52,7 +52,7 @@ final class CatalogFile4Method
      * @param array $input
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
-     * catalog = (integer) $catalog_id)
+     * catalog = (integer) $catalog_id
      * @return boolean
      */
     public static function catalog_file(array $input): bool
@@ -109,7 +109,7 @@ final class CatalogFile4Method
 
         if ($catalog->catalog_type == 'local') {
             define('API', true);
-            if (isset($SSE_OUTPUT)) {
+            if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }
             switch ($task) {
