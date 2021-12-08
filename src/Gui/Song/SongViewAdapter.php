@@ -444,7 +444,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getSongLink(): string
     {
-        return $this->song->f_link;
+        return $this->song->get_f_link();
     }
 
     public function getArtistLink(): string

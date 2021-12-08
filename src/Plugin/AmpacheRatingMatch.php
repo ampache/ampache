@@ -59,8 +59,8 @@ class AmpacheRatingMatch
      * Constructor
      * This function does nothing...
      */
-    public function __construct(
-    ) {
+    public function __construct()
+    {
         $this->description   = T_('Raise the album and artist rating to match the highest song rating');
 
         return true;

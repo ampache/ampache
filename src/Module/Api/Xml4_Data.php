@@ -993,32 +993,6 @@ class Xml4_Data
     } // timeline
 
     /**
-     * rss_feed
-     *
-     * (description here...)
-     *
-     * @param    array    $data    (description here...)
-     * @param    string    $title    RSS feed title
-     * @param    string    $date    publish date
-     * @return    string    RSS feed xml
-     */
-    public static function rss_feed($data, $title, $date = null)
-    {
-        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if (is_int($date)) {
-            $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), true);
-        }
-
-        return self::_header() . $string . self::_footer();
-    } // rss_feed
-
-    /**
      * _header
      *
      * this returns a standard header, there are a few types

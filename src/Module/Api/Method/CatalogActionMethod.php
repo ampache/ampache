@@ -71,7 +71,9 @@ final class CatalogActionMethod
         $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog) {
             define('API', true);
-            unset($SSE_OUTPUT);
+            if (isset($SSE_OUTPUT)) {
+                unset($SSE_OUTPUT);
+            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();

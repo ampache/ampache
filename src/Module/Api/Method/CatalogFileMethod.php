@@ -120,7 +120,9 @@ final class CatalogFileMethod
         if ($catalog->catalog_type == 'local') {
             foreach ($task as $item) {
                 define('API', true);
-                unset($SSE_OUTPUT);
+                if (isset($SSE_OUTPUT)) {
+                    unset($SSE_OUTPUT);
+                }
                 switch ($item) {
                     case 'clean':
                         if ($media->id) {

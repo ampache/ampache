@@ -46,7 +46,7 @@ final class TagArtists3Method
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        if ($artists) {
+        if (!empty($artists)) {
             Xml3_Data::set_offset($input['offset'] ?? 0);
             Xml3_Data::set_limit($input['limit'] ?? 0);
 

@@ -1348,12 +1348,11 @@ class User extends database_object
      */
     public static function get_username($user_id)
     {
-        $users    = static::getUserRepository()->getValidArray(true);
-        $username = (isset($users[$user_id]))
+        $users = static::getUserRepository()->getValidArray(true);
+
+        return (isset($users[$user_id]))
             ? $users[$user_id]
             : T_('System');
-
-        return $username;
     }
 
     /**

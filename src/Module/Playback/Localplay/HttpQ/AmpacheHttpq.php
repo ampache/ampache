@@ -474,7 +474,7 @@ class AmpacheHttpq extends localplay_controller
                     $song        = new Song($data['oid']);
                     $song->format();
                     $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                    $data['link'] = $song->f_link;
+                    $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
                     $democratic   = new Democratic($url_data['demo_id']);

@@ -511,7 +511,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified, $fcatalogs);
+            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
         }
         self::apiOutput($input, $response);
     }

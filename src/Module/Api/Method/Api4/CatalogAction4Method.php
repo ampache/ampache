@@ -68,7 +68,9 @@ final class CatalogAction4Method
 
         if ($catalog) {
             define('API', true);
-            unset($SSE_OUTPUT);
+            if (isset($SSE_OUTPUT)) {
+                unset($SSE_OUTPUT);
+            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();

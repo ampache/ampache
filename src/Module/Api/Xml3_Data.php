@@ -520,7 +520,7 @@ class Xml3_Data
             $video = new Video($video_id);
             $video->format();
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url($video->id, '', 'api') . "]]></url>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url($video->id, 'api') . "]]></url>\n</video>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -656,37 +656,6 @@ class Xml3_Data
 
         return $final;
     } // timeline
-
-    /**
-     * rss_feed
-     *
-     * (description here...)
-     *
-     * @param    array    $data    (descriptiong here...)
-     * @param    string    $title    RSS feed title
-     * @param    string    $description    (not use yet?)
-     * @param    string    $date    publish date
-     * @return    string    RSS feed xml
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function rss_feed($data, $title, $description, $date = null)
-    {
-        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date != null) {
-            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), 1);
-        }
-
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
-    } // rss_feed
 
     /**
      * _header

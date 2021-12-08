@@ -115,7 +115,7 @@ foreach ($data as $row) {
         } ?>
                 </div>
             </td>
-            <td class="cel_song"><?php echo $song->f_link; ?></td>
+            <td class="cel_song"><?php echo $song->get_f_link(); ?></td>
             <td class="cel_add">
                 <span class="cel_item_add">
                     <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>

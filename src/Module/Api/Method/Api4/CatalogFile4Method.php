@@ -109,7 +109,9 @@ final class CatalogFile4Method
 
         if ($catalog->catalog_type == 'local') {
             define('API', true);
-            unset($SSE_OUTPUT);
+            if (isset($SSE_OUTPUT)) {
+                unset($SSE_OUTPUT);
+            }
             switch ($task) {
                 case 'clean':
                     $catalog->clean_file($file, $type);

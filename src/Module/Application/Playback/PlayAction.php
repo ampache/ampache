@@ -303,10 +303,7 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             /* Update the users last seen information */
-            $this->userRepository->updateLastSeen(
-                (int) $user->id,
-                time()
-            );
+            $this->userRepository->updateLastSeen($user->id);
         } else {
             $uid   = 0;
             $share = new Share((int) $share_id);
@@ -468,7 +465,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if (!empty($cache_path) && !empty($cache_target) && is_file($file_target)) {
+            if (!empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
                 $cache_file   = true;
                 $original     = true;
@@ -534,11 +531,11 @@ final class PlayAction implements ApplicationActionInterface
             : Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);
 
-        /* If they are just trying to download make sure they have rights
-         * and then present them with the download file
-         */
+        // If they are just trying to download make sure they have rights and then present them with the download file
         if ($action == 'download' && !$original) {
-            debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 4);
+            if ($transcode_to) {
+                debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
+            }
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
@@ -550,8 +547,7 @@ final class PlayAction implements ApplicationActionInterface
             debug_event('play/index', 'Downloading raw file...', 4);
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
-
-            $headers = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -700,7 +696,7 @@ final class PlayAction implements ApplicationActionInterface
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
             if ($cpaction) {
-                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
+                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
                 $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;
             } else {

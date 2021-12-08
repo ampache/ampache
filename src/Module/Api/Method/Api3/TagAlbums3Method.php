@@ -46,7 +46,7 @@ final class TagAlbums3Method
     {
         $albums = Tag::get_tag_objects('album', $input['filter']);
         $user   = User::get_from_username(Session::username($input['auth']));
-        if ($albums) {
+        if (!empty($albums)) {
             Xml3_Data::set_offset($input['offset'] ?? 0);
             Xml3_Data::set_limit($input['limit'] ?? 0);
 

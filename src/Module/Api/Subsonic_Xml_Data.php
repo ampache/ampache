@@ -474,9 +474,8 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $artists
      * @param $lastModified
-     * @param array $catalogs
      */
-    public static function addArtistsIndexes($xml, $artists, $lastModified, $catalogs)
+    public static function addArtistsIndexes($xml, $artists, $lastModified)
     {
         $xindexes = $xml->addChild('indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
@@ -881,8 +880,6 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
-        // <!-- Added in 1.14.0 -->
-        // $xsong->addAttribute('playCount', (string)$songData['total_count']);
         $rating      = new Rating($songData['id'], "song");
         $user_rating = ($rating->get_user_rating() ?: 0);
         if ($user_rating > 0) {
