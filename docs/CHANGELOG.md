@@ -11,12 +11,17 @@ API3 is not recommended for use outside of running old applications and it is re
 ### Added
 
 * Get image from more tag types
-* Database 5.2.0 Build 3:
+* Translation Updates Nov 2021
+* Update AmpacheRatingMatch.php to allow writing ratings to file tags
+  * Enable 'Save ratings to file tags when changed' on the plugin page
+  * write_tags must be enabled in the config file
+* Database 5.2.0 Build 5:
  * Make sure preference names are always unique
  * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
  * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
  * Add ui option ('show_playlist_username') Show playlist owner username in titles
  * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+ * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
 
 ### Changed
 
@@ -24,10 +29,13 @@ API3 is not recommended for use outside of running old applications and it is re
 * Update catalog counts before returning API data
 * Fix preferences for system and users after each update
 * Light theme hover color for sidebar
+* Changed some cookie from Strict to Lax to fix some bugs
+* Check ldap group by username instead of DN
 
 ### Removed
 
 * Remove AssestCache class and functions (unreliable)
+* When recording stats don't ignore based on a hardcoded gap
 
 ### Fixed
 
@@ -42,7 +50,10 @@ API3 is not recommended for use outside of running old applications and it is re
 * Missing (and duplicate) preferences for users and system
 * Size 0 when reading file tags
 * Disk and totaldisks for wma files
-* Genre for quicktime/m4a files.
+* Genre for quicktime/m4a files
+* Last.fm login impossible with strict cookies
+* Some double scrubs of text in image links
+* Updating playlist user would only update the name and not the ID
 
 ## API 5.2.0
 
@@ -53,6 +64,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 ### Added
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
+* playlists: sql for searches wasn't filtering
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
