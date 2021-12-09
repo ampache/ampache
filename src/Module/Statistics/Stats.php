@@ -407,11 +407,11 @@ class Stats
         // update the total counts as well
         if ($user_id > 0 && $agent !== 'debug') {
             $song = new Song($object_id);
-            $sql  = "UPDATE `song` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ?";
+            $sql  = "UPDATE `song` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ? AND `total_count` > 0";
             Dba::write($sql, array($song->id));
-            $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1 WHERE `id` = ?";
+            $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0";
             Dba::write($sql, array($song->album));
-            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` = ?";
+            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0";
             Dba::write($sql, array($song->artist));
             if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
                 $sql  = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
