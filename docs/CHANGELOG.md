@@ -33,6 +33,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Light theme hover color for sidebar
 * Changed some cookie from Strict to Lax to fix some bugs
 * Check ldap group by username instead of DN
+* config: playlist_art now true by default
 
 ### Removed
 
@@ -66,13 +67,19 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 ### Added
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
-* playlists: sql for searches wasn't filtering
+* API5
+  * playlists: sql for searches wasn't filtering
+  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+* API4
+  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
 ### Fixed
 
 * Session and user id identification and errors from that
+* API5
+  * playlists: sql for searches wasn't filtering
 * API3
   * democratic: This method was broken in API3 and never worked correctly
 

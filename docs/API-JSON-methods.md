@@ -847,6 +847,7 @@ This returns playlists based on the specified filter
 | 'offset'      | integer    | Return results starting from this index position                 | YES      |
 | 'limit'       | integer    | Maximum number of results to return                              | YES      |
 | 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result    | YES      |
+| 'show_dupes'  | integer    | 0,1, if true if true ignore 'api_hide_dupe_searches' setting     | YES      |
 
 * return array
 
