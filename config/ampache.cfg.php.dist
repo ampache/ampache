@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 58
+config_version = 59
 
 ;#########################################################
 ; Auto Update                                            #
@@ -269,11 +269,6 @@ additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 ; This determines if we write metadata to files when modifying metadata, or only keep them in Ampache (the default).
 ; DEFAULT: "false"
 ;write_tags = "true"
-
-; Overwrite tags
-; This switch allows removal of id3v1 tags from the files.
-; DEFAULT: "false"
-;overwrite_tags = "true"
 
 ;#########################################################
 ; Catalog                                                #

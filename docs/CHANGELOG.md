@@ -15,6 +15,8 @@ API3 is not recommended for use outside of running old applications and it is re
 * Update AmpacheRatingMatch.php to allow writing ratings to file tags
   * Enable 'Save ratings to file tags when changed' on the plugin page
   * write_tags must be enabled in the config file
+* Config version 59
+  * Removed overwrite_tags (It doesn't do anything)
 * Database 5.2.0 Build 5:
  * Make sure preference names are always unique
  * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
