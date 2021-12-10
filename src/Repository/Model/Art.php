@@ -1124,6 +1124,7 @@ class Art extends database_object
             'video',
             'user',
             'live_stream',
+            'playlist',
             'song'
         );
 
