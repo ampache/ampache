@@ -1842,7 +1842,7 @@ class Subsonic_Api
         $uploadRole   = ($input['uploadRole'] == 'true');
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
-        $maxbitrate = $input['maxBitRate'];
+        $maxbitrate   = $input['maxBitRate'];
 
         if (Access::check('interface', 100)) {
             $access = 25;
