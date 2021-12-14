@@ -397,7 +397,7 @@ class Xml4_Data
                         $playlist_user  = ($playlist->type !== 'public')
                             ? $playlist->username
                             : $playlist->type;
-                        $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                        $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                     } else {
                         $playlist = new Playlist($object_id);
@@ -639,6 +639,7 @@ class Xml4_Data
                 if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
                     continue;
                 }
+                $playlist_id    = $playlist->id;
                 $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $object_type    = 'search';
