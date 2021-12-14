@@ -55,11 +55,26 @@ final class AdminAddUserCommand extends Command
         $values     = $this->values();
         $interactor = $this->io();
 
+        $email = $values['website'];
+        if ($email) {
+            $user = User::get_from_email($email);
+            if ($user != null) {
+                $interactor->error(T_('User with email already exists'), true);
+                return;
+            }
+        } else {
+            $user = User::get_from_username($username);
+            if ($user) {
+                $interactor->error(T_('User with username already exists'), true);
+                return;
+            }
+        }
+
         $result = (int) User::create(
             $username,
             $values['name'],
             $values['email'],
-            $values['website'],
+            $email,
             $values['password'],
             $values['level']
         );
