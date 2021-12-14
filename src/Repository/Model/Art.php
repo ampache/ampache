@@ -222,12 +222,13 @@ class Art extends database_object
      * exists, if it doesn't depending on settings it will try
      * to create it.
      * @param boolean $raw
+     * @param boolean $fallback
      * @return string
      */
-    public function get($raw = false)
+    public function get($raw = false, $fallback = false)
     {
-        // Get the data either way
-        if (!$this->has_db_info()) {
+        // Get the data either way (allow forcing to fallback image)
+        if (!$this->has_db_info($fallback)) {
             return '';
         }
 
@@ -245,10 +246,11 @@ class Art extends database_object
      * ahead and try to resize
      * @return boolean
      */
-    public function has_db_info()
+    public function has_db_info($fallback = false)
     {
-        $sql        = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
+        $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results  = Dba::read($sql, array($this->type, $this->uid, $this->kind));
+        $default_art = false;
 
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
@@ -268,6 +270,12 @@ class Art extends database_object
             }
             $this->id = (int)$results['id'];
         }
+        // return a default image if fallback is requested
+        if (!$this->raw && $fallback) {
+            $this->raw      = self::read_from_images();
+            $this->raw_mime = 'image/png';
+            $default_art    = true;
+        }
         // If we get nothing return false
         if (!$this->raw) {
             return false;
@@ -279,7 +287,9 @@ class Art extends database_object
             $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
             if (!empty($data)) {
-                $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
+                if (!$default_art) {
+                    $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
+                }
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
@@ -614,11 +624,35 @@ class Art extends database_object
     }
 
     /**
+     * read_from_images
+     * @param string $name
+     */
+    private static function read_from_images($name = 'blankalbum.png')
+    {
+        $path = __DIR__ . '/../../../public/images/blankalbum.png';
+        if (!Core::is_readable($path)) {
+            debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);
+
+            return null;
+        }
+
+        $image    = '';
+        $filepath = fopen($path, "rb");
+        do {
+            $image .= fread($filepath, 2048);
+        } while (!feof($filepath));
+        fclose($filepath);
+
+        return $image;
+    }
+
+    /**
      * read_from_dir
      * @param $sizetext
      * @param string $type
      * @param integer $uid
      * @param string $kind
+     * @param $mime
      * @return string|null
      */
     private static function read_from_dir($sizetext, $type, $uid, $kind, $mime)
@@ -790,7 +824,7 @@ class Art extends database_object
     public function generate_thumb($image, $size, $mime)
     {
         $data = explode('/', (string) $mime);
-        $type = ((string) $data['1'] !== '') ? strtolower((string) $data['1']) : 'jpg';
+        $type = ((string)($data[1] ?? '') !== '') ? strtolower((string) $data[1]) : 'jpg';
 
         if (!self::test_image($image)) {
             debug_event(self::class, 'Not trying to generate thumbnail, invalid data passed', 1);

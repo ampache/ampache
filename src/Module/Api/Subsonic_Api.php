@@ -1333,7 +1333,7 @@ class Subsonic_Api
                 $art  = new Art($song->album, "album");
             }
         }
-        if (!$art || $art->get() == '') {
+        if (!$art || $art->get(false, true) == '') {
             self::setHeader($input['f'] ?? 'xml');
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
@@ -1355,7 +1355,7 @@ class Subsonic_Api
                 return;
             }
         }
-        $image = $art->get(true);
+        $image = $art->get(true, true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;

@@ -48,8 +48,9 @@ final class GetArtMethod
      * Get an art image.
      *
      * @param array $input
-     * id   = (string) $object_id
-     * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * id       = (string) $object_id
+     * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
      * @return boolean
      */
     public static function get_art(array $input): bool
@@ -63,6 +64,7 @@ final class GetArtMethod
         $type      = (string) $input['type'];
         $size      = $input['size'] ?? false;
         $user      = User::get_from_username(Session::username($input['auth']));
+        $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
@@ -98,7 +100,7 @@ final class GetArtMethod
             }
         }
 
-        if ($art->has_db_info()) {
+        if ($art->has_db_info($fallback)) {
             header('Access-Control-Allow-Origin: *');
             if ($size && AmpConfig::get('resize_images')) {
                 $dim           = array();
