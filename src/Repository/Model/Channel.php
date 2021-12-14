@@ -655,7 +655,7 @@ class Channel extends database_object implements Media, library_item
                     $this->media_bytes_streamed += strlen((string)$chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        // debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
+                        //debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {

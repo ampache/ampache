@@ -1212,8 +1212,10 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results, false)) {
+            //debug_event(self::class, 'get_artist_arrays ' . print_r($row, true), 5);
             $results[] = $row;
         }
+        //debug_event(self::class, 'get_artist_arrays ' . $sql, 5);
 
         return $results;
     }
@@ -3344,8 +3346,15 @@ abstract class Catalog extends database_object
      */
     public static function process_action($action, $catalogs, $options = null)
     {
-        if (!$options || !is_array($options)) {
-            $options = array();
+        if (empty($options)) {
+            $options = array(
+                'gather_art' => false,
+                'parse_playlist' => false
+            );
+        }
+        // make sure parse_playlist is set
+        if ($action == 'import_to_catalog') {
+            $options['parse_playlist'] = true;
         }
 
         switch ($action) {
@@ -3354,9 +3363,6 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'add_to_catalog':
             case 'import_to_catalog':
-                $options = ($action == 'import_to_catalog')
-                    ? array('gather_art' => false, 'parse_playlist' => true)
-                    : $options;
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);

@@ -561,7 +561,7 @@ class Subsonic_Api
      */
     public static function getartists($input)
     {
-        $musicFolderId = $input['musicFolderId'];
+        $musicFolderId = $input['musicFolderId'] ?? '';
         $catalogs      = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
@@ -1842,7 +1842,6 @@ class Subsonic_Api
         $uploadRole   = ($input['uploadRole'] == 'true');
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
-        //$musicfolderid = $input['musicFolderId'];
         $maxbitrate = $input['maxBitRate'];
 
         if (Access::check('interface', 100)) {

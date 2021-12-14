@@ -256,8 +256,7 @@ final class DefaultAction implements ApplicationActionInterface
             //   to retrieve for each user
             Session::create($auth);
 
-            // Not sure if it was me or php tripping out,
-            //   but naming this 'user' didn't work at all
+            // Not sure if it was me or php tripping out, but naming this 'user' didn't work at all
             $_SESSION['userdata'] = $auth;
 
             // You really don't want to store the avatar

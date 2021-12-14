@@ -109,7 +109,7 @@ final class Session implements SessionInterface
                 $GLOBALS['user']->access   = (int) ($auth['access']);
             } else {
                 self::check();
-                if ($_SESSION['userdata']['username']) {
+                if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
                 } else {
                     $GLOBALS['user']           = new User('-1');
@@ -289,8 +289,9 @@ final class Session implements SessionInterface
      */
     public static function create($data)
     {
+        $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
-        switch ($data['type']) {
+        switch ($type) {
             case 'api':
                 $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
@@ -311,9 +312,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'),
-            FILTER_VALIDATE_IP) : '0';
-        $type  = $data['type'];
+        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
