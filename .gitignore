@@ -53,3 +53,5 @@ config/ampache.cfg.php.backup
 
 # Devs should be able to customize their docker-compose env without unintentionally committing it
 docker-compose.override.yml
+
+docker/volumes/media/*

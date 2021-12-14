@@ -25,6 +25,11 @@ docker-compose up -d
 
 You can then open http://localhost:8080 and use the username `ampache` and password `ampache` to connect as the admin.
 
+**Making a catalog**
+
+By default `/media` is available in the `ampache` service to create a catalog.
+You can put your media in `docker/volumes/media` on your machine to make them available in the service.
+
 **Debugging**
 
 !!!This has only been tested on Linux!!!

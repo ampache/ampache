@@ -1,14 +1,16 @@
 #!/bin/bash
 set -xeuo pipefail
+# Execute commands without XDEBUG
+rm -f /usr/local/etc/php/conf.d/xdebug.ini
+
 composer install
 
 # Give access to all dirs
 find -type d -exec chmod +rx '{}' \;
 # Give read access to all files
 chmod -R +r .
-
-# Execute commands without XDEBUG
-rm -f /usr/local/etc/php/conf.d/xdebug.ini
+# Ensure /media can be written to
+chmod 777 /media/
 
 # Install ampache (install db and write config)
 bin/installer install \

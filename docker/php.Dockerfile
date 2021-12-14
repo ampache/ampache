@@ -27,6 +27,7 @@ COPY composer.json $COMPOSER_HOME/
 COPY resources/ ./resources
 RUN composer global install --no-dev --no-autoloader
 
+VOLUME /media
 
 FROM base as dev
 

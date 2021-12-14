@@ -31,6 +31,7 @@ services:
       - ./:/var/www/html
       - ./docker/php/cmd.sh:/cmd.sh
       - ./docker/php/fpm.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+      - ./docker/volumes/media:/media
 
   db:
     image: mariadb:10
