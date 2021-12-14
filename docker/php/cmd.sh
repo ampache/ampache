@@ -28,10 +28,9 @@ bin/cli admin:addUser \
 
 # https://xdebug.org/docs/step_debug#configure
 # https://stackoverflow.com/questions/48026670/configure-xdebug-in-php-fpm-docker-container#48243590
-# configure xdebug to connect to port 9000 on the host by default
+# configure xdebug to connect to port 9003 on the host by default
 
-case "${XDEBUG_SESSION}" in
-  "true"|"1"|"one"|"yes")
+if [[ "${XDEBUG_SESSION:-}" = "1" ]] ; then
     echo "Enabling XDEBUG remote session"
     echo "
     xdebug.mode=debug
@@ -39,7 +38,6 @@ case "${XDEBUG_SESSION}" in
     xdebug.client_port=${XDEBUG_PORT:-9003}
     xdebug.client_host=${XDEBUG_HOST:-host.docker.internal}
     " > /usr/local/etc/php/conf.d/xdebug.ini
-    ;;
-esac
+fi
 
 exec php-fpm
