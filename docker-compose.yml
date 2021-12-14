@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - ampache
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+  ampache:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+    command: /cmd.sh
+    depends_on:
+      - db
+    environment:
+      # Enable XDEBUG by setting to "1"
+      XDEBUG_SESSION: "0"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/cmd.sh:/cmd.sh
+      - ./docker/php/fpm.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+
+  db:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret'
+      MYSQL_USER: 'ampache'
+      MYSQL_PASSWORD: 'ampache'
+      MYSQL_DATABASE: 'ampache'
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "127.0.0.1:13306:3306"
+
+volumes:
+  mysqldata:

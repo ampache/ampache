@@ -1,0 +1,5 @@
+.git/
+.github/
+.tx/
+vendor
+public/lib/components

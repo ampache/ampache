@@ -1,0 +1,45 @@
+#!/bin/bash
+set -xeuo pipefail
+composer install
+
+# Give access to all dirs
+find -type d -exec chmod +rx '{}' \;
+# Give read access to all files
+chmod -R +r .
+
+# Execute commands without XDEBUG
+rm -f /usr/local/etc/php/conf.d/xdebug.ini
+
+# Install ampache (install db and write config)
+bin/installer install \
+    --dbhost db \
+    --dbname ampache \
+    --dbuser ampache \
+    --dbpassword ampache \
+    --webpath "/public"
+chmod a+rw config/ampache.cfg.php
+
+# Add admin user if necessary
+bin/cli admin:addUser \
+    --email ampache@test.test \
+    --password ampache \
+    --level 100 \
+    ampache || true
+
+# https://xdebug.org/docs/step_debug#configure
+# https://stackoverflow.com/questions/48026670/configure-xdebug-in-php-fpm-docker-container#48243590
+# configure xdebug to connect to port 9000 on the host by default
+
+case "${XDEBUG_SESSION}" in
+  "true"|"1"|"one"|"yes")
+    echo "Enabling XDEBUG remote session"
+    echo "
+    xdebug.mode=debug
+    xdebug.remote_enable=true
+    xdebug.client_port=${XDEBUG_PORT:-9003}
+    xdebug.client_host=${XDEBUG_HOST:-host.docker.internal}
+    " > /usr/local/etc/php/conf.d/xdebug.ini
+    ;;
+esac
+
+exec php-fpm
