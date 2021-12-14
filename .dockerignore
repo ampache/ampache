@@ -3,3 +3,4 @@
 .tx/
 vendor
 public/lib/components
+docker/volumes/media
