@@ -21,6 +21,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && mv composer.phar /usr/local/bin/composer \
     && mkdir -p $COMPOSER_HOME
 
+# Install composer deps globally \
+# It'll be useful for the production image sometime and acts as a cache for the dev env
 COPY composer.json $COMPOSER_HOME/
 COPY resources/ ./resources
 RUN composer global install --no-dev --no-autoloader

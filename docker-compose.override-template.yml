@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  ampache:
+    environment:
+       # Enable XDebug
+       XDEBUG_SESSION: "1"
+
+       # Uncomment to change the default port
+       # XDEBUG_PORT: 9003
+
+       # This host works on linux to YOUR local machine (yours is the host, the service is the guest)
+       # XDEBUG_HOST: host.docker.internal
