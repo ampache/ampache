@@ -239,35 +239,45 @@ abstract class playlist_object extends database_object implements library_item
     public function display_art($thumb = 2, $force = false, $link = true)
     {
         if (AmpConfig::get('playlist_art') || $force) {
-            $add_link = ($link) ? $this->get_link() : null;
-            if (Art::has_db($this->id, 'playlist')) {
-                Art::display('playlist', $this->id, $this->get_fullname(), $thumb, $add_link);
+            $add_link  = ($link) ? $this->get_link() : null;
+            $list_type = ($this instanceof Search)
+                ? 'search'
+                : 'playlist';
+            Art::display($list_type, $this->id, $this->get_fullname(), $thumb, $add_link);
+        }
+    }
 
-                return;
+    /**
+     * gather_art
+     */
+    public function gather_art($limit)
+    {
+        $medias   = $this->get_medias();
+        $count    = 0;
+        $images   = array();
+        $title    = T_('Playlist Items');
+        $web_path = AmpConfig::get('web_path');
+        shuffle($medias);
+        foreach ($medias as $media) {
+            if ($count >= $limit) {
+                return $images;
             }
-            $medias = $this->get_medias();
-            shuffle($medias);
-            foreach ($medias as $media) {
-                if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
-                    if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                        $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
-                        $libitem    = new $class_name($media['object_id']);
-                        $parent     = $libitem->get_parent();
-                        if ($parent !== null) {
-                            $media = $parent;
-                        } elseif (!$force) {
-                            $media = null;
-                        }
-                    }
-
-                    if ($media !== null) {
-                        Art::duplicate($media['object_type'], $media['object_id'], $this->id, 'playlist');
-                        Art::display('playlist', $this->id, $this->get_fullname(), $thumb, $add_link);
-
-                        return;
+            if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
+                if (!Art::has_db($media['object_id'], $media['object_type'])) {
+                    $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
+                    $libitem    = new $class_name($media['object_id']);
+                    $parent     = $libitem->get_parent();
+                    if ($parent !== null) {
+                        $media = $parent;
                     }
                 }
+                $art = new Art($media['object_id'], $media['object_type']);
+                if ($art->has_db_info()) {
+                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type'];
+                    $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
+                }
             }
+            $count++;
         }
     }
 

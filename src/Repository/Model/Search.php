@@ -2789,13 +2789,13 @@ class Search extends playlist_object
         if ($fromYear) {
             $search['rule_' . $count . '_input']    = $fromYear;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "original_year";
+            $search['rule_' . $count]               = "original_year";
             ++$count;
         }
         if ($toYear) {
             $search['rule_' . $count . '_input']    = $toYear;
             $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count . '']          = "original_year";
+            $search['rule_' . $count]               = "original_year";
             ++$count;
         }
 

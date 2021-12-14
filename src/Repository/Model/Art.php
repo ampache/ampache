@@ -30,7 +30,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -364,7 +363,7 @@ class Art extends database_object
         }
 
         // Default to image/jpeg if they don't pass anything
-        $mime = $mime ? $mime : 'image/jpeg';
+        $mime = $mime ?? 'image/jpeg';
         // Blow it away!
         $this->reset();
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
@@ -372,6 +371,7 @@ class Art extends database_object
         if (AmpConfig::get('write_tags', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
+            $songs      = array();
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
@@ -600,10 +600,11 @@ class Art extends database_object
     /**
      * write_to_dir
      * @param string $source
-     * @param $sizetext
+     * @param string $sizetext
      * @param string $type
      * @param integer $uid
      * @param $kind
+     * @param $mime
      * @return boolean
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime)
@@ -1533,7 +1534,10 @@ class Art extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             return (string)$row['image'];
         }
+
+        return '';
     }
+
     /**
      * @deprecated
      */

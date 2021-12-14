@@ -680,8 +680,8 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear'] : $input['toYear'];
-                $toYear   = $input['toYear'] > $input['fromYear'] ? $input['toYear'] : $input['fromYear'];
+                $fromYear = min($input['fromYear'], $input['toYear']);
+                $toYear   = max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
                     $search = Search::year_search($fromYear, $toYear, $size, $offset);
@@ -695,8 +695,6 @@ class Subsonic_Api
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
-            default:
-                $albums = false;
         }
 
         return $albums;
@@ -764,19 +762,19 @@ class Subsonic_Api
         if ($genre) {
             $search['rule_' . $count . '_input']    = $genre;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "tag";
+            $search['rule_' . $count]               = "tag";
             ++$count;
         }
         if ($fromYear) {
             $search['rule_' . $count . '_input']    = $fromYear;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count]               = "year";
             ++$count;
         }
         if ($toYear) {
             $search['rule_' . $count . '_input']    = $toYear;
             $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count]               = "year";
             ++$count;
         }
         if ($musicFolderId > 0) {
@@ -799,7 +797,7 @@ class Subsonic_Api
             }
             $search['rule_' . $count . '_input']    = $finput;
             $search['rule_' . $count . '_operator'] = $operator;
-            $search['rule_' . $count . '']          = $ftype;
+            $search['rule_' . $count]               = $ftype;
             ++$count;
         }
         $user = User::get_from_username((string)$username);
@@ -2121,13 +2119,13 @@ class Subsonic_Api
             if ($artist) {
                 $search['rule_' . $count . '_input']    = $artist;
                 $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count . '']          = "artist";
+                $search['rule_' . $count]               = "artist";
                 ++$count;
             }
             if ($title) {
                 $search['rule_' . $count . '_input']    = $title;
                 $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count . '']          = "title";
+                $search['rule_' . $count]               = "title";
             }
 
             $songs    = Search::run($search);

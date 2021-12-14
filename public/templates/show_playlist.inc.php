@@ -42,6 +42,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Playlist $playlist */
+/** @var array $object_ids */
 
 ?>
 <?php

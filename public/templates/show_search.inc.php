@@ -29,6 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $playlist */
+/** @var array $object_ids */
 
 ?>
 <?php
