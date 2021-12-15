@@ -211,7 +211,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // First things first, if we don't have a uid/oid stop here
         // Added $session_id here as user may not be specified but then ssid may be and will be checked later
-        if (empty($uid) && empty($session_id) && (!$share_id && !$secret)) {
+        if (empty($uid) && empty($session_id) && (!$share_id && !$secret && !$random)) {
             debug_event('play/index', 'No object UID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 
