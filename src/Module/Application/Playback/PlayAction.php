@@ -151,7 +151,7 @@ final class PlayAction implements ApplicationActionInterface
         $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_SPECIAL_CHARS));
 
         // democratic play url doesn't include these
-        if ($demo_id !== '') {
+        if ($demo_id !== '' || $random !== '') {
             $type   = 'song';
         }
         // if you don't specify, assume stream
