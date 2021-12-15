@@ -104,7 +104,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 </tr>
 <tr>
     <td><?php echo T_('PHP intl extension'); ?></td>
-    <td><?php echo debug_wresult($environment->check_php_intl()); ?></td>
+    <td><?php echo debug_result($environment->check_php_intl()); ?></td>
     <td><?php echo T_('This tests whether you have the intl extension enabled. This extension is required by Ampache.'); ?></td>
 </tr>
 <tr>
