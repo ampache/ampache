@@ -151,8 +151,12 @@ final class PlayAction implements ApplicationActionInterface
         $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_SPECIAL_CHARS));
 
         // democratic play url doesn't include these
-        if ($demo_id !== '' || $random !== '') {
-            $type   = 'song';
+        if ($demo_id !== '') {
+            $type = 'song';
+        }
+        // random play url can be multiple types but default to song if missing
+        if (empty($type) && $random !== '') {
+            $type = 'song';
         }
         // if you don't specify, assume stream
         if (empty($action)) {
@@ -409,19 +413,18 @@ final class PlayAction implements ApplicationActionInterface
             }
         } // if random
 
-        if ($type == 'song') {
-            /* Base Checks passed create the song object */
-            $media = new Song($object_id);
+        if ($type == 'video') {
+            $media = new Video($object_id);
+            if (array_key_exists('subtitle', $_REQUEST)) {
+                $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+            }
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview($object_id);
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode((int) $object_id);
         } else {
-            $type  = 'video';
-            $media = new Video($object_id);
-            if (array_key_exists('subtitle', $_REQUEST)) {
-                $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
-            }
+            // default to song
+            $media = new Song($object_id);
         }
         $media->format();
 
