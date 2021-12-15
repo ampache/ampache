@@ -159,7 +159,7 @@ class Art extends database_object
             return '';
         }
         $data      = explode('/', $mime);
-        $extension = $data['1'];
+        $extension = $data['1'] ?? '';
 
         if ($extension == 'jpeg') {
             $extension = 'jpg';
@@ -1290,17 +1290,17 @@ class Art extends database_object
         if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'png'), 'title' => $plugin->name);
+            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
         }
         if (array_key_exists('tvshow_season_art', $meta)) {
             $url      = $meta['tvshow_season_art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'png'), 'title' => $plugin->name);
+            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
         }
         if (array_key_exists('tvshow_art', $meta)) {
             $url      = $meta['tvshow_art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'png'), 'title' => $plugin->name);
+            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
         }
 
         return $images;
