@@ -10,6 +10,7 @@ services:
     volumes:
       - ./:/var/www/html
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+
   ampache:
     build:
       context: .
