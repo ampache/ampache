@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastEpisodeDeleteMethod
 {
-    private const ACTION = 'podcast_episode_delete';
+    public const ACTION = 'podcast_episode_delete';
 
     /**
      * podcast_episode_delete
@@ -50,7 +50,7 @@ final class PodcastEpisodeDeleteMethod
      * filter = (string) UID of podcast_episode to delete
      * @return boolean
      */
-    public static function podcast_episode_delete(array $input)
+    public static function podcast_episode_delete(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -76,12 +76,11 @@ final class PodcastEpisodeDeleteMethod
 
         if ($episode->remove()) {
             Api::message('podcast_episode ' . $object_id . ' deleted', $input['api_format']);
+            Catalog::count_table('podcast_episode');
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Catalog::count_table('podcast_episode');
-        Session::extend($input['auth']);
 
         return true;
     }

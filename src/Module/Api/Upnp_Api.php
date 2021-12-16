@@ -1527,7 +1527,8 @@ class Upnp_Api
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $mediaItems[] = self::_itemSong($song, $parent = 'amp://music/albums/' . (string) $song->album);
+                    $parent       = 'amp://music/albums/' . (string) $song->album;
+                    $mediaItems[] = self::_itemSong($song, $parent);
                 }
             break;
             case 'album':
@@ -1604,10 +1605,10 @@ class Upnp_Api
     }
 
     /**
-      * @param Tag $tag
-      * @param string $parent
-      * @return array
-      */
+     * @param Tag $tag
+     * @param string $parent
+     * @return array
+     */
     private static function _itemTag($tag, $parent)
     {
         return array(

@@ -162,8 +162,7 @@ function captcha_spamfree_no_new_urls() {
    var s = document.getElementById("captcha").style;
    if (s.opacity) {
       s.opacity = has_new_urls ? "0.9" : "0.1";
-   }
-   else {
+   } else {
       s.display = has_new_urls ? "block" : "none";
    }
 }

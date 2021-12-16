@@ -1310,7 +1310,7 @@ class Search extends playlist_object
     /**
      * update
      *
-     * This function updates the saved version with the current settings.
+     * This function updates the saved search with the current settings.
      * @param array|null $data
      * @return integer
      */
@@ -1329,10 +1329,11 @@ class Search extends playlist_object
             return 0;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
         Dba::write($sql, array(
             $this->name,
             $this->type,
+            $this->user,
             $this->username,
             json_encode($this->rules),
             $this->logic_operator,
@@ -2788,13 +2789,13 @@ class Search extends playlist_object
         if ($fromYear) {
             $search['rule_' . $count . '_input']    = $fromYear;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "original_year";
+            $search['rule_' . $count]               = "original_year";
             ++$count;
         }
         if ($toYear) {
             $search['rule_' . $count . '_input']    = $toYear;
             $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count . '']          = "original_year";
+            $search['rule_' . $count]               = "original_year";
             ++$count;
         }
 

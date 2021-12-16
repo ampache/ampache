@@ -81,7 +81,7 @@ final class DefaultAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Avoid form login if still connected
-        if ($this->configContainer->get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
+        if ($this->configContainer->get('use_auth') && !isset($_GET['force_display'])) {
             $auth = false;
             $name = $this->configContainer->getSessionName();
             if (array_key_exists($name, $_COOKIE) && Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
@@ -123,9 +123,9 @@ final class DefaultAction implements ApplicationActionInterface
 
         if (empty($_REQUEST['step'])) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-            if ((filter_has_var(INPUT_POST, 'username')) ||
+            if ((isset($_POST['username'])) ||
                 (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
-                    (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
+                    (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
                     $auth                         = array();
@@ -138,9 +138,9 @@ final class DefaultAction implements ApplicationActionInterface
                         $username = (string) scrub_in(Core::get_post('username'));
                         $password = Core::get_post('password');
                     } else {
-                        if (filter_has_var(INPUT_SERVER, 'REMOTE_USER')) {
+                        if (isset($_SERVER['REMOTE_USER'])) {
                             $username = (string) Core::get_server('REMOTE_USER');
-                        } elseif (filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')) {
+                        } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
                             $username = (string) Core::get_server('HTTP_REMOTE_USER');
                         } else {
                             $username = '';
@@ -152,7 +152,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if ($auth['success']) {
                         $username = $auth['username'];
-                    } elseif ($auth['ui_required']) {
+                    } elseif (array_key_exists('ui_required', $auth)) {
                         echo $auth['ui_required'];
 
                         return null;
@@ -256,8 +256,7 @@ final class DefaultAction implements ApplicationActionInterface
             //   to retrieve for each user
             Session::create($auth);
 
-            // Not sure if it was me or php tripping out,
-            //   but naming this 'user' didn't work at all
+            // Not sure if it was me or php tripping out, but naming this 'user' didn't work at all
             $_SESSION['userdata'] = $auth;
 
             // You really don't want to store the avatar
@@ -271,7 +270,7 @@ final class DefaultAction implements ApplicationActionInterface
 
             if (isset($username)) {
                 Session::create_user_cookie($username);
-                if (filter_has_var(INPUT_POST, 'rememberme')) {
+                if (isset($_POST['rememberme'])) {
                     Session::create_remember_cookie($username);
                 }
             }

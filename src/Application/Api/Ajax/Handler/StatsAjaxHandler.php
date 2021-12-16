@@ -39,7 +39,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
                     $user = Core::get_global('user');

@@ -109,7 +109,7 @@ final class Session implements SessionInterface
                 $GLOBALS['user']->access   = (int) ($auth['access']);
             } else {
                 self::check();
-                if ($_SESSION['userdata']['username']) {
+                if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
                 } else {
                     $GLOBALS['user']           = new User('-1');
@@ -245,11 +245,12 @@ final class Session implements SessionInterface
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            // debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            //debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+
             return $results[$column];
         }
 
-        debug_event(self::class, 'Unable to read session from key ' . $key . ' no data found', 3);
+        debug_event(self::class, 'Unable to read ' . $column . ' from key ' . $key . ' no data found', 3);
 
         return '';
     }
@@ -288,8 +289,9 @@ final class Session implements SessionInterface
      */
     public static function create($data)
     {
+        $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
-        switch ($data['type']) {
+        switch ($type) {
             case 'api':
                 $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
@@ -310,9 +312,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'),
-            FILTER_VALIDATE_IP) : '0';
-        $type  = $data['type'];
+        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -367,7 +367,7 @@ final class Session implements SessionInterface
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
+        if (!isset($_COOKIE[$session_name])) {
             if (!self::auth_remember()) {
                 debug_event(self::class, 'Existing session NOT found', 5);
 
@@ -381,7 +381,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Lax'
         ];
 
         // Set up the cookie params before we start the session.
@@ -527,10 +527,32 @@ final class Session implements SessionInterface
         return $location;
     }
 
+    /**
+     * get_api_version
+     * Get session geolocation.
+     * @param string $sid
+     * @return int
+     */
+    public static function get_api_version($sid)
+    {
+        $api_version = 5;
+
+        if ($sid) {
+            $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
+            $db_results = Dba::read($sql, array($sid));
+            $row        = Dba::fetch_assoc($db_results);
+            if (!empty($row)) {
+                $api_version =  (int)$row['value'];
+            }
+        }
+
+        return $api_version;
+    }
+
     public function setup(): void
     {
         // enforce strict cookies. you don't need these elsewhere
-        ini_set('session.cookie_samesite', 'Strict');
+        ini_set('session.cookie_samesite', 'Lax');
 
         session_set_save_handler(
             static function (): bool {
@@ -574,7 +596,7 @@ final class Session implements SessionInterface
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict'
+                'samesite' => 'Lax'
             ];
             setcookie(session_name(), session_id(), $cookie_options);
         } else {
@@ -583,7 +605,7 @@ final class Session implements SessionInterface
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict'
+                'samesite' => 'Lax'
             ];
             session_set_cookie_params($cookie_options);
         }
@@ -678,7 +700,7 @@ final class Session implements SessionInterface
     {
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
-        if (filter_has_var(INPUT_COOKIE, $cname)) {
+        if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
@@ -713,7 +735,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
+        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
                 FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }

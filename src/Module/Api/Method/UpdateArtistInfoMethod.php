@@ -36,7 +36,7 @@ use Ampache\Module\Util\Recommendation;
  */
 final class UpdateArtistInfoMethod
 {
-    private const ACTION = 'update_artist_info';
+    public const ACTION = 'update_artist_info';
 
     /**
      * update_artist_info
@@ -49,7 +49,7 @@ final class UpdateArtistInfoMethod
      * id = (integer) $artist_id)
      * @return boolean
      */
-    public static function update_artist_info(array $input)
+    public static function update_artist_info(array $input): bool
     {
         if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
@@ -75,7 +75,6 @@ final class UpdateArtistInfoMethod
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

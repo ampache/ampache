@@ -155,7 +155,7 @@ class Horde_Browser
     {
         // Set our agent string.
         if ($userAgent == null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
+            if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
         } else {
@@ -165,7 +165,7 @@ class Horde_Browser
 
         // Set our accept string.
         if ($accept === null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT')) {
+            if (isset($_SERVER['HTTP_ACCEPT'])) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
         } else {
@@ -173,7 +173,7 @@ class Horde_Browser
         }
 
         // Check for UTF support.
-        if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT_CHARSET')) {
+        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
             $this->setFeature('utf', strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
         }
 

@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistCreateMethod
 {
-    private const ACTION = 'playlist_create';
+    public const ACTION = 'playlist_create';
 
     /**
      * playlist_create
@@ -52,7 +52,7 @@ final class PlaylistCreateMethod
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create(array $input)
+    public static function playlist_create(array $input): bool
     {
         if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;
@@ -70,6 +70,7 @@ final class PlaylistCreateMethod
 
             return false;
         }
+        Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::playlists(array($object_id), $user->id, false, false);
@@ -77,8 +78,6 @@ final class PlaylistCreateMethod
             default:
                 echo Xml_Data::playlists(array($object_id), $user->id);
         }
-        Catalog::count_table('playlist');
-        Session::extend($input['auth']);
 
         return true;
     }

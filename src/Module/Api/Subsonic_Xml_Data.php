@@ -474,9 +474,8 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $artists
      * @param $lastModified
-     * @param array $catalogs
      */
-    public static function addArtistsIndexes($xml, $artists, $lastModified, $catalogs)
+    public static function addArtistsIndexes($xml, $artists, $lastModified)
     {
         $xindexes = $xml->addChild('indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
@@ -633,7 +632,9 @@ class Subsonic_Xml_Data
         $sub_id = (string)self::getArtistId($child['id']);
         $xchild = $xml->addChild('child');
         $xchild->addAttribute('id', $sub_id);
-        $xchild->addAttribute('parent', $child['catalog_id']);
+        if (array_key_exists('catalog_id', $child)) {
+            $xchild->addAttribute('parent', $child['catalog_id']);
+        }
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', (string)self::checkName($child['f_name']));
         $xchild->addAttribute('artist', (string)self::checkName($child['f_name']));
@@ -695,7 +696,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->album_artist));
-        $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
+        $xalbum->addAttribute('artist', (string) self::checkName($album->get_album_artist_fullname()));
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -879,8 +880,6 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
-        // <!-- Added in 1.14.0 -->
-        // $xsong->addAttribute('playCount', (string)$songData['total_count']);
         $rating      = new Rating($songData['id'], "song");
         $user_rating = ($rating->get_user_rating() ?: 0);
         if ($user_rating > 0) {
@@ -974,7 +973,9 @@ class Subsonic_Xml_Data
         $data   = Artist::get_id_array($amp_id);
         $xdir   = $xml->addChild('directory');
         $xdir->addAttribute('id', (string)$artist_id);
-        $xdir->addAttribute('parent', (string)$data['catalog_id']);
+        if (array_key_exists('catalog_id', $data)) {
+            $xdir->addAttribute('parent', (string)$data['catalog_id']);
+        }
         $xdir->addAttribute('name', (string)$data['f_name']);
         $allalbums = static::getAlbumRepository()->getByArtist($amp_id);
         foreach ($allalbums as $album_id) {
@@ -1104,19 +1105,28 @@ class Subsonic_Xml_Data
     /**
      * addPlaylists
      * @param SimpleXMLElement $xml
-     * @param $playlists
+     * @param int $user_id
+     * @param array $playlists
      * @param array $smartplaylists
+     * @param bool $hide_dupe_searches
      */
-    public static function addPlaylists($xml, $playlists, $smartplaylists = array())
+    public static function addPlaylists($xml, $user_id, $playlists, $smartplaylists = array(), $hide_dupe_searches = false)
     {
-        $xplaylists = $xml->addChild('playlists');
+        $playlist_names = array();
+        $xplaylists     = $xml->addChild('playlists');
         foreach ($playlists as $plistid) {
             $playlist = new Playlist($plistid);
+            if ($hide_dupe_searches && $playlist->user == $user_id) {
+                $playlist_names[] = $playlist->name;
+            }
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $splistid) {
-            $smartplaylist = new Search((int)str_replace('smart_', '', (string)$splistid), 'song');
-            self::addSmartPlaylist($xplaylists, $smartplaylist);
+            $playlist = new Search((int)str_replace('smart_', '', (string)$splistid), 'song');
+            if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                continue;
+            }
+            self::addSmartPlaylist($xplaylists, $playlist);
         }
     }
 

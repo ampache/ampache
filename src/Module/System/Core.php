@@ -296,7 +296,7 @@ class Core
      */
     public static function image_dimensions($image_data)
     {
-        if (!function_exists('ImageCreateFromString')) {
+        if (!function_exists('imagecreatefromstring')) {
             return array('width' => 0, 'height' => 0);
         }
 
@@ -306,7 +306,7 @@ class Core
             return array('width' => 0, 'height' => 0);
         }
 
-        $image = ImageCreateFromString($image_data);
+        $image = imagecreatefromstring($image_data);
 
         if ($image == false) {
             return array('width' => 0, 'height' => 0);

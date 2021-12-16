@@ -64,8 +64,8 @@ final class AlbumsMethod implements MethodInterface
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = self::set_filter(date) //optional
-     * update  = self::set_filter(date) //optional
+     * add     = Api::set_filter(date) //optional
+     * update  = Api::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
@@ -95,7 +95,7 @@ final class AlbumsMethod implements MethodInterface
                 T_('No Results')
             );
         }
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }

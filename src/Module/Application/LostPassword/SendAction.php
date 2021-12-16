@@ -68,7 +68,7 @@ final class SendAction implements ApplicationActionInterface
 
         /* Check for posted email */
         $result = false;
-        if (filter_has_var(INPUT_POST, 'email') && Core::get_post('email')) {
+        if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip = filter_has_var(

@@ -206,17 +206,14 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param integer $artist_id
      * @return string
      */
-    public function get_artist_name($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0)
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
         $artist = new Artist($artist_id);
-        if ($artist->prefix) {
-            return $artist->prefix . " " . $artist->name;
-        } else {
-            return $artist->name;
-        }
+
+        return $artist->get_fullname();
     } // get_album_name
 
     /**
@@ -232,7 +229,7 @@ class Song_Preview extends database_object implements Media, playable_item
         unset($details); // dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
-            $this->f_artist_full = $this->get_artist_name();
+            $this->f_artist_full = $this->get_artist_fullname();
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
@@ -350,7 +347,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type      = $this->type;
-        $song_name = rawurlencode($this->get_artist_name() . " - " . $this->title . "." . $type);
+        $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_Url::format($url . $additional_params);

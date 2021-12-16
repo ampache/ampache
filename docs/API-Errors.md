@@ -1,6 +1,6 @@
 ---
-title: "Errors"
-metaTitle: "Errors"
+title: "API 5 Errors"
+metaTitle: "API 5 Errors"
 metaDescription: "API documentation"
 ---
 
@@ -88,11 +88,11 @@ Error 4701: Received Invalid Handshake
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4701">
-		<errorAction><![CDATA[playlist_create]]></errorAction>
-		<errorType><![CDATA[account]]></errorType>
-		<errorMessage><![CDATA[Session Expired]]></errorMessage>
-	</error>
+    <error errorCode="4701">
+        <errorAction><![CDATA[playlist_create]]></errorAction>
+        <errorType><![CDATA[account]]></errorType>
+        <errorMessage><![CDATA[Session Expired]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -144,11 +144,11 @@ Error 4704: Not Found
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4704">
-		<errorAction><![CDATA[scrobble]]></errorAction>
-		<errorType><![CDATA[song]]></errorType>
-		<errorMessage><![CDATA[Not Found]]></errorMessage>
-	</error>
+    <error errorCode="4704">
+        <errorAction><![CDATA[scrobble]]></errorAction>
+        <errorType><![CDATA[song]]></errorType>
+        <errorMessage><![CDATA[Not Found]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -172,11 +172,11 @@ Error 4705: Missing Method
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4705">
-		<errorAction><![CDATA[plafgfylist_create]]></errorAction>
-		<errorType><![CDATA[system]]></errorType>
-		<errorMessage><![CDATA[Invalid Request]]></errorMessage>
-	</error>
+    <error errorCode="4705">
+        <errorAction><![CDATA[plafgfylist_create]]></errorAction>
+        <errorType><![CDATA[system]]></errorType>
+        <errorMessage><![CDATA[Invalid Request]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -200,11 +200,11 @@ Error 4706: Depreciated Method
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4706">
-		<errorAction><![CDATA[tag_songs]]></errorAction>
-		<errorType><![CDATA[removed]]></errorType>
-		<errorMessage><![CDATA[Depreciated]]></errorMessage>
-	</error>
+    <error errorCode="4706">
+        <errorAction><![CDATA[tag_songs]]></errorAction>
+        <errorType><![CDATA[removed]]></errorType>
+        <errorMessage><![CDATA[Depreciated]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -228,11 +228,11 @@ Error 4710: Bad Request
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4710">
-		<errorAction><![CDATA[playlist_create]]></errorAction>
-		<errorType><![CDATA[system]]></errorType>
-		<errorMessage><![CDATA[Bad Request: name]]></errorMessage>
-	</error>
+    <error errorCode="4710">
+        <errorAction><![CDATA[playlist_create]]></errorAction>
+        <errorType><![CDATA[system]]></errorType>
+        <errorMessage><![CDATA[Bad Request: name]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -256,11 +256,11 @@ Error 4742: Failed Access Check
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4710">
-		<errorAction><![CDATA[playlist_delete]]></errorAction>
-		<errorType><![CDATA[account]]></errorType>
-		<errorMessage><![CDATA[Require: 100]]></errorMessage>
-	</error>
+    <error errorCode="4710">
+        <errorAction><![CDATA[playlist_delete]]></errorAction>
+        <errorType><![CDATA[account]]></errorType>
+        <errorMessage><![CDATA[Require: 100]]></errorMessage>
+    </error>
 </root>
 ```
 

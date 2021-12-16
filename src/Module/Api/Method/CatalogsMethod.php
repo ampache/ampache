@@ -51,7 +51,7 @@ final class CatalogsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function catalogs(array $input)
+    public static function catalogs(array $input): bool
     {
         // filter for specific catalog types
         $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
@@ -76,7 +76,6 @@ final class CatalogsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::catalogs($catalogs);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

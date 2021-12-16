@@ -45,7 +45,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
  */
 final class StatsMethod
 {
-    private const ACTION = 'stats';
+    public const ACTION = 'stats';
 
     /**
      * stats
@@ -64,7 +64,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input)
+    public static function stats(array $input): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -149,7 +149,7 @@ final class StatsMethod
                 debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
-                        $results = Random::get_default($limit, $user_id);
+                        $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
                         $results = static::getArtistRepository()->getRandom(
@@ -164,7 +164,9 @@ final class StatsMethod
                         );
                         break;
                     case 'playlist':
-                        $results = array_merge(Playlist::get_playlists($user_id), Playlist::get_smartlists($user->id));
+                        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
+                        $searches  = Playlist::get_smartlists($user_id, '', true, false);
+                        $results   = array_merge($playlists, $searches);
                         shuffle($results);
                         break;
                     case 'video':
@@ -278,7 +280,6 @@ final class StatsMethod
                 }
                 break;
         }
-        Session::extend($input['auth']);
 
         return true;
     }

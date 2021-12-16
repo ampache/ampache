@@ -26,7 +26,7 @@ use Ampache\Repository\Model\User;
 
 interface GatekeeperInterface
 {
-    public function getUser(): User;
+    public function getUser(): ?User;
 
     public function sessionExists(): bool;
 

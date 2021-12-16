@@ -615,7 +615,7 @@ class Ui implements UiInterface
     {
         $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
-        if (filter_has_var(INPUT_COOKIE, $name)) {
+        if (isset($_COOKIE[$name])) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 
@@ -653,15 +653,11 @@ class Ui implements UiInterface
 
     /**
      * shows a simple continue button after an action
-     *
-     * @param string $title The Title of the message
-     * @param string $text The details of the message
-     * @param string $next_url Where to go next
      */
     public function showContinue(
-        $title,
-        $text,
-        $next_url
+        string $title,
+        string $text,
+        string $next_url
     ): void {
         $webPath = $this->configContainer->getWebPath();
 
@@ -738,6 +734,7 @@ class Ui implements UiInterface
             case 'hide_single_artist':
             case 'hide_genres':
             case 'show_skipped_times':
+            case 'show_playlist_username':
             case 'show_license':
             case 'song_page_title':
             case 'subsonic_backend':
@@ -770,6 +767,7 @@ class Ui implements UiInterface
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_recently_played':
+            case 'api_hide_dupe_searches':
             case 'home_now_playing':
             case 'browser_notify':
             case 'allow_video':
@@ -782,6 +780,7 @@ class Ui implements UiInterface
             case 'upload_catalog_pattern':
             case 'catalogfav_gridview':
             case 'personalfav_display':
+            case 'ratingmatch_write_tags':
             case 'ratingmatch_flags':
             case 'catalog_check_duplicate':
             case 'browse_filter':
@@ -792,6 +791,9 @@ class Ui implements UiInterface
             case 'tadb_overwrite_name':
             case 'mb_overwrite_name':
             case 'subsonic_always_download':
+            case 'api_enable_3':
+            case 'api_enable_4':
+            case 'api_enable_5':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
@@ -900,6 +902,27 @@ class Ui implements UiInterface
                 } // end foreach
                 echo "</select>\n";
                 break;
+            case 'api_force_version':
+                $is_0 = '';
+                $is_3 = '';
+                $is_4 = '';
+                $is_5 = '';
+                if ($value == 0) {
+                    $is_0 = 'selected="selected"';
+                } elseif ($value == 3) {
+                    $is_3 = 'selected="selected"';
+                } elseif ($value == 4) {
+                    $is_4 = 'selected="selected"';
+                } elseif ($value == 5) {
+                    $is_5 = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
+                echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
+                echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
+                echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
+                echo "</select>\n";
+                break;
             case 'ratingmatch_stars':
                 $is_0 = '';
                 $is_1 = '';
@@ -917,7 +940,7 @@ class Ui implements UiInterface
                     $is_3 = 'selected="selected"';
                 } elseif ($value == 4) {
                     $is_4 = 'selected="selected"';
-                } elseif ($value == 4) {
+                } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
@@ -1070,7 +1093,7 @@ class Ui implements UiInterface
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
                 $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
-                echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
             default:
                 if (preg_match('/_pass$/', $name)) {

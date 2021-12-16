@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LiveStreamMethod
@@ -38,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class LiveStreamMethod
 {
-    private const ACTION = 'live_stream';
+    public const ACTION = 'live_stream';
 
     /**
      * live_stream
@@ -50,7 +49,7 @@ final class LiveStreamMethod
      * filter = (string) UID of live_stream
      * @return boolean
      */
-    public static function live_stream(array $input)
+    public static function live_stream(array $input): bool
     {
         if (!AmpConfig::get('live_stream')) {
             Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +76,6 @@ final class LiveStreamMethod
             default:
                 echo Xml_Data::live_streams(array($object_id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

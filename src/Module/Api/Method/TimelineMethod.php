@@ -27,11 +27,9 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -40,7 +38,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 final class TimelineMethod
 {
-    private const ACTION = 'timeline';
+    public const ACTION = 'timeline';
 
     /**
      * timeline
@@ -54,7 +52,7 @@ final class TimelineMethod
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input)
+    public static function timeline(array $input): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -88,7 +86,6 @@ final class TimelineMethod
                 }
             }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

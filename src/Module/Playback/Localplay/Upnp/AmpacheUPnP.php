@@ -478,7 +478,7 @@ class AmpacheUPnP extends localplay_controller
             if ($url_data != null) {
                 $song = new Song($url_data['id']);
                 if ($song != null) {
-                    $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
+                    $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }
             if (!$data['name']) {
@@ -521,8 +521,8 @@ class AmpacheUPnP extends localplay_controller
         if ($url_data != null) {
             $song = new Song($url_data['id']);
             if ($song != null) {
-                $status['track_artist'] = $song->get_artist_name();
-                $status['track_album']  = $song->get_album_name();
+                $status['track_artist'] = $song->get_artist_fullname();
+                $status['track_album']  = $song->get_album_fullname();
             }
         }
 

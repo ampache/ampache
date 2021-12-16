@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdatePodcastMethod
 {
-    private const ACTION = 'update_podcast';
+    public const ACTION = 'update_podcast';
 
     /**
      * update_podcast
@@ -47,7 +47,7 @@ final class UpdatePodcastMethod
      * filter = (string) UID of podcast
      * @return boolean
      */
-    public static function update_podcast(array $input)
+    public static function update_podcast(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -69,7 +69,6 @@ final class UpdatePodcastMethod
         } else {
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

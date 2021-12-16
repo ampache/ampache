@@ -49,15 +49,15 @@ final class ArtistsMethod
      * @param array $input
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add          = self::set_filter(date) //optional
-     * update       = self::set_filter(date) //optional
+     * add          = Api::set_filter(date) //optional
+     * update       = Api::set_filter(date) //optional
      * include      = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
      * @return boolean
      */
-    public static function artists(array $input)
+    public static function artists(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -82,7 +82,7 @@ final class ArtistsMethod
 
         ob_end_clean();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
@@ -97,7 +97,6 @@ final class ArtistsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::artists($artists, $include, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

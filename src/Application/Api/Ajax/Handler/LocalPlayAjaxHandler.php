@@ -41,7 +41,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'set_instance':
                 // Make sure they they are allowed to do this
                 if (!Access::check('localplay', 5)) {

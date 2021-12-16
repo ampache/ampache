@@ -29,13 +29,15 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $playlist */
+/** @var array $object_ids */
 
 ?>
 <?php
 ob_start();
 require Ui::find_template('show_search_title.inc.php');
-$title  = ob_get_contents();
-$browse = new Browse();
+$title    = ob_get_contents();
+$web_path = AmpConfig::get('web_path');
+$browse   = new Browse();
 $browse->set_type('playlist_media');
 $browse->add_supplemental_object('search', $playlist->id);
 $browse->set_static_content(false);
@@ -49,7 +51,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         $zipHandler = $dic->get(ZipHandlerInterface::class);
         if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
@@ -67,7 +69,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('delete'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
@@ -77,7 +79,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/smartplaylist.php?action=show_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
     <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" onClick="$('#hiddenaction').val('update_playlist');" />&nbsp;&nbsp;

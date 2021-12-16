@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class LabelArtistsMethod
 {
-    private const ACTION = 'label_artists';
+    public const ACTION = 'label_artists';
 
     /**
      * label_artists
@@ -52,7 +52,7 @@ final class LabelArtistsMethod
      * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function label_artists(array $input)
+    public static function label_artists(array $input): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,7 +63,7 @@ final class LabelArtistsMethod
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
@@ -83,7 +83,6 @@ final class LabelArtistsMethod
             default:
                 echo Xml_Data::artists($artists, $include, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

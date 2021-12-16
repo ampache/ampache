@@ -53,7 +53,7 @@ final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
         $album = $this->modelFactory->createAlbum($objectId);
         $album->format();
 
-        $artistName = $album->f_album_artist_name;
+        $artistName = $album->get_album_artist_fullname();
         $albumName  = $album->get_fullname(true);
 
         if ($artistName && $albumName) {

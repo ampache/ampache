@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastEditMethod
 {
-    private const ACTION = 'podcast_edit';
+    public const ACTION = 'podcast_edit';
 
     /**
      * podcast_edit
@@ -56,7 +56,7 @@ final class PodcastEditMethod
      * copyright   = (string) //optional
      * @return boolean
      */
-    public static function podcast_edit(array $input)
+    public static function podcast_edit(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -100,7 +100,6 @@ final class PodcastEditMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -511,7 +511,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified, $fcatalogs);
+            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
         }
         self::apiOutput($input, $response);
     }
@@ -561,7 +561,7 @@ class Subsonic_Api
      */
     public static function getartists($input)
     {
-        $musicFolderId = $input['musicFolderId'];
+        $musicFolderId = $input['musicFolderId'] ?? '';
         $catalogs      = array();
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
@@ -680,8 +680,8 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear'] : $input['toYear'];
-                $toYear   = $input['toYear'] > $input['fromYear'] ? $input['toYear'] : $input['fromYear'];
+                $fromYear = min($input['fromYear'], $input['toYear']);
+                $toYear   = max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
                     $search = Search::year_search($fromYear, $toYear, $size, $offset);
@@ -695,8 +695,6 @@ class Subsonic_Api
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
-            default:
-                $albums = false;
         }
 
         return $albums;
@@ -745,7 +743,7 @@ class Subsonic_Api
      */
     public static function getrandomsongs($input)
     {
-        $size = $input['size'];
+        $size = $input['size'] ?? false;
         if (!$size) {
             $size = 10;
         }
@@ -764,19 +762,19 @@ class Subsonic_Api
         if ($genre) {
             $search['rule_' . $count . '_input']    = $genre;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "tag";
+            $search['rule_' . $count]               = "tag";
             ++$count;
         }
         if ($fromYear) {
             $search['rule_' . $count . '_input']    = $fromYear;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count]               = "year";
             ++$count;
         }
         if ($toYear) {
             $search['rule_' . $count . '_input']    = $toYear;
             $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count]               = "year";
             ++$count;
         }
         if ($musicFolderId > 0) {
@@ -799,14 +797,14 @@ class Subsonic_Api
             }
             $search['rule_' . $count . '_input']    = $finput;
             $search['rule_' . $count . '_operator'] = $operator;
-            $search['rule_' . $count . '']          = $ftype;
+            $search['rule_' . $count]               = $ftype;
             ++$count;
         }
         $user = User::get_from_username((string)$username);
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
-            $songs = Random::get_default($size, $user->id);
+            $songs = Random::get_default($size, $user);
         }
 
         $response = Subsonic_Xml_Data::createSuccessResponse('getrandomsongs');
@@ -983,14 +981,17 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        $username = isset($_REQUEST['username'])
+        $username  = isset($_REQUEST['username'])
             ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
             : (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
-        $user     = User::get_from_username((string)$username);
-        $response = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
+        $user      = User::get_from_username((string)$username);
+        $response  = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
+        $playlists = Playlist::get_playlists($user->id, '', true, true, false);
+        $searches  = Playlist::get_smartlists($user->id, '', true, false);
+        // allow skipping dupe search names when used as refresh searches
+        $hide_dupe_searches = (bool)Preference::get_by_user($user->id, 'api_hide_dupe_searches');
 
-        // Don't allow playlist listing for another user
-        Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($user->id), Playlist::get_smartlists($user->id));
+        Subsonic_Xml_Data::addPlaylists($response, $user->id, $playlists, $searches, $hide_dupe_searches);
         self::apiOutput($input, $response);
     }
 
@@ -1330,7 +1331,7 @@ class Subsonic_Api
                 $art  = new Art($song->album, "album");
             }
         }
-        if (!$art || $art->get() == '') {
+        if (!$art || $art->get(false, true) == '') {
             self::setHeader($input['f'] ?? 'xml');
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
@@ -1352,7 +1353,7 @@ class Subsonic_Api
                 return;
             }
         }
-        $image = $art->get(true);
+        $image = $art->get(true, true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
@@ -1839,8 +1840,7 @@ class Subsonic_Api
         $uploadRole   = ($input['uploadRole'] == 'true');
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
-        //$musicfolderid = $input['musicFolderId'];
-        $maxbitrate = $input['maxBitRate'];
+        $maxbitrate   = $input['maxBitRate'];
 
         if (Access::check('interface', 100)) {
             $access = 25;
@@ -2119,13 +2119,13 @@ class Subsonic_Api
             if ($artist) {
                 $search['rule_' . $count . '_input']    = $artist;
                 $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count . '']          = "artist";
+                $search['rule_' . $count]               = "artist";
                 ++$count;
             }
             if ($title) {
                 $search['rule_' . $count . '_input']    = $title;
                 $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count . '']          = "title";
+                $search['rule_' . $count]               = "title";
             }
 
             $songs    = Search::run($search);

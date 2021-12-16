@@ -474,7 +474,7 @@ class AmpacheHttpq extends localplay_controller
                     $song        = new Song($data['oid']);
                     $song->format();
                     $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                    $data['link'] = $song->f_link;
+                    $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
                     $democratic   = new Democratic($url_data['demo_id']);
@@ -542,8 +542,8 @@ class AmpacheHttpq extends localplay_controller
         if (array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
             $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_name();
-            $array['track_album']  = $song->get_album_name();
+            $array['track_artist'] = $song->get_artist_fullname();
+            $array['track_album']  = $song->get_album_fullname();
         } else {
             $array['track_title'] = basename($array['track'] ?? '');
         }

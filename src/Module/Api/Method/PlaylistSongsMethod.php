@@ -40,7 +40,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistSongsMethod
 {
-    private const ACTION = 'playlist_songs';
+    public const ACTION = 'playlist_songs';
 
     /**
      * playlist_songs
@@ -54,7 +54,7 @@ final class PlaylistSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function playlist_songs(array $input)
+    public static function playlist_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -104,7 +104,6 @@ final class PlaylistSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

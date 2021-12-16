@@ -179,7 +179,7 @@ class Catalog_local extends Catalog
 
         // Break it down into its component parts and start looking for a catalog
         do {
-            if ($catalog_paths[$component_path]) {
+            if (array_key_exists($component_path, $catalog_paths)) {
                 return $catalog_paths[$component_path];
             }
 
@@ -480,16 +480,23 @@ class Catalog_local extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-        if ($options == null) {
+        if (empty($options)) {
             $options = array(
                 'gather_art' => true,
                 'parse_playlist' => false
             );
         }
+        // make double sure that options are set
+        if (!array_key_exists('gather_art', $options)) {
+            $options['gather_art'] = true;
+        }
+        if (!array_key_exists('parse_playlist', $options)) {
+            $options['parse_playlist'] = false;
+        }
 
-        $this->count                  = 0;
-        $this->songs_to_gather        = array();
-        $this->videos_to_gather       = array();
+        $this->count            = 0;
+        $this->songs_to_gather  = array();
+        $this->videos_to_gather = array();
 
         if (!defined('SSE_OUTPUT')) {
             require Ui::find_template('show_adds_catalog.inc.php');

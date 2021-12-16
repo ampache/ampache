@@ -40,7 +40,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogFileMethod
 {
-    private const ACTION = 'catalog_file';
+    public const ACTION = 'catalog_file';
 
     /**
      * catalog_file
@@ -56,7 +56,7 @@ final class CatalogFileMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input)
+    public static function catalog_file(array $input): bool
     {
         if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -120,7 +120,9 @@ final class CatalogFileMethod
         if ($catalog->catalog_type == 'local') {
             foreach ($task as $item) {
                 define('API', true);
-                unset($SSE_OUTPUT);
+                if (defined('SSE_OUTPUT')) {
+                    unset($SSE_OUTPUT);
+                }
                 switch ($item) {
                     case 'clean':
                         if ($media->id) {
@@ -148,7 +150,6 @@ final class CatalogFileMethod
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

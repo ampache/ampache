@@ -39,7 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumSongsMethod
 {
-    private const ACTION = 'album_songs';
+    public const ACTION = 'album_songs';
 
     /**
      * album_songs
@@ -54,7 +54,7 @@ class AlbumSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs(array $input)
+    public static function album_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -72,7 +72,7 @@ class AlbumSongsMethod
         // songs for all disks
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = array_key_exists('exact', $input) && (int)$input['exact'] == 1;
+        $exact = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         if (AmpConfig::get('album_group') && !$exact) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
@@ -104,7 +104,6 @@ class AlbumSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

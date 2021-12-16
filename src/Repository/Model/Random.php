@@ -81,17 +81,23 @@ class Random
     /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
-     * @param $type
+     * @param string $random_type
+     * @param User $user
+     * @param int $object_id
      * @return mixed
      */
-    public static function get_single_song($type)
+    public static function get_single_song($random_type, $user, $object_id = 0)
     {
-        $method_name = 'get_' . $type;
-
-        if (!method_exists(Random::class, $method_name)) {
-            $method_name = 'get_default';
+        switch ($random_type) {
+            case 'artist':
+                $song_ids = self::get_artist(1, $user);
+                break;
+            case 'playlist':
+                $song_ids = self::get_playlist($user, $object_id);
+                break;
+            default:
+                $song_ids = self::get_default(1, $user);
         }
-        $song_ids = self::$method_name(1);
 
         return array_pop($song_ids);
     } // get_single_song
@@ -101,23 +107,22 @@ class Random
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      * @param string $limit
-     * @param integer $user_id
+     * @param User $user
      * @return integer[]
      */
-    public static function get_default($limit = '', $user_id = null)
+    public static function get_default($limit = '', $user = null)
     {
         $results = array();
 
         if (empty($limit)) {
             $limit = AmpConfig::get('offset_limit', 25);
         }
-        if ((int)$user_id < 1) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? null;
+        if (empty($user)) {
+            $user = Core::get_global('user');
         }
-
-        $join        = 'WHERE';
-        $sql         = "SELECT `song`.`id` FROM `song` ";
+        $user_id = $user->id ?? null;
+        $join    = 'WHERE';
+        $sql     = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
             $join = 'AND';
@@ -141,16 +146,20 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param $limit
-     * @return array
+     * @param integer $limit
+     * @param User $user
+     * @return integer[]
      */
-    public static function get_artist($limit)
+    public static function get_artist($limit, $user = null)
     {
         $results = array();
 
-        $data        = Core::get_global('user')->get_recently_played('artist', 1);
-        $where_sql   = "";
-        $join        = 'WHERE';
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $data      = $user->get_recently_played('artist', 1);
+        $where_sql = "";
+        $join      = 'WHERE';
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
@@ -161,7 +170,7 @@ class Random
             $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user)) {
             $user_id = Core::get_global('user')->id;
             $sql .= " $join `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
@@ -169,11 +178,31 @@ class Random
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
     } // get_artist
+
+    /**
+     * get_playlist
+     * Get a random song from a playlist (that you own)
+     * @param User $user
+     * @param int $playlist_id
+     * @return integer[]
+     */
+    public static function get_playlist($user, $playlist_id = 0)
+    {
+        $results  = array();
+        $playlist = new Playlist($playlist_id);
+        if ($playlist->has_access($user->id)) {
+            foreach ($playlist->get_random_items(1) as $songs) {
+                $results[] = $songs['object_id'];
+            }
+        }
+
+        return $results;
+    } // get_playlist
 
     /**
      * advanced

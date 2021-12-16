@@ -48,6 +48,7 @@ class Clip extends Video
         parent::__construct($clip_id);
 
         $info = $this->get_info($clip_id);
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -158,9 +159,8 @@ class Clip extends Video
             }
 
             if ($this->song) {
-                $song = new Song($this->song);
-                $song->format();
-                $this->f_song = $song->f_link;
+                $song         = new Song($this->song);
+                $this->f_song = $song->get_f_link();
             }
         }
 

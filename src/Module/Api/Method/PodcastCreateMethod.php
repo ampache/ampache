@@ -40,7 +40,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastCreateMethod
 {
-    private const ACTION = 'podcast_create';
+    public const ACTION = 'podcast_create';
 
     /**
      * podcast_create
@@ -53,7 +53,7 @@ final class PodcastCreateMethod
      * catalog = (string) podcast catalog
      * @return boolean
      */
-    public static function podcast_create(array $input)
+    public static function podcast_create(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,6 +77,7 @@ final class PodcastCreateMethod
             return false;
         }
 
+        Catalog::count_table('podcast');
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
@@ -86,8 +87,6 @@ final class PodcastCreateMethod
             default:
                 echo XML_Data::podcasts(array($podcast), $user->id);
         }
-        Catalog::count_table('podcast');
-        Session::extend($input['auth']);
 
         return true;
     }

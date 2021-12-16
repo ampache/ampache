@@ -46,7 +46,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'show_broadcasts':
                 ob_start();
                 require Ui::find_template('show_broadcasts_dialog.inc.php');

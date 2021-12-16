@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json_Data;
 
 final class JsonOutput implements ApiOutputInterface
@@ -38,6 +39,25 @@ final class JsonOutput implements ApiOutputInterface
             $message,
             $action,
             $type
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     */
+    public function error3(int $code, string $message): string
+    {
+        return '';
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     */
+    public function error4(int $code, string $message): string
+    {
+        return Json4_Data::error(
+            $code,
+            $message
         );
     }
 

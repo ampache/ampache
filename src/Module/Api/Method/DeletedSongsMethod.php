@@ -26,11 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class DeletedSongsMethod
@@ -52,7 +50,7 @@ final class DeletedSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function deleted_songs(array $input)
+    public static function deleted_songs(array $input): bool
     {
         $songs = Song::get_deleted();
         if (empty($songs)) {
@@ -73,7 +71,6 @@ final class DeletedSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::deleted('song', $songs);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

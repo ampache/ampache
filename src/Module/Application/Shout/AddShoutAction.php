@@ -70,10 +70,10 @@ final class AddShoutAction implements ApplicationActionInterface
         }
 
         // Remove unauthorized defined values from here
-        if (filter_has_var(INPUT_POST, 'user')) {
+        if (isset($_POST['user'])) {
             unset($_POST['user']);
         }
-        if (filter_has_var(INPUT_POST, 'date')) {
+        if (isset($_POST['date'])) {
             unset($_POST['date']);
         }
 

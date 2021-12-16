@@ -52,9 +52,11 @@ final class Gatekeeper implements GatekeeperInterface
         $this->request = $request;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
-        return User::get_from_username($this->getUserName());
+        return (isset($this->request->getQueryParams()['user']))
+            ? User::get_from_username($this->request->getQueryParams()['user'])
+            : User::get_from_apikey($this->getAuth());
     }
 
     public function sessionExists(): bool
@@ -69,7 +71,9 @@ final class Gatekeeper implements GatekeeperInterface
 
     public function getUserName(): string
     {
-        return Session::username($this->getAuth());
+        return (isset($this->request->getQueryParams()['user']))
+            ? $this->request->getQueryParams()['user']
+            : Session::username($this->getAuth());
     }
 
     public function getAuth(): string

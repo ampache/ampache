@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -38,6 +40,28 @@ final class XmlOutput implements ApiOutputInterface
             $message,
             $action,
             $type
+        );
+    }
+
+    /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error3(int $code, string $message): string
+    {
+        return Xml3_Data::error(
+            $code,
+            $message
+        );
+    }
+
+    /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error4(int $code, string $message): string
+    {
+        return Xml4_Data::error(
+            $code,
+            $message
         );
     }
 

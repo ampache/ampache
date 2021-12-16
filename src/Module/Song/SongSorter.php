@@ -131,7 +131,7 @@ final class SongSorter implements SongSorterInterface
         /* Do the various check */
         $album_object = new Album($song->album);
         $album_object->format();
-        if ($album_object->f_album_artist_name) {
+        if ($album_object->get_album_artist_fullname() != "") {
             $artist = $album_object->f_album_artist_name;
         } elseif ($album_object->artist_count != 1) {
             $artist = $various_artist;

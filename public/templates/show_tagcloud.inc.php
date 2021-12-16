@@ -78,7 +78,7 @@ $ui = $dic->get(UiInterface::class);
 
 <br /><br /><br />
 <?php
-if (filter_has_var(INPUT_GET, 'show_tag')) {
+if (isset($_GET['show_tag'])) {
             $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {

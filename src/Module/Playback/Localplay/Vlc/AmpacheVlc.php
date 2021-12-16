@@ -495,8 +495,8 @@ class AmpacheVlc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->f_name . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                    $data['link'] = $song->f_link;
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
                     $democratic   = new Democratic($url_data['demo_id']);
@@ -568,10 +568,10 @@ class AmpacheVlc extends localplay_controller
 
         $url_data = $this->parse_url($array['track']);
         $song     = new Song($url_data['oid']);
-        if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
+        if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
             $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_name();
-            $array['track_album']  = $song->get_album_name();
+            $array['track_artist'] = $song->get_artist_fullname();
+            $array['track_album']  = $song->get_album_fullname();
         } else {
             // if not a known format
             $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));

@@ -24,6 +24,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var array $controllers */
+
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
@@ -44,11 +46,11 @@ $web_path = AmpConfig::get('web_path'); ?>
             }
             $localplay->format();
             if (LocalPlay::is_enabled($controller)) {
-                $action        = 'confirm_uninstall_localplay';
-                $action_txt    = T_('Disable');
+                $action     = 'confirm_uninstall_localplay';
+                $action_txt = T_('Disable');
             } else {
-                $action        = 'install_localplay';
-                $action_txt    = T_('Enable');
+                $action     = 'install_localplay';
+                $action_txt = T_('Enable');
             } ?>
         <tr>
             <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>

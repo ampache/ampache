@@ -199,6 +199,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         /* Get the information from the db */
         $info = $this->get_info($artist_id);
+        if (empty($info)) {
+            return false;
+        }
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -714,7 +717,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $trimmed = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
             debug_event(self::class, "check Artist: cut {{$name}} to {{$trimmed[0]}}", 4);
-            $mbid = '';
         }
         $name    = $trimmed[0];
 

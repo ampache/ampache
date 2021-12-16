@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class AdvancedSearchMethod
 {
-    private const ACTION = 'advanced_search';
+    public const ACTION = 'advanced_search';
 
     /**
      * advanced_search
@@ -71,7 +71,7 @@ final class AdvancedSearchMethod
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input)
+    public static function advanced_search(array $input): bool
     {
         if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -149,7 +149,6 @@ final class AdvancedSearchMethod
                         break;
                 }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

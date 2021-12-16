@@ -50,13 +50,13 @@ final class SongsMethod
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
+     * add    = Api::set_filter(date) //optional
+     * update = Api::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function songs(array $input)
+    public static function songs(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -90,7 +90,6 @@ final class SongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

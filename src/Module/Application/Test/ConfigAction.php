@@ -88,7 +88,7 @@ final class ConfigAction implements ApplicationActionInterface
         // Try to load localization from cookie
         $session_name = $this->configContainer->getSessionName();
 
-        if (filter_has_var(INPUT_COOKIE, $session_name . '_lang')) {
+        if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
         if (!class_exists('Gettext\Translations')) {

@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
@@ -41,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class BookmarkCreateMethod
 {
-    private const ACTION = 'bookmark_create';
+    public const ACTION = 'bookmark_create';
 
     /**
      * bookmark_create
@@ -57,7 +56,7 @@ final class BookmarkCreateMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_create(array $input)
+    public static function bookmark_create(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
@@ -122,7 +121,6 @@ final class BookmarkCreateMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

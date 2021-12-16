@@ -39,7 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 final class ArtistSongsMethod
 {
-    private const ACTION = 'artist_songs';
+    public const ACTION = 'artist_songs';
 
     /**
      * artist_songs
@@ -54,7 +54,7 @@ final class ArtistSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs(array $input)
+    public static function artist_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -89,7 +89,6 @@ final class ArtistSongsMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($songs, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

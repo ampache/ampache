@@ -546,7 +546,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
                 $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
                 debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
+                if (file_put_contents($file, fopen($this->source, 'r'))) {
                     debug_event(self::class, 'Download completed.', 4);
                     $this->file = $file;
 

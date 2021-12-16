@@ -77,6 +77,11 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
         $album->mbid_group          = $musicBrainzIdGroup;
         $album->mbid                = $musicBrainzId;
 
+        $album->shouldReceive('get_album_artist_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($albumArtistName);
+
         $album->shouldReceive('get_fullname')
             ->with(true)
             ->once()

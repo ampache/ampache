@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class VideosMethod
 {
-    private const ACTION = 'videos';
+    public const ACTION = 'videos';
 
     /**
      * videos
@@ -51,7 +51,7 @@ final class VideosMethod
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function videos(array $input)
+    public static function videos(array $input): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -86,7 +86,6 @@ final class VideosMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::videos($video_ids, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

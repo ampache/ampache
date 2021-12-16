@@ -36,6 +36,8 @@ use Ampache\Module\System\Session;
  */
 final class UserPreferencesMethod
 {
+    public const ACTION = 'user_preferences';
+
     /**
      * user_preferences
      * MINIMUM_API_VERSION=5.0.0
@@ -59,6 +61,5 @@ final class UserPreferencesMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
     }
 }
