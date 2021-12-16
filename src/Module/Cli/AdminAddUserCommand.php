@@ -64,7 +64,7 @@ final class AdminAddUserCommand extends Command
             }
         } else {
             $user = User::get_from_username($username);
-            if ($user) {
+            if ($user->id) {
                 $interactor->error(T_('User with username already exists'), true);
                 return;
             }
