@@ -16,8 +16,10 @@ chmod 777 /media/
 bin/installer install \
     --dbhost db \
     --dbname ampache \
-    --dbuser ampache \
-    --dbpassword ampache \
+    --dbuser root \
+    --dbpassword secret \
+    --ampachedbuser ampache \
+    --ampachedbpassword ampache\
     --webpath "/public"
 chmod a+rw config/ampache.cfg.php
 
