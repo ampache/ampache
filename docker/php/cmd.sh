@@ -44,4 +44,17 @@ if [[ "${XDEBUG_SESSION:-}" = "1" ]] ; then
     " > /usr/local/etc/php/conf.d/xdebug.ini
 fi
 
-exec php-fpm
+# Enable logging ampache debug output
+# Still have to modify config and set debug = "true"
+sed -i -e 's|log_path = "/var/log/.+"|log_path = "/var/log/"|g' config/ampache.cfg.php
+sed -i -e 's|log_filename = "%name.%Y%m%d.log"|log_filename = "ampache.log"|g' config/ampache.cfg.php
+
+touch /var/log/ampache.log
+chmod a+rw /var/log/ampache.log
+php-fpm &> /var/log/php.log &
+
+# Output the debug logs and the php-fpm process
+tail --lines=1 --follow --retry /var/log/php.log /var/log/ampache.log
+
+# Kill the php-fpm process
+kill %1
