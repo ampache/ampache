@@ -804,7 +804,7 @@ class Subsonic_Api
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
-            $songs = Random::get_default($size, $user->id);
+            $songs = Random::get_default($size, $user);
         }
 
         $response = Subsonic_Xml_Data::createSuccessResponse('getrandomsongs');

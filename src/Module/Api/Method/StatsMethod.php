@@ -149,7 +149,7 @@ final class StatsMethod
                 debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
-                        $results = Random::get_default($limit, $user_id);
+                        $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
                         $results = static::getArtistRepository()->getRandom(

@@ -403,7 +403,7 @@ final class PlayAction implements ApplicationActionInterface
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype);
+                $object_id = Random::get_single_song($rtype, $user, $object_id);
                 if ($object_id) {
                     // Save this one in case we do a seek
                     $_SESSION['random']['last'] = $object_id;
