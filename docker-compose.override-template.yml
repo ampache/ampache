@@ -11,3 +11,15 @@ services:
 
        # This host works on linux to YOUR local machine (yours is the host, the service is the guest)
        # XDEBUG_HOST: host.docker.internal
+
+  # Enable this to run tools like PHP Stan et al
+  # You will probably have xdebug activated on the ampache service and don't want the debugger
+  #  to be called just because you're executing a linting process
+  # Run them with this service instead
+  php:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+    command: echo "Use this to execute tools"
+    volumes:
+      - ./:/var/www/html
