@@ -2897,7 +2897,7 @@ abstract class Catalog extends database_object
                     $db_results = Dba::read($sql, array($file));
                     $results    = Dba::fetch_assoc($db_results);
 
-                    if ((int)$results['id'] > 0) {
+                    if (array_key_exists('id', $results) && (int)($results['id']) > 0) {
                         debug_event(__CLASS__, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
                         $songs[$track] = (int)$results['id'];
                         $track++;
