@@ -564,15 +564,16 @@ class Json_Data
                 if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
                     continue;
                 }
+                $object_type    = 'search';
+                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playlist_id    = $playlist->id;
                 $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
-                $object_type    = 'search';
             } else {
                 $playlist       = new Playlist($playlist_id);
-                $playlist_id    = $playlist->id;
-                $playitem_total = $playlist->get_media_count('song');
                 $object_type    = 'playlist';
+                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+                $playitem_total = $playlist->get_media_count('song');
                 if ($hide_dupe_searches && $playlist->user == $user_id) {
                     $playlist_names[] = $playlist->name;
                 }
@@ -594,7 +595,6 @@ class Json_Data
             }
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
-            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
             array_push($JSON, [
