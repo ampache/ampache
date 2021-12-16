@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.2.0-develop
+## Ampache 5.2.0-release
 
 Ampache 5.2.0 (and all future versions) now support multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
 
