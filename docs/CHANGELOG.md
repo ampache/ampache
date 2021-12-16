@@ -12,11 +12,13 @@ API3 is not recommended for use outside of running old applications and it is re
 
 * Get image from more tag types
 * Translation Updates Nov 2021
+* Added the ability to play random songs from a playlist with a play url
 * Update AmpacheRatingMatch.php to allow writing ratings to file tags
   * Enable 'Save ratings to file tags when changed' on the plugin page
   * write_tags must be enabled in the config file
 * Config version 59
   * Removed overwrite_tags (It doesn't do anything)
+  * playlist_art now true by default
 * Database 5.2.0 Build 5:
  * Make sure preference names are always unique
  * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
@@ -33,7 +35,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Light theme hover color for sidebar
 * Changed some cookie from Strict to Lax to fix some bugs
 * Check ldap group by username instead of DN
-* config: playlist_art now true by default
+* Allow gathering random art from playlist contents instead of generating on page load
 
 ### Removed
 
@@ -57,6 +59,11 @@ API3 is not recommended for use outside of running old applications and it is re
 * Last.fm login impossible with strict cookies
 * Some double scrubs of text in image links
 * Updating playlist user would only update the name and not the ID
+* garbage collection for playlist images
+* Stats when skipping songs with 0 plays
+* More PHP8 runtime errors
+* Fixed single song random playback using a play url
+* Make sure we error if php_intl module isn't found
 
 ## API 5.2.0
 
@@ -70,6 +77,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * API5
   * playlists: sql for searches wasn't filtering
   * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
 * API4
   * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
 * API3
@@ -80,6 +88,9 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Session and user id identification and errors from that
 * API5
   * playlists: sql for searches wasn't filtering
+  * Art URL for searches was malformed
+* API4
+  * Art URL for searches was malformed
 * API3
   * democratic: This method was broken in API3 and never worked correctly
 
