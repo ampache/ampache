@@ -42,6 +42,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
+        "ext-redis": "*",
         "ext-simplexml": "*",
         "ext-xml": "*",
         "adhocore/cli": "^0.9.0",

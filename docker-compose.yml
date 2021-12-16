@@ -44,5 +44,8 @@ services:
     ports:
       - "127.0.0.1:13306:3306"
 
+  redis:
+    image: redis:latest
+
 volumes:
   mysqldata:

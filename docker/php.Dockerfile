@@ -8,10 +8,12 @@ RUN apt-get update -qq \
         p7zip-full \
     && rm -rf /var/lib/apt/lists/*
 # Install required PHP extensions
-RUN docker-php-ext-install \
+RUN pecl install redis \
+    && docker-php-ext-install \
       intl \
       gettext \
-      pdo_mysql
+      pdo_mysql \
+    && docker-php-ext-enable redis.so
 
 # Install composer 2.1.14
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \

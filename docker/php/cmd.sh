@@ -21,6 +21,10 @@ bin/installer install \
     --ampachedbuser ampache \
     --ampachedbpassword ampache\
     --webpath "/public"
+# Point to redis container
+sed -i -e 's/.*memory_cache =.*/memory_cache = "true"/g' config/ampache.cfg.php
+sed -i -e 's/.*redis_host =.*/redis_host = "redis"/g' config/ampache.cfg.php
+sed -i -e 's/.*redis_port =.*/redis_port = 6379/g' config/ampache.cfg.php
 chmod a+rw config/ampache.cfg.php
 
 # Add admin user if necessary

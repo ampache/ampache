@@ -521,6 +521,12 @@ sociable = "true"
 ; DEFAULT: "false"
 ;memory_cache = "true"
 
+; The memory cache is handled by redis
+; You will need to point to the redis instance you want to use
+; DEFAULT: "127.0.0.1"
+redis_host = "127.0.0.1"
+redis_port = 6379
+
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
 ; has a lower value set Ampache will set it up to this. If you

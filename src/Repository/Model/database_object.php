@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Redis;
 
 /**
  * This is a general object that is extended by all of the basic
@@ -36,7 +37,7 @@ abstract class database_object
 {
     protected const DB_TABLENAME = null;
 
-    private static $object_cache = array();
+    private static ?Redis $object_cache = null;
 
     // Statistics for debugging
     public static $cache_hit       = 0;
@@ -97,11 +98,56 @@ abstract class database_object
     }
 
     /**
+     * Setup the redis client to connect to the redis instance
+     *
+     * @return bool If the connection could be made, true is returned. false is returned for any other reason
+     */
+    private static function init_redis(): bool
+    {
+        if (self::$object_cache and self::$object_cache->isConnected()){
+            return true;
+        }
+        if (self::$_enabled === null) {
+            self::$_enabled = AmpConfig::get('memory_cache');
+        }
+        if (!self::$_enabled) {
+            return false;
+        }
+        self::$object_cache = new Redis();
+
+        self::$object_cache->connect(
+            AmpConfig::get('redis_host'),
+            AmpConfig::get('redis_port'),
+            1,
+        );
+
+        return true;
+    }
+
+    /**
      * clear_cache
      */
     public static function clear_cache()
     {
-        self::$object_cache = array();
+        if (!self::init_redis()){
+            return;
+        }
+
+        // Remove keys with the class prefix
+        $keys = self::$object_cache->keys(self::DB_TABLENAME . ":*");
+        self::$object_cache->del(...$keys);
+    }
+
+    /**
+     * get_cache_key
+     * Builds a key that can be used to find a hash set in redis
+     * @param string $object_id
+     * @return string
+     */
+    public static function get_cache_key($object_id): string
+    {
+        $output = Dba::escape(strtolower(get_called_class())) . ":" . $object_id;
+        return $output;
     }
 
     /**
@@ -111,14 +157,12 @@ abstract class database_object
      * @param string $object_id
      * @return boolean
      */
-    public static function is_cached($index, $object_id)
+    public static function is_cached($index, $object_id): bool
     {
-        // Make sure we've got some parents here before we dive below
-        if (!array_key_exists($index, self::$object_cache)) {
+        if (!self::init_redis()) {
             return false;
         }
-
-        return array_key_exists($object_id, self::$object_cache[$index]);
+        return self::$object_cache->hExists(self::get_cache_key($object_id), $index);
     } // is_cached
 
     /**
@@ -130,11 +174,13 @@ abstract class database_object
      */
     public static function get_from_cache($index, $object_id)
     {
-        // Check if the object is set
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
-            self::$cache_hit++;
+        if (!self::init_redis()) {
+            return array();
+        }
 
-            return self::$object_cache[$index][$object_id];
+        $cache_result = self::$object_cache->hGet(self::get_cache_key($object_id), $index);
+        if ($cache_result) {
+            return json_decode($cache_result, true);
         }
 
         return array();
@@ -150,22 +196,16 @@ abstract class database_object
      */
     public static function add_to_cache($index, $object_id, $data)
     {
-        /**
-         * Lazy load the cache setting to avoid some magic auto_init logic
-         */
-        if (self::$_enabled === null) {
-            self::$_enabled = AmpConfig::get('memory_cache');
-        }
-        if (!self::$_enabled) {
+        if (!self::init_redis()) {
             return false;
         }
 
         $value = false;
         if (!empty($data)) {
-            $value = $data;
+            $value = json_encode($data);
         }
 
-        self::$object_cache[$index][$object_id] = $value;
+        self::$object_cache->hSet(self::DB_TABLENAME . ":" . $object_id, $index, $value);
 
         return true;
     } // add_to_cache
@@ -179,8 +219,9 @@ abstract class database_object
      */
     public static function remove_from_cache($index, $object_id)
     {
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
-            unset(self::$object_cache[$index][$object_id]);
+        if (!self::init_redis()) {
+            return;
         }
+        self::$object_cache->hDel(self::get_cache_key($object_id), $index);
     } // remove_from_cache
 }
