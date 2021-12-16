@@ -641,6 +641,7 @@ class Xml4_Data
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+                $playlist_id    = $playlist->id;
                 $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
             } else {
