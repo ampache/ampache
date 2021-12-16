@@ -38,8 +38,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'secret'
       MYSQL_USER: 'ampache'
-      MYSQL_PASSWORD: 'ampache'
-      MYSQL_DATABASE: 'ampache'
     volumes:
       - mysqldata:/var/lib/mysql
     ports:
