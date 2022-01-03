@@ -152,7 +152,11 @@ final class PlayAction implements ApplicationActionInterface
 
         // democratic play url doesn't include these
         if ($demo_id !== '') {
-            $type   = 'song';
+            $type = 'song';
+        }
+        // random play url can be multiple types but default to song if missing
+        if (empty($type) && $random !== '') {
+            $type = 'song';
         }
         // if you don't specify, assume stream
         if (empty($action)) {
@@ -211,7 +215,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // First things first, if we don't have a uid/oid stop here
         // Added $session_id here as user may not be specified but then ssid may be and will be checked later
-        if (empty($uid) && empty($session_id) && (!$share_id && !$secret)) {
+        if (empty($uid) && empty($session_id) && (!$share_id && !$secret && !$random)) {
             debug_event('play/index', 'No object UID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 
@@ -303,10 +307,7 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             /* Update the users last seen information */
-            $this->userRepository->updateLastSeen(
-                (int) $user->id,
-                time()
-            );
+            $this->userRepository->updateLastSeen($user->id);
         } else {
             $uid   = 0;
             $share = new Share((int) $share_id);
@@ -402,7 +403,7 @@ final class PlayAction implements ApplicationActionInterface
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype);
+                $object_id = Random::get_single_song($rtype, $user, $object_id);
                 if ($object_id) {
                     // Save this one in case we do a seek
                     $_SESSION['random']['last'] = $object_id;
@@ -412,19 +413,18 @@ final class PlayAction implements ApplicationActionInterface
             }
         } // if random
 
-        if ($type == 'song') {
-            /* Base Checks passed create the song object */
-            $media = new Song($object_id);
+        if ($type == 'video') {
+            $media = new Video($object_id);
+            if (array_key_exists('subtitle', $_REQUEST)) {
+                $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+            }
         } elseif ($type == 'song_preview') {
             $media = new Song_Preview($object_id);
         } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode((int) $object_id);
         } else {
-            $type  = 'video';
-            $media = new Video($object_id);
-            if (array_key_exists('subtitle', $_REQUEST)) {
-                $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
-            }
+            // default to song
+            $media = new Song($object_id);
         }
         $media->format();
 
@@ -468,7 +468,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if (!empty($cache_path) && !empty($cache_target) && is_file($file_target)) {
+            if (!empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
                 $cache_file   = true;
                 $original     = true;
@@ -534,11 +534,11 @@ final class PlayAction implements ApplicationActionInterface
             : Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);
 
-        /* If they are just trying to download make sure they have rights
-         * and then present them with the download file
-         */
+        // If they are just trying to download make sure they have rights and then present them with the download file
         if ($action == 'download' && !$original) {
-            debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 4);
+            if ($transcode_to) {
+                debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
+            }
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
@@ -550,8 +550,7 @@ final class PlayAction implements ApplicationActionInterface
             debug_event('play/index', 'Downloading raw file...', 4);
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
-
-            $headers = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -642,7 +641,7 @@ final class PlayAction implements ApplicationActionInterface
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
                     $media_bitrate = floor($media->bitrate / 1000);
-                    // debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
+                    //debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
                     if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
@@ -700,7 +699,7 @@ final class PlayAction implements ApplicationActionInterface
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
             if ($cpaction) {
-                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to);
+                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
                 $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;
             } else {

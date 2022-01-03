@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class RecordPlayMethod
 {
-    private const ACTION = 'record_play';
+    public const ACTION = 'record_play';
 
     /**
      * record_play
@@ -53,7 +53,7 @@ final class RecordPlayMethod
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function record_play(array $input)
+    public static function record_play(array $input): bool
     {
         if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
@@ -100,7 +100,6 @@ final class RecordPlayMethod
         }
 
         Api::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

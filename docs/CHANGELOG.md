@@ -1,5 +1,159 @@
 # CHANGELOG
 
+## Ampache 5.2.0-release
+
+Ampache 5.2.0 (and all future versions) now support multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
+
+To change from API3 to API5 you can send a ping with a new version parameter to update your session (or send goodbye to log off and start again.)
+
+API3 is not recommended for use outside of running old applications and it is recommended that you turn off API versions you don't use.
+
+### Added
+
+* Get image from more tag types
+* Translation Updates Nov 2021
+* Added the ability to play random songs from a playlist with a play url
+* Update AmpacheRatingMatch.php to allow writing ratings to file tags
+  * Enable 'Save ratings to file tags when changed' on the plugin page
+  * write_tags must be enabled in the config file
+* Config version 59
+  * Removed overwrite_tags (It doesn't do anything)
+  * playlist_art now true by default
+* Database 5.2.0 Build 5:
+ * Make sure preference names are always unique
+ * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+ * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
+ * Add ui option ('show_playlist_username') Show playlist owner username in titles
+ * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+ * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
+
+### Changed
+
+* Don't try to return objects that aren't there sometimes
+* Update catalog counts before returning API data
+* Fix preferences for system and users after each update
+* Light theme hover color for sidebar
+* Changed some cookie from Strict to Lax to fix some bugs
+* Check ldap group by username instead of DN
+* Allow gathering random art from playlist contents instead of generating on page load
+
+### Removed
+
+* Remove AssestCache class and functions (unreliable)
+* When recording stats don't ignore based on a hardcoded gap
+
+### Fixed
+
+* test_image function would fail without php-gd (which is optional)
+* Searching for images in files could not return the files you found
+* Get rid of that annoying space on api key text in the WebUI
+* Catalog map for artist tables
+* ratingmatch_stars value 5 wasn't setting itself
+* filter_has_var is returning false in FCGI enabled PHP
+* Allow catalog manager to manage a catalog in the WebUI
+* When using custom metadata don't overwrite managed values
+* Missing (and duplicate) preferences for users and system
+* Size 0 when reading file tags
+* Disk and totaldisks for wma files
+* Genre for quicktime/m4a files
+* Last.fm login impossible with strict cookies
+* Some double scrubs of text in image links
+* Updating playlist user would only update the name and not the ID
+* garbage collection for playlist images
+* Stats when skipping songs with 0 plays
+* More PHP8 runtime errors
+* Fixed single song random playback using a play url
+* Make sure we error if php_intl module isn't found
+
+## API 5.2.0
+
+Check out the docs for multi API support at [ampache.org](https://ampache.org/api/)
+
+**note** JSON didn't exist for API3 so all json requests from API3 calls will revert to API5
+
+### Added
+
+* Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
+* API5
+  * playlists: sql for searches wasn't filtering
+  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
+* API4
+  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+* API3
+  * Added genre calls as an alias to tag functions to match API4 and API5
+
+### Fixed
+
+* Session and user id identification and errors from that
+* API5
+  * playlists: sql for searches wasn't filtering
+  * Art URL for searches was malformed
+* API4
+  * Art URL for searches was malformed
+* API3
+  * democratic: This method was broken in API3 and never worked correctly
+
+## Ampache 5.1.1-release
+
+### Added
+
+* Clean cache files that aren't in the database
+* Translate random and democratic in the webplayer
+* Add transcode_flv to config
+* Add playlist, playlist_name to album searches
+* Send the user to an error page when the config wasn't written
+* Config version 58
+  * Removed subsonic_stream_scrobble
+* Database 5.1.0 Build 5:
+  * Add `subsonic_always_download` to preferences
+
+### Changed
+
+* Rebuild aurora.js modules from source
+* Perform waveform and cache on disk the same way
+* Move song waveforms on load if in the wrong folder
+* Make genre searches faster with a join instead of select in
+* Send a flat file path for zips when using browse/playlist
+
+### Removed
+
+* Podcast links on the dashboard removed (There is no link for them to go to)
+* Remove subsonic_stream_scrobble from config and make it per user (subsonic_always_download)
+
+### Fixed
+
+* Use addslashes for translations in html5 player
+* Send the generic client name for localplay again
+* Use the set permission level for localplay access
+* Webplayer playlists would become out of order after moving/adding
+* Cache process could cache the wrong song
+* Missing user id in search
+* Grouping sql in search when not grouping albums
+* Setting Localplay instance would not update the preference
+* Advanced search (Random) wasn't working in php8
+* Fixed returning the correct objects for advanced search (Random)
+* Some objects would add transcode_to to their play url
+* Set system prefs for mb and tadb plugins
+* Updating a channel in php8
+* Get tmp_playlist by session (could get confused and never retrieve items)
+* Setting cookies and session details on remember_me sessions
+* Set the catalog parameters for seafile catalogs
+* Database updates for php8
+* Remember me session cookie error when recreating a new session
+* ampache.sql script had AUTO_INCREMENT data it didn't need
+* Subsonic
+  * Get the artists for a single catalog correctly
+  * Browse highest used the sql differently to the UI
+
+## API 5.1.1
+
+### Fixed
+
+* Access to podcast_episode_delete
+* stats calls with an offest and limit
+* advanced_search calls with an offset and limit
+
 ## Ampache 5.1.0-release
 
 ### Added

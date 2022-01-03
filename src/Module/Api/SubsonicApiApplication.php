@@ -90,7 +90,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $version   = $_REQUEST['v'] ?? '';
         $clientapp = $_REQUEST['c'] ?? '';
 
-        if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
@@ -157,10 +157,15 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $query  = explode('&', $query_string);
         $params = array();
         foreach ($query as $param) {
+            $decname  = false;
+            $decvalue = false;
             if (strpos((string)$param, '=')) {
                 [$name, $value] = explode('=', $param);
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
+            }
+            if (!$decname && !$decvalue) {
+                continue;
             }
 
             // workaround for clementine/Qt5 bug

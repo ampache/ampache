@@ -42,7 +42,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'delete_track':
                 // Create the object and remove the track
                 $playlist = new Playlist($_REQUEST['playlist_id']);

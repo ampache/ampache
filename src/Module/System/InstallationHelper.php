@@ -432,7 +432,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        // Fix the system users preferences
+        // Fix the system user preferences
         User::fix_preferences('-1');
 
         return true;

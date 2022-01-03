@@ -51,7 +51,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'show_add_tag':
                 break;
             case 'get_tag_map':

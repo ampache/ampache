@@ -39,7 +39,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class UserMethod
 {
-    private const ACTION = 'user';
+    public const ACTION = 'user';
 
     /**
      * user
@@ -51,7 +51,7 @@ final class UserMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function user(array $input)
+    public static function user(array $input): bool
     {
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
@@ -88,7 +88,6 @@ final class UserMethod
             default:
                 echo Xml_Data::user($user, $fullinfo);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

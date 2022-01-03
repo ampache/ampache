@@ -26,11 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Video;
 
 /**
@@ -39,7 +37,7 @@ use Ampache\Repository\Model\Video;
  */
 final class DeletedVideosMethod
 {
-    private const ACTION = 'deleted_videos';
+    public const ACTION = 'deleted_videos';
 
     /**
      * deleted_videos
@@ -50,7 +48,7 @@ final class DeletedVideosMethod
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function deleted_videos(array $input)
+    public static function deleted_videos(array $input): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +75,6 @@ final class DeletedVideosMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::deleted('video', $video_ids);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistRemoveSongMethod
 {
-    private const ACTION = 'playlist_remove_song';
+    public const ACTION = 'playlist_remove_song';
 
     /**
      * playlist_remove_song
@@ -56,7 +56,7 @@ final class PlaylistRemoveSongMethod
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
-    public static function playlist_remove_song(array $input)
+    public static function playlist_remove_song(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -92,7 +92,6 @@ final class PlaylistRemoveSongMethod
                 Api::message('song removed from playlist', $input['api_format']);
             }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

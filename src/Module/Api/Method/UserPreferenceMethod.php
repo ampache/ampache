@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class UserPreferenceMethod
 {
-    private const ACTION = 'user_preference';
+    public const ACTION = 'user_preference';
 
     /**
      * user_preference
@@ -49,7 +49,7 @@ final class UserPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function user_preference(array $input)
+    public static function user_preference(array $input): bool
     {
         $user = User::get_from_username(Session::username($input['auth']));
         // fix preferences that are missing for user
@@ -70,7 +70,6 @@ final class UserPreferenceMethod
             default:
                 echo Xml_Data::object_array($preference, 'preference');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

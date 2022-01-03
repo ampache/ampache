@@ -39,7 +39,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class BookmarkDeleteMethod
 {
-    private const ACTION = 'bookmark_delete';
+    public const ACTION = 'bookmark_delete';
 
     /**
      * bookmark_delete
@@ -53,7 +53,7 @@ final class BookmarkDeleteMethod
      * client = (string) Agent string Default: 'AmpacheAPI' // optional
      * @return boolean
      */
-    public static function bookmark_delete(array $input)
+    public static function bookmark_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter','type'), self::ACTION)) {
             return false;
@@ -113,7 +113,6 @@ final class BookmarkDeleteMethod
         }
 
         Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     } // bookmark_delete

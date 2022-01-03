@@ -714,7 +714,7 @@ div#autoupdate > span {
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
-    margin: 3px auto 5px 5px;
+    margin: 3px auto 5px 0;
 }
 
 #sidebar-tabs .sb2 #browse_filters #multi_alpha_filterLabel {

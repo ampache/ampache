@@ -140,7 +140,6 @@ $(function() {
             }
             Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $cookie_string ?>});
         });
-
     });
 });
 

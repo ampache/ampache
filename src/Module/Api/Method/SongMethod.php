@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SongMethod
 {
-    private const ACTION = 'song';
+    public const ACTION = 'song';
 
     /**
      * song
@@ -50,7 +50,7 @@ final class SongMethod
      * filter = (string) UID of song
      * @return boolean
      */
-    public static function song(array $input)
+    public static function song(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -73,7 +73,6 @@ final class SongMethod
             default:
                 echo Xml_Data::songs(array((int) $object_id), $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

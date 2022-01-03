@@ -53,7 +53,7 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
         return $this->getUser()->getId();
     }
 
-    public function getUser(): User
+    public function getUser()
     {
         return Core::get_global('user');
     }

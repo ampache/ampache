@@ -51,6 +51,8 @@ class Catalog_dropbox extends Catalog
     private $type        = 'dropbox';
     private $description = 'Dropbox Remote Catalog';
 
+    private string $authcode;
+
     /**
      * get_description
      * This returns the description of this catalog
@@ -505,8 +507,7 @@ class Catalog_dropbox extends Catalog
         }
 
         // Make Dropbox File if target is specified
-        $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null,
-            DropboxFile::MODE_WRITE) : null;
+        $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE) : null;
 
         // Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
@@ -714,8 +715,6 @@ class Catalog_dropbox extends Catalog
             // Download File
             $this->download($dropbox, $media->file, null, $outfile);
             $media->file = $outfile;
-            // Generate browser class for sending headers
-            fclose($outfile);
         } catch (DropboxClientException $e) {
             debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
         }

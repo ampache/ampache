@@ -26,6 +26,9 @@ use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var array $images */
+/** @var string $object_type */
+
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0; ?>

@@ -33,6 +33,8 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Podcast_Episode $episode */
+
+$web_path = AmpConfig::get('web_path');
 ?>
 <?php Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
@@ -57,7 +59,7 @@ use Ampache\Module\Util\Ui;
         <dt><?php echo T_('Waveform'); ?></dt>
         <dd>
             <div id="waveform_<?php echo $episode->id; ?>">
-                <img src="<?php echo AmpConfig::get('web_path'); ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
+                <img src="<?php echo $web_path; ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
             </div>
         </dd>
         <?php
@@ -82,7 +84,7 @@ use Ampache\Module\Util\Ui;
     } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php
@@ -98,12 +100,12 @@ use Ampache\Module\Util\Ui;
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
             <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', '')">
@@ -112,7 +114,7 @@ use Ampache\Module\Util\Ui;
         <?php
     } ?>
         <?php if (Catalog::can_remove($episode)) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
+            <a href="<?php echo $web_path; ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php

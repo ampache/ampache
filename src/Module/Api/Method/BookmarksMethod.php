@@ -38,6 +38,8 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class BookmarksMethod
 {
+    public const ACTION = 'bookmarks';
+
     /**
      * bookmarks
      * MINIMUM_API_VERSION=5.0.0
@@ -47,7 +49,7 @@ final class BookmarksMethod
      * @param array $input
      * @return boolean
      */
-    public static function bookmarks(array $input)
+    public static function bookmarks(array $input): bool
     {
         $user      = User::get_from_username(Session::username($input['auth']));
         $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
@@ -66,7 +68,6 @@ final class BookmarksMethod
             default:
                 echo Xml_Data::bookmarks($bookmarks);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

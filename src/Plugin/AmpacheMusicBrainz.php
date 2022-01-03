@@ -242,7 +242,7 @@ class AmpacheMusicBrainz
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
                         'placeformed' => $placeFormed,
-                        'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? null))[0] ?? $object->yearformed
+                        'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
                     );
 
                     // when you come in with an mbid you might want to keep the name updated

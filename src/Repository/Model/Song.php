@@ -954,8 +954,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $album_id
      * @return string
      */
-    public function get_album_name($album_id = 0)
+    public function get_album_fullname($album_id = 0)
     {
+        if (isset($this->f_album_full) && $album_id == 0) {
+            return $this->f_album_full;
+        }
         if (!$album_id) {
             $album_id = $this->album;
         }
@@ -1018,8 +1021,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param integer $artist_id
      * @return string
      */
-    public function get_artist_name($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0)
     {
+        if (isset($this->f_artist_full) && $artist_id == 0) {
+            return $this->f_artist_full;
+        }
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
@@ -1032,23 +1038,26 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_artist_name
 
     /**
-     * get_album_artist_name
+     * get_album_artist_fullname
      * gets the name of $this->albumartist, allows passing of id
      * @param integer $album_artist_id
      * @return string
      */
-    public function get_album_artist_name($album_artist_id = 0)
+    public function get_album_artist_fullname($album_artist_id = 0)
     {
-        if (!$album_artist_id) {
-            $album_artist_id = $this->albumartist;
+        if ($album_artist_id) {
+            return self::get_artist_fullname($album_artist_id);
         }
-        $album_artist = new Artist($album_artist_id);
-        if ($album_artist->id) {
-            return (string)$album_artist->get_fullname();
+        if ($this->albumartist == null) {
+            return '';
+        }
+        if (!isset($this->albumartist)) {
+            $album             = new Album($this->album);
+            $this->albumartist = $album->album_artist;
         }
 
-        return '';
-    } // get_album_artist_name
+        return self::get_artist_fullname($this->albumartist);
+    } // get_album_artist_fullname
 
     /**
      * set_played
@@ -1080,12 +1089,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // If it hasn't been played, set it
         if (!$this->played) {
             self::update_played(true, $this->id);
-        }
-        if (!Recommendation::has_recommendation_cache('song', $this->id)) {
-            Recommendation::get_songs_like($this->id);
-        }
-        if (!Recommendation::has_recommendation_cache('artist', $this->artist)) {
-            Recommendation::get_artists_like($this->artist);
         }
 
         return true;
@@ -1687,27 +1690,27 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // force the album artist.
         $album             = new Album($this->album);
-        $this->albumartist = (!empty($this->albumartist)) ? $this->albumartist : $album->album_artist;
+        $this->albumartist = $this->albumartist ?? $album->album_artist;
 
         // fix missing song disk (where is this coming from?)
-        $this->disk = ($this->disk) ? $this->disk : $album->disk;
+        $this->disk = ($this->disk) ?? $album->disk;
 
         // Format the album name
-        $this->f_album_full = $this->get_album_name();
+        $this->f_album_full = $this->get_album_fullname();
         $this->f_album      = $this->f_album_full;
 
         // Format the artist name
-        $this->f_artist_full = $this->get_artist_name();
+        $this->f_artist_full = $this->get_artist_fullname();
         $this->f_artist      = $this->f_artist_full;
 
         // Format the album_artist name
-        $this->f_albumartist_full = $this->get_album_artist_name();
+        $this->f_albumartist_full = $this->get_album_artist_fullname();
 
         // Format the title
         $this->f_name_full = $this->get_fullname();
 
         // Create Links for the different objects
-        $this->f_link        = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+        $this->get_f_link();
         $this->f_album_link  = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
         if (!empty($this->albumartist)) {
@@ -1813,6 +1816,20 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -2030,7 +2047,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?: 0;
+            $uid = Core::get_global('user')->id ?? 0;
         }
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
@@ -2058,7 +2075,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_stream_name()
     {
-        return $this->get_artist_name() . " - " . $this->title;
+        return $this->get_artist_fullname() . " - " . $this->title;
     }
 
     /**

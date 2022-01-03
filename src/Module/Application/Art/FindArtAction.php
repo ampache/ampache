@@ -67,7 +67,7 @@ final class FindArtAction extends AbstractArtAction
         $object_id = $item->id;
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -103,7 +103,7 @@ final class FindArtAction extends AbstractArtAction
         }
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 

@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class AdvancedSearchMethod
 {
-    private const ACTION = 'advanced_search';
+    public const ACTION = 'advanced_search';
 
     /**
      * advanced_search
@@ -71,7 +71,7 @@ final class AdvancedSearchMethod
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input)
+    public static function advanced_search(array $input): bool
     {
         if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -100,8 +100,6 @@ final class AdvancedSearchMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
-                Json_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
                         echo Json_Data::artists($results, array(), $user->id);
@@ -127,8 +125,6 @@ final class AdvancedSearchMethod
                 }
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
-                Xml_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
                         echo Xml_Data::artists($results, array(), $user->id);
@@ -153,7 +149,6 @@ final class AdvancedSearchMethod
                         break;
                 }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

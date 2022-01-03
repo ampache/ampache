@@ -76,7 +76,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
             );
         }
 
-        if (filter_has_var(INPUT_GET, 'order')) {
+        if (array_key_exists('order', $_GET)) {
             $songs = explode(";", $_GET['order']);
             $track = ((int)$_GET['offset']) + 1;
             foreach ($songs as $song_id) {

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class UpdateFromTagsMethod
@@ -35,7 +34,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdateFromTagsMethod
 {
-    private const ACTION = 'update_from_tags';
+    public const ACTION = 'update_from_tags';
 
     /**
      * update_from_tags
@@ -48,7 +47,7 @@ final class UpdateFromTagsMethod
      * id   = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
-    public static function update_from_tags(array $input)
+    public static function update_from_tags(array $input): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
@@ -76,7 +75,6 @@ final class UpdateFromTagsMethod
         Catalog::update_single_item($type, $object_id, true);
 
         Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

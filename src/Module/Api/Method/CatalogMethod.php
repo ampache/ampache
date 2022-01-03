@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogMethod
@@ -36,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogMethod
 {
-    private const ACTION = 'catalog';
+    public const ACTION = 'catalog';
 
     /**
      * catalog
@@ -48,7 +47,7 @@ final class CatalogMethod
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input)
+    public static function catalog(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -70,7 +69,6 @@ final class CatalogMethod
             default:
                 echo Xml_Data::catalogs(array($catalog->id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

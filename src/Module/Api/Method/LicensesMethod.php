@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LicensesMethod
@@ -37,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class LicensesMethod
 {
-    private const ACTION = 'licenses';
+    public const ACTION = 'licenses';
 
     /**
      * licenses
@@ -52,7 +51,7 @@ final class LicensesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function licenses(array $input)
+    public static function licenses(array $input): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -86,7 +85,6 @@ final class LicensesMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::licenses($licenses);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

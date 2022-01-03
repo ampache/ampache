@@ -37,7 +37,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class FlagMethod
 {
-    private const ACTION = 'flag';
+    public const ACTION = 'flag';
 
     /**
      * flag
@@ -53,7 +53,7 @@ final class FlagMethod
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag(array $input)
+    public static function flag(array $input): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -66,7 +66,7 @@ final class FlagMethod
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $flag      = (bool) $input['flag'];
+        $flag      = (bool)($input['flag'] ?? false);
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
         if ((int) $user->id > 0) {
@@ -100,7 +100,6 @@ final class FlagMethod
             }
             Api::error('flag failed ' . $object_id, '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -85,7 +85,7 @@ final class ControlReplyApplication implements ApplicationInterface
         switch ($upnpRequest['action']) {
             case 'systemupdateID':
                 // Should reflect changes to the database; Catalog::GetLatestUpdate() doesn't cut it though
-                // debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
+                //debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
                 $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
                 $soapXML = "<?xml version=\"1.0\"?>" .
                     "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
@@ -146,8 +146,8 @@ final class ControlReplyApplication implements ApplicationInterface
                         $items[]                  = Upnp_Api::_videoMetadata('');
                         list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                         debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
-                        // debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
-                        // debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
+                        //debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
+                        //debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
                     }
                 } else {
                     /**

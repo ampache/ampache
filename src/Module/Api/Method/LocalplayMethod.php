@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class LocalplayMethod
 {
-    private const ACTION = 'localplay';
+    public const ACTION = 'localplay';
 
     /**
      * localplay
@@ -56,7 +56,7 @@ final class LocalplayMethod
      * id
      * @return boolean
      */
-    public static function localplay(array $input)
+    public static function localplay(array $input): bool
     {
         if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;
@@ -151,7 +151,6 @@ final class LocalplayMethod
             default:
                 echo Xml_Data::keyed_array($output_array);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

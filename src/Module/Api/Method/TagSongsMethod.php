@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class TagSongsMethod
@@ -34,7 +33,7 @@ use Ampache\Module\System\Session;
  */
 final class TagSongsMethod
 {
-    private const ACTION = 'tag_songs';
+    public const ACTION = 'tag_songs';
 
     /**
      * tag_songs
@@ -47,6 +46,5 @@ final class TagSongsMethod
     public static function tag_songs(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
-        Session::extend($input['auth']);
     }
 }

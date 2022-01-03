@@ -45,7 +45,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
  */
 final class StatsMethod
 {
-    private const ACTION = 'stats';
+    public const ACTION = 'stats';
 
     /**
      * stats
@@ -64,7 +64,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input)
+    public static function stats(array $input): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -112,15 +112,21 @@ final class StatsMethod
             case 'newest':
                 debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
+                $offset  = 0;
+                $limit   = 0;
                 break;
             case 'highest':
                 debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset, $user_id);
+                $offset  = 0;
+                $limit   = 0;
                 break;
             case 'frequent':
                 debug_event(self::class, 'stats frequent', 4);
                 $threshold = (int)AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
+                $offset    = 0;
+                $limit     = 0;
                 break;
             case 'recent':
             case 'forgotten':
@@ -129,17 +135,21 @@ final class StatsMethod
                 $results = ($user->id)
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
                     : Stats::get_recent($type, $limit, $offset, $newest);
+                $offset = 0;
+                $limit  = 0;
                 break;
             case 'flagged':
                 debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id, $limit, $offset);
+                $offset  = 0;
+                $limit   = 0;
                 break;
             case 'random':
             default:
                 debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
-                        $results = Random::get_default($limit, $user_id);
+                        $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
                         $results = static::getArtistRepository()->getRandom(
@@ -154,7 +164,9 @@ final class StatsMethod
                         );
                         break;
                     case 'playlist':
-                        $results = array_merge(Playlist::get_playlists($user_id), Playlist::get_smartlists($user->id));
+                        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
+                        $searches  = Playlist::get_smartlists($user_id, '', true, false);
+                        $results   = array_merge($playlists, $searches);
                         shuffle($results);
                         break;
                     case 'video':
@@ -268,7 +280,6 @@ final class StatsMethod
                 }
                 break;
         }
-        Session::extend($input['auth']);
 
         return true;
     }

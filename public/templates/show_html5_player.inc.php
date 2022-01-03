@@ -234,7 +234,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     if (AmpConfig::get('song_page_title') && !$is_share) {
                         echo "var mediaTitle = obj.title;\n";
                         echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
-                        echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
+                        echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title', '')) . "';";
                     } ?>
                 }
             });

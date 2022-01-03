@@ -28,7 +28,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\AssetCache;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -100,9 +99,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/base.js'); ?>" defer></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/ajax.js'); ?>" defer></script>
-        <script src="<?php echo AssetCache::get_url($web_path . '/lib/javascript/tools.js'); ?>" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
 
         <script>
             $(document).ready(function(){
@@ -407,25 +406,25 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/index.php">
+                    <a href="<?php echo $web_path; ?>/index.php">
                         <?php echo Ui::get_image('topmenu-home', $t_home); ?>
                         <span><?php echo $t_home ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=album_artist">
+                    <a href="<?php echo $web_path; ?>/browse.php?action=album_artist">
                         <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=playlist">
+                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
                         <?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?>
                         <span><?php echo $t_playlists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=tag&type=artist">
+                    <a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
                         <?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?>
                         <span><?php echo $t_genres ?></span>
                     </a>
@@ -433,7 +432,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
                 <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/stats.php?action=userflag">
+                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
                         <span><?php echo $t_favorites ?></span>
                     </a>
@@ -442,7 +441,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 <?php }
                     if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/upload.php">
+                    <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
                         <span><?php echo $t_upload ?></span>
                     </a>
@@ -455,7 +454,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
             <?php
                 }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] != "expanded")) || (filter_has_var(INPUT_COOKIE, 'sidebar_state') && $_COOKIE['sidebar_state'] == "collapsed")); ?>
+                $isCollapsed = ((AmpConfig::get('sidebar_light') && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >

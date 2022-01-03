@@ -86,7 +86,7 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     } ?>
         <?php if (Catalog::can_remove($season)) { ?>
         <li>
-            <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
+            <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

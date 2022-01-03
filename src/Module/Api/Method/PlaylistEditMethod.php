@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistEditMethod
 {
-    private const ACTION = 'playlist_edit';
+    public const ACTION = 'playlist_edit';
 
     /**
      * playlist_edit
@@ -57,7 +57,7 @@ final class PlaylistEditMethod
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit(array $input)
+    public static function playlist_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -65,8 +65,8 @@ final class PlaylistEditMethod
         $name  = $input['name'];
         $type  = $input['type'];
         $owner = $input['owner'];
-        $items = explode(',', (string) $input['items']);
-        $order = explode(',', (string) $input['tracks']);
+        $items = explode(',', (string)($input['items'] ?? ''));
+        $order = explode(',', (string)($input['tracks'] ?? ''));
         $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
@@ -107,7 +107,6 @@ final class PlaylistEditMethod
             $playlist->sort_tracks();
             $change_made = true;
         }
-        Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);

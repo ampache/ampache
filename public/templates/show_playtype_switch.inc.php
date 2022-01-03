@@ -58,9 +58,7 @@ if (Preference::has_access('play_type')) { ?>
         <?php echo Ajax::observe('play_type_select', 'change', Ajax::action('?page=stream&action=set_play_type', 'play_type_select', 'play_type_form')); ?>
     </form>
 <?php
-} // if they have access
-// Else just show what it currently is
-else {
-    echo T_(ucwords(AmpConfig::get('play_type')));
-} ?>
+} else {
+        echo T_(ucwords(AmpConfig::get('play_type')));
+    } ?>
 </div>

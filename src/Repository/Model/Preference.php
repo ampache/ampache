@@ -54,6 +54,12 @@ class Preference extends database_object
         'allow_stream_playback',
         'allow_upload',
         'allow_video',
+        'api_enable_3',
+        'api_enable_4',
+        'api_enable_5',
+        'api_force_version',
+        'api_hidden_playlists',
+        'api_hide_dupe_searches',
         'autoupdate',
         'autoupdate_lastcheck',
         'autoupdate_lastversion',
@@ -68,7 +74,7 @@ class Preference extends database_object
         'custom_blankmovie',
         'custom_datetime',
         'custom_favicon',
-        'custom_login_backgound',
+        'custom_login_background',
         'custom_login_logo',
         'custom_logo',
         'custom_text_footer',
@@ -81,6 +87,8 @@ class Preference extends database_object
         'download',
         'force_http_play',
         'geolocation',
+        'hide_genres',
+        'hide_single_artist',
         'home_moment_albums',
         'home_moment_videos',
         'home_now_playing',
@@ -98,6 +106,7 @@ class Preference extends database_object
         'notify_email',
         'now_playing_per_user',
         'offset_limit',
+        'of_the_moment',
         'playlist_method',
         'playlist_type',
         'play_type',
@@ -108,8 +117,10 @@ class Preference extends database_object
         'share',
         'share_expire',
         'show_donate',
+        'show_license',
         'show_lyrics',
         'show_played_times',
+        'show_playlist_username',
         'show_skipped_times',
         'sidebar_light',
         'site_title',
@@ -117,6 +128,7 @@ class Preference extends database_object
         'song_page_title',
         'stats_threshold',
         'stream_beautiful_url',
+        'subsonic_always_download',
         'subsonic_backend',
         'theme_color',
         'theme_name',
@@ -133,6 +145,7 @@ class Preference extends database_object
         'upload_subdir',
         'upload_user_artist',
         'upnp_backend',
+        'use_original_year',
         'webdav_backend',
         'webplayer_aurora',
         'webplayer_confirmclose',
@@ -159,7 +172,7 @@ class Preference extends database_object
      */
     public static function get_by_user($user_id, $pref_name)
     {
-        //debug_event(self::class, 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
+        //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
         $user_id   = (int) Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
@@ -678,7 +691,14 @@ class Preference extends database_object
                "(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
                "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'), " .
                "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'), " .
-               "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse');";
+               "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'), " .
+               "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'), " .
+               "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
+               "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
+               "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
+               "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
+               "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
+               "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null);";
         Dba::write($sql);
     } // set_defaults
 
@@ -852,7 +872,14 @@ class Preference extends database_object
             'yourls_use_idn' => T_('YOURLS use IDN'),
             'yourls_api_key' => T_('YOURLS API key'),
             'tadb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
-            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid')
+            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
+            'subsonic_always_download' => T_('Force Subsonic streams to download. (Enable scrobble in your client to record stats)'),
+            'api_enable_3' => T_('Allow Ampache API3 responses'),
+            'api_enable_4' => T_('Allow Ampache API4 responses'),
+            'api_enable_5' => T_('Allow Ampache API5 responses'),
+            'api_force_version' => T_('Force a specific API response no matter what version you send'),
+            'show_playlist_username' => T_('Show playlist owner username in titles'),
+            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));

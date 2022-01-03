@@ -256,7 +256,7 @@ class Daap_Api
 
         self::check_auth($code);
 
-        if (!filter_has_var(INPUT_GET, 'session-id')) {
+        if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";

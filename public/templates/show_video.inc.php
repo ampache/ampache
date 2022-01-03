@@ -35,6 +35,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+$web_path = AmpConfig::get('web_path');
 ?>
 <?php Ui::show_box_top($video->f_name . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
@@ -102,7 +103,7 @@ $subtitles = $video->get_subtitles();
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
             <?php
         } ?>
         <?php
@@ -116,12 +117,12 @@ $subtitles = $video->get_subtitles();
     } ?>
         <?php if (Access::check_function('download')) { ?>
             <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
@@ -130,7 +131,7 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php if (Catalog::can_remove($video)) { ?>
-            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
+            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 57
+config_version = 59
 
 ;#########################################################
 ; Auto Update                                            #
@@ -269,11 +269,6 @@ additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 ; This determines if we write metadata to files when modifying metadata, or only keep them in Ampache (the default).
 ; DEFAULT: "false"
 ;write_tags = "true"
-
-; Overwrite tags
-; This switch allows removal of id3v1 tags from the files.
-; DEFAULT: "false"
-;overwrite_tags = "true"
 
 ;#########################################################
 ; Catalog                                                #
@@ -605,8 +600,8 @@ sociable = "true"
 ; Set this to true if you want Ampache to generate
 ; cover art for playlists automatically based on
 ; the content.
-; DEFAULT: "false"
-;playlist_art = "true"
+; DEFAULT: "true"
+playlist_art = "true"
 
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical graphs on usages / users.
@@ -804,12 +799,6 @@ show_footer_statistics = "true"
 ; dangerous. Do this only if you trust every theme in your themes/ directory.
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
-
-; Subsonic clients all seem to ignore the download method and use stream.
-; This setting will cache Subsonic stream actions which will not record as a play
-; Make sure scrobble is set in Subsonic and Ampache will use that for play recording
-; DEFAULT: "true"
-subsonic_stream_scrobble = "true"
 
 ;#########################################################
 ; Debugging                                              #

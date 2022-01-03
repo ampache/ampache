@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -134,7 +135,7 @@ class Xml_Data
      */
     public static function error($code, $string, $action, $type)
     {
-        $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[$action]]></errorAction>\n\t\t<errorType><![CDATA[$type]]></errorType>\n\t\t<errorMessage><![CDATA[$string]]></errorMessage>\n\t</error>";
+        $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
         return self::output_xml($xml_string);
     } // error
@@ -151,9 +152,9 @@ class Xml_Data
      */
     public static function success($string, $return_data = array())
     {
-        $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
+        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
         foreach ($return_data as $title => $data) {
-            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
+            $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
         }
 
         return self::output_xml($xml_string);
@@ -262,7 +263,7 @@ class Xml_Data
                             $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
                         } elseif (is_string($value)) {
                             /* We need to escape the value */
-                            $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+                            $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
                         }
                     }
                 } // end foreach
@@ -280,7 +281,7 @@ class Xml_Data
                             $string .= "\t\t\t<$key>$value</$key>\n";
                         } elseif (is_string($value)) {
                             /* We need to escape the value */
-                            $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+                            $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
                         }
                     }
                 } // end foreach
@@ -299,7 +300,7 @@ class Xml_Data
                         $string .= "\t<content div=\"$key\">$value</content>\n";
                     } else {
                         /* We need to escape the value */
-                        $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
+                        $string .= "\t<content div=\"$key\"><![CDATA[" . $value . "]]></content>\n";
                     }
                     // end foreach elements
                 }
@@ -338,7 +339,7 @@ class Xml_Data
                 $value = self::keyed_array($value, true);
                 $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
             } else {
-                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[$value]]></$object>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
+                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
             }
         } // end foreach
 
@@ -370,7 +371,7 @@ class Xml_Data
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
             foreach ($object as $name => $value) {
-                $filter = (is_numeric($value)) ? $value : "<![CDATA[$value]]>";
+                $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
                 $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
             }
             $string .= "\t</$item>\n";
@@ -425,19 +426,18 @@ class Xml_Data
                         $string .= self::albums(array($object_id), array('songs'), $user_id, false);
                     } else {
                         $album = new Album($object_id);
-                        $album->format();
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->f_album_artist_name . "]]></artist>\n</$object_type>\n";
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_album_artist_fullname() . "]]></artist>\n</$object_type>\n";
                     }
                     break;
                 case 'song':
                     $song = new Song($object_id);
                     $song->format();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n</$object_type>\n";
+                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_fullname() . "]]></albumartist>\n\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n</$object_type>\n";
                     break;
                 case 'playlist':
                     if ((int) $object_id === 0) {
                         $playlist       = new Search((int) str_replace('smart_', '', (string) $object_id));
-                        $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                        $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                     } else {
                         $playlist       = new Playlist($object_id);
@@ -503,7 +503,7 @@ class Xml_Data
 
         foreach ($licenses as $license_id) {
             $license = new license($license_id);
-            $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[$license->name]]></name>\n\t<description><![CDATA[$license->description]]></description>\n\t<external_link><![CDATA[$license->external_link]]></external_link>\n</license>\n";
+            $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->name . "]]></name>\n\t<description><![CDATA[" . $license->description . "]]></description>\n\t<external_link><![CDATA[" . $license->external_link . "]]></external_link>\n</license>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -528,7 +528,7 @@ class Xml_Data
             $label = new Label($label_id);
             $label->format();
 
-            $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[$label->f_name]]></name>\n\t<artists><![CDATA[$label->artists]]></artists>\n\t<summary><![CDATA[$label->summary]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[$label->address]]></address>\n\t<category><![CDATA[$label->category]]></category>\n\t<email><![CDATA[$label->email]]></email>\n\t<website><![CDATA[$label->website]]></website>\n\t<user><![CDATA[$label->user]]></user>\n</license>\n";
+            $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[" . $label->f_name . "]]></name>\n\t<artists><![CDATA[" . $label->artists . "]]></artists>\n\t<summary><![CDATA[" . $label->summary . "]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[" . $label->address . "]]></address>\n\t<category><![CDATA[" . $label->category . "]]></category>\n\t<email><![CDATA[" . $label->email . "]]></email>\n\t<website><![CDATA[" . $label->website . "]]></website>\n\t<user><![CDATA[" . $label->user . "]]></user>\n</license>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -577,7 +577,7 @@ class Xml_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[$tag->name]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<live_streams>" . (int) ($counts['live_stream'] ?? 0) . "</live_streams>\n</genre>\n";
+            $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<live_streams>" . (int) ($counts['live_stream'] ?? 0) . "</live_streams>\n</genre>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -623,7 +623,7 @@ class Xml_Data
                 ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false)
                 : '';
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . ($artist->albums ?? 0) . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . ($artist->songs ?? 0) . "</songcount>\n\t<art><![CDATA[$art_url]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . ($artist->albums ?? 0) . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . ($artist->songs ?? 0) . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
@@ -672,12 +672,12 @@ class Xml_Data
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
 
             // Do a little check for artist stuff
-            if ($album->f_album_artist_name != "") {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->f_album_artist_name]]></artist>\n";
+            if ($album->get_album_artist_fullname() != "") {
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->f_album_artist_name . "]]></artist>\n";
             } elseif ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[$album->f_artist_name]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
             }
 
             // Handle includes
@@ -690,7 +690,7 @@ class Xml_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
-            $string .= "\t<time>" . $album->total_duration . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $disk . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->tags) . "\t<art><![CDATA[$art_url]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
+            $string .= "\t<time>" . $album->total_duration . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $disk . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         } // end foreach
 
         return self::output_xml($string, $full_xml);
@@ -710,7 +710,9 @@ class Xml_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $playlist_names     = array();
+        $string             = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -721,16 +723,21 @@ class Xml_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
-
-                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
-                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                    continue;
+                }
                 $object_type    = 'search';
+                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
             } else {
-                $playlist    = new Playlist($playlist_id);
-                $playlist_id = $playlist->id;
-
-                $playitem_total = $playlist->get_media_count('song');
+                $playlist       = new Playlist($playlist_id);
                 $object_type    = 'playlist';
+                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+                $playitem_total = $playlist->get_media_count('song');
+                if ($hide_dupe_searches && $playlist->user == $user_id) {
+                    $playlist_names[] = $playlist->name;
+                }
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
@@ -738,10 +745,9 @@ class Xml_Data
 
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
-            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
-            $string .= "<playlist id=\"$playlist_id\">\n\t<name><![CDATA[$playlist_name]]></name>\n\t<owner><![CDATA[$playlist_user]]></owner>\n\t<items>$playitem_total</items>\n\t<type>$playlist_type</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -920,7 +926,7 @@ class Xml_Data
             $art_url       = Art::url($art_object, $art_type, Core::get_request('auth'));
             $playlist_track++;
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->f_name . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<bitrate>" . $song->bitrate . "</bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n\t<artist_mbid><![CDATA[" . $song->artist_mbid . "]]></artist_mbid>\n\t<albumartist_mbid><![CDATA[" . $song->albumartist_mbid . "]]></albumartist_mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<catalog>" . $song->catalog . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $song->f_license . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->f_name . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_fullname() . "]]></albumartist>\n\t<disk><![CDATA[" . $song->disk . "]]></disk>\n\t<track>" . $song->track . "</track>\n" . $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<bitrate>" . $song->bitrate . "</bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode><![CDATA[" . $song->mode . "]]></mode>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n\t<artist_mbid><![CDATA[" . $song->artist_mbid . "]]></artist_mbid>\n\t<albumartist_mbid><![CDATA[" . $song->albumartist_mbid . "]]></albumartist_mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $song->total_count . "</playcount>\n\t<catalog>" . $song->catalog . "</catalog>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n\t<license><![CDATA[" . $song->f_license . "]]></license>\n\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
                     $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
@@ -971,17 +977,17 @@ class Xml_Data
      * due to the votes and all of that
      *
      * @param  array    $object_ids Object IDs
-     * @param  integer  $user_id
+     * @param  User  $user
      * @return string   return xml
      */
-    public static function democratic($object_ids = array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user = null)
     {
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $class_name($data['object_id']);
+            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $className($data['object_id']);
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
@@ -993,7 +999,7 @@ class Xml_Data
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->f_name . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->f_name . "]]></title>\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $song->mime . "]]></mime>\n\t<url><![CDATA[" . $song->play_url('', 'api', false, $user->id) . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?: null) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1132,7 +1138,7 @@ class Xml_Data
      */
     public static function rss_feed($data, $title, $date = null)
     {
-        $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
+        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int)$date) . "</pubDate>\n";
         }
@@ -1280,8 +1286,8 @@ class Xml_Data
 
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
-            $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
-            $media      = new $class_name($media_info['object_id']);
+            $className  = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            $media      = new $className($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));

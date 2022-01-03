@@ -92,7 +92,6 @@ final class AlbumMethod implements MethodInterface
         }
 
         $include = [];
-
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         }

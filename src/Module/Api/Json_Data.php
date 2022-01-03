@@ -39,6 +39,7 @@ use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -244,7 +245,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
             $live_stream->format();
@@ -278,7 +278,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($licenses as $license_id) {
             $license = new License($license_id);
             array_push($JSON, array(
@@ -309,7 +308,6 @@ class Json_Data
         }
 
         $JSON = [];
-
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
             $label->format();
@@ -481,7 +479,7 @@ class Json_Data
             $ourArray["name"] = $album->get_fullname();
 
             // Do a little check for artist stuff
-            if ($album->f_album_artist_name != "") {
+            if ($album->get_album_artist_fullname() != "") {
                 $ourArray['artist'] = array(
                     "id" => (string)$album->album_artist,
                     "name" => $album->f_album_artist_name
@@ -494,7 +492,7 @@ class Json_Data
             } else {
                 $ourArray['artist'] = array(
                     "id" => (string)$album->album_artist,
-                    "name" => $album->f_artist_name
+                    "name" => $album->get_artist_fullname()
                 );
             }
 
@@ -550,8 +548,9 @@ class Json_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-
-        $JSON = [];
+        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $playlist_names     = array();
+        $JSON               = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -561,15 +560,22 @@ class Json_Data
              * playlist  = 1000000
              */
             if ((int) $playlist_id === 0) {
-                $playlist       = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+                    continue;
+                }
+                $object_type    = 'search';
+                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
-                $object_type    = 'search';
             } else {
                 $playlist       = new Playlist($playlist_id);
-                $playlist_id    = $playlist->id;
-                $playitem_total = $playlist->get_media_count('song');
                 $object_type    = 'playlist';
+                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+                $playitem_total = $playlist->get_media_count('song');
+                if ($hide_dupe_searches && $playlist->user == $user_id) {
+                    $playlist_names[] = $playlist->name;
+                }
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
@@ -588,7 +594,6 @@ class Json_Data
             }
             $rating  = new Rating($playlist_id, $object_type);
             $flag    = new Userflag($playlist_id, $object_type);
-            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
             array_push($JSON, [
@@ -924,13 +929,13 @@ class Json_Data
                 "name" => $song->get_fullname(),
                 "artist" => array(
                     "id" => (string) $song->artist,
-                    "name" => $song->get_artist_name()),
+                    "name" => $song->get_artist_fullname()),
                 "album" => array(
                     "id" => (string) $song->album,
-                    "name" => $song->get_album_name()),
+                    "name" => $song->get_album_fullname()),
                 'albumartist' => array(
                     "id" => (string) $song->albumartist,
-                    "name" => $song->get_album_artist_name()
+                    "name" => $song->get_album_artist_fullname()
                 )
             );
 
@@ -1042,23 +1047,21 @@ class Json_Data
      * due to the votes and all of that
      *
      * @param  array        $object_ids Object IDs
-     * @param  integer|null $user_id
+     * @param  User|null $user
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return string       JSON Object "song"
      */
-    public static function democratic($object_ids = array(), $user_id = null, $object = true)
+    public static function democratic($object_ids = array(), $user = null, $object = true)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
         }
-
-        $democratic = Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-
         foreach ($object_ids as $row_id => $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $song       = new $class_name($data['object_id']);
+            $className = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song      = new $className($data['object_id']);
             $song->format();
 
             $rating  = new Rating($song->id, 'song');
@@ -1067,18 +1070,18 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
-                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
-                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
+                "artist" => array("id" => (string) $song->artist, "name" => $song->get_artist_fullname()),
+                "album" => array("id" => (string) $song->album, "name" => $song->get_album_fullname()),
                 "genre" => self::genre_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => $song->play_url('', 'api', false, $user_id),
+                "url" => $song->play_url('', 'api', false, $user->id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => $rating->get_user_rating(),
-                "rating" => $rating->get_user_rating(),
-                "averagerating" => $rating->get_average_rating(),
+                "preciserating" => ($rating->get_user_rating($user->id) ?: null),
+                "rating" => ($rating->get_user_rating($user->id) ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
                 "playcount" => (int) $song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ));

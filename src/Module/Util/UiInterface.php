@@ -79,15 +79,11 @@ interface UiInterface
 
     /**
      * shows a simple continue button after an action
-     *
-     * @param string $title The Title of the message
-     * @param string $text The details of the message
-     * @param string $next_url Where to go next
      */
     public function showContinue(
-        $title,
-        $text,
-        $next_url
+        string $title,
+        string $text,
+        string $next_url
     ): void;
 
     public function scrubOut(?string $string): string;

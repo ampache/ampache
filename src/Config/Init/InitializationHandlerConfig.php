@@ -33,7 +33,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = 'develop';
-    private const CONFIG_VERSION = '57';
+    private const CONFIG_VERSION = '59';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -70,7 +70,6 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         }
 
         if ($this->environment->isCli() === false) {
-            $results['raw_web_path'] = $results['web_path'];
             if (empty($results['http_host'])) {
                 $results['http_host'] = $_SERVER['SERVER_NAME'];
             }
@@ -80,7 +79,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                     $protocol,
                     $_SERVER['SERVER_NAME'],
                     $_SERVER['SERVER_PORT'],
-                    $results['raw_web_path']
+                    $results['web_path'] ?? ''
                 );
             }
             $results['http_port'] = (!empty($results['http_port']))
@@ -91,16 +90,15 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 ? ':' . $results['http_port']
                 : '';
 
-            $results['web_path'] = sprintf(
+            $results['raw_web_path'] = empty($results['web_path']) ? '/' : $results['web_path'];
+            $results['web_path']     = sprintf(
                 '%s://%s%s%s',
                 $protocol,
                 $results['http_host'],
                 $port,
-                $results['web_path']
+                $results['web_path'] ?? ''
             );
-
             $results['site_charset'] = $results['site_charset'] ?? 'UTF-8';
-            $results['raw_web_path'] = $results['raw_web_path'] ?? '/';
             if (!isset($results['max_upload_size'])) {
                 $results['max_upload_size'] = 1048576;
             }

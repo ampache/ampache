@@ -37,7 +37,7 @@ use Ampache\Repository\Model\User;
  */
 final class LocalplaySongsMethod
 {
-    private const ACTION = 'localplay_songs';
+    public const ACTION = 'localplay_songs';
 
     /**
      * localplay_songs
@@ -48,7 +48,7 @@ final class LocalplaySongsMethod
      * @param array $input
      * @return boolean
      */
-    public static function localplay_songs(array $input)
+    public static function localplay_songs(array $input): bool
     {
         // localplay is actually meant to be behind permissions
         $level = AmpConfig::get('localplay_level', 100);
@@ -79,7 +79,6 @@ final class LocalplaySongsMethod
             default:
                 echo Xml_Data::object_array($output_array['localplay_songs'], 'localplay_songs');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

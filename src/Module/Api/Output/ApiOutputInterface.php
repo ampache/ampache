@@ -35,6 +35,22 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * This generates an error message
+     */
+    public function error3(
+        int $code,
+        string $message
+    ): string;
+
+    /**
+     * This generates an error message
+     */
+    public function error4(
+        int $code,
+        string $message
+    ): string;
+
+    /**
      * @param integer[] $albums
      * @param array $include
      * @param integer|null $user_id

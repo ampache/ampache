@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class GetIndexesMethod
 {
-    private const ACTION = 'get_indexes';
+    public const ACTION = 'get_indexes';
 
     /**
      * get_indexes
@@ -53,15 +53,15 @@ final class GetIndexesMethod
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = self::set_filter(date) //optional
-     * update      = self::set_filter(date) //optional
+     * add         = Api::set_filter(date) //optional
+     * update      = Api::set_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
-    public static function get_indexes(array $input)
+    public static function get_indexes(array $input): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -88,7 +88,7 @@ final class GetIndexesMethod
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = array_key_exists('include', $input) && (int)$input['include'] == 1;
+        $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
@@ -138,7 +138,6 @@ final class GetIndexesMethod
                 XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::indexes($objects, $type, $user->id, true, $include);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

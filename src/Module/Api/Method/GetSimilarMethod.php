@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetSimilarMethod
 {
-    private const ACTION = 'get_similar';
+    public const ACTION = 'get_similar';
 
     /**
      * get_similar
@@ -53,7 +53,7 @@ final class GetSimilarMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar(array $input)
+    public static function get_similar(array $input): bool
     {
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
@@ -98,7 +98,6 @@ final class GetSimilarMethod
                 XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::indexes($objects, $type, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

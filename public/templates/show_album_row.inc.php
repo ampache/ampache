@@ -134,7 +134,7 @@ $display_year = ($original_year && $libitem->original_year)
         global $dic;
         $zipHandler = $dic->get(ZipHandlerInterface::class);
         if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
-            <a class="nohtml" href="<?php echo $web_path ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
             </a>
     <?php
@@ -146,7 +146,7 @@ $display_year = ($original_year && $libitem->original_year)
     <?php
     }
         if (Catalog::can_remove($libitem)) { ?>
-            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo $web_path ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
+            <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
     <?php

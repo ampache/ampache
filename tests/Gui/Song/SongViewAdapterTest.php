@@ -273,11 +273,16 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetSongLinkReturnsValus(): void
+    public function testGetSongLinkReturnsValues(): void
     {
         $value = 'some-link';
 
         $this->song->f_link = $value;
+
+        $this->song->shouldReceive('get_f_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,
@@ -309,7 +314,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetYearReturnsValus(): void
+    public function testGetYearReturnsValues(): void
     {
         $value = 666;
 
@@ -321,7 +326,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGenreReturnsValus(): void
+    public function testGenreReturnsValues(): void
     {
         $value = 'some-tags';
 
@@ -355,7 +360,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetNumberPlayedReturnsValus(): void
+    public function testGetNumberPlayedReturnsValues(): void
     {
         $value = 42;
 
@@ -503,7 +508,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testCanBeReorderedReturnsValus(): void
+    public function testCanBeReorderedReturnsValues(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)

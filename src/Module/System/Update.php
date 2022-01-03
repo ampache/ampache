@@ -285,6 +285,27 @@ class Update
         $update_string = "* Add waveform column to podcast_episode table";
         $version[]     = array('version' => '510004', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)";
+        $version[]     = array('version' => '510005', 'description' => $update_string);
+
+        $update_string = "* Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions<br />* Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)";
+        $version[]     = array('version' => '520000', 'description' => $update_string);
+
+        $update_string = "* Make sure preference names are always unique";
+        $version[]     = array('version' => '520001', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('show_playlist_username') Show playlist owner username in titles";
+        $version[]     = array('version' => '520002', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string";
+        $version[]     = array('version' => '520003', 'description' => $update_string);
+
+        $update_string = "* Set 'plugins' category to lastfm_challenge preference";
+        $version[]     = array('version' => '520004', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients";
+        $version[]     = array('version' => '520005', 'description' => $update_string);
+
         return $version;
     }
 
@@ -422,7 +443,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -440,13 +461,13 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates',100, 'boolean', 'system', 'catalog')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -464,13 +485,13 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -503,19 +524,19 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankmovie', '', 'Custom blank video default image',75, 'string', 'interface', 'custom')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)',75, 'string', 'interface', 'library')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -933,13 +954,13 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -957,7 +978,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         $tables    = ['cache_object_count', 'cache_object_count_run'];
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -987,7 +1008,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1147,7 +1168,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '6')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1165,7 +1186,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1420,7 +1441,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1459,7 +1480,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1476,7 +1497,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1530,7 +1551,7 @@ class Update
             while ($results  = Dba::fetch_assoc($db_p)) {
                 $total = $total + (int)$results['size'];
             }
-            $retval &= Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total));
+            $retval &= (Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total)) !== false);
         }
 
         return $retval;
@@ -1607,7 +1628,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        $retval &= Dba::write($sql, array($row_id));
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }
@@ -1677,6 +1698,147 @@ class Update
 
         $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_510005
+     *
+     * Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)
+     */
+    public static function update_510005()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520000
+     *
+     * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+     * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
+     */
+    public static function update_520000()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_4', '1', 'Enable API4 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_5', '1', 'Enable API5 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_force_version', '0', 'Force a specific API response (even if that version is disabled)', 25, 'special', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520001
+     *
+     * Make sure preference names are always unique
+     */
+    public static function update_520001()
+    {
+        $sql             = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
+        $dupe_prefs      = Dba::read($sql);
+        $pref_list       = array();
+        while ($results  = Dba::fetch_assoc($dupe_prefs)) {
+            $pref_list[] = (int)$results['id'];
+        }
+        // delete duplicates (if they exist)
+        foreach ($pref_list as $pref_id) {
+            $sql    = "DELETE FROM `preference` WHERE `id` = ?;";
+            Dba::write($sql, array($pref_id));
+        }
+        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
+        Dba::write($sql);
+        $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
+        $retval = (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520002
+     *
+     * Add ui option ('show_playlist_username') Show playlist owner username in titles
+     */
+    public static function update_520002()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520003
+     *
+     * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+     */
+    public static function update_520003()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520004
+     *
+     * Set 'plugins' category to lastfm_challenge preference
+     */
+    public static function update_520004()
+    {
+        $retval = true;
+        $sql    = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_520005
+     *
+     * Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients
+     */
+    public static function update_520005()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

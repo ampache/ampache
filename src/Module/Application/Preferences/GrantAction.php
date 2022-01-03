@@ -53,10 +53,12 @@ final class GrantAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $user = $gatekeeper->getUser();
+
         // Make sure we're a user and they came from the form
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
-            Core::get_global('user')->id > 0
+            !isset($user->id)
         ) {
             throw new AccessDeniedException();
         }
@@ -71,8 +73,8 @@ final class GrantAction implements ApplicationActionInterface
         ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
             if ($plugin = new Plugin($pluginName)) {
-                $plugin->load(Core::get_global('user'));
-                if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
+                $plugin->load($user);
+                if ($plugin->_plugin->get_session($user->id, Core::get_request('token'))) {
                     $title    = T_('No Problem');
                     $text     = T_('Your account has been updated') . ' : ' . $pluginName;
                 } else {
@@ -85,10 +87,11 @@ final class GrantAction implements ApplicationActionInterface
                 );
 
                 $this->ui->showConfirmation($title, $text, $next_url);
+
+                return null;
             }
         }
 
-        $user = $gatekeeper->getUser();
 
         $this->ui->show(
             'show_preferences.inc.php',

@@ -8,7 +8,7 @@
 
 ## News
 
-Ampache 5.1.0 is here and is the first major update to the 5.x branch!
+Still want to use Power Ampache but don't have an Ampache3 server? Multi-API support has landed!
 
 * Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
 * As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)

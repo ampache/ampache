@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GenresMethod
@@ -51,7 +50,7 @@ final class GenresMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genres(array $input)
+    public static function genres(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -79,7 +78,6 @@ final class GenresMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::genres($tags);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

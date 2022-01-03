@@ -627,7 +627,7 @@ class AmpacheXbmc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     if ($song != null) {
-                        $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
+                        $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                     }
                 }
                 if (!$data['name']) {
@@ -680,10 +680,10 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($array['track']);
                 $song     = new Song($url_data['oid']);
-                if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
+                if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
                     $array['track_title']  = $song->title;
-                    $array['track_artist'] = $song->get_artist_name();
-                    $array['track_album']  = $song->get_album_name();
+                    $array['track_artist'] = $song->get_artist_fullname();
+                    $array['track_album']  = $song->get_album_fullname();
                 }
             } catch (XBMC_RPC_Exception $ex) {
                 debug_event(self::class, 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);

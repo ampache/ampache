@@ -67,10 +67,10 @@ final class AddLabelAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Remove unauthorized defined values from here
-        if (filter_has_var(INPUT_POST, 'user')) {
+        if (isset($_POST['user'])) {
             unset($_POST['user']);
         }
-        if (filter_has_var(INPUT_POST, 'creation_date')) {
+        if (isset($_POST['creation_date'])) {
             unset($_POST['creation_date']);
         }
 

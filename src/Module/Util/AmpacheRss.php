@@ -313,12 +313,11 @@ class AmpacheRss
 
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
-            $album->format();
 
             $xml_array = array(
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
-                'description' => $album->f_artist_name . ' - ' . $album->get_fullname(true),
+                'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date('c', $album->addition_time)

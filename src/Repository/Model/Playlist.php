@@ -109,9 +109,10 @@ class Playlist extends playlist_object
      * @param string $playlist_name
      * @param boolean $like
      * @param boolean $includePublic
+     * @param boolean $includeHidden
      * @return integer[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true)
+    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true)
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
@@ -128,16 +129,25 @@ class Playlist extends playlist_object
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = array();
+        $join     = 'WHERE';
 
         if (!$is_admin) {
             $sql .= ($includePublic)
-                ? "WHERE (`user` = ? OR `type` = 'public') "
-                : "WHERE (`user` = ?) ";
+                ? "$join (`user` = ? OR `type` = 'public') "
+                : "$join (`user` = ?) ";
             $params[] = $user_id;
+            $join     = 'AND';
         }
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
-            $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
+            $sql .= "$join `name` " . $playlist_name;
+            $join = 'AND';
+        }
+        if (!$includeHidden) {
+            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
+            if (!empty($hide_string)) {
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
+            }
         }
         $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
@@ -223,31 +233,41 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
+     * @param boolean $includeHidden
      * @return array
      */
-    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true)
+    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includeHidden = true)
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
-        $key = 'smartlists';
+        $key  = 'smartlists';
         if (empty($playlist_name)) {
             if (parent::is_cached($key, $user_id)) {
                 return parent::get_from_cache($key, $user_id);
             }
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
-        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
+        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search` ";
         $params   = array();
+        $join     = 'WHERE';
 
         if (!$is_admin) {
-            $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
+            $sql .= "$join (`user` = ? OR `type` = 'public') ";
             $params[] = $user_id;
+            $join     = 'AND';
         }
         if ($playlist_name !== '') {
             $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
-            $sql .= (!$is_admin) ? "AND `name` " . $playlist_name : "WHERE `name` " . $playlist_name;
+            $sql .= "$join `name` " . $playlist_name;
+            $join = 'AND';
+        }
+        if (!$includeHidden) {
+            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
+            if (!empty($hide_string)) {
+                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
+            }
         }
         $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_smartlists ' . $sql, 5);
@@ -433,10 +453,10 @@ class Playlist extends playlist_object
     private function update_user($new_user)
     {
         if ($this->_update_item('user', $new_user, 50)) {
-            $this->type     = $new_user;
+            $this->user     = $new_user;
             $this->username = User::get_username($new_user);
-            $sql            = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = ?;";
-            Dba::write($sql, array($this->username, $new_user));
+            $sql            = "UPDATE `playlist` SET `user` = ?, `username` = ? WHERE `playlist`.`user` = ?;";
+            Dba::write($sql, array($this->user, $this->username, $this->user));
         }
     } // update_type
 
@@ -734,7 +754,7 @@ class Playlist extends playlist_object
             $results    = Dba::fetch_assoc($db_results);
         }
         if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event(self::class, 'has_item results: ' . $results['object_id'], 5);
+            debug_event(self::class, 'has_item results: ' . ($results['object_id'] ?? $results['track']), 5);
 
             return true;
         }

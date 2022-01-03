@@ -30,7 +30,6 @@ use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LicenseMethod
@@ -38,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class LicenseMethod
 {
-    private const ACTION = 'license';
+    public const ACTION = 'license';
 
     /**
      * license
@@ -50,7 +49,7 @@ final class LicenseMethod
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input)
+    public static function license(array $input): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +76,6 @@ final class LicenseMethod
             default:
                 echo Xml_Data::licenses(array($object_id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

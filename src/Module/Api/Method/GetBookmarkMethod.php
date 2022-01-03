@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class GetBookmarkMethod
 {
-    private const ACTION = 'get_bookmark';
+    public const ACTION = 'get_bookmark';
 
     /**
      * get_bookmark
@@ -53,7 +53,7 @@ final class GetBookmarkMethod
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function get_bookmark(array $input)
+    public static function get_bookmark(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
@@ -111,7 +111,6 @@ final class GetBookmarkMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

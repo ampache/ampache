@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class ArtistMethod
 {
-    private const ACTION = 'artist';
+    public const ACTION = 'artist';
 
     /**
      * artist
@@ -51,7 +51,7 @@ final class ArtistMethod
      * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function artist(array $input)
+    public static function artist(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -66,7 +66,7 @@ final class ArtistMethod
         }
 
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = array();
+        $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
@@ -77,7 +77,6 @@ final class ArtistMethod
             default:
                 echo Xml_Data::artists(array($object_id), $include, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }
