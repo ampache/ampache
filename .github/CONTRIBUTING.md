@@ -18,6 +18,9 @@ Hopefully this document will help you make the jump!
 
 **Getting started**
 
+!!!This assumes `config/ampache.cfg.php` doesn't exist!!!  
+!!!If it does, the initial setup **will** be skipped!!!
+
 After installing the requirements, just run
 ```shell
 docker-compose up -d
