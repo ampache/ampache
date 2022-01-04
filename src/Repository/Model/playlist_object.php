@@ -61,6 +61,10 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $link;
     /**
+     * @var string $f_link
+     */
+    public $f_link;
+    /**
      * @var string $f_type
      */
     public $f_type;

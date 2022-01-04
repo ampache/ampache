@@ -48,7 +48,7 @@ final class GetArt4Method
      *
      * @param array $input
      * id   = (string) $object_id
-     * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
+     * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
      * @return boolean
      */
     public static function get_art(array $input): bool

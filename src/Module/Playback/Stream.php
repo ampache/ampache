@@ -110,9 +110,9 @@ class Stream
         if ($max_bitrate > 1) {
             $sql        = "SELECT COUNT(*) FROM `now_playing` WHERE `user` IN (SELECT DISTINCT `user_preference`.`user` FROM `preference` JOIN `user_preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` = 'play_type' AND `user_preference`.`value` = 'downsample')";
             $db_results = Dba::read($sql);
-            $results    = Dba::fetch_row($db_results);
+            $row        = Dba::fetch_row($db_results);
 
-            $active_streams = (int) ($results[0] ?? 0);
+            $active_streams = (int) ($row[0] ?? 0);
             debug_event(self::class, 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm

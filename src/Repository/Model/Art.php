@@ -1530,12 +1530,12 @@ class Art extends database_object
     {
         $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
         $db_results = Dba::read($sql, $data);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return (string)$row['image'];
+        $row        = Dba::fetch_assoc($db_results);
+        if (!$row) {
+            return '';
         }
 
-        return '';
+        return (string)$row['image'];
     }
 
     /**

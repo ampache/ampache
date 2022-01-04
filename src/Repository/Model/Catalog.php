@@ -916,8 +916,10 @@ abstract class Catalog extends database_object
         // FIXME: Ignores catalog_id
         $sql        = "SELECT COUNT(`id`) FROM `tag`";
         $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_row($db_results);
+        $row        = Dba::fetch_row($db_results);
+        if (!$row) {
+            return 0;
+        }
 
         return $row[0];
     }
@@ -984,11 +986,13 @@ abstract class Catalog extends database_object
     {
         $sql        = "SELECT COUNT(`id`) FROM `$table`";
         $db_results = Dba::read($sql);
-        $data       = Dba::fetch_row($db_results);
+        $row        = Dba::fetch_row($db_results);
+        if (!$row) {
+            return array();
+        }
+        self::set_count($table, (int)$row[0]);
 
-        self::set_count($table, (int)$data[0]);
-
-        return $data;
+        return $row;
     } // count_table
 
     /**
@@ -1012,10 +1016,10 @@ abstract class Catalog extends database_object
             }
             $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
-            $data             = Dba::fetch_row($db_results);
-            $results['items'] = $data[0];
-            $results['time']  = $data[1];
-            $results['size']  = $data[2];
+            $row              = Dba::fetch_row($db_results);
+            $results['items'] = ($row[0] ?? 0);
+            $results['time']  = ($row[1] ?? 0);
+            $results['size']  = ($row[2] ?? 0);
         }
 
         return $results;
@@ -1141,12 +1145,12 @@ abstract class Catalog extends database_object
             $sql .= "WHERE `video`.`catalog` = `" . (string)($catalog_id) . "`";
         }
         $db_results = Dba::read($sql);
-        $video_cnt  = 0;
-        if ($row = Dba::fetch_row($db_results)) {
-            $video_cnt = $row[0];
+        $row        = Dba::fetch_row($db_results);
+        if (!$row) {
+            return 0;
         }
 
-        return $video_cnt;
+        return $row[0];
     }
 
     /**
@@ -2458,12 +2462,12 @@ abstract class Catalog extends database_object
             $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
-            $data        = Dba::fetch_row($db_results);
+            $row         = Dba::fetch_row($db_results);
             // save the object and add to the current size
-            $items += (int)$data[0];
-            $time += (int)$data[1];
-            $size += (int)$data[2];
-            self::set_count($table, (int)$data[0]);
+            $items += (int)($row[0] ?? 0);
+            $time += (int)($row[1] ?? 0);
+            $size += (int)($row[2] ?? 0);
+            self::set_count($table, (int)($row[0] ?? 0));
         }
         self::set_count('items', $items);
         self::set_count('time', $time);
@@ -2473,21 +2477,21 @@ abstract class Catalog extends database_object
         foreach ($song_tables as $table) {
             $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
             $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
-            self::set_count($table, (int)$data[0]);
+            $row        = Dba::fetch_row($db_results);
+            self::set_count($table, (int)($row[0] ?? 0));
         }
         // grouped album counts
         $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`);";
         $db_results = Dba::read($sql);
-        $data       = Dba::fetch_row($db_results);
-        self::set_count('album_group', (int)$data[0]);
+        $row        = Dba::fetch_row($db_results);
+        self::set_count('album_group', (int)($row[0] ?? 0));
 
         $list_tables = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($list_tables as $table) {
             $sql        = "SELECT COUNT(`id`) FROM `$table`";
             $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
-            self::set_count($table, (int)$data[0]);
+            $row        = Dba::fetch_row($db_results);
+            self::set_count($table, (int)($row[0] ?? 0));
         }
         // user accounts may have different items to return based on catalog_filter so lets set those too
         User::update_counts();

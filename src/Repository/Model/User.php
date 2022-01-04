@@ -205,16 +205,16 @@ class User extends database_object
     {
         $sql              = 'SELECT COUNT(`id`) FROM `user`';
         $db_results       = Dba::read($sql);
-        $data             = Dba::fetch_row($db_results);
+        $row              = Dba::fetch_row($db_results);
         $results          = array();
-        $results['users'] = $data[0];
+        $results['users'] = $row[0] ?? 0;
 
         $time                 = time();
         $last_seen            = $time - 1200;
         $sql                  = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` INNER JOIN `user` ON `session`.`username` = `user`.`username` WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
-        $data                 = Dba::fetch_row($db_results);
-        $results['connected'] = $data[0];
+        $row                  = Dba::fetch_row($db_results);
+        $results['connected'] = $row[0] ?? 0;
 
         return $results;
     }
@@ -751,9 +751,9 @@ class User extends database_object
                     ? "SELECT COUNT(`id`) FROM `$table`"
                     : "SELECT COUNT(`id`) FROM `$table` WHERE" . Catalog::get_user_filter($table, $user_id);
                 $db_results = Dba::read($sql);
-                $data       = Dba::fetch_row($db_results);
+                $row        = Dba::fetch_row($db_results);
 
-                self::set_count($user_id, $table, (int)$data[0]);
+                self::set_count($user_id, $table, (int)($row[0] ?? 0));
             }
             // tables with media items to count, song-related tables and the rest
             $media_tables = array('song', 'video', 'podcast_episode');
@@ -766,12 +766,12 @@ class User extends database_object
                     : ' WHERE';
                 $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
                 $db_results  = Dba::read($sql);
-                $data        = Dba::fetch_row($db_results);
+                $row         = Dba::fetch_row($db_results);
                 // save the object and add to the current size
-                $items += (int)$data[0];
-                $time += (int)$data[1];
-                $size += (int)$data[2];
-                self::set_count($user_id, $table, (int)$data[0]);
+                $items += (int)($row[0] ?? 0);
+                $time += (int)($row[1] ?? 0);
+                $size += (int)($row[2] ?? 0);
+                self::set_count($user_id, $table, (int)($row[0] ?? 0));
             }
             self::set_count($user_id, 'items', $items);
             self::set_count($user_id, 'time', $time);
@@ -779,8 +779,8 @@ class User extends database_object
             // grouped album counts
             $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
-            self::set_count($user_id, 'album_group', (int)$data[0]);
+            $row        = Dba::fetch_row($db_results);
+            self::set_count($user_id, 'album_group', (int)($row[0] ?? 0));
         }
     } // update_counts
 

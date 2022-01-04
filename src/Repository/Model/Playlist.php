@@ -43,8 +43,6 @@ class Playlist extends playlist_object
     public $last_update;
     public $last_duration;
 
-    public $link;
-    public $f_link;
     public $f_date;
     public $f_last_update;
 
@@ -384,10 +382,12 @@ class Playlist extends playlist_object
             $params[] = $type;
         }
         $db_results = Dba::read($sql, $params);
+        $row        = Dba::fetch_row($db_results);
+        if (!$row) {
+            return null;
+        }
 
-        $results = Dba::fetch_row($db_results);
-
-        return $results['0'];
+        return $row[0];
     } // get_media_count
 
     /**
@@ -404,9 +404,12 @@ class Playlist extends playlist_object
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
-        $results    = Dba::fetch_row($db_results);
+        $row        = Dba::fetch_row($db_results);
+        if (!$row) {
+            return 0;
+        }
 
-        return (int) $results['0'];
+        return (int) $row[0];
     } // get_total_duration
 
     /**
@@ -821,10 +824,10 @@ class Playlist extends playlist_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $new_data          = array();
-            $new_data['id']    = $row['id'];
-            $new_data['track'] = $count;
-            $results[]         = $new_data;
+            $results[] = array(
+                'id' => $row['id'],
+                'track' => $count
+            );
             $count++;
         } // end while results
         if (!empty($results)) {

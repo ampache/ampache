@@ -51,9 +51,6 @@ class Search extends playlist_object
     public $basetypes;
     public $types;
 
-    public $link;
-    public $f_link;
-
     public $search_user;
 
     private $stars;
@@ -1180,9 +1177,9 @@ class Search extends playlist_object
         $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
         $db_results = Dba::read($sql);
-        $results    = Dba::fetch_row($db_results);
+        $row        = Dba::fetch_row($db_results);
 
-        return (int)$results['0'];
+        return (int)($row[0] ?? 0);
     } // get_total_duration
 
     /**
