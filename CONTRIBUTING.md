@@ -34,7 +34,7 @@ You can put your media in `docker/volumes/media` on your machine to make them av
 
 !!!This has only been tested on Linux!!!
 
-Create `docker-compose.override.yml` from `docker-compose.override-template.yml`.
+Create `docker-compose.override.yml` from `/docs/templates/docker-compose.override.yml`.
 Then start a debugger on your local machine that listens to port `9003`.
 
 Finally, recreate the `ampache` service with `docker-compose up -d ampache`.
