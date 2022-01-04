@@ -1046,8 +1046,6 @@ class Search extends playlist_object
     public function format($details = true)
     {
         parent::format();
-
-        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
     }
 
     /**
