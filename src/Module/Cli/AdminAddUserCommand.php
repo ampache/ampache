@@ -55,7 +55,7 @@ final class AdminAddUserCommand extends Command
         $values     = $this->values();
         $interactor = $this->io();
 
-        $result = (int) User::create(
+        $result = (int)User::create(
             $username,
             $values['name'],
             $values['email'],
@@ -64,7 +64,7 @@ final class AdminAddUserCommand extends Command
             $values['level']
         );
 
-        if ($result !== null) {
+        if ($result > 0) {
             $interactor->ok(
                 sprintf(
                     T_('Created %s user %s with password %s'),

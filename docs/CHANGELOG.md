@@ -22,7 +22,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Database 5.2.0 Build 5:
   * Make sure preference names are always unique
   * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
-  * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
+  * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
   * Add ui option ('show_playlist_username') Show playlist owner username in titles
   * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
   * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
@@ -33,7 +33,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Update catalog counts before returning API data
 * Fix preferences for system and users after each update
 * Light theme hover color for sidebar
-* Changed some cookie from Strict to Lax to fix some bugs
+* Changed some cookie's from Strict to Lax to fix some bugs
 * Check ldap group by username instead of DN
 * Allow gathering random art from playlist contents instead of generating on page load
 
@@ -75,11 +75,10 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
 * API5
-  * playlists: sql for searches wasn't filtering
-  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
   * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
 * API4
-  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
