@@ -20,12 +20,12 @@ API3 is not recommended for use outside of running old applications and it is re
   * Removed overwrite_tags (It doesn't do anything)
   * playlist_art now true by default
 * Database 5.2.0 Build 5:
- * Make sure preference names are always unique
- * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
- * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
- * Add ui option ('show_playlist_username') Show playlist owner username in titles
- * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
- * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
+  * Make sure preference names are always unique
+  * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+  * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
+  * Add ui option ('show_playlist_username') Show playlist owner username in titles
+  * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+  * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
 
 ### Changed
 
