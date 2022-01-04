@@ -11,7 +11,10 @@ bootstrap/
 build
 config/ampache-doped.cfg.php
 config/ampache.cfg.php
+config/ampache.cfg.php.backup
 config/registration_agreement.php
+docker-compose.override.yml
+docker/volumes/media/
 log/
 logs/
 nbproject/
@@ -49,9 +52,3 @@ web.config
 *.swp
 *.v11.suo
 *~
-config/ampache.cfg.php.backup
-
-# Devs should be able to customize their docker-compose env without unintentionally committing it
-docker-compose.override.yml
-
-docker/volumes/media/*
