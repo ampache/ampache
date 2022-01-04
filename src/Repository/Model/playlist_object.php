@@ -266,7 +266,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * gather_art
      */
-    public function gather_art($limit)
+    public function gather_art($limit): array
     {
         $medias   = $this->get_medias();
         $count    = 0;
@@ -295,6 +295,8 @@ abstract class playlist_object extends database_object implements library_item
             }
             $count++;
         }
+
+        return $images;
     }
 
     /**
