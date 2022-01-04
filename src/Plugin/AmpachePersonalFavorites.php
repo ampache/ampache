@@ -132,7 +132,7 @@ class AmpachePersonalFavorites
 
                     if ($item[0]->id) {
                         echo '<tr id="playlist_' . $item[0]->id . '" class="libitem_menu">';
-                        echo '<td>' . $item[0]->f_link . '</td>';
+                        echo '<td style="height: 50px;">' . $item[0]->f_link . '</td>';
                         echo '<td style="height: auto;">';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
