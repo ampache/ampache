@@ -7,7 +7,41 @@ submitting bug reports and feature requests or writing code which can be incorpo
 Anyone can take part in our community and it there are no rules or requirements stopping you from joining.
 Hopefully this document will help you make the jump!
 
-Please read [Development section](https://github.com/ampache/ampache/wiki#development).
+## Local development environment
+
+### Docker env
+
+**Requirements**
+
+ - [docker](https://docs.docker.com/engine/install/)
+ - [docker-compose](https://docs.docker.com/compose/install/)
+
+**Getting started**
+
+After installing the requirements, just run
+```shell
+docker-compose up -d
+```
+
+You can then open http://localhost:8080 and use the username `ampache` and password `ampache` to connect as the admin.
+
+**Making a catalog**
+
+By default `/media` is available in the `ampache` service to create a catalog.
+You can put your media in `docker/volumes/media` on your machine to make them available in the service.
+
+**Debugging**
+
+!!!This has only been tested on Linux!!!
+
+Create `docker-compose.override.yml` from `/docs/templates/docker-compose.override.yml`.
+Then start a debugger on your local machine that listens to port `9003`.
+
+Finally, recreate the `ampache` service with `docker-compose up -d ampache`.
+
+**More information**
+
+Additional information can be found on [Development section](https://github.com/ampache/ampache/wiki#development).
 
 ## Bug report
 
