@@ -44,7 +44,7 @@ final class AdminAddUserCommand extends Command
             ->option('-e|--email', T_('E-mail'), 'strval', '')
             ->option('-w|--website', T_('Website'), 'strval', '')
             ->option('-n|--name', T_('Name'), 'strval', '')
-            ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? 5)
+            ->option('-l|--level', T_('Access Level'), 'intval', User::access_name_to_level(($this->configContainer->get('auto_user') ?? 'guest')))
             ->argument('<username>', T_('Username'))
             ->usage('<bold>  admin:addUser some-user</end> <comment> ## ' . T_('Add a User with the name `some-user`') . '</end><eol/>');
     }
