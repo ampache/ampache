@@ -1221,6 +1221,10 @@ class User extends database_object
         $sql = "DELETE FROM `user` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
 
+        // Delete custom access settings
+        $sql = "DELETE FROM `access_list` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
+
         $sql = "DELETE FROM `session` WHERE `username` = ?";
         Dba::write($sql, array($this->username));
 
