@@ -2391,17 +2391,15 @@ class Subsonic_Api
             if ($episode->id !== null) {
                 if ($episode->remove()) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastepisode');
+                    Catalog::count_table('podcast_episode');
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'deletepodcastepisode');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '', 'deletepodcastepisode');
                 }
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'deletepodcastepisode');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletepodcastepisode');
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'deletepodcastepisode');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'deletepodcastepisode');
         }
         self::apiOutput($input, $response);
     }

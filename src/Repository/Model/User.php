@@ -977,6 +977,7 @@ class User extends database_object
         if (!$db_results) {
             return null;
         }
+        Catalog::count_table('user');
 
         // Get the insert_id
         $insert_id = (int)Dba::insert_id();
@@ -1216,58 +1217,15 @@ class User extends database_object
             }
         } // if this is an admin check for others
 
-        // simple deletion queries.
-        $user_tables = array(
-            'access_list',
-            'bookmark',
-            'broadcast',
-            'democratic',
-            'ip_history',
-            'object_count',
-            'playlist',
-            'rating',
-            'search',
-            'share',
-            'tag_map',
-            'user_activity',
-            'user_flag',
-            'user_preference',
-            'user_shout',
-            'user_vote',
-            'wanted'
-        );
-        foreach ($user_tables as $table_id) {
-            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
-            Dba::write($sql, array($this->id));
-        }
-        // reset their data to null if they've made custom changes
-        $user_tables = array(
-            'artist',
-            'label'
-        );
-        foreach ($user_tables as $table_id) {
-            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` = ?";
-            Dba::write($sql, array($this->id));
-        }
-
-        // Clean up the playlist data table
-        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
-        Dba::write($sql);
-
-        // Clean out the tags
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
-        Dba::write($sql);
-
-        // Delete their following/followers
-        $sql = "DELETE FROM `user_follower` WHERE `user` = ? OR `follow_user` = ?";
-        Dba::write($sql, array($this->id, $this->id));
-
         // Delete the user itself
         $sql = "DELETE FROM `user` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `session` WHERE `username` = ?";
         Dba::write($sql, array($this->username));
+
+        Catalog::count_table('user');
+        static::getUserRepository()->collectGarbage();
 
         return true;
     } // delete

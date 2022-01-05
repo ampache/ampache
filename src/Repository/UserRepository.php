@@ -121,6 +121,63 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Remove details for users that no longer exist.
+     */
+    public function collectGarbage(
+    ): void {
+
+        // simple deletion queries.
+        $user_tables = array(
+            'access_list',
+            'bookmark',
+            'broadcast',
+            'democratic',
+            'ip_history',
+            'object_count',
+            'playlist',
+            'rating',
+            'search',
+            'share',
+            'tag_map',
+            'user_activity',
+            'user_data',
+            'user_flag',
+            'user_preference',
+            'user_shout',
+            'user_vote',
+            'wanted'
+        );
+        foreach ($user_tables as $table_id) {
+            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` NOT IN (SELECT `id` FROM `user`);";
+            Dba::write($sql);
+        }
+        // reset their data to null if they've made custom changes
+        $user_tables = array(
+            'artist',
+            'label'
+        );
+        foreach ($user_tables as $table_id) {
+            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` NOT IN (SELECT `id` FROM `user`);";
+            Dba::write($sql);
+        }
+
+        // Clean up the playlist data table
+        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
+        Dba::write($sql);
+
+        // Clean out the tags
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
+        Dba::write($sql);
+
+        // Delete their following/followers
+        $sql = "DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `session` WHERE `username` NOT IN (SELECT `username` FROM `user`);";
+        Dba::write($sql);
+    }
+
+    /**
      * This returns a built user from a email
      */
     public function findByEmail(string $email): ?User
