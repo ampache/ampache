@@ -128,7 +128,6 @@ final class UserRepository implements UserRepositoryInterface
 
         // simple deletion queries.
         $user_tables = array(
-            'access_list',
             'bookmark',
             'broadcast',
             'democratic',
