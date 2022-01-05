@@ -49,13 +49,12 @@ use Ampache\Repository\Model\Song;
                     <td class="cel_filename"><?php echo $song->file; ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>
-            <?php
-} if (!count($songs)) { ?>
+            <?php } ?>
+            <?php if (!count($songs)) { ?>
                 <tr>
                     <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
                 </tr>
-            <?php
-    } ?>
+            <?php } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">

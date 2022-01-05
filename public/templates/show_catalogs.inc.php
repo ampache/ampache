@@ -48,14 +48,11 @@ use Ampache\Module\Util\Ui;
         </tr>
         <?php
             } ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="6">
-            <?php if (!count($object_ids)) { ?>
-                <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
-            <?php
-            } ?>
-            </td>
+            <td colspan="6"><span class="nodata"><?php echo T_('No Catalog found'); ?></span></td>
         </tr>
+            <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

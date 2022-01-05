@@ -53,8 +53,7 @@ use Ampache\Module\Util\Ui;
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No Broadcast found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
 </table>
 <?php if ($browse->is_show_header()) {
