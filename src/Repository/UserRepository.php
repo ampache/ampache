@@ -173,7 +173,7 @@ final class UserRepository implements UserRepositoryInterface
         $sql = "DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `session` WHERE `username` NOT IN (SELECT `username` FROM `user`);";
+        $sql = "DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);";
         Dba::write($sql);
     }
 
