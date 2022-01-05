@@ -3407,7 +3407,6 @@ abstract class Catalog extends database_object
                         $catalog->add_to_catalog();
                     }
                 }
-                Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
                 $catalogs = self::get_catalogs();
