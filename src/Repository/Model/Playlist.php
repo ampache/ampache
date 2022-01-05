@@ -623,6 +623,7 @@ class Playlist extends playlist_object
         $date = time();
         $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
+        Catalog::count_table('playlist');
 
         return Dba::insert_id();
     } // create
@@ -806,6 +807,7 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, array($this->id));
+        Catalog::count_table('playlist');
 
         return true;
     } // delete

@@ -1031,6 +1031,7 @@ class Search extends playlist_object
         $search_id = Dba::escape($this->id);
         $sql       = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, array($search_id));
+        Catalog::count_table('search');
 
         return true;
     }
@@ -1240,12 +1241,12 @@ class Search extends playlist_object
     }
 
     /**
-     * save
+     * create
      *
      * Save this search to the database for use as a smart playlist
-     * @return string
+     * @return string|null
      */
-    public function save()
+    public function create()
     {
         $user = Core::get_global('user');
         // Make sure we have a unique name
@@ -1271,6 +1272,7 @@ class Search extends playlist_object
         ));
         $insert_id = Dba::insert_id();
         $this->id  = (int)$insert_id;
+        Catalog::count_table('search');
 
         return $insert_id;
     }
