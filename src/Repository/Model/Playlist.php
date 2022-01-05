@@ -623,9 +623,11 @@ class Playlist extends playlist_object
         $date = time();
         $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
+        $insert_id = Dba::insert_id();
+
         Catalog::count_table('playlist');
 
-        return Dba::insert_id();
+        return $insert_id;
     } // create
 
     /**

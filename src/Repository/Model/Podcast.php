@@ -618,11 +618,12 @@ class Podcast extends database_object implements library_item
 
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
+        $insert_id = Dba::insert_id();
 
         Catalog::count_table('podcast');
         Catalog::count_table('podcast_episode');
 
-        return Dba::insert_id();
+        return $insert_id;
     }
 
     /**

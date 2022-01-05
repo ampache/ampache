@@ -975,15 +975,15 @@ class User extends database_object
         $db_results = Dba::write($sql, $params);
 
         if (!$db_results) {
-            return null;
+            return 0;
         }
-        Catalog::count_table('user');
-
         // Get the insert_id
         $insert_id = (int)Dba::insert_id();
 
         // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
+
+        Catalog::count_table('user');
 
         return (int)$insert_id;
     } // create
