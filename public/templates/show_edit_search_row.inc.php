@@ -37,8 +37,8 @@ use Ampache\Repository\Model\Search;
                     <?php $name    = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
                     <select name="pl_type">
-                        <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
-                        <option value="private"<?php echo $select_private; ?>><?php echo T_('Private'); ?></option>
+                        <option value="public"<?php echo $select_public ?? ''; ?>><?php echo T_('Public'); ?></option>
+                        <option value="private"<?php echo $select_private ?? ''; ?>><?php echo T_('Private'); ?></option>
                     </select>
                 </td>
             </tr>
