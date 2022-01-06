@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
 ?>
@@ -44,5 +45,5 @@ use Ampache\Module\Util\Ui;
     <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
     <?php
     } ?>
-    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php" class="nohtml"><img src="<?php echo $web_path; ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
+    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" class="nohtml"><img src="<?php echo $web_path; ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
 </ul>

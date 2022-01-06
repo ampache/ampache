@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -88,20 +89,17 @@ if (User::is_registered()) {
     $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
 
     $web_path = AmpConfig::get('web_path'); ?>
-    <?php
-    foreach ($sidebar_items as $item) {
+    <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
         <li <?php print_r($li_params); ?>>
-    <?php
-            print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
+    <?php print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
                 <?php require_once Ui::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
             </div>
-    <?php
-            } ?>
+    <?php } ?>
         </li>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
@@ -109,7 +107,7 @@ if (User::is_registered()) {
         }
     } ?>
     <li id="sb_tab_logout" class="sb1">
-        <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" class="nohtml" >
+        <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
         <?php echo Ui::get_icon('logout', $t_logout); ?>
         </a>
     </li>
