@@ -148,7 +148,7 @@ final class UserRepository implements UserRepositoryInterface
             'wanted'
         );
         foreach ($user_tables as $table_id) {
-            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
+            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
         // reset their data to null if they've made custom changes
