@@ -3105,7 +3105,7 @@ abstract class Catalog extends database_object
 
         $catalog = self::create_from_id($catalog_id);
 
-        if (!$catalog->id) {
+        if (!$catalog) {
             return false;
         }
 

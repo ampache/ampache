@@ -336,7 +336,10 @@ class Podcast extends database_object implements library_item
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog->gather_types !== "podcast") {
+            if (!$catalog) {
+                AmpError::add('catalog', T_('Catalog not found'));
+            }
+            if ($catalog && $catalog->gather_types !== "podcast") {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
         }

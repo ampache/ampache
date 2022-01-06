@@ -69,10 +69,10 @@ final class ShareCreateMethod
             return false;
         }
 
-        $description = $input['description'];
         $object_id   = $input['filter'];
         $type        = $input['type'];
-        $expire_days = Share::get_expiry($input['expires']);
+        $description = $input['description'] ?? null;
+        $expire_days = Share::get_expiry($input['expires'] ?? null);
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
