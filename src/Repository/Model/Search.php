@@ -1175,9 +1175,9 @@ class Search extends playlist_object
         if ($idlist == '()') {
             return 0;
         }
-        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN ?";
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
 
-        $db_results = Dba::read($sql, array($idlist));
+        $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
 
         return (int)($row[0] ?? 0);
