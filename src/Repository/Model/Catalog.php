@@ -3324,8 +3324,6 @@ abstract class Catalog extends database_object
         $target = AmpConfig::get('cache_target');
         // need a destination and target filetype
         if ((!is_dir($path) || !$target)) {
-            debug_event(__CLASS__, 'Check your cache_path and cache_target settings', 5);
-
             return false;
         }
         // make a folder per catalog
