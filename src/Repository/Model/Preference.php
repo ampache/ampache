@@ -879,7 +879,8 @@ class Preference extends database_object
             'api_enable_5' => T_('Allow Ampache API5 responses'),
             'api_force_version' => T_('Force a specific API response no matter what version you send'),
             'show_playlist_username' => T_('Show playlist owner username in titles'),
-            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string')
+            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string'),
+            'api_hide_dupe_searches' => T_('Hide smartlists that match playlist names in Subsonic and API clients')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));
