@@ -26,6 +26,7 @@ services:
       # Uncomment to change the default host
       # This host works on linux to YOUR local machine (yours is the host, the service is the guest)
       # XDEBUG_HOST: host.docker.internal
+    restart: on-failure
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
