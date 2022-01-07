@@ -19,8 +19,7 @@ bin/installer install \
     --dbuser root \
     --dbpassword secret \
     --ampachedbuser ampache \
-    --ampachedbpassword ampache\
-    --webpath "/public"
+    --ampachedbpassword ampache
 chmod a+rw config/ampache.cfg.php
 
 # Add admin user if necessary
