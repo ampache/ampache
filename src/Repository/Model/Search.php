@@ -570,6 +570,7 @@ class Search extends playlist_object
         $this->type_text('tag', $t_genre, $t_genre);
         $this->type_text('album_tag', T_('Album Genre'), $t_genre);
         $this->type_text('artist_tag', T_('Artist Genre'), $t_genre);
+        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
@@ -684,6 +685,7 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
+        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
 
         $t_file_data = T_('File Data');
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
@@ -744,6 +746,7 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
+        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
@@ -866,6 +869,9 @@ class Search extends playlist_object
             case 'label':
             case 'user':
                 $request['type'] = $data['type'];
+                break;
+            case 'genre':
+                $request['type'] = 'tag';
                 break;
             default:
                 $request['type'] = 'song';
@@ -1427,6 +1433,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?)";
                     $parameters[] = $input;
                     $parameters[] = $input;
@@ -1604,8 +1611,13 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'tag':
+                case 'genre':
                     $where[]      = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
+                    break;
+                case 'no_tag':
+                case 'no_genre':
+                    $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'playlist_name':
                     $where[]      = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
@@ -1759,8 +1771,13 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'tag':
+                case 'genre':
                     $where[]      = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
+                    break;
+                case 'no_tag':
+                case 'no_genre':
+                    $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'rating':
                     // average ratings only
@@ -2054,20 +2071,28 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                     break;
                 case 'tag':
+                case 'genre':
                     $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
+                case 'no_tag':
+                case 'no_genre':
+                    $where[] = "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    break;
                 case 'album_tag':
+                case 'album_genre':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[]   = $input;
                     break;
                 case 'artist_tag':
+                case 'artist_genre':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     $parameters[]    = $input;
                     break;
                 case 'title':
+                case 'name':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
