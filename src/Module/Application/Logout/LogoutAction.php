@@ -74,7 +74,6 @@ final class LogoutAction implements ApplicationActionInterface
             setcookie($sessionName . '_remember', null, $cookie_options);
 
             $this->authenticationManager->logout($input['session'], false);
-
         } else {
             header('Location: ' . $this->configContainer->get('web_path'));
         }
