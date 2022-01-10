@@ -324,7 +324,7 @@ abstract class Catalog extends database_object
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($catalog_id));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
 
@@ -915,7 +915,7 @@ abstract class Catalog extends database_object
         $sql        = "SELECT COUNT(`id`) FROM `tag`";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return 0;
         }
 
@@ -985,7 +985,7 @@ abstract class Catalog extends database_object
         $sql        = "SELECT COUNT(`id`) FROM `$table`";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return array();
         }
         self::set_count($table, (int)$row[0]);
@@ -1144,7 +1144,7 @@ abstract class Catalog extends database_object
         }
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return 0;
         }
 

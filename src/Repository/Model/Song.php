@@ -732,7 +732,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $sql .= " LIMIT 1;";
         $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             debug_event(self::class, 'can_scrobble failed to find: ' . $song_name, 5);
 
             return '';

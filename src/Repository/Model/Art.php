@@ -1531,7 +1531,7 @@ class Art extends database_object
         $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
         $db_results = Dba::read($sql, $data);
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return '';
         }
 

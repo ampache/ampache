@@ -383,7 +383,7 @@ class Playlist extends playlist_object
         }
         $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_row($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
 
@@ -405,7 +405,7 @@ class Playlist extends playlist_object
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return 0;
         }
 
