@@ -175,7 +175,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer $object_id
      * @param string $value
      * @param boolean $user
-     * @return boolean|mixed|string|null
+     * @return bool|int
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -223,7 +223,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return string|null
+     * @return int|null
      */
     public static function add_tag($value)
     {
@@ -332,7 +332,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer|string $object_id
      * @param integer|string $tag_id
      * @param boolean $user
-     * @return boolean|string|null
+     * @return boolean|int
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -453,7 +453,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer $object_id
      * @param integer $tag_id
      * @param integer $user
-     * @return boolean|mixed
+     * @return bool|int
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {

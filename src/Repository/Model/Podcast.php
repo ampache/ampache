@@ -583,7 +583,7 @@ class Podcast extends database_object implements library_item
     /**
      * sync_episodes
      * @param boolean $gather
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function sync_episodes($gather = false)
     {

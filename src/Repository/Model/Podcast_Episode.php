@@ -180,7 +180,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function get_keywords()
     {

@@ -193,7 +193,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
-            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
+            $libraryItem::$aliases ?? array(),
             array_keys(get_object_vars($libraryItem))
         );
         foreach ($keys as $key) {

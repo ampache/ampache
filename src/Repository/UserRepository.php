@@ -123,9 +123,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Remove details for users that no longer exist.
      */
-    public function collectGarbage(
-    ): void {
-
+    public function collectGarbage(): void {
         // simple deletion queries.
         $user_tables = array(
             'access_list',

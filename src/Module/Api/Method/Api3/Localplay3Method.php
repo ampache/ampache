@@ -38,7 +38,6 @@ final class Localplay3Method
     /**
      * localplay
      * This is for controling localplay
-     * @param array $input
      */
     public static function localplay(array $input)
     {

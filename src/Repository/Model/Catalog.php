@@ -455,7 +455,7 @@ abstract class Catalog extends database_object
     /**
      * Check if a file is a playlist.
      * @param string $file
-     * @return integer
+     * @return bool
      */
     public static function is_playlist_file($file)
     {
@@ -761,8 +761,6 @@ abstract class Catalog extends database_object
 
     /**
      * Run the cache_catalog_proc() on music catalogs.
-     * @param integer[]|null $catalogs
-     * @return integer
      */
     public static function cache_catalogs()
     {
