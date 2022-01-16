@@ -1939,7 +1939,9 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($object_id);
+                foreach ($libitem->album_suite as $album_id) {
+                    $songs[] = static::getSongRepository()->getByAlbum($album_id);
+                }
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
