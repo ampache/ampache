@@ -52,11 +52,11 @@ final class UpdateFromTags4Method
         if (!Api4::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
-        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
+        $type      = ObjectTypeToClassNameMapper::map(strtolower((string)$input['type']));
         $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($type, array('Artist', 'Album', 'Song'))) {
+        if (!in_array(strtolower($type), array('artist', 'album', 'song'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
