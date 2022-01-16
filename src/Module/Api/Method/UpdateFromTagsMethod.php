@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class UpdateFromTagsMethod
@@ -72,7 +73,13 @@ final class UpdateFromTagsMethod
             return false;
         }
         // update your object
-        Catalog::update_single_item($type, $object_id, true);
+        if ($type == 'album') {
+            foreach ($item->album_suite as $album_id) {
+                Catalog::update_single_item($type, $album_id, true);
+            }
+        } else {
+            Catalog::update_single_item($type, $object_id, true);
+        }
 
         Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
 
