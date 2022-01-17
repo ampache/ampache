@@ -616,17 +616,17 @@ class Stream_Playlist
                 $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
-                $purl = Stream_Url::parse($url->url);
-                $id   = $purl['id'];
+                $url_data = Stream_Url::parse($url->url);
+                $id       = $url_data['id'];
 
-                unset($purl['id']);
-                unset($purl['ssid']);
-                unset($purl['type']);
-                unset($purl['base_url']);
-                unset($purl['uid']);
-                unset($purl['name']);
+                unset($url_data['id']);
+                unset($url_data['ssid']);
+                unset($url_data['type']);
+                unset($url_data['base_url']);
+                unset($url_data['uid']);
+                unset($url_data['name']);
 
-                foreach ($purl as $key => $value) {
+                foreach ($url_data as $key => $value) {
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
@@ -720,8 +720,8 @@ class Stream_Playlist
         $items = array();
 
         foreach ($this->urls as $url) {
-            $data    = Stream_Url::parse($url->url);
-            $items[] = array($data['type'], $data['id']);
+            $url_data = Stream_Url::parse($url->url);
+            $items[]  = array($url_data['type'], $url_data['id']);
         }
         if (!empty($items)) {
             $democratic->add_vote($items);

@@ -2871,12 +2871,12 @@ abstract class Catalog extends database_object
                 $orig  = $file;
                 // Check to see if it's a url from this ampache instance
                 if (!empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
-                    $data       = Stream_Url::parse($file);
+                    $url_data   = Stream_Url::parse($file);
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
-                    $db_results = Dba::read($sql, array($data['id']));
-                    if (Dba::num_rows($db_results) && (int)$data['id'] > 0) {
-                        debug_event(__CLASS__, "import_playlist identified: {" . $data['id'] . "}", 5);
-                        $songs[$track] = $data['id'];
+                    $db_results = Dba::read($sql, array($url_data['id']));
+                    if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
+                        debug_event(__CLASS__, "import_playlist identified: {" . $url_data['id'] . "}", 5);
+                        $songs[$track] = $url_data['id'];
                         $track++;
                         $found = true;
                     }
