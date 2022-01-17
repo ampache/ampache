@@ -203,7 +203,6 @@ class Userflag extends database_object
         }
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
             $album = new Album($this->id);
-            $album->get_group_disks_ids();
             $album_array = $album->get_group_disks_ids();
             self::set_flag_for_group($flagged, $album_array, $user_id);
 
