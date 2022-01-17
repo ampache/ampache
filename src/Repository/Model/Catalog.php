@@ -3192,7 +3192,7 @@ abstract class Catalog extends database_object
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`catalog` > 0 GROUP BY `song`.`catalog`, 'artist', `artist`.`id` UNION SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `album`.`catalog` > 0 GROUP BY `album`.`catalog`, 'artist', `artist`.`id`;";
             Dba::write($sql);
         } else {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0 GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
             Dba::write($sql);
         }
     }
@@ -3217,15 +3217,15 @@ abstract class Catalog extends database_object
      */
     public static function update_map($catalog, $object_type, $object_id)
     {
-        debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
-        if ($object_type == 'artist') {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0;";
-            Dba::write($sql, array($object_id));
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
-            Dba::write($sql, array($object_id));
-        } elseif ($catalog > 0) {
-            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
-            Dba::write($sql, array($catalog, $object_type, $object_id));
+        if ($catalog > 0) {
+            debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
+            if ($object_type == 'artist') {
+                $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0 UNION SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
+                Dba::write($sql, array($object_id, $object_id));
+            } else {
+                $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+                Dba::write($sql, array($catalog, $object_type, $object_id));
+            }
         }
     }
 
