@@ -3487,6 +3487,8 @@ abstract class Catalog extends database_object
         static::getCatalogGarbageCollector()->collect();
         self::clean_empty_albums();
         Album::update_album_artist();
+        Catalog::update_mapping('artist');
+        Catalog::update_mapping('album');
         self::update_counts();
     }
 
