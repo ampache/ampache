@@ -1499,7 +1499,10 @@ class Subsonic_Xml_Data
     {
         $xjbox  = $xml->addChild(htmlspecialchars($elementName));
         $status = $localplay->status();
-        $xjbox->addAttribute('currentIndex', 0); // Not supported
+        $index  = (AmpConfig::get('localplay_controller') == 'mpd')
+            ? $status['track'] - 1
+            : 0;
+        $xjbox->addAttribute('currentIndex', $index);
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
         $xjbox->addAttribute('position', 0); // Not supported
