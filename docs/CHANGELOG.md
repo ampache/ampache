@@ -1,5 +1,46 @@
 # CHANGELOG
 
+## Ampache Develop
+
+### Added
+
+* Count tables on create and delete actions
+* Search:
+  * Added no_tag as a possible search item (song, album, artist)
+  * Document the alias names of search rules (docs/API-advanced-search.md)
+
+### Changed
+
+* AmpachePersonalFavorites: double the playlist title height
+* Move get_f_link from playlist/search into playlist_object
+* Make some functions that do the same thing use the same variable names
+* Don't optimize tables when doing ful_service catalog updates
+* Use parameters in search queries instead of printing them into the query
+* Logout action requires a session id now to log out
+* Update mapping more often after catalog actions
+
+### Fixed
+
+* Lowercase package names in composer
+* CLI add user
+* Demo Systemd timer files WantedBy
+* Some missing garbage collection for some tables
+* Phantom html table row in show_catalogs page
+* Grouping albums with special characters
+* Searching albums with special characters
+* Lots more PHP8 runtime errors
+* SQL for artists in catalog_map
+* Typo in url for update_all_file_tags
+* Search:
+  * possible_duplicate was grouping too much together
+
+## API Develop
+
+### Fixed
+
+* Api4::update_from_tags type case error
+* Api3::stats incorrect getRandom call
+
 ## Ampache 5.2.0-release
 
 Ampache 5.2.0 (and all future versions) now support multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
