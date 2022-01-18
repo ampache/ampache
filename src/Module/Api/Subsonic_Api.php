@@ -1952,8 +1952,7 @@ class Subsonic_Api
     public static function jukeboxcontrol($input)
     {
         $action = self::check_parameter($input, 'action');
-        $id     = $input['id'];
-        $gain   = $input['gain'];
+        $id     = $input['id'] ?? array();
 
         $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
         debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
@@ -2028,7 +2027,7 @@ class Subsonic_Api
                     $ret = $localplay->random(true);
                     break;
                 case 'setGain':
-                    $ret = $localplay->volume_set($gain * 100);
+                    $ret = $localplay->volume_set(((float)$input['gain']) * 100);
                     break;
             }
 
