@@ -51,8 +51,8 @@ RUN     apt-get -q -q update \
           supervisor \
           vorbis-tools \
           zip \
-          unzip
-RUN     update-alternatives --set php /usr/bin/php8.0 \
+          unzip \
+    &&  update-alternatives --set php /usr/bin/php8.0 \
     &&  update-alternatives --set phpize /usr/bin/phpize8.0 \
     &&  update-alternatives --set php-config /usr/bin/php-config8.0 \
     &&  phpenmod -v 8.0 xml \
@@ -69,11 +69,13 @@ RUN     update-alternatives --set php /usr/bin/php8.0 \
           lsb-release \
           software-properties-common \
           unzip \
-    &&  apt-get -qq autoremove
-RUN     pecl install xdebug \
-    && echo "zend_extension=$(find /usr/lib/php/extensions/ -name xdebug.so)" > /etc/php/8.0/apache2/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /etc/php/8.0/apache2/conf.d/xdebug.ini
+    &&  apt-get -qq autoremove \
+    &&  pecl install xdebug \
+    &&  echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/8.0/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_enable=on" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
+    &&  echo "xdebug.remote_autostart=off" >> /etc/php/8.0/apache2/conf.d/xdebug.ini \
+    &&  wget -q -O /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar \
+    &&  chmod +x /usr/local/bin/composer
 
 VOLUME ["/var/log/ampache", "/var/www/html"]
 EXPOSE 80
