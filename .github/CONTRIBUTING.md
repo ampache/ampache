@@ -19,6 +19,7 @@ This will allow you to edit server files in a live environment and check your ch
 
  - [docker](https://docs.docker.com/engine/install/)
  - [docker-compose](https://docs.docker.com/compose/install/)
+ - [composer](https://getcomposer.org)
 
 **Getting started**
 
@@ -39,7 +40,6 @@ After installing the requirements, just run
 ```shell
 docker-compose up -d
 ```
-
 
 You can then open http://localhost:8080
 

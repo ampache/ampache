@@ -62,6 +62,8 @@ RUN     apt-get -q -q update \
     &&  chmod 775 /var/log/ampache \
     &&  chown -R www-data:www-data /media \
     &&  chmod -R 775 /media \
+    &&  chown -R www-data:www-data /var/www \
+    &&  chmod -R 775 /var/www \
     &&  ln -s /etc/apache2/sites-available/001-ampache.conf /etc/apache2/sites-enabled/ \
     &&  a2enmod rewrite \
     &&  apt-get -qq purge \
