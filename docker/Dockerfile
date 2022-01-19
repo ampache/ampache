@@ -48,6 +48,7 @@ RUN     apt-get -q -q update \
           php8.0-zip \
           php-pear \
           pwgen \
+          sudo \
           supervisor \
           vorbis-tools \
           zip \
@@ -82,7 +83,7 @@ RUN     apt-get -q -q update \
 VOLUME ["/var/log/ampache", "/var/www/html"]
 EXPOSE 80
 
-COPY docker/data/bin/apache2.sh docker/data/bin/run.sh /usr/local/bin/
+COPY docker/data/bin/apache2.sh docker/data/bin/run.sh docker/data/bin/composer.sh /usr/local/bin/
 COPY docker/data/sites-enabled/001-ampache.conf /etc/apache2/sites-available/
 COPY docker/data/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

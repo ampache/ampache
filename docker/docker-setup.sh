@@ -29,6 +29,12 @@ chmod 775 ./docker/media
 chown $UID:33 ./config
 chmod -R 775 ./config
 
+chown -R $UID:33 ./vendor/
+chmod -R 775 ./vendor/
+
+chown -R $UID:33 ./public/
+chmod -R 775 ./public/
+
 chown $UID:33 ./composer.json 
 chmod 775 ./composer.json
 
