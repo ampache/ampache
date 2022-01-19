@@ -687,6 +687,13 @@ class Search extends playlist_object
         $this->type_text('tag', $t_genre, $t_genre);
         $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
 
+        $t_playlists = T_('Playlists');
+        $playlists   = Playlist::get_playlist_array($user_id);
+        if (!empty($playlists)) {
+            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
+        }
+        $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
+
         $t_file_data = T_('File Data');
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
@@ -1777,6 +1784,16 @@ class Search extends playlist_object
                 case 'no_tag':
                 case 'no_genre':
                     $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    break;
+                case 'playlist_name':
+                    $where[]      = "`artist`.`id` IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'playlist':
+                    $where[] = ($sql_match_operator == '1')
+                        ? "`artist`.`id` IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)"
+                        : "`artist`.`id` NOT IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
+                    $parameters[] = $input;
                     break;
                 case 'rating':
                     // average ratings only
