@@ -51,11 +51,10 @@ If you don't have php locally available you can log in as the www-data user
 docker container exec -it ampache_ampache_1 sudo su - www-data -s /bin/bash
 ```
 
-And then install your composer deps
+And then install your composer deps (this script is part of the container)
 
 ```shell
-cd /var/www/html
-composer install --prefer-dist --no-interaction
+composer.sh
 ```
 
 ### Making a catalog
