@@ -45,7 +45,7 @@ You can then open http://localhost:8080
 **Making a catalog**
 
 By default `/media` is available in the `ampache` service to create a catalog.
-You can put your media in `docker/volumes/media` on your machine to make them available in the service.
+You can put your media in `docker/media` on your machine to make them available in the service.
 
 **Debugging**
 
