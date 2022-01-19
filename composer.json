@@ -28,7 +28,12 @@
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "robloach/component-installer": true,
+            "oomphinc/composer-installers-extender": true
+        }
     },
     "require": {
         "php": ">=7.4 || >=8.0",
