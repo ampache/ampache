@@ -48,7 +48,6 @@ RUN     apt-get -q -q update \
           php8.0-zip \
           php-pear \
           pwgen \
-          sudo \
           supervisor \
           vorbis-tools \
           zip \

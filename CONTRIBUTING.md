@@ -15,13 +15,13 @@ This will allow you to edit server files in a live environment and check your ch
 
 ### Docker env
 
-**Requirements**
+### Requirements
 
- - [docker](https://docs.docker.com/engine/install/)
- - [docker-compose](https://docs.docker.com/compose/install/)
- - [composer](https://getcomposer.org)
+* [docker](https://docs.docker.com/engine/install/)
+* [docker-compose](https://docs.docker.com/compose/install/)
+* [composer](https://getcomposer.org)
 
-**Getting started**
+### Getting started
 
 Tell git to ignore your permission changes
 
@@ -43,16 +43,31 @@ docker-compose up -d
 
 You can then open http://localhost:8080
 
-**Making a catalog**
+### Run composer as www-data
+
+If you don't have php locally available you can log in as the www-data user
+
+```shell
+docker container exec -it ampache_ampache_1 sudo su - www-data -s /bin/bash
+```
+
+And then install your composer deps
+
+```shell
+cd /var/www/html
+composer install --prefer-dist --no-interaction
+```
+
+### Making a catalog
 
 By default `/media` is available in the `ampache` service to create a catalog.
 You can put your media in `docker/media` on your machine to make them available in the service.
 
-**Debugging**
+### Debugging
 
 Xdebug is included and the extension is enabled in this Dockerfile
 
-**More information**
+### More information
 
 Please read [Development section](https://github.com/ampache/ampache/wiki#development).
 
