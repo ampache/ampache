@@ -1441,18 +1441,16 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[]      = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?)";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?)";
+                    $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'year':
                     $where[]      = "`album`.`" . $rule[0] . "` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'original_year':
-                    $where[]      = "(`album`.`original_year` $sql_match_operator ? OR (`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator ?))";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`album`.`original_year` $sql_match_operator ? OR (`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator ?))";
+                    $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'time':
                     $input        = $input * 60;
@@ -1466,9 +1464,8 @@ class Search extends playlist_object
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]      = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
+                    $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
@@ -1627,11 +1624,11 @@ class Search extends playlist_object
                     $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'playlist_name':
-                    $where[]      = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
+                    $where[]      = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
                 case 'playlist':
-                    $where[]      = "`album`.`id` $sql_match_operator IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
+                    $where[]      = "`album`.`id` $sql_match_operator IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
                 case 'has_image':
@@ -1642,13 +1639,12 @@ class Search extends playlist_object
                 case 'image_width':
                     $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator ?";
-                $parameters[]      = $input;
+                    $parameters[]  = $input;
                     $join['image'] = true;
                     break;
                 case 'artist':
                     $where[]         = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?)";
-                    $parameters[]    = $input;
-                    $parameters[]    = $input;
+                    $parameters      = array_merge($parameters, array($input, $input));
                     $table['artist'] = "LEFT JOIN `artist` ON `album`.`album_artist`=`artist`.`id`";
                     break;
                 case 'mbid':
@@ -1757,9 +1753,8 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[]  = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?)";
-                $parameters[] = $input;
-                $parameters[] = $input;
+                    $where[]    = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?)";
+                    $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'yearformed':
                     $where[]      = "`artist`.`yearformed` $sql_match_operator ?";
@@ -1784,11 +1779,11 @@ class Search extends playlist_object
                     $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
                 case 'playlist_name':
-                    $where[]      = "`artist`.`id` IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
+                    $where[]      = "`artist`.`id` IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
                 case 'playlist':
-                    $where[]      = "`artist`.`id` $sql_match_operator IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
+                    $where[]      = "`artist`.`id` $sql_match_operator IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
                 case 'rating':
@@ -1798,9 +1793,8 @@ class Search extends playlist_object
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]      = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
+                    $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
@@ -2069,14 +2063,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) OR (`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) OR `song_data`.`comment` $sql_match_operator ? OR `song_data`.`label` $sql_match_operator ? OR `song`.`file` $sql_match_operator ? OR `song`.`title` $sql_match_operator ? OR " . $tag_string . ')';
                     }
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $parameters = array_merge($parameters, array($input, $input, $input, $input, $input, $input, $input, $input));
                     // join it all up
                     $table['album']    = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     $table['artist']   = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
@@ -2110,22 +2097,17 @@ class Search extends playlist_object
                     break;
                 case 'album':
                     $where[]        = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?)";
-                    $parameters[]   = $input;
-                    $parameters[]   = $input;
+                    $parameters     = array_merge($parameters, array($input, $input));
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     break;
                 case 'artist':
                     $where[]         = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?)";
-                    $parameters[]    = $input;
-                    $parameters[]    = $input;
+                    $parameters      = array_merge($parameters, array($input, $input));
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
                     break;
                 case 'album_artist':
-                    $where[]         = "(`album_artist`.`name` $sql_match_operator ? " .
-                        " OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), " .
-                        "' ', `album_artist`.`name`)) $sql_match_operator ?)";
-                    $parameters[]          = $input;
-                    $parameters[]          = $input;
+                    $where[]               = "(`album_artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) $sql_match_operator ?)";
+                    $parameters            = array_merge($parameters, array($input, $input));
                     $table['album']        = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
                     $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist`=`album_artist`.`id`";
                     break;
@@ -2250,9 +2232,8 @@ class Search extends playlist_object
                         : "";
                     break;
                 case 'favorite_album':
-                    $where[]      = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
+                    $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
@@ -2263,9 +2244,8 @@ class Search extends playlist_object
                     $join['album'] = true;
                     break;
                 case 'favorite_artist':
-                    $where[]      = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
-                    $parameters[] = $input;
-                    $parameters[] = $input;
+                    $where[]    = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `favorite_artist_$user_id`.`user` = $user_id AND `favorite_artist_$user_id`.`object_type` = 'artist'";
+                    $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
@@ -2611,8 +2591,8 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[]  = "`playlist`.`name` $sql_match_operator ?";
-                $parameters[] = $input;
+                    $where[]      = "`playlist`.`name` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 default:
                     break;
@@ -2704,8 +2684,8 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[]  = "`label`.`name` $sql_match_operator ?";
-                $parameters[] = $input;
+                    $where[]      = "`label`.`name` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'category':
                     $where[]      = "`label`.`category` $sql_match_operator ?";
@@ -2795,8 +2775,8 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                 case 'name':
-                    $where[]  = "`tag`.`name` $sql_match_operator ?";
-                $parameters[] = $input;
+                    $where[]      = "`tag`.`name` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'category':
                     $where[]      = "`tag`.`category` $sql_match_operator ?";
