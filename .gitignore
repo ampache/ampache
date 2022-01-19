@@ -11,7 +11,11 @@ bootstrap/
 build
 config/ampache-doped.cfg.php
 config/ampache.cfg.php
+config/ampache.cfg.php.backup
 config/registration_agreement.php
+docker-compose.override.yml
+docker/log/
+docker/media/
 log/
 logs/
 nbproject/

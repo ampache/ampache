@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  ampache:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - db
+    links:
+      - db:db
+    restart: on-failure
+    ports:
+      - "8080:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/log:/var/log/ampache
+      - ./docker/media:/media
+  db:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret'
+      MYSQL_USER: 'ampache'
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "13306:3306"
+
+volumes:
+  mysqldata:

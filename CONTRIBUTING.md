@@ -7,6 +7,52 @@ submitting bug reports and feature requests or writing code which can be incorpo
 Anyone can take part in our community and it there are no rules or requirements stopping you from joining.
 Hopefully this document will help you make the jump!
 
+## Local development environment
+
+You can create a local dev environment using docker to get you up and running.
+
+This will allow you to edit server files in a live environment and check your changes.
+
+### Docker env
+
+**Requirements**
+
+ - [docker](https://docs.docker.com/engine/install/)
+ - [docker-compose](https://docs.docker.com/compose/install/)
+
+**Getting started**
+
+Make sure you're a docker user so you can still edit the files
+
+```shell
+sudo usermod -a -G docker user
+```
+
+Tell git to ignore your permission changes
+
+```shell
+git config core.fileMode false
+```
+
+After installing the requirements, just run
+
+```shell
+sudo ./docker/docker-compose.sh
+```
+
+You can then open http://localhost:8080
+
+**Making a catalog**
+
+By default `/media` is available in the `ampache` service to create a catalog.
+You can put your media in `docker/volumes/media` on your machine to make them available in the service.
+
+**Debugging**
+
+Xdebug is included and the extension is enabled in this Dockerfile
+
+**More information**
+
 Please read [Development section](https://github.com/ampache/ampache/wiki#development).
 
 ## Bug report

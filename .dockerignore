@@ -1,0 +1,7 @@
+.git/
+.github/
+.tx/
+docker/log
+docker/media
+public/lib/components
+vendor
