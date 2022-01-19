@@ -31,4 +31,4 @@ chmod 775 ./docker/media
 chown $UID:33 ./config
 chmod -R 775 ./config
 
-docker-compose up -d
+docker-compose build

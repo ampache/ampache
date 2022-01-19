@@ -22,23 +22,24 @@ This will allow you to edit server files in a live environment and check your ch
 
 **Getting started**
 
-Make sure you're a docker user so you can still edit the files
-
-```shell
-sudo usermod -a -G docker user
-```
-
 Tell git to ignore your permission changes
 
 ```shell
 git config core.fileMode false
 ```
 
+Create the local folders for the volumes, set file permissions and add yourself to the docker group
+```
+sudo ./docker/docker-setup.sh
+sudo usermod -a -G docker $USERNAME
+```
+
 After installing the requirements, just run
 
 ```shell
-sudo ./docker/docker-compose.sh
+docker-compose up -d
 ```
+
 
 You can then open http://localhost:8080
 
