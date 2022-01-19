@@ -30,7 +30,7 @@ git config core.fileMode false
 
 Create the local folders for the volumes, set file permissions and add yourself to the docker group
 ```
-sudo ./docker/docker-setup.sh
+sudo sh ./docker/docker-setup.sh
 sudo usermod -a -G docker $USERNAME
 ```
 
