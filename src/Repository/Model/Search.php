@@ -575,7 +575,7 @@ class Search extends playlist_object
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
         if (!empty($playlists)) {
-            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
+            $this->type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
         $playlists = self::get_search_array($user_id);
         if (!empty($playlists)) {
@@ -690,7 +690,7 @@ class Search extends playlist_object
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
         if (!empty($playlists)) {
-            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
+            $this->type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
@@ -758,7 +758,7 @@ class Search extends playlist_object
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
         if (!empty($playlists)) {
-            $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists, $t_playlists);
+            $this->type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
@@ -1631,9 +1631,7 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'playlist':
-                    $where[] = ($sql_match_operator == '1')
-                        ? "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)"
-                        : "`album`.`id` NOT IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
+                    $where[]      = "`album`.`id` $sql_match_operator IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
                 case 'has_image':
@@ -1790,9 +1788,7 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'playlist':
-                    $where[] = ($sql_match_operator == '1')
-                        ? "`artist`.`id` IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)"
-                        : "`artist`.`id` NOT IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
+                    $where[]      = "`artist`.`id` $sql_match_operator IN (SELECT `song`.`artist` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` and `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
                 case 'rating':
@@ -2352,9 +2348,8 @@ class Search extends playlist_object
                     $parameters[]          = $input;
                     break;
                 case 'playlist':
-                    $join['playlist_data'] = true;
-                    $where[]               = "`playlist_data`.`playlist` $sql_match_operator ?";
-                    $parameters[]          = $input;
+                    $where[]      = "`song`.`id` $sql_match_operator IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song')";
+                    $parameters[] = $input;
                     break;
                 case 'smartplaylist':
                     $subsearch  = new Search($input, 'song', $this->search_user);
