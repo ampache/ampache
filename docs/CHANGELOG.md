@@ -4,10 +4,13 @@
 
 ### Added
 
+* Translation Updates Jan 2022
 * Count tables on create and delete actions
+* set allow-plugins in composer.json
 * Search:
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
+  * Add playlist and playlist_name search to artist types
 
 ### Changed
 
@@ -33,6 +36,8 @@
 * Typo in url for update_all_file_tags
 * Search:
   * possible_duplicate was grouping too much together
+* Subsonic:
+  * Jukeboxcontrol didn't send an index to the client
 
 ## API Develop
 
