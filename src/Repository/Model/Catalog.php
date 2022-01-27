@@ -2344,7 +2344,7 @@ abstract class Catalog extends database_object
         $update_time = self::get_update_info('update_counts');
         $now_time    = time();
         // give the server a 30 min break for this help with load
-        if ($update_time > ($now_time - 1800)) {
+        if ($update_time !== 0 && $update_time > ($now_time - 1800)) {
             return;
         }
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
