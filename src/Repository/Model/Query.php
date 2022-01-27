@@ -801,11 +801,8 @@ class Query
             $this->_state['sort'][$sort] = $order;
         } else {
             // if the sort already exists you want the reverse
-            if (array_key_exists('sort', $this->_state) && array_key_exists($sort, $this->_state['sort'])) {
-                $order = ($this->_state['sort'][$sort] == 'ASC') ? 'ASC' : 'DESC';
-            } else {
-                $order = 'ASC';
-            }
+            $state                       = $this->_state['sort'][$sort] ?? 'DESC';
+            $order                       = ($state == 'ASC') ? 'DESC' : 'ASC';
             $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
         }

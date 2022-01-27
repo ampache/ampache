@@ -64,7 +64,7 @@ final class Flag4Method
             return false;
         }
         ob_end_clean();
-        $type      = (string) $input['type'];;
+        $type      = (string) $input['type'];
         $object_id = $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
         $user      = User::get_from_username(Session::username($input['auth']));
