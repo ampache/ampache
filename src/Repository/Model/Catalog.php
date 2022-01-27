@@ -2349,22 +2349,28 @@ abstract class Catalog extends database_object
         }
         self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
+        // Delete duplicates from the object_count table
+        $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING count(`date`) >1));";
+        Dba::write($sql);
+        // Fill in null Agents with a value
+        $sql = "UPDATE `object_count` SET `agent` = 'Unknown' WHERE `agent` IS NULL;";
+        Dba::write($sql);
         // fix object_count table missing artist row
-        $sql        = "SELECT `song`.`artist`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` WHERE `object_type` = 'song' AND `count_type` = 'stream' AND `date` NOT IN (SELECT `date` from `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'album') LIMIT 100;";
+        $sql        = "SELECT `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `artist_count`.`id` IS NULL LIMIT 100;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql  = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             Dba::write($sql, array('artist', $row['artist'], $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
         }
         // fix object_count table missing album row
-        $sql        = "SELECT `song`.`album`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` WHERE `object_type` = 'song' AND `count_type` = 'stream' AND `date` NOT IN (SELECT `date` from `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'album') LIMIT 100;";
+        $sql        = "SELECT `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `album_count`.`id` IS NULL LIMIT 100;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql  = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             Dba::write($sql, array('album', $row['album'], $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
         }
         // fix object_count table missing podcast row
-        $sql        = "SELECT `object_type`, `podcast_episode`.`podcast`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` LEFT JOIN `podcast_episode` ON `object_count`.`object_id` = `podcast_episode`.`id` WHERE `podcast_episode`.`podcast` IS NOT NULL AND `object_type` = 'podcast_episode' AND `count_type` = 'stream' AND `date` NOT IN (SELECT `date` from `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'podcast') LIMIT 100;";
+        $sql        = "SELECT `podcast_episode`.`podcast`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `podcast_episode` ON `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `podcast_episode`.`id` LEFT JOIN `object_count` AS `podcast_count` ON `podcast_count`.`object_type` = 'podcast' AND `object_count`.`date` = `podcast_count`.`date` AND `object_count`.`user` = `podcast_count`.`user` AND `object_count`.`agent` = `podcast_count`.`agent` AND `object_count`.`count_type` = `podcast_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `podcast_count`.`id` IS NULL LIMIT 100;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
