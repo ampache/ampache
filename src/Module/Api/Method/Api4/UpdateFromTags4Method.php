@@ -52,7 +52,7 @@ final class UpdateFromTags4Method
         if (!Api4::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
-        $type      = ObjectTypeToClassNameMapper::map(strtolower((string)$input['type']));
+        $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 
         // confirm the correct data
@@ -61,7 +61,8 @@ final class UpdateFromTags4Method
 
             return false;
         }
-        $item = new $type($object_id);
+        $className = ObjectTypeToClassNameMapper::map($type);
+        $item      = new $className($object_id);
         if (!$item->id) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 

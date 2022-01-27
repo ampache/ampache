@@ -44,7 +44,12 @@
 ### Fixed
 
 * Api4::update_from_tags type case error
+* Api4::rate Object type to class mapping
+* Api4::flag Object type to class mapping
+* Api4::update_art Object type to class mapping
+* Api4::update_from_tags Object type to class mapping
 * Api3::stats incorrect getRandom call
+* Api3::rate Object type to class mapping
 
 ## Ampache 5.2.0-release
 
