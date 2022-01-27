@@ -63,7 +63,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
-            <th class="cel_play essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, T_('Track'), 'sort_song_track' . $browse->id); ?></th>
+            <th class="cel_play essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'sort_song_track' . $browse->id); ?></th>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
             <?php if (!$hide_artist) {
@@ -163,7 +163,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <th class="cel_play"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, T_('Track'), 'sort_song_track' . $browse->id); ?></th>
+            <th class="cel_play"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'sort_song_track' . $browse->id); ?></th>
             <th class="<?php echo $cel_song; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add"></th>
             <?php if (!$hide_artist) { ?>

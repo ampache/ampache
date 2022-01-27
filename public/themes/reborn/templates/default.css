@@ -981,7 +981,7 @@ table.tabledata thead .th-top {
 
 table.tabledata thead th.cel_play {
     text-align: right;
-    padding-right: 8px;
+    padding-right: 10px;
 }
 
 table.tabledata thead th.cel_ratings {
