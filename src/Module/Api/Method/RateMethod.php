@@ -80,7 +80,6 @@ final class RateMethod
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
-
         if (!$className || !$object_id) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
