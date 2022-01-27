@@ -504,10 +504,11 @@ class User extends database_object
     /**
      * set_user_data
      * This updates some background data for user specific function
+     * @param int $user_id
      * @param string $key
      * @param string|integer $value
      */
-    public static function set_user_data($user_id, $key, $value)
+    public static function set_user_data(int $user_id, string $key, $value)
     {
         Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, $key, $value));
     } // set_user_data
@@ -515,7 +516,7 @@ class User extends database_object
     /**
      * get_user_data
      * This updates some background data for user specific function
-     * @param string $user_id
+     * @param int $user_id
      * @param string $key
      * @return array
      */
@@ -734,7 +735,7 @@ class User extends database_object
                 debug_event(self::class, 'Update counts for ' . $user_id, 5);
                 foreach ($server_counts as $table => $count) {
                     if (in_array($table, $count_array)) {
-                        self::set_count($user_id, $table, $count);
+                        self::set_user_data($user_id, $table, $count);
                     }
                 }
             }
@@ -753,7 +754,7 @@ class User extends database_object
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
 
-                self::set_count($user_id, $table, (int)($row[0] ?? 0));
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
             }
             // tables with media items to count, song-related tables and the rest
             $media_tables = array('song', 'video', 'podcast_episode');
@@ -771,31 +772,18 @@ class User extends database_object
                 $items += (int)($row[0] ?? 0);
                 $time += (int)($row[1] ?? 0);
                 $size += (int)($row[2] ?? 0);
-                self::set_count($user_id, $table, (int)($row[0] ?? 0));
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
             }
-            self::set_count($user_id, 'items', $items);
-            self::set_count($user_id, 'time', $time);
-            self::set_count($user_id, 'size', $size);
+            self::set_user_data($user_id, 'items', $items);
+            self::set_user_data($user_id, 'time', $time);
+            self::set_user_data($user_id, 'size', $size);
             // grouped album counts
             $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
-            self::set_count($user_id, 'album_group', (int)($row[0] ?? 0));
+            self::set_user_data($user_id, 'album_group', (int)($row[0] ?? 0));
         }
     } // update_counts
-
-    /**
-     * set_count
-     *
-     * write the total_counts to update_info
-     * @param int $user_id
-     * @param string $key
-     * @param int $value
-     */
-    public static function set_count(int $user_id, string $key, int $value)
-    {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?;", array($user_id, $key, $value));
-    } // set_count
 
     /**
      * disable

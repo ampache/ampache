@@ -67,7 +67,7 @@ class Update
             header("Location: test.php");
         } else {
             // If we've found the update_info table, let's get the version from it
-            $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
+            $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
             $version    = $results['value'];

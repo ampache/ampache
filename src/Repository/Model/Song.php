@@ -1063,28 +1063,28 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user, $agent, $date)) {
+        if (!$this->check_play_history($user_id, $agent, $date)) {
             return false;
         }
         // insert stats for each object type
-        if (Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date)) {
-            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
-            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+            Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
+            Stats::insert('artist', $this->artist, $user_id, $agent, $location, 'stream', $date);
             // followup on some stats too
-            $user_data = User::get_user_data($user, 'play_size');
+            $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
                 ? (int)$user_data['play_size']
                 : 0;
-            User::set_user_data($user, 'play_size', ($play_size + $this->size));
+            User::set_user_data($user_id, 'play_size', ($play_size + $this->size));
         }
         // If it hasn't been played, set it
         if (!$this->played) {

@@ -7,6 +7,7 @@
 * Translation Updates Jan 2022
 * Count tables on create and delete actions
 * set allow-plugins in composer.json
+* Improve description of rss feed to make each play more unique
 * Search:
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
@@ -17,10 +18,11 @@
 * AmpachePersonalFavorites: double the playlist title height
 * Move get_f_link from playlist/search into playlist_object
 * Make some functions that do the same thing use the same variable names
-* Don't optimize tables when doing ful_service catalog updates
+* Don't optimize tables when doing full_service catalog updates
 * Use parameters in search queries instead of printing them into the query
 * Logout action requires a session id now to log out
 * Update mapping more often after catalog actions
+* Album check function added mbid_group to lookup
 
 ### Fixed
 
@@ -41,15 +43,22 @@
 
 ## API Develop
 
+### Changed
+
+* API5
+  * Return the xml total_count of playlists based on hide_search preference
+
 ### Fixed
 
-* Api4::update_from_tags type case error
-* Api4::rate Object type to class mapping
-* Api4::flag Object type to class mapping
-* Api4::update_art Object type to class mapping
-* Api4::update_from_tags Object type to class mapping
-* Api3::stats incorrect getRandom call
-* Api3::rate Object type to class mapping
+* API4
+  * update_from_tags type case error
+  * rate Object type to class mapping
+  * flag Object type to class mapping
+  * update_art Object type to class mapping and type case check
+  * update_from_tags Object type to class mapping
+* API3
+  * stats incorrect getRandom call
+  * rate Object type to class mapping
 
 ## Ampache 5.2.0-release
 
