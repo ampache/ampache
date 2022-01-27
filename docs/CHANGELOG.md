@@ -8,6 +8,7 @@
 * Count tables on create and delete actions
 * set allow-plugins in composer.json
 * Improve description of rss feed to make each play more unique
+* Wait 30 minutes between catalog updates before running update_counts
 * Search:
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
@@ -51,14 +52,14 @@
 ### Fixed
 
 * API4
-  * update_from_tags type case error
-  * rate Object type to class mapping
-  * flag Object type to class mapping
-  * update_art Object type to class mapping and type case check
-  * update_from_tags Object type to class mapping
+  * update_from_tags: type case error
+  * rate: Object type to class mapping
+  * flag: Object type to class mapping
+  * update_art: Object type to class mapping and type case check
+  * update_from_tags: Object type to class mapping
 * API3
-  * stats incorrect getRandom call
-  * rate Object type to class mapping
+  * stats: incorrect getRandom call
+  * rate: Object type to class mapping
 
 ## Ampache 5.2.0-release
 
