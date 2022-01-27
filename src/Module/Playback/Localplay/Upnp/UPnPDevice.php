@@ -57,7 +57,7 @@ class UPnPDevice
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
 
-        if ($this->_settings['descriptionURL'] == $descriptionUrl) {
+        if ($this->_settings && $this->_settings['descriptionURL'] == $descriptionUrl) {
             debug_event('upnpdevice', 'service Urls restored from session.', 5);
 
             return true;
@@ -81,7 +81,7 @@ class UPnPDevice
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
-        $services    = $responseXML->device->serviceList->service;
+        $services    = $responseXML->device->serviceList->service ?? array();
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
