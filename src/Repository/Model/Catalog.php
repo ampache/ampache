@@ -2347,6 +2347,7 @@ abstract class Catalog extends database_object
         if ($update_time !== 0 && $update_time > ($now_time - 1800)) {
             return;
         }
+        self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // fix object_count table missing artist row
         $sql        = "SELECT `song`.`artist`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` WHERE `object_type` = 'song' AND `count_type` = 'stream' AND `date` NOT IN (SELECT `date` from `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'album') LIMIT 100;";
@@ -2499,7 +2500,6 @@ abstract class Catalog extends database_object
         }
         // user accounts may have different items to return based on catalog_filter so lets set those too
         User::update_counts();
-        self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts completed', 5);
     }
 
