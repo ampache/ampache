@@ -795,18 +795,19 @@ class Query
         if ($sort == 'random') {
             $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
-        } elseif ($order) {
+        } elseif (!empty($order)) {
             $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
             $this->_state['sort']        = array();
             $this->_state['sort'][$sort] = $order;
-        } elseif ($this->_state['sort'][$sort] == 'DESC') {
-            // Reset it till I can figure out how to interface the hotness
-            $this->_state['sort']        = array();
-            $this->_state['sort'][$sort] = 'ASC';
         } else {
-            // Reset it till I can figure out how to interface the hotness
+            // if the sort already exists you want the reverse
+            if (array_key_exists('sort', $this->_state) && array_key_exists($sort, $this->_state['sort'])) {
+                $order = ($this->_state['sort'][$sort] == 'ASC') ? 'ASC' : 'DESC';
+            } else {
+                $order = 'ASC';
+            }
             $this->_state['sort']        = array();
-            $this->_state['sort'][$sort] = 'DESC';
+            $this->_state['sort'][$sort] = $order;
         }
 
         $this->resort_objects();
