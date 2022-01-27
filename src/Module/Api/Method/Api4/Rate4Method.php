@@ -83,7 +83,7 @@ final class Rate4Method
         if (!$className || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $item = new $className($object_id);
             if (!$item->id) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
