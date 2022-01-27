@@ -57,7 +57,7 @@ final class UpdateFromTagsMethod
         $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album', 'song'))) {
+        if (!in_array(strtolower($type), array('artist', 'album', 'song'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;

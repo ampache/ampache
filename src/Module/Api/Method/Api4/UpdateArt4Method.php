@@ -63,7 +63,7 @@ final class UpdateArt4Method
         $overwrite = (int) $input['overwrite'] == 0;
 
         // confirm the correct data
-        if (!in_array($type, array('Artist', 'Album'))) {
+        if (!in_array(strtolower($type), array('Artist', 'Album'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return true;
