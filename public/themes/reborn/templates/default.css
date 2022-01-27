@@ -979,8 +979,13 @@ table.tabledata thead .th-top {
     border-bottom: 1px solid;
 }
 
+table.tabledata thead th.cel_play {
+    text-align: right;
+    padding-right: 8px;
+}
+
 table.tabledata thead th.cel_ratings {
-    padding-left: 7px;
+    padding-left: 8px;
 }
 
 table.tabledata tfoot .th-bottom {
