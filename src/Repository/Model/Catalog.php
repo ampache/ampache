@@ -636,19 +636,19 @@ abstract class Catalog extends database_object
      * get_update_info
      *
      * return the counts from update info to speed up responses
-     * @param string $table
+     * @param string $key
      * @return int
      */
-    public static function get_update_info(string $table)
+    public static function get_update_info(string $key)
     {
-        if ($table == 'joined') {
+        if ($key == 'joined') {
             $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info` WHERE `key` IN ('playlist', 'search')";
             $db_results = Dba::read($sql);
         } else {
             $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-            $db_results = Dba::read($sql, array($table));
+            $db_results = Dba::read($sql, array($key));
         }
-        $results    = Dba::fetch_assoc($db_results);
+        $results = Dba::fetch_assoc($db_results);
 
         return (int) $results['value'];
     } // get_update_info
@@ -657,12 +657,12 @@ abstract class Catalog extends database_object
      * set_update_info
      *
      * write the total_counts to update_info
-     * @param string $table
+     * @param string $key
      * @param int $value
      */
-    public static function set_update_info(string $table, int $value)
+    public static function set_update_info(string $key, int $value)
     {
-        Dba::write("REPLACE INTO `update_info` SET `key`= ?, `value`= ?;", array($table, $value));
+        Dba::write("REPLACE INTO `update_info` SET `key`= ?, `value`= ?;", array($key, $value));
     } // set_update_info
 
     /**
@@ -2341,6 +2341,12 @@ abstract class Catalog extends database_object
      */
     public static function update_counts()
     {
+        $update_time = self::get_update_info('update_counts');
+        $now_time    = time();
+        // give the server a 30 min break for this help with load
+        if ($update_time > ($now_time - 1800)) {
+            return;
+        }
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // fix object_count table missing artist row
         $sql        = "SELECT `song`.`artist`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` WHERE `object_type` = 'song' AND `count_type` = 'stream' AND `date` NOT IN (SELECT `date` from `object_count` WHERE `count_type` = 'stream' AND `object_type` = 'album') LIMIT 100;";
@@ -2493,6 +2499,7 @@ abstract class Catalog extends database_object
         }
         // user accounts may have different items to return based on catalog_filter so lets set those too
         User::update_counts();
+        self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts completed', 5);
     }
 
