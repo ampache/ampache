@@ -81,7 +81,7 @@ final class RecordPlayMethod
 
         // validate client string or fall back to 'api'
         $agent = (array_key_exists('client', $input))
-            ? filter_var($input['client'], FILTER_SANITIZE_STRING)
+            ? filter_var($input['client'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)
             : 'api';
 
         $media = new Song($object_id);

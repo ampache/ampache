@@ -80,7 +80,7 @@ final class EditObjectAction extends AbstractEditAction
         $entities($_POST);
 
         if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
         } else {
             $object_type = implode('_', explode('_', $object_type, -1));
         }

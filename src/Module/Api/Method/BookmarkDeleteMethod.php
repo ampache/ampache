@@ -61,7 +61,7 @@ final class BookmarkDeleteMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : 'AmpacheAPI';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 

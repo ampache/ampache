@@ -458,7 +458,7 @@ class Wanted extends database_object
      */
     public function get_fullname()
     {
-        return filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($this->name, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**

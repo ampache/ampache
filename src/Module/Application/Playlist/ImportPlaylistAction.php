@@ -59,7 +59,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         $filename  = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
         // allow setting public or private for your imports
-        $playlist_type = filter_input(INPUT_POST, 'default_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $playlist_type = filter_input(INPUT_POST, 'default_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         $result = Catalog::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
 

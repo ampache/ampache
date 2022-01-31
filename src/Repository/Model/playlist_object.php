@@ -87,8 +87,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         // format shared lists using the username
         $this->f_name = (($this->user == Core::get_global('user')->id))
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            ? filter_var($this->name, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
         $this->get_f_link();
     } // format
@@ -152,8 +152,8 @@ abstract class playlist_object extends database_object implements library_item
         $show_fullname = AmpConfig::get('show_playlist_username');
         $my_playlist   = $this->user == Core::get_global('user')->id;
         $this->f_name  = ($my_playlist || !$show_fullname)
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            ? filter_var($this->name, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         return $this->f_name;
     }

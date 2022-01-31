@@ -60,7 +60,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
+        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : array();
         $deleted  = true;
         // Delete the sucker, we don't need to check perms as that's done above
         foreach ($catalogs as $catalog_id) {

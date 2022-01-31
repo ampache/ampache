@@ -1269,8 +1269,8 @@ class User extends database_object
     {
         if (!isset($this->f_name)) {
             $this->f_name = ($this->fullname_public)
-                ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-                : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                ? filter_var($this->fullname, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)
+                : filter_var($this->username, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
         return $this->f_name;

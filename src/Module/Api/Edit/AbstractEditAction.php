@@ -62,14 +62,14 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
 
         // Post first
-        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) Core::get_get('id');
 
         if (empty($object_type)) {
             $object_type = $source_object_type = filter_input(
                 INPUT_GET,
                 'object_type',
-                FILTER_SANITIZE_STRING,
+                FILTER_SANITIZE_FULL_SPECIAL_CHARS,
                 FILTER_FLAG_NO_ENCODE_QUOTES
             );
         } else {

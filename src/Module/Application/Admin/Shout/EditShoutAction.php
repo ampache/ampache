@@ -69,10 +69,10 @@ final class EditShoutAction implements ApplicationActionInterface
 
         if ($shout->id) {
             $data['comment'] = (array_key_exists('license_id', $data))
-                ? filter_var($data['comment'], FILTER_SANITIZE_STRING)
+                ? filter_var($data['comment'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)
                 : '';
             $data['sticky']  = (array_key_exists('license_id', $data))
-                ? filter_var($data['sticky'], FILTER_SANITIZE_STRING)
+                ? filter_var($data['sticky'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)
                 : '';
             $shout->update($data);
         }

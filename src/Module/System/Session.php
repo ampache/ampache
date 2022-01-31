@@ -751,7 +751,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
+        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_FULL_SPECIAL_CHARS,
                 FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }
