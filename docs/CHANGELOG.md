@@ -649,7 +649,7 @@ This version of the API is the first semantic version. "5.0.0"
 * SubSonic
   * just send getmusicfolders music folders
   * When calling createPlaylist, assume that the list needs to be empty first
-  
+
 ### Fixed
 
 * Require a valid database hostname instead of assuming localhost

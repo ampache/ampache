@@ -1485,7 +1485,7 @@ function get_mime_from_image($data): string
             return 'image/jpeg';
     }
 }
-    
+
 /**
  * @deprecated Will be removed
  */

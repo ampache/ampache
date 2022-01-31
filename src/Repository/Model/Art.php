@@ -367,7 +367,7 @@ class Art extends database_object
         // Blow it away!
         $this->reset();
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
-        
+
         if (AmpConfig::get('write_tags', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
@@ -390,7 +390,7 @@ class Art extends database_object
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
-        
+
                 $ndata      = array();
                 $data       = $vainfo->read_id3();
                 $fileformat = $data['fileformat'];
@@ -430,7 +430,7 @@ class Art extends database_object
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
                             }
-                            
+
                             break;
                     }
                 }

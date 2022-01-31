@@ -1780,7 +1780,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $keywords;
     }
-    
+
     /**
      * Get total count
      * @return integer
