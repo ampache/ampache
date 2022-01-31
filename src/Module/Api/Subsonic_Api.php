@@ -449,7 +449,7 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $username = (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user     = User::get_from_username($username);
         $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
@@ -982,8 +982,8 @@ class Subsonic_Api
     public static function getplaylists($input)
     {
         $username  = isset($_REQUEST['username'])
-            ? (string)filter_var($input['username'], FILTER_SANITIZE_FULL_SPECIAL_CHARS)
-            : (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
+            : (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user      = User::get_from_username((string)$username);
         $response  = Subsonic_Xml_Data::createSuccessResponse('getplaylists');
         $playlists = Playlist::get_playlists($user->id, '', true, true, false);
@@ -1159,11 +1159,11 @@ class Subsonic_Api
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format'] ?? ''; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
-        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $username      = (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username      = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user          = User::get_from_username($username);
         $user_id       = $user->id;
-        $client        = (string)filter_var($input['c'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Subsonic';
+        $client        = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
 
         $params = '&client=' . rawurlencode($client);
         if ($contentLength == 'true') {
@@ -1211,7 +1211,7 @@ class Subsonic_Api
     {
         $fileid  = self::check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $client  = (string)filter_var($input['c'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Subsonic';
+        $client  = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $params  = '&client=' . rawurlencode($client) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::isSong($fileid)) {
@@ -2048,7 +2048,7 @@ class Subsonic_Api
         $object_ids = self::check_parameter($input, 'id');
         $submission = ($input['submission'] === 'true' || $input['submission'] === '1');
         $username   = (string) $input['u'];
-        $client     = (string)filter_var($input['c'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Subsonic';
+        $client     = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $user       = User::get_from_username($username);
 
         if (!is_array($object_ids)) {
@@ -2531,7 +2531,7 @@ class Subsonic_Api
             strip_tags(
                 filter_var(
                     $message,
-                    FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+                    FILTER_SANITIZE_STRING,
                     FILTER_FLAG_NO_ENCODE_QUOTES
                 )
             )
@@ -2559,8 +2559,8 @@ class Subsonic_Api
         if ($media->id) {
             $response  = Subsonic_Xml_Data::createSuccessResponse('saveplayqueue');
             $position  = (int)((int)$input['position'] / 1000);
-            $client    = (string)filter_var($input['c'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Subsonic';
-            $username  = (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $client    = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+            $username  = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
             $user      = User::get_from_username($username);
             $user_id   = $user->id;
             $user_data = User::get_user_data($user_id, 'playqueue_time');
@@ -2607,9 +2607,9 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $username = (string)filter_var($input['u'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $user     = User::get_from_username($username);
-        $client   = (string)filter_var($input['c'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'Subsonic';
+        $client   = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $user_id  = $user->id;
         $response = Subsonic_Xml_Data::createSuccessResponse('getplayqueue');
         User::set_user_data($user_id, 'playqueue_time', time());
