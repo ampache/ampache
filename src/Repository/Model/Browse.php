@@ -479,12 +479,12 @@ class Browse extends Query
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             }
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             } else {
                 $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
@@ -495,13 +495,13 @@ class Browse extends Query
             }
             $name = 'browse_' . $type . '_grid_view';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
                         FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
             }
 
             parent::set_type($type, $custom_base);
         } else {
-            debug_event(self::class, 'set_type invalid type: ' . filter_var($type, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 5);
+            debug_event(self::class, 'set_type invalid type: ' . filter_var($type, FILTER_SANITIZE_STRING), 5);
         }
     }
 

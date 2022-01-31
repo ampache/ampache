@@ -92,7 +92,7 @@ final class ScrobbleMethod
         }
 
         // validate client string or fall back to 'api'
-        $agent       = filter_var($input['client'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 'api';
+        $agent       = filter_var($input['client'], FILTER_SANITIZE_STRING) ?? 'api';
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {

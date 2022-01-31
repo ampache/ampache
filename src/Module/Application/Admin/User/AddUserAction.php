@@ -74,14 +74,14 @@ final class AddUserAction extends AbstractUserAction
 
         $this->ui->showHeader();
 
-        $username       = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname       = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $username       = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname       = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $email          = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website        = (string) scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $access         = (int) scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $website        = (string) scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access         = (int) scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {

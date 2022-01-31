@@ -68,7 +68,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
 
     protected function getCatalogIds(): ?array
     {
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : array();
+        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
         // If only one catalog, check it is ready.
         if (is_array($catalogs) && count($catalogs) == 1) {
             // If not ready, display the data to make it ready / stop the action.

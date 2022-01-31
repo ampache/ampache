@@ -69,7 +69,7 @@ $logic_operator = strtolower($logic_operator); ?>
 if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
+    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

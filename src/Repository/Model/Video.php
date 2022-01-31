@@ -368,7 +368,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->title, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
         return $this->f_name;

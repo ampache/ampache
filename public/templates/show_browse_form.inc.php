@@ -28,7 +28,7 @@ global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
-$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES) ?>
+$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?>
 
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 

@@ -56,19 +56,19 @@ final class ShowAction implements ApplicationActionInterface
         $content = '';
 
         if (array_key_exists('param_name', $_REQUEST)) {
-            $name = (string) scrub_in(filter_var($_REQUEST['param_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $name = (string) scrub_in(filter_var($_REQUEST['param_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             if (array_key_exists($name, $_REQUEST)) {
                 $content .= sprintf(
                     '%s: %s',
                     $name,
-                    (string) scrub_in(filter_var($_REQUEST['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES))
+                    (string) scrub_in(filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))
                 );
             }
         }
 
         if (array_key_exists('error', $_REQUEST)) {
-            $error             = (string) scrub_in(filter_var($_REQUEST['error'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
-            $error_description = (string) scrub_in(filter_var($_REQUEST['error_description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $error             = (string) scrub_in(filter_var($_REQUEST['error'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $error_description = (string) scrub_in(filter_var($_REQUEST['error_description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             $content .= sprintf('%s error: %s', $error, $error_description);
         }
 

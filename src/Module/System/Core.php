@@ -62,13 +62,13 @@ class Core
             return '';
         }
         if (filter_has_var(INPUT_POST, $variable)) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if (filter_has_var(INPUT_GET, $variable)) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        return filter_var($_REQUEST[$variable], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -84,10 +84,10 @@ class Core
             return '';
         }
         if (filter_has_var(INPUT_GET, $variable)) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        return filter_var($_GET[$variable], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -105,10 +105,10 @@ class Core
             return '';
         }
         if (filter_has_var(INPUT_COOKIE, $variable)) {
-            return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        return filter_var($_COOKIE[$variable], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -124,14 +124,14 @@ class Core
             return '';
         }
         if (filter_has_var(INPUT_SERVER, $variable)) {
-            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         // INPUT_SERVER can sometimes fail
         if (filter_has_var(INPUT_ENV, $variable)) {
-            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        return filter_var($_SERVER[$variable], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -147,10 +147,10 @@ class Core
             return '';
         }
         if (filter_has_var(INPUT_POST, $variable)) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
-        return filter_var($_POST[$variable], FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**

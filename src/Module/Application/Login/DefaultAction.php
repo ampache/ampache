@@ -112,7 +112,7 @@ final class DefaultAction implements ApplicationActionInterface
                 throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',
-                        (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)
+                        (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
                     )
                 );
             }
@@ -164,7 +164,7 @@ final class DefaultAction implements ApplicationActionInterface
                                 filter_input(
                                     INPUT_SERVER,
                                     'REMOTE_ADDR',
-                                    FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+                                    FILTER_SANITIZE_STRING,
                                     FILTER_FLAG_NO_ENCODE_QUOTES
                                 )
                             ),
@@ -207,7 +207,7 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif (AmpConfig::get('prevent_multiple_logins')) {
                 // if logged in multiple times
                 $session_ip = $user->is_logged_in();
-                $current_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+                $current_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
                 if ($current_ip && ($current_ip != $session_ip)) {
                     $auth['success'] = false;
                     AmpError::add('general', T_('User is already logged in'));

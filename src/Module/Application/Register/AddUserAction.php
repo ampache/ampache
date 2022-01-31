@@ -139,7 +139,7 @@ final class AddUserAction implements ApplicationActionInterface
             }
         } // if they have to agree to something
 
-        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
             AmpError::add('username', T_('You must enter a Username'));
         }
 

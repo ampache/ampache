@@ -66,7 +66,7 @@ final class ShareEdit4Method
         $share_id = $input['filter'];
         if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);
-            $description = filter_var($input['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? $share->description;
+            $description = filter_var($input['description'], FILTER_SANITIZE_STRING) ?? $share->description;
             $stream      = filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) ?? $share->allow_stream;
             $download    = filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) ?? $share->allow_download;
             $expires     = isset($input['expires']) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) : $share->expire_days;

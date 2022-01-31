@@ -66,7 +66,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         } // end foreach
 
         // the ui is sometimes looking for a formatted name...
-        $this->f_name = filter_var($this->name, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         return true;
     } // constructor
