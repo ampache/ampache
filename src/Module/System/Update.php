@@ -1593,9 +1593,9 @@ class Update
         $sql = "UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;";
         Dba::write($sql);
         $sql = "UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;";
-        Dba::write($sql);
+        Dba::write($sql, array(T_('System')));
         $sql = "UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;";
-        Dba::write($sql);
+        Dba::write($sql, array(T_('System')));
 
         return $retval;
     }
