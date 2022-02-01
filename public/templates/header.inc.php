@@ -54,7 +54,7 @@ $t_logout    = T_('Log out');
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$jQueryKnob = (is_dir(__DIR__ . '/../lib/components/jquery-knob'))
+$jQueryKnob       = (is_dir(__DIR__ . '/../lib/components/jquery-knob'))
     ? 'jquery-knob'
     : 'jQuery-Knob';
 $jQueryFileUpload = (is_dir(__DIR__ . '/../lib/components/jquery-file-upload'))
