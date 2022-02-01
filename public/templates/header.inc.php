@@ -54,6 +54,15 @@ $t_logout    = T_('Log out');
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
+$jQueryKnob = (is_dir(__DIR__ . '/../lib/components/jquery-knob'))
+    ? 'jquery-knob'
+    : 'jQuery-Knob';
+$jQueryFileUpload = (is_dir(__DIR__ . '/../lib/components/jquery-file-upload'))
+    ? 'jquery-file-upload'
+    : 'jQuery-File-Upload';
+$jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
+    ? 'jquery-contextmenu'
+    : 'jQuery-contextMenu';
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
@@ -83,7 +92,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
@@ -95,10 +104,10 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryKnob; ?>/js/jquery.knob.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.iframe-transport.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.fileupload.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.js"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
