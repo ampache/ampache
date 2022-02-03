@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class UpdateFromTags4Method
@@ -51,25 +52,32 @@ final class UpdateFromTags4Method
         if (!Api4::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
-        $type   = ObjectTypeToClassNameMapper::map((string)$input['type']);
-        $object = (int) $input['id'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($type, array('Artist', 'Album', 'Song'))) {
+        if (!in_array(strtolower($type), array('artist', 'album', 'song'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
-        $item = new $type($object);
+        $className = ObjectTypeToClassNameMapper::map($type);
+        $item      = new $className($object_id);
         if (!$item->id) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;
         }
         // update your object
-        Catalog::update_single_item($type, $object, true);
+        if ($type == 'album') {
+            foreach ($item->album_suite as $album_id) {
+                Catalog::update_single_item($type, $album_id, true);
+            }
+        } else {
+            Catalog::update_single_item($type, $object_id, true);
+        }
 
-        Api4::message('success', 'Updated tags for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
+        Api4::message('success', 'Updated tags for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
 
         return true;
     } // update_from_tags

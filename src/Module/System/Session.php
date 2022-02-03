@@ -474,6 +474,22 @@ final class Session implements SessionInterface
     }
 
     /**
+     * get
+     *
+     * This checks for an existing session cookie and returns the value.
+     * @return string
+     */
+    public static function get()
+    {
+        $session_name = AmpConfig::get('session_name');
+
+        if (array_key_exists($session_name, $_COOKIE)) {
+            return $_COOKIE[$session_name];
+        }
+
+        return '';
+    }
+    /**
      * update_username
      *
      * This takes a SID and update associated username.

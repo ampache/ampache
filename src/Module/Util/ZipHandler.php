@@ -74,7 +74,7 @@ final class ZipHandler implements ZipHandlerInterface
         $options = [
             'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
         ];
-        
+
         foreach ($media_files as $dir => $files) {
             foreach ($files as $file) {
                 $dirname = ($flat_path)

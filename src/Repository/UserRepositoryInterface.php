@@ -51,6 +51,11 @@ interface UserRepositoryInterface
     public function getValidArray(bool $includeDisabled = false): array;
 
     /**
+     * Remove details for users that no longer exist.
+     */
+    public function collectGarbage(): void;
+
+    /**
      * This returns a built user from a email
      */
     public function findByEmail(string $email): ?User;

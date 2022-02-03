@@ -55,15 +55,15 @@ final class UrlToSong4Method
             return false;
         }
         // Don't scrub, the function needs her raw and juicy
-        $data = Stream_URL::parse($input['url']);
-        $user = User::get_from_username(Session::username($input['auth']));
+        $url_data = Stream_URL::parse($input['url']);
+        $user     = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs(array($data['id']), $user->id);
+                echo Json4_Data::songs(array($url_data['id']), $user->id);
             break;
             default:
-                echo Xml4_Data::songs(array($data['id']), $user->id);
+                echo Xml4_Data::songs(array($url_data['id']), $user->id);
         }
 
         return true;

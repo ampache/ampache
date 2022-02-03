@@ -205,16 +205,16 @@ class User extends database_object
     {
         $sql              = 'SELECT COUNT(`id`) FROM `user`';
         $db_results       = Dba::read($sql);
-        $data             = Dba::fetch_row($db_results);
+        $row              = Dba::fetch_row($db_results);
         $results          = array();
-        $results['users'] = $data[0];
+        $results['users'] = $row[0] ?? 0;
 
         $time                 = time();
         $last_seen            = $time - 1200;
         $sql                  = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` INNER JOIN `user` ON `session`.`username` = `user`.`username` WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
-        $data                 = Dba::fetch_row($db_results);
-        $results['connected'] = $data[0];
+        $row                  = Dba::fetch_row($db_results);
+        $results['connected'] = $row[0] ?? 0;
 
         return $results;
     }
@@ -504,10 +504,11 @@ class User extends database_object
     /**
      * set_user_data
      * This updates some background data for user specific function
+     * @param int $user_id
      * @param string $key
      * @param string|integer $value
      */
-    public static function set_user_data($user_id, $key, $value)
+    public static function set_user_data(int $user_id, string $key, $value)
     {
         Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, $key, $value));
     } // set_user_data
@@ -515,7 +516,7 @@ class User extends database_object
     /**
      * get_user_data
      * This updates some background data for user specific function
-     * @param string $user_id
+     * @param int $user_id
      * @param string $key
      * @return array
      */
@@ -734,7 +735,7 @@ class User extends database_object
                 debug_event(self::class, 'Update counts for ' . $user_id, 5);
                 foreach ($server_counts as $table => $count) {
                     if (in_array($table, $count_array)) {
-                        self::set_count($user_id, $table, $count);
+                        self::set_user_data($user_id, $table, $count);
                     }
                 }
             }
@@ -751,9 +752,9 @@ class User extends database_object
                     ? "SELECT COUNT(`id`) FROM `$table`"
                     : "SELECT COUNT(`id`) FROM `$table` WHERE" . Catalog::get_user_filter($table, $user_id);
                 $db_results = Dba::read($sql);
-                $data       = Dba::fetch_row($db_results);
+                $row        = Dba::fetch_row($db_results);
 
-                self::set_count($user_id, $table, (int)$data[0]);
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
             }
             // tables with media items to count, song-related tables and the rest
             $media_tables = array('song', 'video', 'podcast_episode');
@@ -766,36 +767,23 @@ class User extends database_object
                     : ' WHERE';
                 $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
                 $db_results  = Dba::read($sql);
-                $data        = Dba::fetch_row($db_results);
+                $row         = Dba::fetch_row($db_results);
                 // save the object and add to the current size
-                $items += (int)$data[0];
-                $time += (int)$data[1];
-                $size += (int)$data[2];
-                self::set_count($user_id, $table, (int)$data[0]);
+                $items += (int)($row[0] ?? 0);
+                $time += (int)($row[1] ?? 0);
+                $size += (int)($row[2] ?? 0);
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
             }
-            self::set_count($user_id, 'items', $items);
-            self::set_count($user_id, 'time', $time);
-            self::set_count($user_id, 'size', $size);
+            self::set_user_data($user_id, 'items', $items);
+            self::set_user_data($user_id, 'time', $time);
+            self::set_user_data($user_id, 'size', $size);
             // grouped album counts
             $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
-            self::set_count($user_id, 'album_group', (int)$data[0]);
+            $row        = Dba::fetch_row($db_results);
+            self::set_user_data($user_id, 'album_group', (int)($row[0] ?? 0));
         }
     } // update_counts
-
-    /**
-     * set_count
-     *
-     * write the total_counts to update_info
-     * @param int $user_id
-     * @param string $key
-     * @param int $value
-     */
-    public static function set_count(int $user_id, string $key, int $value)
-    {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key`= ?, `value`=?;", array($user_id, $key, $value));
-    } // set_count
 
     /**
      * disable
@@ -975,14 +963,15 @@ class User extends database_object
         $db_results = Dba::write($sql, $params);
 
         if (!$db_results) {
-            return null;
+            return 0;
         }
-
         // Get the insert_id
         $insert_id = (int)Dba::insert_id();
 
         // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
+
+        Catalog::count_table('user');
 
         return (int)$insert_id;
     } // create
@@ -1216,58 +1205,19 @@ class User extends database_object
             }
         } // if this is an admin check for others
 
-        // simple deletion queries.
-        $user_tables = array(
-            'access_list',
-            'bookmark',
-            'broadcast',
-            'democratic',
-            'ip_history',
-            'object_count',
-            'playlist',
-            'rating',
-            'search',
-            'share',
-            'tag_map',
-            'user_activity',
-            'user_flag',
-            'user_preference',
-            'user_shout',
-            'user_vote',
-            'wanted'
-        );
-        foreach ($user_tables as $table_id) {
-            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
-            Dba::write($sql, array($this->id));
-        }
-        // reset their data to null if they've made custom changes
-        $user_tables = array(
-            'artist',
-            'label'
-        );
-        foreach ($user_tables as $table_id) {
-            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` = ?";
-            Dba::write($sql, array($this->id));
-        }
-
-        // Clean up the playlist data table
-        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
-        Dba::write($sql);
-
-        // Clean out the tags
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
-        Dba::write($sql);
-
-        // Delete their following/followers
-        $sql = "DELETE FROM `user_follower` WHERE `user` = ? OR `follow_user` = ?";
-        Dba::write($sql, array($this->id, $this->id));
-
         // Delete the user itself
         $sql = "DELETE FROM `user` WHERE `id` = ?";
         Dba::write($sql, array($this->id));
 
+        // Delete custom access settings
+        $sql = "DELETE FROM `access_list` WHERE `user` = ?";
+        Dba::write($sql, array($this->id));
+
         $sql = "DELETE FROM `session` WHERE `username` = ?";
         Dba::write($sql, array($this->username));
+
+        Catalog::count_table('user');
+        static::getUserRepository()->collectGarbage();
 
         return true;
     } // delete

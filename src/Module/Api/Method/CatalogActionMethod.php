@@ -86,7 +86,7 @@ final class CatalogActionMethod
                     break;
                 case 'add_to_catalog':
                     $options = array(
-                        'gather_art' => false,
+                        'gather_art' => true,
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);

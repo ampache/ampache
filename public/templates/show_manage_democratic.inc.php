@@ -45,7 +45,7 @@ Ui::show_box_top(T_('Manage'));  ?>
             $playlist->format(); ?>
     <tr>
         <td><?php echo scrub_out($democratic->name); ?></td>
-        <td><?php echo $playlist->f_link; ?></td>
+        <td><?php echo $playlist->get_f_link(); ?></td>
         <td><?php echo $democratic->f_cooldown; ?></td>
         <td><?php echo $democratic->f_level; ?></td>
         <td><?php echo $democratic->f_primary; ?></td>

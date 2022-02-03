@@ -37,7 +37,7 @@ if (!Core::is_session_started()) {
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
-    <?php if (in_array('starts_with', $allowed_filters)) { ?>
+    <?php if (in_array('starts_with', $allowed_filters) && array_key_exists('catalog', $_SESSION)) { ?>
         <form id="multi_alpha_filter_form" action="javascript:void(0);">
             <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Starts With'); ?></label>
             <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php $browse->set_catalog($_SESSION['catalog']);
@@ -96,7 +96,7 @@ if (!Core::is_session_started()) {
 
         foreach ($results as $entries) {
             echo '<option value="' . $entries['id'] . '" ';
-            if ($_SESSION['catalog'] == $entries['id']) {
+            if (array_key_exists('catalog', $_SESSION) && $_SESSION['catalog'] == $entries['id']) {
                 echo ' selected="selected" ';
             }
             echo '>' . $entries['name'] . '</options>';

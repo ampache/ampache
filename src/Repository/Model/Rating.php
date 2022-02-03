@@ -206,7 +206,7 @@ class Rating extends database_object
         $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ? AND `rating` > 0;";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
         $rating = (int)$row['rating'];
@@ -230,7 +230,7 @@ class Rating extends database_object
         $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
         $rating = (double)$row['rating'];

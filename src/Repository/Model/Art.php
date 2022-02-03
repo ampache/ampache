@@ -367,7 +367,7 @@ class Art extends database_object
         // Blow it away!
         $this->reset();
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
-        
+
         if (AmpConfig::get('write_tags', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
@@ -390,7 +390,7 @@ class Art extends database_object
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
-        
+
                 $ndata      = array();
                 $data       = $vainfo->read_id3();
                 $fileformat = $data['fileformat'];
@@ -430,7 +430,7 @@ class Art extends database_object
                                 $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
                                 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
                             }
-                            
+
                             break;
                     }
                 }
@@ -1117,7 +1117,7 @@ class Art extends database_object
             }
         }
 
-        $mime      = $thumb_mime ?? (isset($mime) ? $mime : null);
+        $mime      = $thumb_mime ?? ($mime ?? null);
         $extension = self::extension($mime);
 
         if (AmpConfig::get('stream_beautiful_url')) {
@@ -1530,12 +1530,12 @@ class Art extends database_object
     {
         $sql        = "SELECT `image` FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `mime` = ?;";
         $db_results = Dba::read($sql, $data);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return (string)$row['image'];
+        $row        = Dba::fetch_assoc($db_results);
+        if (empty($row)) {
+            return '';
         }
 
-        return '';
+        return (string)$row['image'];
     }
 
     /**

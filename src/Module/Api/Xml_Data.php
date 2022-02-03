@@ -112,7 +112,7 @@ class Xml_Data
      */
     public static function set_type($type)
     {
-        if (!in_array($type, array('rss', 'xspf', 'itunes'))) {
+        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
             return false;
         }
 
@@ -399,7 +399,11 @@ class Xml_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_count($object_type) . "</total_count>\n" : '';
+        // you might not want the joined tables for playlsits
+        $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
+            ? Catalog::get_update_info('joined')
+            : Catalog::get_update_info($object_type);
+        $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n" : '';
 
         // here is where we call the object type
         foreach ($objects as $object_id) {
@@ -499,7 +503,7 @@ class Xml_Data
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('license') . "</total_count>\n";
 
         foreach ($licenses as $license_id) {
             $license = new license($license_id);
@@ -522,7 +526,7 @@ class Xml_Data
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('license') . "</total_count>\n";
 
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
@@ -547,7 +551,7 @@ class Xml_Data
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('live_stream') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('live_stream') . "</total_count>\n";
 
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
@@ -572,7 +576,7 @@ class Xml_Data
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('tag') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('tag') . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
@@ -600,7 +604,7 @@ class Xml_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('artist') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist') . "</total_count>\n" : '';
 
         Rating::build_cache('artist', $artists);
 
@@ -649,7 +653,7 @@ class Xml_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album') . "</total_count>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -712,7 +716,10 @@ class Xml_Data
         }
         $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
         $playlist_names     = array();
-        $string             = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
+        $total_count        = (AmpConfig::get('hide_search', false))
+            ? Catalog::get_update_info('joined')
+            : Catalog::get_update_info('playlist');
+        $string = "<total_count>" . $total_count . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -766,7 +773,7 @@ class Xml_Data
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('share') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('share') . "</total_count>\n";
 
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
@@ -808,7 +815,7 @@ class Xml_Data
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('catalog') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('catalog') . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -834,7 +841,7 @@ class Xml_Data
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('podcast') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('podcast') . "</total_count>\n";
 
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
@@ -870,7 +877,7 @@ class Xml_Data
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('podcast_episode') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode') . "</total_count>\n" : '';
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
@@ -899,7 +906,7 @@ class Xml_Data
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('song') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song') . "</total_count>\n" : '';
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
@@ -955,7 +962,7 @@ class Xml_Data
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('video') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('video') . "</total_count>\n";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);

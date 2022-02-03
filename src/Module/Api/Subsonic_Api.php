@@ -1399,7 +1399,6 @@ class Subsonic_Api
      * getStarred
      * Get starred songs, albums and artists.
      * Takes no parameter.
-     * Not supported.
      * @param array $input
      * @param string $elementName
      */
@@ -1428,7 +1427,6 @@ class Subsonic_Api
      * star
      * Attaches a star to a song, album or artist.
      * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
      * @param array $input
      */
     public static function star($input)
@@ -1440,7 +1438,6 @@ class Subsonic_Api
      * unstar
      * Removes the star from a song, album or artist.
      * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
      * @param array $input
      */
     public static function unstar($input)
@@ -1518,7 +1515,6 @@ class Subsonic_Api
      * getUser
      * Get details about a given user.
      * Takes the username in parameter.
-     * Not supported.
      * @param array $input
      */
     public static function getuser($input)
@@ -1545,7 +1541,6 @@ class Subsonic_Api
      * getUsers
      * Get details about a given user.
      * Takes no parameter.
-     * Not supported.
      * @param array $input
      */
     public static function getusers($input)
@@ -1716,7 +1711,6 @@ class Subsonic_Api
      * updateShare
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
-     * Not supported.
      * @param array $input
      */
     public static function updateshare($input)
@@ -1946,14 +1940,12 @@ class Subsonic_Api
      * jukeboxControl
      * Control the jukebox.
      * Takes the action with optional index, offset, song id and volume gain in parameters.
-     * Not supported.
      * @param array $input
      */
     public static function jukeboxcontrol($input)
     {
         $action = self::check_parameter($input, 'action');
-        $id     = $input['id'];
-        $gain   = $input['gain'];
+        $id     = $input['id'] ?? array();
 
         $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
         debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
@@ -2028,7 +2020,7 @@ class Subsonic_Api
                     $ret = $localplay->random(true);
                     break;
                 case 'setGain':
-                    $ret = $localplay->volume_set($gain * 100);
+                    $ret = $localplay->volume_set(((float)$input['gain']) * 100);
                     break;
             }
 
@@ -2391,17 +2383,15 @@ class Subsonic_Api
             if ($episode->id !== null) {
                 if ($episode->remove()) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastepisode');
+                    Catalog::count_table('podcast_episode');
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'deletepodcastepisode');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '', 'deletepodcastepisode');
                 }
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'deletepodcastepisode');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletepodcastepisode');
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'deletepodcastepisode');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'deletepodcastepisode');
         }
         self::apiOutput($input, $response);
     }
@@ -2434,7 +2424,6 @@ class Subsonic_Api
      * getBookmarks
      * Get all user bookmarks.
      * Takes no parameter.
-     * Not supported.
      * @param array $input
      */
     public static function getbookmarks($input)
@@ -2455,7 +2444,6 @@ class Subsonic_Api
      * createBookmark
      * Creates or updates a bookmark.
      * Takes the file id and position with optional comment in parameters.
-     * Not supported.
      * @param array $input
      */
     public static function createbookmark($input)
@@ -2492,7 +2480,6 @@ class Subsonic_Api
      * deleteBookmark
      * Delete an existing bookmark.
      * Takes the file id in parameter.
-     * Not supported.
      * @param array $input
      */
     public static function deletebookmark($input)
@@ -2514,7 +2501,6 @@ class Subsonic_Api
      * getChatMessages
      * Get the current chat messages.
      * Takes no parameter.
-     * Not supported.
      * @param array $input
      */
     public static function getchatmessages($input)
@@ -2535,7 +2521,6 @@ class Subsonic_Api
      * addChatMessages
      * Add a message to the chat.
      * Takes the message in parameter.
-     * Not supported.
      * @param array $input
      */
     public static function addchatmessage($input)

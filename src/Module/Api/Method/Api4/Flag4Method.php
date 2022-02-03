@@ -64,7 +64,7 @@ final class Flag4Method
             return false;
         }
         ob_end_clean();
-        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
+        $type      = (string) $input['type'];
         $object_id = $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -73,7 +73,7 @@ final class Flag4Method
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -82,7 +82,8 @@ final class Flag4Method
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $item      = new $className($object_id);
             if (!$item->id) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 

@@ -74,7 +74,7 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+        $action = $_REQUEST['action'] ?? '';
 
         /**
          * If Access Control is turned on then we don't

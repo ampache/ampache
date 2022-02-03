@@ -1067,7 +1067,7 @@ class mpd
      * Computes numeric value from a version string
      *
      * @param string $string
-     * @return float|integer|mixed
+     * @return float|integer
      */
     private static function _computeVersionValue($string)
     {

@@ -58,29 +58,30 @@ final class UpdateArt4Method
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['api_format'])) {
             return false;
         }
-        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
-        $object    = (int) $input['id'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
         $overwrite = (int) $input['overwrite'] == 0;
 
         // confirm the correct data
-        if (!in_array($type, array('Artist', 'Album'))) {
+        if (!in_array(strtolower($type), array('artist', 'album'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return true;
         }
-        $item = new $type($object);
+        $className = ObjectTypeToClassNameMapper::map($type);
+        $item      = new $className($object_id);
         if (!$item->id) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return true;
         }
         // update your object
-        if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            Api4::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
+        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+            Api4::message('success', 'Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_art for ' . (string) $object), '400', $input['api_format']);
+        Api4::message('error', T_('Failed to update_art for ' . (string) $object_id), '400', $input['api_format']);
 
         return true;
     } // update_art
