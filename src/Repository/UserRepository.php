@@ -165,7 +165,7 @@ final class UserRepository implements UserRepositoryInterface
         Dba::write($sql);
 
         // Clean out the tags
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`) AND `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_merge`)";
         Dba::write($sql);
 
         // Delete their following/followers

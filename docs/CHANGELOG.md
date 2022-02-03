@@ -9,6 +9,7 @@
 * set allow-plugins in composer.json
 * Improve description of rss feed to make each play more unique
 * Wait 30 minutes between catalog updates before running update_counts
+* On database connection failure, go to test.php
 * Search:
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
@@ -37,6 +38,8 @@
 * Lots more PHP8 runtime errors
 * SQL for artists in catalog_map
 * Typo in url for update_all_file_tags
+* SQL error in database update 500013 (Not fatal)
+* Don't garbage_collect tags after merging
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
