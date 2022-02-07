@@ -66,6 +66,7 @@
 * API3
   * stats: incorrect getRandom call
   * rate: Object type to class mapping
+  * playlist: bas escaping on the playlist id
 
 ## Ampache 5.2.0-release
 
