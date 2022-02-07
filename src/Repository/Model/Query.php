@@ -1162,7 +1162,7 @@ class Query
      */
     private function get_select()
     {
-        return implode(", ", $this->_state['select']);
+        return implode(", ", $this->_state['select'] ?? array());
     } // get_select
 
     /**
