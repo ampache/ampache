@@ -2526,7 +2526,7 @@ msgstr "Video"
 #: ../../src/Application/Api/Ajax/Handler/SongAjaxHandler.php:66
 #: ../../src/Gui/Song/SongViewAdapter.php:301
 msgid "Disable"
-msgstr "Disabilitato"
+msgstr "Disabilita"
 
 #: ../../public/templates/show_catalog_row.inc.php:35
 #: ../../public/templates/show_disabled_songs.inc.php:71
