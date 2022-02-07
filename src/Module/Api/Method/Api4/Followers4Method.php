@@ -57,7 +57,7 @@ final class Followers4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'followers')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];

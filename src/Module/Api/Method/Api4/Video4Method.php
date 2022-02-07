@@ -48,7 +48,7 @@ final class Video4Method
      */
     public static function video(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'video')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $video_id = scrub_in($input['filter']);

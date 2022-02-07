@@ -696,7 +696,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . scrub_out($value['name']) . '">';
             }
-            $results .= scrub_out($value['name']);
+            $results .= $value['name'];
             if ($link) {
                 $results .= '</a>';
             }

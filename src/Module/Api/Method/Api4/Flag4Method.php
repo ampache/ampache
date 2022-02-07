@@ -60,7 +60,7 @@ final class Flag4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
+        if (!Api4::check_parameter($input, array('type', 'id', 'flag'), self::ACTION)) {
             return false;
         }
         ob_end_clean();

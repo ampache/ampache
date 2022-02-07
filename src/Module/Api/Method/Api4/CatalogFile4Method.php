@@ -66,7 +66,7 @@ final class CatalogFile4Method
         if (!Api4::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'catalog_file', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), 'catalog_action')) {
+        if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
         $file = (string) html_entity_decode($input['file']);

@@ -53,7 +53,7 @@ final class PlaylistCreate4Method
      */
     public static function playlist_create(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+        if (!Api4::check_parameter($input, array('name', 'type'), self::ACTION)) {
             return false;
         }
         $name    = $input['name'];

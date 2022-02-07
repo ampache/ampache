@@ -54,7 +54,7 @@ final class ToggleFollow4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'toggle_follow')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];

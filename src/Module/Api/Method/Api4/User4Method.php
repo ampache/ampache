@@ -51,7 +51,7 @@ final class User4Method
      */
     public static function user(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('username'), 'user')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = (string) $input['username'];

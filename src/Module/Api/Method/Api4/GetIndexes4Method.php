@@ -61,7 +61,7 @@ final class GetIndexes4Method
      */
     public static function get_indexes(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type'), 'get_indexes')) {
+        if (!Api4::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
         $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];

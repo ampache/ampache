@@ -47,7 +47,7 @@ final class Catalog4Method
      */
     public static function catalog(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'catalog')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $catalog = array((int) $input['filter']);

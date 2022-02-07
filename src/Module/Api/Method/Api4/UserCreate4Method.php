@@ -57,7 +57,7 @@ final class UserCreate4Method
         if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!Api4::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];

@@ -438,7 +438,7 @@ class Xml3_Data
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
-            $string .= "<playlist id=" . $playlist->id . ">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist->id . "\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);

@@ -25,49 +25,52 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
- * Class Artist4Method
+ * Class Genres4Method
  */
-final class Artist4Method
+final class Genres4Method
 {
-    public const ACTION = 'artist';
+    public const ACTION = 'genres';
 
     /**
-     * artist
+     * genres
      * MINIMUM_API_VERSION=380001
      *
-     * This returns a single artist based on the UID of said artist
+     * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
-     * filter  = (string) Alpha-numeric search term
-     * include = (array) 'albums'|'songs' //optional
-     * @return boolean
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
-    public static function artist(array $input): bool
+    public static function genres(array $input)
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $uid     = scrub_in($input['filter']);
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $include = [];
-        if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
-        }
+        $browse = Api4::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('tag');
+        $browse->set_sort('name', 'ASC');
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        $tags = $browse->get_objects();
+
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::artists(array($uid), $include, $user->id);
+                Json4_Data::set_offset($input['offset'] ?? 0);
+                Json4_Data::set_limit($input['limit'] ?? 0);
+                echo Json4_Data::tags($tags);
             break;
             default:
-                echo Xml4_Data::artists(array($uid), $include, $user->id);
+                Xml4_Data::set_offset($input['offset'] ?? 0);
+                Xml4_Data::set_limit($input['limit'] ?? 0);
+                echo Xml4_Data::tags($tags);
         }
-
-        return true;
-    } // artist
+    } // genres
 }

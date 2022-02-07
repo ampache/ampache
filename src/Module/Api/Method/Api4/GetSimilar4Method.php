@@ -54,7 +54,7 @@ final class GetSimilar4Method
      */
     public static function get_similar(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'filter'), 'get_similar')) {
+        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];

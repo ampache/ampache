@@ -54,7 +54,7 @@ final class Share4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), 'share')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $share = array((int) $input['filter']);

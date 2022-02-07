@@ -25,49 +25,42 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
- * Class Artist4Method
+ * Class Genre4Method
  */
-final class Artist4Method
+final class Genre4Method
 {
-    public const ACTION = 'artist';
+    public const ACTION = 'genre';
 
     /**
-     * artist
+     * genre
      * MINIMUM_API_VERSION=380001
      *
-     * This returns a single artist based on the UID of said artist
+     * This returns a single genre based on UID
      *
      * @param array $input
-     * filter  = (string) Alpha-numeric search term
-     * include = (array) 'albums'|'songs' //optional
+     * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function artist(array $input): bool
+    public static function genre(array $input): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = scrub_in($input['filter']);
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $include = [];
-        if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
-        }
+        $uid = scrub_in($input['filter']);
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::artists(array($uid), $include, $user->id);
+                echo Json4_Data::tags(array($uid));
             break;
             default:
-                echo Xml4_Data::artists(array($uid), $include, $user->id);
+                echo Xml4_Data::tags(array($uid));
         }
 
         return true;
-    } // artist
+    } // genre
 }

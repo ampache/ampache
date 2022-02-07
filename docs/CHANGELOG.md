@@ -1,14 +1,15 @@
 # CHANGELOG
 
-## Ampache Develop
+## Ampache 5.2.1-develop
 
 ### Added
 
 * Translation Updates Jan 2022
 * Count tables on create and delete actions
-* set allow-plugins in composer.json
+* Set allow-plugins in composer.json
 * Improve description of rss feed to make each play more unique
 * Wait 30 minutes between catalog updates before running update_counts
+* On database connection failure, go to test.php
 * Search:
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
@@ -24,6 +25,9 @@
 * Logout action requires a session id now to log out
 * Update mapping more often after catalog actions
 * Album check function added mbid_group to lookup
+* Support database upgrades from version 350008 (Ampache 3.5.4)
+* Remove additional 'Details' string from song/video and radio pages
+* Tag value is being extra filtered in the edit screen
 
 ### Fixed
 
@@ -37,12 +41,14 @@
 * Lots more PHP8 runtime errors
 * SQL for artists in catalog_map
 * Typo in url for update_all_file_tags
+* SQL error in database update 500013 (Not fatal)
+* Don't garbage_collect tags after merging
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
   * Jukeboxcontrol didn't send an index to the client
 
-## API Develop
+## API 5.2.1
 
 ### Changed
 
@@ -57,9 +63,11 @@
   * flag: Object type to class mapping
   * update_art: Object type to class mapping and type case check
   * update_from_tags: Object type to class mapping
+  * genre and tag function compatibility
 * API3
   * stats: incorrect getRandom call
   * rate: Object type to class mapping
+  * playlist: bad escaping on the playlist id
 
 ## Ampache 5.2.0-release
 
