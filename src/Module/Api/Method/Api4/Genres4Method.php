@@ -31,14 +31,14 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 
 /**
- * Class Tags4Method
+ * Class Genres4Method
  */
-final class Tags4Method
+final class Genres4Method
 {
-    public const ACTION = 'tags';
+    public const ACTION = 'genres';
 
     /**
-     * tags
+     * genres
      * MINIMUM_API_VERSION=380001
      *
      * This returns the tags (Genres) based on the specified filter
@@ -49,8 +49,28 @@ final class Tags4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags(array $input)
+    public static function genres(array $input)
     {
-        Genres4Method::genres($input);
-    } // tags
+        $browse = Api4::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('tag');
+        $browse->set_sort('name', 'ASC');
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        $tags = $browse->get_objects();
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                Json4_Data::set_offset($input['offset'] ?? 0);
+                Json4_Data::set_limit($input['limit'] ?? 0);
+                echo Json4_Data::tags($tags);
+            break;
+            default:
+                Xml4_Data::set_offset($input['offset'] ?? 0);
+                Xml4_Data::set_limit($input['limit'] ?? 0);
+                echo Xml4_Data::tags($tags);
+        }
+    } // genres
 }

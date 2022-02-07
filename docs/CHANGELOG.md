@@ -63,10 +63,11 @@
   * flag: Object type to class mapping
   * update_art: Object type to class mapping and type case check
   * update_from_tags: Object type to class mapping
+  * genre and tag function compatibility
 * API3
   * stats: incorrect getRandom call
   * rate: Object type to class mapping
-  * playlist: bas escaping on the playlist id
+  * playlist: bad escaping on the playlist id
 
 ## Ampache 5.2.0-release
 

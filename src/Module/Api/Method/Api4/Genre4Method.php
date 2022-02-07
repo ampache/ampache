@@ -28,35 +28,39 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\User;
 
 /**
- * Class TagAlbums4Method
+ * Class Genre4Method
  */
-final class TagAlbums4Method
+final class Genre4Method
 {
-    public const ACTION = 'tag_albums';
+    public const ACTION = 'genre';
 
     /**
-     * tag_albums
+     * genre
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the albums associated with the tag in question
+     * This returns a single genre based on UID
      *
      * @param array $input
-     * filter = (string) UID of Tag
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function tag_albums(array $input): bool
+    public static function genre(array $input): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $uid = scrub_in($input['filter']);
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo Json4_Data::tags(array($uid));
+            break;
+            default:
+                echo Xml4_Data::tags(array($uid));
+        }
 
-        return GenreAlbums4Method::genre_albums($input);
-    } // tag_albums
+        return true;
+    } // genre
 }

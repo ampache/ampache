@@ -33,30 +33,47 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 
 /**
- * Class TagAlbums4Method
+ * Class GenreArtists4Method
  */
-final class TagAlbums4Method
+final class GenreArtists4Method
 {
-    public const ACTION = 'tag_albums';
+    public const ACTION = 'genre_artists';
 
     /**
-     * tag_albums
+     * genre_artists
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the albums associated with the tag in question
+     * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_albums(array $input): bool
+    public static function genre_artists(array $input): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $artists = Tag::get_tag_objects('artist', $input['filter']);
+        if (!empty($artists)) {
+            $user = User::get_from_username(Session::username($input['auth']));
 
-        return GenreAlbums4Method::genre_albums($input);
-    } // tag_albums
+            ob_end_clean();
+            switch ($input['api_format']) {
+            case 'json':
+                Json4_Data::set_offset($input['offset'] ?? 0);
+                Json4_Data::set_limit($input['limit'] ?? 0);
+                echo Json4_Data::artists($artists, array(), $user->id);
+            break;
+            default:
+                Xml4_Data::set_offset($input['offset'] ?? 0);
+                Xml4_Data::set_limit($input['limit'] ?? 0);
+                echo Xml4_Data::artists($artists, array(), $user->id);
+            }
+        }
+
+        return true;
+    } // genre_artists
 }
