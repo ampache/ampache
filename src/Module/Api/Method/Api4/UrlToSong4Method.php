@@ -51,7 +51,7 @@ final class UrlToSong4Method
      */
     public static function url_to_song(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('url'), 'url_to_song')) {
+        if (!Api4::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
         // Don't scrub, the function needs her raw and juicy

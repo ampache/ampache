@@ -53,7 +53,7 @@ final class SearchSongs4Method
      */
     public static function search_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'search_songs')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $array                    = array();

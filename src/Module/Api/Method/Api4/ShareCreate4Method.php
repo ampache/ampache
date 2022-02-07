@@ -64,7 +64,7 @@ final class ShareCreate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'filter'), 'share_create')) {
+        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         $description = $input['description'];

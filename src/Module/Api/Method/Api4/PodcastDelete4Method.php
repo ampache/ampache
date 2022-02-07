@@ -58,7 +58,7 @@ final class PodcastDelete4Method
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), 'podcast_delete')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];

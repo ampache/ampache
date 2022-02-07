@@ -55,7 +55,7 @@ final class LastShouts4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'last_shouts')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $limit = (int) ($input['limit']);

@@ -55,7 +55,7 @@ final class PlaylistSongs4Method
      */
     public static function playlist_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'playlist_songs')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));

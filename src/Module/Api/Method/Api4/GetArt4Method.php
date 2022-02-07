@@ -53,7 +53,7 @@ final class GetArt4Method
      */
     public static function get_art(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), 'get_art')) {
+        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
 
             return false;

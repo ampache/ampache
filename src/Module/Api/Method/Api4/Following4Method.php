@@ -57,7 +57,7 @@ final class Following4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'following')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];

@@ -52,7 +52,7 @@ final class UpdateArt4Method
      */
     public static function update_art(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'id'), 'update_art')) {
+        if (!Api4::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['api_format'])) {

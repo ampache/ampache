@@ -52,7 +52,7 @@ final class Localplay4Method
      */
     public static function localplay(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('command'), 'localplay')) {
+        if (!Api4::check_parameter($input, array('command'), self::ACTION)) {
             return false;
         }
         // Load their Localplay instance

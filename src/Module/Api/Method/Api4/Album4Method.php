@@ -51,7 +51,7 @@ final class Album4Method
      */
     public static function album(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'album')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid     = (int) scrub_in($input['filter']);

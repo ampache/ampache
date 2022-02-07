@@ -58,7 +58,7 @@ final class Rate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
+        if (!Api4::check_parameter($input, array('type', 'id', 'rating'), self::ACTION)) {
             return false;
         }
         ob_end_clean();

@@ -54,7 +54,7 @@ class AlbumSongs4Method
      */
     public static function album_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'album_songs')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $album = new Album($input['filter']);

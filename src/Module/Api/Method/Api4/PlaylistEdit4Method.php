@@ -57,7 +57,7 @@ final class PlaylistEdit4Method
      */
     public static function playlist_edit(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'playlist_edit')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $name  = $input['name'];

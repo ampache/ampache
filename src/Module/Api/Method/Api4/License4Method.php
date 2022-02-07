@@ -54,7 +54,7 @@ final class License4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), 'license')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid = array((int) scrub_in($input['filter']));

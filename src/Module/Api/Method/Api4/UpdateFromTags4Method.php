@@ -49,7 +49,7 @@ final class UpdateFromTags4Method
      */
     public static function update_from_tags(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
+        if (!Api4::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
         $type      = (string) $input['type'];

@@ -51,7 +51,7 @@ final class Artist4Method
      */
     public static function artist(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'artist')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid     = scrub_in($input['filter']);
