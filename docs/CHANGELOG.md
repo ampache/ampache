@@ -27,6 +27,7 @@
 * Album check function added mbid_group to lookup
 * Support database upgrades from version 350008 (Ampache 3.5.4)
 * Remove additional 'Details' string from song/video and radio pages
+* Tag value is being extra filtered in the edit screen
 
 ### Fixed
 
@@ -47,7 +48,7 @@
 * Subsonic:
   * Jukeboxcontrol didn't send an index to the client
 
-## API Develop
+## API 5.2.1
 
 ### Changed
 
