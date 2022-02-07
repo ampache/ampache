@@ -1,12 +1,12 @@
 # CHANGELOG
 
-## Ampache 5.2.2-develop
+## Ampache 5.2.1-develop
 
 ### Added
 
 * Translation Updates Jan 2022
 * Count tables on create and delete actions
-* set allow-plugins in composer.json
+* Set allow-plugins in composer.json
 * Improve description of rss feed to make each play more unique
 * Wait 30 minutes between catalog updates before running update_counts
 * On database connection failure, go to test.php
@@ -26,6 +26,7 @@
 * Update mapping more often after catalog actions
 * Album check function added mbid_group to lookup
 * Support database upgrades from version 350008 (Ampache 3.5.4)
+* Remove additional 'Details' string from song/video and radio pages
 
 ### Fixed
 
