@@ -25,6 +25,7 @@
 * Logout action requires a session id now to log out
 * Update mapping more often after catalog actions
 * Album check function added mbid_group to lookup
+* Support database upgrades from version 350008 (Ampache 3.5.4)
 
 ### Fixed
 
