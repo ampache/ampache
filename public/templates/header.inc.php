@@ -382,6 +382,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                         <?php if ($site_social) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic; echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount((Core::get_global('user')->getId())); ?>)</a>
                         <?php } ?>
+                        </span>
                     <?php
                     } elseif (!AmpConfig::get('simple_user_mode')) { ?>
                         <span id="loginInfo">
