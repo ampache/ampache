@@ -28,7 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$is_session       = (!empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) < 0);
+$is_session       = (!empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
