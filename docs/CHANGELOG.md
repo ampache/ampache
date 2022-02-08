@@ -43,6 +43,7 @@
 * Typo in url for update_all_file_tags
 * SQL error in database update 500013 (Not fatal)
 * Don't garbage_collect tags after merging
+* Create art URLs correctly when using rewrite rules and no auth
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
