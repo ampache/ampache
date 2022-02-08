@@ -21,12 +21,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+$is_session       = (!empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) < 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
@@ -73,8 +75,7 @@ $t_shares          = T_('Shares');
 $t_statistics      = T_('Statistics');
 $t_logout          = T_('Log out'); ?>
 <ul id="sidebar-tabs">
-<?php
-if (User::is_registered()) {
+<?php if (User::is_registered()) {
     if (!array_key_exists('state', $_SESSION) || !array_key_exists('sidebar_tab', $_SESSION['state'])) {
         $_SESSION['state']['sidebar_tab'] = 'home';
     }
