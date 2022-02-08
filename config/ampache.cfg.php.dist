@@ -411,7 +411,7 @@ catalog_verify_by_time = "true"
 ; Ampache which directory to save the temporary file to. Do not put a
 ; trailing slash or this will not work.
 ; DEFAULT: "false"
-;tmp_dir_path = "true"
+;tmp_dir_path = "/tmp"
 
 ; This setting throttles a persons downloading to the specified
 ; bytes per second. This is not a 100% guaranteed function, and
@@ -431,7 +431,7 @@ catalog_verify_by_time = "true"
 ;no_symlinks = "true"
 
 ; Use auth?
-; If this is set to "Yes" Ampache will require a valid
+; If this is set to "true" Ampache will require a valid
 ; Username and password. If this is set to false then Ampache
 ; will not ask you for a username and password. false is only
 ; recommended for internal only instances

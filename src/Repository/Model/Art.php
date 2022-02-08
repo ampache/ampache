@@ -1089,6 +1089,8 @@ class Art extends database_object
                     'type' => 'api'
                 ));
             }
+        } else {
+            $sid = 'none';
         }
 
         $key = $type . $uid;

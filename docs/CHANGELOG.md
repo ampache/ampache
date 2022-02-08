@@ -28,6 +28,7 @@
 * Support database upgrades from version 350008 (Ampache 3.5.4)
 * Remove additional 'Details' string from song/video and radio pages
 * Tag value is being extra filtered in the edit screen
+* Hide the login link when using simple_user_mode and no auth is set **note** this does not stop you logging in with /login.php
 
 ### Fixed
 
@@ -43,6 +44,7 @@
 * Typo in url for update_all_file_tags
 * SQL error in database update 500013 (Not fatal)
 * Don't garbage_collect tags after merging
+* Create art URLs correctly when using rewrite rules and no auth
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
