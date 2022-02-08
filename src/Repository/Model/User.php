@@ -827,11 +827,11 @@ class User extends database_object
         }
 
         $new_access = Dba::escape($new_access);
-        $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
+        $sql        = "UPDATE `user` SET `access` = ? WHERE `id` = ?;";
 
         debug_event(self::class, 'Updating access level for ' . $this->id, 4);
 
-        Dba::write($sql);
+        Dba::write($sql, array($new_access, $this->id));
 
         return true;
     } // update_access

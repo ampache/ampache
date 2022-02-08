@@ -691,7 +691,7 @@ class Update
      */
     private static function set_version($key, $value)
     {
-        $sql = "UPDATE `update_info` SET `value`=? WHERE `key`=?";
+        $sql = "UPDATE `update_info` SET `value` = ? WHERE `key` = ?";
         Dba::write($sql, array($value, $key));
     }
 

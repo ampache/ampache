@@ -101,7 +101,7 @@ class Tmp_Playlist extends database_object
     {
         $session_id = Dba::escape($session_id);
 
-        $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session`=?";
+        $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
         $db_results = Dba::read($sql, array($session_id));
         $row        = Dba::fetch_row($db_results);
 

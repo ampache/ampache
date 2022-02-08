@@ -782,7 +782,7 @@ class Subsonic_Xml_Data
      */
     public static function getAlbumData($albumId)
     {
-        $sql        = "SELECT * FROM `album` WHERE `id`=?";
+        $sql        = "SELECT * FROM `album` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($albumId));
         $row        = Dba::fetch_assoc($db_results);
         if (empty($row)) {
