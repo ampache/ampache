@@ -63,7 +63,7 @@ final class UserCreateMethod
         }
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
-        $email    = $input['email'];
+        $email    = urldecode((string)Api::check_parameter($input, 'email'));
         $password = $input['password'];
         $disable  = (bool)($input['disable'] ?? false);
         $access   = 25;
