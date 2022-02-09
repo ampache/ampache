@@ -263,14 +263,12 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $session_name = AmpConfig::get('session_name');
-        if ($use_auth) {
-            // Identify the user according to it's web session
-            // We try to avoid the generic 'Ampache User' as much as possible
-            if (array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
-                Session::check();
-                $user = User::get_from_username($_SESSION['userdata']['username']);
-                $uid  = $user->id;
-            }
+        // Identify the user according to it's web session
+        // We try to avoid the generic 'Ampache User' as much as possible
+        if (array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
+            Session::check();
+            $user = User::get_from_username($_SESSION['userdata']['username']);
+            $uid  = $user->id;
         }
 
         if (!$share_id) {
