@@ -73,7 +73,7 @@ final class LastShouts4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::shouts($shouts);
-            break;
+                break;
             default:
                 echo Xml4_Data::shouts($shouts);
         }

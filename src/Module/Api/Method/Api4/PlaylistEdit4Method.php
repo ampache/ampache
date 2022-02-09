@@ -60,8 +60,6 @@ final class PlaylistEdit4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $name  = $input['name'];
-        $type  = $input['type'];
         $items = explode(',', (string)($input['items'] ?? ''));
         $order = explode(',', (string)($input['tracks'] ?? ''));
         $sort  = (int) $input['sort'];
@@ -81,8 +79,10 @@ final class PlaylistEdit4Method
 
             return false;
         }
+        $name = $input['name'] ?? $playlist->name;
+        $type = $input['type'] ?? $playlist->type;
         // update name/type
-        if ($name || $type) {
+        if ($name !== $playlist->name || $type !== $playlist->type) {
             $array = [
                 "name" => $name,
                 "pl_type" => $type,

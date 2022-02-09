@@ -47,7 +47,8 @@
 * SQL error in database update 500013 (Not fatal)
 * Don't garbage_collect tags after merging
 * Create art URLs correctly when using rewrite rules and no auth
-* respect sidebar_light preference when no cookie is present
+* Respect sidebar_light preference when no cookie is present
+* Don't try to create users that already exist
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
