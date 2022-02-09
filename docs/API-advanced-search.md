@@ -21,8 +21,8 @@ This is passed as a type argument and will only return this object in results
 * playlist
 * label
 * user
-* tag
-* genre (*Alias of tag)
+* genre
+* tag (*Alias of genre)
 
 ## Using advanced_search
 
@@ -74,14 +74,14 @@ Select the type of search based on the type of data you are searching for. (song
 | myplayedalbum            | Played by Me (Album)      | boolean           |               song               |
 | myplayedartist           | Played by Me (Artist)     | boolean           |               song               |
 | time                     | Length (in minutes)       | numeric           |        song,album,artist         |
-| tag                      | Genre                     | tags              |        song,album,artist         |
-| genre                    | (*Alias of tag)           |                   |                                  |
-| album_tag                | Album Genre               | tags              |               song               |
-| album_genre              | (*Alias of album_tag)     |                   |                                  |
-| artist_tag               | Artist Genre              | tags              |               song               |
-| artist_genre             | (*Alias of artist_tag)    |                   |                                  |
-| no_tag                   | No Genre                  | is_true           |        song,album,artist         |
-| no_genre                 | (*Alias of no_tag)        |                   |                                  |
+| genre                    | Genre                     | tags              |        song,album,artist         |
+| tag                      | (*Alias of genre)         |                   |                                  |
+| album_genre              | Album Genre               | tags              |               song               |
+| album_tag                | (*Alias of album_genre)   |                   |                                  |
+| artist_genre             | Artist Genre              | tags              |               song               |
+| artist_tag               | (*Alias of artist_genre)  |                   |                                  |
+| no_genre                 | No Genre                  | is_true           |        song,album,artist         |
+| no_tag                   | (*Alias of no_genre)      |                   |                                  |
 | other_user               | Another User              | user_numeric      |        song,album,artist         |
 | other_user_album         | Another User (Album)      | user_numeric      |               song               |
 | other_user_artist        | Another User (Artist)     | user_numeric      |               song               |
