@@ -27,7 +27,6 @@ return $config->setRules([
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
         'visibility_required' => false,
-        'visibility_required' => true,
      ])
    ->setIndent("    ")
    ->setUsingCache(false)

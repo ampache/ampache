@@ -29,6 +29,9 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\Browse;
+
+/** @var Browse $browse */
 
 if (isset($is_header) && $is_header) {
     $is_header = false;
