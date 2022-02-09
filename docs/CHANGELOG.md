@@ -30,6 +30,7 @@
 * Tag value is being extra filtered in the edit screen
 * Hide the login link when using simple_user_mode and no auth is set **note** this does not stop you logging in with /login.php
 * When not using auth, keep recording stats for system user plays
+* Hide username column from Recently Played when not authed as a user
 
 ### Fixed
 
