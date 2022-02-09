@@ -81,7 +81,9 @@ final class Session implements SessionInterface
             self::check();
 
             // Create the new user
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+                ? User::get_from_username($_SESSION['userdata']['username'])
+                : '';
 
             // If the user ID doesn't exist deny them
             $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;

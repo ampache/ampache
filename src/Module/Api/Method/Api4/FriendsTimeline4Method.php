@@ -61,7 +61,7 @@ final class FriendsTimeline4Method
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json4_Data::timeline($activities);
-                    break;
+                        break;
                     default:
                         echo Xml4_Data::timeline($activities);
                 }

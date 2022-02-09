@@ -56,7 +56,7 @@ final class Genre4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::tags(array($uid));
-            break;
+                break;
             default:
                 echo Xml4_Data::tags(array($uid));
         }

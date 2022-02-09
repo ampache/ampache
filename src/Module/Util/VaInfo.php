@@ -289,6 +289,9 @@ final class VaInfo implements VaInfoInterface
                 }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
                 if ($enc !== false) {
+                    if (!array_key_exists($enc, $encodings)) {
+                        $encodings[$enc] = 0;
+                    }
                     $encodings[$enc]++;
                 }
             }

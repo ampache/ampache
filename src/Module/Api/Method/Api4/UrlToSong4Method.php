@@ -61,7 +61,7 @@ final class UrlToSong4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::songs(array($url_data['id']), $user->id);
-            break;
+                break;
             default:
                 echo Xml4_Data::songs(array($url_data['id']), $user->id);
         }

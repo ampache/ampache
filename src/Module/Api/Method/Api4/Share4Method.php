@@ -63,7 +63,7 @@ final class Share4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::shares($share);
-            break;
+                break;
             default:
                 echo Xml4_Data::shares($share);
         }

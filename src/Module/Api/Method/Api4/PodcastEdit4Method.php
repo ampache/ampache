@@ -76,9 +76,9 @@ final class PodcastEdit4Method
             return false;
         }
 
-        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ?? $podcast->feed;
         $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
-        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
+        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ?? $podcast->website;
         $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
         $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
         $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;

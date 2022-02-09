@@ -101,7 +101,7 @@ final class AdvancedSearch4Method
                         echo Json4_Data::songs($results, $user->id);
                         break;
                 }
-            break;
+                break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);

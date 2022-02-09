@@ -57,7 +57,7 @@ final class Video4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::videos(array($video_id), $user->id);
-            break;
+                break;
             default:
                 echo Xml4_Data::videos(array($video_id), $user->id);
         }
