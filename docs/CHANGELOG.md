@@ -30,6 +30,7 @@
 * Tag value is being extra filtered in the edit screen
 * Hide the login link when using simple_user_mode and no auth is set **note** this does not stop you logging in with /login.php
 * When not using auth, keep recording stats for system user plays
+* Hide username column from Recently Played when not authed as a user
 
 ### Fixed
 
@@ -46,6 +47,7 @@
 * SQL error in database update 500013 (Not fatal)
 * Don't garbage_collect tags after merging
 * Create art URLs correctly when using rewrite rules and no auth
+* respect sidebar_light preference when no cookie is present
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:

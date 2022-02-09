@@ -684,15 +684,18 @@ lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 ; Last.FM API secret
 ; Set this to your Last.FM api secret to actually use Last.FM for
 ; scrobbling.
+; DEFAULT: none
 lastfm_api_secret = ""
 
 ; Spotify client id
 ; Set this to your Spotify client id to actually use Spotify for
 ; accessing their catalog API. (https://developer.spotify.com/dashboard/)
+; DEFAULT: none
 ;spotify_client_id = ""
 
 ; Spotify client secret
 ; Both id and secret are required to access the spotify catalog.
+; DEFAULT: none
 ;spotify_client_secret = ""
 
 ; Wanted
@@ -737,7 +740,7 @@ live_stream = "true"
 ; Podcasts
 ; Set this to true to enable podcasts and the
 ; possibility for admins to subscribe to new podcasts.
-; DEFAULT: "false"
+; DEFAULT: "true"
 podcast = "true"
 
 ; Web Socket address
@@ -785,7 +788,6 @@ refresh_limit = "60"
 ; This defines whether statistics (Queries, Cache Hits, Load Time)
 ; are shown in the page footer.
 ; DEFAULT: "true"
-; Possible values: "true", "false"
 show_footer_statistics = "true"
 
 ; RSS Feeds
@@ -874,6 +876,7 @@ site_charset = UTF-8
 ;   - %a: the artist name
 ;   - %A: the album name
 ;   - %t: the song title
+; DEFAULT: none
 ;custom_play_action_run_0 = ""
 
 ; Example for Karaoke playing
@@ -1318,10 +1321,12 @@ send_full_stream = "webplayer"
 
 ; SMTP username
 ; your mail auth username.
+; DEFAULT: none
 ;mail_auth_user = ""
 
 ; SMTP password
 ; your mail auth password.
+; DEFAULT: none
 ;mail_auth_pass = ""
 
 ;#########################################################
