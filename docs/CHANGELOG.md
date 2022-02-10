@@ -49,6 +49,7 @@
 * Create art URLs correctly when using rewrite rules and no auth
 * Respect sidebar_light preference when no cookie is present
 * Don't try to create users that already exist
+* Add/Edit catalogs in the UI missing filter_user
 * Search:
   * possible_duplicate was grouping too much together
 * Subsonic:
