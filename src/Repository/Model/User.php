@@ -924,10 +924,6 @@ class User extends database_object
         $disabled = false,
         $encrypted = false
     ) {
-        // don't try to overwrite users that already exist
-        if (User::get_from_username($username) || User::get_from_email($email)) {
-            return 0;
-        }
         $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);

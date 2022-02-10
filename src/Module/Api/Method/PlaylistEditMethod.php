@@ -64,7 +64,7 @@ final class PlaylistEditMethod
         }
         $items = explode(',', (string)($input['items'] ?? ''));
         $order = explode(',', (string)($input['tracks'] ?? ''));
-        $sort  = (int) $input['sort'];
+        $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {

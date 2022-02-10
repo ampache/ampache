@@ -1827,7 +1827,7 @@ class Subsonic_Api
     {
         $username = self::check_parameter($input, 'username');
         $password = $input['password'];
-        $email    = urldecode($input['email']);
+        $email    = urldecode((string)self::check_parameter($input, 'email'));
         //$ldapAuthenticated = $input['ldapAuthenticated'];
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');

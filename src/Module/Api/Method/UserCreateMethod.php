@@ -63,9 +63,9 @@ final class UserCreateMethod
         }
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
-        $email    = $input['email'];
+        $email    = urldecode($input['email']);
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
+        $disable  = (bool)($input['disable'] ?? false);
         $access   = 25;
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
