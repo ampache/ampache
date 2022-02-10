@@ -24,6 +24,7 @@ An Ampache5 error has the following parts:
   * errorAction will return the method used that caused the error
   * Use errorType 'system' for things users can't change / server config
   * Use errorType 'account' for user issues (password, perms, auth, etc)
+  * All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
 * errorMessage must be a translated string to allow devs to show things for the user in their language.
 
 ## Error Codes
@@ -50,6 +51,16 @@ To separate Ampache from the http codes it's been decided to prefix our codes wi
   * You can check the error message for details, but do not re-attempt the exact same request
 * **4742** Failed Access Check
   * Access denied to the requested object or function for this user
+
+## Error Types
+
+There are three error types; two are static 'account' and 'system'
+
+Account errors are things that your user can't do. Either the permission level or something with the session is incorrect.
+
+System errors tell you whether a system feature is disabled or something else has failed on the server. Check the debug logs for further information.
+
+Everything else will be a parameter from the call that caused your error. Maybe the email you used was malformed or the song you looked for doesn't exist?
 
 ## Example Error messages
 

@@ -74,6 +74,16 @@ final class UserCreate4Method
 
             return true;
         }
+        if (User::id_from_username($username) > 0) {
+            Api4::message('error', 'username already exists: ' . $username, '400', $input['api_format']);
+
+            return false;
+        }
+        if (User::id_from_email($email) > 0) {
+            Api4::message('error', 'email already exists: ' . $email, '400', $input['api_format']);
+
+            return false;
+        }
         Api4::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
 
         return false;
