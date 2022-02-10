@@ -19,10 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Live_Stream $libitem */
 
-use Ampache\Repository\Model\Live_Stream;
-
+/** @var Ampache\Repository\Model\Live_Stream $libitem */
 ?>
 <div>
     <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">

@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -32,7 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Podcast_Episode $episode */
+/** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
 $web_path = AmpConfig::get('web_path');
 ?>

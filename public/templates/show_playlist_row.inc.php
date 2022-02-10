@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Userflag;
@@ -31,7 +30,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-/** @var Playlist $libitem */
+/** @var Ampache\Repository\Model\Playlist $libitem */
 /** @var bool $show_art */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */

@@ -24,9 +24,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\library_item;
 
-/** @var library_item $item */
+/** @var Ampache\Repository\Model\library_item $item */
 /** @var string $object_type */
 ?>
 <?php

@@ -23,11 +23,10 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
-/** @var Label $libitem */
+/** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
 ?>
 <?php $name = scrub_out($libitem->get_fullname()); ?>
