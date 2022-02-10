@@ -57,6 +57,11 @@
 
 ## API 5.2.1
 
+### Added
+
+* API5
+  * The docs for errors have been extended for the type when returned
+
 ### Changed
 
 * API5
@@ -64,6 +69,8 @@
 
 ### Fixed
 
+* API5
+  * Some errors were returning the value and not the parameter on error
 * API4
   * update_from_tags: type case error
   * rate: Object type to class mapping

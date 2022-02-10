@@ -240,9 +240,9 @@ Error 4710: Bad Request
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
     <error errorCode="4710">
-        <errorAction><![CDATA[playlist_create]]></errorAction>
-        <errorType><![CDATA[system]]></errorType>
-        <errorMessage><![CDATA[Bad Request: name]]></errorMessage>
+        <errorAction>user_create</errorAction>
+        <errorType>username</errorType>
+        <errorMessage>Bad Request: temp_user</errorMessage>
     </error>
 </root>
 ```
@@ -253,9 +253,9 @@ Error 4710: Bad Request
 {
     "error": {
         "errorCode": "4710",
-        "errorAction": "playlist_create",
-        "errorType": "system",
-        "errorMessage": "Bad Request: name"
+        "errorAction": "user_create",
+        "errorType": "username",
+        "errorMessage": "Bad Request: temp_user"
     }
 }
 ```
