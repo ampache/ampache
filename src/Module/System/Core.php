@@ -219,16 +219,16 @@ class Core
     {
         switch ($type) {
             case 'post':
-                $sid = $_POST['form_validation'] ?? '';
+                $sid = $_POST['form_validation'];
                 break;
             case 'get':
-                $sid = $_GET['form_validation'] ?? '';
+                $sid = $_GET['form_validation'];
                 break;
             case 'cookie':
-                $sid = $_COOKIE['form_validation'] ?? '';
+                $sid = $_COOKIE['form_validation'];
                 break;
             case 'request':
-                $sid = $_REQUEST['form_validation'] ?? '';
+                $sid = $_REQUEST['form_validation'];
                 break;
             default:
                 return false;

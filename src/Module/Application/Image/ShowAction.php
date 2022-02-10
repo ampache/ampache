@@ -201,7 +201,7 @@ final class ShowAction implements ApplicationActionInterface
 
             if (!$art->raw_mime) {
                 $rootimg = sprintf(
-                    '%s/../../../../public/%s/images/',
+                    '%s/../../../../%s/images/',
                     __DIR__,
                     $this->configContainer->getThemePath()
                 );

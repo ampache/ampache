@@ -54,9 +54,6 @@ class Stream_Url extends MemoryObject
      */
     public static function parse($url)
     {
-        if (empty($url)) {
-            return array();
-        }
         if (AmpConfig::get('stream_beautiful_url')) {
             $posargs = strpos($url, '/play/');
             if ($posargs !== false) {

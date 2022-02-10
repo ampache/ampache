@@ -448,7 +448,7 @@ class UPnPPlayer
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = Session::read($sid);
 
-        $this->_intState = json_decode($data, true) ?? 0;
+        $this->_intState = json_decode($data, true);
         debug_event(self::class, 'ReadIndState:' . $this->_intState, 5);
     }
 }

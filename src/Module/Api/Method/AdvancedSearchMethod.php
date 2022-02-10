@@ -84,7 +84,7 @@ final class AdvancedSearchMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;

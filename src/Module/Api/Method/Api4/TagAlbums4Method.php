@@ -53,10 +53,27 @@ final class TagAlbums4Method
      */
     public static function tag_albums(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'tag_albums')) {
             return false;
         }
+        $albums = Tag::get_tag_objects('album', $input['filter']);
+        if (!empty($albums)) {
+            $user = User::get_from_username(Session::username($input['auth']));
 
-        return GenreAlbums4Method::genre_albums($input);
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    Json4_Data::set_offset($input['offset'] ?? 0);
+                    Json4_Data::set_limit($input['limit'] ?? 0);
+                    echo Json4_Data::albums($albums, array(), $user->id);
+                break;
+                default:
+                    Xml4_Data::set_offset($input['offset'] ?? 0);
+                    Xml4_Data::set_limit($input['limit'] ?? 0);
+                    echo Xml4_Data::albums($albums, array(), $user->id);
+            }
+        }
+
+        return true;
     } // tag_albums
 }

@@ -56,8 +56,8 @@ final class UrlToSongMethod
             return false;
         }
         // Don't scrub, the function needs her raw and juicy
-        $url_data = Stream_Url::parse($input['url']);
-        if (array_key_exists('id', $url_data)) {
+        $data = Stream_Url::parse($input['url']);
+        if (empty($data['id'])) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
 
             return false;
@@ -66,10 +66,10 @@ final class UrlToSongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs(array($url_data['id']), $user->id, true, false);
+                echo Json_Data::songs(array($data['id']), $user->id, true, false);
                 break;
             default:
-                echo Xml_Data::songs(array($url_data['id']), $user->id);
+                echo Xml_Data::songs(array($data['id']), $user->id);
         }
 
         return true;

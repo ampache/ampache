@@ -54,7 +54,7 @@ final class Timeline4Method
     public static function timeline(array $input): bool
     {
         if (AmpConfig::get('sociable')) {
-            if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
+            if (!Api4::check_parameter($input, array('username'), 'timeline')) {
                 return false;
             }
             $username = $input['username'];

@@ -48,12 +48,12 @@ final class GetArt4Method
      *
      * @param array $input
      * id   = (string) $object_id
-     * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
+     * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
      * @return boolean
      */
     public static function get_art(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('id', 'type'), 'get_art')) {
             http_response_code(400);
 
             return false;
@@ -64,7 +64,7 @@ final class GetArt4Method
         $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

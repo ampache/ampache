@@ -53,10 +53,11 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
         switch ($_REQUEST['action']) {
             case 'search':
                 $web_path = AmpConfig::get('web_path');
-                $search   = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
-                $target   = $_REQUEST['target'] ?? '';
+                $search   = $_REQUEST['search'];
+                $target   = $_REQUEST['target'];
                 $limit    = $_REQUEST['limit'] ?? 5;
-                $results  = array();
+
+                $results = array();
 
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = array(

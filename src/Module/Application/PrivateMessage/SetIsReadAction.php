@@ -84,7 +84,7 @@ final class SetIsReadAction implements ApplicationActionInterface
                     throw new Exception();
                 }
                 $this->privateMessageRepository->setIsRead($messageId, $readMode);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId),
                 );

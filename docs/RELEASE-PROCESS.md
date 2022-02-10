@@ -41,7 +41,8 @@ wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubuserc
 * Reset the vendor folder completely and pull it all down
 
 ```shell
-rm -rf ./vendor & rm composer.lock
+rm -rf ./vendor
+rm composer.lock
 ```
 
 * Install packages for all supported php releases (ONE at a time obviously)
@@ -66,10 +67,7 @@ read -p "Enter Ampache Version: " a_version
 
 ```shell
 rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
-rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_php8.0.zip ./
-
-rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_squashed.zip ./
-rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_squashed_php8.0.zip ./
+rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_php8.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality

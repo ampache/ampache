@@ -195,10 +195,8 @@ class Xml3_Data
                 if (array_key_exists($data['id'], $atags)) {
                     $atags[$data['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = array(
-                        'name' => $data['name'],
-                        'count' => 1
-                    );
+                    $atags[$data['id']] = array('name' => $data['name'],
+                        'count' => 1);
                 }
             }
 
@@ -440,7 +438,7 @@ class Xml3_Data
             $item_total = $playlist->get_media_count('song');
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist->id . "\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
+            $string .= "<playlist id=" . $playlist->id . ">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);

@@ -80,7 +80,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                     throw new Exception();
                 }
                 $this->privateMessageRepository->delete($messageId);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId)
                 );

@@ -177,7 +177,7 @@ class TvShow extends database_object implements library_item
 
     /**
      * get_keywords
-     * @return array
+     * @return array|mixed
      */
     public function get_keywords()
     {

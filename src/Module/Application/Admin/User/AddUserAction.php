@@ -93,7 +93,7 @@ final class AddUserAction extends AbstractUserAction
         }
 
         /* make sure the username doesn't already exist */
-        if ($this->userRepository->idByUsername($username) > 0) {
+        if ($this->userRepository->findByUsername($username) !== null) {
             AmpError::add('username', T_('That Username already exists'));
         }
 

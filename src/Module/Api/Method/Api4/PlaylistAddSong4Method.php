@@ -53,7 +53,7 @@ final class PlaylistAddSong4Method
      */
     public static function playlist_add_song(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter', 'song'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter', 'song'), 'playlist_add_song')) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));

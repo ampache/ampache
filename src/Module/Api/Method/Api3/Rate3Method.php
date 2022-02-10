@@ -46,7 +46,7 @@ final class Rate3Method
     public static function rate(array $input)
     {
         ob_end_clean();
-        $type      = (string) $input['type'];
+        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -54,8 +54,7 @@ final class Rate3Method
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             echo Xml3_Data::error('401', T_('Wrong library item type.'));
         } else {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            $item      = new $className($object_id);
+            $item = new $type($object_id);
             if (!$item->id) {
                 echo Xml3_Data::error('404', T_('Library item not found.'));
             } else {

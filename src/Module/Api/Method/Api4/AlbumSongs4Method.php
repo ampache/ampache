@@ -54,7 +54,7 @@ class AlbumSongs4Method
      */
     public static function album_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'album_songs')) {
             return false;
         }
         $album = new Album($input['filter']);
@@ -82,7 +82,7 @@ class AlbumSongs4Method
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
                     echo Json4_Data::songs($songs, $user->id);
-                    break;
+                break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);

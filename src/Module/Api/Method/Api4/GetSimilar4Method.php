@@ -54,13 +54,13 @@ final class GetSimilar4Method
      */
     public static function get_similar(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('type', 'filter'), 'get_similar')) {
             return false;
         }
         $type   = (string) $input['type'];
         $filter = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'artist'))) {
+        if (!in_array($type, array('song', 'artist'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

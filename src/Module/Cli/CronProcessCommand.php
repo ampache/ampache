@@ -26,6 +26,7 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;
@@ -35,7 +36,6 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
 
 final class CronProcessCommand extends Command
 {
@@ -47,14 +47,11 @@ final class CronProcessCommand extends Command
 
     private BookmarkRepositoryInterface $bookmarkRepository;
 
-    private UserRepositoryInterface $userRepository;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
         CatalogGarbageCollectorInterface $catalogGarbageCollector,
-        BookmarkRepositoryInterface $bookmarkRepository,
-        UserRepositoryInterface $userRepository
+        BookmarkRepositoryInterface $bookmarkRepository
     ) {
         parent::__construct('run:cronProcess', T_('Run the cron process'));
 
@@ -62,7 +59,6 @@ final class CronProcessCommand extends Command
         $this->objectCache             = $objectCache;
         $this->catalogGarbageCollector = $catalogGarbageCollector;
         $this->bookmarkRepository      = $bookmarkRepository;
-        $this->userRepository          = $userRepository;
     }
 
     public function execute(): void
@@ -121,7 +117,6 @@ final class CronProcessCommand extends Command
         Podcast_Episode::garbage_collection();
         $this->bookmarkRepository->collectGarbage();
         Recommendation::garbage_collection();
-        $this->userRepository->collectGarbage();
 
         /**
          * Run compute_cache

@@ -437,7 +437,7 @@ class Stats
      */
     public static function has_played_history($object_type, $object, $user, $agent, $date)
     {
-        if (AmpConfig::get('use_auth') && $user == -1) {
+        if ($user == -1) {
             return false;
         }
         // if it's already recorded (but from a different agent), don't do it again

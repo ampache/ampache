@@ -627,6 +627,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * Write new configuration into the current configuration file by keeping old values.
+     * @param string $current_file_path
      */
     public function write_config(string $current_file_path): bool
     {

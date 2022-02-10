@@ -73,9 +73,9 @@ final class BookmarkCreateMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
             return false;
         }
@@ -84,7 +84,7 @@ final class BookmarkCreateMethod
 
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
             return false;
         }

@@ -81,7 +81,10 @@ final class ShowSongAction implements ApplicationActionInterface
             echo T_('You have requested a Song that does not exist.');
         } else {
             $this->ui->showBoxTop(
-                scrub_out($song->get_fullname()),
+                sprintf(
+                    T_('%s Details'),
+                    scrub_out($song->get_fullname())
+                ),
                 'box box_song_details'
             );
 

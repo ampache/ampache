@@ -133,6 +133,8 @@ final class InstallerCommand extends Command
                 true
             );
             $interactor->error(AmpError::get('general'), true);
+
+            return;
         }
     }
 }

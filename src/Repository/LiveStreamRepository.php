@@ -25,7 +25,6 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Catalog;
 
 final class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
@@ -59,6 +58,5 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
             'DELETE FROM `live_stream` WHERE `id` = ?',
             [$liveStreamId]
         );
-        Catalog::count_table('live_stream');
     }
 }

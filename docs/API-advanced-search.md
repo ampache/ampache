@@ -8,22 +8,6 @@ Advanced search is the API method to access the search rules used in the WEB UI.
 
 It can be confusing to process how the rules are generated so this has been split into it's own page.
 
-### Search Types
-
-You can search for multiple object types in advanced_search.
-
-This is passed as a type argument and will only return this object in results
-
-* song
-* album
-* artist
-* video
-* playlist
-* label
-* user
-* genre
-* tag (*Alias of genre)
-
 ## Using advanced_search
 
 Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
@@ -43,74 +27,67 @@ Use operator ('and', 'or') to choose whether to join or separate each rule when 
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
-| rule_1                   | Title                     | Operator Type     |           Valid Types            |
-|--------------------------|---------------------------|-------------------|:--------------------------------:|
-| anywhere                 | Any searchable text       | text              |               song               |
-| title                    | Title / Name              | text              | song,album,artist,playlist,label |
-| name                     | (*Alias of title)         |                   |                                  |
-| album                    | Album Title               | text              |            song,artist           |
-| artist                   | Artist                    | text              |         song,album,artist        |
-| album_artist             | Album Artist              | text              |               song               |
-| composer                 | Composer                  | text              |               song               |
-| year                     | Year                      | numeric           |            song,album            |
-| original_year            | Original Year             | numeric           |              album               |
-| yearformed               | Year Formed               | numeric           |              artist              |
-| placeformed              | Place Formed              | text              |              artist              |
-| release_type             | Release Type              | text              |              album               |
-| release_status           | Release Status            | text              |              album               |
-| myrating                 | My Rating                 | numeric           |        song,album,artist         |
-| rating                   | Rating (Average)          | numeric           |        song,album,artist         |
-| albumrating              | My Rating (Album)         | numeric           |               song               |
-| artistrating             | My Rating (Artist)        | numeric           |            song,album            |
-| favorite                 | Favorites                 | text              |        song,album,artist         |
-| favorite_album           | Favorites (Album)         | text              |               song               |
-| favorite_artist          | Favorites (Artist)        | text              |               song               |
-| played_times             | # Played                  | numeric           |        song,album,artist         |
-| skipped_times            | # Skipped                 | numeric           |               song               |
-| play_skip_ratio          | Played/Skipped ratio      | numeric           |               song               |
-| last_play                | My Last Play              | days              |        song,album,artist         |
-| played                   | Played                    | boolean           |               song               |
-| myplayed                 | Played by Me              | boolean           |        song,album,artist         |
-| myplayedalbum            | Played by Me (Album)      | boolean           |               song               |
-| myplayedartist           | Played by Me (Artist)     | boolean           |               song               |
-| time                     | Length (in minutes)       | numeric           |        song,album,artist         |
-| genre                    | Genre                     | tags              |        song,album,artist         |
-| tag                      | (*Alias of genre)         |                   |                                  |
-| album_genre              | Album Genre               | tags              |               song               |
-| album_tag                | (*Alias of album_genre)   |                   |                                  |
-| artist_genre             | Artist Genre              | tags              |               song               |
-| artist_tag               | (*Alias of artist_genre)  |                   |                                  |
-| no_genre                 | No Genre                  | is_true           |        song,album,artist         |
-| no_tag                   | (*Alias of no_genre)      |                   |                                  |
-| other_user               | Another User              | user_numeric      |        song,album,artist         |
-| other_user_album         | Another User (Album)      | user_numeric      |               song               |
-| other_user_artist        | Another User (Artist)     | user_numeric      |               song               |
-| label                    | Label                     | text              |               song               |
-| license                  | Music License             | boolean_numeric   |               song               |
-| playlist                 | Playlist                  | boolean_numeric   |        song,album,artist         |
-| smartplaylist            | Smart Playlist            | boolean_subsearch |               song               |
-| playlist_name            | Playlist Name             | text              |        song,album,artist         |
-| comment                  | Comment                   | text              |               song               |
-| lyrics                   | Lyrics                    | text              |               song               |
-| file                     | Filename                  | text              |            song,video            |
-| bitrate                  | Bitrate                   | numeric           |               song               |
-| added                    | Added                     | date              |               song               |
-| updated                  | Updated                   | date              |               song               |
-| recent_played            | Recently Played           | numeric_limit     |        song,album,artist         |
-| recent_added             | Recently Added            | numeric_limit     |               song               |
-| recent_updated           | Recently Updated          | numeric_limit     |               song               |
-| catalog                  | Catalog                   | boolean_numeric   |        song,album,artist         |
-| mbid                     | MusicBrainz ID            | text              |        song,album,artist         |
-| mbid_album               | MusicBrainz ID (Album)    | text              |               song               |
-| mbid_artist              | MusicBrainz ID (Artist)   | text              |               song               |
-| metadata                 | Metadata                  | metadata (mixed)  |               song               |
-| has_image                | Local Image               | boolean           |           album,artist           |
-| image_height             | Image Height              | numeric           |           album,artist           |
-| image_width              | Image Width               | numeric           |           album,artist           |
-| possible_duplicate       | Possible Duplicate        | is_true           |        song,album,artist         |
-| possible_duplicate_album | Possible Duplicate Albums | is_true           |              artist              |
-| username                 | Username                  | text              |               user               |
-| category                 | Category                  | text              |              label               |
+| rule_1             | Title                   | Operator Type     |           Valid Items            |
+|--------------------|-------------------------|-------------------|:--------------------------------:|
+| anywhere           | Any searchable text     | text              |               song               |
+| title              | Title / Name            | text              | song,album,artist,playlist,label |
+| album              | Album Title             | text              |            song,artist           |
+| artist             | Artist                  | text              |         song,album,artist        |
+| album_artist       | Album Artist            | text              |               song               |
+| composer           | Composer                | text              |               song               |
+| year               | Year                    | numeric           |            song,album            |
+| original_year      | Original Year           | numeric           |              album               |
+| yearformed         | Year                    | numeric           |              artist              |
+| placeformed        | Place                   | text              |              artist              |
+| release_type       | Release Type            | text              |              album               |
+| release_status     | Release Status          | text              |              album               |
+| myrating           | My Rating               | numeric           |        song,album,artist         |
+| rating             | Rating (Average)        | numeric           |        song,album,artist         |
+| albumrating        | My Rating (Album)       | numeric           |               song               |
+| artistrating       | My Rating (Artist)      | numeric           |            song,album            |
+| favorite           | Favorites               | text              |        song,album,artist         |
+| favorite_album     | Favorites (Album)       | text              |               song               |
+| favorite_artist    | Favorites (Artist)      | text              |               song               |
+| played_times       | # Played                | numeric           |        song,album,artist         |
+| skipped_times      | # Skipped               | numeric           |               song               |
+| play_skip_ratio    | Played/Skipped ratio    | numeric           |               song               |
+| last_play          | My Last Play            | days              |        song,album,artist         |
+| played             | Played                  | boolean           |               song               |
+| myplayed           | Played by Me            | boolean           |        song,album,artist         |
+| myplayedalbum      | Played by Me (Album)    | boolean           |               song               |
+| myplayedartist     | Played by Me (Artist)   | boolean           |               song               |
+| time               | Length (in minutes)     | numeric           |        song,album,artist         |
+| tag                | Tag                     | tags              |        song,album,artist         |
+| album_tag          | Album tag               | tags              |               song               |
+| artist_tag         | Artist tag              | tags              |               song               |
+| other_user         | Another User            | user_numeric      |        song,album,artist         |
+| other_user_album   | Another User (Album)    | user_numeric      |               song               |
+| other_user_artist  | Another User (Artist)   | user_numeric      |               song               |
+| label              | Label                   | text              |               song               |
+| license            | Music License           | boolean_numeric   |               song               |
+| playlist           | Playlist                | boolean_numeric   |            song,album            |
+| smartplaylist      | Smart Playlist          | boolean_subsearch |               song               |
+| playlist_name      | Playlist Name           | text              |            song,album            |
+| comment            | Comment                 | text              |               song               |
+| lyrics             | Lyrics                  | text              |               song               |
+| file               | Filename                | text              |            song,video            |
+| bitrate            | Bitrate                 | numeric           |               song               |
+| added              | Added                   | date              |               song               |
+| updated            | Updated                 | date              |               song               |
+| recent_played      | Recently Played         | numeric_limit     |        song,album,artist         |
+| recent_added       | Recently Added          | numeric_limit     |               song               |
+| recent_updated     | Recently Updated        | numeric_limit     |               song               |
+| catalog            | Catalog                 | boolean_numeric   |        song,album,artist         |
+| mbid               | MusicBrainz ID          | text              |        song,album,artist         |
+| mbid_album         | MusicBrainz ID (Album)  | text              |               song               |
+| mbid_artist        | MusicBrainz ID (Artist) | text              |               song               |
+| metadata           | Metadata                | metadata (mixed)  |               song               |
+| has_image          | Local Image             | boolean           |           album,artist           |
+| image_height       | Image Height            | numeric           |           album,artist           |
+| image_width        | Image Width             | numeric           |           album,artist           |
+| possible_duplicate | Possible Duplicate      | is_true           |        song,album,artist         |
+| username           | Username                | text              |               user               |
+| category           | Category                | text              |              label               |
 
 ### Available operator values
 

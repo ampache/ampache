@@ -67,7 +67,7 @@ final class Cron
         $name = Dba::escape('cron_date');
 
         $db_results = Dba::read(
-            'SELECT `key`, `value` FROM `update_info` WHERE `key` = ?',
+            'SELECT * FROM `update_info` WHERE `key` = ?',
             [$name]
         );
 

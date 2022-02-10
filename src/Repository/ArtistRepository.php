@@ -66,7 +66,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
+        if ($rating_filter > 0 && $rating_filter <= 5) {
             $sql .= "$join `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= $rating_filter AND `rating`.`user` = " . $userId . ") ";
         }
 

@@ -175,7 +175,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer $object_id
      * @param string $value
      * @param boolean $user
-     * @return bool|int
+     * @return boolean|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -223,7 +223,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return int|null
+     * @return string|null
      */
     public static function add_tag($value)
     {
@@ -332,7 +332,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer|string $object_id
      * @param integer|string $tag_id
      * @param boolean $user
-     * @return boolean|int
+     * @return boolean|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -453,7 +453,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param integer $object_id
      * @param integer $tag_id
      * @param integer $user
-     * @return bool|int
+     * @return boolean|mixed
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -696,7 +696,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . scrub_out($value['name']) . '">';
             }
-            $results .= $value['name'];
+            $results .= scrub_out($value['name']);
             if ($link) {
                 $results .= '</a>';
             }

@@ -44,7 +44,7 @@ final class AdminAddUserCommand extends Command
             ->option('-e|--email', T_('E-mail'), 'strval', '')
             ->option('-w|--website', T_('Website'), 'strval', '')
             ->option('-n|--name', T_('Name'), 'strval', '')
-            ->option('-l|--level', T_('Access Level'), 'intval', User::access_name_to_level(($this->configContainer->get('auto_user') ?? 'guest')))
+            ->option('-l|--level', T_('Access Level'), 'intval', $this->configContainer->get('auto_user') ?? 5)
             ->argument('<username>', T_('Username'))
             ->usage('<bold>  admin:addUser some-user</end> <comment> ## ' . T_('Add a User with the name `some-user`') . '</end><eol/>');
     }
@@ -55,7 +55,7 @@ final class AdminAddUserCommand extends Command
         $values     = $this->values();
         $interactor = $this->io();
 
-        $result = (int)User::create(
+        $result = (int) User::create(
             $username,
             $values['name'],
             $values['email'],
@@ -64,7 +64,7 @@ final class AdminAddUserCommand extends Command
             $values['level']
         );
 
-        if ($result > 0) {
+        if ($result !== null) {
             $interactor->ok(
                 sprintf(
                     T_('Created %s user %s with password %s'),

@@ -52,7 +52,7 @@ final class Democratic4Method
      */
     public static function democratic(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('method'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('method'), 'democratic')) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));

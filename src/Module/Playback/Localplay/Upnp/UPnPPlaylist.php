@@ -78,11 +78,11 @@ class UPnPPlaylist
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function CurrentItem()
     {
-        return $this->_songs[$this->_current] ?? array();
+        return $this->_songs[$this->_current];
     }
 
     /**

@@ -58,7 +58,7 @@ final class Scrobble4Method
      */
     public static function scrobble(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('song', 'artist', 'album'), 'scrobble')) {
             return false;
         }
         ob_end_clean();

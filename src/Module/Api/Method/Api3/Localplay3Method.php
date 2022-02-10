@@ -38,6 +38,7 @@ final class Localplay3Method
     /**
      * localplay
      * This is for controling localplay
+     * @param array $input
      */
     public static function localplay(array $input)
     {
@@ -71,7 +72,5 @@ final class Localplay3Method
 
         $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         echo Xml3_Data::keyed_array($xml_array);
-
-        return true;
     } // localplay
 }

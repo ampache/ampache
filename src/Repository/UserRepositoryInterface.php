@@ -31,14 +31,9 @@ interface UserRepositoryInterface
     public function getByRssToken(string $rssToken): ?User;
 
     /**
-     * Lookup for a user id with a certain name
+     * Lookup for a user with a certain name
      */
-    public function idByUsername(string $username): int;
-
-    /**
-     * Lookup for a user id with a certain email
-     */
-    public function idByEmail(string $email): int;
+    public function findByUsername(string $username): ?int;
 
     /**
      * This returns all valid users in database.
@@ -54,16 +49,6 @@ interface UserRepositoryInterface
      * @return array
      */
     public function getValidArray(bool $includeDisabled = false): array;
-
-    /**
-     * Remove details for users that no longer exist.
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * This returns a built user from a username
-     */
-    public function findByUsername(string $username): ?User;
 
     /**
      * This returns a built user from a email

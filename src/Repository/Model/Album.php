@@ -439,12 +439,6 @@ class Album extends database_object implements library_item
         } else {
             $sql .= 'AND `album`.`mbid` IS NULL ';
         }
-        if ($mbid_group) {
-            $sql .= 'AND `album`.`mbid_group` = ? ';
-            $params[] = $mbid_group;
-        } else {
-            $sql .= 'AND `album`.`mbid_group` IS NULL ';
-        }
         if ($prefix) {
             $sql .= 'AND `album`.`prefix` = ? ';
             $params[] = $prefix;

@@ -782,7 +782,7 @@ class Subsonic_Xml_Data
      */
     public static function getAlbumData($albumId)
     {
-        $sql        = "SELECT * FROM `album` WHERE `id` = ?";
+        $sql        = "SELECT * FROM `album` WHERE `id`=?";
         $db_results = Dba::read($sql, array($albumId));
         $row        = Dba::fetch_assoc($db_results);
         if (empty($row)) {
@@ -1499,13 +1499,10 @@ class Subsonic_Xml_Data
     {
         $xjbox  = $xml->addChild(htmlspecialchars($elementName));
         $status = $localplay->status();
-        $index  = (AmpConfig::get('localplay_controller') == 'mpd') // TODO a way for this to support all localplay types
-            ? $status['track'] - 1
-            : 0;
-        $xjbox->addAttribute('currentIndex', $index);
+        $xjbox->addAttribute('currentIndex', 0); // Not supported
         $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
         $xjbox->addAttribute('gain', (string)$status['volume']);
-        $xjbox->addAttribute('position', 0); // TODO Not supported
+        $xjbox->addAttribute('position', 0); // Not supported
 
         return $xjbox;
     }

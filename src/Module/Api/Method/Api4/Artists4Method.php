@@ -81,7 +81,7 @@ final class Artists4Method
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 echo Json4_Data::artists($artists, $include, $user->id);
-                break;
+            break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);

@@ -28,7 +28,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\System\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -55,28 +54,22 @@ final class LogoutAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // only log out the session passed to the user, not just whatever the browser has stored
-        $input = $request->getQueryParams();
-        if (array_key_exists('session', $input) && Session::exists('interface', $input['session'])) {
-            $sessionName    = $this->configContainer->get('session_name');
-            $cookie_options = [
-                'expires' => -1,
-                'path' => (string)$this->configContainer->get('cookie_path'),
-                'domain' => (string)$this->configContainer->get('cookie_domain'),
-                'secure' => make_bool($this->configContainer->get('cookie_secure')),
-                'samesite' => 'Strict'
-            ];
-            $this->logger->debug(
-                'LogoutAction: ' . $sessionName,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            // To end a legitimate session, just call logout.
-            setcookie($sessionName . '_remember', null, $cookie_options);
+        $sessionName    = $this->configContainer->get('session_name');
+        $cookie_options = [
+            'expires' => -1,
+            'path' => (string)$this->configContainer->get('cookie_path'),
+            'domain' => (string)$this->configContainer->get('cookie_domain'),
+            'secure' => make_bool($this->configContainer->get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
+        $this->logger->debug(
+            'LogoutAction: ' . $sessionName,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+        // To end a legitimate session, just call logout.
+        setcookie($sessionName . '_remember', null, $cookie_options);
 
-            $this->authenticationManager->logout($input['session'], false);
-        } else {
-            header('Location: ' . $this->configContainer->get('web_path'));
-        }
+        $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '', false);
 
         return null;
     }

@@ -65,7 +65,7 @@ class Ui implements UiInterface
     public static function find_template($template, bool $extern = false)
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/' . $path;
+        $realpath  = __DIR__ . '/../../../' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -74,7 +74,7 @@ class Ui implements UiInterface
                 return '/templates/' . $template;
             }
 
-            return __DIR__ . '/../../../public/templates/' . $template;
+            return __DIR__ . '/../../../templates/' . $template;
         }
     }
 
@@ -332,7 +332,7 @@ class Ui implements UiInterface
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
-        $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an icon. fall back to default images folder
             $filename = 'icon_' . $name . '.png';
@@ -431,7 +431,7 @@ class Ui implements UiInterface
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/';
-        $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../' . $path . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';

@@ -119,6 +119,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info('------------------', true);
+                Album::update_album_artist();
             }
             if ($verification === true) {
                 ob_start();
@@ -207,11 +208,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
         }
-        // clean up after the action
-        Catalog::clean_empty_albums();
-        Album::update_album_artist();
-        Catalog::update_mapping('artist');
-        Catalog::update_mapping('album');
         Catalog::update_counts();
         if ($optimizeDatabase === true) {
             ob_start();

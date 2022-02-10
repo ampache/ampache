@@ -246,7 +246,7 @@ final class HttpServer implements HttpServerInterface
                     case '/images/key.png':
                     case '/images/tunein.png':
                         // Get read file data
-                        $fpath = __DIR__ . '/../../../public/channel' . $cmd['1'];
+                        $fpath = __DIR__ . '/../../../channel' . $cmd['1'];
                         $pinfo = pathinfo($fpath);
 
                         $content_type = 'text/html';

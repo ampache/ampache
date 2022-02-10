@@ -61,10 +61,6 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $link;
     /**
-     * @var string $f_link
-     */
-    public $f_link;
-    /**
      * @var string $f_type
      */
     public $f_type;
@@ -90,7 +86,6 @@ abstract class playlist_object extends database_object implements library_item
             ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
             : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
-        $this->get_f_link();
     } // format
 
     /**
@@ -176,21 +171,6 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * Get item link.
-     * @return string
-     */
-    public function get_f_link()
-    {
-        // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
-            $link_text    = scrub_out($this->get_fullname());
-            $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
-        }
-
-        return $this->f_link;
-    }
-
-    /**
      * @return null
      */
     public function get_parent()
@@ -270,7 +250,7 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * gather_art
      */
-    public function gather_art($limit): array
+    public function gather_art($limit)
     {
         $medias   = $this->get_medias();
         $count    = 0;
@@ -299,8 +279,6 @@ abstract class playlist_object extends database_object implements library_item
             }
             $count++;
         }
-
-        return $images;
     }
 
     /**

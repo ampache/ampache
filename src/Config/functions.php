@@ -540,8 +540,8 @@ function check_config_writable()
  */
 function check_htaccess_channel_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/')));
+    return ((file_exists(__DIR__ . '/../../channel/.htaccess') && is_writeable(__DIR__ . '/../../channel/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../channel/.htaccess') && is_writeable(__DIR__ . '/../../channel/')));
 }
 
 /**
@@ -549,8 +549,8 @@ function check_htaccess_channel_writable()
  */
 function check_htaccess_rest_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
+    return ((file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/')));
 }
 
 /**
@@ -558,8 +558,8 @@ function check_htaccess_rest_writable()
  */
 function check_htaccess_play_writable()
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+    return ((file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/')));
 }
 
 /**
@@ -1099,7 +1099,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
     if (empty($results) && !empty($filter_type)) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
+        echo "\t<option value=\"\"selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
     }
 
     foreach ($results as $row) {
@@ -1363,7 +1363,7 @@ function nT_($original, $plural, $value)
 function get_themes()
 {
     /* Open the themes dir and start reading it */
-    $handle = opendir(__DIR__ . '/../../public/themes');
+    $handle = opendir(__DIR__ . '/../../themes');
 
     if (!is_resource($handle)) {
         debug_event('themes', 'Failed to open /themes directory', 2);
@@ -1408,7 +1408,7 @@ function get_theme($name)
         return $_mapcache[$name];
     }
 
-    $config_file = __DIR__ . "/../../public/themes/" . $name . "/theme.cfg.php";
+    $config_file = __DIR__ . "/../../themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
         $results         = parse_ini_file($config_file);
         $results['path'] = $name;
@@ -1434,7 +1434,7 @@ function get_theme($name)
  */
 function get_theme_author($theme_name)
 {
-    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
     $results    = read_config($theme_path);
 
     return $results['author'];
@@ -1448,7 +1448,7 @@ function get_theme_author($theme_name)
  */
 function theme_exists($theme_name)
 {
-    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
 
     if (!file_exists($theme_path)) {
         return false;
@@ -1485,7 +1485,7 @@ function get_mime_from_image($data): string
             return 'image/jpeg';
     }
 }
-
+    
 /**
  * @deprecated Will be removed
  */

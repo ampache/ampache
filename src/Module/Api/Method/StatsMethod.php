@@ -87,9 +87,9 @@ final class StatsMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
             return false;
         }

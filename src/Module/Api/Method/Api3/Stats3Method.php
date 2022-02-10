@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -51,12 +50,8 @@ final class Stats3Method
         $offset   = $input['offset'];
         $limit    = $input['limit'];
         $username = $input['username'];
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
-        // override your user if you're looking at others
-        if (array_key_exists('username', $input)) {
-            $user    = User::get_from_username($input['username']);
-        }
+        $user     = User::get_from_username($username);
+
         $albums = null;
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
@@ -84,7 +79,7 @@ final class Stats3Method
                             if (!$limit) {
                                 $limit = AmpConfig::get('popular_threshold');
                             }
-                            $albums = static::getAlbumRepository()->getRandom($user->id, $limit);
+                            $albums = static::getAlbumRepository()->getRandom($limit);
                         }
                     }
                 }

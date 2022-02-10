@@ -101,19 +101,20 @@ class Tmp_Playlist extends database_object
     {
         $session_id = Dba::escape($session_id);
 
-        $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
-        $db_results = Dba::read($sql, array($session_id));
-        $row        = Dba::fetch_row($db_results);
+        $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session`='$session_id'";
+        $db_results = Dba::read($sql);
 
-        if (empty($row)) {
-            $row[0] = Tmp_Playlist::create(array(
+        $results = Dba::fetch_row($db_results);
+
+        if (!array_key_exists('0', $results)) {
+            $results['0'] = Tmp_Playlist::create(array(
                 'session_id' => $session_id,
                 'type' => 'user',
                 'object_type' => 'song'
             ));
         }
 
-        return new Tmp_Playlist($row[0]);
+        return new Tmp_Playlist($results['0']);
     } // get_from_session
 
     /**
@@ -199,9 +200,10 @@ class Tmp_Playlist extends database_object
 
         $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist`='$id'";
         $db_results = Dba::read($sql);
-        $row        = Dba::fetch_row($db_results);
 
-        return $row[0] ?? 0;
+        $results = Dba::fetch_row($db_results);
+
+        return $results['0'];
     } // count_items
 
     /**

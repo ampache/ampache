@@ -48,7 +48,7 @@ final class UpdatePodcast4Method
      */
     public static function update_podcast(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'update_podcast')) {
             return false;
         }
         if (!Api4::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {

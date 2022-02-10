@@ -75,7 +75,7 @@ final class PreferenceCreateMethod
             return false;
         }
         $type = (string) $input['type'];
-        if (!in_array(strtolower($type), array('boolean', 'integer', 'string', 'special'))) {
+        if (!in_array($type, array('boolean', 'integer', 'string', 'special'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;

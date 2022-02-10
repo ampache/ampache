@@ -59,7 +59,7 @@ final class ShareEdit4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'share_edit')) {
             return false;
         }
         $user     = User::get_from_username(Session::username($input['auth']));

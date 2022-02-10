@@ -303,7 +303,7 @@ class Live_Stream extends database_object implements Media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return string|null
+     * @return PDOStatement|boolean
      */
     public static function create(array $data)
     {
@@ -337,16 +337,14 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         if (AmpError::occurred()) {
-            return null;
+            return false;
         }
 
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
-        $insert_id = Dba::insert_id();
-        Catalog::count_table('live_stream');
 
-        return $insert_id;
+        return Dba::write($sql,
+            array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
     } // create
 
     /**

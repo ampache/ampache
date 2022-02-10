@@ -31,7 +31,6 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
-use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class User4Method
@@ -52,43 +51,30 @@ final class User4Method
      */
     public static function user(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('username'), 'user')) {
             return false;
         }
         $username = (string) $input['username'];
         $user     = User::get_from_username($username);
-        $valid    = $user !== null && in_array($user->id, static::getUserRepository()->getValid(true));
-        if (!$valid) {
+        if ($user->id) {
+            $apiuser  = User::get_from_username(Session::username($input['auth']));
+            $fullinfo = false;
+            // get full info when you're an admin or searching for yourself
+            if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                $fullinfo = true;
+            }
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    echo Json4_Data::user($user, $fullinfo);
+                break;
+                default:
+                    echo Xml4_Data::user($user, $fullinfo);
+            }
+        } else {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
-
-            return false;
-        }
-
-        $apiuser  = User::get_from_username(Session::username($input['auth']));
-        $fullinfo = false;
-        // get full info when you're an admin or searching for yourself
-        if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-            $fullinfo = true;
-        }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::user($user, $fullinfo);
-            break;
-            default:
-                echo Xml4_Data::user($user, $fullinfo);
         }
 
         return true;
     } // user
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
 }

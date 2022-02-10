@@ -84,7 +84,7 @@ class Random
      * @param string $random_type
      * @param User $user
      * @param int $object_id
-     * @return int|null
+     * @return mixed
      */
     public static function get_single_song($random_type, $user, $object_id = 0)
     {

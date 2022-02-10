@@ -53,7 +53,7 @@ final class SearchSongs4Method
      */
     public static function search_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'search_songs')) {
             return false;
         }
         $array                    = array();
@@ -71,7 +71,7 @@ final class SearchSongs4Method
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 echo Json4_Data::songs($results, $user->id);
-                break;
+            break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);

@@ -75,7 +75,7 @@ final class ShowAction implements ApplicationActionInterface
             $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
 
             if (empty($results)) {
-                $link = __DIR__ . '/../../public/test.php?action=config';
+                $link = __DIR__ . '/../../test.php?action=config';
             }
         }
         /* Temp Fixes */
@@ -91,12 +91,12 @@ final class ShowAction implements ApplicationActionInterface
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
         if (!class_exists('Gettext\Translations')) {
-            require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         } else {
             load_gettext();
             // Load template
-            require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';
+            require_once __DIR__ . '/../../../../templates/show_test.inc.php';
         }
 
         return null;

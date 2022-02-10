@@ -118,7 +118,7 @@ class Xml4_Data
      */
     public static function set_type($type)
     {
-        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
+        if (!in_array($type, array('rss', 'xspf', 'itunes'))) {
             return false;
         }
 
@@ -203,10 +203,8 @@ class Xml4_Data
                 if (array_key_exists($data['id'], $atags)) {
                     $atags[$data['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = array(
-                        'name' => $data['name'],
-                        'count' => 1
-                    );
+                    $atags[$data['id']] = array('name' => $data['name'],
+                        'count' => 1);
                 }
             }
 

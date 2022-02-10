@@ -323,7 +323,7 @@ class Share extends database_object
         $this->expire_days    = (int)($data['expire']);
         $this->allow_stream   = ($data['allow_stream'] == '1');
         $this->allow_download = ($data['allow_download'] == '1');
-        $this->description    = $data['description'] ?? $this->description;
+        $this->description    = isset($data['description']) ? $data['description'] : $this->description;
 
         $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
         $params = array(

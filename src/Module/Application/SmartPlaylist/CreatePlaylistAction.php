@@ -81,7 +81,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         $playlist                 = $this->modelFactory->createSearch(null);
         $playlist->logic_operator = $operator;
         $playlist->name           = $playlist_name;
-        $playlist->create();
+        $playlist->save();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

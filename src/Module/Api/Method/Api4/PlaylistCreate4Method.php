@@ -53,7 +53,7 @@ final class PlaylistCreate4Method
      */
     public static function playlist_create(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('name', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('name', 'type'), 'playlist_create')) {
             return false;
         }
         $name    = $input['name'];
@@ -69,7 +69,7 @@ final class PlaylistCreate4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::playlists(array($uid), $user_id);
-                break;
+            break;
             default:
                 echo Xml4_Data::playlists(array($uid), $user_id);
         }

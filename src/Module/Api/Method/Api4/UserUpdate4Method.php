@@ -71,7 +71,7 @@ final class UserUpdate4Method
         $username   = $input['username'];
         $password   = $input['password'] ?? null;
         $fullname   = $input['fullname'] ?? null;
-        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
+        $email      = $input['email'] ?? null;
         $website    = $input['website'] ?? null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;

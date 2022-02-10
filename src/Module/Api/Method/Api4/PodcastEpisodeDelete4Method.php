@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -59,7 +58,7 @@ final class PodcastEpisodeDelete4Method
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -67,7 +66,6 @@ final class PodcastEpisodeDelete4Method
         if ($episode->id > 0) {
             if ($episode->remove()) {
                 Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
-                Catalog::count_table('podcast_episode');
             } else {
                 Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
             }

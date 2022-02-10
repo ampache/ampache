@@ -60,8 +60,9 @@ final class PrintTagsCommand extends Command
         /* Attempt to figure out what catalog it comes from */
         $sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
         $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-        $catalog    = Catalog::create_from_id($row['id']);
+        $results    = Dba::fetch_assoc($db_results);
+
+        $catalog = Catalog::create_from_id($results['id']);
 
         $dir_pattern  = $catalog->sort_pattern;
         $file_pattern = $catalog->rename_pattern;

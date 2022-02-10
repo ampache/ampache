@@ -57,7 +57,7 @@ final class VideoRepository implements VideoRepositoryInterface
         }
 
         $sql .= $where;
-        if (AmpConfig::get('catalog_filter') && $userId > 0) {
+        if (AmpConfig::get('catalog_filter') && $userId !== null) {
             $sql .= " AND" . Catalog::get_user_filter('video', $userId);
         }
         $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);

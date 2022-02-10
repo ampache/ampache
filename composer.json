@@ -7,7 +7,7 @@
     "license": "AGPL-3.0",
     "config":
     {
-        "component-dir": "public/lib/components",
+        "component-dir": "lib/components",
         "platform": {
             "ext-curl": "1.0",
             "ext-date": "1.0",
@@ -28,12 +28,7 @@
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
         },
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/installers": true,
-            "robloach/component-installer": true,
-            "oomphinc/composer-installers-extender": true
-        }
+        "sort-packages": true
     },
     "require": {
         "php": ">=7.4 || >=8.0",
@@ -62,6 +57,7 @@
         "doctrine/cache": "1.*.*",
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",
+        "happyworm/jplayer": "2.*",
         "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
         "js-cookie/js-cookie": "2.*",
@@ -84,7 +80,6 @@
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
         "rmccue/requests": "1.8.*",
-        "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
         "scaron/prettyphoto": "3.*",
@@ -100,7 +95,7 @@
         "xdan/datetimepicker": "2.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "2.19.*",
+        "friendsofphp/php-cs-fixer": "2.18.*",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^9",
@@ -253,7 +248,7 @@
         {
             "type": "package",
             "package": {
-                "name": "blueimp/jquery-file-upload",
+                "name": "blueimp/jQuery-File-Upload",
                 "type": "component",
                 "version": "v10.2.0",
                 "source": {
@@ -278,7 +273,7 @@
         {
             "type": "package",
             "package": {
-                "name": "aterrien/jquery-knob",
+                "name": "aterrien/jQuery-Knob",
                 "type": "component",
                 "version": "1.2.11",
                 "source": {
@@ -341,7 +336,7 @@
         {
             "type": "package",
             "package": {
-                "name": "swisnl/jquery-contextmenu",
+                "name": "swisnl/jQuery-contextMenu",
                 "type": "component",
                 "version": "2.1.0",
                 "source": {
@@ -371,8 +366,9 @@
         "sort-packages": true,
         "installer-types": ["component"],
         "installer-paths": {
-            "public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
-            "public/lib/components/{$name}/": ["type:component"]
+            "lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
+            "lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
+            "lib/components/{$name}/": ["type:component"]
         }
     },
     "autoload": {

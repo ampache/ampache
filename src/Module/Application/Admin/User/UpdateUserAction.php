@@ -95,7 +95,7 @@ final class UpdateUserAction extends AbstractUserAction
             AmpError::add('username', T_("A Username is required"));
         } else {
             if ($username != $client->username) {
-                if ($this->userRepository->idByUsername($username) > 0) {
+                if ($this->userRepository->findByUsername($username) !== null) {
                     AmpError::add('username', T_("That Username already exists"));
                 }
             }

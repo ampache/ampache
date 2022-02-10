@@ -48,7 +48,7 @@ final class Goodbye4Method
      */
     public static function goodbye(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('auth'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('auth'), 'goodbye')) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)

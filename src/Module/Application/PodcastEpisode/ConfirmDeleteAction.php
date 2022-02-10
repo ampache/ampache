@@ -79,7 +79,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if ($episode->remove()) {
-            Catalog::count_table('podcast_episode');
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Podcast Episode has been deleted'),

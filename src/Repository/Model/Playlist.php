@@ -43,6 +43,8 @@ class Playlist extends playlist_object
     public $last_update;
     public $last_duration;
 
+    public $link;
+    public $f_link;
     public $f_date;
     public $f_last_update;
 
@@ -292,6 +294,7 @@ class Playlist extends playlist_object
     public function format($details = true)
     {
         parent::format($details);
+        $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     } // format
@@ -382,12 +385,10 @@ class Playlist extends playlist_object
             $params[] = $type;
         }
         $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return null;
-        }
 
-        return $row[0];
+        $results = Dba::fetch_row($db_results);
+
+        return $results['0'];
     } // get_media_count
 
     /**
@@ -404,12 +405,9 @@ class Playlist extends playlist_object
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
-        $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return 0;
-        }
+        $results    = Dba::fetch_row($db_results);
 
-        return (int) $row[0];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
@@ -623,11 +621,8 @@ class Playlist extends playlist_object
         $date = time();
         $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
-        $insert_id = Dba::insert_id();
 
-        Catalog::count_table('playlist');
-
-        return $insert_id;
+        return Dba::insert_id();
     } // create
 
     /**
@@ -809,7 +804,6 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, array($this->id));
-        Catalog::count_table('playlist');
 
         return true;
     } // delete
@@ -828,10 +822,10 @@ class Playlist extends playlist_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
-                'id' => $row['id'],
-                'track' => $count
-            );
+            $new_data          = array();
+            $new_data['id']    = $row['id'];
+            $new_data['track'] = $count;
+            $results[]         = $new_data;
             $count++;
         } // end while results
         if (!empty($results)) {

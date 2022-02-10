@@ -62,7 +62,7 @@ final class PodcastCreate4Method
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
             return false;
         }
         $data            = array();
