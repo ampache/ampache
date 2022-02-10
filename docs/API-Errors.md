@@ -19,12 +19,11 @@ An Ampache5 error has the following parts:
 
 * XML and JSON errors are always in an 'error' object.
 * Errors will always provide a code
-* The data names user in the error must use names that don't conflict with other data objects
-* Allow the ability to drill down even further using the action and type of error
-  * errorAction will return the method used that caused the error
-  * Use errorType 'system' for things users can't change / server config
-  * Use errorType 'account' for user issues (password, perms, auth, etc)
-  * All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
+* The data names used in the error must use names that don't conflict with other data objects
+* errorAction will return the method used that caused the error
+* Use errorType 'system' for things users can't change / server config
+* Use errorType 'account' for user issues (password, perms, auth, etc)
+* All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
 * errorMessage must be a translated string to allow devs to show things for the user in their language.
 
 ## Error Codes
