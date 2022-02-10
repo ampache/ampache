@@ -51,7 +51,7 @@ final class ArtistAlbums4Method
      */
     public static function artist_albums(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'artist_albums')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $artist = new Artist($input['filter']);
@@ -64,7 +64,7 @@ final class ArtistAlbums4Method
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 echo Json4_Data::albums($albums, array(), $user->id);
-            break;
+                break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);

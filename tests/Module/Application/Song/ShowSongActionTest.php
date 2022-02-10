@@ -156,7 +156,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('showBoxTop')
             ->with(
-                sprintf('%s Details', $title),
+                $title,
                 'box box_song_details'
             )
             ->once();

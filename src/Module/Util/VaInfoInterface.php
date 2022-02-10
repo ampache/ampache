@@ -54,7 +54,7 @@ interface VaInfoInterface
      * @throws Exception
      */
     public function write_id3($tagData);
-    
+
     /**
      * prepare_metadata_for_writing
      * Prepares vorbiscomments/id3v2 metadata for writing tag to file

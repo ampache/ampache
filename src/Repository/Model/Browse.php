@@ -156,7 +156,7 @@ class Browse extends Query
      */
     public function get_supplemental_objects()
     {
-        $objects = isset($_SESSION['browse']['supplemental'][$this->id]) ? $_SESSION['browse']['supplemental'][$this->id] : '';
+        $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
             $objects = array();

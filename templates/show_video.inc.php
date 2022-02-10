@@ -35,9 +35,11 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Video $video */
+
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php Ui::show_box_top($video->f_name . ' ' . T_('Details'), 'box box_video_details'); ?>
+<?php Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;

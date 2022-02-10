@@ -158,7 +158,7 @@ class Dba
 
             return '';
         }
-        $out_var = $dbh->quote(filter_var($var, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $out_var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
         return substr($out_var, 1, -1);
     }

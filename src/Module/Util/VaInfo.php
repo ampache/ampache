@@ -289,12 +289,18 @@ final class VaInfo implements VaInfoInterface
                 }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
                 if ($enc !== false) {
+                    if (!array_key_exists($enc, $encodings)) {
+                        $encodings[$enc] = 0;
+                    }
                     $encodings[$enc]++;
                 }
             }
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
             if ($enc !== false) {
+                if (!array_key_exists($enc, $encodings)) {
+                    $encodings[$enc] = 0;
+                }
                 $encodings[$enc]++;
             }
         }
@@ -1721,7 +1727,7 @@ final class VaInfo implements VaInfoInterface
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        //$logger->debug('Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);

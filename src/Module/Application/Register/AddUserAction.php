@@ -170,7 +170,7 @@ final class AddUserAction implements ApplicationActionInterface
             AmpError::add('password', T_('Passwords do not match'));
         }
 
-        if ($this->userRepository->findByUsername((string) $username) !== null) {
+        if ($this->userRepository->idByUsername((string) $username) > 0) {
             AmpError::add('duplicate_user', T_('That Username already exists'));
         }
 

@@ -1099,7 +1099,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
     if (empty($results) && !empty($filter_type)) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        echo "\t<option value=\"\"selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
+        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
     }
 
     foreach ($results as $row) {
@@ -1485,7 +1485,7 @@ function get_mime_from_image($data): string
             return 'image/jpeg';
     }
 }
-    
+
 /**
  * @deprecated Will be removed
  */

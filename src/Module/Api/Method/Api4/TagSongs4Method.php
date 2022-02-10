@@ -53,27 +53,10 @@ final class TagSongs4Method
      */
     public static function tag_songs(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'tag_songs')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $songs = Tag::get_tag_objects('song', $input['filter']);
-        $user  = User::get_from_username(Session::username($input['auth']));
 
-        ob_end_clean();
-        if (!empty($songs)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    Json4_Data::set_offset($input['offset'] ?? 0);
-                    Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($songs, $user->id);
-                break;
-                default:
-                    Xml4_Data::set_offset($input['offset'] ?? 0);
-                    Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($songs, $user->id);
-            }
-        }
-
-        return true;
+        return GenreSongs4Method::genre_songs($input);
     } // tag_songs
 }

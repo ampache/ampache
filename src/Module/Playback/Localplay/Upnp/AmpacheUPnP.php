@@ -470,12 +470,12 @@ class AmpacheUPnP extends localplay_controller
         $idx     = 1;
         foreach ($playlist as $key => $item) {
             $data          = array();
-            $data['link']  = $item['link'];
+            $data['link']  = $item['link'] ?? '';
             $data['id']    = $idx;
             $data['track'] = $idx;
 
-            $url_data = Stream_Url::parse($item['link']);
-            if ($url_data != null) {
+            $url_data = Stream_Url::parse($data['link']);
+            if (array_key_exists('id', $url_data)) {
                 $song = new Song($url_data['id']);
                 if ($song != null) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
@@ -514,13 +514,13 @@ class AmpacheUPnP extends localplay_controller
         $status['volume']      = $this->_upnp->GetVolume();
         $status['repeat']      = false;
         $status['random']      = false;
-        $status['track']       = $item['link'];
-        $status['track_title'] = $item['name'];
+        $status['track']       = $item['link'] ?? '';
+        $status['track_title'] = $item['name'] ?? '';
 
-        $url_data = Stream_Url::parse($item['link']);
-        if ($url_data != null) {
+        $url_data = Stream_Url::parse($status['track']);
+        if (array_key_exists('id', $url_data)) {
             $song = new Song($url_data['id']);
-            if ($song != null) {
+            if ($song->id) {
                 $status['track_artist'] = $song->get_artist_fullname();
                 $status['track_album']  = $song->get_album_fullname();
             }

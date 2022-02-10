@@ -57,7 +57,7 @@ final class Following4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'following')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
@@ -73,7 +73,7 @@ final class Following4Method
                     switch ($input['api_format']) {
                         case 'json':
                             echo Json4_Data::users($users);
-                        break;
+                            break;
                         default:
                             echo Xml4_Data::users($users);
                     }

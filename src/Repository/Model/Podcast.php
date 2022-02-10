@@ -336,7 +336,10 @@ class Podcast extends database_object implements library_item
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog->gather_types !== "podcast") {
+            if (!$catalog) {
+                AmpError::add('catalog', T_('Catalog not found'));
+            }
+            if ($catalog && $catalog->gather_types !== "podcast") {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
         }
@@ -421,6 +424,7 @@ class Podcast extends database_object implements library_item
                 $art->insert_url($arturl);
             }
             Catalog::update_map($catalog_id, 'podcast', (int)$podcast_id);
+            Catalog::count_table('user');
             if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
@@ -478,6 +482,7 @@ class Podcast extends database_object implements library_item
         $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
         Dba::write($sql, $params);
         Catalog::update_mapping('podcast_episode');
+        Catalog::count_table('podcast_episode');
         $this->update_lastsync($time);
     }
 
@@ -578,7 +583,7 @@ class Podcast extends database_object implements library_item
     /**
      * sync_episodes
      * @param boolean $gather
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function sync_episodes($gather = false)
     {
@@ -604,7 +609,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
-     * @return PDOStatement|boolean
+     * @return string|null
      */
     public function remove()
     {
@@ -615,8 +620,13 @@ class Podcast extends database_object implements library_item
         }
 
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
+        Dba::write($sql, array($this->id));
+        $insert_id = Dba::insert_id();
 
-        return Dba::write($sql, array($this->id));
+        Catalog::count_table('podcast');
+        Catalog::count_table('podcast_episode');
+
+        return $insert_id;
     }
 
     /**

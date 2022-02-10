@@ -44,9 +44,9 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Lookup for a user with a certain name
+     * Lookup for a user id with a certain name
      */
-    public function findByUsername(string $username): ?int
+    public function idByUsername(string $username): int
     {
         $db_results = Dba::read(
             'SELECT `id` FROM `user` WHERE `username`= ?',
@@ -60,7 +60,27 @@ final class UserRepository implements UserRepositoryInterface
             return (int) $result;
         }
 
-        return null;
+        return 0;
+    }
+
+    /**
+     * Lookup for a user id with a certain email
+     */
+    public function idByEmail(string $email): int
+    {
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `email`= ?',
+            [$email]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
     }
 
     /**
@@ -118,6 +138,81 @@ final class UserRepository implements UserRepositoryInterface
         User::add_to_cache($key, $value, $users);
 
         return $users;
+    }
+
+    /**
+     * Remove details for users that no longer exist.
+     */
+    public function collectGarbage(): void
+    {
+        // simple deletion queries.
+        $user_tables = array(
+            'access_list',
+            'bookmark',
+            'broadcast',
+            'democratic',
+            'ip_history',
+            'object_count',
+            'playlist',
+            'rating',
+            'search',
+            'share',
+            'tag_map',
+            'user_activity',
+            'user_data',
+            'user_flag',
+            'user_preference',
+            'user_shout',
+            'user_vote',
+            'wanted'
+        );
+        foreach ($user_tables as $table_id) {
+            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
+            Dba::write($sql);
+        }
+        // reset their data to null if they've made custom changes
+        $user_tables = array(
+            'artist',
+            'label'
+        );
+        foreach ($user_tables as $table_id) {
+            $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
+            Dba::write($sql);
+        }
+
+        // Clean up the playlist data table
+        $sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist`.`id` IS NULL";
+        Dba::write($sql);
+
+        // Clean out the tags
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`) AND `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_merge`)";
+        Dba::write($sql);
+
+        // Clean out the tag_merges that have been lost
+        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` NOT IN (SELECT `id` FROM `tag`) OR `tag_merge`.`merged_to` NOT IN (SELECT `id` FROM `tag`)";
+        Dba::write($sql);
+
+        // Delete their following/followers
+        $sql = "DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);";
+        Dba::write($sql);
+    }
+
+    /**
+     * This returns a built user from a username
+     */
+    public function findByUsername(string $username): ?User
+    {
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
+        $db_results = Dba::read($sql, array($username));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
     }
 
     /**

@@ -57,14 +57,12 @@ final class PlaylistEdit4Method
      */
     public static function playlist_edit(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'playlist_edit')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $name  = $input['name'];
-        $type  = $input['type'];
         $items = explode(',', (string)($input['items'] ?? ''));
         $order = explode(',', (string)($input['tracks'] ?? ''));
-        $sort  = (int) $input['sort'];
+        $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -81,8 +79,10 @@ final class PlaylistEdit4Method
 
             return false;
         }
+        $name = $input['name'] ?? $playlist->name;
+        $type = $input['type'] ?? $playlist->type;
         // update name/type
-        if ($name || $type) {
+        if ($name !== $playlist->name || $type !== $playlist->type) {
             $array = [
                 "name" => $name,
                 "pl_type" => $type,

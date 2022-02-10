@@ -50,7 +50,7 @@ final class Song4Method
      */
     public static function song(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'song')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $song_id = scrub_in($input['filter']);
@@ -60,7 +60,7 @@ final class Song4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::songs(array((int) $song_id), $user->id);
-            break;
+                break;
             default:
                 echo Xml4_Data::songs(array((int) $song_id), $user->id);
         }

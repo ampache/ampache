@@ -33,12 +33,17 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 $web_path          = AmpConfig::get('web_path');
-$htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
+$site_lang         = AmpConfig::get('lang');
+$site_title        = scrub_out(AmpConfig::get('site_title'));
+$site_social       = AmpConfig::get('sociable');
+$site_ajax         = AmpConfig::get('ajax_load');
+$htmllang          = str_replace("_", "-", $site_lang);
 $location          = get_location();
 $_SESSION['login'] = false;
 $cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
+$current_user      = Core::get_global('user');
 // strings for the main page and templates
 $t_home      = T_('Home');
 $t_play      = T_('Play');
@@ -54,27 +59,33 @@ $t_logout    = T_('Log out');
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
+$jQueryKnob       = (is_dir(__DIR__ . '/../lib/components/jquery-knob'))
+    ? 'jquery-knob'
+    : 'jQuery-Knob';
+$jQueryFileUpload = (is_dir(__DIR__ . '/../lib/components/jquery-file-upload'))
+    ? 'jquery-file-upload'
+    : 'jQuery-File-Upload';
+$jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
+    ? 'jquery-contextmenu'
+    : 'jQuery-contextMenu';
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr';?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
-        <?php
-            if (AmpConfig::get('use_rss')) { ?>
+        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
+        <?php if (AmpConfig::get('use_rss')) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
-        <?php
-                if (AmpConfig::get('sociable')) { ?>
+        <?php if ($site_social) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
-        <?php
-                }
+        <?php }
             } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
+        <title><?php echo $site_title; ?> - <?php echo $location['title']; ?></title>
 
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
@@ -83,7 +94,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
@@ -95,10 +106,10 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" defer></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryKnob; ?>/js/jquery.knob.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.iframe-transport.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryFileUpload; ?>/js/jquery.fileupload.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/<?php echo $jQueryContextMenu; ?>/dist/jquery.contextMenu.js"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
@@ -108,8 +119,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
                 <?php if (AmpConfig::get('geolocation')) { ?>
                     geolocate_user();
-                <?php
-        } ?>
+                <?php } ?>
             });
 
             // Using the following workaround to set global variable available from any javascript script.
@@ -120,9 +130,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             var jsCancelTitle = "<?php echo T_('Cancel') ?>";
         </script>
 
-        <?php
-        if (AmpConfig::get('ajax_load')) {
-            $iframed = true; ?>
+        <?php if ($site_ajax) {
+                $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
         <?php require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
@@ -146,7 +155,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             }
         </script>
         <?php
-        } else { ?>
+            } else { ?>
         <script>
             function NavigateTo(url)
             {
@@ -158,8 +167,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 return btoa(window.location.href);
             }
         </script>
-        <?php
-        } ?>
+        <?php } ?>
         <script>
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
@@ -244,10 +252,10 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script>
             var lastaction = new Date().getTime();
             var refresh_slideshow_interval=<?php if (Preference::exists('flickr_api_key')) {
-            echo AmpConfig::get('slideshow_time');
-        } else {
-            echo 0;
-        } ?>;
+                echo AmpConfig::get('slideshow_time');
+            } else {
+                echo 0;
+            } ?>;
             var iSlideshow = null;
             var tSlideshow = null;
             function init_slideshow_check()
@@ -326,8 +334,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             });
         </script>
 
-        <?php
-            if (AmpConfig::get('libitem_contextmenu')) { ?>
+        <?php if (AmpConfig::get('libitem_contextmenu')) { ?>
         <script>
             function libitem_action(item, action)
             {
@@ -353,9 +360,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 }
             });
         </script>
-
-        <?php
-            } ?>
+        <?php } ?>
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
@@ -364,36 +369,30 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" alt="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" />
+                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>" />
                   </a>
                 </h1>
                 <div id="headerbox">
-                    <?php
-                        Ui::show_box_top('', 'box box_headerbox');
+                    <?php Ui::show_box_top('', 'box box_headerbox');
                         require_once Ui::find_template('show_search_bar.inc.php');
-                    if (User::is_registered() && !empty(Core::get_global('user'))) {
+                    if (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0) {
                         require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
-                        <?php
-                            if (AmpConfig::get('sociable')) { ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic; echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount((Core::get_global('user')->getId())); ?>)</a>
-                        <?php
-                            } ?>
+                            <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user->id; ?>"><?php echo $current_user->fullname; ?></a>
+                        <?php if ($site_social) { ?>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic; echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount(($current_user->getId())); ?>)</a>
+                        <?php } ?>
                         </span>
                     <?php
-                    } else { ?>
+                    } elseif (!AmpConfig::get('simple_user_mode')) { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
-                        <?php
-                            if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
+                        <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
-                        <?php
-                            } ?>
+                        <?php } ?>
                         </span>
-                    <?php
-                        } ?>
-                    <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+                    <?php } ?>
+                    <?php if ($site_ajax && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
                         </div>
@@ -402,8 +401,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
-            <?php
-                if (AmpConfig::get('topmenu')) { ?>
+            <?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/index.php">
@@ -437,24 +435,21 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                         <span><?php echo $t_favorites ?></span>
                     </a>
                 </div>
-
-                <?php }
-                    if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
+                <?php } ?>
+                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
                         <span><?php echo $t_upload ?></span>
                     </a>
                 </div>
-
-                <?php
-                    } ?>
-
+                <?php } ?>
             </div>
-
-            <?php
-                }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
+            <?php } ?>
+            <?php $sidebarLight = AmpConfig::get('sidebar_light');
+            $isCollapsed        = (($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
+                        ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
+                        (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
@@ -510,30 +505,27 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if (Access::check('interface', 100)) {
-                    echo '<div id=update_notify>';
-                    //if (!AmpConfig::get('hide_ampache_messages', false)) {
-                    //    AutoUpdate::show_ampache_message();
-                    //}
-                    if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
-                        AutoUpdate::show_new_version();
-                        echo '<br />';
-                    }
-                    $count_temp_playlist = (!empty(Core::get_global('user')))
-                        ? count(Core::get_global('user')->playlist->get_items())
-                        : 0;
+                            echo '<div id=update_notify>';
+                            //if (!AmpConfig::get('hide_ampache_messages', false)) {
+                            //    AutoUpdate::show_ampache_message();
+                            //}
+                            if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
+                                AutoUpdate::show_new_version();
+                                echo '<br />';
+                            }
+                            $count_temp_playlist = (!empty($current_user)) ? count($current_user->playlist->get_items()) : 0;
 
-                    if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
+                            if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
                             </div>
-                <?php
+                <?php }
+                            echo '</div>';
                         }
-                    echo '</div>';
-                }
                 if (AmpConfig::get("ajax_load")) {
                     require Ui::find_template('show_web_player_embedded.inc.php');
-                } // load the web_player early to make sure the browser doesn't block audio playback?>
+                } ?>
                 <div id="guts">

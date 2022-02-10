@@ -229,8 +229,8 @@ class WebPlayer
             if ($item->type == 'broadcast') {
                 $force_type = 'mp3';
             }
-            $urlinfo = Stream_Url::parse($item->url);
-            $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
+            $url_data = Stream_Url::parse($item->url);
+            $types    = self::get_types($item, $url_data, $transcode_cfg, $force_type);
             if (!in_array($types['player'], $jptypes)) {
                 $jptypes[] = $types['player'];
             }
@@ -304,17 +304,17 @@ class WebPlayer
             $json[$kmember] = $item->$member;
         }
 
-        $urlinfo  = Stream_Url::parse($item->url);
-        $types    = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
-        $url      = $urlinfo['base_url'];
-        $media    = self::get_media_object($urlinfo);
+        $url_data  = Stream_Url::parse($item->url);
+        $types     = self::get_types($item, $url_data, $transcode_cfg, $force_type);
+        $url       = $url_data['base_url'];
+        $media     = self::get_media_object($url_data);
         // stream urls that don't send a type (democratic playlists)
-        $item->type = (empty($item->type) && !empty($urlinfo['type']))
-            ? $urlinfo['type']
+        $item->type = (empty($item->type) && !empty($url_data['type']))
+            ? $url_data['type']
             : $item->type;
 
         if ($media != null) {
-            if ($urlinfo['type'] == 'song') {
+            if ($url_data['type'] == 'song') {
                 // get replaygain from the song_data table
                 $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
                 $json['artist_id']             = $media->artist;
@@ -332,7 +332,7 @@ class WebPlayer
                 }
             }
             $json['media_id']   = $media->id;
-            $json['media_type'] = $urlinfo['type'];
+            $json['media_type'] = $url_data['type'];
 
         //$url .= "&content_length=required";
         } else {

@@ -51,7 +51,7 @@ final class CatalogAction4Method
      */
     public static function catalog_action(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
+        if (!Api4::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
         }
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'catalog_action', $input['api_format'])) {

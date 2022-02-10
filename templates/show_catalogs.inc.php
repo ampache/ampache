@@ -23,6 +23,8 @@
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
@@ -48,14 +50,11 @@ use Ampache\Module\Util\Ui;
         </tr>
         <?php
             } ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="6">
-            <?php if (!count($object_ids)) { ?>
-                <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
-            <?php
-            } ?>
-            </td>
+            <td colspan="6"><span class="nodata"><?php echo T_('No Catalog found'); ?></span></td>
         </tr>
+            <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

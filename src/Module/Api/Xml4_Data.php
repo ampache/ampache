@@ -118,7 +118,7 @@ class Xml4_Data
      */
     public static function set_type($type)
     {
-        if (!in_array($type, array('rss', 'xspf', 'itunes'))) {
+        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
             return false;
         }
 

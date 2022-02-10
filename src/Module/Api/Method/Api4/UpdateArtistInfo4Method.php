@@ -50,7 +50,7 @@ final class UpdateArtistInfo4Method
      */
     public static function update_artist_info(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id'), 'update_artist_info')) {
+        if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
         if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_artist_info', $input['api_format'])) {

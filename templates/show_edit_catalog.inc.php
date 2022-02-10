@@ -23,6 +23,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Catalog $catalog */
+
 /* HINT: Catalog Name */
 Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
@@ -67,24 +69,22 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
             <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" /></td>
         </tr>
-            <?php if (AmpConfig::get('catalog_filter')) { ?>
         <tr>
-            <td>
-                <?php echo T_('Catalog User'); ?>:<br />
-            </td>
-            <td>
-                <?php
-                $options   = array();
-                if (!empty($users)) {
-                    foreach ($users as $user_id => $username) {
-                        $selected  = ($user_id == $catalog->filter_user) ? ' selected="selected"' : '';
-                        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
-                    }
-                    echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
-                } ?>
+<?php if (AmpConfig::get('catalog_filter')) {
+    echo "<td>" . T_('Catalog User') . ":<br /></td>\n<td>";
+    $options = array();
+    if (!empty($users)) {
+        foreach ($users as $user_id => $username) {
+            $selected  = ($user_id == $catalog->filter_user) ? ' selected="selected"' : '';
+            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+        }
+        echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
+    }
+} else {
+    echo "<td style=\"display: none;\">" . T_('Catalog User') . ":<br /></td>\n<td style=\"display: none;\">\n<select name=\"filter_user\"><option value=\"0\" selected=\"selected\">" . T_('Public Catalog') . "</option></select>";
+} ?>
             </td>
         </tr>
-            <?php } ?>
     </table>
     <div class="formValidation">
         <input type="hidden" name="catalog_id" value="<?php echo scrub_out($catalog->id); ?>" />

@@ -28,7 +28,12 @@
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "robloach/component-installer": true,
+            "oomphinc/composer-installers-extender": true
+        }
     },
     "require": {
         "php": ">=7.4 || >=8.0",
@@ -248,7 +253,7 @@
         {
             "type": "package",
             "package": {
-                "name": "blueimp/jQuery-File-Upload",
+                "name": "blueimp/jquery-file-upload",
                 "type": "component",
                 "version": "v10.2.0",
                 "source": {
@@ -273,7 +278,7 @@
         {
             "type": "package",
             "package": {
-                "name": "aterrien/jQuery-Knob",
+                "name": "aterrien/jquery-knob",
                 "type": "component",
                 "version": "1.2.11",
                 "source": {
@@ -336,7 +341,7 @@
         {
             "type": "package",
             "package": {
-                "name": "swisnl/jQuery-contextMenu",
+                "name": "swisnl/jquery-contextmenu",
                 "type": "component",
                 "version": "2.1.0",
                 "source": {

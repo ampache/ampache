@@ -180,7 +180,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function get_keywords()
     {
@@ -505,8 +505,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         debug_event(self::class, 'Removing podcast episode ' . $this->id, 5);
 
         if (AmpConfig::get('delete_from_disk') && !empty($this->file)) {
-            if (!unlink($this->file)) {
-                debug_event(self::class, 'Cannot delete file ' . $this->file, 3);
+            if (Core::is_readable($this->file)) {
+                unlink($this->file);
             }
         }
 

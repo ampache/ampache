@@ -53,7 +53,7 @@ final class Playlist4Method
      */
     public static function playlist(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'playlist')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
@@ -75,7 +75,7 @@ final class Playlist4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::playlists(array($list_id), $user->id);
-            break;
+                break;
             default:
                 echo Xml4_Data::playlists(array($list_id), $user->id);
         }
