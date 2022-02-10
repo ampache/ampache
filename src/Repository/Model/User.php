@@ -270,15 +270,11 @@ class User extends database_object
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
      * @param string $username
-     * @return User $user
+     * @return User|null $user
      */
     public static function get_from_username($username)
     {
-        $sql        = "SELECT `id` FROM `user` WHERE `username` = ? OR `fullname` = ?";
-        $db_results = Dba::read($sql, array($username, $username));
-        $results    = Dba::fetch_assoc($db_results);
-
-        return new User($results['id'] ?? 0);
+        return static::getUserRepository()->findByUsername($username);
     } // get_from_username
 
     /**
@@ -924,6 +920,10 @@ class User extends database_object
         $disabled = false,
         $encrypted = false
     ) {
+        // don't try to overwrite users that already exist
+        if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
+            return 0;
+        }
         $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
