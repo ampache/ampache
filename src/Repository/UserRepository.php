@@ -44,9 +44,9 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Lookup for a user with a certain name
+     * Lookup for a user id with a certain name
      */
-    public function findByUsername(string $username): ?int
+    public function idByUsername(string $username): int
     {
         $db_results = Dba::read(
             'SELECT `id` FROM `user` WHERE `username`= ?',
@@ -60,7 +60,27 @@ final class UserRepository implements UserRepositoryInterface
             return (int) $result;
         }
 
-        return null;
+        return 0;
+    }
+
+    /**
+     * Lookup for a user id with a certain email
+     */
+    public function idByEmail(string $email): int
+    {
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `email`= ?',
+            [$email]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
     }
 
     /**
@@ -178,6 +198,21 @@ final class UserRepository implements UserRepositoryInterface
 
         $sql = "DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);";
         Dba::write($sql);
+    }
+
+    /**
+     * This returns a built user from a username
+     */
+    public function findByUsername(string $username): ?User
+    {
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
+        $db_results = Dba::read($sql, array($username));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
     }
 
     /**

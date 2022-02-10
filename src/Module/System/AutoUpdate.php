@@ -163,6 +163,9 @@ class AutoUpdate
             }
             // Otherwise it is stable version, get latest tag
             $tags = self::github_request('/tags');
+            if (!$tags) {
+                return $lastversion;
+            }
             foreach ($tags as $release) {
                 $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
                 if (empty($str)) {
