@@ -650,7 +650,7 @@ abstract class Catalog extends database_object
         }
         $results = Dba::fetch_assoc($db_results);
 
-        return (int) $results['value'] ?? 0;
+        return (int)($results['value'] ?? 0);
     } // get_update_info
 
     /**
