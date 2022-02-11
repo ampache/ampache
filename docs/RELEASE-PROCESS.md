@@ -41,7 +41,7 @@ wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubuserc
 * Reset the vendor folder completely and pull it all down
 
 ```shell
-rm -rf ./vendor & rm composer.lock
+rm -rf ./composer.lock vendor/* public/lib/components/*
 ```
 
 * Install packages for all supported php releases (ONE at a time obviously)
@@ -172,3 +172,41 @@ Then pushing it to github
 ```shell
 git push --force origin 5.0.0
 ```
+
+## Updating for squashed releases
+
+For the squashed repo you need to manually copy/paste then do some find/replace to get the server working.
+
+After fixing up the paths you can commit then follow the regular release process
+
+* Clone the repo `git clone -b squashed https://github.com/ampache/ampache.git ampache_squashed/`
+* Clone master `git clone -b master https://github.com/ampache/ampache.git ampache_master/`
+* Copy everything except the public folder into ampache_squashed
+* Copy everything from /public into the root on the ampache_squashed folder
+* find and replace for the following folders
+
+/admin, /channel, /daap, /play, /rest, /server, /upnp, /webdav
+* find `$dic = require __DIR__ . '/../../src/Config/Init.php';`
+* replace `$dic = require __DIR__ . '/../src/Config/Init.php';`
+
+/lib/javascript
+* find `$dic = require __DIR__ . '/../../../src/Config/Init.php';`
+* replace `$dic = require __DIR__ . '/../../src/Config/Init.php';`
+
+/src
+* find `/public/`
+* replace `/`
+
+/
+* find `$dic = require __DIR__ . '/../src/Config/Init.php';`
+* replace `$dic = require __DIR__ . '/src/Config/Init.php';`
+* find `$dic = require_once __DIR__ . '/../src/Config/Init.php';`
+* replace `$dic = require_once __DIR__ . '/src/Config/Init.php';`
+* find `$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';`
+* replace `$dic = require_once __DIR__ . '/src/Config/Bootstrap.php';`
+
+composer.json
+* find `public/lib`
+* replace `lib`
+
+

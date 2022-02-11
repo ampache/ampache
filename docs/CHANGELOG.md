@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.2.1-develop
+## Ampache 5.2.1-release
 
 ### Added
 

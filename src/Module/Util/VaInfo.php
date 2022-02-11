@@ -228,7 +228,7 @@ final class VaInfo implements VaInfoInterface
             } else {
                 $tags = array();
                 foreach ($test_tags as $tag) {
-                    if (array_key_exists('id3v1', $this->_raw) && $value = $this->_raw['id3v1'][$tag]) {
+                    if (array_key_exists('id3v1', $this->_raw) && array_key_exists($tag, $this->_raw['id3v1']) && $value = $this->_raw['id3v1'][$tag]) {
                         $tags[$tag] = $value;
                     }
                 }
@@ -241,7 +241,7 @@ final class VaInfo implements VaInfoInterface
                 // The user has told us to be moronic, so let's do that thing
                 $tags = array();
                 foreach ($test_tags as $tag) {
-                    if ($value = $this->_raw['id3v2']['comments'][$tag]) {
+                    if (array_key_exists('id3v2', $this->_raw) && array_key_exists($tag, $this->_raw['id3v2']) && $value = $this->_raw['id3v2']['comments'][$tag]) {
                         $tags[$tag] = $value;
                     }
                 }
