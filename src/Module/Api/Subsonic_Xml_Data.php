@@ -691,7 +691,9 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', (string)$album->disk);
 
-        $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
+        if ($album->has_art) {
+            $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
+        }
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
