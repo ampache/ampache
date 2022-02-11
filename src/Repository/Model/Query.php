@@ -991,6 +991,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
         $sql = $this->get_sql();
+        //debug_event(self::class, 'get_objects query: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1320,6 +1321,7 @@ class Query
     public function get_sql($limit = true)
     {
         $sql = $this->get_base_sql();
+        //debug_event(self::class, 'get_sql query: ' . $sql, 5);
 
         $filter_sql = "";
         $join_sql   = "";
@@ -1336,8 +1338,8 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group') && $this->_state['sort']) {
-            $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
+        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group')) {
+            $album_artist = (array_key_exists('sort', $this->_state) && array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
             $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
