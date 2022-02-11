@@ -668,6 +668,8 @@ class Search extends playlist_object
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
+            $this->type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
             $this->type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
             $this->type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
@@ -735,6 +737,7 @@ class Search extends playlist_object
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $this->type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
             $this->type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
             $this->type_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
@@ -1483,7 +1486,6 @@ class Search extends playlist_object
                     if ($input == 0 && $sql_match_operator == '>=') {
                         break;
                     }
-
                     if ($input == 0 && $sql_match_operator == '<') {
                         $input              = -1;
                         $sql_match_operator = '<=>';
@@ -1500,12 +1502,32 @@ class Search extends playlist_object
                         $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                if (!array_key_exists('rating', $table)) {
-                    $table['rating'] = '';
-                }
+                    if (!array_key_exists('rating', $table)) {
+                        $table['rating'] = '';
+                    }
                     $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`album`.`$column`"
                         : "";
+                    break;
+                case 'songrating':
+                    if ($input == 0 && $sql_match_operator == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $sql_match_operator == '<') {
+                        $input              = -1;
+                        $sql_match_operator = '<=>';
+                    }
+                    if ($input == 0 && $sql_match_operator == '<>') {
+                        $input              = 1;
+                        $sql_match_operator = '>=';
+                    }
+                    if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
+                        $where[] = "`album`.`id NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator $input))) OR `album`.`id` NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                    } else {
+                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator $input)))";
+                    }
                     break;
                 case 'myplayed':
                     $column       = 'id';
@@ -1815,7 +1837,6 @@ class Search extends playlist_object
                     $join['image'] = true;
                     break;
                 case 'myrating':
-                    // combine these as they all do the same thing just different tables
                     $column  = 'id';
                     $my_type = 'artist';
                     if ($input == 0 && $sql_match_operator == '>=') {
@@ -1845,6 +1866,29 @@ class Search extends playlist_object
                     $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id`=`artist`.`$column`"
                         : "";
+                    break;
+                case 'albumrating':
+                case 'songrating':
+                    $looking = str_replace('rating', '', $rule[0]);
+                    $column  = ($looking == 'album') ? 'album_artist' : 'artist';
+                    if ($input == 0 && $sql_match_operator == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $sql_match_operator == '<') {
+                        $input              = -1;
+                        $sql_match_operator = '<=>';
+                    }
+                    if ($input == 0 && $sql_match_operator == '<>') {
+                        $input              = 1;
+                        $sql_match_operator = '>=';
+                    }
+                    if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
+                        $where[] = "`artist`.`id NOT IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator $input))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                    } else {
+                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator $input)))";
+                    }
                     break;
                 case 'myplayed':
                     $column       = 'id';

@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Ampache develop
+
+### Added
+
+* search:
+  * Add `songrating` to album search (My Rating (Song))
+  * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
+
+## API develop
+
+### Added
+
+* advanced_search:
+  * Add `songrating` to album search
+  * Add `songrating` and `albumrating` to artist search
+
 ## Ampache 5.2.1-release
 
 ### Added
