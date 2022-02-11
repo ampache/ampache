@@ -158,10 +158,10 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
 * API5
-  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_dupes` if true ignore 'api_hide_dupe_searches' setting
   * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
 * API4
-  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_dupes` if true ignore 'api_hide_dupe_searches' setting
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
