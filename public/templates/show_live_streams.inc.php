@@ -70,13 +70,12 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
-        } // end foreach ($artists as $artist)?>
+        } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

@@ -65,7 +65,7 @@ final class PodcastEdit4Method
         if (!Api4::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), 'podcast_edit')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $podcast_id = $input['filter'];
@@ -76,13 +76,13 @@ final class PodcastEdit4Method
             return false;
         }
 
-        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
-        $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
-        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
-        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
-        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
-        $data           = array(
+        $feed        = filter_var($input['feed'], FILTER_VALIDATE_URL) ?? $podcast->feed;
+        $title       = (array_key_exists('title', $input)) ? scrub_in($input['title']) : $podcast->title;
+        $website     = filter_var($input['website'], FILTER_VALIDATE_URL) ?? $podcast->website;
+        $description = (array_key_exists('description', $input)) ? scrub_in($input['description']) : $podcast->description;
+        $generator   = (array_key_exists('generator', $input)) ? scrub_in($input['generator']) : $podcast->generator;
+        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $data        = array(
             'feed' => $feed,
             'title' => $title,
             'website' => $website,

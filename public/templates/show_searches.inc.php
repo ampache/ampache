@@ -64,13 +64,12 @@ use Ampache\Module\Util\Ui;
             <?php require Ui::find_template('show_search_row.inc.php'); ?>
         </tr>
         <?php
-        } // end foreach ($playlists as $playlist)?>
+        } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

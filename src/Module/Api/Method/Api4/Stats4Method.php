@@ -65,7 +65,7 @@ final class Stats4Method
      */
     public static function stats(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'filter'), 'stats')) {
+        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         // set a default user

@@ -67,7 +67,7 @@ final class UpdateArtMethod
         $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album'))) {
+        if (!in_array(strtolower($type), array('artist', 'album'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return true;

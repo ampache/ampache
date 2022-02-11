@@ -54,7 +54,7 @@ final class RecordPlay4Method
      */
     public static function record_play(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'user'), 'record_play')) {
+        if (!Api4::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;
         }
         $api_user  = User::get_from_username(Session::username($input['auth']));

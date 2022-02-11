@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Live_Stream;
 /** @var Live_Stream $radio */
 ?>
 
-<?php Ui::show_box_top($radio->get_fullname() . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
+<?php Ui::show_box_top($radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php
         $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;

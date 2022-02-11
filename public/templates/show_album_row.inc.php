@@ -98,11 +98,9 @@ $display_year = ($original_year && $libitem->original_year)
     if (AmpConfig::get('show_played_times')) { ?>
         <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
-<?php if (!$hide_genres) {
-        ++$thcount; ?>
-<td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>
-<?php
-    } ?>
+<?php if (!$hide_genres) { ?>
+    <td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>
+<?php } ?>
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
@@ -115,41 +113,40 @@ $display_year = ($original_year && $libitem->original_year)
             <?php
             } ?>
         </td>
-    <?php
-    } ?>
+    <?php } ?>
 <td class="cel_action">
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
-        if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
+                if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
         <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
         </a>
     <?php
     }
-        if (Access::check('interface', 25)) {
-            if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
-                echo Share::display_ui('album', $libitem->id, false);
-            }
-        }
-        // @todo remove after refactoring
-        global $dic;
-        $zipHandler = $dic->get(ZipHandlerInterface::class);
-        if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
+                if (Access::check('interface', 25)) {
+                    if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
+                        echo Share::display_ui('album', $libitem->id, false);
+                    }
+                }
+                // @todo remove after refactoring
+                global $dic;
+                $zipHandler = $dic->get(ZipHandlerInterface::class);
+                if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
             </a>
     <?php
     }
-        if (Access::check('interface', 50) && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
+                if (Access::check('interface', 50) && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
             <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', 'album_')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
     <?php
     }
-        if (Catalog::can_remove($libitem)) { ?>
+                if (Catalog::can_remove($libitem)) { ?>
             <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
     <?php
     }
-    } ?>
+            } ?>
 </td>

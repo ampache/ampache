@@ -58,31 +58,32 @@ final class Rate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
+        if (!Api4::check_parameter($input, array('type', 'id', 'rating'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
-        $type      = ObjectTypeToClassNameMapper::map((string)$input['type']);
+        $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
-
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api4::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['api_format']);
 
             return false;
         }
 
-        if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
+        $className = ObjectTypeToClassNameMapper::map($type);
+        if (!$className || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $item = new $className($object_id);
             if (!$item->id) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 

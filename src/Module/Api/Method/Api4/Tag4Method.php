@@ -48,19 +48,10 @@ final class Tag4Method
      */
     public static function tag(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'tag')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid = scrub_in($input['filter']);
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json4_Data::tags(array($uid));
-            break;
-            default:
-                echo Xml4_Data::tags(array($uid));
-        }
 
-        return true;
+        return Genre4Method::genre($input);
     } // tag
 }

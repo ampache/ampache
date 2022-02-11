@@ -57,14 +57,14 @@ final class UserCreate4Method
         if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!Api4::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
-        $email    = $input['email'];
+        $email    = urldecode($input['email']);
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
+        $disable  = (bool)($input['disable'] ?? false);
         $access   = 25;
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
@@ -73,6 +73,16 @@ final class UserCreate4Method
             Catalog::count_table('user');
 
             return true;
+        }
+        if (User::id_from_username($username) > 0) {
+            Api4::message('error', 'username already exists: ' . $username, '400', $input['api_format']);
+
+            return false;
+        }
+        if (User::id_from_email($email) > 0) {
+            Api4::message('error', 'email already exists: ' . $email, '400', $input['api_format']);
+
+            return false;
         }
         Api4::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
 

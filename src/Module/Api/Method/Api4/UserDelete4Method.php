@@ -53,7 +53,7 @@ final class UserDelete4Method
         if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'user_delete')) {
+        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];

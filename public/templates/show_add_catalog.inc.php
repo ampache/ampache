@@ -76,21 +76,21 @@ $allow_video    = AmpConfig::get('allow_video'); ?>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
             <td><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
         </tr>
-        <?php if (AmpConfig::get('catalog_filter')) { ?>
         <tr>
-            <td><?php echo T_('Catalog User'); ?>:<br /></td>
-            <td>
-                <?php
-                $options  = array();
-                if (!empty($users)) {
-                    foreach ($users as $user_id => $username) {
-                        $options[] = '<option value="' . $user_id . '">' . $username . '</option>';
-                    }
-                    echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
-                } ?>
+<?php if (AmpConfig::get('catalog_filter')) {
+    echo "<td>" . T_('Catalog User') . ":<br /></td>\n<td>";
+    $options = array();
+    if (!empty($users)) {
+        foreach ($users as $user_id => $username) {
+            $options[] = '<option value="' . $user_id . '">' . $username . '</option>';
+        }
+        echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
+    }
+} else {
+    echo "<td style=\"display: none;\">" . T_('Catalog User') . ":<br /></td>\n<td style=\"display: none;\">\n<select name=\"filter_user\"><option value=\"0\" selected=\"selected\">" . T_('Public Catalog') . "</option></select>";
+} ?>
             </td>
         </tr>
-        <?php } ?>
         <tr>
             <td><?php echo T_('Gather Art'); ?>:</td>
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
@@ -110,12 +110,10 @@ $allow_video    = AmpConfig::get('allow_video'); ?>
                     <option value="tvshow"><?php echo T_('TV Show'); ?></option>
                     <option value="movie"><?php echo T_('Movie'); ?></option>
                     <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
-            <?php
-}
+            <?php }
             if (AmpConfig::get('podcast')) { ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>
-            <?php
-            } ?>
+            <?php } ?>
                 </select>
             </td>
         </tr>

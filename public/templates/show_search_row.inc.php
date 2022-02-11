@@ -46,7 +46,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
         } ?>
     </div>
 </td>
-<td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
+<td class="cel_playlist"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>

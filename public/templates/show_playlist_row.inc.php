@@ -32,6 +32,9 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Playlist $libitem */
+/** @var bool $show_art */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -53,7 +56,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     <?php $libitem->display_art(2, true); ?>
 </td>
 <?php } ?>
-<td class="cel_playlist"><?php echo $libitem->f_link ?></td>
+<td class="cel_playlist"><?php echo $libitem->get_f_link() ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php

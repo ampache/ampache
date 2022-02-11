@@ -55,7 +55,7 @@ final class Stream4Method
      */
     public static function stream(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), 'stream')) {
+        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
         $fileid  = $input['id'];

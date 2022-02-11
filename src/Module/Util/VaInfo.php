@@ -228,7 +228,7 @@ final class VaInfo implements VaInfoInterface
             } else {
                 $tags = array();
                 foreach ($test_tags as $tag) {
-                    if (array_key_exists('id3v1', $this->_raw) && $value = $this->_raw['id3v1'][$tag]) {
+                    if (array_key_exists('id3v1', $this->_raw) && array_key_exists($tag, $this->_raw['id3v1']) && $value = $this->_raw['id3v1'][$tag]) {
                         $tags[$tag] = $value;
                     }
                 }
@@ -241,7 +241,7 @@ final class VaInfo implements VaInfoInterface
                 // The user has told us to be moronic, so let's do that thing
                 $tags = array();
                 foreach ($test_tags as $tag) {
-                    if ($value = $this->_raw['id3v2']['comments'][$tag]) {
+                    if (array_key_exists('id3v2', $this->_raw) && array_key_exists($tag, $this->_raw['id3v2']) && $value = $this->_raw['id3v2']['comments'][$tag]) {
                         $tags[$tag] = $value;
                     }
                 }
@@ -289,12 +289,18 @@ final class VaInfo implements VaInfoInterface
                 }
                 $enc = mb_detect_encoding($tag, $mb_order, true);
                 if ($enc !== false) {
+                    if (!array_key_exists($enc, $encodings)) {
+                        $encodings[$enc] = 0;
+                    }
                     $encodings[$enc]++;
                 }
             }
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
             if ($enc !== false) {
+                if (!array_key_exists($enc, $encodings)) {
+                    $encodings[$enc] = 0;
+                }
                 $encodings[$enc]++;
             }
         }
@@ -1721,7 +1727,7 @@ final class VaInfo implements VaInfoInterface
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        //$logger->debug('Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);

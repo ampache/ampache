@@ -81,7 +81,9 @@ final class Session implements SessionInterface
             self::check();
 
             // Create the new user
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+                ? User::get_from_username($_SESSION['userdata']['username'])
+                : '';
 
             // If the user ID doesn't exist deny them
             $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
@@ -99,7 +101,7 @@ final class Session implements SessionInterface
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
             $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
-            if (!self::exists('interface', $_COOKIE[$sessionName])) {
+            if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);
                 self::check();
@@ -473,6 +475,22 @@ final class Session implements SessionInterface
         return $db_results;
     }
 
+    /**
+     * get
+     *
+     * This checks for an existing session cookie and returns the value.
+     * @return string
+     */
+    public static function get()
+    {
+        $session_name = AmpConfig::get('session_name');
+
+        if (array_key_exists($session_name, $_COOKIE)) {
+            return $_COOKIE[$session_name];
+        }
+
+        return '';
+    }
     /**
      * update_username
      *

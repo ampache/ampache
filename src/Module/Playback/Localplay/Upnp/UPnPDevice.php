@@ -57,7 +57,7 @@ class UPnPDevice
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);
 
-        if ($this->_settings['descriptionURL'] == $descriptionUrl) {
+        if ($this->_settings && $this->_settings['descriptionURL'] == $descriptionUrl) {
             debug_event('upnpdevice', 'service Urls restored from session.', 5);
 
             return true;
@@ -81,7 +81,7 @@ class UPnPDevice
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
-        $services    = $responseXML->device->serviceList->service;
+        $services    = $responseXML->device->serviceList->service ?? array();
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
@@ -112,6 +112,9 @@ class UPnPDevice
      */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
+        if (!array_key_exists('host', $this->_settings) || !array_key_exists('controlURLs', $this->_settings)) {
+            return '';
+        }
         $body = '<?xml version="1.0" encoding="utf-8"?>';
         $body .= '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
         $body .= '  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
@@ -121,8 +124,7 @@ class UPnPDevice
         $body .= '  </u:' . $method . '>';
         $body .= '</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0,
-                    1) != "/") ? '/' : "") . $this->_settings['controlURLs'][$type];
+        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? '/' : "") . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
         $header = array(

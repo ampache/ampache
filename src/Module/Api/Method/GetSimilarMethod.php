@@ -61,7 +61,7 @@ final class GetSimilarMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array($type, array('song', 'artist'))) {
+        if (!in_array(strtolower($type), array('song', 'artist'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;

@@ -63,9 +63,9 @@ final class UserCreateMethod
         }
         $username = $input['username'];
         $fullname = $input['fullname'] ?? $username;
-        $email    = $input['email'];
+        $email    = urldecode($input['email']);
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
+        $disable  = (bool)($input['disable'] ?? false);
         $access   = 25;
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
@@ -75,8 +75,20 @@ final class UserCreateMethod
 
             return true;
         }
+        if (User::id_from_username($username) > 0) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
+        if (User::id_from_email($email) > 0) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
+
+            return false;
+        }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

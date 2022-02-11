@@ -42,13 +42,13 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
             <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
-            <th class="cel_username"><?php echo T_('Username'); ?></th>
+            <?php if ($user_id > 0) { ?>
+                <th class="cel_username"><?php echo T_('Username'); ?></th>
+            <?php } ?>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if ($is_admin) {
-    ?>
+            <?php if ($is_admin) { ?>
                 <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-                <?php
-} ?>
+            <?php } ?>
         </tr>
     </thead>
     <tbody>
@@ -105,14 +105,11 @@ foreach ($data as $row) {
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $count . '_' . $song->id); ?>
                     <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $count . '_' . $song->id); ?>
-                    <?php
-            } ?>
+                    <?php } ?>
                     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
-                    <?php
-            } ?>
-                <?php
-        } ?>
+                    <?php } ?>
+                <?php } ?>
                 </div>
             </td>
             <td class="cel_song"><?php echo $song->get_f_link(); ?></td>
@@ -127,21 +124,21 @@ foreach ($data as $row) {
             <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
             <td class="cel_album"><?php echo $song->f_album_link; ?></td>
             <td class="cel_year"><?php echo $song->year; ?></td>
+            <?php if ($user_id > 0) { ?>
             <td class="cel_username">
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
                 <?php echo scrub_out($row_user->fullname); ?>
                 </a>
             </td>
+            <?php } ?>
             <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-            <?php if ($is_admin) {
-            ?>
+            <?php if ($is_admin) { ?>
                 <td class="cel_agent">
                     <?php if (!empty($agent)) {
-                echo Ui::get_icon('info', $agent);
-            } ?>
-                </td>
-                <?php
+            echo Ui::get_icon('info', $agent);
         } ?>
+                </td>
+                <?php } ?>
         </tr>
     <?php
         ++$count;
@@ -151,8 +148,7 @@ foreach ($data as $row) {
     <tr>
         <td colspan="9"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
     </tr>
-<?php
-} ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -162,13 +158,13 @@ foreach ($data as $row) {
             <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
+            <?php if ($user_id > 0) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
+                <?php } ?>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if ($is_admin) {
-    ?>
+            <?php if ($is_admin) { ?>
                 <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-                <?php
-} ?>
+                <?php } ?>
         </tr>
     </tfoot>
 </table>

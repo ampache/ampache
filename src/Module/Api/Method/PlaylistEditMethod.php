@@ -62,12 +62,9 @@ final class PlaylistEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $name  = $input['name'];
-        $type  = $input['type'];
-        $owner = $input['owner'];
         $items = explode(',', (string)($input['items'] ?? ''));
         $order = explode(',', (string)($input['tracks'] ?? ''));
-        $sort  = (int) $input['sort'];
+        $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -84,8 +81,11 @@ final class PlaylistEditMethod
 
             return false;
         }
+        $name  = $input['name'] ?? $playlist->name;
+        $type  = $input['type'] ?? $playlist->type;
+        $owner = $input['owner'] ?? $playlist->user;
         // update name/type
-        if ($name || $type || $owner) {
+        if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [
                 "name" => $name,
                 "pl_type" => $type,

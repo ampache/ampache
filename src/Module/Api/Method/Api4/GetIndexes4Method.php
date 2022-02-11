@@ -61,7 +61,7 @@ final class GetIndexes4Method
      */
     public static function get_indexes(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('type'), 'get_indexes')) {
+        if (!Api4::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
         $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
@@ -84,7 +84,7 @@ final class GetIndexes4Method
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

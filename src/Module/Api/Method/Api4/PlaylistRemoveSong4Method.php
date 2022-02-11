@@ -57,7 +57,7 @@ final class PlaylistRemoveSong4Method
      */
     public static function playlist_remove_song(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), 'playlist_remove_song')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));

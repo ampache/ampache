@@ -6,4 +6,4 @@ OnCalendar=23:23:00
 Unit=channel_restart.service
 
 [Install]
-WantedBy=timer.target
+WantedBy=timers.target

@@ -1,5 +1,88 @@
 # CHANGELOG
 
+## Ampache 5.2.1-release
+
+### Added
+
+* Translation Updates Jan 2022
+* Count tables on create and delete actions
+* Set allow-plugins in composer.json
+* Improve description of rss feed to make each play more unique
+* Wait 30 minutes between catalog updates before running update_counts
+* On database connection failure, go to test.php
+* Search:
+  * Added no_tag as a possible search item (song, album, artist)
+  * Document the alias names of search rules (docs/API-advanced-search.md)
+  * Add playlist and playlist_name search to artist types
+
+### Changed
+
+* AmpachePersonalFavorites: double the playlist title height
+* Move get_f_link from playlist/search into playlist_object
+* Make some functions that do the same thing use the same variable names
+* Don't optimize tables when doing full_service catalog updates
+* Use parameters in search queries instead of printing them into the query
+* Logout action requires a session id now to log out
+* Update mapping more often after catalog actions
+* Album check function added mbid_group to lookup
+* Support database upgrades from version 350008 (Ampache 3.5.4)
+* Remove additional 'Details' string from song/video and radio pages
+* Tag value is being extra filtered in the edit screen
+* Hide the login link when using simple_user_mode and no auth is set **note** this does not stop you logging in with /login.php
+* When not using auth, keep recording stats for system user plays
+* Hide username column from Recently Played when not authed as a user
+
+### Fixed
+
+* Lowercase package names in composer
+* CLI add user
+* Demo Systemd timer files WantedBy
+* Some missing garbage collection for some tables
+* Phantom html table row in show_catalogs page
+* Grouping albums with special characters
+* Searching albums with special characters
+* Lots more PHP8 runtime errors
+* SQL for artists in catalog_map
+* Typo in url for update_all_file_tags
+* SQL error in database update 500013 (Not fatal)
+* Don't garbage_collect tags after merging
+* Create art URLs correctly when using rewrite rules and no auth
+* Respect sidebar_light preference when no cookie is present
+* Don't try to create users that already exist
+* Add/Edit catalogs in the UI missing filter_user
+* Search:
+  * possible_duplicate was grouping too much together
+* Subsonic:
+  * Jukeboxcontrol didn't send an index to the client
+
+## API 5.2.1
+
+### Added
+
+* API5
+  * The docs for errors have been extended for the type when returned
+
+### Changed
+
+* API5
+  * Return the xml total_count of playlists based on hide_search preference
+
+### Fixed
+
+* API5
+  * Some errors were returning the value and not the parameter on error
+* API4
+  * update_from_tags: type case error
+  * rate: Object type to class mapping
+  * flag: Object type to class mapping
+  * update_art: Object type to class mapping and type case check
+  * update_from_tags: Object type to class mapping
+  * genre and tag function compatibility
+* API3
+  * stats: incorrect getRandom call
+  * rate: Object type to class mapping
+  * playlist: bad escaping on the playlist id
+
 ## Ampache 5.2.0-release
 
 Ampache 5.2.0 (and all future versions) now support multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
@@ -20,12 +103,12 @@ API3 is not recommended for use outside of running old applications and it is re
   * Removed overwrite_tags (It doesn't do anything)
   * playlist_art now true by default
 * Database 5.2.0 Build 5:
- * Make sure preference names are always unique
- * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
- * Add ui option ('api_force_version') to to force a specific API response (even if that version is disabled)
- * Add ui option ('show_playlist_username') Show playlist owner username in titles
- * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
- * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
+  * Make sure preference names are always unique
+  * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
+  * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
+  * Add ui option ('show_playlist_username') Show playlist owner username in titles
+  * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
+  * Add ui option ('api_hide_dupe_searches') Hide searchs in Subsonic and API clients with the same name as playlists (and both owned by you)
 
 ### Changed
 
@@ -33,7 +116,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Update catalog counts before returning API data
 * Fix preferences for system and users after each update
 * Light theme hover color for sidebar
-* Changed some cookie from Strict to Lax to fix some bugs
+* Changed some cookie's from Strict to Lax to fix some bugs
 * Check ldap group by username instead of DN
 * Allow gathering random art from playlist contents instead of generating on page load
 
@@ -75,11 +158,10 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
 * API5
-  * playlists: sql for searches wasn't filtering
-  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
   * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
 * API4
-  * playlists: add parameter 'show_all' if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
@@ -589,7 +671,7 @@ This version of the API is the first semantic version. "5.0.0"
 * SubSonic
   * just send getmusicfolders music folders
   * When calling createPlaylist, assume that the list needs to be empty first
-  
+
 ### Fixed
 
 * Require a valid database hostname instead of assuming localhost

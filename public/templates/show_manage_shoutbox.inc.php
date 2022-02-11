@@ -49,12 +49,12 @@ $web_path = AmpConfig::get('web_path'); ?>
 
             require Ui::find_template('show_shout_row.inc.php'); ?>
         <?php
-        } if (!count($object_ids)) { ?>
+        } ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6" class="error"><?php echo T_('No records found'); ?></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

@@ -57,7 +57,7 @@ final class LicenseSongs4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), 'license_songs')) {
+        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user     = User::get_from_username(Session::username($input['auth']));

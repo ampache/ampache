@@ -61,7 +61,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
             $sql .= $join . sprintf(
                 " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
@@ -182,7 +182,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         Album $album,
         int $catalogId = 0
     ): array {
-        $f_name = Dba::escape($album->get_fullname(true));
+        $f_name = $album->get_fullname(true);
         if ($f_name == '') {
             return array();
         }
@@ -209,7 +209,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $original_year = "= '$album->original_year'";
         }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = '$f_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$f_name') AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
         $catalog_where = "";
         $catalog_join  = "";
 
@@ -220,15 +220,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
-
-        $db_results = Dba::read(
-            sprintf(
-                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
-                $catalog_join,
-                $where,
-                $catalog_where
-            )
+        $sql = sprintf(
+            'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
+            $catalog_join,
+            $where,
+            $catalog_where
         );
+        $db_results = Dba::read($sql, array($f_name, $f_name));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['disk']] = (int) $row['id'];

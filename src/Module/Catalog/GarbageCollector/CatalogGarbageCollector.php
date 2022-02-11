@@ -43,6 +43,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * This is a wrapper for all of the different database cleaning
@@ -56,14 +57,18 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->userRepository         = $userRepository;
     }
 
     public function collect(): void
@@ -81,6 +86,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Label::garbage_collection();
         Recommendation::garbage_collection();
         $this->useractivityRepository->collectGarbage();
+        $this->userRepository->collectGarbage();
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
