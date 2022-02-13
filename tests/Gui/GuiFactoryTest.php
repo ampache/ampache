@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Album\AlbumViewAdapter;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Song\SongViewAdapter;
@@ -86,6 +87,17 @@ class GuiFactoryTest extends MockeryTestCase
             $this->subject->createSongViewAdapter(
                 $this->mock(GuiGatekeeperInterface::class),
                 $this->mock(Song::class)
+            )
+        );
+    }
+
+    public function testCreateAlbumViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            AlbumViewAdapter::class,
+            $this->subject->createAlbumViewAdapter(
+                $this->mock(GuiGatekeeperInterface::class),
+                $this->mock(Album::class)
             )
         );
     }
