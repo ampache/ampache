@@ -663,6 +663,7 @@ class Search extends playlist_object
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
+        $this->type_text('label', T_('Label'), $t_artist_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -2204,9 +2205,19 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                     break;
                 case 'label':
-                    $where[]           = "`song_data`.`label` $sql_match_operator ?";
-                    $parameters[]      = $input;
                     $join['song_data'] = true;
+                    if (!$input || $input == '%%' || $input == '%') {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`label` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`label` IS NOT NULL";
+                            break;
+                        }
+                    }
+                    $where[]      = "`song_data`.`label` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'lyrics':
                     $where[]           = "`song_data`.`lyrics` $sql_match_operator ?";
