@@ -571,6 +571,7 @@ class Subsonic_Xml_Data
             } else {
                 $xartist->addAttribute('albumCount', (string)count($allalbums));
             }
+            self::setIfStarred($xartist, 'artist', $artist->id);
         }
         if ($albums) {
             foreach ($allalbums as $albumid) {
@@ -661,6 +662,7 @@ class Subsonic_Xml_Data
             $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
         }
         $xartist->addAttribute('albumCount', (string)$artist['album_count']);
+        self::setIfStarred($xartist, 'artist', $artist['id']);
     }
 
     /**
