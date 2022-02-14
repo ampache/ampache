@@ -118,6 +118,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public $tags;
 
     /**
+     * @var bool $has_art
+     */
+    public $has_art;
+
+    /**
      * @var string $f_tags
      */
     public $f_tags;
@@ -498,6 +503,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return true;
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'album');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * Get item keywords for metadata searches.

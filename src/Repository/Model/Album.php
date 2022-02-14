@@ -166,6 +166,11 @@ class Album extends database_object implements library_item
     public $total_count;
 
     /**
+     * @var bool $has_art
+     */
+    public $has_art;
+
+    /**
      * @var string $f_artist_name
      */
     public $f_artist_name;
@@ -369,10 +374,7 @@ class Album extends database_object implements library_item
             // overwrite so you can get something
             $this->album_artist = $results['artist_id'];
         }
-        $art = new Art($this->id, 'album');
-        $art->has_db_info();
-        $results['has_art']   = make_bool($art->raw);
-        $results['has_thumb'] = make_bool($art->thumb);
+        $this->has_art();
 
         if (AmpConfig::get('show_played_times')) {
             $results['total_count'] = $this->total_count;
@@ -607,6 +609,19 @@ class Album extends database_object implements library_item
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'album');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * Get item keywords for metadata searches.

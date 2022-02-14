@@ -48,6 +48,7 @@ class Podcast extends database_object implements library_item
     public $lastsync;
     public $total_count;
     public $episodes;
+    public $has_art;
 
     public $f_name;
     public $f_website;
@@ -152,6 +153,19 @@ class Podcast extends database_object implements library_item
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
+    }
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'podcast');
+        }
+
+        return $this->has_art;
     }
 
     /**

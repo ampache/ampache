@@ -137,9 +137,14 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @var integer $total_count
      */
     public $total_count;
-
-    /** @var int */
+    /**
+     * @var int $total_skip
+     */
     public $total_skip;
+    /**
+     * @var bool $has_art
+     */
+    public $has_art;
     /**
      * @var integer $f_release_date
      */
@@ -346,6 +351,19 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'video');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * Get item keywords for metadata searches.

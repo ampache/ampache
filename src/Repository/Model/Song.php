@@ -210,6 +210,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $r128_track_gain;
     /**
+     * @var bool $has_art
+     */
+    public $has_art;
+    /**
      * @var string $f_name
      */
     public $f_name;
@@ -952,19 +956,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * get_album_name
      * gets the name of $this->album, allows passing of id
      * @param integer $album_id
+     * @param bool $simple
      * @return string
      */
-    public function get_album_fullname($album_id = 0)
+    public function get_album_fullname($album_id = 0, $simple = false)
     {
         if (isset($this->f_album_full) && $album_id == 0) {
             return $this->f_album_full;
         }
-        if (!$album_id) {
-            $album_id = $this->album;
-        }
-        $album = new Album($album_id);
+        $album = (!$album_id)
+            ? new Album($this->album)
+            : new Album($album_id);
 
-        return $album->get_fullname();
+        return $album->get_fullname($simple);
     } // get_album_name
 
     /**
@@ -1014,6 +1018,22 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $album->barcode;
     } // get_album_barcode
+
+    /**
+     * get_album_disk
+     * gets the disk of $this->album, allows passing of id
+     * @param integer $album_id
+     * @return string
+     */
+    public function get_album_disk($album_id = null)
+    {
+        if (!$album_id) {
+            $album_id = $this->album;
+        }
+        $album = new Album($album_id);
+
+        return $album->disk;
+    } // get_album_disk
 
     /**
      * get_artist_name
@@ -1754,6 +1774,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->f_license = $license->getLinkFormatted();
         }
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = (AmpConfig::get('show_song_art', false) && Art::has_db($this->id, 'song') || Art::has_db($this->album, 'album'));
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * Get item keywords for metadata searches.
