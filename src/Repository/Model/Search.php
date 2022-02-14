@@ -1496,10 +1496,12 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
-                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
+                    } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[]      = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator ? OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
+                        $parameters[] = $input;
                     } else {
-                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
+                        $where[]      = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator ?";
+                        $parameters[] = $input;
                     }
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
@@ -1523,10 +1525,12 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`album`.`id NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
-                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator $input))) OR `album`.`id` NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                    } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator ?))) OR `album`.`id` NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                        $parameters[] = $input;
                     } else {
-                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator $input)))";
+                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $sql_match_operator ?)))";
+                        $parameters[] = $input;
                     }
                     break;
                 case 'myplayed':
@@ -1670,6 +1674,16 @@ class Search extends playlist_object
                     $table['artist'] = "LEFT JOIN `artist` ON `album`.`album_artist`=`artist`.`id`";
                     break;
                 case 'mbid':
+                    if (!$input) {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`album`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`album`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]      = "`album`.`mbid` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -1852,7 +1866,7 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
-                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                    } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
                         $where[]      = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator ? OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
                         $parameters[] = $input;
                     } else {
@@ -1884,10 +1898,12 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`artist`.`id NOT IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
-                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator $input))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                    } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                        $parameters[] = $input;
                     } else {
-                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator $input)))";
+                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?)))";
+                        $parameters[] = $input;
                     }
                     break;
                 case 'myplayed':
@@ -1990,6 +2006,16 @@ class Search extends playlist_object
                     $join['artist_catalog'] = true;
                     break;
                 case 'mbid':
+                    if (!$input) {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]      = "`artist`.`mbid` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -2102,7 +2128,7 @@ class Search extends playlist_object
                     $tag_string   = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     // we want AND NOT and like for this query to really exclude them
-                    if ($sql_match_operator == 'NOT LIKE' || $sql_match_operator == 'NOT' || $sql_match_operator == '!=') {
+                    if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT'))) {
                         $where[] = "NOT ((`artist`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE ?) OR (`album`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE ?) OR `song_data`.`comment` LIKE ? OR `song_data`.`label` LIKE ? OR `song`.`file` LIKE ? OR `song`.`title` LIKE ? OR NOT " . $tag_string . ')';
                     } else {
                         $where[] = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) OR (`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) OR `song_data`.`comment` $sql_match_operator ? OR `song_data`.`label` $sql_match_operator ? OR `song`.`file` $sql_match_operator ? OR `song`.`title` $sql_match_operator ? OR " . $tag_string . ')';
@@ -2225,16 +2251,20 @@ class Search extends playlist_object
                     $where[] = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
-                    $where[] = "(`song`.`total_count` $sql_match_operator $input)";
+                    $where[]      = "(`song`.`total_count` $sql_match_operator ?)";
+                    $parameters[] = $input;
                     break;
                 case 'skipped_times':
-                    $where[] = "(`song`.`total_skip` $sql_match_operator $input)";
+                    $where[]      = "(`song`.`total_skip` $sql_match_operator ?)";
+                    $parameters[] = $input;
                     break;
                 case 'played_or_skipped_times':
-                    $where[] = "((`song`.`total_count` + `song`.`total_skip`) $sql_match_operator $input)";
+                    $where[]      = "((`song`.`total_count` + `song`.`total_skip`) $sql_match_operator ?)";
+                    $parameters[] = $input;
                     break;
                 case 'play_skip_ratio':
-                    $where[] = "(((`song`.`total_count`/`song`.`total_skip`) * 100) $sql_match_operator $input)";
+                    $where[]      = "(((`song`.`total_count`/`song`.`total_skip`) * 100) $sql_match_operator ?)";
+                    $parameters[] = $input;
                     break;
                 case 'myplayed':
                 case 'myplayedalbum':
@@ -2319,10 +2349,12 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
-                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
-                        $where[] = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
+                    } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[]      = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator ? OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
+                        $parameters[] = $input;
                     } else {
-                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator $input";
+                        $where[]      = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $sql_match_operator ?";
+                        $parameters[] = $input;
                     }
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
@@ -2391,12 +2423,14 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'added':
-                    $input   = strtotime((string) $input);
-                    $where[] = "`song`.`addition_time` $sql_match_operator $input";
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`addition_time` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'updated':
-                    $input   = strtotime((string) $input);
-                    $where[] = "`song`.`update_time` $sql_match_operator $input";
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`song`.`update_time` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
@@ -2414,16 +2448,46 @@ class Search extends playlist_object
                     $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
+                    if (!$input) {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`song`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`song`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]      = "`song`.`mbid` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'mbid_album':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    if (!$input) {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`album`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`album`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]        = "`album`.`mbid` $sql_match_operator ?";
                     $parameters[]   = $input;
                     break;
                 case 'mbid_artist':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    if (!$input) {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]         = "`artist`.`mbid` $sql_match_operator ?";
                     $parameters[]    = $input;
                     break;
@@ -2441,7 +2505,8 @@ class Search extends playlist_object
                         if (!array_key_exists($field, $metadata)) {
                             $metadata[$field] = array();
                         }
-                        $metadata[$field][] = "`metadata`.`data` $sql_match_operator $parsedInput";
+                        $metadata[$field][] = "`metadata`.`data` $sql_match_operator ?";
+                        $parameters[]       = $input;
                     }
                     break;
                 default:
