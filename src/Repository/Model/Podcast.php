@@ -494,8 +494,6 @@ class Podcast extends database_object implements library_item
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
     {
-        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '...', 4);
-
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
@@ -545,6 +543,7 @@ class Podcast extends database_object implements library_item
         }
 
         if ($pubdate > $afterdate) {
+            debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
