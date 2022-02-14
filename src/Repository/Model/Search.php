@@ -1674,7 +1674,7 @@ class Search extends playlist_object
                     $table['artist'] = "LEFT JOIN `artist` ON `album`.`album_artist`=`artist`.`id`";
                     break;
                 case 'mbid':
-                    if (!$input) {
+                    if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`album`.`mbid` IS NULL";
                             break;
@@ -2006,7 +2006,7 @@ class Search extends playlist_object
                     $join['artist_catalog'] = true;
                     break;
                 case 'mbid':
-                    if (!$input) {
+                    if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`artist`.`mbid` IS NULL";
                             break;
@@ -2448,7 +2448,7 @@ class Search extends playlist_object
                     $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
-                    if (!$input) {
+                    if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`song`.`mbid` IS NULL";
                             break;
@@ -2463,7 +2463,7 @@ class Search extends playlist_object
                     break;
                 case 'mbid_album':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    if (!$input) {
+                    if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`album`.`mbid` IS NULL";
                             break;
@@ -2478,7 +2478,7 @@ class Search extends playlist_object
                     break;
                 case 'mbid_artist':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    if (!$input) {
+                    if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`artist`.`mbid` IS NULL";
                             break;
