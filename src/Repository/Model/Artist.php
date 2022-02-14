@@ -1035,6 +1035,21 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * Migrate an object associate stats to a new object
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($old_object_id, $new_object_id)
+    {
+        $params = array($new_object_id, $old_object_id);
+        $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?";
+        Dba::write($sql, $params);
+        $sql    = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?";
+        Dba::write($sql, $params);
+    }
+
+    /**
      * @deprecated
      */
     private function getLabelRepository(): LabelRepositoryInterface

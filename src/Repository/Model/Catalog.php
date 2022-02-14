@@ -745,7 +745,7 @@ abstract class Catalog extends database_object
             $join     = 'AND';
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= $join . Catalog::get_user_filter('catalog', $user_id);
+            $sql .= $join . self::get_user_filter('catalog', $user_id);
         }
         $sql .= "ORDER BY `name`";
         //debug_event(__CLASS__, "get_catalogs sql:" . $sql, 5);
@@ -2631,13 +2631,43 @@ abstract class Catalog extends database_object
     {
         $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
-        $artists    = array();
-        while ($album = Dba::fetch_assoc($db_results)) {
-            $object_id  = $album['id'];
-            $sql        = "DELETE FROM `album` WHERE `id` = ?";
-            $db_results = Dba::write($sql, array($object_id));
-            $artists[]  = (int) $album['album_artist'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $sql       = "DELETE FROM `album` WHERE `id` = ?";
+            Dba::write($sql, array($row['id']));
         }
+    }
+
+    /**
+     * clean_duplicate_artists
+     *
+     * Artists that have the same mbid shouldn't be duplicated but can be created and updated based on names
+     */
+    public static function clean_duplicate_artists()
+    {
+        debug_event(__CLASS__, "Clean Artists with duplicate mbid's", 5);
+        $sql        = "SELECT `mbid`, min(`id`) AS `minid`, max(`id`) AS `maxid` FROM `artist` WHERE `mbid` IS NOT NULL GROUP BY `mbid` HAVING count(`mbid`) >1;";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event(__CLASS__, "clean_duplicate_artists " . $row['maxid'] . "=>" . $row['minid'], 5);
+            // migrate linked tables first
+            Stats::migrate('artist', $row['maxid'], $row['minid']);
+            Useractivity::migrate('artist', $row['maxid'], $row['minid']);
+            Recommendation::migrate('artist', $row['maxid'], $row['minid']);
+            Share::migrate('artist', $row['maxid'], $row['minid']);
+            Shoutbox::migrate('artist', $row['maxid'], $row['minid']);
+            Tag::migrate('artist', $row['maxid'], $row['minid']);
+            Userflag::migrate('artist', $row['maxid'], $row['minid']);
+            Label::migrate('artist', $row['maxid'], $row['minid']);
+            Rating::migrate('artist', $row['maxid'], $row['minid']);
+            Wanted::migrate('artist', $row['maxid'], $row['minid']);
+            Clip::migrate('artist', $row['maxid'], $row['minid']);
+            self::migrate_map('artist', $row['maxid'], $row['minid']);
+
+            // replace all songs and albums with the original artist
+            Artist::migrate($row['maxid'], $row['minid']);
+        }
+        // remove the duplicate after moving everyrthing
+        Artist::garbage_collection();
     }
 
     /**
@@ -2662,6 +2692,7 @@ abstract class Catalog extends database_object
         if ($dead_total > 0) {
             self::clean_empty_albums();
         }
+        self::clean_duplicate_artists();
 
         debug_event(__CLASS__, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
@@ -3513,8 +3544,9 @@ abstract class Catalog extends database_object
         static::getCatalogGarbageCollector()->collect();
         self::clean_empty_albums();
         Album::update_album_artist();
-        Catalog::update_mapping('artist');
-        Catalog::update_mapping('album');
+        self::clean_duplicate_artists();
+        self::update_mapping('artist');
+        self::update_mapping('album');
         self::update_counts();
     }
 

@@ -174,14 +174,12 @@ class Stats
                     static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
                 }
             }
-        }
-        if (!$db_results) {
-            debug_event(self::class, 'Unable to insert statistics for ' . $user_id . ':' . $object_id, 3);
 
-            return false;
+            return true;
         }
+        debug_event(self::class, 'Unable to insert statistics for ' . $user_id . ':' . $object_id, 3);
 
-        return true;
+        return false;
     } // insert
 
     /**
