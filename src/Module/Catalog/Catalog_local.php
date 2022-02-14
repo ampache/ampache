@@ -752,20 +752,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_count_' . $this->id, $count);
                 Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
-            $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
-            if ($file_info < 1) {
-                debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
-                /* HINT: filename (file path) */
-                AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
-
-                // Store it in an array we'll delete it later...
-                $dead[] = $results['id'];
-            } else {
-                // if error
-                if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
-                    debug_event('local.catalog', $results['file'] . ' is not readable, but does exist', 1);
-                }
-            }
+            self::clean_file($results['file'], $media_type);
         }
 
         return $dead;
@@ -787,7 +774,7 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $params    = array($object_id);
+            $params = array($object_id);
             switch ($media_type) {
                 case 'song':
                     $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;";
