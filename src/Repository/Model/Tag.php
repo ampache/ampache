@@ -366,8 +366,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
         $insert_id = (int)Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id,
-            array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 
         return $insert_id;
     } // add_tag_map
@@ -491,9 +490,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' LIMIT $limit";
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT $limit";
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($type, $object_id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
@@ -731,12 +730,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
-        $ctags = self::get_top_tags($object_type, $object_id);
+        $ctags = self::get_top_tags($object_type, $object_id, 50);
         foreach ($ctags as $ctid => $ctv) {
+            $found = false;
             if ($ctv['id'] != '') {
                 $ctag  = new Tag($ctv['id']);
-                $found = false;
-
                 foreach ($editedTags as $tk => $tv) {
                     if ($ctag->name == $tv) {
                         $found = true;
@@ -746,11 +744,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
                 if ($found) {
                     unset($editedTags[$ctag->name]);
-                } else {
-                    if ($overwrite && $ctv['user'] == 0) {
-                        debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
-                        $ctag->remove_map($object_type, $object_id, false);
-                    }
+                }
+                if (!$found && $overwrite && $ctv['user'] == 0) {
+                    debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
+                    $ctag->remove_map($object_type, $object_id, false);
                 }
             }
         }
