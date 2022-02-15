@@ -116,7 +116,7 @@ Update the official Ampache docker images [<https://hub.docker.com/r/ampache/amp
 * Make sure the docker API is [accessible](https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd)
 
 This part should only be needed once.
-It creates a local builder that can build the other CPU architectures.
+It creates a local builder that can build the other CPU architectures using [buildx](https://github.com/docker/buildx).
 
 ```bash
 aptitude install qemu qemu-user-static qemu-user binfmt-support
@@ -131,10 +131,6 @@ Log in to your docker account
 docker login -u USER -p PASSWORD
 ```
 
-To update master and nosql; add the latest zip file to the docker images
-```Dockerfile
-    &&  wget -q -O /tmp/master.zip https://github.com/ampache/ampache/releases/download/5.x.x/ampache-5.x.x_all.zip \
-```
 Build latest (master) images and push to docker hub.
 
 ```bash

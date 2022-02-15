@@ -1700,7 +1700,7 @@ class Subsonic_Xml_Data
     {
         $xbookmark = $xml->addChild('bookmark');
         $xbookmark->addAttribute('position', (string)$bookmark->position);
-        $xbookmark->addAttribute('username', (string)$bookmark->getUserName());
+        $xbookmark->addAttribute('username', $bookmark->getUserName());
         $xbookmark->addAttribute('comment', (string)$bookmark->comment);
         $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
