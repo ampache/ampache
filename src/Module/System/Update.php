@@ -513,7 +513,7 @@ class Update
         $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
         $version[]     = array('version' => '500002', 'description' => $update_string);
 
-        $update_string = "* Create catalog_map table and fill it with data";
+        $update_string = "* Add `catalog` to podcast_episode table";
         $version[]     = array('version' => '500003', 'description' => $update_string);
 
         $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create catalog_map table and fill it with data";
