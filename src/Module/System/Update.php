@@ -513,7 +513,7 @@ class Update
         $update_string = "* Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables<br />* Fill counts into the columns";
         $version[]     = array('version' => '500002', 'description' => $update_string);
 
-        $update_string = "* Create catalog_map table and fill it with data";
+        $update_string = "* Add `catalog` to podcast_episode table";
         $version[]     = array('version' => '500003', 'description' => $update_string);
 
         $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create catalog_map table and fill it with data";
@@ -587,6 +587,9 @@ class Update
 
         $update_string = "* Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients";
         $version[]     = array('version' => '520005', 'description' => $update_string);
+
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create artist_map table and fill it with data";
+        $version[]     = array('version' => '530000', 'description' => $update_string);
 
         return $version;
     }
@@ -3912,6 +3915,29 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530000
+     *
+     * Create artist_map table and fill it with data
+     */
+    public static function update_530000()
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        // create the table
+        $sql = "CREATE TABLE IF NOT EXISTS `artist_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+        // fill the data
+        $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT `song`.`artist`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT `album`.`album_artist`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0;";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }

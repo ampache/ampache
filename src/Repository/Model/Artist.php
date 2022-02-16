@@ -261,7 +261,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function garbage_collection()
     {
-        Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL);");
+        Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map`);");
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
         Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
@@ -850,6 +850,93 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * check_mbid
+     *
+     * Checks for an existing artist by mbid; if none exists, insert one.
+     * @param string $mbid
+     * @return integer
+     */
+    public static function check_mbid($mbid)
+    {
+        $artist_id   = 0;
+        $parsed_mbid = VaInfo::parse_mbid($mbid);
+
+        // check for artists by mbid and split-mbid
+        if ($parsed_mbid) {
+            $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+            $db_results = Dba::read($sql, array($parsed_mbid));
+            if ($results = Dba::fetch_assoc($db_results)) {
+                $artist_id = (int)$results['id'];
+            }
+            // return the result
+            if ($artist_id > 0) {
+                return $artist_id;
+            }
+            // if that fails, insert a new artist and return the id
+            $plugin = new Plugin('musicbrainz');
+            $data   = $plugin->_plugin->get_artist($parsed_mbid);
+            if (array_key_exists('name', $data)) {
+                $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
+                $name    = $trimmed['string'];
+                $prefix  = $trimmed['prefix'];
+
+                $sql        = "INSERT INTO `artist` (`name`, `prefix`, `mbid`) VALUES(?, ?, ?)";
+                $db_results = Dba::write($sql, array($name, $prefix, $parsed_mbid));
+                if (!$db_results) {
+                    return $artist_id;
+                }
+
+                $artist_id = (int)Dba::insert_id();
+                debug_event(self::class, "check mbid: created {{$artist_id}} " . $data['name'], 4);
+            }
+        }
+
+        return $artist_id;
+    }
+
+    /**
+     * Update the artist map for a single item
+     */
+    public static function update_artist_map($artist_id, $object_type, $object_id)
+    {
+        if ($artist_id > 0) {
+            debug_event(__CLASS__, "update_artist_map $artist_id: $object_type {{$object_id}}", 5);
+            $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($artist_id, $object_type, $object_id));
+        }
+    }
+    /**
+     * Delete the artist map for a single item
+     */
+    public static function remove_artist_map($artist_id, $object_type, $object_id)
+    {
+        if ($artist_id > 0) {
+            $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;";
+            Dba::write($sql, array($artist_id, $object_type, $object_id));
+        }
+    }
+
+    /**
+     * get_artist_map
+     *
+     * This returns an ids of artists that have songs/albums mapped
+     * @param string $object_type
+     * @param string $object_id
+     * @return array
+     */
+    public static function get_artist_map($object_type, $object_id)
+    {
+        $results    = array();
+        $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['artist_id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
@@ -1056,14 +1143,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * Migrate an object associate stats to a new object
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return PDOStatement|boolean
      */
     public static function migrate($old_object_id, $new_object_id)
     {
         $params = array($new_object_id, $old_object_id);
         $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?";
         Dba::write($sql, $params);
-        $sql    = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?";
+        $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?";
         Dba::write($sql, $params);
     }
 

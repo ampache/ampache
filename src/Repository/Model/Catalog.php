@@ -2050,8 +2050,8 @@ abstract class Catalog extends database_object
         $callable = $functions[$name];
 
         // try and get the tags from your file
-        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
-        $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+        $extension = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+        $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
         // for files without tags try to update from their file name instead
         if ($media->id && in_array($extension, array('wav', 'shn'))) {
             debug_event(__CLASS__, 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
@@ -2146,6 +2146,9 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
+        // info for the artist_map table.
+        $artist_mbid_array      = $results['mb_artistid_array'];
+        $albumartist_mbid_array = $results['mb_albumartistid_array'];
         // info for the album table.
         $album      = self::check_length($results['album']);
         $album_mbid = $results['mb_albumid'];
@@ -2176,6 +2179,39 @@ abstract class Catalog extends database_object
         $new_song->album = Album::check($song->catalog, $album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number);
         if (!$new_song->album) {
             $new_song->album = $song->album;
+        }
+
+        // map all artists to the song and album
+        $song_maps = Artist::get_artist_map('song', $song->id);
+        foreach ($artist_mbid_array as $song_artist_mbid) {
+            $song_artist_id = Artist::check_mbid($song_artist_mbid);
+            if ($song_artist_id > 0) {
+                if (!in_array($song_artist_id, $song_maps)) {
+                    Artist::update_artist_map($song_artist_id, 'song', $song->id);
+                }
+                Artist::update_artist_counts($song_artist_id);
+            }
+        }
+        $album_maps = Artist::get_artist_map('album', $new_song->album);
+        foreach ($albumartist_mbid_array as $album_artist_mbid) {
+            $album_artist_id = Artist::check_mbid($album_artist_mbid);
+            if ($album_artist_id > 0) {
+                if (!in_array($album_artist_id, $album_maps)) {
+                    Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+                }
+                Artist::update_artist_counts($album_artist_id);
+            }
+        }
+        // clean up the mapped things that are missing after the update
+        foreach ($song_maps as $existing_map) {
+            if (!in_array($existing_map, $artist_mbid_array)) {
+                Artist::remove_artist_map($existing_map, 'song', $song->id);
+            }
+        }
+        foreach ($album_maps as $existing_map) {
+            if (!in_array($existing_map, $albumartist_mbid_array)) {
+                Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+            }
         }
 
         if ($artist_mbid) {

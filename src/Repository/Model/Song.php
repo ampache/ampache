@@ -440,6 +440,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 Label::helper($label_name);
             }
         }
+        // info for the artist_map table.
+        $artist_mbid_array      = $results['mb_artistid_array'];
+        $albumartist_mbid_array = $results['mb_albumartistid_array'];
 
         if (isset($results['license'])) {
             $licenseRepository = static::getLicenseRepository();
@@ -525,7 +528,21 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $song_id = (int)Dba::insert_id();
 
+        // map the catalog and artists
         Catalog::update_map((int)$catalog, 'song', $song_id);
+        foreach ($artist_mbid_array as $song_artist_mbid) {
+            $song_artist_id = Artist::check_mbid($song_artist_mbid);
+            if ($song_artist_id > 0) {
+                Artist::update_artist_map($song_artist_id, 'song', $song_id);
+            }
+        }
+        foreach ($albumartist_mbid_array as $album_artist_mbid) {
+            $album_artist_id = Artist::check_mbid($album_artist_mbid);
+            if ($album_artist_id > 0) {
+                Artist::update_artist_map($album_artist_id, 'album', $album_id);
+            }
+        }
+        // update the counts too
         Album::update_album_counts($album_id);
         Artist::update_artist_counts($artist_id);
 
