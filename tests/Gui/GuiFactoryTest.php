@@ -34,6 +34,7 @@ use Ampache\Gui\Stats\StatsViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\MockeryTestCase;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -97,6 +98,7 @@ class GuiFactoryTest extends MockeryTestCase
             AlbumViewAdapter::class,
             $this->subject->createAlbumViewAdapter(
                 $this->mock(GuiGatekeeperInterface::class),
+                $this->mock(Browse::class),
                 $this->mock(Album::class)
             )
         );
