@@ -34,6 +34,8 @@ use Ampache\Gui\Stats\StatsViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -41,6 +43,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -51,6 +54,12 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
+
+    /** @var MockInterface|ZipHandlerInterface|null */
+    private MockInterface $zipHandler;
+
+    /** @var MockInterface|FunctionCheckerInterface|null */
+    private MockInterface $functionChecker;
 
     /** @var MockInterface|AjaxUriRetrieverInterface|null */
     private MockInterface $ajaxUriRetriever;
@@ -68,6 +77,8 @@ class GuiFactoryTest extends MockeryTestCase
     {
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->zipHandler       = $this->mock(ZipHandlerInterface::class);
+        $this->functionChecker  = $this->mock(FunctionCheckerInterface::class);
         $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
         $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
         $this->videoRepository  = $this->mock(VideoRepositoryInterface::class);
@@ -75,6 +86,8 @@ class GuiFactoryTest extends MockeryTestCase
         $this->subject = new GuiFactory(
             $this->configContainer,
             $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
             $this->ajaxUriRetriever,
             $this->playlistLoader,
             $this->videoRepository
