@@ -261,8 +261,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function garbage_collection()
     {
+        // delete old mapping
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist_map`.`artist_id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL);");
+        // delte the artists
         Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map`);");
-        // also clean up some bad data that might creep in
+        // then clean up remaining artists with data that might creep in
         Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
         Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
         Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
@@ -1112,19 +1115,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($artist_id > 0) {
             $params = array($artist_id);
             // artist.time
-            $sql = "UPDATE `artist`, (SELECT sum(`song`.`time`) as `time`, `song`.`artist` FROM `song` WHERE `song`.`artist` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist`;";
+            $sql = "UPDATE `artist`, (SELECT SUM(`song`.`time`) as `time`, `song`.`artist` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `song`.`artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
             // artist.total_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `album`.`album_artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql, $params);
             // artist.album_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`id` = `album`.`album_artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `album`.`album_artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql, $params);
             // artist.album_group_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`id` = `album`.`album_artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `album`.`album_artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`id` = `album`.`album_artist`;";
             Dba::write($sql, $params);
             // artist.song_count
-            $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`artist` = ? AND `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`id` = `song`.`artist`;";
+            $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `song`.`artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `song`.`artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
         }
     }

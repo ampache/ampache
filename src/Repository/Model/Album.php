@@ -1191,7 +1191,7 @@ class Album extends database_object implements library_item
         if ($album_id > 0) {
             $params = array($album_id);
             // album.time
-            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album`;";
+            $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.total_count
             $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`id` = `object_count`.`object_id`;";
