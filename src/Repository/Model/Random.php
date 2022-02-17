@@ -224,9 +224,9 @@ class Random
             $limit_sql = "";
         }
 
-        $sql     = self::advanced_sql($data, $type, $limit_sql);
-        $results = self::advanced_results($sql, $data);
-        //debug_event(self::class, 'advanced ' . $sql, 5);
+        $search  = self::advanced_sql($data, $type, $limit_sql);
+        $results = self::advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
 
         switch ($type) {
             case 'song':
@@ -254,14 +254,15 @@ class Random
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
-     * @param string $sql
+     * @param array $sql_data
+     * @param array $sql_params
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql, $data)
+    private static function advanced_results($sql_data, $sql_params, $data)
     {
         // Run the query generated above so we can while it
-        $db_results = Dba::read($sql, $data);
+        $db_results = Dba::read($sql_data, $sql_params);
         $results    = array();
 
         $size_total = 0;
@@ -334,7 +335,7 @@ class Random
      * @param array $data
      * @param string $type
      * @param string $limit_sql
-     * @return string
+     * @return array
      */
     private static function advanced_sql($data, $type, $limit_sql)
     {
@@ -399,7 +400,10 @@ class Random
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 
-        return $sql;
+        return array(
+            'sql' => $sql,
+            'parameters' => $search_info['parameters']
+        );
     }
 
     /**
