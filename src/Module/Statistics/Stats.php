@@ -195,16 +195,17 @@ class Stats
      */
     public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false)
     {
-        $agent = Dba::escape($agent);
-        $sql   = ($exact)
+        $sql = ($exact)
             ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND `object_count`.`date` = $time "
             : "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
+        $params = array($user, $type);
         if ($agent !== '') {
-            $sql .= "AND `object_count`.`agent` = '$agent' ";
+            $sql .= "AND `object_count`.`agent` = ? ";
+            $params[] = $agent;
         }
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
-        $db_results = Dba::read($sql, array($user, $type));
+        $db_results = Dba::read($sql, $params);
         while ($row = Dba::fetch_assoc($db_results)) {
             // Stop double ups
             if ($row['object_id'] == $object_id) {

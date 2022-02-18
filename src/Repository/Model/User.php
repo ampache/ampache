@@ -363,21 +363,19 @@ class User extends database_object
      */
     public function get_preferences($type = 0, $system = false)
     {
-        // Fill out the user id
-        $user_id = $system ? Dba::escape(-1) : Dba::escape($this->id);
-
         $user_limit = "";
         if (!$system) {
+            $user_id    = $this->id;
             $user_limit = "AND preference.catagory != 'system'";
         } else {
+            $user_id =  -1;
             if ($type != '0') {
                 $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
             }
         }
 
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = '$user_id' " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
-
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
+        $db_results = Dba::read($sql, array($user_id));
         $results    = array();
         $type_array = array();
         /* Ok this is crappy, need to clean this up or improve the code FIXME */

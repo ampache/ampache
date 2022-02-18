@@ -263,7 +263,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         // delete old mapping
         Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist_map`.`artist_id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL);");
-        // delte the artists
+        // delete the artists
         Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map`);");
         // then clean up remaining artists with data that might creep in
         Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
@@ -337,17 +337,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_time($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
+        $total_time = (int) ($results['time'] ?? 0);
         // album artists that don't have any songs
-        if ((int) $results['time'] == 0) {
-            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` WHERE `album`.`album_artist` = ?";
+        if ($total_time == 0) {
+            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ?";
             $db_results = Dba::read($sql, $params);
             $results    = Dba::fetch_assoc($db_results);
+            $total_time = (int) ($results['time'] ?? 0);
         }
 
-        return (int) $results['time'];
+        return $total_time;
     }
 
     /**
@@ -360,11 +362,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_song_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(`song`.`id`) AS `song_count` from `song` WHERE `song`.`artist` = ?";
+        $sql        = "SELECT COUNT(`song`.`id`) AS `song_count` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['song_count'];
+        return (int)($results['song_count'] ?? 0);
     }
 
     /**
@@ -377,7 +379,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_album_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -394,7 +396,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_album_group_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -457,7 +459,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_child_ids()
     {
-        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album`.`album_artist` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
 
@@ -908,6 +910,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             Dba::write($sql, array($artist_id, $object_type, $object_id));
         }
     }
+
     /**
      * Delete the artist map for a single item
      */
@@ -1129,6 +1132,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
             // artist.song_count
             $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `song`.`artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `song`.`artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
+            // clean maps
+            $sql = "DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist_map`.`artist_id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL);";
+            Dba::write($sql, $params);
+            // Update the album map
+            $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` = ? UNION SELECT DISTINCT `album`.`album_artist`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` = ?;";
+            Dba::write($sql, array($artist_id, $artist_id));
         }
     }
 
@@ -1150,10 +1159,25 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function migrate($old_object_id, $new_object_id)
     {
         $params = array($new_object_id, $old_object_id);
-        $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?";
+        $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?;";
         Dba::write($sql, $params);
-        $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?";
+        $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;";
         Dba::write($sql, $params);
+    }
+
+    /**
+     * Migrate an object associated artist to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate_map($object_type, $old_object_id, $new_object_id)
+    {
+        $sql    = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $params = array($new_object_id, $object_type, $old_object_id);
+
+        return Dba::write($sql, $params);
     }
 
     /**

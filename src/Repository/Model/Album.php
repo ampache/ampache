@@ -1205,6 +1205,12 @@ class Album extends database_object implements library_item
             // album.artist_count
             $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
+            // clean maps
+            $sql = "DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song` WHERE `song`.`album` IS NOT NULL);";
+            Dba::write($sql, $params);
+            // Update the album map
+            $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'artist', `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`artist` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`artist` = ?;";
+            Dba::write($sql, array($album_id, $album_id));
         }
     }
 
