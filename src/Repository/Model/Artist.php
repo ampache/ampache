@@ -556,6 +556,20 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return $this->f_name;
     }
+    /**
+     * Get item fullname by the artist id.
+     * @return string
+     */
+    public static function get_fullname_by_id($artist_id)
+    {
+        $sql        = "SELECT LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($artist_id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row['f_name'];
+        }
+
+        return '';
+    }
 
     /**
      * Get item link.

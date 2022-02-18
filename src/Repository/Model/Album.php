@@ -589,17 +589,13 @@ class Album extends database_object implements library_item
             foreach ($data as $key => $value) {
                 $this->$key = $value;
             }
-
-            if ($this->get_album_artist_fullname() != "") {
-                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->get_album_artist_name()) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
-            }
-
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
         // set link and f_link
         $this->get_f_link();
         $this->get_artist_fullname();
+        $this->get_f_album_artist_link();
         $this->get_f_artist_link();
 
         if (!$this->year) {
@@ -716,6 +712,26 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Get item f_album_artist_link.
+     * @return string
+     */
+    public function get_f_album_artist_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_album_artist_link)) {
+            $this->f_album_artist_link = '';
+            $id_list                   = self::get_parent_array($this->id);
+            $web_path                  = AmpConfig::get('web_path');
+            foreach ($id_list as $artist_id) {
+                $artist_fullname = Artist::get_fullname_by_id($artist_id);
+                $this->f_album_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . scrub_out($artist_fullname) . "\">" . scrub_out($artist_fullname) . "</a>,&nbsp";
+            }
+            $this->f_album_artist_link = rtrim($this->f_album_artist_link, ",&nbsp");
+        }
+
+        return $this->f_album_artist_link;
+    }
+    /**
      * Get item f_artist_link.
      * @return string
      */
@@ -798,6 +814,24 @@ class Album extends database_object implements library_item
         }
 
         return null;
+    }
+
+    /**
+     * Get parent album artists.
+     * @param int $album
+     * @return array
+     */
+    public function get_parent_array($album)
+    {
+        $results    = array();
+        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;";
+        $db_results = Dba::read($sql, array($album));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
+        }
+
+        return $results;
     }
 
     /**
