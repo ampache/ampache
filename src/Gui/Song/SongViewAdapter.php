@@ -341,7 +341,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if (!empty($this->song->f_albumartist_link)) {
             $songprops[T_('Album Artist')]   = $this->song->f_albumartist_link;
         }
-        $songprops[T_('Album')]         = $this->song->f_album_link . ($this->song->year ? " (" . scrub_out($this->song->year) . ")" : "");
+        $songprops[T_('Album')]         = $this->song->f_album_link;
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Year')]          = $this->song->year;
