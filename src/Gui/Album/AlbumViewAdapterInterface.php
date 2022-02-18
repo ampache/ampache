@@ -30,6 +30,8 @@ interface AlbumViewAdapterInterface
 
     public function getRating(): string;
 
+    public function getAverageRating(): string;
+
     public function getUserFlags(): string;
 
     public function getArt(): string;

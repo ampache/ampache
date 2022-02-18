@@ -84,12 +84,24 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAlbumSuiteIds(): string
     {
-        return count($this->album->album_suite) <= 1 ? $this->album->getId() : implode(',', $this->album->album_suite);
+        return count($this->album->album_suite) <= 1 ?
+            $this->album->getId() :
+            implode(',', $this->album->album_suite);
     }
 
     public function getRating(): string
     {
         return Rating::show($this->album->getId(), 'album');
+    }
+
+    public function getAverageRating(): string
+    {
+        $rating = $this->modelFactory->createRating(
+            $this->album->getId(),
+            'album'
+        );
+
+        return (string) $rating->get_average_rating();
     }
 
     public function getUserFlags(): string

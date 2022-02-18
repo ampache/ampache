@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Module\Application\Album\DeleteAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\Rating;
 use Mockery\MockInterface;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -96,6 +97,62 @@ class AlbumViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             $id,
             $this->subject->getId()
+        );
+    }
+
+    public function testGetAlbumSuiteIdsReturnsAlbumSuiteIds(): void
+    {
+        $id                 = 666;
+        $albumSuiteSingle   = [1];
+        $albumSuiteMultiple = [1,2,3];
+
+        // single disc test
+        $this->album->album_suite = $albumSuiteSingle;
+
+        $this->album->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($id);
+
+        $this->assertEquals(
+            $id,
+            $this->subject->getAlbumSuiteIds()
+        );
+
+        // multiple disc test
+        $this->album->album_suite = $albumSuiteMultiple;
+
+        $this->assertSame(
+            implode(',', $albumSuiteMultiple),
+            $this->subject->getAlbumSuiteIds()
+        );
+    }
+
+    public function testGetAverageRatingReturnsValue(): void
+    {
+        $albumId       = 666;
+        $averageRating = '7.89';
+
+        $rating = $this->mock(Rating::class);
+
+        $this->album->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($albumId);
+
+        $this->modelFactory->shouldReceive('createRating')
+            ->with($albumId, 'album')
+            ->once()
+            ->andReturn($rating);
+
+        $rating->shouldReceive('get_average_rating')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($averageRating);
+
+        $this->assertSame(
+            (string) $averageRating,
+            $this->subject->getAverageRating()
         );
     }
 
