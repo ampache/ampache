@@ -1753,17 +1753,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // Create Links for the different objects
         $this->get_f_link();
+        $this->get_f_artist_link();
+        $this->get_f_albumartist_link();
         $web_path            = AmpConfig::get('web_path');
         $this->f_album_link  = "<a href=\"" . $web_path . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
-        $this->get_f_artist_link();
-        if (!empty($this->albumartists)) {
-            $this->f_albumartist_link = '';
-            foreach ($this->albumartists as $artist_id) {
-                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                $this->f_albumartist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&amp;artist=" . $this->albumartist . "\" title=\"" . $artist_fullname . "\"> " . $artist_fullname . "</a>";
-            }
-            $this->f_albumartist_link = rtrim($this->f_albumartist_link, ",&nbsp");
-        }
 
         // Format the Bitrate
         $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
@@ -1913,6 +1906,29 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $this->f_artist_link;
+    }
+
+    /**
+     * Get item f_albumartist_link.
+     * @return string
+     */
+    public function get_f_albumartist_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_albumartist_link)) {
+            $this->f_albumartist_link = '';
+            $web_path                 = AmpConfig::get('web_path');
+            if (empty($this->albumartists)) {
+                $this->albumartists = self::get_parent_array($this->album, 'album');
+            }
+            foreach ($this->albumartists as $artist_id) {
+                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+            }
+            $this->f_albumartist_link = rtrim($this->f_albumartist_link, ",&nbsp");
+        }
+
+        return $this->f_albumartist_link;
     }
 
     /**
