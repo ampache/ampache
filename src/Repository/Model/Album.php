@@ -61,6 +61,11 @@ class Album extends database_object implements library_item
     public $album_artist;
 
     /**
+     * @var array $album_artists
+     */
+    public array $album_artists;
+
+    /**
      * @var integer $disk
      */
     public $disk;
@@ -582,6 +587,7 @@ class Album extends database_object implements library_item
         $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
+        $this->album_artists  = self::get_parent_array($this->id);
 
         if ($details) {
             /* Pull the advanced information */
@@ -593,6 +599,7 @@ class Album extends database_object implements library_item
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
         // set link and f_link
+        $this->get_album_artist_array();
         $this->get_f_link();
         $this->get_artist_fullname();
         $this->get_f_album_artist_link();
@@ -720,17 +727,20 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_album_artist_link)) {
             $this->f_album_artist_link = '';
-            $id_list                   = self::get_parent_array($this->id);
             $web_path                  = AmpConfig::get('web_path');
-            foreach ($id_list as $artist_id) {
-                $artist_fullname = Artist::get_fullname_by_id($artist_id);
-                $this->f_album_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . scrub_out($artist_fullname) . "\">" . scrub_out($artist_fullname) . "</a>,&nbsp";
+            if (empty($this->album_artists)) {
+                $this->album_artists = self::get_parent_array($this->id);
+            }
+            foreach ($this->album_artists as $artist_id) {
+                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                $this->f_album_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
             }
             $this->f_album_artist_link = rtrim($this->f_album_artist_link, ",&nbsp");
         }
 
         return $this->f_album_artist_link;
     }
+
     /**
      * Get item f_artist_link.
      * @return string
@@ -740,7 +750,8 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
             if ($this->artist_count == '1') {
-                $this->f_artist_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\">" . scrub_out($this->get_artist_fullname()) . "</a>";
+                $artist_fullname     = scrub_out($this->get_artist_fullname());
+                $this->f_artist_link = "<a href=\"" . $this->get_link() . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>";
             } else {
                 $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
             }
@@ -768,12 +779,49 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * get_disk
+     *
+     * Returns the disk id for an album (default to one)
+     * @param int $album_id
+     * @return int|null
+     */
+    public static function get_disk($album_id)
+    {
+        $sql        = "SELECT `disk` FROM `album` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($album_id));
+        $results    = Dba::fetch_assoc($db_results);
+        if (!$results) {
+            return null;
+        }
+
+        return self::sanitize_disk($results(['disk']));
+    }
+
+    /**
      * Get item album_artist fullname.
      * @return string
      */
     public function get_album_artist_fullname()
     {
         if (!isset($this->f_album_artist_name)) {
+            if ($this->album_artist) {
+                $album_artist              = new Artist($this->album_artist);
+                $this->f_album_artist_name = $album_artist->get_fullname();
+            } else {
+                $this->f_album_artist_name = '';
+            }
+        }
+
+        return $this->f_album_artist_name;
+    }
+
+    /**
+     * Get item album_artist array.
+     * @return string
+     */
+    public function get_album_artist_array()
+    {
+        if (empty($this->album_artists)) {
             if ($this->album_artist) {
                 $album_artist              = new Artist($this->album_artist);
                 $this->f_album_artist_name = $album_artist->get_fullname();
@@ -818,14 +866,14 @@ class Album extends database_object implements library_item
 
     /**
      * Get parent album artists.
-     * @param int $album
+     * @param int $album_id
      * @return array
      */
-    public function get_parent_array($album)
+    public static function get_parent_array($album_id)
     {
         $results    = array();
         $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;";
-        $db_results = Dba::read($sql, array($album));
+        $db_results = Dba::read($sql, array($album_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
@@ -1256,10 +1304,10 @@ class Album extends database_object implements library_item
      */
     public static function sanitize_disk($disk)
     {
-        $alphabet = range('A', 'Z');
         if ((int)$disk == 0) {
             // A is 0 but we want to start at disk 1
-            $disk = (int)array_search(strtoupper((string)$disk), $alphabet) + 1;
+            $alphabet = range('A', 'Z');
+            $disk     = (int)array_search(strtoupper((string)$disk), $alphabet) + 1;
         }
 
         return (int)$disk;

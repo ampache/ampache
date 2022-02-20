@@ -556,6 +556,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return $this->f_name;
     }
+
     /**
      * Get item fullname by the artist id.
      * @return string
