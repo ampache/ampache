@@ -794,7 +794,7 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        return self::sanitize_disk($results(['disk']));
+        return self::sanitize_disk($results['disk']);
     }
 
     /**
