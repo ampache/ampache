@@ -1907,7 +1907,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));
-                $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . $artist_fullname . "\"> " . $artist_fullname . "</a>,&nbsp";
+                $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
             }
             $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
         }
