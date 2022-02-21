@@ -2160,9 +2160,16 @@ abstract class Catalog extends database_object
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
         // info for the artist_map table.
+        $artists_array          = $results['artists'] ?? array();
         $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
-
+        // if you have an artist array this will be named better than what your tags will give you
+        if (!empty($artists_array)) {
+            if ($artist == $albumartist) {
+                $albumartist = $artists_array[0];
+            }
+            $artist = $artists_array[0];
+        }
         // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
@@ -2194,6 +2201,16 @@ abstract class Catalog extends database_object
                 }
             }
         }
+        foreach ($artists_array as $artist_name) {
+            $album_artist_id = Artist::check($artist_name);
+            if ($album_artist_id > 0) {
+                $artist_song_array[] = $album_artist_id;
+                if (!in_array($album_artist_id, $artist_song_maps)) {
+                    Artist::update_artist_map($song_artist_id, 'song', $song->id);
+                    Artist::update_artist_counts($album_artist_id);
+                }
+            }
+        }
         $artist_album_array = array();
         $artist_album_maps  = Artist::get_artist_map('album', $new_song->album);
         foreach ($albumartist_mbid_array as $album_artist_mbid) {
@@ -2203,6 +2220,18 @@ abstract class Catalog extends database_object
                 if (!in_array($album_artist_id, $artist_album_maps)) {
                     Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
                     Artist::update_artist_counts($album_artist_id);
+                }
+            }
+        }
+        if ($artist == $albumartist) {
+            foreach ($artists_array as $artist_name) {
+                $album_artist_id = Artist::check($artist_name);
+                if ($album_artist_id > 0) {
+                    $artist_album_array[] = $album_artist_id;
+                    if (!in_array($album_artist_id, $artist_album_maps)) {
+                        Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+                        Artist::update_artist_counts($album_artist_id);
+                    }
                 }
             }
         }
