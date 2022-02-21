@@ -1070,7 +1070,7 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
-            //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data[0] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
@@ -1087,14 +1087,14 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_artistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_albumid':
                     $parsed['mb_albumid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumartistid':
                     $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_albumartistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_releasegroupid':
                     $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
@@ -1154,8 +1154,10 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data[0] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['track'] = $data;
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $this->parseGenres($data);
@@ -1186,14 +1188,14 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_artistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_albumid':
                     $parsed['mb_albumid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumartistid':
                     $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_albumartistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_releasegroupid':
                     $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
@@ -1305,7 +1307,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data[0] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1527,7 +1529,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Quicktime tag: ' . $tag . ' value: ' . print_r($data[0] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('Quicktime tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -1548,14 +1550,14 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'musicbrainz album artist id':
                     $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_albumartistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_albumartistid_array'] = self::parse_mbid_array($data);
                     break;
                 case 'musicbrainz release group id':
                     $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz artist id':
                     $parsed['mb_artistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_artistid_array'] = self::parse_mbid_array($data[0]);
+                    $parsed['mb_artistid_array'] = self::parse_mbid_array($data);
                     break;
                 case 'musicbrainz album type':
                     $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
