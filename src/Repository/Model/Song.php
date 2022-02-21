@@ -1950,7 +1950,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $results    = array();
         $sql        = ($type == 'album')
             ? "SELECT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;"
-            : "SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
+            : "SELECT `artist_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
