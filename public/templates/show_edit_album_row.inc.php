@@ -45,7 +45,7 @@ use Ampache\Module\Api\Ajax;
                     </div>
                     <?php
                         } else {
-                            echo $libitem->f_album_artist_name;
+                            echo $libitem->get_album_artist_fullname();
                         } ?>
                 </td>
             </tr>
