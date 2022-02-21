@@ -1274,8 +1274,8 @@ class Album extends database_object implements library_item
     public static function update_album_map($album_id, $object_type, $object_id)
     {
         if ($album_id > 0) {
-            debug_event(__CLASS__, "update_artist_map $album_id: $object_type {{$object_id}}", 5);
-            $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            debug_event(__CLASS__, "update_album_map $album_id: $object_type {{$object_id}}", 5);
+            $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
     }
