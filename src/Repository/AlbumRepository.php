@@ -371,7 +371,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name`" . $sort_disk . ", $original_year";
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
+        $sql = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
         if ($allow_group_disks) {
             $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY $sql_sort";
         }

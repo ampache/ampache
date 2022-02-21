@@ -335,13 +335,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_time($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ?";
+        $sql        = "SELECT DISTINCT SUM(`song`.`time`) AS `time` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
         $total_time = (int) ($results['time'] ?? 0);
         // album artists that don't have any songs
         if ($total_time == 0) {
-            $sql        = "SELECT SUM(`album`.`time`) AS `time` from `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ?";
+            $sql        = "SELECT DISTINCT SUM(`album`.`time`) AS `time` from `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album'";
             $db_results = Dba::read($sql, $params);
             $results    = Dba::fetch_assoc($db_results);
             $total_time = (int) ($results['time'] ?? 0);
@@ -360,7 +360,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_song_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(`song`.`id`) AS `song_count` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ?";
+        $sql        = "SELECT DISTINCT COUNT(`song`.`id`) AS `song_count` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -377,7 +377,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_album_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT COUNT(DISTINCT `album`.`id`) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -394,7 +394,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_album_group_count($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
@@ -457,7 +457,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function get_child_ids()
     {
-        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1'";
+        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
 
