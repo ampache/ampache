@@ -2261,12 +2261,20 @@ abstract class Catalog extends database_object
         foreach ($artist_song_maps as $existing_map) {
             if (!in_array($existing_map, $artist_song_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+            }
+        }
+        foreach ($song_artist_maps as $existing_map) {
+            if (!in_array($existing_map, $artist_song_array)) {
                 Album::remove_album_map($new_song->album, 'song_artist', $existing_map);
             }
         }
         foreach ($artist_album_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+            }
+        }
+        foreach ($album_artist_maps as $existing_map) {
+            if (!in_array($existing_map, $artist_album_array)) {
                 Album::remove_album_map($new_song->album, 'album_artist', $existing_map);
             }
         }
