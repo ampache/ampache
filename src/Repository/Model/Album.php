@@ -872,7 +872,7 @@ class Album extends database_object implements library_item
     public static function get_parent_array($album_id)
     {
         $results    = array();
-        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;";
+        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
