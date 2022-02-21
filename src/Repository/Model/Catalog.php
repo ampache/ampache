@@ -2202,12 +2202,12 @@ abstract class Catalog extends database_object
             }
         }
         foreach ($artists_array as $artist_name) {
-            $album_artist_id = Artist::check($artist_name);
-            if ($album_artist_id > 0) {
-                $artist_song_array[] = $album_artist_id;
-                if (!in_array($album_artist_id, $artist_song_maps)) {
+            $song_artist_id = Artist::check($artist_name);
+            if ($song_artist_id > 0) {
+                $artist_song_array[] = $song_artist_id;
+                if (!in_array($song_artist_id, $artist_song_maps)) {
                     Artist::update_artist_map($song_artist_id, 'song', $song->id);
-                    Artist::update_artist_counts($album_artist_id);
+                    Artist::update_artist_counts($song_artist_id);
                 }
             }
         }
