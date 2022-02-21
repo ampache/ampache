@@ -1269,6 +1269,18 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Update the album map for a single item
+     */
+    public static function update_album_map($album_id, $object_type, $object_id)
+    {
+        if ($album_id > 0) {
+            debug_event(__CLASS__, "update_artist_map $album_id: $object_type {{$object_id}}", 5);
+            $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($album_id, $object_type, $object_id));
+        }
+    }
+
+    /**
      * Delete the album map for a single item
      */
     public static function remove_album_map($album_id, $object_type, $object_id)
@@ -1281,17 +1293,24 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Update the album map for a single item
+     * get_album_map
+     *
+     * This returns an ids of albums that have songs/albums mapped
+     * @param string $object_type
+     * @param string $object_id
+     * @return array
      */
-    public static function update_album_map($album_id, $object_type, $object_id)
+    public static function get_album_map($object_type, $object_id)
     {
-        if ($album_id > 0) {
-            debug_event(__CLASS__, "update_artist_map $album_id: $object_type {{$object_id}}", 5);
-            $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
-            Dba::write($sql, array($album_id, $object_type, $object_id));
+        $results    = array();
+        $sql        = "SELECT `album_id` AS `album_id` FROM `album_map` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['album_id'];
         }
-    }
 
+        return $results;
+    }
     /**
      * update_album_counts
      *
