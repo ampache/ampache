@@ -2198,6 +2198,7 @@ abstract class Catalog extends database_object
                 if (!in_array($song_artist_id, $artist_song_maps)) {
                     Artist::update_artist_map($song_artist_id, 'song', $song->id);
                     Artist::update_artist_counts($song_artist_id);
+                    Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
                 }
             }
         }
@@ -2208,6 +2209,7 @@ abstract class Catalog extends database_object
                 if (!in_array($song_artist_id, $artist_song_maps)) {
                     Artist::update_artist_map($song_artist_id, 'song', $song->id);
                     Artist::update_artist_counts($song_artist_id);
+                    Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
                 }
             }
         }
@@ -2220,6 +2222,7 @@ abstract class Catalog extends database_object
                 if (!in_array($album_artist_id, $artist_album_maps)) {
                     Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
                     Artist::update_artist_counts($album_artist_id);
+                    Album::update_album_map($new_song->album, 'album_artist', $album_artist_id);
                 }
             }
         }
@@ -2231,6 +2234,7 @@ abstract class Catalog extends database_object
                     if (!in_array($album_artist_id, $artist_album_maps)) {
                         Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
                         Artist::update_artist_counts($album_artist_id);
+                        Album::update_album_map($new_song->album, 'album_artist', $album_artist_id);
                     }
                 }
             }
@@ -2239,11 +2243,13 @@ abstract class Catalog extends database_object
         foreach ($artist_song_maps as $existing_map) {
             if (!in_array($existing_map, $artist_song_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+                Album::remove_album_map($new_song->album, 'song_artist', $existing_map);
             }
         }
         foreach ($artist_album_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+                Album::remove_album_map($new_song->album, 'album_artist', $existing_map);
             }
         }
 

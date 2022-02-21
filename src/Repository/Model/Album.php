@@ -1269,6 +1269,30 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Delete the album map for a single item
+     */
+    public static function remove_album_map($album_id, $object_type, $object_id)
+    {
+        if ($album_id > 0) {
+            debug_event(__CLASS__, "remove_album_map $album_id: $object_type {{$object_id}}", 5);
+            $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
+            Dba::write($sql, array($album_id, $object_type, $object_id));
+        }
+    }
+
+    /**
+     * Update the album map for a single item
+     */
+    public static function update_album_map($album_id, $object_type, $object_id)
+    {
+        if ($album_id > 0) {
+            debug_event(__CLASS__, "update_artist_map $album_id: $object_type {{$object_id}}", 5);
+            $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($album_id, $object_type, $object_id));
+        }
+    }
+
+    /**
      * update_album_counts
      *
      * @param integer $album_id
@@ -1292,12 +1316,6 @@ class Album extends database_object implements library_item
             // album.artist_count
             $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`album_id` = ? AND `album_map`.`object_type` = 'album_artist' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
             Dba::write($sql, $params);
-            // clean maps
-            $sql = "DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song` WHERE `song`.`album` IS NOT NULL);";
-            Dba::write($sql, $params);
-            // Update the album map
-            $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'album_artist' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` = ?;";
-            Dba::write($sql, array($album_id, $album_id, $album_id));
         }
     }
 

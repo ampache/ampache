@@ -261,6 +261,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function garbage_collection()
     {
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_id` NOT IN (SELECT `id` FROM `artist`);");
         // delete the artists
         Dba::write("DELETE FROM `artist` WHERE `artist`.`id` NOT IN (SELECT `song`.`artist` FROM `song` WHERE `song`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `album`.`album_artist` FROM `album` WHERE `album`.`album_artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `wanted`.`artist` FROM `wanted` WHERE `wanted`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `clip`.`artist` FROM `clip` WHERE `clip`.`artist` IS NOT NULL) AND `artist`.`id` NOT IN (SELECT `artist_id` FROM `artist_map`);");
         // then clean up remaining artists with data that might creep in
@@ -802,7 +803,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         // search by the artist name and build an array
         if (!$exists) {
-            $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
+            $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` = ?;';
             $db_results = Dba::read($sql, array($name));
             $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -919,7 +920,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         if ($artist_id > 0) {
             debug_event(__CLASS__, "update_artist_map $artist_id: $object_type {{$object_id}}", 5);
-            $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($artist_id, $object_type, $object_id));
         }
     }
@@ -1146,9 +1147,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
             // artist.song_count
             $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `song`.`artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `catalog`.`enabled` = '1' GROUP BY `song`.`artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`id` = `song`.`artist`;";
             Dba::write($sql, $params);
-            // Update the album map
-            $sql = "REPLACE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` = ? UNION SELECT DISTINCT `album`.`album_artist`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` = ?;";
-            Dba::write($sql, array($artist_id, $artist_id));
         }
     }
 
