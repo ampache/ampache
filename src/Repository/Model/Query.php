@@ -1594,8 +1594,9 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':
+                        $this->set_join_and('LEFT', '`artist_map`', '`artist_map`.`artist_id`', '`artist`.`id`', '`artist_map`.`object_type`', '\'album\'', 100);
                         $this->set_join('LEFT', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `album`.`album_artist` IS NOT NULL AND ";
+                        $filter_sql = " `artist_map`.`artist_id` IS NOT NULL AND ";
                         break;
                     default:
                         break;
