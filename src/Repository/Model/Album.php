@@ -1303,10 +1303,10 @@ class Album extends database_object implements library_item
     public static function get_album_map($object_type, $object_id)
     {
         $results    = array();
-        $sql        = "SELECT `album_id` AS `album_id` FROM `album_map` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['album_id'];
+            $results[] = $row['object_id'];
         }
 
         return $results;
