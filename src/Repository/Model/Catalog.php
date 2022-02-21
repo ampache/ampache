@@ -2200,7 +2200,7 @@ abstract class Catalog extends database_object
                     Artist::update_artist_map($song_artist_id, 'song', $song->id);
                     Artist::update_artist_counts($song_artist_id);
                 }
-                if (!in_array($album_artist_id, $song_artist_maps)) {
+                if (!in_array($song_artist_id, $song_artist_maps)) {
                     Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
                 }
             }
@@ -2213,7 +2213,7 @@ abstract class Catalog extends database_object
                     Artist::update_artist_map($song_artist_id, 'song', $song->id);
                     Artist::update_artist_counts($song_artist_id);
                 }
-                if (!in_array($album_artist_id, $song_artist_maps)) {
+                if (!in_array($song_artist_id, $song_artist_maps)) {
                     Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
                 }
             }
