@@ -1594,8 +1594,7 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':
-                        //$this->set_join_and('LEFT', '`artist_map`', '`artist_map`.`artist_id`', '`artist`.`id`', '`artist_map`.`object_type`', '\'album\'', 100);
-                        $filter_sql = " `id` in(SELECT `artist_id` FROM  `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
+                        $filter_sql = " `id` in(SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
                         break;
                     default:
                         break;
