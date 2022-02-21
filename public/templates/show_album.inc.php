@@ -52,7 +52,7 @@ $title    = ($album->artist_count > 0)
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
-$hide_array        = (AmpConfig::get('hide_single_artist') && $album->artist_count == 1)
+$hide_array        = (AmpConfig::get('hide_single_artist') && $album->song_artist_count == 1)
     ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
     : array('cel_album', 'cel_year', 'cel_drag');
 
