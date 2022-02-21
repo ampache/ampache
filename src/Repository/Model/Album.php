@@ -872,7 +872,7 @@ class Album extends database_object implements library_item
     public static function get_parent_array($album_id)
     {
         $results    = array();
-        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'artist' AND `album_id` = ?;";
+        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album_artist' AND `album_id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1285,7 +1285,7 @@ class Album extends database_object implements library_item
             $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.artist_count
-            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`id` = `song`.`album`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`album_id` = ? AND `album_map`.`object_type` = 'artist' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
             Dba::write($sql, $params);
             // clean maps
             $sql = "DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song` WHERE `song`.`album` IS NOT NULL);";
