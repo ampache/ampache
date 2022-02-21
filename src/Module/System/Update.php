@@ -3963,9 +3963,7 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `album_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         // fill the data
-        $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album_artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' UNION SELECT DISTINCT `album`.`id` AS `album_id`, 'album_artist', `album`.`album_artist` AS `object_id` FROM `album` WHERE `album`.`album_artist` > 0;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'song_artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song_artist', `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`artist` > 0;";
+        $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'album_artist' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id`;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

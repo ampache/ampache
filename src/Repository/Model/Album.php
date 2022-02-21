@@ -1296,8 +1296,8 @@ class Album extends database_object implements library_item
             $sql = "DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song` WHERE `song`.`album` IS NOT NULL);";
             Dba::write($sql, $params);
             // Update the album map
-            $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'artist', `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`artist` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`artist` = ?;";
-            Dba::write($sql, array($album_id, $album_id));
+            $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'album_artist' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` = ? UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song_artist' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` = ?;";
+            Dba::write($sql, array($album_id, $album_id, $album_id));
         }
     }
 
