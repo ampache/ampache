@@ -2226,17 +2226,6 @@ abstract class Catalog extends database_object
                 }
             }
         }
-        // clean up the mapped things that are missing after the update
-        foreach ($artist_song_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_mbid_array)) {
-                Artist::remove_artist_map($existing_map, 'song', $song->id);
-            }
-        }
-        foreach ($artist_album_maps as $existing_map) {
-            if (!in_array($existing_map, $albumartist_mbid_array)) {
-                Artist::remove_artist_map($existing_map, 'album', $new_song->album);
-            }
-        }
 
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;

@@ -450,6 +450,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // info for the artist_map table.
         $artist_name_array      = Catalog::trim_featuring($artist);
+        $albumartist_name_array = ($albumartist)
+            ? Catalog::trim_featuring($albumartist)
+            : array();
         $artist_mbid_array      = $results['mb_artistid_array'];
         $albumartist_mbid_array = $results['mb_albumartistid_array'];
 
@@ -551,6 +554,13 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($song_artist_id > 0) {
                 Artist::update_artist_map($song_artist_id, 'song', $song_id);
                 Artist::update_artist_counts($song_artist_id);
+            }
+        }
+        foreach ($albumartist_name_array as $album_artist_name) {
+            $album_artist_id = Artist::check($album_artist_name);
+            if ($album_artist_id > 0) {
+                Artist::update_artist_map($album_artist_id, 'album', $album_id);
+                Artist::update_artist_counts($album_artist_id);
             }
         }
         foreach ($albumartist_mbid_array as $album_artist_mbid) {
