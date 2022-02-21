@@ -89,7 +89,7 @@ $display_year = ($original_year && $libitem->original_year)
             } ?>
     </span>
 </td>
-<td class="<?php echo $cel_artist; ?>"><?php $libitem->get_f_album_artist_link(); ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_album_artist_link(); ?></td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
 <td class="cel_year"><?php if ($display_year > 0) {
                 echo $display_year;
