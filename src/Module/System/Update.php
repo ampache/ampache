@@ -594,6 +594,9 @@ class Update
         $update_string = "* Create album_map table and fill it with data";
         $version[]     = array('version' => '530001', 'description' => $update_string);
 
+        $update_string = "* Add song_artist_count to album";
+        $version[]     = array('version' => '530002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -3964,6 +3967,24 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "REPLACE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'song_artist', `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song_artist', `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`artist` > 0;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530002
+     *
+     * Add song_artist_count to album
+     */
+    public static function update_530002()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` ADD `song_artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT (`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song_artist' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
+        Dba::write($sql);
 
         return $retval;
     }
