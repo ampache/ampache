@@ -2146,9 +2146,6 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
-        // info for the artist_map table.
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
         // info for the album table.
         $album      = self::check_length($results['album']);
         $album_mbid = $results['mb_albumid'];
@@ -2162,6 +2159,13 @@ abstract class Catalog extends database_object
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
+        // info for the artist_map table.
+        $artist_name_array      = Catalog::trim_featuring($artist);
+        $albumartist_name_array = ($albumartist)
+            ? Catalog::trim_featuring($albumartist)
+            : array();
+        $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
+        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
 
         // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
@@ -2183,6 +2187,16 @@ abstract class Catalog extends database_object
 
         // map all artists to the song and album
         $artist_song_maps = Artist::get_artist_map('song', $song->id);
+        foreach ($artist_name_array as $song_artist_name) {
+            $song_artist_id = Artist::check($song_artist_name);
+            if ($song_artist_id > 0) {
+                if (!in_array($song_artist_id, $artist_song_maps)) {
+                    Artist::update_artist_map($song_artist_id, 'song', $song->id);
+                    Artist::update_artist_counts($song_artist_id);
+                    $artist_song_maps[] = $song_artist_id;
+                }
+            }
+        }
         foreach ($artist_mbid_array as $song_artist_mbid) {
             $song_artist_id = Artist::check_mbid($song_artist_mbid);
             if ($song_artist_id > 0) {
@@ -2193,6 +2207,16 @@ abstract class Catalog extends database_object
             }
         }
         $artist_album_maps = Artist::get_artist_map('album', $new_song->album);
+        foreach ($albumartist_name_array as $album_artist_name) {
+            $album_artist_id = Artist::check($album_artist_name);
+            if ($album_artist_id > 0) {
+                if (!in_array($album_artist_id, $artist_album_maps)) {
+                    Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+                    Artist::update_artist_counts($album_artist_id);
+                    $artist_album_maps[] = $album_artist_id;
+                }
+            }
+        }
         foreach ($albumartist_mbid_array as $album_artist_mbid) {
             $album_artist_id = Artist::check_mbid($album_artist_mbid);
             if ($album_artist_id > 0) {
