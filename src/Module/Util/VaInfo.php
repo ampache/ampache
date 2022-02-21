@@ -1400,7 +1400,7 @@ final class VaInfo implements VaInfoInterface
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         // return artists as array not as string of artists with delimiter, don't process metadata in catalog
-                        $parsed['artists'] = $this->splitSlashedlist($id3v2['comments']['text'][$txxx['description']], false);
+                        $parsed['artists'] = explode("\x00", $id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
