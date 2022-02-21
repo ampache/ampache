@@ -42,7 +42,9 @@ $web_path = AmpConfig::get('web_path');
 $album->allow_group_disks = true;
 // Title for this album
 $f_name  = $album->get_fullname();
-$title   = scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ?: $album->f_artist_link);
+$title   = ($album->artist_count > 0)
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_album_artist_link()) ?: '')
+    : scrub_out($f_name);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
 $show_playlist_add    = Access::check('interface', 25);
