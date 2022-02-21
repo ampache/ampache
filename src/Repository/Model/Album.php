@@ -1274,7 +1274,7 @@ class Album extends database_object implements library_item
     public static function update_album_map($album_id, $object_type, $object_id)
     {
         if ($album_id > 0) {
-            debug_event(__CLASS__, "update_album_map $album_id: $object_type {{$object_id}}", 5);
+            //debug_event(__CLASS__, "update_album_map $album_id: $object_type {{$object_id}}", 5);
             $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
@@ -1286,7 +1286,7 @@ class Album extends database_object implements library_item
     public static function remove_album_map($album_id, $object_type, $object_id)
     {
         if ($album_id > 0) {
-            debug_event(__CLASS__, "remove_album_map $album_id: $object_type {{$object_id}}", 5);
+            //debug_event(__CLASS__, "remove_album_map $album_id: $object_type {{$object_id}}", 5);
             $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }

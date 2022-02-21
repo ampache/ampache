@@ -919,7 +919,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function update_artist_map($artist_id, $object_type, $object_id)
     {
         if ($artist_id > 0) {
-            debug_event(__CLASS__, "update_artist_map $artist_id: $object_type {{$object_id}}", 5);
+            //debug_event(__CLASS__, "update_artist_map $artist_id: $object_type {{$object_id}}", 5);
             $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($artist_id, $object_type, $object_id));
         }
@@ -931,7 +931,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function remove_artist_map($artist_id, $object_type, $object_id)
     {
         if ($artist_id > 0) {
-            debug_event(__CLASS__, "remove_artist_map $artist_id: $object_type {{$object_id}}", 5);
+            //debug_event(__CLASS__, "remove_artist_map $artist_id: $object_type {{$object_id}}", 5);
             $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, array($artist_id, $object_type, $object_id));
         }
