@@ -240,6 +240,18 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
+    public function testGetPlayedTimesReturnsValue(): void
+    {
+        $value = 666;
+
+        $this->album->total_count = $value;
+
+        $this->assertEquals(
+            $value,
+            $this->subject->getPlayedTimes()
+        );
+    }
+
     public function testGetAlbumUrlReturnsValue(): void
     {
         $value = 'some-url';

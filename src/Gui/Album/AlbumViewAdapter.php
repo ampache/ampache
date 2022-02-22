@@ -287,6 +287,11 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
         return Ui::get_icon('playlist_add', T_('Add to playlist'));
     }
 
+    public function getPlayedTimes(): bool
+    {
+        return $this->album->total_count;
+    }
+
     public function getAlbumUrl(): string
     {
         return $this->album->get_link();
