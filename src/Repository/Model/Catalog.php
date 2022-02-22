@@ -2163,13 +2163,6 @@ abstract class Catalog extends database_object
         $artists_array          = $results['artists'] ?? array();
         $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
-        // if you have an artist array this will be named better than what your tags will give you
-        if (!empty($artists_array)) {
-            if ($artist == $albumartist) {
-                $albumartist = $artists_array[0];
-            }
-            $artist = $artists_array[0];
-        }
         // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
