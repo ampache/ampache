@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Exception;
 use Seafile\Client\Http\Client;
 use Seafile\Client\Resource\Library;
@@ -318,7 +319,7 @@ class SeafileAdapter
             return $this->client['Client']->request('GET', $url, $opts);
         });
 
-        $tempfilename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $file->name;
+        $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
 
         $tempfile = fopen($tempfilename, 'wb');
 
