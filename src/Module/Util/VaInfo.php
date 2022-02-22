@@ -627,7 +627,9 @@ final class VaInfo implements VaInfoInterface
             $info['release_status'] = (!$info['release_status'] && array_key_exists('release_status', $tags)) ? trim((string)$tags['release_status']) : $info['release_status'];
 
             // artists is an array treat it as one
-            $info['artists'] = self::clean_array_tag('artists', $info, $tags);
+            $info['artists'] = (!$info['artists'] && array_key_exists('artists', $tags) && !empty($tags['artists']))
+                ? $tags['artists']
+                : $info['artists'];
 
             $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string)$tags['original_year']) : $info['original_year'];
             $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string)$tags['barcode']) : $info['barcode'];
