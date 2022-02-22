@@ -747,9 +747,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function check($name, $mbid = '', $readonly = false)
     {
-        $trimmed = Catalog::trim_prefix(trim((string)$name));
-        $name    = $trimmed['string'];
-        $prefix  = $trimmed['prefix'];
+        $full_name = $name;
+        $trimmed   = Catalog::trim_prefix(trim((string)$name));
+        $name      = $trimmed['string'];
+        $prefix    = $trimmed['prefix'];
         // If Ampache support multiple artists per song one day, we should also handle other artists here
         $trimmed = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
@@ -803,8 +804,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         // search by the artist name and build an array
         if (!$exists) {
-            $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` = ?;';
-            $db_results = Dba::read($sql, array($name));
+            $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?);";
+            $db_results = Dba::read($sql, array($name, $full_name));
             $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key            = $row['mbid'] ?? 'null';
