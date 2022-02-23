@@ -943,7 +943,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      *
      * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
-     * @param string $object_id
+     * @param int $object_id
      * @return array
      */
     public static function get_artist_map($object_type, $object_id)
@@ -952,7 +952,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['artist_id'];
+            $results[] = (int)$row['artist_id'];
         }
 
         return $results;

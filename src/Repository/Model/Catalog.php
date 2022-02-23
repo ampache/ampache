@@ -2165,8 +2165,7 @@ abstract class Catalog extends database_object
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
-            debug_event(self::class, "artist_array: " . print_r($artists_array, true), 4);
-            if ($artist == $albumartist) {
+            if (!empty($artist) && !empty($albumartist) && $artist == $albumartist) {
                 $albumartist = $artists_array[0];
             }
             $artist = $artists_array[0];
@@ -2189,68 +2188,85 @@ abstract class Catalog extends database_object
             $new_song->album = $song->album;
         }
 
-        // map all artists to the song and album
-        $artist_song_array = array();
+        // get the artists / album_artists for this song
+        $artist_song_array  = array($new_song->artist);
+        $artist_album_array = array($new_song->albumartist);
+        // artist_map stores song and album against the artist_id
         $artist_song_maps  = Artist::get_artist_map('song', $song->id);
-        $song_artist_maps  = Album::get_album_map('song_artist', $new_song->album);
-        foreach ($artist_mbid_array as $song_artist_mbid) {
-            $song_artist_id = Artist::check_mbid($song_artist_mbid);
-            if ($song_artist_id > 0) {
-                $artist_song_array[] = $song_artist_id;
-                if (!in_array($song_artist_id, $artist_song_maps)) {
-                    $artist_song_maps[] = $song_artist_id;
-                    Artist::update_artist_map($song_artist_id, 'song', $song->id);
-                    Artist::update_artist_counts($song_artist_id);
-                }
-                if (!in_array($song_artist_id, $song_artist_maps)) {
-                    $song_artist_maps[] = $song_artist_id;
-                    Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
+        $artist_album_maps = Artist::get_artist_map('album', $new_song->album);
+        // album_map stores song_artist and album_artist against the album_id
+        $album_song_artist_maps  = Album::get_artist_map('song_artist', $new_song->album);
+        $album_album_artist_maps = Album::get_artist_map('album_artist', $new_song->album);
+
+        // add song artists to the list
+        if (!empty($artist_mbid_array)) {
+            foreach ($artist_mbid_array as $song_artist_mbid) {
+                $song_artist_id = Artist::check_mbid($song_artist_mbid);
+                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
+                    $artist_song_array[] = $song_artist_id;
                 }
             }
         }
-        foreach ($artists_array as $artist_name) {
-            $song_artist_id = Artist::check($artist_name);
-            if ($song_artist_id > 0) {
-                $artist_song_array[] = $song_artist_id;
-                if (!in_array($song_artist_id, $artist_song_maps)) {
-                    $artist_song_maps[] = $song_artist_id;
-                    Artist::update_artist_map($song_artist_id, 'song', $song->id);
-                    Artist::update_artist_counts($song_artist_id);
-                }
-                if (!in_array($song_artist_id, $song_artist_maps)) {
-                    $song_artist_maps[] = $song_artist_id;
-                    Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
+        // add song artists found by mbid to the list
+        if (!empty($artists_array)) {
+            foreach ($artists_array as $artist_name) {
+                $song_artist_id = Artist::check($artist_name);
+                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
+                    $artist_song_array[] = $song_artist_id;
                 }
             }
         }
-        $artist_album_array = array();
-        $artist_album_maps  = Artist::get_artist_map('album', $new_song->album);
-        $album_artist_maps  = Album::get_album_map('album_artist', $new_song->album);
-        foreach ($albumartist_mbid_array as $album_artist_mbid) {
-            $album_artist_id = Artist::check_mbid($album_artist_mbid);
-            if ($album_artist_id > 0) {
-                $artist_album_array[] = $album_artist_id;
-                if (!in_array($album_artist_id, $artist_album_maps)) {
-                    $artist_album_maps[] = $album_artist_id;
-                    Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
-                    Artist::update_artist_counts($album_artist_id);
+        // map every song artist we've found
+        foreach ($artist_song_array as $song_artist_id) {
+            if (!in_array($song_artist_id, $artist_song_maps)) {
+                $artist_song_maps[] = $song_artist_id;
+                Artist::update_artist_map($song_artist_id, 'song', $song->id);
+                Artist::update_artist_counts($song_artist_id);
+            }
+            if (!in_array($song_artist_id, $album_song_artist_maps)) {
+                $album_song_artist_maps[] = $song_artist_id;
+                Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
+            }
+        }
+        // add album artists to the list
+        if (!empty($albumartist_mbid_array)) {
+            foreach ($albumartist_mbid_array as $album_artist_mbid) {
+                $album_artist_id = Artist::check_mbid($album_artist_mbid);
+                if ($album_artist_id > 0 && !in_array($album_artist_id, $artist_album_array)) {
+                    $artist_album_array[] = $album_artist_id;
                 }
-                if (!in_array($album_artist_id, $album_artist_maps)) {
-                    $album_artist_maps[] = $album_artist_id;
-                    Album::update_album_map($new_song->album, 'album_artist', $album_artist_id);
-                }
+            }
+        }
+        // map every album artist we've found
+        foreach ($artist_album_array as $album_artist_id) {
+            if (!in_array($album_artist_id, $artist_album_maps)) {
+                $artist_album_maps[] = $album_artist_id;
+                Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+                Artist::update_artist_counts($album_artist_id);
+            }
+            if (!in_array($album_artist_id, $album_album_artist_maps)) {
+                $album_album_artist_maps[] = $album_artist_id;
+                Album::update_album_map($new_song->album, 'album_artist', $album_artist_id);
             }
         }
         // clean up the mapped things that are missing after the update
         foreach ($artist_song_maps as $existing_map) {
             if (!in_array($existing_map, $artist_song_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+            }
+        }
+        foreach ($album_song_artist_maps as $existing_map) {
+            if (!in_array($existing_map, $artist_song_array)) {
                 Album::remove_album_map($new_song->album, 'song_artist', $existing_map);
             }
         }
         foreach ($artist_album_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+            }
+        }
+        foreach ($album_album_artist_maps as $existing_map) {
+            if (!in_array($existing_map, $artist_album_array)) {
                 Album::remove_album_map($new_song->album, 'album_artist', $existing_map);
             }
         }

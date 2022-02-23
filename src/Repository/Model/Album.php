@@ -1295,18 +1295,18 @@ class Album extends database_object implements library_item
     /**
      * get_album_map
      *
-     * This returns an ids of albums that have songs/albums mapped
+     * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
-     * @param string $object_id
+     * @param int $album_id
      * @return array
      */
-    public static function get_album_map($object_type, $object_id)
+    public static function get_artist_map($object_type, $album_id)
     {
         $results    = array();
         $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?";
-        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $db_results = Dba::read($sql, array($object_type, $album_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;
