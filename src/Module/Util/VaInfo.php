@@ -1159,7 +1159,7 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'artists':
-                    $parsed['track'] = $data;
+                    $parsed['artists'] = $data;
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $this->parseGenres($data);
