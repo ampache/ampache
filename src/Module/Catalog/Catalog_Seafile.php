@@ -401,6 +401,8 @@ class Catalog_Seafile extends Catalog
 
         $results['file'] = $this->seafile->to_virtual_path($file);
 
+        unlink($tempfilename);
+
         return $results;
     }
 
