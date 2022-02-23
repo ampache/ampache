@@ -2225,7 +2225,7 @@ abstract class Catalog extends database_object
             }
             if (!in_array($song_artist_id, $album_song_artist_maps)) {
                 $album_song_artist_maps[] = $song_artist_id;
-                Album::update_album_map($new_song->album, 'song_artist', $song_artist_id);
+                Album::update_artist_map($new_song->album, 'song_artist', $song_artist_id);
             }
         }
         // add album artists to the list
@@ -2237,6 +2237,7 @@ abstract class Catalog extends database_object
                 }
             }
         }
+        debug_event(__CLASS__, "Album artists " . print_r($artist_album_array, true), 5);
         // map every album artist we've found
         foreach ($artist_album_array as $album_artist_id) {
             if (!in_array($album_artist_id, $artist_album_maps)) {
@@ -2246,7 +2247,7 @@ abstract class Catalog extends database_object
             }
             if (!in_array($album_artist_id, $album_album_artist_maps)) {
                 $album_album_artist_maps[] = $album_artist_id;
-                Album::update_album_map($new_song->album, 'album_artist', $album_artist_id);
+                Album::update_artist_map($new_song->album, 'album_artist', $album_artist_id);
             }
         }
         // clean up the mapped things that are missing after the update
@@ -2257,7 +2258,7 @@ abstract class Catalog extends database_object
         }
         foreach ($album_song_artist_maps as $existing_map) {
             if (!in_array($existing_map, $artist_song_array)) {
-                Album::remove_album_map($new_song->album, 'song_artist', $existing_map);
+                Album::remove_artist_map($new_song->album, 'song_artist', $existing_map);
             }
         }
         foreach ($artist_album_maps as $existing_map) {
@@ -2267,7 +2268,7 @@ abstract class Catalog extends database_object
         }
         foreach ($album_album_artist_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
-                Album::remove_album_map($new_song->album, 'album_artist', $existing_map);
+                Album::remove_artist_map($new_song->album, 'album_artist', $existing_map);
             }
         }
 
