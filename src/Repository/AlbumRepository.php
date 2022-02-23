@@ -243,7 +243,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function collectGarbage(): void
     {
         // delete old mappings
-        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song` WHERE `song`.`album` IS NOT NULL) OR `object_type` = 'artist';");
+        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
         // delete the albums
         Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`);");
         // also clean up some bad data that might creep in

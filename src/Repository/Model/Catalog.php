@@ -2080,6 +2080,7 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags($results, Song $song)
     {
+        //debug_event(__CLASS__, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
         $new_song       = new Song();
         $new_song->file = $results['file'];
