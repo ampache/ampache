@@ -985,9 +985,11 @@ final class VaInfo implements VaInfoInterface
         $parsed['size']          = $this->_forcedSize ?? $tags['filesize'] ?? null;
         $parsed['encoding']      = $tags['encoding'] ?? null;
         $parsed['mime']          = $tags['mime_type'] ?? null;
-        $parsed['time']          = (($this->_forcedSize || !array_key_exists('playtime_seconds', $tags) && (int)$tags['bitrate'] > 0))
-            ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate'])
-            : $tags['playtime_seconds'];
+        if (($this->_forcedSize || !array_key_exists('playtime_seconds', $tags)) && $tags['bitrate']) {
+                $parsed['time'] = (($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate'];
+        } else {
+                $tags['playtime_seconds'];
+        }
 
         if (isset($tags['ape'])) {
             if (isset($tags['ape']['items'])) {
