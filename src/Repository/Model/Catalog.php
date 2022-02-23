@@ -2196,8 +2196,8 @@ abstract class Catalog extends database_object
         $artist_song_maps  = Artist::get_artist_map('song', $song->id);
         $artist_album_maps = Artist::get_artist_map('album', $new_song->album);
         // album_map stores song_artist and album_artist against the album_id
-        $album_song_artist_maps  = Album::get_artist_map('song_artist', $new_song->album);
-        $album_album_artist_maps = Album::get_artist_map('album_artist', $new_song->album);
+        $album_song_artist_maps  = Album::get_artist_map('song', $new_song->album);
+        $album_album_artist_maps = Album::get_artist_map('album', $new_song->album);
 
         // add song artists to the list
         if (!empty($artist_mbid_array)) {
@@ -2226,7 +2226,7 @@ abstract class Catalog extends database_object
             }
             if (!in_array($song_artist_id, $album_song_artist_maps)) {
                 $album_song_artist_maps[] = $song_artist_id;
-                Album::update_artist_map($new_song->album, 'song_artist', $song_artist_id);
+                Album::update_artist_map($new_song->album, 'song', $song_artist_id);
             }
         }
         // add album artists to the list
@@ -2247,7 +2247,7 @@ abstract class Catalog extends database_object
             }
             if (!in_array($album_artist_id, $album_album_artist_maps)) {
                 $album_album_artist_maps[] = $album_artist_id;
-                Album::update_artist_map($new_song->album, 'album_artist', $album_artist_id);
+                Album::update_artist_map($new_song->album, 'album', $album_artist_id);
             }
         }
         // clean up the mapped things that are missing after the update
@@ -2258,7 +2258,7 @@ abstract class Catalog extends database_object
         }
         foreach ($album_song_artist_maps as $existing_map) {
             if (!in_array($existing_map, $album_song_artist_maps)) {
-                Album::remove_artist_map($new_song->album, 'song_artist', $existing_map);
+                Album::remove_artist_map($new_song->album, 'song', $existing_map);
             }
         }
         foreach ($artist_album_maps as $existing_map) {
@@ -2268,7 +2268,7 @@ abstract class Catalog extends database_object
         }
         foreach ($album_album_artist_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
-                Album::remove_artist_map($new_song->album, 'album_artist', $existing_map);
+                Album::remove_artist_map($new_song->album, 'album', $existing_map);
             }
         }
 
@@ -2561,7 +2561,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
         // album.artist_count
-        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'album_artist' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
         Dba::write($sql);
         //debug_event(__CLASS__, 'update_counts song table', 5);
         // song.total_count
