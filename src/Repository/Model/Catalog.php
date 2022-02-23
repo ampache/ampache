@@ -2237,7 +2237,6 @@ abstract class Catalog extends database_object
                 }
             }
         }
-        debug_event(__CLASS__, "Album artists " . print_r($artist_album_array, true), 5);
         // map every album artist we've found
         foreach ($artist_album_array as $album_artist_id) {
             if (!in_array($album_artist_id, $artist_album_maps)) {
@@ -2257,7 +2256,7 @@ abstract class Catalog extends database_object
             }
         }
         foreach ($album_song_artist_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_song_array)) {
+            if (!in_array($existing_map, $album_song_artist_maps)) {
                 Album::remove_artist_map($new_song->album, 'song_artist', $existing_map);
             }
         }
