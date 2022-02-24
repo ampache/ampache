@@ -290,8 +290,7 @@ class Catalog_Seafile extends Catalog
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
-                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.",
-                        5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.", 5);
                 }
 
                 return 0;
@@ -344,8 +343,7 @@ class Catalog_Seafile extends Catalog
                 return $added;
             } catch (Exception $error) {
                 /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_catalog',
-                    sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }

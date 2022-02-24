@@ -1967,9 +1967,13 @@ abstract class Catalog extends database_object
                 }
                 $file = scrub_out($song->file);
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
+            } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
+                if (!$api) {
+                    echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
+                }
             } else {
                 if (!$api) {
-                    echo '<tr><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
             }
             flush();

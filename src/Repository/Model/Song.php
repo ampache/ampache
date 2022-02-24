@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\Waveform;
 use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -560,6 +561,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
         }
+        //get the waveform if enabled
+        if (AmpConfig::get('waveform', false)) {
+            Waveform::get($song_id, 'song');
+        }
 
         // Allow scripts to populate new tags when injecting user uploads
         if (!defined('NO_SESSION')) {
@@ -1068,7 +1073,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return string
      */
     public function get_artist_fullname($artist_id = 0)
