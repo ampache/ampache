@@ -908,8 +908,8 @@ final class VaInfo implements VaInfoInterface
      */
     private function _parse_general($tags)
     {
+        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         $parsed = array();
-
         if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
         } else {
@@ -937,10 +937,10 @@ final class VaInfo implements VaInfoInterface
         $parsed['size']          = $this->_forcedSize ?? $tags['filesize'] ?? null;
         $parsed['encoding']      = $tags['encoding'] ?? null;
         $parsed['mime']          = $tags['mime_type'] ?? null;
-        if (($this->_forcedSize || !array_key_exists('playtime_seconds', $tags)) && $tags['bitrate']) {
-                $parsed['time'] = (($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate'];
+        if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
+            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
         } else {
-                $tags['playtime_seconds'];
+            $parsed['time'] = $tags['playtime_seconds'];
         }
 
         if (isset($tags['ape'])) {
