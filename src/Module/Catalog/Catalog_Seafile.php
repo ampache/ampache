@@ -369,8 +369,9 @@ class Catalog_Seafile extends Catalog
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
+        $is_cached = is_file($file);
 
-        if ((is_file($file))) {
+        if ($is_cached) {
             debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
             $tempfilename = $file;
         } else {
@@ -391,7 +392,9 @@ class Catalog_Seafile extends Catalog
             $rename_pattern,
             true
         );
-        $vainfo->forceSize($file->size);
+        if (!$is_cached) {
+            $vainfo->forceSize($file->size);
+        }
         $vainfo->get_info();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
@@ -399,11 +402,15 @@ class Catalog_Seafile extends Catalog
         // maybe fix stat-ing-nonexistent-file bug?
         $vainfo->tags['general']['size'] = (int)($file->size);
 
-        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
+        $results = ($is_cached)
+            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
+            : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
         // Set the remote path
         $results['catalog'] = $this->id;
-        $results['file']    = $this->seafile->to_virtual_path($file);
+        $results['file']    = ($is_cached)
+            ? $file
+            : $this->seafile->to_virtual_path($file);
 
         // remove the temp file
         self::clean_tmp_file($tempfilename);
