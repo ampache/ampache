@@ -367,7 +367,7 @@ class Catalog_Seafile extends Catalog
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
-        $is_cached = is_file($file);
+        $is_cached = (is_string($file) && is_file($file));
 
         if ($is_cached) {
             debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
