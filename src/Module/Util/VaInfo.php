@@ -1313,6 +1313,8 @@ final class VaInfo implements VaInfoInterface
         foreach ($tags as $tag => $data) {
             //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['artists'] = $data;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
