@@ -50,7 +50,8 @@ class Catalog_Seafile extends Catalog
     private static $description = 'Seafile Remote Catalog';
     private static $table_name  = 'catalog_seafile';
 
-    private $seafile;
+    private int $count;
+    private SeafileAdapter $seafile;
 
     /**
      * get_description
@@ -398,10 +399,10 @@ class Catalog_Seafile extends Catalog
 
         // Set the remote path
         $results['catalog'] = $this->id;
+        $results['file']    = $this->seafile->to_virtual_path($file);
 
-        $results['file'] = $this->seafile->to_virtual_path($file);
-
-        unlink($tempfilename);
+        // remove the temp file
+        self::clean_tmp_file($tempfilename);
 
         return $results;
     }
@@ -479,6 +480,19 @@ class Catalog_Seafile extends Catalog
 
         return null;
     }
+    /**
+     * clean_tmp_file
+     *
+     * Clean up temp files after use.
+     *
+     * @param string $tempfilename
+     */
+    public function clean_tmp_file($tempfilename)
+    {
+        if (file_exists($tempfilename)) {
+            unlink($tempfilename);
+        }
+    } // clean_file
 
     /**
      * clean_catalog_proc
