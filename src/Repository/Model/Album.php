@@ -1251,19 +1251,21 @@ class Album extends database_object implements library_item
             }
         }
         foreach ($results as $album_id) {
-            $artist     = 0;
+            $artist_id  = 0;
             $sql        = "SELECT MIN(`artist`) AS `artist` FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, array($album_id));
 
             // these are albums that only have 1 artist
             while ($row = Dba::fetch_assoc($db_results)) {
-                $artist = (int)$row['artist'];
+                $artist_id = (int)$row['artist'];
             }
 
             // Update the album
-            if ($artist > 0) {
-                debug_event(self::class, 'Found album_artist {' . $artist . '} for: ' . $album_id, 5);
-                Album::update_field('album_artist', $artist, $album_id);
+            if ($artist_id > 0) {
+                debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
+                Album::update_field('album_artist', $artist_id, $album_id);
+                Artist::update_artist_map($artist_id, 'album', $album_id);
+                Album::update_artist_map($album_id, 'album', $artist_id);
             }
         }
     }
