@@ -1168,7 +1168,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['artists'] = array();
                         foreach ($data as $row) {
                             if (!empty($row)) {
-                                $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
                             }
                         }
                     }
@@ -1331,7 +1331,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['artists'] = array();
                         foreach ($data as $row) {
                             if (!empty($row)) {
-                                $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
                             }
                         }
                     }
@@ -1433,7 +1433,7 @@ final class VaInfo implements VaInfoInterface
                             $parsed['artists'] = array();
                             foreach ($id3v2['comments']['text'][$txxx['description']] as $row) {
                                 if (!empty($row)) {
-                                    $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                                    $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
                                 }
                             }
                         }
