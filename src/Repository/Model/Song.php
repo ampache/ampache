@@ -449,8 +449,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
         // info for the artist_map table.
-        $artist_mbid_array      = $results['mb_artistid_array'];
-        $albumartist_mbid_array = $results['mb_albumartistid_array'];
+        $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
+        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
 
         if (isset($results['license'])) {
             $licenseRepository = static::getLicenseRepository();
