@@ -1164,9 +1164,17 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'artists':
-                    $parsed['artists'] = (!empty($data))
-                        ? explode("\x00", $data)
-                        : null;
+                    if (is_array($data)) {
+                        $parsed['artists'] = array();
+                        foreach ($data as $row) {
+                            if (!empty($row)) {
+                                $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                            }
+                        }
+                    }
+                    if (is_string($data) && !empty($data)) {
+                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
+                    }
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $this->parseGenres($data);
@@ -1319,7 +1327,17 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'artists':
-                    $parsed['artists'] = $data;
+                    if (is_array($data)) {
+                        $parsed['artists'] = array();
+                        foreach ($data as $row) {
+                            if (!empty($row)) {
+                                $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                            }
+                        }
+                    }
+                    if (is_string($data) && !empty($data)) {
+                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
+                    }
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
@@ -1411,9 +1429,17 @@ final class VaInfo implements VaInfoInterface
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         // return artists as array not as string of artists with delimiter, don't process metadata in catalog
-                        $parsed['artists'] = (!empty($id3v2['comments']['text'][$txxx['description']]))
-                            ? explode("\x00", $id3v2['comments']['text'][$txxx['description']])
-                            : null;
+                        if (is_array($id3v2['comments']['text'][$txxx['description']])) {
+                            $parsed['artists'] = array();
+                            foreach ($id3v2['comments']['text'][$txxx['description']] as $row) {
+                                if (!empty($row)) {
+                                    $parsed['artists'][] = trim(explode(';', str_replace("\x00", ';', $row)));
+                                }
+                            }
+                        }
+                        if (is_string($id3v2['comments']['text'][$txxx['description']]) && !empty($id3v2['comments']['text'][$txxx['description']])) {
+                            $parsed['artists'] = explode(';', str_replace("\x00", ';', $id3v2['comments']['text'][$txxx['description']]));
+                        }
                         break;
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
