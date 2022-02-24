@@ -939,8 +939,11 @@ final class VaInfo implements VaInfoInterface
         $parsed['mime']          = $tags['mime_type'] ?? null;
         if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
             $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
-        } else {
+        } elseif (array_key_exists('playtime_seconds', $tags)) {
             $parsed['time'] = $tags['playtime_seconds'];
+        } else {
+            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            $parsed['time'] = 0;
         }
 
         if (isset($tags['ape'])) {
