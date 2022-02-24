@@ -396,11 +396,11 @@ class Catalog_Seafile extends Catalog
             $vainfo->forceSize($file->size);
         }
         $vainfo->get_info();
-
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        // maybe fix stat-ing-nonexistent-file bug?
-        $vainfo->tags['general']['size'] = (int)($file->size);
+        if (!$is_cached) {
+            $vainfo->tags['general']['size'] = (int)($file->size);
+        }
 
         $results = ($is_cached)
             ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
