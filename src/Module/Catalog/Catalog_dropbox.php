@@ -51,6 +51,7 @@ class Catalog_dropbox extends Catalog
     private $type        = 'dropbox';
     private $description = 'Dropbox Remote Catalog';
 
+    private int $count;
     private string $authcode;
 
     /**
