@@ -133,7 +133,7 @@ final class SongRepository implements SongRepositoryInterface
     ): array {
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
-            : "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
+            : "SELECT DISTINCT `artist_map`.`object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
