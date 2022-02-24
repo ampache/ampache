@@ -1959,13 +1959,13 @@ abstract class Catalog extends database_object
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
+            $file = scrub_out($song->file);
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if (array_key_exists($type, $info['element'])) {
                     $change = explode(' --> ', (string)$info['element'][$type]);
                     $result = (int)$change[1];
                 }
-                $file = scrub_out($song->file);
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } else {
                 if (!$api) {
