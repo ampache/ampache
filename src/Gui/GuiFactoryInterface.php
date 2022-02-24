@@ -22,6 +22,7 @@
 
 namespace Ampache\Gui;
 
+use Ampache\Gui\Album\AlbumViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
@@ -29,6 +30,8 @@ use Ampache\Gui\Stats\CatalogStatsInterface;
 use Ampache\Gui\Stats\StatsViewAdapterInterface;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -39,6 +42,12 @@ interface GuiFactoryInterface
         GuiGatekeeperInterface $gatekeeper,
         Song $song
     ): SongViewAdapterInterface;
+
+    public function createAlbumViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        Album $album
+    ): AlbumViewAdapterInterface;
 
     public function createConfigViewAdapter(): ConfigViewAdapterInterface;
 
