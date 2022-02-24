@@ -370,9 +370,13 @@ class Catalog_Seafile extends Catalog
             $rename_pattern = $this->rename_pattern;
         }
 
-        debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
-
-        $tempfilename = $this->seafile->download($file, true);
+        if ((is_file($file))) {
+            debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
+            $tempfilename = $file;
+        } else {
+            debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
+            $tempfilename = $this->seafile->download($file, true);
+        }
 
         if ($gather_types === null) {
             $gather_types = $this->get_gather_types('music');
@@ -468,6 +472,10 @@ class Catalog_Seafile extends Catalog
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
+        // if you have the file it's all good
+        if (is_file($media->file)) {
+            return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
+        }
         if ($this->seafile->prepare()) {
             $fileinfo = $this->seafile->from_virtual_path($media->file);
 
