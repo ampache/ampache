@@ -21,12 +21,15 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
@@ -34,14 +37,15 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 /** @var string $limit_threshold */
 
-$web_path      = AmpConfig::get('web_path');
-$thcount       = 9;
-$show_ratings  = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres   = AmpConfig::get('hide_genres');
-$is_table      = $browse->is_grid_view();
-$group_release = AmpConfig::get('album_release_type');
-$original_year = AmpConfig::get('use_original_year');
-$year_sort     = ($original_year) ? "&sort=original_year" : "&sort=year";
+$web_path          = AmpConfig::get('web_path');
+$thcount           = 9;
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres       = AmpConfig::get('hide_genres');
+$show_played_times = AmpConfig::get('show_played_times');
+$is_table          = $browse->is_grid_view();
+$group_release     = AmpConfig::get('album_release_type');
+$original_year     = AmpConfig::get('use_original_year');
+$year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
 $album_text  = T_('Album');
 $artist_text = T_('Album Artist');
@@ -79,7 +83,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             <th class="<?php echo $cel_artist; ?> essential"><?php echo $artist_link; ?></th>
             <th class="cel_songs optional"><?php echo $songs_link; ?></th>
             <th class="cel_year essential"><?php echo $year_link; ?></th>
-            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
             <?php } ?>
             <?php if (!$hide_genres) {
@@ -96,10 +100,15 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
         </tr>
     </thead>
     <tbody>
-        <?php if (AmpConfig::get('ratings')) {
-        Rating::build_cache('album', $object_ids);
-        Userflag::build_cache('album', $object_ids);
-    }
+        <?php global $dic;
+        $talFactory = $dic->get(TalFactoryInterface::class);
+        $guiFactory = $dic->get(GuiFactoryInterface::class);
+        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('album', $object_ids);
+            Userflag::build_cache('album', $object_ids);
+        }
 
         $show_direct_play     = AmpConfig::get('directplay');
         $directplay_limit     = AmpConfig::get('direct_play_limit');
@@ -117,7 +126,27 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
                 }
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
-            <?php require Ui::find_template('show_album_row.inc.php'); ?>
+            <?php
+            if (Access::check('interface', 50)) {
+                $content = $talFactory->createTalView()
+                    ->setContext('USER_IS_REGISTERED', User::is_registered())
+                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                    ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
+                    ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                    ->setContext('IS_TABLE_VIEW', $is_table)
+                    ->setContext('IS_HIDE_GENRE', $hide_genres)
+                    ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+                    ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+                    ->setContext('CLASS_COVER', $cel_cover)
+                    ->setContext('CLASS_ALBUM', $cel_album)
+                    ->setContext('CLASS_ARTIST', $cel_artist)
+                    ->setContext('CLASS_TAGS', $cel_tags)
+                    ->setContext('CLASS_COUNTER', $cel_counter)
+                    ->setTemplate('album_row.xhtml')
+                    ->render();
+
+                echo $content;
+            } ?>
         </tr>
         <?php
         }?>
@@ -136,7 +165,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             <th class="<?php echo $cel_artist; ?>"><?php echo $artist_text; ?></th>
             <th class="cel_songs"><?php echo $songs_text; ?></th>
             <th class="cel_year"><?php echo $year_text; ?></th>
-            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>

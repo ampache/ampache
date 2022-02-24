@@ -1507,6 +1507,40 @@ class Art extends database_object
     }
 
     /**
+     * Display an item art, bypassing the return value.
+     * @deprecated Temporary as legacy Art::display outputs boolean when used with return
+     * @param string $object_type
+     * @param integer $object_id
+     * @param string $name
+     * @param integer $thumb
+     * @param string $link
+     * @param boolean $show_default
+     * @param string $kind
+     * @return string
+     */
+    public static function display_without_return(
+        $object_type,
+        $object_id,
+        $name,
+        $thumb,
+        $link = null,
+        $show_default = true,
+        $kind = 'default'
+    ) {
+        self::display(
+            $object_type,
+            $object_id,
+            $name,
+            $thumb,
+            $link,
+            $show_default,
+            $kind
+        );
+
+        return '';
+    }
+
+    /**
      * Get the object details for the art table
      * @return array
      */
