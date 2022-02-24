@@ -561,10 +561,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
         }
-        //get the waveform if enabled
-        if (AmpConfig::get('waveform', false)) {
-            Waveform::get($song_id, 'song');
-        }
 
         // Allow scripts to populate new tags when injecting user uploads
         if (!defined('NO_SESSION')) {
