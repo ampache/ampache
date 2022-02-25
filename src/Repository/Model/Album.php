@@ -1326,7 +1326,10 @@ class Album extends database_object implements library_item
             $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.total_count
-            $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(`album`.`id`) AS `total_count`, `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` = ? GROUP BY `album`.`id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
+            Dba::write($sql, $params);
+            // album.total_count 0 plays
+            $sql = "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `album`.`id` = ? AND `id` NOT IN ( SELECT `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`)) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
             Dba::write($sql, $params);
             // album.addition_time
             $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `song`.`album` = `album`.`id`;";
