@@ -80,7 +80,7 @@ interface AlbumViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string;
 
-    public function getPlayedTimes(): bool;
+    public function getPlayedTimes(): int;
 
     public function getAlbumUrl(): string;
 
