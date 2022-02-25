@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumViewAdapter;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
+use Ampache\Gui\Playlist\PlaylistViewAdapter;
 use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Stats\CatalogStats;
 use Ampache\Gui\Stats\StatsViewAdapter;
@@ -39,6 +40,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
@@ -113,6 +115,17 @@ class GuiFactoryTest extends MockeryTestCase
                 $this->mock(GuiGatekeeperInterface::class),
                 $this->mock(Browse::class),
                 $this->mock(Album::class)
+            )
+        );
+    }
+
+    public function testCreatePlaylistViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            PlaylistViewAdapter::class,
+            $this->subject->createPlaylistViewAdapter(
+                $this->mock(GuiGatekeeperInterface::class),
+                $this->mock(Playlist::class)
             )
         );
     }

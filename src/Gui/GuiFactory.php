@@ -31,6 +31,8 @@ use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
+use Ampache\Gui\Playlist\PlaylistViewAdapter;
+use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\Stats\CatalogStats;
@@ -45,6 +47,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
@@ -112,6 +115,20 @@ final class GuiFactory implements GuiFactoryInterface
             $gatekeeper,
             $browse,
             $album
+        );
+    }
+
+    public function createPlaylistViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Playlist $playlist
+    ): PlaylistViewAdapterInterface {
+        return new PlaylistViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $gatekeeper,
+            $playlist
         );
     }
 
