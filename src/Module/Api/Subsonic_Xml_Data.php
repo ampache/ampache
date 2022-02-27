@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -837,6 +838,11 @@ class Subsonic_Xml_Data
         $db_results  = Dba::read($sqllook, [$catalogId]);
         $resultcheck = Dba::fetch_assoc($db_results);
         if (!empty($resultcheck)) {
+            if ($resultcheck['catalog_type'] == 'catalog_seafile') {
+                $results['path'] = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file_Path;
+
+                return $results;
+            }
             $sql             = 'SELECT `path` FROM `catalog_' . $resultcheck['catalog_type'] . '` WHERE `catalog_id` = ?';
             $db_results      = Dba::read($sql, [$catalogId]);
             $result          = Dba::fetch_assoc($db_results);
