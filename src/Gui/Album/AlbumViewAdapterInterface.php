@@ -93,6 +93,6 @@ interface AlbumViewAdapterInterface
     public function getYear(): int;
 
     public function getGenre(): string;
-    
+
     public function getSongCount(): int;
 }

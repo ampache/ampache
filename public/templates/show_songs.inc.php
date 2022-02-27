@@ -130,8 +130,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 $libitem = new Song($song_id, $limit_threshold);
                 $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
-                <?php
-                if ($libitem->enabled || Access::check('interface', 50)) {
+                <?php if ($libitem->enabled || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
