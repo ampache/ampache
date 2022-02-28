@@ -336,13 +336,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_time($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SELECT DISTINCT SUM(`song`.`time`) AS `time` from `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
+        $sql        = "SELECT DISTINCT SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
         $total_time = (int) ($results['time'] ?? 0);
         // album artists that don't have any songs
         if ($total_time == 0) {
-            $sql        = "SELECT DISTINCT SUM(`album`.`time`) AS `time` from `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album'";
+            $sql        = "SELECT DISTINCT SUM(`album`.`time`) AS `time` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album'";
             $db_results = Dba::read($sql, $params);
             $results    = Dba::fetch_assoc($db_results);
             $total_time = (int) ($results['time'] ?? 0);
@@ -1140,7 +1140,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             Dba::write($sql, array($artist_id, $artist_id, $artist_id));
             $params = array($artist_id);
             // artist.time
-            $sql = "UPDATE `artist`, (SELECT SUM(`song`.`time`) as `time`, `song`.`artist` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `song`.`artist` = `artist_map`.`artist_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? GROUP BY `song`.`artist`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`id` = `song`.`artist`;";
+            $sql = "UPDATE `artist`, (SELECT SUM(`song`.`time`) AS `time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`time` != `song`.`time` AND `artist`.`id` = `song`.`artist_id`;";
             Dba::write($sql, $params);
             // artist.total_count
             $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
