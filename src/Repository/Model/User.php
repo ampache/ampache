@@ -796,7 +796,7 @@ class User extends database_object
             self::set_user_data($user_id, 'time', $time);
             self::set_user_data($user_id, 'size', $size);
             // grouped album counts
-            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
+            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`) AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
             self::set_user_data($user_id, 'album_group', (int)($row[0] ?? 0));
@@ -1054,7 +1054,7 @@ class User extends database_object
             $user_data = self::get_user_data($this->id);
             if (!isset($user_data['play_size'])) {
                 // Calculate their total Bandwidth Usage
-                $sql        = "SELECT SUM(`song`.`size`) as `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
+                $sql        = "SELECT SUM(`song`.`size`) AS `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
                 $db_results = Dba::read($sql, array($this->id));
                 $result     = Dba::fetch_assoc($db_results);
                 $play_size  = $result['play_size'] ?? 0;
@@ -1150,7 +1150,7 @@ class User extends database_object
         // Delete that system pref that's not a user pref...
         if ($user_id > 0) {
             // TODO, remove before next release. ('custom_login_logo' needs to be here a while at least so 5.0.0+1)
-            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` from `preference` where `name` IN ('custom_login_background', 'custom_login_logo')) AND `user` = $user_id";
+            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` IN ('custom_login_background', 'custom_login_logo')) AND `user` = $user_id";
             Dba::write($sql);
         }
 

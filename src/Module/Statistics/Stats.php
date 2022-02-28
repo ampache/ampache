@@ -560,7 +560,7 @@ class Stats
             return $sql;
         }
         if ($user_id === null && AmpConfig::get('cron_cache') && !$addAdditionalColumns && in_array($type, array('album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'))) {
-            $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
+            $sql = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
         } else {
             $allow_group_disks = AmpConfig::get('album_group') && $type == 'album';
             $is_podcast        = ($type == 'podcast');
@@ -577,11 +577,11 @@ class Stats
             }
             $sql .= " FROM `object_count`";
             if ($allow_group_disks) {
-                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'album'";
+                $sql .= " LEFT JOIN `album` ON `album`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'album'";
             }
             if ($is_podcast) {
                 $type = 'podcast_episode';
-                $sql .= " LEFT JOIN `podcast_episode` on `podcast_episode`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'podcast_episode'";
+                $sql .= " LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'podcast_episode'";
             }
             if ($user_id !== null) {
                 $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . (string)$user_id;
@@ -668,8 +668,8 @@ class Stats
         $catalog_filter    = (AmpConfig::get('catalog_filter'));
 
         $sql = ($allow_group_disks)
-            ? "SELECT MIN(`object_id`) as `id`, MAX(`date`) AS `date` FROM `object_count` LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'album' WHERE `object_type` = '" . $type . "'" . $user_sql
-            : "SELECT `object_id` as `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = '" . $type . "'" . $user_sql;
+            ? "SELECT MIN(`object_id`) AS `id`, MAX(`date`) AS `date` FROM `object_count` LEFT JOIN `album` ON `album`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'album' WHERE `object_type` = '" . $type . "'" . $user_sql
+            : "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
@@ -686,7 +686,7 @@ class Stats
 
         // playlists aren't the same as other objects so change the sql
         if ($type === 'playlist') {
-            $sql = "SELECT `id`, `last_update` as `date` FROM `playlist`";
+            $sql = "SELECT `id`, `last_update` AS `date` FROM `playlist`";
             if (!empty($user_id)) {
                 $sql .= " WHERE `user` = '" . $user_id . "'";
             }
@@ -820,31 +820,31 @@ class Stats
         $filter_type       = $type;
         // everything else
         if ($type === 'song') {
-            $sql      = "SELECT DISTINCT(`song`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
+            $sql      = "SELECT DISTINCT(`song`.`id`) AS `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
             $sql_type = "`song`.`id`";
         } elseif ($type === 'album') {
             $base_type = 'album';
-            $sql       = "SELECT MIN(`album`.`id`) as `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` ";
+            $sql       = "SELECT MIN(`album`.`id`) AS `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` ";
             $sql_type  = "`album`.`id`";
         } elseif ($type === 'video') {
             $base_type = 'video';
-            $sql       = "SELECT DISTINCT(`video`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
+            $sql       = "SELECT DISTINCT(`video`.`id`) AS `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
             $sql_type  = "`video`.`id`";
         } elseif ($type === 'artist') {
-            $sql         = "SELECT MIN(`song`.`artist`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
+            $sql         = "SELECT MIN(`song`.`artist`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
             $sql_type    = "`song`.`artist`";
             $filter_type = 'song_artist';
         } elseif ($type === 'podcast') {
             $base_type = 'podcast';
-            $sql       = "SELECT MIN(`podcast`.`id`) as `id`, MIN(`podcast`.`lastsync`) AS `real_atime` FROM `podcast` ";
+            $sql       = "SELECT MIN(`podcast`.`id`) AS `id`, MIN(`podcast`.`lastsync`) AS `real_atime` FROM `podcast` ";
             $sql_type  = "`podcast`.`id`";
         } elseif ($type === 'podcast_episode') {
             $base_type = 'podcast_episode';
-            $sql       = "SELECT MIN(`podcast_episode`.`id`) as `id`, MIN(`podcast_episode`.`addition_time`) AS `real_atime` FROM `podcast_episode` ";
+            $sql       = "SELECT MIN(`podcast_episode`.`id`) AS `id`, MIN(`podcast_episode`.`addition_time`) AS `real_atime` FROM `podcast_episode` ";
             $sql_type  = "`podcast_episode`.`id`";
         } else {
             // what else?
-            $sql      = "SELECT MIN(`$type`) as `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
+            $sql      = "SELECT MIN(`$type`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
             $sql_type = "`song`.`" . $type . "`";
         }
         // join catalogs

@@ -265,7 +265,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getAlbumDuration(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `time` from `album` WHERE `album`.`id` = ?',
+            'SELECT `time` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -280,7 +280,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getAlbumPlayCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `total_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `total_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -295,7 +295,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getSongCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `song_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `song_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -310,7 +310,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getArtistCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `artist_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `artist_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 

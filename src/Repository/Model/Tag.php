@@ -556,7 +556,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $sql = ($type == 'album')
-            ? "SELECT DISTINCT MIN(`tag_map`.`object_id`) as `object_id` FROM `tag_map` LEFT JOIN `album` ON `tag_map`.`object_id` = `album`.`id` "
+            ? "SELECT DISTINCT MIN(`tag_map`.`object_id`) AS `object_id` FROM `tag_map` LEFT JOIN `album` ON `tag_map`.`object_id` = `album`.`id` "
             : "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` ";
         $sql .= "WHERE $tag_sql `tag_map`.`object_type` = ?";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {

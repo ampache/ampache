@@ -2206,13 +2206,13 @@ class Update
     {
         $retval = true;
 
-        $sql        = "select `width` from `image`";
+        $sql        = "select `width` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql        = "select `height` from `image`";
+        $sql        = "select `height` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`";
@@ -3376,9 +3376,9 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `label` ADD `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
+        $sql = "UPDATE `album`, (SELECT min(`song`.`catalog`) AS `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
-        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
         Dba::write($sql);
         $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
         Dba::write($sql);
@@ -3431,7 +3431,7 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
+        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) AS `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
         Dba::write($sql);
 
         return $retval;
@@ -3478,7 +3478,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `album` ADD `artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`));";
+        $sql = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`));";
         Dba::write($sql);
         $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
@@ -3618,17 +3618,17 @@ class Update
         foreach ($user_list as $user_id) {
             $params = array($user_id);
             $total  = 0;
-            $sql_s  = "SELECT SUM(`song`.`size`) as `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `object_count`.`user` = ?;";
+            $sql_s  = "SELECT SUM(`song`.`size`) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `object_count`.`user` = ?;";
             $db_s   = Dba::read($sql_s, $params);
             while ($results  = Dba::fetch_assoc($db_s)) {
                 $total = $total + (int)$results['size'];
             }
-            $sql_v = "SELECT SUM(`video`.`size`) as `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+            $sql_v = "SELECT SUM(`video`.`size`) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
             $db_v  = Dba::read($sql_v, $params);
             while ($results  = Dba::fetch_assoc($db_v)) {
                 $total = $total + (int)$results['size'];
             }
-            $sql_p = "SELECT SUM(`podcast_episode`.`size`) as `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+            $sql_p = "SELECT SUM(`podcast_episode`.`size`) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
             $db_p  = Dba::read($sql_p, $params);
             while ($results  = Dba::fetch_assoc($db_p)) {
                 $total = $total + (int)$results['size'];
@@ -3852,7 +3852,7 @@ class Update
             $sql    = "DELETE FROM `preference` WHERE `id` = ?;";
             Dba::write($sql, array($pref_id));
         }
-        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
+        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);";
         Dba::write($sql);
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
         $retval = (Dba::write($sql) !== false);

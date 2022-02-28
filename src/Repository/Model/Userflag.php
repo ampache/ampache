@@ -299,8 +299,8 @@ class Userflag extends database_object
         $user_id           = (int)($user_id);
         $allow_group_disks = AmpConfig::get('album_group') && $type == 'album';
         $sql               = ($allow_group_disks)
-            ? "SELECT MIN(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag` LEFT JOIN `album` on `user_flag`.`object_id` = `album`.`id`"
-            : "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` as `type`, MAX(`user_flag`.`user`) as `user`, MAX(`user_flag`.`date`) as `date` FROM `user_flag`";
+            ? "SELECT MIN(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_id` = `album`.`id`"
+            : "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";

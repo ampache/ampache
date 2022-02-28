@@ -175,7 +175,7 @@ final class SongRepository implements SongRepositoryInterface
     public function getByLicense(int $licenseId): array
     {
         $db_results = Dba::read(
-            'SELECT `id` from `song` WHERE `song`.`license` = ?',
+            'SELECT `id` FROM `song` WHERE `song`.`license` = ?',
             [$licenseId]
         );
 
