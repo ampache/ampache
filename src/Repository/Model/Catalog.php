@@ -1989,7 +1989,7 @@ abstract class Catalog extends database_object
             // update the artist after updating the album too
             $tags = self::getSongTags('artist', $libitem->album_artist);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
-            Artist::update_artist_counts($libitem->id);
+            Artist::update_artist_counts($libitem->album_artist);
         }
         if ($libitem instanceof Artist) {
             // make sure albums are updated before the artist
@@ -2233,7 +2233,7 @@ abstract class Catalog extends database_object
             if (!in_array($song_artist_id, $artist_song_maps)) {
                 $artist_song_maps[] = $song_artist_id;
                 Artist::update_artist_map($song_artist_id, 'song', $song->id);
-                Artist::update_artist_counts($song_artist_id);
+                //Artist::update_artist_counts($song_artist_id);
             }
             if (!in_array($song_artist_id, $album_song_artist_maps)) {
                 $album_song_artist_maps[] = $song_artist_id;
@@ -2254,7 +2254,7 @@ abstract class Catalog extends database_object
             if (!in_array($album_artist_id, $artist_album_maps)) {
                 $artist_album_maps[] = $album_artist_id;
                 Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
-                Artist::update_artist_counts($album_artist_id);
+                //Artist::update_artist_counts($album_artist_id);
             }
             if (!in_array($album_artist_id, $album_album_artist_maps)) {
                 $album_album_artist_maps[] = $album_artist_id;
@@ -3694,9 +3694,11 @@ abstract class Catalog extends database_object
             self::migrate_map($object_type, $old_object_id, $new_object_id);
             switch ($object_type) {
                 case 'artist':
+                    Artist::update_artist_counts($old_object_id);
                     Artist::update_artist_counts($new_object_id);
                     break;
                 case 'album':
+                    Album::update_album_counts($old_object_id);
                     Album::update_album_counts($new_object_id);
                     break;
             }
