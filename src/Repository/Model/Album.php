@@ -1030,7 +1030,7 @@ class Album extends database_object implements library_item
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
             Useractivity::migrate('album', $this->id, $album_id);
-            Recommendation::migrate('album', $this->id, $album_id);
+            //Recommendation::migrate('album', $this->id);
             Share::migrate('album', $this->id, $album_id);
             Shoutbox::migrate('album', $this->id, $album_id);
             Tag::migrate('album', $this->id, $album_id);

@@ -61,8 +61,9 @@ class Recommendation
      */
     public static function garbage_collection()
     {
-        Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `object_id` NOT IN (SELECT `id` from `song`)) OR (`object_type` = 'artist' AND `object_id` NOT IN (SELECT `id` from `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` from `album`)))", array((time() - 31556952)));
+        Dba::write("DELETE FROM `recommendation` WHERE `last_update` < ? OR ((`object_type` = 'song' AND `rel` IS NOT NULL AND `object_id` NOT IN (SELECT `id` from `song`)) OR (`object_type` = 'artist' AND `rel` IS NULL AND `object_id` NOT IN (SELECT `id` from `artist`)) OR (`object_type` = 'album' AND `object_id` NOT IN (SELECT `id` from `album`)))", array((time() - 31556952)));
         Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` from `recommendation`);");
+        Dba::write("UPDATE `recommendation_item` SET `mbid` = NULL WHERE `mbid` = '';");
     }
 
     /**
@@ -435,17 +436,9 @@ class Recommendation
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
-     * @param integer $new_object_id
-     * @return PDOStatement|boolean
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id)
     {
-        if ($object_type == 'artist') {
-            $sql = "UPDATE IGNORE `recommendation_item` SET `recommendation_id` = ? WHERE `recommendation_id` = ?";
-            Dba::write($sql, array($new_object_id, $old_object_id));
-        }
-        $sql = "UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        self::delete_recommendation_cache($object_type, $old_object_id);
     }
 }

@@ -3575,7 +3575,7 @@ abstract class Catalog extends database_object
 
             Stats::migrate($object_type, $old_object_id, $new_object_id);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
-            Recommendation::migrate($object_type, $old_object_id, $new_object_id);
+            Recommendation::migrate($object_type, $old_object_id);
             Share::migrate($object_type, $old_object_id, $new_object_id);
             Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
             Tag::migrate($object_type, $old_object_id, $new_object_id);
