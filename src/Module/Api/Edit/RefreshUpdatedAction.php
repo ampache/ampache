@@ -134,23 +134,19 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 break;
             case 'playlist_row':
                 $show_art = AmpConfig::get('playlist_art');
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'show_art' => $show_art,
-                        'show_ratings' => $show_ratings,
-                    ]
+                $results  = preg_replace(
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                        ->setContext('PLAYLIST', $this->guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_SHOW_ART', $show_art)
+                        ->setContext('IS_SHOW_PLAYLIST_ADD', true)
+                        ->setContext('CLASS_COVER', 'cel_cover')
+                        ->setTemplate('playlist_row.xhtml')
+                        ->render()
                 );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
                 break;
             case 'album_row':
                 $hide_genres       = AmpConfig::get('hide_genres');

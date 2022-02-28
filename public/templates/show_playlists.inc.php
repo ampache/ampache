@@ -21,6 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -31,10 +34,11 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
-$is_table     = $browse->is_grid_view();
-$show_art     = AmpConfig::get('playlist_art') || $browse->is_mashup();
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres  = AmpConfig::get('hide_genres');
+$is_table          = $browse->is_grid_view();
+$show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_playlist_add = Access::check('interface', 25);
+$hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 <?php if ($browse->is_show_header()) {
@@ -60,7 +64,11 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         </tr>
     </thead>
     <tbody>
-        <?php
+        <?php global $dic;
+        $talFactory = $dic->get(TalFactoryInterface::class);
+        $guiFactory = $dic->get(GuiFactoryInterface::class);
+        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+
         foreach ($object_ids as $playlist_id) {
             $libitem = new Playlist($playlist_id);
             $libitem->format();
@@ -68,7 +76,17 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             // Don't show empty playlist if not admin or the owner
             if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
-            <?php require Ui::find_template('show_playlist_row.inc.php'); ?>
+            <?php $content = $talFactory->createTalView()
+                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                ->setContext('IS_SHOW_ART', $show_art)
+                ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+                ->setContext('CLASS_COVER', $cel_cover)
+                ->setTemplate('playlist_row.xhtml')
+                ->render();
+
+            echo $content; ?>
         </tr>
         <?php
             }
