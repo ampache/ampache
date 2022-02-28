@@ -90,7 +90,7 @@ interface AlbumViewAdapterInterface
 
     public function canShowYear(): bool;
 
-    public function getYear(): int;
+    public function getDisplayYear(): int;
 
     public function getGenre(): string;
 
