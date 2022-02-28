@@ -670,9 +670,10 @@ class Album extends database_object implements library_item
     /**
      * Get item fullname.
      * @param bool $simple
+     * @param bool $force_year
      * @return string
      */
-    public function get_fullname($simple = false)
+    public function get_fullname($simple = false, $force_year = false)
     {
         // return the basic name without all the wild formatting
         if ($simple) {
@@ -681,8 +682,8 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
             $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
-            // Looking if we need to display the release year
-            if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
+            // Album pages should show a year and looking if we need to display the release year
+            if ($force_year || ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year)) {
                 $this->f_name .= " (" . $this->year . ")";
             }
             // Looking if we need to combine or display disks
