@@ -679,11 +679,14 @@ class Album extends database_object implements library_item
         if ($simple) {
             return trim(trim($this->prefix . ' ' . trim($this->name)));
         }
+        if ($force_year) {
+            return trim(trim($this->prefix . ' ' . trim($this->name))) . " (" . $this->year . ")";;
+        }
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
             $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
             // Album pages should show a year and looking if we need to display the release year
-            if ($force_year || ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year)) {
+            if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
                 $this->f_name .= " (" . $this->year . ")";
             }
             // Looking if we need to combine or display disks
