@@ -309,12 +309,14 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function canShowYear(): bool
     {
-        return $this->album->year > 0;
+        return $this->getDisplayYear() > 0;
     }
 
-    public function getYear(): int
+    public function getDisplayYear(): int
     {
-        return $this->album->year;
+        return ($this->configContainer->get('use_original_year') && $this->album->original_year)
+            ? $this->album->original_year
+            : $this->album->year;
     }
 
     public function getGenre(): string

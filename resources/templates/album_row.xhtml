@@ -27,7 +27,7 @@
     <td class="${CLASS_ARTIST}" tal:content="structure ALBUM/getArtistLink">ARTIST</td>
     <td class="cel_songs optional" tal:content="structure ALBUM/getSongCount">SONG COUNT</td>
     <td class="cel_year">
-        <tal:block tal:condition="ALBUM/canShowYear" tal:content="structure ALBUM/getYear">
+        <tal:block tal:condition="ALBUM/canShowYear" tal:content="structure ALBUM/getDisplayYear">
             YEAR
         </tal:block>
     </td>

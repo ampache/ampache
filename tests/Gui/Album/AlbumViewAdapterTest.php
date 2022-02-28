@@ -296,15 +296,60 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetYearReturnsValues(): void
+    public function testGetYearIfUseOriginalYearIsDeactivated(): void
     {
-        $value = 666;
+        $year         = 666;
+        $originalYear = 555;
 
-        $this->album->year = $value;
+        $this->album->year          = $year;
+        $this->album->original_year = $originalYear;
+
+        $this->configContainer->shouldReceive('get')
+            ->with('use_original_year')
+            ->once()
+            ->andReturnFalse();
 
         $this->assertSame(
-            $value,
-            $this->subject->getYear()
+            $year,
+            $this->subject->getDisplayYear()
+        );
+    }
+
+    public function testGetYearIfUseOriginalYearIsActivated(): void
+    {
+        $year         = 666;
+        $originalYear = 555;
+
+        $this->album->year          = $year;
+        $this->album->original_year = $originalYear;
+
+        $this->configContainer->shouldReceive('get')
+            ->with('use_original_year')
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertSame(
+            $originalYear,
+            $this->subject->getDisplayYear()
+        );
+    }
+
+    public function testGetYearIfUseOriginalYearIsActivatedButMissing(): void
+    {
+        $year         = 666;
+        $originalYear = null;
+
+        $this->album->year          = $year;
+        $this->album->original_year = $originalYear;
+
+        $this->configContainer->shouldReceive('get')
+            ->with('use_original_year')
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertSame(
+            $year,
+            $this->subject->getDisplayYear()
         );
     }
 
