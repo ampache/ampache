@@ -296,7 +296,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($extra && (AmpConfig::get('show_played_times'))) {
             $sql = "SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
-            //debug_event("artist.class", "build_cache sql: " . $sql, 5);
+            //debug_event(__CLASS__, "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -754,7 +754,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         // If Ampache support multiple artists per song one day, we should also handle other artists here
         $trimmed = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
-            debug_event(self::class, "check artist: cut {{$name}} to {{$trimmed[0]}}", 4);
+            debug_event(__CLASS__, "check artist: cut {{$name}} to {{$trimmed[0]}}", 4);
         }
         $name = $trimmed[0];
 
@@ -860,7 +860,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         $artist_id = (int) Dba::insert_id();
-        debug_event(self::class, "check artist: created {{$artist_id}}", 4);
+        debug_event(__CLASS__, "check artist: created {{$artist_id}}", 4);
         // map the new id
         Catalog::update_map(0, 'artist', $artist_id);
 
@@ -907,7 +907,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
 
                 $artist_id = (int)Dba::insert_id();
-                debug_event(self::class, "check mbid: created {{$artist_id}} " . $data['name'], 4);
+                debug_event(__CLASS__, "check mbid: created {{$artist_id}} " . $data['name'], 4);
             }
         }
 
@@ -973,7 +973,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $prefix  = $trimmed['prefix'];
         $trimmed = Catalog::trim_featuring($name);
         $name    = $trimmed[0];
-        debug_event(self::class, "update_name_from_mbid: rename {{$mbid}} to {{$prefix}} {{$name}}", 4);
+        debug_event(__CLASS__, "update_name_from_mbid: rename {{$mbid}} to {{$prefix}} {{$name}}", 4);
 
         $sql = 'UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `mbid` = ?';
         Dba::write($sql, array($prefix, $name, $mbid));
@@ -989,6 +989,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update(array $data)
     {
+        //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
         // Save our current ID
         $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
         $mbid        = $data['mbid'] ?? $this->mbid;

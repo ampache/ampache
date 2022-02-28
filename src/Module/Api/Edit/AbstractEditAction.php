@@ -95,7 +95,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_id,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
-        $libitem    = new $className($object_id);
+        $libitem = new $className($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }
