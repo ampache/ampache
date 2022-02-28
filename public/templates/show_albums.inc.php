@@ -126,8 +126,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
                 }
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
-            <?php if ($libitem->enabled || $libitem->enabled || Access::check('interface', 50)) {
-                $content = $talFactory->createTalView()
+            <?php $content = $talFactory->createTalView()
                     ->setContext('USER_IS_REGISTERED', User::is_registered())
                     ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
                     ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
@@ -144,8 +143,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
                     ->setTemplate('album_row.xhtml')
                     ->render();
 
-                echo $content;
-            } ?>
+                echo $content; ?>
         </tr>
         <?php
         }?>
