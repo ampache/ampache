@@ -67,11 +67,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * @var array $artists
      */
-    public array $artists = array();
+    public array $artists;
     /**
      * @var array $albumartists
      */
-    public array $albumartists = array();
+    public array $albumartists;
     /**
      * @var string $title
      */
@@ -1736,6 +1736,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->tags   = Tag::get_top_tags('song', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'song');
         }
+        if (!isset($this->albumartists)) {
+            $this->albumartists = self::get_parent_array($this->album, 'album');
+        }
         $this->albumartist  = $this->albumartists[0] ?? null;
 
         $this->get_album_disk();
@@ -1898,6 +1901,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->f_artist_link)) {
             $this->f_artist_link  = '';
             $web_path             = AmpConfig::get('web_path');
+            if (!isset($this->artists)) {
+                $this->artists = self::get_parent_array($this->id);
+            }
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));
                 $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
@@ -1918,6 +1924,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->f_albumartist_link)) {
             $this->f_albumartist_link = '';
             $web_path                 = AmpConfig::get('web_path');
+            if (!isset($this->albumartists)) {
+                $this->albumartists = self::get_parent_array($this->album, 'album');
+            }
             foreach ($this->albumartists as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
