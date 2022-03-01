@@ -169,7 +169,7 @@ class AmpacheRatingMatch
                 }
             }
             if ($rating->type == 'album') {
-                $album  = new Album($rating->id);
+                $album = new Album($rating->id);
                 // rate all the album artists (If there are more than one)
                 foreach ($album->album_artists as $artist_id) {
                     $artist        = new Rating($artist_id, 'artist');

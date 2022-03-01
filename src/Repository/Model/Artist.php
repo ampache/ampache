@@ -1013,7 +1013,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
                 $updated    = true;
                 $current_id = $artist_id;
-                Stats::migrate('artist', $this->id, $artist_id);
+                //Stats::migrate('artist', $this->id, $artist_id);
                 Useractivity::migrate('artist', $this->id, $artist_id);
                 Recommendation::migrate('artist', $this->id);
                 Share::migrate('artist', $this->id, $artist_id);

@@ -1577,7 +1577,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('artist', $new_artist, $song_id, 50);
 
         // migrate stats for the old artist
-        Stats::migrate('artist', $old_artist, $new_artist);
+        //Stats::migrate('artist', $old_artist, $new_artist);
         Useractivity::migrate('artist', $old_artist, $new_artist);
         Recommendation::migrate('artist', $old_artist);
         Share::migrate('artist', $old_artist, $new_artist);
@@ -1604,7 +1604,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('album', $new_album, $song_id, 50, true);
 
         // migrate stats for the old album
-        Stats::migrate('album', $old_album, $new_album);
+        //Stats::migrate('album', $old_album, $new_album);
         Useractivity::migrate('album', $old_album, $new_album);
         //Recommendation::migrate('album', $old_album);
         Share::migrate('album', $old_album, $new_album);
