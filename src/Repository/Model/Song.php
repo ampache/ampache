@@ -396,6 +396,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
             return false;
         }
+        $this->artists      = self::get_parent_array($this->id);
+        $this->albumartists = self::get_parent_array($this->album, 'album');
 
         return true;
     } // constructor
@@ -1124,8 +1126,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // insert stats for each object type
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
-            Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
-            Stats::insert('artist', $this->artist, $user_id, $agent, $location, 'stream', $date);
             // followup on some stats too
             $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
@@ -1736,8 +1736,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->tags   = Tag::get_top_tags('song', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'song');
         }
-        $this->artists      = self::get_parent_array($this->id);
-        $this->albumartists = self::get_parent_array($this->album, 'album');
         $this->albumartist  = $this->albumartists[0] ?? null;
 
         $this->get_album_disk();
@@ -1900,9 +1898,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->f_artist_link)) {
             $this->f_artist_link  = '';
             $web_path             = AmpConfig::get('web_path');
-            if (empty($this->artists)) {
-                $this->artists = self::get_parent_array($this->id);
-            }
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));
                 $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
@@ -1923,9 +1918,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->f_albumartist_link)) {
             $this->f_albumartist_link = '';
             $web_path                 = AmpConfig::get('web_path');
-            if (empty($this->albumartists)) {
-                $this->albumartists = self::get_parent_array($this->album, 'album');
-            }
             foreach ($this->albumartists as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                 $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
