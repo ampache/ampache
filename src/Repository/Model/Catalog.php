@@ -1961,18 +1961,16 @@ abstract class Catalog extends database_object
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
-            $change = array_key_exists('change', $info) && $info['change'];
+            $change = $change == true || (array_key_exists('change', $info) && $info['change']);
             // don't echo useless info when using api
-            if ($change && (!$api)) {
+            if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if (array_key_exists($type, $info['element'])) {
                     $element = explode(' --> ', (string)$info['element'][$type]);
                     $result  = (int)$element[1];
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
-                if (!$api) {
                     echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
-                }
             } else {
                 if (!$api) {
                     echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
