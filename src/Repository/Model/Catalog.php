@@ -1970,11 +1970,9 @@ abstract class Catalog extends database_object
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
-                    echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
-            } else {
-                if (!$api) {
-                    echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
-                }
+                echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
+            } elseif (!$api) {
+                echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
             }
             flush();
         } // foreach songs
