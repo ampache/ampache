@@ -1988,8 +1988,10 @@ abstract class Catalog extends database_object
             $tags = self::getSongTags('album', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
             // update the artist after updating the album too
-            $tags = self::getSongTags('artist', $libitem->album_artist);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            foreach ($libitem->get_album_artist_array() as $album_artist_id) {
+                $tags = self::getSongTags('artist', $album_artist_id);
+                Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
+            }
             if ($change) {
                 Album::update_album_counts($libitem->id);
                 Artist::update_artist_counts($libitem->album_artist);
@@ -3478,8 +3480,10 @@ abstract class Catalog extends database_object
      */
     protected static function updateArtistTags(Song $song)
     {
-        $tags = self::getSongTags('artist', $song->artist);
-        Tag::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
+        foreach (Song::get_parent_array($song->id) as $artist_id) {
+            $tags = self::getSongTags('artist', $artist_id);
+            Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
+        }
     }
 
     /**
