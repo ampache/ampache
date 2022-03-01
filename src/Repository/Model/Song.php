@@ -376,7 +376,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return false;
         }
 
-        $this->id = (int)($songid);
+        $this->id           = (int)($songid);
+        $this->artists      = self::get_parent_array($this->id);
+        $this->albumartists = self::get_parent_array($this->album, 'album');
 
         if (self::isCustomMetadataEnabled()) {
             $this->initializeMetadata();
@@ -393,11 +395,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->total_count = (int)$this->total_count;
         } else {
             $this->id = null;
+            $this->artists      = array();
+            $this->albumartists = array();
 
             return false;
         }
-        $this->artists      = self::get_parent_array($this->id);
-        $this->albumartists = self::get_parent_array($this->album, 'album');
 
         return true;
     } // constructor
