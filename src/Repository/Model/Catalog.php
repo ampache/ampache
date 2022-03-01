@@ -2296,13 +2296,23 @@ abstract class Catalog extends database_object
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
 
-        if (Song::isCustomMetadataEnabled()) {
+        if (AmpConfig::get('enable_custom_metadata')) {
             $ctags = self::get_clean_metadata($song, $results);
-            if (method_exists($song, 'updateOrInsertMetadata') && $song::isCustomMetadataEnabled()) {
+            //debug_event(__CLASS__, "get_clean_metadata " . print_r($ctags, true), 4);
+            if (method_exists($song, 'updateOrInsertMetadata')) {
                 $ctags = array_diff_key($ctags, array_flip($song->getDisabledMetadataFields()));
                 foreach ($ctags as $tag => $value) {
                     $field = $song->getField($tag);
                     $song->updateOrInsertMetadata($field, $value);
+                }
+            }
+            if (method_exists($song, 'deleteMetadata')) {
+                foreach ($song->getMetadata() as $metadata) {
+                    $metaName = $metadata->getField()->getName();
+                    if (!array_key_exists($metaName, $ctags)) {
+                        debug_event(__CLASS__, "delete metadata field " . $metaName, 4);
+                        $song->deleteMetadata($metadata);
+                    }
                 }
             }
         }
@@ -2440,7 +2450,22 @@ abstract class Catalog extends database_object
      */
     private static function get_clean_metadata(library_item $libraryItem, $metadata)
     {
-        $tags = array_diff_key($metadata, get_object_vars($libraryItem), array_flip($libraryItem::$aliases ?: array()));
+        // these fields seem to be ignored but should be removed
+        $databaseFields = array(
+            'artists' => null,
+            'mb_albumartistid_array' => null,
+            'mb_artistid_array' => null,
+            'original_year' => null,
+            'release_status' => null,
+            'release_type' => null,
+            'originalyear' => null,
+            'dynamic range (r128)' => null,
+            'volume level (r128)' => null,
+            'volume level (replaygain)' => null,
+            'peak level (r128)' => null,
+            'peak level (sample)' => null
+        );
+        $tags = array_diff_key($metadata, get_object_vars($libraryItem), array_flip($libraryItem::$aliases ?? array()), $databaseFields);
 
         return array_filter($tags);
     }
