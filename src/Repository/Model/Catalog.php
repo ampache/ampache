@@ -1956,15 +1956,17 @@ abstract class Catalog extends database_object
             echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
             echo "<tbody>\n";
         }
+        $change = false;
         foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            $info = self::update_media_from_tags($song);
-            $file = scrub_out($song->file);
+            $song   = new Song($song_id);
+            $info   = self::update_media_from_tags($song);
+            $file   = scrub_out($song->file);
+            $change = array_key_exists('change', $info) && $info['change'];
             // don't echo useless info when using api
-            if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
+            if ($change && (!$api)) {
                 if (array_key_exists($type, $info['element'])) {
-                    $change = explode(' --> ', (string)$info['element'][$type]);
-                    $result = (int)$change[1];
+                    $element = explode(' --> ', (string)$info['element'][$type]);
+                    $result  = (int)$element[1];
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
@@ -1985,23 +1987,29 @@ abstract class Catalog extends database_object
         if ($libitem instanceof Album) {
             $tags = self::getSongTags('album', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
-            Album::update_album_counts($libitem->id);
             // update the artist after updating the album too
             $tags = self::getSongTags('artist', $libitem->album_artist);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
-            Artist::update_artist_counts($libitem->album_artist);
+            if ($change) {
+                Album::update_album_counts($libitem->id);
+                Artist::update_artist_counts($libitem->album_artist);
+            }
         }
         if ($libitem instanceof Artist) {
             // make sure albums are updated before the artist
             foreach ($libitem->get_child_ids() as $album_id) {
                 $album_tags = self::getSongTags('album', $album_id);
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-                Album::update_album_counts($album_id);
+                if ($change) {
+                    Album::update_album_counts($album_id);
+                }
             }
             // refresh the artist tags after everything else
             $tags = self::getSongTags('artist', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
-            Artist::update_artist_counts($libitem->id);
+            if ($change) {
+                Artist::update_artist_counts($libitem->id);
+            }
         } // end switch type
 
         static::getAlbumRepository()->collectGarbage();
@@ -2209,6 +2217,8 @@ abstract class Catalog extends database_object
         // album_map stores song_artist and album_artist against the album_id
         $album_song_artist_maps  = Album::get_artist_map('song', $new_song->album);
         $album_album_artist_maps = Album::get_artist_map('album', $new_song->album);
+        // don't update counts unless something changes
+        $map_change = false;
 
         // add song artists to the list
         if (!empty($artist_mbid_array)) {
@@ -2234,10 +2244,12 @@ abstract class Catalog extends database_object
                 $artist_song_maps[] = $song_artist_id;
                 Artist::update_artist_map($song_artist_id, 'song', $song->id);
                 //Artist::update_artist_counts($song_artist_id);
+                $map_change = true;
             }
             if (!in_array($song_artist_id, $album_song_artist_maps)) {
                 $album_song_artist_maps[] = $song_artist_id;
                 Album::update_artist_map($new_song->album, 'song', $song_artist_id);
+                $map_change = true;
             }
         }
         // add album artists to the list
@@ -2255,31 +2267,37 @@ abstract class Catalog extends database_object
                 $artist_album_maps[] = $album_artist_id;
                 Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
                 //Artist::update_artist_counts($album_artist_id);
+                $map_change = true;
             }
             if (!in_array($album_artist_id, $album_album_artist_maps)) {
                 $album_album_artist_maps[] = $album_artist_id;
                 Album::update_artist_map($new_song->album, 'album', $album_artist_id);
+                $map_change = true;
             }
         }
         // clean up the mapped things that are missing after the update
         foreach ($artist_song_maps as $existing_map) {
             if (!in_array($existing_map, $artist_song_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+                $map_change = true;
             }
         }
         foreach ($album_song_artist_maps as $existing_map) {
             if (!in_array($existing_map, $album_song_artist_maps)) {
                 Album::remove_artist_map($new_song->album, 'song', $existing_map);
+                $map_change = true;
             }
         }
         foreach ($artist_album_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+                $map_change = true;
             }
         }
         foreach ($album_album_artist_maps as $existing_map) {
             if (!in_array($existing_map, $artist_album_array)) {
                 Album::remove_artist_map($new_song->album, 'album', $existing_map);
+                $map_change = true;
             }
         }
 
@@ -2387,6 +2405,9 @@ abstract class Catalog extends database_object
         // lets always update the time when you update
         $update_time = time();
         Song::update_utime($song->id, $update_time);
+        if ($map_change) {
+            $info['change'] = true;
+        }
 
         return $info;
     } // update_song_from_tags
