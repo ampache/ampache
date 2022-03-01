@@ -155,7 +155,7 @@ final class SongRepository implements SongRepositoryInterface
     ): array {
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE (`song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `song`.`artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song') OR `song`.`album` IN (SELECT `album`.`id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `album`.`album_artist` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song')) AND `catalog`.`enabled` = '1' "
-            : "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ?;) OR `song`.`album` IN (SELECT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song') ";
+            : "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ?) OR `song`.`album` IN (SELECT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'song') ";
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId, $artistId));
