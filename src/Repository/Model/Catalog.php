@@ -1988,7 +1988,7 @@ abstract class Catalog extends database_object
             $tags = self::getSongTags('album', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
             // update the artist after updating the album too
-            foreach ($libitem->get_album_artist_array() as $album_artist_id) {
+            foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
                 $tags = self::getSongTags('artist', $album_artist_id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
             }
