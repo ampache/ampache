@@ -1037,11 +1037,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $this->getUseractivityRepository()->collectGarbage();
                 self::update_artist_counts($current_id);
             } // if updated
-        } else {
-            if ($this->mbid != $mbid) {
-                $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-                Dba::write($sql, array($mbid, $current_id));
-            }
+        } elseif ($this->mbid != $mbid) {
+            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+            Dba::write($sql, array($mbid, $current_id));
         }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
