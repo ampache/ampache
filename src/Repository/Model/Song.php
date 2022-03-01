@@ -67,11 +67,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * @var array $artists
      */
-    public array $artists;
+    public array $artists = array();
     /**
      * @var array $albumartists
      */
-    public array $albumartists;
+    public array $albumartists = array();
     /**
      * @var string $title
      */
@@ -395,8 +395,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->total_count = (int)$this->total_count;
         } else {
             $this->id = null;
-            $this->artists      = array();
-            $this->albumartists = array();
 
             return false;
         }
