@@ -326,6 +326,28 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
+     * has_merge
+     * Get merged tags to this tag.
+     * @param string $name
+     * @return bool
+     */
+    public function has_merge($name)
+    {
+        $sql = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
+
+        $db_results = Dba::read($sql, array($this->id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($name == $row['name']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * add_tag_map
      * This adds a specific tag to the map for specified object
      * @param string $type
@@ -732,11 +754,19 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $ctags = self::get_top_tags($object_type, $object_id, 50);
         foreach ($ctags as $ctid => $ctv) {
+            //debug_event(self::class, 'ctag {' . $ctid . '} = ' . print_r($ctv, true), 5);
             $found = false;
             if ($ctv['id'] != '') {
                 $ctag  = new Tag($ctv['id']);
                 foreach ($editedTags as $tk => $tv) {
+                    //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
                     if ($ctag->name == $tv) {
+                        $found = true;
+                        break;
+                    }
+                    // check if this thing has been renamed into something else
+                    $merged = self::construct_from_name($tv);
+                    if ($merged && $merged->is_hidden && $merged->has_merge($ctag->name)) {
                         $found = true;
                         break;
                     }
