@@ -1009,8 +1009,8 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $updated   = false;
             $artist_id = (int)self::check($name, $mbid, true);
 
-            // Update artist name (if we don't want to use the MusicBrainz name)
-            if ($artist_id > 0 && $artist_id == $current_id) {
+            // If you couldn't find an artist OR you found the current one, just rename it and move on
+            if ($artist_id == 0 || ($artist_id > 0 && $artist_id == $current_id)) {
                 debug_event(__CLASS__, "updated name: " . $prefix . ' ' . $name, 5);
                 $this->update_artist_name($name, $prefix);
             }
