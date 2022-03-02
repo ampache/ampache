@@ -1966,7 +1966,7 @@ abstract class Catalog extends database_object
             $file   = scrub_out($song->file);
             $change = ($change == true) || (array_key_exists('change', $info) && $info['change']);
             $album  = ($album == true) || (array_key_exists('element', $info) && array_key_exists('album', $info['element']));
-            $artist = ($artist == true) || (array_key_exists('element', $info) && array_key_exists('artist', $info['element']);
+            $artist = ($artist == true) || (array_key_exists('element', $info) && array_key_exists('artist', $info['element']));
             $tags   = ($tags == true) || (array_key_exists('element', $info) && array_key_exists('tags', $info['element']));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
