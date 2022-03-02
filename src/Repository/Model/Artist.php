@@ -1137,8 +1137,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public function update_artist_name($name, $prefix)
     {
-        $trim = Catalog::trim_prefix($name);
-        $sql  = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
+        $sql = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($prefix, $name, $this->id));
     }
