@@ -1965,7 +1965,7 @@ abstract class Catalog extends database_object
             $info    = self::update_media_from_tags($song);
             $file    = scrub_out($song->file);
             $change  = ($change == true) || (array_key_exists('change', $info) && $info['change']);
-            $diff    = (array_key_exists('element', $info) && is_array($info['element']);
+            $diff    = array_key_exists('element', $info) && is_array($info['element']);
             $album   = ($album == true) || ($diff && array_key_exists('album', $info['element']));
             $artist  = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
             $tags    = ($tags == true) || ($diff && array_key_exists('tags', $info['element']));
