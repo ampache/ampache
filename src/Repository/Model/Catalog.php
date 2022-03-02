@@ -2153,7 +2153,21 @@ abstract class Catalog extends database_object
         $new_song->r128_album_gain       = (!is_null($results['r128_album_gain'])) ? (int) $results['r128_album_gain'] : null;
 
         // genre is used in the tag and tag_map tables
-        $new_song->tags = $results['genre'];
+        $tag_array = array();
+        if (!empty($results['genre'])) {
+            // check if this thing has been renamed into something else
+            foreach ($results['genre'] as $tagName) {
+                $merged = Tag::construct_from_name($tagName);
+                if ($merged && $merged->is_hidden) {
+                    foreach ($merged->get_merged_tags() as $merged_tag) {
+                        $tag_array[] = $merged_tag['name'];
+                    }
+                } else {
+                    $tag_array[] = $tagName;
+                }
+            }
+        }
+        $new_song->tags = $tag_array;
         $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
