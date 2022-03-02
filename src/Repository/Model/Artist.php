@@ -852,6 +852,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             return (int)$artist_id;
         }
+        if ($readonly) {
+            return null;
+        }
         // if all else fails, insert a new artist, cache it and return the id
         $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
         $mbid = (!empty($matches)) ? $matches[0] : $mbid; // TODO only use primary mbid until multi-artist is ready
@@ -1000,7 +1003,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $yearformed  = $data['yearformed'] ?? $this->yearformed;
         $current_id  = $this->id;
 
-        // Check if name is different than current name
+        // Check if name is different than the current name
         if ($this->name != $name) {
             $updated   = false;
             $artist_id = self::check($name, $mbid, true);
@@ -1045,12 +1048,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
-        $trimmed = Catalog::trim_prefix(trim((string)$name));
-        $name    = $trimmed['string'];
-        if ($name != '' && $name != $this->name) {
-            $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
-            Dba::write($sql, array($name, $current_id));
-        }
+        $this->update_artist_name($data['name']);
 
         $this->update_artist_info($summary, $placeformed, $yearformed, true);
 
@@ -1123,6 +1121,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($user, $this->id));
+    }
+
+    /**
+     * Update artist associated user.
+     * @param string $name
+     * @return PDOStatement|boolean
+     */
+    public function update_artist_name(string $name)
+    {
+        $trim = Catalog::trim_prefix($name);
+        $sql  = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
+
+        return Dba::write($sql, array($trim['prefix'], $trim['name'], $this->id));
     }
 
     /**
