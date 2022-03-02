@@ -1957,11 +1957,17 @@ abstract class Catalog extends database_object
             echo "<tbody>\n";
         }
         $change = false;
+        $album  = false;
+        $artist = false;
+        $tags   = false;
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
-            $change = $change == true || (array_key_exists('change', $info) && $info['change']);
+            $change = ($change == true) || (array_key_exists('change', $info) && $info['change']);
+            $album  = ($album == true) || (array_key_exists('element', $info) && array_key_exists('album', $info['element']));
+            $artist = ($artist == true) || (array_key_exists('element', $info) && array_key_exists('artist', $info['element']);
+            $tags   = ($tags == true) || (array_key_exists('element', $info) && array_key_exists('tags', $info['element']));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if (array_key_exists($type, $info['element'])) {
@@ -1983,32 +1989,44 @@ abstract class Catalog extends database_object
         if ($change) {
             // album
             if ($libitem instanceof Album) {
-                $tags = self::getSongTags('album', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
-                // update the artist after updating the album too
-                foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
-                    $tags = self::getSongTags('artist', $album_artist_id);
-                    Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
+                if ($tags) {
+                    $tags = self::getSongTags('album', $libitem->id);
+                    Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
+                    // update the artist after updating the album too
+                    foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
+                        $tags = self::getSongTags('artist', $album_artist_id);
+                        Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
+                    }
                 }
-                Album::update_album_counts($libitem->id);
-                Artist::update_artist_counts($libitem->album_artist);
+                if ($album || $artist) {
+                    Album::update_album_counts($libitem->id);
+                    Artist::update_artist_counts($libitem->album_artist);
+                }
             }
             // artist
             if ($libitem instanceof Artist) {
-                // make sure albums are updated before the artist
-                foreach ($libitem->get_child_ids() as $album_id) {
-                    $album_tags = self::getSongTags('album', $album_id);
-                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-                    Album::update_album_counts($album_id);
+                if ($tags) {
+                    // make sure albums are updated before the artist
+                    foreach ($libitem->get_child_ids() as $album_id) {
+                        $album_tags = self::getSongTags('album', $album_id);
+                        Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
+                        Album::update_album_counts($album_id);
+                    }
+                    // refresh the artist tags after everything else
+                    $tags = self::getSongTags('artist', $libitem->id);
+                    Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
                 }
-                // refresh the artist tags after everything else
-                $tags = self::getSongTags('artist', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
-                Artist::update_artist_counts($libitem->id);
+                if ($artist) {
+                    Artist::update_artist_counts($libitem->id);
+                }
             }
             // collect the garage too
-            static::getAlbumRepository()->collectGarbage();
-            Artist::garbage_collection();
+            if ($album) {
+                static::getAlbumRepository()->collectGarbage();
+            }
+            if ($artist) {
+                Artist::garbage_collection();
+            }
         }
 
         return $result;
