@@ -2009,9 +2009,10 @@ abstract class Catalog extends database_object
                 Artist::update_artist_counts($libitem->id);
             }
         } // end switch type
-
-        static::getAlbumRepository()->collectGarbage();
-        Artist::garbage_collection();
+        if ($change) {
+            static::getAlbumRepository()->collectGarbage();
+            Artist::garbage_collection();
+        }
 
         return $result;
     } // update_single_item
@@ -2839,7 +2840,7 @@ abstract class Catalog extends database_object
             // replace all songs and albums with the original artist
             Artist::migrate($row['maxid'], $row['minid']);
         }
-        // remove the duplicate after moving everyrthing
+        // remove the duplicate after moving everything
         Artist::garbage_collection();
     }
 
