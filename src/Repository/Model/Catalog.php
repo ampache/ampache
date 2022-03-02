@@ -1956,14 +1956,12 @@ abstract class Catalog extends database_object
             echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
             echo "<tbody>\n";
         }
-        $change = false;
         $album  = false;
         $artist = false;
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
-            $change = ($change == true) || (array_key_exists('change', $info) && $info['change']);
             $diff   = array_key_exists('element', $info) && is_array($info['element']);
             $album  = ($album == true) || ($diff && array_key_exists('album', $info['element']));
             $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
@@ -1986,17 +1984,21 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            $tags = self::getSongTags('album', $libitem->id);
+            $artists = array();
+            $tags    = self::getSongTags('album', $libitem->id);
             Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
             // update the album artists
             foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
-                $tags = self::getSongTags('artist', $album_artist_id);
+                $artists[] = $album_artist_id;
+                $tags      = self::getSongTags('artist', $album_artist_id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
             }
             // update the song artists too
             foreach (Album::get_artist_map('song', $libitem->id) as $song_artist_id) {
-                $tags = self::getSongTags('artist', $song_artist_id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $song_artist_id, true);
+                if (!in_array($song_artist_id, $artists)) {
+                    $tags = self::getSongTags('artist', $song_artist_id);
+                    Tag::update_tag_list(implode(',', $tags), 'artist', $song_artist_id, true);
+                }
             }
             if ($album || $artist) {
                 Album::update_album_counts($libitem->id);
