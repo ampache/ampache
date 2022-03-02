@@ -996,6 +996,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
         // Save our current ID
+        $prefix      = Catalog::trim_prefix($data['name'])['prefix'] ?? $this->prefix;
         $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
         $mbid        = $data['mbid'] ?? $this->mbid;
         $summary     = $data['summary'] ?? $this->summary;
@@ -1006,10 +1007,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
         // Check if name is different than the current name
         if ($this->name != $name) {
             $updated   = false;
-            $artist_id = self::check($name, $mbid, true);
+            $artist_id = (int)self::check($name, $mbid, true);
 
+            // Update artist name (if we don't want to use the MusicBrainz name)
+            if ($artist_id > 0 && $artist_id == $current_id) {
+                debug_event(__CLASS__, "updated name: " . $prefix . ' ' . $name, 5);
+                $this->update_artist_name($name, $prefix);
+            }
             // If it's changed we need to update
-            if ($artist_id !== null && $artist_id !== $this->id) {
+            if ($artist_id > 0 && $artist_id != $current_id) {
+                debug_event(__CLASS__, "updated: " . $current_id . "  to: " . $artist_id, 5);
                 $time  = time();
                 $songs = $this->getSongRepository()->getByArtist($this->id);
                 foreach ($songs as $song_id) {
@@ -1034,6 +1041,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             // clear out the old data
             if ($updated) {
+                debug_event(__CLASS__, "garbage_collection: " . $artist_id, 5);
                 self::garbage_collection();
                 Stats::garbage_collection();
                 Rating::garbage_collection();
@@ -1047,13 +1055,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
             Dba::write($sql, array($mbid, $current_id));
         }
 
-        // Update artist name (if we don't want to use the MusicBrainz name)
-        $this->update_artist_name($data['name']);
-
         $this->update_artist_info($summary, $placeformed, $yearformed, true);
 
-        $this->name = $name;
-        $this->mbid = $mbid;
+        $this->prefix = $prefix;
+        $this->name   = $name;
+        $this->mbid   = $mbid;
 
         $override_childs = false;
         if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
@@ -1126,14 +1132,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * Update artist associated user.
      * @param string $name
+     * @param string|null $prefix
      * @return PDOStatement|boolean
      */
-    public function update_artist_name(string $name)
+    public function update_artist_name($name, $prefix)
     {
         $trim = Catalog::trim_prefix($name);
         $sql  = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($trim['prefix'], $trim['name'], $this->id));
+        return Dba::write($sql, array($prefix, $name, $this->id));
     }
 
     /**
