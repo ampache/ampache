@@ -155,7 +155,7 @@ class AmpacheRatingMatch
                 $song = new Song($rating->id);
                 // rate all the song artists (If there are more than one)
                 foreach ($song->artists as $artist_id) {
-                    $artist = new Rating($artist_id, 'artist');
+                    $artist        = new Rating($artist_id, 'artist');
                     $rating_artist = $artist->get_user_rating($this->user->id);
                     if ($rating_artist < $new_rating) {
                         $artist->set_rating($new_rating, $this->user->id);

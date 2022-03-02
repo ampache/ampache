@@ -143,7 +143,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
                     ->setTemplate('album_row.xhtml')
                     ->render();
 
-                echo $content; ?>
+            echo $content; ?>
         </tr>
         <?php
         }?>

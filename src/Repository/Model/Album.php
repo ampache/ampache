@@ -680,7 +680,8 @@ class Album extends database_object implements library_item
             return trim(trim($this->prefix . ' ' . trim($this->name)));
         }
         if ($force_year) {
-            return trim(trim($this->prefix . ' ' . trim($this->name))) . " (" . $this->year . ")";;
+            return trim(trim($this->prefix . ' ' . trim($this->name))) . " (" . $this->year . ")";
+            ;
         }
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
