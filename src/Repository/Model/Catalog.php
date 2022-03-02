@@ -1969,7 +1969,7 @@ abstract class Catalog extends database_object
             $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
-                if ($diff) {
+                if ($diff && array_key_exists($type, $info['element'])) {
                     $element = explode(' --> ', (string)$info['element'][$type]);
                     $result  = (int)$element[1];
                 }
