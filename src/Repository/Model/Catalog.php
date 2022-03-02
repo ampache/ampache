@@ -2413,8 +2413,8 @@ abstract class Catalog extends database_object
                     ? implode(',', $new_song->tags)
                     : '';
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true);
-                self::updateAlbumTags($song);
-                self::updateArtistTags($song);
+                self::updateAlbumTags($song->album);
+                self::updateArtistTags($song->id);
             }
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
@@ -2435,6 +2435,7 @@ abstract class Catalog extends database_object
         Song::update_utime($song->id, $update_time);
         if ($map_change) {
             $info['change'] = true;
+            self::updateArtistTags($song->id);
         }
 
         return $info;
@@ -3491,22 +3492,22 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Updates album tags from given song
-     * @param Song $song
+     * Updates album tags from given album id
+     * @param int $album_id
      */
-    protected static function updateAlbumTags(Song $song)
+    protected static function updateAlbumTags(int $album_id)
     {
-        $tags = self::getSongTags('album', $song->album);
-        Tag::update_tag_list(implode(',', $tags), 'album', $song->album, true);
+        $tags = self::getSongTags('album', $album_id);
+        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
     }
 
     /**
-     * Updates artist tags from given song
-     * @param Song $song
+     * Updates artist tags from given song id
+     * @param int $song_id
      */
-    protected static function updateArtistTags(Song $song)
+    protected static function updateArtistTags(int $song_id)
     {
-        foreach (Song::get_parent_array($song->id) as $artist_id) {
+        foreach (Song::get_parent_array($song_id) as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
         }
